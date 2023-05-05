@@ -1,0 +1,33 @@
+<div class="whole-basket" *ngIf="connector$ | async as connector">
+	<div class="title flex justify-between items-center">
+		<h3>Warenkorb</h3>
+		<button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<div class="product-list">
+		<div class="product" *ngFor="let product of connector.basket.articles">
+			<div class="image"></div>
+			<div class="content">
+				<div>
+					<h5>{{ product.quantity }}x {{ product.name }}</h5>
+					<p>{{ product.price }}</p>
+				</div>
+				<div class="delete">
+					<mat-icon class="color">delete</mat-icon>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="summery flex justify-between">
+		<h4 class="text-base color sum">Summe:</h4>
+		<h4 class="text-base color amount">{{ 000 }}</h4>
+	</div>
+
+    <div class="buttons">
+        <button color="primary" mat-flat-button>Zur Kasse</button>
+        <button color="accent" mat-flat-button>Zum Warenkorb</button>
+    </div>
+</div>

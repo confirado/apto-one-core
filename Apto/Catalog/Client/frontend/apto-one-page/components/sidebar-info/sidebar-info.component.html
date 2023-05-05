@@ -1,0 +1,15 @@
+<section class="sidebar-info gutter-medium-all">
+    <h1 class="uppercase">{{$ctrl.translate($ctrl.productDetail.name)}} </h1>
+    <span>
+        {{$ctrl.getStatePrice()}}
+        <span ng-if="$ctrl.hasStatePseudoPrice()" class="pseudo-price">{{$ctrl.getStatePrice('pseudoPrice')}}</span><br />
+        <small>
+            {{ $ctrl.getShowGross() === true ? $ctrl.snippetGlobal('aptoSummary.tax.withTax') : $ctrl.snippetGlobal('aptoSummary.tax.withoutTax') }},
+            {{ $ctrl.snippet('shipping.prefix') }}
+            <a ng-href="{{ $ctrl.snippet('shipping.link.href') ? $ctrl.snippet('shipping.link.href') : $ctrl.shopUrls.additional.shippingCosts }}" target="_blank">
+                {{ $ctrl.snippet('shipping.link.text') }}
+            </a>
+        </small>
+    </span>
+    <apto-select selected="$ctrl.quantity" on-change-selected="$ctrl.setQuantity(quantity)"></apto-select>
+</section>

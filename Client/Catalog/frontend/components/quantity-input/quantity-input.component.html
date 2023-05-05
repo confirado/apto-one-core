@@ -1,0 +1,15 @@
+<div class="input">
+	<span *ngIf="name">{{ name }}</span>
+	<div class="container" *ngIf="quantity$ | async as quantity">
+		<span>{{ quantity }} St.</span>
+		<div>
+			<div class="control" mat-ripple (click)="setQuantity(quantity + 1)">
+				<mat-icon>arrow_drop_up</mat-icon>
+			</div>
+			<div class="control" mat-ripple (click)="setQuantity(quantity - 1)">
+				<mat-icon>arrow_drop_down</mat-icon>
+			</div>
+		</div>
+	</div>
+	<span class="hint" *ngIf="hint">{{ hint }}</span>
+</div>

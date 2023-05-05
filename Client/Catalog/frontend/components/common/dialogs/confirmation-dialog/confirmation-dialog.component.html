@@ -1,0 +1,20 @@
+<div class="confirm-dialog" [attr.type]="data.type">
+    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+
+    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.ERROR"><mat-icon [attr.type]="data.type">close</mat-icon></div>
+    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.WARNING"><mat-icon [attr.type]="data.type">warning</mat-icon></div>
+    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CONFIRM"><mat-icon [attr.type]="data.type">done</mat-icon></div>
+    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.INFO"><mat-icon [attr.type]="data.type">info</mat-icon></div>
+    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CUSTOM"><mat-icon [attr.type]="data.type">info</mat-icon></div>
+
+    <h1 mat-dialog-title>{{data.title}}</h1>
+
+    <mat-dialog-content>
+        <p>{{data.descriptionText}}</p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button *ngIf="data.buttonText" mat-flat-button color="accent" [mat-dialog-close]="true" type="button">{{data.buttonText}}</button>
+        <button *ngIf="data.secondButtonText" mat-flat-button color="primary" type="submit">{{data.secondButtonText}}</button>
+    </mat-dialog-actions>
+</div>

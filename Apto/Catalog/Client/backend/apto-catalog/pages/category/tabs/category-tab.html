@@ -1,0 +1,34 @@
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value required label="'Name'" type="'input'" translated-value="categoryDetail.name" flex="45"></apto-translated-value>
+    <div flex="5"></div>
+
+    <md-input-container class="md-block" flex>
+        <label>Position:</label>
+        <input type="number" min="0" step="1" ng-model="categoryDetail.position">
+    </md-input-container>
+    <div flex="5"></div>
+
+    <md-input-container ng-if="'superadmin' !== currentUserFactory.currentUser.id" class="md-block" flex>
+        <input type="hidden" ng-model="categoryDetail.parent">
+    </md-input-container>
+
+    <md-input-container ng-if="'superadmin' === currentUserFactory.currentUser.id" class="md-block" flex>
+        <label>Parent:</label>
+        <input type="text" ng-model="categoryDetail.parent">
+    </md-input-container>
+
+</div>
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value label="'Beschreibung'" type="'trumbowyg'" translated-value="categoryDetail.description" flex="100"></apto-translated-value>
+</div>
+
+<div>
+    <p>Vorschaubild:</p>
+</div>
+<div layout="row" layout-align="start" flex>
+    <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">
+        <apto-media-icon ng-if="categoryDetail.previewImage" style="display: block;" file="{path: categoryDetail.previewImage, extension: categoryDetail.previewImageMediaFile.extension}" size="128x128"></apto-media-icon>
+    </div>
+    <div flex="5"></div>
+    <apto-media-select on-select-file="onSelectPreviewImage(path)" label="'Pfad'" path="categoryDetail.previewImage" required="false" flex></apto-media-select>
+</div>

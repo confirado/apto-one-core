@@ -1,0 +1,58 @@
+@import "globals";
+@import "common";
+
+.full-screen-button:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.full-screen {
+    @include blurry-background();
+
+    .arrows {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #999999;
+        z-index: 4;
+        mat-icon {
+            font-size: 80px;
+            height: 100%;
+            width: 100%;
+        }
+        mat-icon:hover {
+            cursor: pointer;
+        }
+    }
+    .image-wrapper {
+        position: relative;
+        img {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+	.arrows {
+		position: absolute;
+		&.left {
+			left: 5px;
+		}
+		&.right {
+			right: -16px;
+		}
+	}
+    .image-wrapper {
+        margin: 0 20px;
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+	img {
+        max-width: calc(100vw - 100px);
+    }
+}

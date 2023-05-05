@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Catalog\Domain\Core\Model\Product\Rule\Rule" table="apto_product_rule">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="active" type="boolean" column="active"/>
+        <field name="name" type="string" column="name" nullable="true"/>
+        <field name="errorMessage" type="AptoPropertyTranslatedValue" column="error_message" nullable="true"/>
+        <field name="created" column="created" type="datetime"/>
+        <field name="conditionsOperator" column="conditions_operator" type="integer"/>
+        <field name="implicationsOperator" column="implications_operator" type="integer"/>
+        <field name="softRule" type="boolean" column="soft_rule"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+        <one-to-many field="conditions" target-entity="Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCondition" mapped-by="rule" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+        <one-to-many field="implications" target-entity="Apto\Catalog\Domain\Core\Model\Product\Rule\RuleImplication" mapped-by="rule" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="product" target-entity="Apto\Catalog\Domain\Core\Model\Product\Product" inversed-by="rules">
+            <join-column name="product_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

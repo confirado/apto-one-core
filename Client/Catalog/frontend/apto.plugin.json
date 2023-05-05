@@ -1,0 +1,9 @@
+{
+  "id": "apto-catalog-frontend",
+  "app": "frontend",
+  "priority": 350,
+  "imports": [{
+    "class": "AptoCatalogFrontendModule",
+    "file": "apto-catalog-frontend.module.ts"
+  }]
+}

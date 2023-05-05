@@ -1,0 +1,39 @@
+<section class="element-container gutter-medium-all" ng-class="$ctrl.sidebarOpen ? 'active' : ''">
+    <h4 class="uppercase">
+        {{$ctrl.translate($ctrl.section.name)}}
+    </h4>
+
+    <!-- filter temporary disabled -->
+    <div ng-if="false" class="block-group select-color">
+        <div class="select-container-small" ng-class="{active: $ctrl.selectedColorGroup}">
+            <label ng-show="$ctrl.selectedColorGroup">
+                {{$ctrl.translate($ctrl.selectedColorGroup.name)}}
+            </label>
+            <label ng-show="!$ctrl.selectedColorGroup">
+                {{$ctrl.snippet('filter')}}
+            </label>
+            <select ng-model="$ctrl.selectedColorGroup" ng-options="option.name.de_DE for option in $ctrl.section.elements">
+                <option value="" ng-if="false"></option>
+            </select>
+        </div>
+        <div class="close-select-container" ng-click="$ctrl.resetSelect()" ng-class="{active: $ctrl.selectedColorGroup}">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div>
+        <div class="block-group materials" apto-width-materials>
+            <div ng-if="!element.isNotAvailable" bind-html-compile="element.definition.component" ng-repeat-start="element in $ctrl.section.elements | filter:$ctrl.selectedColorGroup.identifier" class="material"></div>
+            <div ng-if="element.isNotAvailable" ng-repeat-end class="material">
+                <apto-element-is-not-available element="element" section="$ctrl.section"></apto-element-is-not-available>
+            </div>
+        </div>
+    </div>
+
+    <div class="close-container" ng-click="$ctrl.closeSidebar()">
+        <svg>
+            <path d="M 9.4039157,33.337496 C 18.47746,30.073368 18.625909,29.959175 32.936842,15.235108 47.392747,0.36188213 48.350318,0.01487213 74.936843,0.01487213 c 26.586527,0 27.544097,0.34701 41.999997,15.22023587 14.31093,14.724067 14.45938,14.83826 23.53292,18.102388 l 7.13375,2.566301 H 74.936843 2.2701741 Z" id="path3711"></path>
+        </svg>
+        <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+    </div>
+</section>

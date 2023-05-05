@@ -1,0 +1,52 @@
+<div style="margin: 8px">
+    <md-expansion-panel-group style="width: 100%;">
+        <md-expansion-panel style="margin: 0 0 20px 0;">
+            <md-expansion-panel-collapsed>
+                <div class="md-summary">Filter:</div>
+                <md-expansion-panel-icon></md-expansion-panel-icon>
+            </md-expansion-panel-collapsed>
+            <md-expansion-panel-expanded>
+                <md-expansion-panel-header ng-click="$panel.collapse()">
+                    <div class="md-summary">Filter:</div>
+                    <md-expansion-panel-icon></md-expansion-panel-icon>
+                </md-expansion-panel-header>
+                <md-expansion-panel-content>
+                    <div layout="row" layout-align="start" flex>
+                        <md-input-container flex>
+                            <label>Produkte durchsuchen:</label>
+                            <input ng-model="filter.searchString">
+                        </md-input-container>
+                        <div flex="5"></div>
+                        <md-input-container flex>
+                            <label>Kategorien:</label>
+                            <md-select
+                            multiple="true"
+                            ng-model="filter.categories"
+                            data-md-container-class="apto-md-select-search-container"
+                            >
+                            <md-select-header class="apto-md-select-header">
+                                <input ng-model="categoriesSearch"
+                                       ng-keydown="$event.stopPropagation()"
+                                       type="search"
+                                       placeholder="Suchen:"
+                                       class="apto-md-header-search-box md-text">
+                            </md-select-header>
+                            <md-optgroup label="Objekt">
+                                <md-option ng-repeat="category in categories | filter: categoriesSearch" ng-value="category.id">
+                                    {{ languageFactory.translate(category.name) }}
+                                </md-option>
+                            </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </md-expansion-panel-content>
+                <md-expansion-panel-footer>
+                    <md-button class="md-cornered" ng-click="resetFilter()">Zurücksetzen</md-button>
+                    <div flex></div>
+                    <md-button class="md-cornered" ng-click="$panel.collapse()">Schließen</md-button>
+                    <md-button class="md-raised md-primary md-cornered" ng-click="setFilter();">Filtern</md-button>
+                </md-expansion-panel-footer>
+            </md-expansion-panel-expanded>
+        </md-expansion-panel>
+    </md-expansion-panel-group>
+</div>

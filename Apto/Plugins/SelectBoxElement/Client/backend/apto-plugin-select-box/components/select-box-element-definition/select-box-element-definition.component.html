@@ -1,0 +1,115 @@
+<div style="padding: 8px 16px 8px 16px;">
+    <!-- basic settings -->
+    <h5 style="margin-bottom: 0.5rem;">Grundeinstellungen</h5>
+    <div layout="row" layout-align="start" flex>
+        <md-checkbox ng-model="$ctrl.values.enableMultiSelect" aria-label="Mehrfachauswahl">
+            Mehrfachauswahl
+        </md-checkbox>
+    </div>
+    <div layout="row" layout-align="start" flex>
+        <md-checkbox ng-model="$ctrl.values.enableMultiplier" aria-label="Preismultiplikator als Inputfeld">
+            Preismultiplikator als Inputfeld
+        </md-checkbox>
+    </div>
+    <div ng-if="$ctrl.values.enableMultiplier" layout="row" layout-align="start" flex>
+        <apto-translated-value label="'Präfix'" type="'input'" translated-value="$ctrl.values.multiplierPrefix" flex></apto-translated-value>
+        <div flex="5"></div>
+        <apto-translated-value label="'Suffix'" type="'input'" translated-value="$ctrl.values.multiplierSuffix" flex></apto-translated-value>
+    </div>
+
+    <!-- new item -->
+    <h5 style="margin-bottom: 0.5rem;">Einzelnes Element hinzufügen</h5>
+    <div layout="row" layout-align="start" flex>
+        <apto-translated-value label="'Name'" type="'input'" translated-value="$ctrl.newItem.name" flex></apto-translated-value>
+        <div flex="5"></div>
+        <md-input-container>
+            <md-button ng-disabled="!$ctrl.hasTranslation($ctrl.newItem.name)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addItem()">Hinzufügen</md-button>
+        </md-input-container>
+    </div>
+
+    <!-- new items by range -->
+    <h5 style="margin-bottom: 0.5rem;">Mehrere Elemente hinzufügen</h5>
+    <div layout="row" layout-align="start" flex>
+        <md-input-container flex>
+            <md-checkbox ng-model="$ctrl.range.positiveSign" aria-label="Zeige positives Vorzeichen">
+                Zeige positives Vorzeichen
+            </md-checkbox>
+        </md-input-container>
+        <div flex="5"></div>
+        <md-input-container class="md-block" flex>
+            <label>Anzahl Dezimalstellen:</label>
+            <input type="number" step="1" ng-model="$ctrl.range.decimalPlaces">
+        </md-input-container>
+    </div>
+    <div layout="row" layout-align="start" flex>
+        <apto-translated-value label="'Prefix'" type="'input'" translated-value="$ctrl.range.prefix" flex></apto-translated-value>
+        <div flex="5"></div>
+        <apto-translated-value label="'Suffix'" type="'input'" translated-value="$ctrl.range.suffix" flex></apto-translated-value>
+    </div>
+    <div layout="row" layout-align="start" flex>
+        <md-input-container class="md-block" flex>
+            <label>Minimum:</label>
+            <input type="number" ng-model="$ctrl.range.min">
+        </md-input-container>
+        <div flex="5"></div>
+        <md-input-container class="md-block" flex>
+            <label>Maximum:</label>
+            <input type="number" ng-model="$ctrl.range.max">
+        </md-input-container>
+        <div flex="5"></div>
+        <md-input-container class="md-block" flex>
+            <label>Step:</label>
+            <input type="number" ng-model="$ctrl.range.step">
+        </md-input-container>
+        <div flex="5"></div>
+        <md-input-container>
+            <md-button ng-disabled="!$ctrl.range.min || !$ctrl.range.max || !$ctrl.range.step" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addRange()">Hinzufügen</md-button>
+        </md-input-container>
+    </div>
+
+    <!-- item list -->
+    <h5 style="margin-bottom: 0.5rem;">Vorhandene Elemente</h5>
+    <md-table-container class="md-whiteframe-2dp" style="margin-bottom: 8px;">
+        <table md-table>
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Default</th>
+                <th md-column>Id</th>
+                <th md-column>Name</th>
+                <th md-column style="width:30%;">Anzahl Preise</th>
+                <th md-column style="width:120px;">Aktionen</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row ng-repeat="item in $ctrl.selectBoxItems">
+                <td md-cell style="width:5%;">
+                    <md-input-container flex>
+                        <md-checkbox ng-change="$ctrl.setSelectBoxItemIsDefault(item)" ng-model="item.isDefault" aria-label="Default"></md-checkbox>
+                    </md-input-container>
+                </td>
+                <td md-cell>{{ item.id }}</td>
+                <td md-cell>{{ $ctrl.translate(item.name) }}</td>
+                <td md-cell>{{ item.aptoPrices.length }}</td>
+                <td md-cell>
+                    <md-button
+                            class="md-icon-button md-primary"
+                            title="Bearbeiten"
+                            ng-click="$ctrl.openItemDetailDialog($event, item.id)">
+                        <md-icon md-font-set="fa">&#xf044</md-icon>
+                    </md-button>
+                    <md-button
+                            title="Löschen"
+                            class="md-icon-button md-warn"
+                            ng-click="$ctrl.removeItem(item.id)">
+                        <md-icon md-font-set="fa">&#xf014</md-icon>
+                    </md-button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <div layout="row" layout-align="end" flex>
+        <md-button ng-disabled="$ctrl.selectBoxItems.length < 1" title="Alle Einträge löschen" class="md-raised md-cornered md-warn" apto-confirm-remove="$ctrl.removeItems()">Alle Einträge löschen</md-button>
+    </div>
+</div>

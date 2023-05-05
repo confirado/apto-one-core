@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Core\Model\CustomerGroup\CustomerGroup" table="apto_customer_group" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\CustomerGroupOrmRepository">
+        <unique-constraints>
+            <unique-constraint name="AptoUniqueShopIdExternalId" columns="shop_id,external_id"/>
+        </unique-constraints>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="name" type="string" column="name"/>
+        <field name="inputGross" type="boolean" column="input_gross"/>
+        <field name="showGross" type="boolean" column="show_gross"/>
+        <field name="shopId" type="AptoPropertyUuid" column="shop_id" nullable="true"/>
+        <field name="externalId" type="string" column="external_id" nullable="true"/>
+        <field name="fallback" type="boolean" column="fallback" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+    </entity>
+</doctrine-mapping>

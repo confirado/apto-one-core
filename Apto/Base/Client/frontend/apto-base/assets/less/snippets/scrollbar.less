@@ -1,0 +1,41 @@
+.nice-scrollbar {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0.75rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+  }
+}
+
+.nice-scrollbar-light {
+  &::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.nice-scrollbar-dark {
+  &::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.nice-scrollbar-no-border-radius {
+  &::-webkit-scrollbar-track {
+    border-radius: 0;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0;
+  }
+}
+
+.nice-scrollbar-gray {
+  &::-webkit-scrollbar-thumb {
+    background: rgb(193, 193, 193);
+  }
+}

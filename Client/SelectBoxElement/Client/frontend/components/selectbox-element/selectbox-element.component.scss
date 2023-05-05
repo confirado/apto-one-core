@@ -1,0 +1,127 @@
+@import "globals";
+@import "elements";
+@import "form-inputs";
+
+.selectbox-element {
+    @include element-grid();
+    @include element-margins();
+
+    .header {
+        grid-area: header;
+        @include header();
+        @include title();
+    }
+
+    .picture {
+        grid-area: picture;
+        @include picture();
+    }
+
+    .element {
+        @include element();
+
+        .select-box {
+            margin-bottom: var(--element-gap);
+        }
+
+        .container {
+            @include element-input-grid();
+
+            & + .container {
+                margin-top: var(--element-gap);
+            }
+
+            .input {
+                grid-area: input;
+            }
+
+            .prefix {
+                grid-area: prefix;
+                @include prefix();
+            }
+
+            .suffix {
+                grid-area: suffix;
+                @include suffix();
+            }
+        }
+    }
+
+    .description {
+        grid-area: description;
+        @include description();
+    }
+
+    .apply-button {
+        grid-area: buttons;
+        @include buttons();
+    }
+}
+
+
+@media only screen and (min-width: $mobile-max-width) {
+    .selectbox-element {
+        @include element-grid('tablet');
+        @include element-margins('tablet');
+
+        .header {
+            @include header('tablet');
+            @include title('tablet');
+        }
+
+        .picture {
+            @include picture('tablet');
+        }
+
+        &.step-by-step {
+            .element {
+                grid-template-areas:
+                    "select-box input-multiplier";
+            }
+        }
+
+        &.one-page {
+            .element {
+                grid-template-areas:
+                    "select-box"
+                    "input-multiplier";
+            }
+        }
+
+        .element {
+            display: grid;
+            align-items: flex-start;
+            justify-items: flex-start;
+
+            .select-box {
+                grid-area: select-box;
+                margin-bottom: var(--element-gap);
+
+                .container {
+                    @include element-input-grid('tablet');
+                }
+            }
+
+            .input-multiplier {
+                grid-area: input-multiplier;
+
+                .container {
+                    @include element-input-grid('tablet', '100px');
+                }
+            }
+
+            .container {
+                .input {}
+                .hint {}
+                .prefix {}
+                .suffix {}
+            }
+        }
+
+        .description {}
+
+        .apply-button {
+            @include buttons('tablet');
+        }
+    }
+}

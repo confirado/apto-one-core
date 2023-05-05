@@ -1,0 +1,46 @@
+@import "globals";
+@import "form-inputs";
+
+:host {
+    @include input-host();
+}
+
+.text-input-field {
+    @include input-grid();
+
+    .name {
+        grid-area: name;
+        @include name();
+    }
+
+    .container {
+        grid-area: container;
+        @include container(max-content);
+        padding: 5px 5px 5px 20px;
+
+        textarea {
+            @include textarea();
+            width: 100%;
+        }
+    }
+
+    .hint {
+        grid-area: hint;
+        @include hint();
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .text-input-field {
+        .name {}
+
+        .container {
+            textarea {
+                @include textarea('tablet');
+                width: 100%;
+            }
+        }
+
+        .hint {}
+    }
+}

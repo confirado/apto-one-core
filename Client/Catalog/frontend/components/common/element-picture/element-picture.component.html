@@ -1,0 +1,17 @@
+<div class="element-picture" *ngIf="previewImage" [class.is-zoomable]="isZoomable">
+    <img [src]="previewImage" [style]="imgStyles"/>
+    <div class="zoom-icon" (click)="zoom($event)" *ngIf="isZoomable">
+        <mat-icon>zoom_in</mat-icon>
+    </div>
+</div>
+
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOpen]="isOpen"
+>
+    <div class="zoomed-in">
+        <div class="image-wrapper">
+            <img (click)="isOpen = !isOpen" [src]="previewImage" />
+            <apto-close-button [mat-dialog-close]="true" (clicked)="isOpen = !isOpen"></apto-close-button>
+        </div>
+    </div>
+</ng-template>

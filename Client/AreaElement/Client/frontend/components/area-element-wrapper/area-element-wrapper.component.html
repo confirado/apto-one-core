@@ -1,0 +1,22 @@
+<ng-container *ngIf="element && product">
+	<apto-area-element
+		*ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product.useStepByStep"
+		[product]="product"
+		[element]="element"
+	></apto-area-element>
+	<div
+		*ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
+		class="container"
+		(click)="openDialog(element, product)"
+	>
+		<div class="single-element">
+			<div [class.selected]="element.state.active">
+                <div *ngIf="element.state.active" [class.selected]="element.state.active" class="circle"><mat-icon>done</mat-icon></div>
+                <div class="element-img"><img [src]="element.element.previewImage" /></div>
+			</div>
+		</div>
+		<div class="element-name">
+			<p>{{ element.element.name | translate }}</p>
+		</div>
+	</div>
+</ng-container>

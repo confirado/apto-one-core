@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\FloatInputElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

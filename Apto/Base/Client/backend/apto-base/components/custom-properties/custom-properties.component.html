@@ -1,0 +1,68 @@
+<div layout="row" layout-align="start" flex>
+    <md-autocomplete
+        flex
+        md-selected-item="$ctrl.keys.item"
+        md-selected-item-change="$ctrl.keysItemChanges($ctrl.keys.item)"
+        md-search-text="$ctrl.keys.text"
+        md-search-text-change="$ctrl.keysSearchTextChanges($ctrl.keys.text)"
+        md-items="key in $ctrl.state.usedCustomPropertyKeys | filter: $ctrl.keys.text"
+        md-item-text="key"
+        md-floating-label="Schlüssel:"
+        md-escape-options="clear"
+        md-min-length="0"
+    >
+        <md-item-template>
+            <span md-highlight-text="$ctrl.keys.text">{{key}}</span>
+        </md-item-template>
+    </md-autocomplete>
+    <div flex="5"></div>
+    <md-input-container flex ng-if="!$ctrl.property.translatable">
+        <label>Wert:</label>
+        <input ng-model="$ctrl.property.value">
+    </md-input-container>
+    <apto-translated-value ng-if="$ctrl.property.translatable" label="'Value'" type="'trumbowyg'" translated-value="$ctrl.property.value" flex></apto-translated-value>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-checkbox ng-model="$ctrl.property.translatable" aria-label="Übersetzbar" ng-change="$ctrl.onChangeTranslatable()">
+            Übersetzbar
+        </md-checkbox>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!$ctrl.property.key || !$ctrl.property.value" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addProperty()">Speichern</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30%;">Schlüssel</th>
+            <th md-column style="width:50%;">Wert</th>
+            <th md-column style="width:10%;">Übersetzbar</th>
+            <th md-column style="width:10%; text-align: center;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="property in $ctrl.properties">
+            <td md-cell>{{property.key}}</td>
+            <td md-cell>{{property.value}}</td>
+            <td md-cell>{{property.translatable}}</td>
+            <td md-cell style="text-align: center;">
+                <md-button
+                        title="Bearbeiten"
+                        class="md-icon-button md-primary"
+                        ng-click="$ctrl.editProperty(property)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="$ctrl.removeProperty(property.key)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

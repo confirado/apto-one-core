@@ -1,0 +1,34 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="ruleForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ detail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Regel">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/rule/rule-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Bedingung">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/rule/condition-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Auswirkung">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/rule/implication-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button class="md-raised md-cornered" ng-click="save(true)" type="submit">Speichern und schließen</md-button>
+            <md-button class="md-raised md-primary md-cornered" ng-click="save()" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

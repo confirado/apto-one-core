@@ -1,0 +1,9 @@
+<div class="text-input-field" [style.width]="width ? width : '100%'">
+    <div class="name" *ngIf="name">{{ name }}</div>
+
+    <div class="container">
+        <textarea [formControl]="formElement" [placeholder]="placeholder" rows="{{ rows }}"></textarea>
+    </div>
+
+    <div class="hint" *ngIf="hint">{{ hint }}</div>
+</div>

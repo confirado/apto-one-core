@@ -1,0 +1,42 @@
+@import "globals";
+@import "common";
+
+.element-picture {
+    position: relative;
+
+    &.is-zoomable {
+        img {
+            width: calc(100% - 2*var(--element-gap));
+        }
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .zoom-icon {
+        position: absolute;
+        top: -2px;
+        right: 10px;
+        cursor: pointer;
+
+        mat-icon {
+            width: 26px;
+            height: 26px;
+            font-size: 26px;
+        }
+    }
+}
+
+.zoomed-in {
+    @include blurry-background();
+
+    .image-wrapper {
+        position: relative;
+
+        img {
+            max-width: calc(100vw - 100px);
+            max-height: calc(100vh - 100px);
+        }
+    }
+}

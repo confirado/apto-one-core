@@ -1,0 +1,98 @@
+.tool-tip-container {
+  cursor: pointer;
+  position: relative;
+
+  .tool-tip {
+    display: none;
+    position: absolute;
+    top: 100%;
+    margin: 1rem 0 0.9375rem;
+    padding: 0.5625rem 1.25rem;
+    width: auto;
+    background: @baseBackgroundToolTip;
+    font-size: 0.875rem;
+    color: @baseColorToolTip;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 999;
+    .border-radius(3px);
+    .opacity(0);
+
+    &:before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: -1rem;
+      left: 0;
+      height: 1rem;
+      width: 100%;
+    }
+
+    &:after {
+      border-left: solid transparent 0.625rem;
+      border-right: solid transparent 0.625rem;
+      border-bottom: solid @baseBackgroundToolTip 0.625rem;
+      top: -1.375rem;
+      content: " ";
+      height: 0.75rem;
+      left: 50%;
+      margin-left: -0.625rem;
+      position: absolute;
+      width: 0;
+    }
+
+    &.tool-tip-top {
+      bottom: 100%;
+      top: inherit;
+
+      &:before {
+        bottom: -1rem;
+        top: inherit;
+      }
+
+      &:after {
+        border-top: solid @baseBackgroundToolTip 0.625rem;
+        border-bottom: 0;
+        bottom: 1.375rem;
+        top: 2.25rem;
+      }
+    }
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    .tool-tip {
+      .opacity(1);
+      pointer-events: auto;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.tool-tip {
+  font-weight: normal;
+  padding: 0.625rem 0.6875rem;
+  color: @baseTooltipSeparatorColor;
+
+  a {
+    font-size: 1rem;
+    padding-right: 0.4rem;
+    color: @baseColorToolTip;
+    text-decoration: none;
+
+    &:last-child {
+      padding-right: 0;
+      padding-left: 0.4rem;
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .tool-tip-container {
+    .tool-tip {
+      display: block;
+    }
+  }
+}

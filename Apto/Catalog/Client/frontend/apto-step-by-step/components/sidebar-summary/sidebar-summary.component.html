@@ -1,0 +1,55 @@
+<h1 class="uppercase gutter-medium-all summary">{{$ctrl.snippet('summary')}}</h1>
+
+<ul class="selected-section-container gutter-large-top gutter-large-bottom">
+    <li class="uppercase gutter-medium-left gutter-medium-right discount-name">
+        {{$ctrl.translate($ctrl.getProductDiscountName())}}
+    </li>
+    <li class="uppercase gutter-medium-left gutter-medium-right">
+        <!--<span>{{$ctrl.snippet('basePrice')}}</span>-->
+        <span>{{$ctrl.snippet('sum')}}</span>
+        <span>
+            <span ng-if="$ctrl.hasStatePseudoPrice()" class="pseudo-price-total">{{$ctrl.getStatePrice('pseudoPrice')}}</span>
+            {{$ctrl.getStatePrice()}}
+        </span>
+    </li>
+    <!--<li ng-repeat="section in $ctrl.productDetail.sections" class="uppercase gutter-medium-left gutter-medium-right"
+        ng-if="$ctrl.sectionIsSelected(section.id)">
+        <span>{{$ctrl.translate(section.name)}}:</span><span>+ 0,00 €</span>
+    </li>-->
+    <li class="tax-and-delivery gutter-medium-left gutter-medium-right">
+         {{ $ctrl.getShowGross() === true ? $ctrl.snippetGlobal('aptoSummary.tax.withTax') : $ctrl.snippetGlobal('aptoSummary.tax.withoutTax') }}
+         <a ng-href="{{ $ctrl.snippet('shippingCostsLink') ? $ctrl.snippet('shippingCostsLink') : $ctrl.shopSession.url.additional.shippingCosts }}" target="_blank">{{$ctrl.snippet('shippingCosts')}}</a>
+    </li>
+</ul>
+
+<section class="info-block  gutter-large-top gutter-large-bottom gutter-medium-left gutter-medium-right">
+    <div class="price-container">
+        <h3>{{$ctrl.snippet('sum')}}</h3>
+        <span>
+            {{$ctrl.getStatePrice()}}
+            <small>
+                 {{ $ctrl.getShowGross() === true ? $ctrl.snippetGlobal('aptoSummary.tax.withTax') : $ctrl.snippetGlobal('aptoSummary.tax.withoutTax') }}
+                 <a ng-href="{{ $ctrl.snippet('shippingCostsLink') ? $ctrl.snippet('shippingCostsLink') : $ctrl.shopSession.url.additional.shippingCosts }}" target="_blank">{{$ctrl.snippet('shippingCosts')}}</a>
+            </small>
+        </span>
+    </div>
+    <apto-select selected="$ctrl.quantity" on-change-selected="$ctrl.setQuantity(quantity)"></apto-select>
+</section>
+
+<button id="basket-button" class="button-primary uppercase" ng-class="{'invalid': !$ctrl.configurationIsValid()}" ng-click="$ctrl.goToSummary()">
+    {{$ctrl.snippet('cart')}}
+</button>
+
+<div ng-if="!$ctrl.configurationIsValid()" class="basket-notification block-group" ng-show="true">
+    <i class="fa fa-info"></i>
+    <div ng-bind-html="$ctrl.snippet('basketNotification', true)"></div>
+</div>
+
+<button ng-if="$ctrl.isOfferEnabled()" id="offer-button" class="button-primary uppercase" ng-click="$ctrl.openOfferConfigurationDialog($event)">
+    {{$ctrl.snippet('offer')}}
+</button>
+
+<div ng-if="$ctrl.isOfferEnabled() && $ctrl.snippet('offerNotification')" class="basket-notification block-group offer-notification">
+    <i class="fa fa-info"></i>
+    <div ng-bind-html="$ctrl.snippet('offerNotification', true)"></div>
+</div>

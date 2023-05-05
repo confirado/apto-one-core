@@ -1,0 +1,36 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="languageForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ languageDetails.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <apto-translated-value required label="'Name'" type="'input'" translated-value="languageDetails.name" flex></apto-translated-value>
+
+                    <div flex="5"></div>
+
+                    <md-input-container class="md-block" flex>
+                        <label>Isocode:</label>
+                        <input required ng-model="languageDetails.isocode">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="!languageDetails.id" class="md-raised md-cornered" ng-click="save(languageForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!languageDetails.id" class="md-raised md-primary md-cornered" ng-click="save(languageForm, true)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="languageDetails.id" class="md-raised md-cornered" ng-click="save(languageForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="languageDetails.id" class="md-raised md-primary md-cornered" ng-click="save(languageForm)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,14 @@
+@import "globals";
+
+.buttons-one-page {
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+	.buttons-one-page {
+		margin: 0;
+	}
+}

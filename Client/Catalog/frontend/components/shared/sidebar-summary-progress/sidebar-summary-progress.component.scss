@@ -1,0 +1,50 @@
+.card {
+    background-color: var(--color-background-card);
+    border-radius: var(--border-radius-card);
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+
+    .progress-content {
+        position: relative;
+        height: 70px;
+        width: auto;
+
+        mat-progress-spinner {
+            display: inline;
+            position: absolute;
+        }
+
+        .number {
+            display: flex;
+            justify-content: center;
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+            width: 100%;
+
+            .progress {
+                position: relative;
+                color: var(--color-primary);
+                font-weight: 700;
+                font-size: 17px;
+            }
+        }
+    }
+
+    .info {
+        display: flex;
+        align-items: center;
+
+        h4 {
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-weight: 500;
+            font-size: 15px;
+        }
+    }
+}

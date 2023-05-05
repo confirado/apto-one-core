@@ -1,0 +1,46 @@
+<mat-toolbar>
+    <ng-container *ngIf="languages$ | async as languages">
+        <div class="language-desktop">
+            <div *ngIf="languages.length === 1"></div>
+            <mat-select *ngIf="languages.length > 1"
+                (selectionChange)="onChangeLanguage(selectLanguage.value)"
+                #selectLanguage
+                [value]="locale$ | async"
+                class="selector"
+            >
+                <mat-option *ngFor="let language of languages" [value]="language.locale">
+                    {{ language.name | translate }}
+                </mat-option>
+            </mat-select>
+        </div>
+    </ng-container>
+    <div class="logo">
+        <a
+            [href]="contentSnippets$ | async | contentSnippet: 'link'"
+            [target]="(contentSnippets$ | async | contentSnippet: 'openInNewTab') === 'active' ? '_blank' : undefined"
+        >
+            <img class="visible-desktop" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImg')" />
+            <img class="visible-mobile" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImgMobile')" />
+        </a>
+    </div>
+    <ng-container *ngIf="languages$ | async as languages">
+        <div class="language-mobile">
+            <div *ngIf="languages.length === 1"></div>
+            <mat-select #selectLanguageMobile
+                        *ngIf="languages.length > 1"
+                        (selectionChange)="onChangeLanguage(selectLanguageMobile.value)"
+                        [value]="locale$ | async"
+                        class="selector"
+                        disableOptionCentering
+                        panelClass="language-mobile-popup"
+            >
+                <mat-select-trigger>
+                    <span class="material-icons language-icon">language</span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let language of languages" [value]="language.locale">
+                    {{ language.name | translate }}
+                </mat-option>
+            </mat-select>
+        </div>
+    </ng-container>
+</mat-toolbar>

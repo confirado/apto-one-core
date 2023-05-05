@@ -1,0 +1,75 @@
+.apto-translated-trumbowyg {
+    width: 100%;
+}
+
+.apto-translated-trumbowyg .trumbowyg-box {
+    margin-top: 32px;
+    margin-bottom: 0;
+}
+
+.apto-translated-trumbowyg .trumbowyg-editor,
+.apto-translated-trumbowyg .trumbowyg-textarea {
+    padding: 8px;
+}
+
+.trumbowyg-editor.apto-trumbowyg-reset-css {
+    background: #FEFEFE !important;
+    font-family: "Trebuchet MS", Helvetica, Verdana, sans-serif !important;
+    color: #333; }
+.trumbowyg-editor.apto-trumbowyg-reset-css a {
+    color: #15c !important;
+    text-decoration: underline !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css div,
+.trumbowyg-editor.apto-trumbowyg-reset-css p,
+.trumbowyg-editor.apto-trumbowyg-reset-css ul,
+.trumbowyg-editor.apto-trumbowyg-reset-css ol,
+.trumbowyg-editor.apto-trumbowyg-reset-css blockquote {
+    box-shadow: none !important;
+    background: none !important;
+    margin: 0 !important;
+    margin-bottom: 15px !important;
+    font-family: "Trebuchet MS", Helvetica, Verdana, sans-serif !important;
+    border: none; }
+.trumbowyg-editor.apto-trumbowyg-reset-css iframe,
+.trumbowyg-editor.apto-trumbowyg-reset-css object,
+.trumbowyg-editor.apto-trumbowyg-reset-css hr {
+    margin-bottom: 15px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css blockquote {
+    margin-left: 32px !important;
+    font-style: italic !important;
+    color: #555; }
+.trumbowyg-editor.apto-trumbowyg-reset-css ul {
+    list-style: disc; }
+.trumbowyg-editor.apto-trumbowyg-reset-css ul,
+.trumbowyg-editor.apto-trumbowyg-reset-css ol {
+    padding-left: 20px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css ul ul,
+.trumbowyg-editor.apto-trumbowyg-reset-css ol ol,
+.trumbowyg-editor.apto-trumbowyg-reset-css ul ol,
+.trumbowyg-editor.apto-trumbowyg-reset-css ol ul {
+    border: none;
+    margin: 2px !important;
+    padding: 0 !important;
+    padding-left: 24px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css hr {
+    display: block;
+    height: 1px;
+    border: none;
+    border-top: 1px solid #CCC; }
+.trumbowyg-editor.apto-trumbowyg-reset-css h1,
+.trumbowyg-editor.apto-trumbowyg-reset-css h2,
+.trumbowyg-editor.apto-trumbowyg-reset-css h3,
+.trumbowyg-editor.apto-trumbowyg-reset-css h4 {
+    color: #111;
+    background: none;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: bold; }
+.trumbowyg-editor.apto-trumbowyg-reset-css h1 {
+    margin-bottom: 20px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css h2 {
+    margin-bottom: 15px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css h3 {
+    margin-bottom: 7px !important; }
+.trumbowyg-editor.apto-trumbowyg-reset-css h4 {
+    margin-bottom: 7px !important; }

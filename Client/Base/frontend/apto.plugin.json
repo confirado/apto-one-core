@@ -1,0 +1,9 @@
+{
+  "id": "apto-base-frontend",
+  "app": "frontend",
+  "priority": 250,
+  "imports": [{
+    "class": "AptoBaseFrontendModule",
+    "file": "apto-base-frontend.module.ts"
+  }]
+}

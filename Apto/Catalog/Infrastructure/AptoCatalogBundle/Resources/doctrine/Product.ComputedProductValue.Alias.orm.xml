@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\Alias" table="apto_product_computed_product_value_alias">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="isCustomProperty" column="is_cp" type="boolean"/>
+        <field name="name" column="name" />
+        <field name="property" column="property" />
+        <field name="sectionId" column="section_id" />
+        <field name="elementId" column="element_id" nullable="true" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+        <many-to-one field="computedProductValue" target-entity="Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue" inversed-by="aliases">
+            <join-column name="computed_product_value_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,44 @@
+<div ng-if="!$ctrl.useStepByStep">
+    <article class="default-element tool-tip-container"
+             apto-tool-tip
+             ng-class="{'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id), 'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)}"
+             ng-click="$ctrl.setActiveValue()">
+        <img ng-if="$ctrl.element.previewImage" ng-src="{{$ctrl.element.previewImage.fileUrl}}" style="display: block; width: 100%; height: 100%;" />
+        <div ng-if="!$ctrl.element.previewImage" style="background: #ffffff; width: 100%; height: 100%;"></div>
+        <div class="tool-tip">
+            {{ $ctrl.translate($ctrl.element.name) }}
+        </div>
+    </article>
+</div>
+
+<div ng-if="$ctrl.useStepByStep">
+    <article class="sbs-element default-element block-group">
+        <div class="image-container block">
+            <apto-sbs-preview-image element="$ctrl.element"></apto-sbs-preview-image>
+        </div>
+        <div class="content-container block">
+            <h4 class="headline">{{ $ctrl.translate($ctrl.element.name)}}</h4>
+            <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+            <apto-extended-element-description element="$ctrl.element"></apto-extended-element-description>
+        </div>
+        <div class="action-container block-group">
+            <div ng-if="$ctrl.livePricePrices" style="text-align: right; font-weight: bold;">{{ $ctrl.snippet('plugins.livePrice.label') }} {{ $ctrl.livePricePrices[$ctrl.element.id].formatted }}</div>
+            <button class="set-value"
+                    ng-if="!$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                    ng-class="{
+                        'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                        'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)
+                    }"
+                    ng-click="$ctrl.setActiveValue()">
+                <span class="select-continue" ng-if="!$ctrl.section.allowMultiple && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('aptoDefaultElementDefinition.buttons.select-continue')}}</span>
+                <span class="select" ng-if="$ctrl.section.allowMultiple && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('aptoDefaultElementDefinition.buttons.select')}}</span>
+                <span class="update" ng-if="$ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('aptoDefaultElementDefinition.buttons.update')}}</span>
+            </button>
+            <button class="remove-value"
+                    ng-if="$ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                    ng-click="$ctrl.removeActiveValue()">
+                <span class="remove">{{$ctrl.snippet('aptoDefaultElementDefinition.buttons.remove')}}</span>
+            </button>
+        </div>
+    </article>
+</div>

@@ -1,0 +1,18 @@
+<div style="margin: 8px;">
+    <md-table-container class="md-whiteframe-2dp">
+        <table md-table>
+            <thead md-head>
+            <tr md-row>
+                <th md-column ng-repeat="field in $ctrl.config.listOptions.table">{{ $ctrl.config.listFields[field].label }}</th>
+                <th md-column style="text-align: center;">Aktionen</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row ng-repeat="model in $ctrl.data">
+                <td md-cell ng-repeat="field in $ctrl.config.listOptions.table">{{ $ctrl.getFieldContent(model, field) }}</td>
+                <td md-cell style="text-align: center;"><div ng-include="'item-actions.html'"></div></td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</div>

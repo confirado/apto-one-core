@@ -1,0 +1,14 @@
+<h4>Angemeldet als:</h4>
+<h3>{{$ctrl.currentUserFactory.currentUser.username }}</h3>
+
+<p
+    ng-if="$ctrl.currentUserFactory.currentUser.id === 'superadmin'"
+    ng-click="$ctrl.currentUserFactory.toggleRte()"
+    style="cursor: pointer; outline: none;"
+>
+    Wysiwyg <span ng-if="!$ctrl.currentUserFactory.isRteEnabled()">aktivieren</span><span ng-if="$ctrl.currentUserFactory.isRteEnabled()">deaktivieren</span>
+</p>
+
+<p>
+    <a href="{{$ctrl.logoutLink}}" style="color: #fff;">Logout</a>
+</p>

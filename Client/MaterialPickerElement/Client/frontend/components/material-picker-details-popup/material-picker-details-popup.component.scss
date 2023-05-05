@@ -1,0 +1,208 @@
+@import "globals";
+@import "dialogs";
+@import "elements";
+
+.material-picker-details-popup-dialog {
+    @include dialog-wrapper();
+    @include border-color();
+
+    .dialog-icon {
+        margin-bottom: 36px;
+        @include dialog-icon();
+    }
+
+    .mat-dialog-content {
+        display: grid;
+        grid-gap: calc(2*var(--element-gap));
+        align-items: flex-start;
+        justify-items: flex-start;
+        grid-template-areas:
+                "item-image"
+                "item-content"
+        ;
+        grid-template-columns: 1fr;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+
+        .item-image {
+            grid-area: item-image;
+
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .item-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+
+            .item-light-properties {
+                grid-area: item-light-properties;
+
+                &:not(:empty) + .item-details-name {
+                    &:not(:empty) {
+                        margin-top: var(--element-gap);
+                    }
+                }
+            }
+
+            .item-details-name {
+                grid-area: item-details-name;
+
+                @include title();
+
+                p {
+                    @include description();
+
+                    &:not(:empty) {
+                        margin-top: var(--input-elements-gap);
+                    }
+                }
+
+                &:not(:empty) + .item-details-property-list {
+                    &:not(:empty) {
+                        margin-top: var(--element-gap);
+                    }
+                }
+            }
+
+            .item-details-property-list {
+                grid-area: item-details-property-list;
+
+                @include title();
+
+                .item-group-name {
+                    font-weight: 600;
+                    color: var(--color-text);
+                    &:not(:empty) {
+                        margin-top: var(--input-elements-gap);
+                    }
+                }
+
+                .item-property-name {
+                    color: var(--color-text);
+                }
+
+                &:not(:empty) + .item-details-description {
+                    &:not(:empty) {
+                        margin-top: var(--element-gap);
+                    }
+                }
+            }
+
+            .item-details-description {
+                grid-area: item-details-description;
+
+                @include description();
+            }
+
+            .item-buttons {
+                margin-top: var(--element-gap);
+            }
+
+            .item-price-info {
+                margin-top: var(--element-gap);
+            }
+
+            .item-details-gallery-images {
+                margin-top: var(--element-gap);
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 5px;
+
+                .item-details-gallery-image {
+                    display: flex;
+                    width: 60px;
+                    height: 60px;
+                    align-content: center;
+                    align-items: center;
+                    padding: 5px;
+                    cursor: pointer;
+                    border: solid 1px transparent;
+
+                    &.gallery-image-selected {
+                        background-color: var(--color-background-image);
+                        border: solid 1px var(--color-border);
+                    }
+
+                    img {
+                        display: flex;
+                        width: 100%;
+                        height: max-content;
+                    }
+                }
+            }
+        }
+    }
+
+    .mat-dialog-actions {
+        @include mat-dialog-actions();
+
+        button {
+            @include button();
+        }
+    }
+}
+
+
+@media only screen and (min-width: $mobile-max-width) {
+    .material-picker-details-popup-dialog {
+        @include dialog-wrapper('tablet');
+
+        .mat-dialog-title {}
+
+        .mat-dialog-content {
+            grid-template-areas:
+                "item-image item-content"
+            ;
+            grid-template-columns: 1fr 320px;
+
+            .item-image {
+
+            }
+
+            .item-content {
+
+                .item-light-properties {
+                }
+
+                .item-details-name {
+                    @include title('tablet');
+
+                    p {
+                        &:not(:empty) {
+                            //margin-top: var(--element-gap);
+                        }
+                    }
+                }
+
+                .item-details-property-list {
+                    @include title('tablet');
+                }
+
+                .item-details-description {
+                    @include description('tablet');
+                }
+
+                .item-buttons {
+                }
+
+                .item-price-info {
+                }
+            }
+        }
+
+        .mat-dialog-actions {
+            @include mat-dialog-actions('tablet');
+
+            button {
+                @include button('tablet');
+            }
+        }
+    }
+}

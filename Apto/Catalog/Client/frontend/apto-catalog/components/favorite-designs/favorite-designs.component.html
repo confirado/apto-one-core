@@ -1,0 +1,4 @@
+<section class="favorite-designs-slider-container small-container">
+    <h3 class="uppercase" ng-if="$ctrl.designs.length > 0">{{$ctrl.snippet('favoriteDesigns')}}</h3>
+    <apto-slick-slider class="slider-container-favorite-designs" items="$ctrl.designs" options="{slidesToScroll: 4, slidesToShow: 4, dots: true}" item-component="apto-favorite-designs-item"></apto-slick-slider>
+</section>

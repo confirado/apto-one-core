@@ -1,0 +1,57 @@
+<div layout="row" layout-align="start" flex>
+    <md-autocomplete
+            md-floating-label="Preismatrix:"
+            md-require-match="true"
+            md-selected-item="priceMatrix.selected"
+            md-search-text="priceMatrix.searchTerm"
+            md-item-text="translate(priceMatrix.name)"
+            md-items="priceMatrix in priceMatrices | filter:priceMatrix.searchTerm"
+            md-no-cache="true"
+            md-clear-button="true"
+            md-selected-item-change="onChangePriceMatrix(priceMatrix)"
+            flex
+    >
+        <md-item-template>
+            <span md-highlight-text="priceMatrix.searchTerm">{{ translate(priceMatrix.name) }}</span>
+        </md-item-template>
+        <md-not-found>
+            Keine Preismatrix gefunden.
+        </md-not-found>
+    </md-autocomplete>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Reihe (Formel):</label>
+        <input ng-model="priceGroup.priceMatrix.row">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>Spalte (Formel):</label>
+        <input ng-model="priceGroup.priceMatrix.column">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Preis nachträglich umrechnen: </label>
+        <input ng-model="priceGroup.priceMatrix.pricePostProcess">
+    </md-input-container>
+</div>
+
+<div>
+    <p>
+        <strong>Funktionsweise:</strong> Das Ergebnis der Formel wird als Wert für die Spalte oder Reihe der Preismatrix festgelegt.
+    </p>
+
+    <p>
+        <strong>Erlaubte Variablen in Formel:</strong> In der Formel kann auf die berechneten Werte des aktuellen Produktes zugegriffen werden.
+    </p>
+
+    <p>
+        <strong>Variablen in Formel:</strong> "{name-berechneter-wert}"
+    </p>
+    <p>
+        <strong>Verwenden Sie {_preis_}, um den berechneten nachbearbeiteten Preis zu erhalten:</strong> "{_preis_}"
+    </p>
+</div>

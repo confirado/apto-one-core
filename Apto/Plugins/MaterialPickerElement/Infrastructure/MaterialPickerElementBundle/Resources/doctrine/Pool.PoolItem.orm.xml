@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\PoolItem" table="plugin_material_picker_pool_item">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <unique-constraints>
+            <unique-constraint columns="material_id,pool_id" name="unique_material_id_pool_id" />
+        </unique-constraints>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+        <many-to-one field="pool" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\Pool" inversed-by="items">
+            <join-column name="pool_id" referenced-column-name="surrogate_id" nullable="false"/>
+        </many-to-one>
+
+        <many-to-one field="material" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\Material" inversed-by="poolItems">
+            <join-column name="material_id" referenced-column-name="surrogate_id" nullable="false"/>
+        </many-to-one>
+
+        <many-to-one field="priceGroup" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup">
+            <join-column name="price_group_id" referenced-column-name="surrogate_id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

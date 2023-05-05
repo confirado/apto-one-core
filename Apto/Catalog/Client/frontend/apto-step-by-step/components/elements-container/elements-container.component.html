@@ -1,0 +1,59 @@
+<section class="elements-container">
+    <div class="filter-property-container">
+        <h4 class="uppercase section-name">{{$ctrl.translate($ctrl.section.name)}} </h4>
+    </div>
+    <div class="section-text-and-image-wrapper">
+        <div ng-if="$ctrl.section.previewImage" class="section-image-container block">
+
+            <apto-sbs-preview-image element="$ctrl.section"></apto-sbs-preview-image>
+        </div>
+        <div class="sbs-section-description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.section.description)"></div>
+    </div>
+    <div class="sbs-state-navigation" ng-if="false">
+        <span ng-click="$ctrl.previousState()">{{$ctrl.snippet('stepBack')}}</span>
+        <span ng-click="$ctrl.nextState()">{{$ctrl.snippet('stepForward')}}</span>
+    </div>
+
+    <div ng-if="$ctrl.section.allowMultiple" class="set-section-complete-container set-section-complete-container-top">
+        <button ng-disabled="$ctrl.nextStepIsDisabled();" ng-click="$ctrl.finishCurrentStep($ctrl.section.id)">
+            {{$ctrl.snippet('nextMultiple')}}
+        </button>
+    </div>
+
+    <div class="block-group select-attributes" ng-if="false">
+        <div class="select-container-small" ng-class="{active: $ctrl.selectedColorGroup}">
+            <label ng-show="$ctrl.selectedColorGroup">
+                {{$ctrl.translate($ctrl.selectedColorGroup.name)}}
+            </label>
+            <label ng-show="!$ctrl.selectedColorGroup">
+                {{$ctrl.snippet('filter')}}
+            </label>
+            <select ng-model="$ctrl.selectedColorGroup"
+                    ng-options="option.name.de_DE for option in $ctrl.section.elements">
+                <option value="" ng-if="false"></option>
+            </select>
+        </div>
+        <div class="close-select-container" ng-click="$ctrl.resetSelect()"
+             ng-class="{active: $ctrl.selectedColorGroup}">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div ng-repeat-start="element in $ctrl.section.elements" ng-if="!$ctrl.elementIsDisabled($ctrl.section.id, element.id) && !element.isNotAvailable"
+         bind-html-compile="element.definition.component"
+         apto-open-description-links-in-dialog="element.openLinksInDialog"
+         class="sbs-element-container gutter-medium-all"
+         ng-class="{'selected':$ctrl.elementIsSelected($ctrl.section.id, element.id)}"
+    ></div>
+
+    <div ng-repeat-end ng-if="element.isNotAvailable" class="sbs-element-container gutter-medium-all">
+        <apto-element-is-not-available element="element" section="$ctrl.section"></apto-element-is-not-available>
+    </div>
+
+    <div ng-if="$ctrl.section.allowMultiple"
+         class="set-section-complete-container set-section-complete-container-bottom">
+        <button ng-disabled="$ctrl.nextStepIsDisabled();" ng-click="$ctrl.finishCurrentStep($ctrl.section.id)">
+            {{$ctrl.snippet('nextStep')}}
+        </button>
+    </div>
+</section>

@@ -1,0 +1,143 @@
+@import "globals";
+
+@mixin discount {
+    .discount {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        h4.discount-amount {
+            text-decoration: line-through;
+            text-align: left;
+            font-size: 12px;
+            color: var(--color-info-text);
+            white-space: nowrap;
+        }
+    }
+}
+
+@mixin sum-amount {
+    h3.sum-amount {
+        display: flex;
+        font-size: 24px;
+        justify-content: flex-end;
+        margin: 0;
+    }
+}
+
+@mixin mwst-info {
+    .mwst-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: x-small;
+        font-weight: 500;
+        text-align: left;
+    }
+}
+
+.one-page-summary {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    gap: 15px;
+
+    .select-basket {
+        background-color: var(--color-background-card);
+        border-radius: var(--border-radius-card);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        height: 64px;
+
+        .line-content {
+            border-top: 3px solid var(--color-optic-lines);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-left: 30px;
+            padding-right: 30px;
+            color: var(--color-text);
+            height: 100%;
+
+            @include discount;
+            @include sum-amount;
+            @include mwst-info;
+        }
+    }
+
+    .add-basket {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+
+        .one-page-button {
+            width: 100%;
+        }
+    }
+}
+
+.step-by-step-summary {
+    padding: 20px;
+
+    .select-basket {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        color: var(--color-text);
+        height: 100%;
+        margin-bottom: 20px;
+
+        @include discount;
+        @include sum-amount;
+        @include mwst-info;
+    }
+
+    .add-basket {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .sbs-button {
+            display: flex;
+            align-items: center;
+            height: 44px;
+            flex-grow: 1;
+            justify-items: center;
+            justify-content: center;
+        }
+    }
+
+    .info {
+        display: flex;
+        gap: 10px;
+
+        mat-icon {
+            color: var(--color-text);
+        }
+
+        p {
+            color: var(--color-info-text);
+            font-size: 14px;
+        }
+    }
+}
+
+@media (min-width: $mobile-max-width) {
+    .step-by-step-summary {
+        .add-basket {
+            justify-content: center;
+            .mat-flat-button {
+                width: auto;
+                flex-grow: 0;
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &.sbs {
+        margin: 0;
+        padding: 0;
+    }
+
+    &.one-page {
+        margin: 0;
+    }
+
+    .element {
+        background-color: var(--color-background-card);
+        border-radius: var(--border-radius-card);
+        box-shadow: var(--box-shadow);
+
+        .divider {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+}

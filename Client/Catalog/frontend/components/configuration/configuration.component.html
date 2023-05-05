@@ -1,0 +1,4 @@
+<ng-container *ngIf="product$ | async as product">
+	<apto-one-page *ngIf="!product.useStepByStep"></apto-one-page>
+	<apto-step-by-step *ngIf="product.useStepByStep"></apto-step-by-step>
+</ng-container>

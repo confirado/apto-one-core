@@ -1,0 +1,39 @@
+custom-text {
+  .no-dialog-element {
+    .image-container {
+      margin-bottom: 0.5rem;
+
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .custom-text-input {
+      width: 100%;
+    }
+
+    .content-container {
+      margin-bottom: 0.75rem;
+    }
+  }
+}
+
+.custom-text.element-disabled {
+  background: #8c8c8c;
+}
+
+@media screen and (max-width: 767px) {
+  .optional-on-page-dialog-element {
+    .element-hide-mobile {
+      display: none;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .optional-on-page-dialog-element {
+    .element-hide-desktop {
+      display: none;
+    }
+  }
+}

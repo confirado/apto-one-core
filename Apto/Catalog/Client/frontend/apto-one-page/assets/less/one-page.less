@@ -1,0 +1,74 @@
+//Override base/catalog variables if needed
+@onePagePrimaryColor: @basePrimaryColor;
+@onePageWhite: @baseWhite;
+@onePageActiveColor: @baseActiveColor;
+
+//Components
+
+// Default Element
+@onePageDefaultElementBorderColor: #bbbbbb;
+
+// Favorite Designs
+
+@onePageFavoriteDesignsHeadlineColor: @onePagePrimaryColor;
+@onePageFavoriteSliderBackgroundArrow: #eeeeee;
+@onePageFavoriteSliderBackgroundHoverArrow: #dddddd;
+@onePageProductNameColor: @onePageFavoriteDesignsHeadlineColor;
+@onePagePriceColor: @onePageActiveColor;
+@onePageDotColor: @onePagePriceColor;
+
+// Info Text
+@onePageInfoTextColor: #333333;
+
+//Sidebar Elements
+@onePageColorHeadline: @onePagePrimaryColor;
+@onePageSidebarLabelColor: #333333;
+@onePageSidebarBorderColor: #dddddd;
+
+//Sidebar info
+@onePageSidebarInfoBackground: @onePagePrimaryColor;
+@onePageSidebarInfoProductNameColor: @onePageWhite;
+@onePageSidebarInfoProductCatColor: #cccccc;
+@onePageSidebarInfoPriceColor: @onePageActiveColor;
+@onePageSidebarInfoMswColor: @onePageSidebarInfoProductCatColor;
+@onePageSidebarInfoSelectColor: @onePageWhite;
+@onePageSidebarLinkCatColorActive: @onePageWhite;
+@onePageBasketButtonBorderColor: #dddddd;
+@onePageSidebarInfoBorderColor: #dddddd;
+
+
+//Sidebar sections
+@onePageSidebarSectionBorderColor: #ddddd;
+@onePageSidebarHeadlineColor: @onePagePrimaryColor;
+@onePageSidebarHeadlineBGColor: #eeeeee;
+@onePageSidebarBackground: @onePageSidebarHeadlineBGColor;
+@onePageSidebarListBackground: #f7f7f7;
+@onePageSidebarLinkColor: @onePageSidebarHeadlineColor;
+@onePageActiveElementBorderColor: #bbbbbb;
+@onePageActiveSectionBackgroundColor: @onePageActiveColor;
+@onePageSidebarSectionListBackgroundColor: #aaaaaa;
+@onePageSidebarSectionListColor: @onePageWhite;
+@onePageSidebarBorderColor: #dddddd;
+
+//Slider Actions
+@onePageColorActions: #999999;
+@onePageColorActionsHover: #444444;
+
+// never ever use important again
+@import "never-ever-use-important-styles";
+
+// components
+@import "components/sidebar";
+@import "components/sidebar-responsive";
+@import "components/sidebar-info";
+@import "components/sidebar-info-responsive";
+@import "components/sidebar-section";
+@import "components/sidebar-section-responsive";
+@import "components/sidebar-elements";
+@import "components/sidebar-elements-responsive";
+@import "components/default-element-definition";
+@import "components/favorite-designs";
+@import "components/favorite-designs-responsiv";
+@import "components/info-text";
+@import "components/info-text-responsiv";
+@import "one-page-responsive";

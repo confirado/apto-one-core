@@ -1,0 +1,11 @@
+{
+	"id": "apto-request-form-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoRequestFormFrontendModule",
+			"file": "apto-request-form-frontend.module.ts"
+		}
+	]
+}

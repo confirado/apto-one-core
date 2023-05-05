@@ -1,0 +1,81 @@
+<div class="apto-media-list">
+    <md-card class="drop-zone" ngf-max-files="{{ $ctrl.maxFiles }}" ngf-max-size="{{ $ctrl.maxFileSize }}" ngf-max-total-size="{{ $ctrl.maxTotalSize }}" multiple="multiple" ngf-select="$ctrl.selectFiles($files, $invalidFiles)" ngf-drop="$ctrl.selectFiles($files, $invalidFiles)" ngf-drag-over-class="'dragover'">
+        <md-card-content>
+            <i class="fa {{ $ctrl.state.runningUploads <= 0 ? 'fa-upload' : 'fa-circle-o-notch fa-spin'}}"></i>
+            Datei-Upload via Drag'n'Drop oder Klick
+            <md-progress-linear ng-if="$ctrl.state.runningUploads > 0" md-mode="determinate" value="{{ $ctrl.state.uploadProgress }}"></md-progress-linear>
+            <div class="error maxfiles" ng-if="$ctrl.errors.maxFiles"><i class="fa fa-exclamation-circle"></i> Es können maximal {{ $ctrl.maxFiles }} Dateien gleichzeitig hochgeladen werden.</div>
+            <div class="error maxfilesize" ng-if="$ctrl.errors.maxFileSize"><i class="fa fa-exclamation-circle"></i> Einzelne Dateien dürfen höchstens <apto-readable-filesize bytes="$ctrl.maxFileSize" decimals="1"></apto-readable-filesize> groß sein. Insgesamt können nur <apto-readable-filesize bytes="$ctrl.maxTotalSize" decimals="1"></apto-readable-filesize> gleichzeitig hochgeladen werden.</div>
+        </md-card-content>
+    </md-card>
+    <md-card class="drop-zone drop-unsupported" ngf-max-files="{{ $ctrl.maxFiles }}" ngf-max-size="{{ $ctrl.maxFileSize }}" ngf-max-total-size="{{ $ctrl.maxTotalSize }}" ngf-select="$ctrl.selectFiles($files, $invalidFiles)" ngf-no-file-drop>
+        <md-card-content>
+            <i class="fa {{ $ctrl.state.runningUploads <= 0 ? 'fa-upload' : 'fa-circle-o-notch fa-spin'}}"></i>
+            Datei-Upload via Klick
+            <md-progress-linear ng-if="$ctrl.state.runningUploads > 0" md-mode="determinate" value="{{ $ctrl.state.uploadProgress }}"></md-progress-linear>
+            <div class="error maxfiles" ng-if="$ctrl.errors.maxFiles"><i class="fa fa-exclamation-circle"></i> Es können maximal {{ $ctrl.maxFiles }} Dateien gleichzeitig hochgeladen werden.</div>
+            <div class="error maxfilesize" ng-if="$ctrl.errors.maxFileSize"><i class="fa fa-exclamation-circle"></i> Einzelne Dateien dürfen höchstens <apto-readable-filesize bytes="$ctrl.maxFileSize" decimals="1"></apto-readable-filesize> groß sein. Insgesamt können nur <apto-readable-filesize bytes="$ctrl.maxTotalSize" decimals="1"></apto-readable-filesize> gleichzeitig hochgeladen werden.</div>
+        </md-card-content>
+    </md-card>
+    <md-card>
+        <md-card-content>
+            <div style="font-size: 13px;">Verzeichnis: {{ $ctrl.state.currentDirectory }}</div>
+        </md-card-content>
+    </md-card>
+    <md-table-container class="md-whiteframe-1dp" style="margin: 8px;">
+        <table md-table>
+            <thead md-head md-order="name">
+            <tr md-row>
+                <th md-column style="width: 5%;">Nr.</th>
+                <th md-column md-order-by="isDir" style="width: 5%;"><i class="fa fa-folder-o"></i></th>
+                <th md-column md-order-by="name">Name</th>
+                <th md-column md-order-by="extension" style="width: 5%;">Erweiterung</th>
+                <th md-column md-order-by="size" style="width: 10%;">Größe</th>
+                <th md-column style="width: 15%;">Aktionen</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)" ng-if="$ctrl.state.currentDirectory != ''" class="is-directory">
+                <td md-cell><apto-media-icon file="{isDir: true}"></apto-media-icon></td>
+                <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)">..</td>
+                <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)"></td>
+                <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)">-</td>
+                <td md-cell>-</td>
+            </tr>
+            <tr md-row ng-click="mediaFile.isDir ? $ctrl.changeDirectory(mediaFile.path) : $ctrl.onSelectMediaFile(mediaFile.path)" ng-repeat="mediaFile in $ctrl.state.mediaFiles | orderBy: name | limitTo: $ctrl.mediaListPagination.recordsPerPage: ($ctrl.mediaListPagination.currentPage - 1) * $ctrl.mediaListPagination.recordsPerPage" ng-class="{'is-directory': mediaFile.isDir}" class="media-list-pointer">
+                <td md-cell>{{$index + 1}}</td>
+                <td md-cell><apto-media-icon file="mediaFile"></apto-media-icon></td>
+                <td md-cell>{{ mediaFile.name }}</td>
+                <td md-cell>{{ mediaFile.extension }}</td>
+                <td md-cell><apto-readable-filesize bytes="mediaFile.size" decimals="1"></apto-readable-filesize></td>
+                <td md-cell>
+                    <md-button
+                            title="Löschen"
+                            class="md-icon-button md-warn"
+                            ng-if="$ctrl.aclAllGranted($ctrl.state.removeFileAclMessagesRequired)"
+                            apto-confirm-remove="$ctrl.removeFile($event, mediaFile)"
+                            apto-confirm-remove-stop-propagation="true"
+                            apto-show-granted-info="{{ $ctrl.state.removeFileAclMessagesRequired }}">
+                        <md-icon md-font-set="fa">&#xf014</md-icon>
+                    </md-button>
+                    <md-button
+                            ng-if="mediaFile.isDir"
+                            title="Umbenennen"
+                            class="md-icon-button md-primary"
+                            ng-click="$ctrl.renameFolder($event, mediaFile)">
+                        <md-icon md-font-set="fa">&#xf044</md-icon>
+                    </md-button>
+                    <md-button
+                            ng-if="!mediaFile.isDir"
+                            title="Download"
+                            class="md-icon-button md-primary"
+                            ng-click="$ctrl.downloadFile($event, mediaFile)">
+                        <md-icon md-font-set="fa">&#xf019</md-icon>
+                    </md-button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+    <md-table-pagination class="md-whiteframe-1dp" style="margin: 8px;" md-limit="$ctrl.mediaListPagination.recordsPerPage" md-page="$ctrl.mediaListPagination.currentPage" md-total="{{$ctrl.state.mediaFiles.length}}"></md-table-pagination>
+</div>

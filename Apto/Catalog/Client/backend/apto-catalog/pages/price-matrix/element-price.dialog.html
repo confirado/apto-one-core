@@ -1,0 +1,31 @@
+<md-dialog aria-label="List dialog">
+    <div ng-if="loadingProgress" style="position: absolute; height: 100%; width: 100%; top: 0; left:0; background: #072540; opacity: 0.2; z-index: 3;"></div>
+    <md-progress-circular ng-if="loadingProgress" ng-disabled="!loadingProgress" class="md-primary" md-diameter="40" style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -20px; z-index: 4;"></md-progress-circular>
+
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Spalte: {{ element.columnValue }}, Reihe: {{ element.rowValue }} <span style="font-size: 14px;">(Id: {{ element.cellId }})</span> </span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="Preise">
+                    <div class="apto-tab-content" ng-include="'catalog/pages/price-matrix/element-price-tab.html'"></div>
+                </md-tab>
+                <md-tab label="Eigenschaften">
+                    <div class="apto-tab-content" ng-include="'catalog/pages/price-matrix/custom-properties-tab.html'"></div>
+                </md-tab>
+            </md-tabs>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-cornered" ng-click="close()">Schließen</md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -1,0 +1,33 @@
+<md-dialog style="min-width: 40%;" aria-label="Folder Rename dialog">
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Ordner umbenennen</span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <md-toolbar style="padding: 0.5rem; margin-bottom: 2rem" class="md-warn">
+                <h3><span> Achtung:</span></h3>
+                <span>
+                    Das Umbenennen eines Ordners kann zu Fehlfunktionen des Konfigurators führen. Bilder die in Content Snippets, benutzerdefinierten Eigenschaften oder in Element Definitionen hinterlegt sind, werden nicht automatisch angepasst. Sollten Sie eine Fehlfunktion des Konfigurators nach dem Umbenennen bemerken, so können Sie dem Ordner wieder den ursprünglichen Namen geben und die Funktionalität wieder herstellen.
+                </span>
+            </md-toolbar>
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Neuer Ordnermame:</label>
+                    <input ng-model="newName"/>
+                </md-input-container>
+                <div flex="5"></div>
+            </div>
+            <md-dialog-actions layout="row" >
+                <md-button class="md-raised md-cornered" ng-click="save()" type="submit">Speichern und schließen</md-button>
+            </md-dialog-actions>
+        </div>
+    </md-dialog-content>
+
+</md-dialog>

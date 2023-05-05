@@ -1,0 +1,11 @@
+{
+	"id": "apto-area-element-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoAreaElementFrontendModule",
+			"file": "apto-area-element-frontend.module.ts"
+		}
+	]
+}

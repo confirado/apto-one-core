@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="Apto\Base\Domain\Core\Model\FrontendUser\UserName">
+        <field name="username" type="string" column="username" length="255" nullable="false" unique="true"/>
+    </embeddable>
+</doctrine-mapping>

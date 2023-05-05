@@ -1,0 +1,182 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Einstellungen">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Eingabefeld:</label>
+                    <md-select required ng-model="$ctrl.values.rendering">
+                        <md-option ng-value="rendering.id" ng-repeat="rendering in $ctrl.renderings">{{ rendering.label }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div flex="5"></div>
+
+                <md-input-container ng-if="$ctrl.values.rendering === 'date-time'" class="md-block" flex>
+                    <label>Step-Wert:</label>
+                    <input type="number" min="0" max="59" required ng-model="$ctrl.values.dateStep">
+                </md-input-container>
+            </div>
+        </div>
+    </md-tab>
+    <md-tab label="gesperrte Zeiträume">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex="25">
+                    <label>Von Datum:</label>
+                    <md-datepicker ng-model="$ctrl.input.lockedDates.fromDate" md-placeholder="Enter date" md-open-on-focus></md-datepicker>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <md-input-container flex="25">
+                    <label>Stunden</label>
+                    <md-select ng-model="$ctrl.input.lockedDates.hoursFrom">
+                        <md-option ng-value="hour" ng-repeat="hour in $ctrl.hoursFrom">{{ hour < 10 ? '0' + hour : hour }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <md-input-container flex="25">
+                    <label>Minuten</label>
+                    <md-select ng-model="$ctrl.input.lockedDates.minutesFrom">
+                        <md-option ng-value="minute" ng-repeat="minute in $ctrl.minutesFrom">{{ minute < 10 ? '0' + minute : minute }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="10"></div>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex="25">
+                    <label>Bis Datum:</label>
+                    <md-datepicker ng-model="$ctrl.input.lockedDates.toDate" md-placeholder="Enter date" md-open-on-focus></md-datepicker>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <md-input-container flex="25">
+                    <label>Stunden</label>
+                    <md-select ng-model="$ctrl.input.lockedDates.hoursTo">
+                        <md-option ng-value="hour" ng-repeat="hour in $ctrl.hoursTo">{{ hour < 10 ? '0' + hour : hour }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <md-input-container flex="25">
+                    <label>Minuten</label>
+                    <md-select ng-model="$ctrl.input.lockedDates.minutesTo">
+                        <md-option ng-value="minute" ng-repeat="minute in $ctrl.minutesTo">{{ minute < 10 ? '0' + minute : minute }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <md-input-container flex="5">
+                    <md-button style="margin: 0;"
+                               class="md-raised md-primary md-cornered"
+                               ng-disabled="!$ctrl.addLockedDateFormValid()"
+                               ng-click="$ctrl.addLockedDate()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <apto-translated-value label="'Fehlermeldung'" type="'input'" translated-value="$ctrl.values.lockedDatesErrorMessage" flex></apto-translated-value>
+            </div>
+
+            <md-table-container ng-if="$ctrl.values.lockedDates.length">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Von Datum</th>
+                        <th md-column>Bis Datum</th>
+                        <th md-column style="width: 5%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="lockedDate in $ctrl.definitionValues.lockedDates track by $index">
+                        <td md-cell>{{ lockedDate.fromDate | date:'yyyy-MM-dd HH:mm' }}</td>
+                        <td md-cell>{{ lockedDate.toDate | date:'yyyy-MM-dd HH:mm' }}</td>
+                        <td md-cell style="width: 5%;">
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeLockedDate($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+    <md-tab label="zeige Eingabe Dauer">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.showDurationInput" aria-label="Aktiv">
+                        Aktiv
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <apto-translated-value label="'Prefix'" type="'input'" translated-value="$ctrl.values.valuePrefix" flex></apto-translated-value>
+                <div flex="5"></div>
+                <apto-translated-value label="'Suffix'" type="'input'" translated-value="$ctrl.values.valueSuffix" flex></apto-translated-value>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Einheit</label>
+                    <md-select ng-model="$ctrl.values.unit">
+                        <md-option ng-value="unit.id" ng-repeat="unit in $ctrl.units">{{ unit.label }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div ng-if="$ctrl.values.showDurationInput" layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Minimum:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.duration.minimum">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Maximum:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.duration.maximum">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Step:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.duration.step">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <md-table-container ng-if="$ctrl.values.showDurationInput && $ctrl.values.duration.length">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Minimum</th>
+                        <th md-column>Maximum</th>
+                        <th md-column>Step</th>
+                        <th md-column style="width: 5%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="duration in $ctrl.definitionValues.duration track by $index">
+                        <td md-cell>{{ duration.minimum }}</td>
+                        <td md-cell>{{ duration.maximum }}</td>
+                        <td md-cell>{{ duration.step }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+</md-tabs>

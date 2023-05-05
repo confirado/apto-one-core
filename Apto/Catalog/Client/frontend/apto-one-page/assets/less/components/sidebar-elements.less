@@ -1,0 +1,102 @@
+.element-container {
+  position: absolute;
+  width: 17.5rem;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  margin-left: 2.188rem;
+  .transition(all 0.3s ease-in-out);
+  &.active {
+    margin-left: -17.5rem;
+  }
+  .select-color {
+    font-size: 0.8125rem;
+    line-height: 0;
+    margin-top: 0.6875rem;
+  }
+  h4 {
+    margin: 0 0 0.5rem 0;
+    color: @onePageColorHeadline;
+    font-size: 0.875rem;
+    line-height: 1rem;
+  }
+
+  .close-container {
+    width: 9.0625rem;
+    height: 2.1875rem;
+    transform: rotate(-90deg);
+    position: absolute;
+    left: -5.625rem;
+    margin: auto 0;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      line-height: 0;
+    }
+    svg {
+      fill: rgba(255, 255, 255, 0.8);
+      width: 9.0625rem;
+      height: 2.1875rem;
+      position: absolute;
+    }
+  }
+}
+
+.select-container-small {
+  position: relative;
+  margin: 0 0 0.5em 0;
+  width: 100%;
+  float: left;
+  .transition(all 0.3s ease-in-out);
+  &.active {
+    width: 90%;
+  }
+  label {
+    width: 100%;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    line-height: 1.688rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
+    color: @onePageSidebarLabelColor;
+    border-bottom: 1px solid @onePageSidebarBorderColor;
+    &:after {
+      display: block;
+      width: 0.625rem;
+      height: 1.813rem;
+      line-height: 1.813rem;
+      position: absolute;
+      right: 0.25rem;
+      top: 0;
+      content: '\f107';
+      font-weight: bold;
+      font-family: FontAwesome;
+    }
+  }
+  select {
+    display: block;
+    height: 1.688rem;
+    position: relative;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    float: none;
+  }
+}
+
+.close-select-container {
+  cursor: pointer;
+  line-height: 1.688rem;
+  text-align: right;
+  .opacity(0);
+  .transition(all 0.3s ease-in-out);
+  position: absolute;
+  right: 1.25rem;
+  &.active {
+    .opacity(1);
+  }
+}

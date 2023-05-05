@@ -1,0 +1,16 @@
+<nav class="sidebar-section" apto-set-height=".slider-container" apto-set-height-subtract=".sidebar-info,#basket-button" apto-set-height-calculate-on="APTO_SIDEBAR_BASKET_SNIPPET_REFRESHED">
+    <ul apto-accordion>
+        <li ng-repeat="(key, value) in $ctrl.sections | orderBy:'group[0].position' | groupBy: 'group[0].id'" class="all-groups">
+            <h4 class="accordion-toggle uppercase gutter-medium-left" ng-show="key != 'undefined'">
+                {{ $ctrl.translate(value[0].group[0].name) }}
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </h4>
+
+            <ul ng-class="{'accordion-content': key != 'undefined'}">
+                <li ng-repeat="section in value" ng-class="{active: $ctrl.sectionIsSelected(section.id)}" ng-if="!section.isHidden" ng-click="$ctrl.onSelectSection(section)">
+                    <span ng-style="$ctrl.getSelectBackground(section.id)" class="active-element"></span>{{$ctrl.translate(section.name)}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>

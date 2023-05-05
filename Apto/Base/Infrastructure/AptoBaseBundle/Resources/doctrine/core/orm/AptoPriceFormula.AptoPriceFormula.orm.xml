@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Core\Model\AptoPriceFormula\AptoPriceFormula" table="apto_price_formula">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCustomerGroupId" columns="customer_group_id"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="formula" type="text" column="formula" nullable="false"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Money\Currency" use-column-prefix="true" column-prefix="currency_" name="currency"/>
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="true" column-prefix="customer_group_" name="customerGroupId"/>
+    </entity>
+</doctrine-mapping>

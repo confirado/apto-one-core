@@ -1,0 +1,31 @@
+.sidebar-container{
+  width: 17.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.sidebar{
+  position: relative;
+  z-index:99;
+}
+
+.select-section{
+  display: none;
+}
+
+.selected-section{
+  position: absolute;
+  top: 0.9375rem;
+  display: none;
+  &.active-section{
+    display: block;
+    .section-is-filled;
+  }
+  i{
+    position: absolute;
+    top: 0;
+    font-size: 0.625rem;
+    line-height: 1rem;
+    right: 0.1875rem;
+  }
+}

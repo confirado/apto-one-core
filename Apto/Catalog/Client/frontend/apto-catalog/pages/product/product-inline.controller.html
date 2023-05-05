@@ -1,0 +1,20 @@
+<div ng-if="redux.state.initialized" class="apto" ng-class="{'one-page': redux.state.product !== null && redux.state.product.useStepByStep === false, 'step-by-step' :  redux.state.product !== null && redux.state.product.useStepByStep === true }">
+    <div id="page">
+        <div ng-controller="AptoCatalogController as CatalogCtrl">
+            <div ng-if="redux.state.product !== null">
+                <div ng-if="false === redux.state.product.useStepByStep && redux.state.productView === 'configuration'">
+                    <apto-one-page></apto-one-page>
+                </div>
+                <div ng-if="true === redux.state.product.useStepByStep && redux.state.productView === 'configuration'">
+                    <apto-step-by-step></apto-step-by-step>
+                </div>
+                <div ng-if="redux.state.productView === 'summary'">
+                    <apto-summary></apto-summary>
+                </div>
+            </div>
+            <div class="container" ng-if="redux.state.product === null">
+                <div ng-bind-html="snippet('message', false, 'aptoProductIsNotAvailable.', true)"></div>
+            </div>
+        </div>
+    </div>
+</div>

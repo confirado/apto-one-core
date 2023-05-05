@@ -1,0 +1,9 @@
+{
+  "id": "apto-base-core",
+  "app": "core",
+  "priority": 200,
+  "imports": [{
+    "class": "AptoBaseCoreModule",
+    "file": "apto-base-core.module.ts"
+  }]
+}

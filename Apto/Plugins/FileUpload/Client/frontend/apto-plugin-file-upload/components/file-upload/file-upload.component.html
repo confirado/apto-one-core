@@ -1,0 +1,84 @@
+<article class="sbs-element file-upload-element block-group">
+    <div class="image-container block">
+        <apto-sbs-preview-image ng-if="$ctrl.element.previewImage" element="$ctrl.element"></apto-sbs-preview-image>
+    </div>
+
+    <div class="content-container block">
+        <div class="apto-file-upload-errors">
+            <div class="apto-file-upload-error" ng-repeat="error in $ctrl.uploadErrors">
+                <p ng-if="error.type === 'pattern'">
+                    Folgende Dateitypen sind erlaubt: {{ $ctrl.allowedFileTypes }}
+                </p>
+                <p ng-if="error.type === 'maxSize'">
+                    Die Dateigröße darf {{ $ctrl.validate.size.max }} nicht überschreiten.
+                </p>
+                <p ng-if="error.type === 'default'">
+                    Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+                </p>
+            </div>
+        </div>
+
+        <h4 ng-if="$ctrl.reduxProps.useStepByStep" class="apto-file-upload-element-name">
+            {{ $ctrl.translate($ctrl.element.name) }}
+        </h4>
+
+        <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+        <apto-extended-element-description element="$ctrl.element"></apto-extended-element-description>
+
+        <div class="input-container">
+            <div class="input-inner-container">
+                <button
+                        class="apto-file-upload-input apto-form-input"
+                        ngf-select="$ctrl.onFileSelect($files, $invalidFiles)"
+                        ngf-validate="$ctrl.validate"
+                        ngf-validate-force="boolean"
+                        ngf-fix-orientation="true"
+                        ng-attr-accept="{{ $ctrl.allowedFileTypes }}"
+                >
+                    <span ng-if="!$ctrl.uploadedFile">Datei auswählen</span>
+                    <span ng-if="$ctrl.uploadedFile">{{ $ctrl.uploadedFile.orgFileName }}</span>
+                </button>
+            </div>
+
+            <div ng-if="$ctrl.staticValues.needsValue" class="apto-file-upload-value">
+                <span class="prefix">{{ $ctrl.translate($ctrl.staticValues.valuePrefix) }}</span>
+
+                <div class="input-inner-container">
+                    <input ng-model="$ctrl.input.value">
+                    <span class="suffix">{{ $ctrl.translate($ctrl.staticValues.valueSuffix) }}</span>
+                    <div class="valid-values hint">
+                        {{
+                        $ctrl.elementValuesService.getHumanReadableString($ctrl.element.definition.properties.value,
+                                '', $ctrl.translate($ctrl.staticValues.valueSuffix)) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <apto-info-message
+                content="$ctrl.element.description"
+                tool-tip="$ctrl.getTooltipContent()"
+        ></apto-info-message>
+    </div>
+
+    <div ng-if="$ctrl.reduxProps.useStepByStep" class="action-container block-group">
+        <div ng-if="$ctrl.livePricePrices" style="text-align: right; font-weight: bold;">{{ $ctrl.snippetGlobal('plugins.livePrice.label') }} {{ $ctrl.livePricePrices[$ctrl.element.id].formatted }}</div>
+        <button class="set-value"
+                ng-disabled="!$ctrl.isFileUploadValid()"
+                ng-if="!$ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                ng-class="{
+                        'element-disabled': $ctrl.configurationService.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                        'element-selected': $ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)
+                    }"
+                ng-click="$ctrl.setValues()">
+            <span class="select-continue" ng-if="!$ctrl.section.allowMultiple && !$ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippetGlobal('aptoDefaultElementDefinition.buttons.select-continue')}}</span>
+            <span class="select" ng-if="$ctrl.section.allowMultiple && !$ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippetGlobal('aptoDefaultElementDefinition.buttons.select')}}</span>
+            <span class="update" ng-if="$ctrl.section.allowMultiple && $ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippetGlobal('aptoDefaultElementDefinition.buttons.update')}}</span>
+        </button>
+        <button class="remove-value"
+                ng-if="$ctrl.section.allowMultiple && $ctrl.configurationService.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                ng-click="$ctrl.removeValue()">
+            <span class="remove">{{$ctrl.snippetGlobal('aptoDefaultElementDefinition.buttons.remove')}}</span>
+        </button>
+    </div>
+</article>

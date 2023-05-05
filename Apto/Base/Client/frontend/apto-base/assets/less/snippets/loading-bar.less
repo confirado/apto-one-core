@@ -1,0 +1,37 @@
+/* loading bar */
+#loading-bar .bar {
+  display: none;
+  background: #4caf50;
+}
+
+#loading-bar .peg {
+  display: none;
+  -moz-box-shadow: #4caf50 1px 0 6px 1px;
+  -ms-box-shadow: #4caf50 1px 0 6px 1px;
+  -webkit-box-shadow: #4caf50 1px 0 6px 1px;
+  box-shadow: #4caf50 1px 0 6px 1px;
+}
+
+#loading-bar-spinner {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, .5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .spinner-icon {
+    border-top-color: rgba(255, 255, 255, 0);
+    border-left-color: rgba(255, 255, 255, 0);
+    background-image: url("../../img/loading.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #ffffff;
+    height: 5rem;
+    width: 5rem;
+    position: fixed;
+    animation-duration: 10s;
+  }
+}

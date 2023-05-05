@@ -1,0 +1,44 @@
+.change-lang {
+  width: auto;
+  position: relative;
+  .change-lang-container {
+    cursor: pointer;
+    padding: 0 0.5rem;
+  }
+  .fa {
+    position: relative;
+    font-size: 1.188rem;
+    vertical-align: middle;
+    top: -0.125rem;
+    .rotate(0);
+  }
+  .current-language {
+    padding: 0 0.25rem;
+  }
+  nav {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: @baseBackgroundHeader;
+    color: @baseColorHeader;
+    padding: 0.5rem;
+    text-align: center;
+
+    li {
+      cursor: pointer;
+      &:hover {
+        background: @backgroundColor;
+      }
+    }
+  }
+  &.active {
+    nav {
+      display: block;
+      border-top: 1px solid @baseActiveColor;
+    }
+
+    .fa {
+      .rotate(180deg);
+    }
+  }
+}

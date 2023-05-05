@@ -1,0 +1,53 @@
+<md-sidenav
+        md-theme="apto-dark"
+        md-component-id="left"
+        md-is-locked-open="$mdMedia('gt-sm')"
+        class="md-sidenav-left"
+        md-whiteframe="4"
+        ng-class="IndexController.getSidebarClass('gt-sm')"
+>
+    <md-list class="apto-main-menu-list">
+        <md-list-item ng-if="IndexController.currentUserFactory.currentUser" class="md-3-line">
+            <apto-user-image></apto-user-image>
+            <div class="md-list-item-text" layout="column">
+                <apto-user-status logout-link="{{ path('apto_base_infrastructure_aptobase_login_logout') }}"></apto-user-status>
+            </div>
+        </md-list-item>
+        <md-divider ></md-divider>
+        <md-list-item hide-xs hide-sm ng-click="IndexController.toggleSidebarSmall()">
+            <md-icon class="open-menu-icon" ng-if="IndexController.sidebarClass != ''" md-font-set="fa">&#xf101</md-icon>
+            <md-icon class="apto-main-menu-list-placeholder-icon" ng-if="IndexController.sidebarClass == ''" md-font-set="fa"></md-icon>
+            <p>Hauptmenü</p>
+            <md-icon ng-if="IndexController.sidebarClass == ''" md-font-set="fa">&#xf100</md-icon>
+        </md-list-item>
+        <md-divider hide-xs hide-sm></md-divider>
+        {% for mainMenuEntry in templateLoaderData.mainMenuEntries %}
+            {% if mainMenuEntry.subItems is defined %}
+                <md-list-item{% if mainMenuEntry.aclMessagesRequired is defined %} apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}" ng-if="IndexController.oneGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %} class="apto-main-menu-sub-item">
+                    <md-icon md-font-set="fa">&#x{{ mainMenuEntry.icon }}</md-icon>
+                    <p class="apto-submenu-root-label md-list-item-text">{{ mainMenuEntry.label }}</p>
+                    <md-menu class="md-secondary">
+                        <md-button class="md-icon-button">
+                            <md-icon md-font-set="fa">&#xf107</md-icon>
+                        </md-button>
+                        <md-menu-content width="4">
+                            {% for subItem in mainMenuEntry.subItems %}
+                                <md-menu-item{% if subItem.aclMessagesRequired is defined %} apto-show-granted-info="{{ subItem.aclMessagesRequired }}" ng-if="IndexController.allGranted({{ subItem.aclMessagesRequired }})"{% endif %} ng-click="IndexController.navigateToRoute('{{ subItem.route }}')">
+                                    <md-button>
+                                        <md-icon md-font-set="fa">&#x{{ subItem.icon }}</md-icon>
+                                        {{ subItem.label }}
+                                    </md-button>
+                                </md-menu-item>
+                            {% endfor %}
+                        </md-menu-content>
+                    </md-menu>
+                </md-list-item>
+            {% else %}
+                <md-list-item{% if mainMenuEntry.aclMessagesRequired is defined %} apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}" ng-if="IndexController.allGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %} ng-click="IndexController.navigateToRoute('{{ mainMenuEntry.route }}')">
+                    <md-icon md-font-set="fa">&#x{{ mainMenuEntry.icon }}</md-icon>
+                    <p>{{ mainMenuEntry.label }}</p>
+                </md-list-item>
+            {% endif %}
+        {% endfor %}
+    </md-list>
+</md-sidenav>

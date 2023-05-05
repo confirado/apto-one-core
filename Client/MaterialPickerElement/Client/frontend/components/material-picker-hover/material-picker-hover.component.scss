@@ -1,0 +1,68 @@
+@import "globals";
+@import "dialogs";
+
+.pool-item-hover {
+    box-shadow: var(--box-shadow);
+    background-color: var(--color-background-card);
+
+    @include dialog-wrapper();
+    @include border-color();
+
+    display: grid;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    cursor: default;
+    width: 320px;
+
+    .item-preview-image {
+        width: 128px;
+        height: 128px;
+        display: flex;
+
+        img {
+            width: 100%;
+            height: auto;
+            display: flex;
+        }
+    }
+
+    p.item-price-info {
+        font-size: 14px;
+        text-align: center;
+        margin-top: var(--element-gap);
+    }
+
+    .item-buttons {
+        &:not(:empty) {
+            margin-top: var(--element-gap);
+        }
+
+        button {
+            @include button();
+        }
+    }
+
+    .item-open-details {
+        cursor: pointer;
+        color: var(--primary-dark);
+        font-weight: 600;
+        font-size: 12px;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: var(--element-gap);
+
+        span.text {
+            display: flex;
+            text-align: center;
+        }
+
+        mat-icon {
+            display: flex;
+            width: 45px;
+        }
+    }
+}

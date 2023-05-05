@@ -1,0 +1,54 @@
+<md-dialog aria-label="List dialog">
+    <div ng-if="loadingProgress" style="position: absolute; height: 100%; width: 100%; top: 0; left:0; background: #072540; opacity: 0.2; z-index: 3;"></div>
+    <md-progress-circular ng-if="loadingProgress" ng-disabled="!loadingProgress" class="md-primary" md-diameter="40" style="position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -20px; z-index: 4;"></md-progress-circular>
+
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Id: {{ className }}</span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+            <md-toolbar class="md-table-toolbar md-default">
+                <div class="md-toolbar-tools">
+                    <span>Rollen die diese Message ausführen dürfen.</span>
+                </div>
+            </md-toolbar>
+
+            <md-table-container class="md-whiteframe-2dp">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column style="width: 30%;">Id</th>
+                        <th md-column style="width: 30%;">Kennung</th>
+                        <th md-column style="width: 30%;">Name</th>
+                        <th md-column style="width: 30%;">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="userRole in userRoles | filter: userRoleFilter">
+                        <td md-cell style="width: 30%;">{{ userRole.id }}</td>
+                        <td md-cell style="width: 30%;">{{ userRole.identifier }}</td>
+                        <td md-cell style="width: 30%;">{{ userRole.name }}</td>
+                        <td md-cell style="width: 10%;">
+                            <md-checkbox
+                                    aria-label="Markieren"
+                                    class="apto-checkbox-button"
+                                    ng-model="selectedRecords[userRole.id]">
+                            </md-checkbox>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+        <md-button class="md-raised md-primary md-cornered" ng-click="save()">Speichern</md-button>
+    </md-dialog-actions>
+</md-dialog>

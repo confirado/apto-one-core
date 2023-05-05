@@ -1,0 +1,94 @@
+@import "globals";
+@import "elements";
+@import "form-inputs";
+
+.custom-text-element {
+    @include element-grid();
+    @include element-margins();
+
+    .header {
+        grid-area: header;
+        @include header();
+        @include title();
+    }
+
+    .picture {
+        grid-area: picture;
+        @include picture();
+    }
+
+    .element {
+        @include element();
+
+        .container {
+            @include element-input-grid();
+
+            .input {
+                grid-area: input;
+            }
+
+            .hint {
+                grid-area: hint;
+                @include hint();
+            }
+
+            .prefix {
+                grid-area: prefix;
+                @include prefix();
+            }
+
+            .suffix {
+                grid-area: suffix;
+                @include suffix();
+            }
+        }
+    }
+
+    .description {
+        grid-area: description;
+        @include description();
+    }
+
+    .apply-button {
+        grid-area: buttons;
+        @include buttons();
+    }
+}
+
+
+@media only screen and (min-width: $mobile-max-width) {
+    .custom-text-element {
+        @include element-grid('tablet');
+        @include element-margins('tablet');
+
+        .header {
+            @include header('tablet');
+            @include title('tablet');
+        }
+
+        .picture {
+            @include picture('tablet');
+        }
+
+        .element {
+            @include element('tablet');
+
+            .container {
+                @include element-input-grid('tablet');
+                grid-template-columns: 0 1fr 0;
+                width: 100%;
+
+                .input {}
+                .hint {}
+                .prefix {}
+                .suffix {}
+            }
+        }
+
+        .description {}
+
+        .apply-button {
+            @include buttons('tablet');
+        }
+    }
+}

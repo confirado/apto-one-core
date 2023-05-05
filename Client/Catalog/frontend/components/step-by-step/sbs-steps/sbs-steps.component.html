@@ -1,0 +1,32 @@
+<ng-container *ngIf="product$ | async as product">
+	<ng-container *ngIf="product.useStepByStep">
+        <mat-accordion>
+            <mat-expansion-panel [hideToggle]="hideToggle" [(expanded)]="isExpanded" [disabled]="isDisabled">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h1 class="headline">
+                            {{ product.name | translate }}
+                        </h1>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="scroll">
+                    <div class="steps" *ngIf="steps$ | async as steps">
+                        <div class="vLine"></div>
+                        <apto-sbs-step
+                            *ngFor="let step of steps.steps; index as i; last as last"
+                            [index]="i + 1"
+                            [status]="step.status"
+                            [section]="step"
+                            [description]="step.description"
+                            [last]="last"
+                            [product]="product"
+                            [state]="steps"
+                        >
+                        </apto-sbs-step>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+	</ng-container>
+</ng-container>

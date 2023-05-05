@@ -1,0 +1,30 @@
+<section class="basket" ng-class="{'active': $ctrl.sidebarRightOpen}">
+    <a href="#close" class="close-basket" ng-click="$ctrl.closeBasket($event)">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i> <span ng-bind-html="$ctrl.snippet('back')"></span>
+    </a>
+    <article ng-repeat="article in $ctrl.shopSession.basket.articles">
+        <div class="article-inner block-group">
+            <div class="block basket-image-container">
+                <img ng-if="article.thumbnail" ng-src="{{ article.thumbnail }}" alt="{{ article.name }}">
+                <img ng-if="!article.thumbnail" ng-src="{{ $ctrl.defaultBasketThumb }}">
+            </div>
+            <div class="block basket-text">
+                <strong>{{ article.quantity }}x</strong> {{ article.name }}<br>
+                {{ $ctrl.snippet('pricePrefix') }} {{ article.price }}
+            </div>
+            <div class="delete-product-container">
+                <!-- @todo: spinner wenn gedrückt -->
+                <a ng-if="article.deletable" ng-click="$ctrl.removeFromBasket($event, article.id)"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </article>
+    <div class="no-items-in-basket" ng-if="$ctrl.shopSession.basket.quantity <= 0" ng-bind-html="$ctrl.snippet('empty')"></div>
+    <strong class="price-total" ng-if="$ctrl.shopSession.basket.quantity > 0">
+        <span ng-bind-html="$ctrl.snippet('subtotal')"></span><br>
+        {{ $ctrl.shopSession.basket.amount }}
+    </strong>
+    <div class="button-container">
+        <a ng-href="{{ $ctrl.shopSession.url.checkout }}" class="btn uppercase btn-basket-checkout" ng-bind-html="$ctrl.snippet('checkout')"></a>
+        <a ng-href="{{ $ctrl.shopSession.url.cart }}" class="btn uppercase button-secondary btn-basket-cart" ng-bind-html="$ctrl.snippet('cart')"></a>
+    </div>
+</section>

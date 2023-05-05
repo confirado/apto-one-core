@@ -1,0 +1,63 @@
+button, input[type="submit"], .btn {
+  border: 0;
+  line-height: 2.063rem;
+  background: @backgroundColor;
+  transition: all 0.2s ease 0s;
+  cursor: pointer;
+  color: @baseButtonColor;
+  font-weight: bold;
+  text-transform: uppercase;
+  &:hover {
+    background: @backgroundColorActive;
+    color: @baseButtonHoverColor;
+  }
+  &:focus, &:active {
+      outline: none;
+  }
+  &:disabled{
+    background: @backgroundColorDisabled;
+    cursor: auto;
+  }
+}
+
+.action-button{
+  background: none;
+  &:hover{
+    background: none;
+  }
+}
+
+
+.ngdialog-close:hover{
+  background: transparent;
+}
+
+
+input[type="submit"]{
+  width: 100%;
+}
+
+.btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button-primary {
+  width: 100%;
+  line-height: 3.313rem;
+  font-size: 0.875rem;
+}
+
+.button-secondary {
+  background: transparent;
+  border: 1px solid;
+  &:hover {
+    color: @backgroundColor;
+  }
+
+  &.filled {
+    background: @backgroundColorDisabled;
+    border: none;
+  }
+}

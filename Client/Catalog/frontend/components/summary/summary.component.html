@@ -1,0 +1,47 @@
+<ng-container *ngIf="product$ | async as product">
+    <ng-container *ngIf="sumPrice$ | async as sumPrice">
+        <apto-summary-finish-message></apto-summary-finish-message>
+        <mat-divider></mat-divider>
+        <form [formGroup]="quantityInputGroup" class="quantity-form">
+            <div class="whole-summary">
+                <div class="summary top">
+                    <img *ngIf="renderImage$ | async as renderImage" [src]="renderImage.url" />
+                    <div class="summary basket">
+                        <div class="basket price" *ngIf="showPrices">
+                            <h4>{{ sumPrice }}</h4>
+                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+                        </div>
+                        <div class="basket buttons">
+                            <apto-quantity-input-editable
+                                [name]="'quantityInput1'"
+                                formControlName="quantityInput"
+                                [size]="'big'"
+                                [width]="'100px'"
+                            ></apto-quantity-input-editable>
+                            <button color="primary" (click)="addBasket()" mat-flat-button>
+                                {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
+                <div class="summary bottom">
+                    <div class="basket bottom">
+                        <button color="accent" [routerLink]="['/product', product.seoUrl]" mat-flat-button>
+                            <mat-icon>undo</mat-icon>{{ contentSnippet$ | async | contentSnippet: 'back' }}
+                        </button>
+                        <apto-quantity-input-editable
+                            [size]="'big'"
+                            [width]="'100px'"
+                            [name]="'quantityInput2'"
+                            formControlName="quantityInput"
+                        ></apto-quantity-input-editable>
+                        <button color="primary" (click)="addBasket()" mat-flat-button>
+                            {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>

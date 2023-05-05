@@ -1,0 +1,105 @@
+{
+  "plugins": {
+    "materialPickerElement": {
+      "poolItemPriceInfoPercentage": {
+        "de_DE": "%."
+      },
+      "poolItemOpenDetails": {
+        "de_DE": "Klicken Sie hier für weitere Information zu dieser Farb-/Stoffauswahl"
+      },
+      "poolItemPriceInfo": {
+        "de_DE": "Bei dieser Farb-/Stoffauswahl berechnen wir einen Aufpreis von"
+      },
+      "isNotAvailable": {
+        "de_DE": "derzeit nicht verfügbar"
+      },
+      "colorSection": {
+        "de_DE": "Farbauswahl"
+      },
+      "materialProperties": {
+        "de_DE": "Eigenschaften"
+      },
+      "priceGroup": {
+        "de_DE": "Preisgruppe"
+      },
+      "mostPopularColors": {
+        "de_DE": "Unsere beliebtesten Farben"
+      },
+      "moreColors": {
+        "de_DE": "weitere Farben"
+      },
+      "fabricSearch": {
+        "de_DE": "Stoffsuche"
+      },
+      "resultsFound": {
+        "de_DE": "Ergebnisse gefunden."
+      },
+      "colorMixture": {
+        "de_DE": "Farbmischung"
+      },
+      "plain": {
+        "de_DE": "einfarbig"
+      },
+      "multicolor": {
+        "de_DE": "mehrfarbig"
+      },
+      "arrangement": {
+        "de_DE": "Anordnung"
+      },
+      "secondaryColor": {
+        "de_DE": "jede zweite Paneele/Lamelle in zweiter Farbe"
+      },
+      "freeInputSecondaryColor": {
+        "de_DE": "freie Eingabe für zweite Paneel- / Lamellenfarbe"
+      },
+      "quantity": {
+        "de_DE": "Anzahl"
+      },
+      "inputFieldQuantity": {
+        "de_DE": "Anzahl"
+      },
+      "selectAndContinue": {
+        "de_DE": "Auswählen & Weiter"
+      },
+      "select": {
+        "de_DE": "Auswählen"
+      },
+      "deselect": {
+        "de_DE": "Abwählen"
+      },
+      "colorSelection": {
+        "de_DE": "Farbauswahl"
+      },
+      "allColors": {
+        "de_DE": "Alle"
+      },
+      "inputFieldSubstanceNumber": {
+        "de_DE": "Stoffnummer eingeben ..."
+      },
+      "allPriceGroups": {
+        "de_DE": "Alle"
+      },
+      "allProperty": {
+        "de_DE": "Alle"
+      },
+      "currentStepContinueButton": {
+        "de_DE": "Weiter"
+      },
+      "reflection": {
+        "de_DE": "Reflexion:"
+      },
+      "transmission": {
+        "de_DE": "Transmission:"
+      },
+      "absorption": {
+        "de_DE": "Absorption:"
+      },
+      "remove": {
+        "de_DE": "Entfernen"
+      },
+      "noFabricsFound": {
+        "de_DE": "Keine Stoffe gefunden."
+      }
+    }
+  }
+}

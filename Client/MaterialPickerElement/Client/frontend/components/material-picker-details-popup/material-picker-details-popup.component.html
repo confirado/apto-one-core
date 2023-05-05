@@ -1,0 +1,74 @@
+<div class="material-picker-details-popup-dialog" [attr.type]="'custom'" xmlns="http://www.w3.org/1999/html">
+    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+
+    <div class="mat-dialog-content">
+        <div class="item-image">
+            <img [src]="poolItemImageSelected" />
+        </div>
+
+        <div class="item-content">
+            <div class="item-light-properties" *ngIf="hasMaterialLightProperties(data.poolItem.material)">
+                <apto-item-light-properties
+                    [reflection]="data.poolItem.material.reflection"
+                    [transmission]="data.poolItem.material.transmission"
+                    [absorption]="data.poolItem.material.absorption"
+                ></apto-item-light-properties>
+            </div>
+
+            <!--<div class="item-properties" *ngIf="hasMaterialPropertyIcons(data.poolItem.material)">
+                <ng-template *ngIf="materialProperty.icon">
+                    <ng-template *ngFor="let materialProperty of data.poolItem.material.properties">
+                        <div class="item-property" >
+                            <img [src]="materialProperty.icon.fileUrl" title="{{ materialProperty.name | translate }}">
+                        </div>
+                    </ng-template>
+                </ng-template>
+            </div>-->
+
+            <div class="item-details-name">
+                <div class="title">
+                    <h4>Stoff / Farbe</h4>
+                </div>
+                <p>{{ data.poolItem.material.name | translate}}</p>
+            </div>
+
+            <div class="item-details-property-list" *ngIf="data.poolItem.material.properties.length > 0">
+                <div class="title">
+                    <h4>Eigenschaften</h4>
+                </div>
+
+                <ng-container *ngFor="let value of data.poolItem.material.properties | groupBy: 'group.id' | pairs">
+                    <p class="item-group-name"><b>{{ value[1][0].group.name | translate }}: </b></p>
+
+                    <ng-container *ngFor="let property of value[1]; let i = index;" class="item-property-name">
+                        <span *ngIf="i !== 0">, </span><span>{{ property.name | translate }}</span>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+            <div class="item-details-description">{{ data.poolItem.material.description | translate }}</div>
+
+            <div class="item-details-gallery-images" *ngIf="data.poolItem.material.galleryImages.length > 0">
+                <div class="item-details-gallery-image"
+                     (click)="setPoolItemImage(data.poolItem.material.previewImage.fileUrl)"
+                     [class.gallery-image-selected]="data.poolItem.material.previewImage.fileUrl === poolItemImageSelected"
+                >
+                    <img [src]="data.poolItem.material.previewImage.fileUrl" />
+                </div>
+
+                <div class="item-details-gallery-image" *ngFor="let galleryImage of data.poolItem.material.galleryImages"
+                     (click)="setPoolItemImage(galleryImage.fileUrl)"
+                     [class.gallery-image-selected]="poolItemImageSelected === galleryImage.fileUrl"
+                >
+                    <img [src]="galleryImage.fileUrl"/>
+                </div>
+            </div>
+
+            <p class="item-price-info" *ngIf="(contentSnippet$ | async | contentSnippet: 'poolItemPriceInfo') &&
+            (contentSnippet$ | async | contentSnippet:  'poolItemPriceInfoPercentage') &&  data.poolItem.priceGroup.additionalCharge !== 0">
+                {{ contentSnippet$ | async | contentSnippet: 'poolItemPriceInfo' }}
+                <b>{{data.poolItem.priceGroup.additionalCharge}}{{ contentSnippet$ | async | contentSnippet: 'poolItemPriceInfoPercentage' }}</b>
+            </p>
+        </div>
+    </div>
+</div>

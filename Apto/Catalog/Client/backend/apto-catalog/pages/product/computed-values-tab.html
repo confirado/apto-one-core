@@ -1,0 +1,39 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Name des Wertes:</label>
+        <input ng-model="newComputedValue.name">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newComputedValue.name" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addComputedValue()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Name</th>
+            <th md-column style="width:120px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="computedValue in computedValues">
+            <td md-cell >{{ computedValue.name }}</td>
+            <td md-cell>
+                <md-button
+                        title="Bearbeiten"
+                        class="md-icon-button md-primary"
+                        ng-click="editComputedValue($event, computedValue.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeComputedValue(computedValue.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

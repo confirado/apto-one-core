@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Backend\Model\User\User" table="apto_user" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\UserOrmRepository">
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+        <field name="active" type="boolean" column="active"/>
+        <field name="password" type="string" column="password" length="255" nullable="true"/>
+        <field name="email" type="string" column="email" length="255" nullable="true" unique="true"/>
+        <field name="userLicenceHash" type="string" length="255" column="licence_hash" nullable="true"/>
+        <field name="userLicenceSignatureTimestamp" type="datetime" column="licence_timestamp" nullable="true"/>
+        <field name="rte" type="string" column="rte" length="255" nullable="false" />
+        <field name="apiKey" type="string" column="api_key" length="255" unique="true" nullable="true" />
+        <field name="apiOrigin" type="string" column="api_origin" length="255" nullable="true" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Base\Domain\Backend\Model\User\UserName" use-column-prefix="false" name="username"/>
+
+        <many-to-many field="userRoles" target-entity="Apto\Base\Domain\Backend\Model\UserRole\UserRole">
+            <join-table name="apto_user_to_user_role">
+                <join-columns>
+                    <join-column name="user_id" referenced-column-name="surrogate_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="user_role_id" referenced-column-name="surrogate_id" />
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

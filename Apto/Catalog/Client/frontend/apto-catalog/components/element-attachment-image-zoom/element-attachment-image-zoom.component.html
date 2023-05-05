@@ -1,0 +1,5 @@
+<div class="element-attachment-image-item" ng-repeat="attachment in $ctrl.element.attachments">
+    <img class="element-attachment-image" ng-src="{{$ctrl.mediaUrl + attachment.fileUrl}}" />
+    <a ng-if="attachment.mediaFile.extension !== 'svg'" class="render-image-zoom-button fa fa-search-plus" ng-href="{{$ctrl.mediaUrl + attachment.fileUrl}}" apto-fancybox-plus></a>
+    <a ng-if="attachment.mediaFile.extension === 'svg'" class="render-image-zoom-button fa fa-search-plus" ng-href="{{$ctrl.mediaUrl + attachment.fileUrl}}" ng-click="$ctrl.openAlternatePreviewImageDialog($event, attachment)"></a>
+</div>

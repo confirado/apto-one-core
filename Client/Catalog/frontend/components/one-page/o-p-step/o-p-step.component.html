@@ -1,0 +1,22 @@
+<ng-container *ngIf="section && product && elements">
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [id]="'id' + index?.toString()" [expanded]="index === 0">
+        <mat-expansion-panel-header [class.divider-line]="panelOpenState">
+            <div>
+                <mat-panel-title>
+                    {{ section.section.name | translate }}
+                    <div *ngIf="section.fulfilled" [class.selected]="section.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
+                </mat-panel-title>
+            </div>
+        </mat-expansion-panel-header>
+        <div class="one-page-elements">
+            <ng-container *ngFor="let element of elements">
+                <apto-slot-outlet
+                    [identifier]="element.element.definition.staticValues.aptoElementDefinitionId"
+                    [section]="section.section"
+                    [product]="product"
+                    [element]="element"
+                ></apto-slot-outlet>
+            </ng-container>
+        </div>
+    </mat-expansion-panel>
+</ng-container>

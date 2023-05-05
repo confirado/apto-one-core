@@ -1,0 +1,13 @@
+<div class="apto">
+    <div id="page">
+        <apto-header></apto-header>
+
+        <div ng-controller="AptoCatalogController as CatalogCtrl">
+            <div class="container">
+                <div style="text-align: center;">{{ $ctrl.snippet('failedPrefix') }} <apto-frontend-user-login></apto-frontend-user-login> {{ $ctrl.snippet('failedSuffix') }}</div>
+            </div>
+        </div>
+
+        <apto-footer></apto-footer>
+    </div>
+</div>

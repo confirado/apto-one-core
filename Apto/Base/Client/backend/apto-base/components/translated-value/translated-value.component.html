@@ -1,0 +1,57 @@
+<div layout="row" layout-align="start" flex class="apto-translated-value-input-container" ng-if="$ctrl.type !== 'trumbowyg'">
+    <md-input-container class="md-block" flex="100">
+        <label>{{ $ctrl.label }} ({{ $ctrl.languageFactory.translate($ctrl.selectedName) }}):</label>
+        <input ng-required="$ctrl.required" ng-model="$ctrl.translatedValue[$ctrl.selectedIsocode]" ng-if="$ctrl.type == 'input'"/>
+        <textarea ng-required="$ctrl.required" style="display: block;" ng-model="$ctrl.translatedValue[$ctrl.selectedIsocode]" ng-if="$ctrl.type == 'textarea'" rows="1" md-select-on-focus></textarea>
+    </md-input-container>
+    <md-input-container class="md-block apto-translated-value-select">
+        <md-menu md-position-mode="target-right target">
+            <md-button aria-label="Open language selector" class="md-icon-button" ng-click="$mdMenu.open($event)">
+                <md-icon md-menu-origin md-font-set="fa">&#xf0ac</md-icon>
+            </md-button>
+            <md-menu-content width="4">
+                <md-menu-item ng-repeat="language in $ctrl.languageFactory.languages">
+                    <md-button ng-click="$ctrl.setLanguage(language)">
+                        <div layout="row" flex>
+                            <p flex ng-style='$ctrl.translatedValue[language.isocode] ? {"color":"#4caf50"} : ""'>{{ $ctrl.languageFactory.translate(language.name) }}</p>
+                            <md-icon md-menu-align-target md-font-set="fa" style="margin: auto 3px auto 0;">&#xf0ac</md-icon>
+                        </div>
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex class="apto-translated-value-input-container" ng-if="$ctrl.type === 'trumbowyg'" style="margin-bottom: 18px;">
+
+    <!-- trumbowyg editor -->
+    <div ng-if="$ctrl.type === 'trumbowyg'" flex style="position: relative;">
+        <md-input-container class="apto-translated-trumbowyg" class="md-block" flex="100">
+
+            <!-- label -->
+            <label>{{ $ctrl.label }} ({{ $ctrl.languageFactory.translate($ctrl.selectedName) }}):</label>
+
+            <!-- language menu -->
+            <md-menu md-position-mode="target-right target" style="position: absolute; top: 0; right: 0; z-index: 1;">
+                <md-button aria-label="Open language selector" class="md-icon-button" ng-click="$mdMenu.open($event)" style="width: 32px; height: 32px; padding: 4px; margin: 0; ">
+                    <md-icon md-menu-origin md-font-set="fa">&#xf0ac</md-icon>
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item ng-repeat="language in $ctrl.languageFactory.languages">
+                        <md-button ng-click="$ctrl.setLanguage(language)">
+                            <div layout="row" flex>
+                                <p flex ng-style='$ctrl.translatedValue[language.isocode] ? {"color":"#4caf50"} : ""'>{{ $ctrl.languageFactory.translate(language.name) }}</p>
+                                <md-icon md-menu-align-target md-font-set="fa" style="margin: auto 3px auto 0;">&#xf0ac</md-icon>
+                            </div>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+            <!-- editor -->
+            <apto-trumbowyg-editor source-code="$ctrl.translatedValue[$ctrl.selectedIsocode]" on-source-code-changed="$ctrl.onUpdateSourceCode(sourceCode)" flex></apto-trumbowyg-editor>
+
+        </md-input-container>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<style>
+    .select-box-property-select {
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="block-group">
+    <div class="image-container block">
+        <apto-sbs-preview-image element="$ctrl.element"></apto-sbs-preview-image>
+    </div>
+    <div class="content-container block">
+        <h4 class="headline">{{ $ctrl.translate($ctrl.element.name)}}</h4>
+        <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+        <apto-extended-element-description element="$ctrl.element"></apto-extended-element-description>
+
+        <div ng-if="$ctrl.element.definition.staticValues.enableMultiSelect" class="select-boxes" ng-repeat="(key,selectBox) in $ctrl.boxes">
+            <div class="select-container">
+                <select ng-model="selectBox.id"
+                        ng-change="$ctrl.onChangedItem(key, $index)"
+                        class="select-box-property-select">
+                    <option value="{{null}}" disabled="disabled">bitte wählen</option>
+                    <option ng-repeat="item in $ctrl.items" value="{{ item.id }}">{{ $ctrl.translate(item.name) + $ctrl.getLivePriceSuffix(item.id) }}</option>
+                </select>
+            </div>
+            <div class="input-container" ng-if="$ctrl.element.definition.staticValues.enableMultiplier">
+                <span class="prefix">{{ $ctrl.translate($ctrl.element.definition.staticValues.multiplierPrefix) }}</span>
+                <div class="input-inner-container">
+                    <input ng-model="selectBox.multi"
+                           ng-change="$ctrl.onChangedMulti()">
+                    <span class="suffix">{{ $ctrl.translate($ctrl.element.definition.staticValues.multiplierSuffix) }}</span>
+                    <div class="valid-values hint">
+                        {{ $ctrl.elementValuesService.getHumanReadableString($ctrl.element.definition.properties.multi,
+                            '', $ctrl.translate($ctrl.element.definition.staticValues.multiplierSuffix)) }}
+                    </div>
+                </div>
+            </div>
+            <button class="remove-select"
+                    ng-click="$ctrl.removeSelect($index)">
+                x
+            </button>
+        </div>
+        <div class="select-input">
+            <div class="select-container">
+                <select ng-model="$ctrl.itemToAdd"
+                        ng-change="$ctrl.onChangedItemToAdd()"
+                        class="select-box-property-select">
+                    <option value="{{null}}" disabled="disabled">bitte wählen</option>
+                    <option ng-repeat="item in $ctrl.items" value="{{ item.id }}">{{ $ctrl.translate(item.name) + $ctrl.getLivePriceSuffix(item.id) }}</option>
+                </select>
+            </div>
+            <div class="input-container" ng-if="$ctrl.element.definition.staticValues.enableMultiplier">
+                <span class="prefix">{{ $ctrl.translate($ctrl.element.definition.staticValues.multiplierPrefix) }}</span>
+                <div class="input-inner-container">
+                    <input ng-model="$ctrl.multiToAdd" ng-change="$ctrl.onChangedSingleMulti()">
+                    <span class="suffix">{{ $ctrl.translate($ctrl.element.definition.staticValues.multiplierSuffix) }}</span>
+                    <div class="valid-values hint">
+                        {{ $ctrl.elementValuesService.getHumanReadableString($ctrl.element.definition.properties.multi,
+                            '', $ctrl.translate($ctrl.element.definition.staticValues.multiplierSuffix)) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-container block-group">
+    <!-- set value button -->
+    <button class="set-value"
+            ng-disabled="!$ctrl.done"
+            ng-class="{
+                        'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                        'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)
+                    }"
+            ng-click="$ctrl.setValues(true)">
+
+        <!-- not multiple and step by step and not selected -->
+        <span class="select-continue" ng-if="!$ctrl.element.definition.staticValues.enableMultiSelect && !$ctrl.section.allowMultiple && $ctrl.reduxProps.useStepByStep && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('plugins.selectBoxElement.buttons.select-continue') ? $ctrl.snippet('plugins.selectBoxElement.buttons.select-continue') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.select-continue')}}</span>
+
+        <!-- not multiple and step by step and not selected -->
+        <span class="select-continue" ng-if="$ctrl.element.definition.staticValues.enableMultiSelect && !$ctrl.section.allowMultiple && $ctrl.reduxProps.useStepByStep">{{$ctrl.snippet('plugins.selectBoxElement.buttons.select-continue') ? $ctrl.snippet('plugins.selectBoxElement.buttons.select-continue') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.select-continue')}}</span>
+
+        <!-- multiple or one page and not selected -->
+        <span class="select" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('plugins.selectBoxElement.buttons.select') ? $ctrl.snippet('plugins.selectBoxElement.buttons.select') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.select')}}</span>
+
+        <!-- multiple or one page and selected -->
+        <span class="update" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">{{$ctrl.snippet('plugins.selectBoxElement.buttons.update') ? $ctrl.snippet('plugins.selectBoxElement.buttons.update') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.update')}}</span>
+    </button>
+
+    <!-- update value button -->
+    <button class="remove-value"
+            ng-if="$ctrl.updateNeeded"
+            ng-class="{
+                        'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                        'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)
+                    }"
+            ng-click="$ctrl.setValues(false)">
+        <span class="update">{{$ctrl.snippet('plugins.selectBoxElement.buttons.update') ? $ctrl.snippet('plugins.selectBoxElement.buttons.update') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.update')}}</span>
+    </button>
+
+    <!-- remove button - one page -->
+    <button class="remove-value"
+            ng-if="!$ctrl.reduxProps.useStepByStep && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- selected -->
+        <span class="remove">{{$ctrl.snippet('plugins.selectBoxElement.buttons.remove') ? $ctrl.snippet('plugins.selectBoxElement.buttons.remove') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.remove')}}</span>
+    </button>
+
+    <!-- remove button - step by step -->
+    <button class="remove-value"
+            ng-if="$ctrl.reduxProps.useStepByStep && $ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- multiple and selected -->
+        <span class="remove">{{$ctrl.snippet('plugins.selectBoxElement.buttons.remove') ? $ctrl.snippet('plugins.selectBoxElement.buttons.remove') : $ctrl.snippet('aptoDefaultElementDefinition.buttons.remove')}}</span>
+    </button>
+</div>

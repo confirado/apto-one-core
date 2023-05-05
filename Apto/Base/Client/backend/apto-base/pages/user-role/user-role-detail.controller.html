@@ -1,0 +1,34 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="userRoleForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ userRoleDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Rolle">
+                        <div class="apto-tab-content" ng-include="'base/pages/user-role/user-role-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Erbt von">
+                        <div class="apto-tab-content" ng-include="'base/pages/user-role/children-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="userRoleDetail.id" class="md-raised md-cornered" ng-click="save(userRoleForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="userRoleDetail.id" class="md-raised md-primary md-cornered" ng-click="save(userRoleForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!userRoleDetail.id" class="md-raised md-cornered" ng-click="save(userRoleForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!userRoleDetail.id" class="md-raised md-primary md-cornered" ng-click="save(userRoleForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

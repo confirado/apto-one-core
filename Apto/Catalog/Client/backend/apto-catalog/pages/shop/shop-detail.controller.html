@@ -1,0 +1,40 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="shopForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ shopDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Domain">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/shop/shop-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Kategorien">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/shop/category-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Sprachen">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/shop/language-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Benutzerdefinierte Eigenschaften" ng-if="shopDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/shop/custom-properties-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="shopDetail.id" class="md-raised md-cornered" ng-click="save(shopForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="shopDetail.id" class="md-raised md-primary md-cornered" ng-click="save(shopForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!shopDetail.id" class="md-raised md-cornered" ng-click="save(shopForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!shopDetail.id" class="md-raised md-primary md-cornered" ng-click="save(shopForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

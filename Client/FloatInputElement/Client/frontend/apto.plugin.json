@@ -1,0 +1,11 @@
+{
+	"id": "apto-float-input-element-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoFloatInputElementFrontendModule",
+			"file": "apto-float-input-element-frontend.module.ts"
+		}
+	]
+}

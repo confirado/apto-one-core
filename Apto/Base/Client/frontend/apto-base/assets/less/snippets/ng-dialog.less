@@ -1,0 +1,50 @@
+.ngdialog.ngdialog-theme-default {
+  .ngdialog-content {
+    font-size: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    color: inherit;
+
+    border-radius: 0;
+    background: #ffffff;
+  }
+  &.apto-ngdialog-scroll {
+    padding: 0;
+    margin: 5% 10%;
+    overflow: hidden;
+    .ngdialog-content {
+      font-size: inherit;
+      line-height: inherit;
+      font-family: inherit;
+      color: inherit;
+
+      padding: 0;
+      height: 100%;
+      overflow: auto;
+    }
+    .apto-ngdialog-scroll-viewport {
+      padding: 1em;
+    }
+  }
+
+  .load-session-configuration {
+    .load-configuration {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.zoom-theme {
+  padding: 0 !important;
+}
+
+.ngdialog-open #page {
+}
+
+@media screen and (max-width: 767px) {
+  .ngdialog.ngdialog-theme-default {
+    &.apto-ngdialog-scroll {
+      margin: 5%;
+    }
+  }
+}

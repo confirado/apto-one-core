@@ -1,0 +1,87 @@
+<div class="page">
+	<form [formGroup]="requestForm">
+		<div class="title">
+			<h5>Ihre Kontaktdaten</h5>
+			<div class="break-text">
+				<p>Bitte geben Sie uns Ihre Daten, damit wir mit einem Angebot auf Sie zukommen können</p>
+			</div>
+		</div>
+
+		<div class="request-form">
+			<apto-select-field
+				formControlName="gender"
+				[name]="'Anrede *'"
+				[items]="[diverse, herr, frau]"
+				[enableClear]="false"
+                [default]="'Anrede *'"
+			></apto-select-field>
+			<apto-input-field
+				formControlName="name"
+				[fullWidth]="true"
+				[name]="'Name *'"
+				[placeholder]="'Ihr Name *'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="email"
+                [fullWidth]="true"
+				[name]="'E-Mail Adresse *'"
+				[placeholder]="'Ihre E-mail Adresse *'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="phone"
+				[fullWidth]="true"
+				[name]="'Telefonnummer'"
+				[placeholder]="'Ihre Telefonnummer'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="company"
+				[fullWidth]="true"
+				[name]="'Unternehmen'"
+				[placeholder]="'Name Ihres Unternehmen'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="street"
+				[fullWidth]="true"
+				[name]="'Anschrift'"
+				[placeholder]="'Straße, Hausnummer'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="zipCode"
+				[fullWidth]="true"
+				[name]="'Postleitzahl'"
+				[placeholder]="'Ihre Postleitzahl'"
+				[type]="'text'"
+			></apto-input-field>
+			<apto-input-field
+                formControlName="city"
+				[fullWidth]="true"
+				[name]="'Ort'"
+				[placeholder]="'Ihr Ort'"
+				[type]="'text'"
+			></apto-input-field>
+		</div>
+		<div class="large-textfield">
+			<apto-text-input-field
+				formControlName="message"
+				[name]="'Ihre Nachricht'"
+				[placeholder]="'Anmerkung, Wünsche, Notizen'"
+                [rows]="6"
+			></apto-text-input-field>
+		</div>
+		<div class="agreement">
+			<mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
+                Durch das Absenden des Formulareserklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw.
+                zur Kontaktaufnahme verwenden. Weitere Informationen zum Datenschutz finden Sie in unserer Datenschutzerklärung. Alle auf
+                confirado.de genannten Preise sind Nettopreise (zzgl 19% USt.)
+            </mat-checkbox>
+		</div>
+		<div class="request-button">
+			<button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">Anfrage senden</button>
+		</div>
+	</form>
+</div>

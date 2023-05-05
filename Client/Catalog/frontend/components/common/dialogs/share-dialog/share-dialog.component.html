@@ -1,0 +1,25 @@
+<div class="share-dialog" [attr.type]="'custom'">
+    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+
+    <h1 mat-dialog-title>Konfiguration teilen</h1>
+
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content>
+        <p>Teilen Via</p>
+
+        <div class="links">
+            <div class="link" *ngFor="let link of links$ | async">
+                <a [mat-dialog-close]="true" [href]="link.link" [target]="link.target">
+                    <i [class]="'fa ' + link.iconClass"></i>
+                </a>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-dialog-actions>
+        <button mat-flat-button color="accent" [mat-dialog-close]="true" type="button">Abbrechen</button>
+    </mat-dialog-actions>
+</div>

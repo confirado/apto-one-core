@@ -1,0 +1,52 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <!-- <apto-price-input amount="newPrice.amount"></apto-price-input> -->
+        <input ng-model="newPrice.amount">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Währung:</label>
+        <input ng-model="newPrice.currencyCode">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Kundengruppe:</label>
+        <md-select ng-model="newPrice.customerGroupId">
+            <md-option ng-value="group.id" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newPrice.amount || !newPrice.currencyCode || !newPrice.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddPrice()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30%;">Preis</th>
+            <th md-column style="width:30%;">Währung</th>
+            <th md-column style="width:40%;">Kundengruppe</th>
+            <th md-column style="width:60px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="price in prices">
+            <!-- <td md-cell price-format="{{price.amount}}"></td> -->
+            <td md-cell>{{price.amount}}</td>
+            <td md-cell>{{price.currencyCode}}</td>
+            <td md-cell>
+                <apto-customer-group-name customer-group-id="price.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
+            </td>
+            <td md-cell>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="onRemovePrice(price.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

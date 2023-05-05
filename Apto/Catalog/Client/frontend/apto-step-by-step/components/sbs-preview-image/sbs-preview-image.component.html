@@ -1,0 +1,27 @@
+<div ng-if="$ctrl.element.zoomFunction && $ctrl.element.zoomFunction !== 'deactivated'">
+
+    <a ng-if="$ctrl.element.zoomFunction === 'image_preview'"
+       class="render-image-zoom-button fa fa-search-plus"
+       ng-href="{{$ctrl.element.previewImage.fileUrl}}"
+       apto-fancybox-plus
+    ></a>
+
+    <div class="apto-element-gallery" ng-if="$ctrl.element.zoomFunction === 'gallery'" apto-fancybox-plus gallery="$ctrl.element.gallery" >
+        <a ng-repeat="g in $ctrl.element.gallery"
+           ng-if="g.mediaFile[0].extension !== 'svg'"
+           rel="group"
+           class="render-image-zoom-button fa fa-search-plus"
+           ng-href="{{ $ctrl.mediaUrl + g.mediaFile[0].path }}/{{ g.mediaFile[0].filename }}.{{ g.mediaFile[0].extension }}"
+        ></a>
+    </div>
+</div>
+
+<div ng-if="$ctrl.element.isZoomable && !$ctrl.element.zoomFunction">
+    <a ng-if="$ctrl.element.previewImage.mediaFile.extension === 'svg'"
+       class="render-image-zoom-button fa fa-search-plus"
+       ng-href="{{$ctrl.element.previewImage.fileUrl}}"
+       ng-click="$ctrl.openAlternatePreviewImageDialog($event)"
+    ></a>
+</div>
+
+<img ng-if="$ctrl.element.previewImage" ng-src="{{$ctrl.element.previewImage.fileUrl}}" class="sbs-default-element-preview-image" />

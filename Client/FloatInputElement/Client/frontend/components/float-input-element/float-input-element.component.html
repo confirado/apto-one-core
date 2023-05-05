@@ -1,0 +1,49 @@
+<div class="float-input-element" *ngIf="element && product"
+     [class.step-by-step]="product.useStepByStep"
+     [class.one-page]="!product.useStepByStep"
+     [class.open-in-dialog]="isDialog"
+>
+    <div class="header">
+        <div class="title">
+            <h4>{{ element.element.name | translate }}</h4>
+        </div>
+    </div>
+
+    <div class="picture">
+        <apto-element-picture *ngIf="element.element.previewImage"
+            [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+        ></apto-element-picture>
+    </div>
+
+    <div class="element">
+        <div class="container">
+            <div class="prefix"></div>
+
+            <div class="input">
+                <apto-input-field
+                    [formControl]="formElement"
+                    [prefix]="element.element.definition.staticValues.prefixHeight | translate"
+                    [suffix]="element.element.definition.staticValues.suffixHeight | translate"
+                    [type]="'float'"
+                    [step]="element.element.definition.properties.value?.[0]?.step"
+                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                >
+                </apto-input-field>
+            </div>
+
+            <div class="hint"></div>
+            <div class="suffix"></div>
+        </div>
+    </div>
+
+    <div class="description"
+         *ngIf="(element.element.description | translate) !== ''"
+         [innerHTML]="element.element.description | translate | safeHtml"
+    ></div>
+
+    <div class="apply-button">
+        <button mat-flat-button color="primary" (click)="saveInput()">
+            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+        </button>
+    </div>
+</div>

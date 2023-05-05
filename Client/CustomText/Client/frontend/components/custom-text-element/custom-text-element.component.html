@@ -1,0 +1,52 @@
+<div class="custom-text-element" *ngIf="element && product"
+     [class.step-by-step]="product.useStepByStep"
+     [class.one-page]="!product.useStepByStep"
+     [class.open-in-dialog]="isDialog"
+>
+    <div class="header">
+        <div class="title">
+            <h4>{{ element.element.name | translate }}</h4>
+        </div>
+    </div>
+
+    <div class="picture">
+        <apto-element-picture *ngIf="element.element.previewImage"
+            [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+        ></apto-element-picture>
+    </div>
+
+    <div class="element">
+        <div class="container">
+            <div class="prefix"></div>
+            <div class="input">
+                <ng-container *ngIf="element.element.definition.staticValues.rendering === 'input'">
+                    <apto-input-field
+                        [formControl]="formElement"
+                        [type]="'text'"
+                        [placeholder]="element.element.definition.staticValues.placeholder | translate"
+                        [hint]="'Text (' +  element.element.definition.properties.text[0].minLength + ' - ' + element.element.definition.properties.text[0].maxLength + ' Zeichen)'"
+                    ></apto-input-field>
+                </ng-container>
+                <ng-container *ngIf="element.element.definition.staticValues.rendering === 'textarea'">
+                    <apto-text-input-field
+                        [formControl]="formElement"
+                        [placeholder]="element.element.definition.staticValues.placeholder | translate"
+                        [hint]="'Text (' +  element.element.definition.properties.text[0].minLength + ' - ' + element.element.definition.properties.text[0].maxLength + ' Zeichen)'"
+                    ></apto-text-input-field>
+                </ng-container>
+            </div>
+            <div class="suffix"></div>
+            <div class="hint"></div>
+        </div>
+    </div>
+
+    <div class="description"
+         *ngIf="(element.element.description | translate) !== ''"
+         [innerHTML]="element.element.description | translate | safeHtml"
+    ></div>
+
+    <div class="apply-button">
+        <button mat-flat-button color="primary" (click)="saveInput()">{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}</button>
+        <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">{{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}</button>
+    </div>
+</div>

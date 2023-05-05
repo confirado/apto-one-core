@@ -1,0 +1,35 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="filterPropertyForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ filterPropertyDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs>
+                    <md-tab label="Filter Eigenschaften">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/filter/filter-property-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Filter Kategorien">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/filter/category-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+                <md-button ng-if="filterPropertyDetail.id" class="md-raised md-cornered" ng-click="save(filterPropertyForm, true)" type="submit">Speichern und schließen</md-button>
+                <md-button ng-if="filterPropertyDetail.id" class="md-raised md-primary md-cornered" ng-click="save(filterPropertyForm)" type="submit">Speichern</md-button>
+
+                <md-button ng-if="!filterPropertyDetail.id" class="md-raised md-cornered" ng-click="save(filterPropertyForm)" type="submit">Speichern und hinzufügen</md-button>
+                <md-button ng-if="!filterPropertyDetail.id" class="md-raised md-primary md-cornered" ng-click="save(filterPropertyForm, true)" type="submit">Speichern</md-button>
+            </md-dialog-actions>
+        </md-tabs>
+    </form>
+</md-dialog>

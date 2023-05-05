@@ -1,0 +1,80 @@
+<div class="container summary-container">
+    <h1 class="uppercase" ng-bind-html="$ctrl.snippet('headline')"></h1>
+    <div ng-if="$ctrl.showAptoSlider" class="product-image-container">
+        <apto-slider></apto-slider>
+    </div>
+    <div class="configuration">
+        <div class="products">
+            <div class="product">
+                <div class="block-group">
+                    <h4 class="uppercase block">{{$ctrl.translate($ctrl.aptoProduct.name)}}</h4>
+                    <div class="product-price block">
+                        {{$ctrl.getProductPrice('pseudoPrice')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ul class="sections">
+            <li class="section" ng-repeat="section in $ctrl.stateSummary.sections">
+                <div class="block-group">
+                    <h4 class="uppercase block" ng-click="$ctrl.onSelectSection(section.id)">
+                        <div ng-if="$ctrl.hasSectionPseudoPrice(section.id, element.id)" class="discount-name">
+                            {{$ctrl.translate($ctrl.getSectionDiscountName(section.id))}}
+                        </div>
+                        <i class="fa fa-pencil" aria-hidden="true"></i> {{$ctrl.translate(section.name)}}
+                    </h4>
+                    <div class="section-price block">
+                        <div ng-if="$ctrl.hasSectionPseudoPrice(section.id)" class="pseudo-price">
+                            {{$ctrl.getSectionPrice(section.id, 'pseudoPrice')}}
+                        </div>
+                        {{$ctrl.getSectionPrice(section.id)}}
+                    </div>
+                </div>
+                <div class="elements">
+                    <div class="element block-group" ng-repeat="element in section.elements">
+                        <div class="element-selection block">
+                            <div ng-if="$ctrl.hasElementPseudoPrice(section.id, element.id)" class="discount-name">
+                                {{$ctrl.translate($ctrl.getElementDiscountName(section.id, element.id))}}
+                            </div>
+                            <div class="flex" ng-class="{'has-preview-image': element.previewImage.fileUrl}">
+                                <img ng-if="element.previewImage.fileUrl" ng-src="{{element.previewImage.fileUrl}}">
+                                <div class="element-content">
+                                    {{$ctrl.translate(element.name)}}
+                                    <ul class="properties" ng-if="$ctrl.humanReadableState[element.id]">
+                                        <li ng-repeat="property in $ctrl.humanReadableState[element.id]">
+                                            {{$ctrl.translate(property)}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="element-price block">
+                            <div ng-if="$ctrl.hasElementPseudoPrice(section.id, element.id)" class="pseudo-price">
+                                {{$ctrl.getElementPrice(section.id, element.id, 'pseudoPrice')}}
+                            </div>
+                            {{$ctrl.getElementPrice(section.id, element.id)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-empty-section" ng-if="section.elements <= 0"></div>
+            </li>
+        </ul>
+    </div>
+    <div class="summary-actions block-group">
+        <apto-product-action></apto-product-action>
+        <apto-select selected="$ctrl.quantity" on-change-selected="$ctrl.setQuantity(quantity)"></apto-select>
+    </div>
+    <div class="price-total-container">
+        <div class="discount-name">
+            {{$ctrl.translate($ctrl.getProductDiscountName())}}
+        </div>
+        <h4 class="uppercase">
+            <span ng-if="$ctrl.getShowGross()" ng-bind-html="$ctrl.snippetGlobal('aptoSummary.tax.withTax')"></span>
+            <span ng-if="!$ctrl.getShowGross()" ng-bind-html="$ctrl.snippetGlobal('aptoSummary.tax.withoutTax')"></span>
+            <span class="price-total">{{$ctrl.getStatePrice()}}</span>
+            <span ng-if="$ctrl.hasStatePseudoPrice()"
+                  class="pseudo-price-total">{{$ctrl.getStatePrice('pseudoPrice')}}</span>
+        </h4>
+    </div>
+    <apto-summary-basket-buttons></apto-summary-basket-buttons>
+</div>

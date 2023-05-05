@@ -1,0 +1,62 @@
+@media screen and (max-width: 1023px) {
+  .step-by-step {
+    .sidebar-section {
+      border: none;
+      z-index: 99;
+      position: fixed;
+      height: @stepByStepSidebarSectionResponsiveSelectorSidebarSectionHeight;
+      width: 100%;
+      padding-bottom: 5.5rem;
+      top: 5.5rem;
+      .transform(scaleY(0));
+      .transform-origin(top);
+      .transition(transform 0.3s ease);
+      ul {
+        li {
+          h4 {
+            background: @onePageSidebarSectionListBackgroundColor;
+            color: @onePageSidebarSectionListColor;
+            line-height: 1.5rem;
+            height: 1.5rem;
+            font-size: 0.75rem;
+            padding-left: 0.625rem;
+            i {
+              display: none;
+            }
+            &.active {
+              background: @onePageSidebarSectionListBackgroundColor;
+              color: @onePageSidebarSectionListColor;
+              border: 0;
+            }
+          }
+          ul {
+            display: @stepByStepSidebarSectionResponsiveSelectorSidebarSectionUlLiUlDisplay;
+            height: @stepByStepSidebarSectionResponsiveSelectorSidebarSectionUlLiUlHeight;
+            li {
+              padding: 0.8125rem 0 0.8125rem 0.625rem;
+              height: 3.063rem;
+              border-bottom: 1px solid @onePageSidebarBorderColor;
+              font-size: 0.75rem;
+              line-height: 1.5rem;
+              text-transform: uppercase;
+              font-weight: bold;
+              margin: 0;
+              &:last-child {
+                border-bottom: none;
+              }
+            }
+          }
+        }
+      }
+      &.active {
+        .transform(scaleY(1));
+      }
+    }
+
+    .active-element {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.625rem;
+    }
+  }
+}

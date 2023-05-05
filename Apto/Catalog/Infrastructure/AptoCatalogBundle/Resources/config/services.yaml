@@ -1,0 +1,7 @@
+services:
+  Apto\Catalog\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

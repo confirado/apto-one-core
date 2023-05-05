@@ -1,0 +1,70 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="elementForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools element-title">
+                <h3>
+                    <span ng-click="closeSectionElement()" ng-class="'title-headline'" class="product-title-header" ng-if="productDetail.name">
+                        {{languageFactory.translate( productDetail.name )}}
+                    </span>
+                    <span ng-click="closeElement()" ng-class="'title-headline'" class="section-title-header">
+                        <span>{{getSectionName()}}</span>
+                    </span>
+                    <md-menu ng-if="elements.length > 1" class="element-title-header">
+                        <span  ng-click="$mdMenu.open($event)">
+                            {{getName()}}
+                        </span>
+                        <md-menu-content width="4">
+                            <md-menu-item ng-click="editElement($event, element.id)" ng-repeat="element in elements" ng-if="element.id !== elementId">
+                                <md-button>
+                                    {{getElementName(element)}}
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <span ng-if="elements.length === 1" class="element-title-header">
+                        <span>{{getName()}}</span>
+                    </span>
+                </h3>
+                <span flex></span>
+                <span ng-class="'title-id'">{{detail.id}}</span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Element">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/element-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Preise">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/price-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Rabatte">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/discount-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Definition">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/definition-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Renderbilder">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/render-image-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Anlagen">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/attachment-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Galerie">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/gallery-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Benutzerdefinierte Eigenschaften">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/element/custom-properties-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+            <md-button class="md-raised md-primary md-cornered" ng-click="save(elementForm)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

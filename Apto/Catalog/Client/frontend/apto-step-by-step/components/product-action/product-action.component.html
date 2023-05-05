@@ -1,0 +1,11 @@
+<div class="product-action-container gutter-medium-all block-group">
+    <button class="uppercase save-button" ng-click="$ctrl.openGuestConfigurationDialog($event)" ng-bind-html="$ctrl.snippetActions('save')"></button>
+    <div class="tool-tip-container uppercase btn share-button" ng-if="$ctrl.socials.length > 0">
+        <span ng-bind-html="$ctrl.snippetActions('share')"></span>
+        <div class="tool-tip tool-tip-top">
+            <a ng-repeat="social in $ctrl.socials" ng-attr-target="{{ social.target ? social.target : '_blank' }}" ng-href="{{social.link}}">
+                <i class="fa" ng-class="{[social.iconClass]:true, 'last':$last}" ></i>
+            </a>
+        </div>
+    </div>
+</div>

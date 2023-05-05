@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\Material" table="plugin_material_picker_material" repository-class="Apto\Plugins\MaterialPickerElement\Infrastructure\MaterialPickerElementBundle\Doctrine\Orm\MaterialOrmRepository">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+
+        <field name="active" type="boolean" column="active"/>
+        <field name="isNotAvailable" type="boolean" column="is_not_available"/>
+        <field name="identifier" column="identifier" unique="true" nullable="true" />
+        <field name="name" type="AptoPropertyTranslatedValue" column="name" />
+        <field name="description" type="AptoPropertyTranslatedValue" column="description" nullable="true" />
+        <field name="clicks" type="integer" column="clicks" />
+        <field name="reflection" type="integer" column="reflection" nullable="true" />
+        <field name="transmission" type="integer" column="transmission" nullable="true" />
+        <field name="absorption" type="integer" column="absorption" nullable="true" />
+        <field name="position" type="integer" column="position">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+        <one-to-many field="poolItems" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\PoolItem" mapped-by="material" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="colorRatings" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\ColorRating" mapped-by="material" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="renderImages" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\RenderImage" mapped-by="material" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="previewImage" target-entity="Apto\Base\Domain\Core\Model\MediaFile\MediaFile">
+            <join-column name="preview_image_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-many field="aptoPrices" target-entity="Apto\Base\Domain\Core\Model\AptoPrice\AptoPrice" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="plugin_material_picker_material_to_apto_price">
+                <join-columns>
+                    <join-column name="material_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="apto_price_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="galleryImages" target-entity="Apto\Base\Domain\Core\Model\MediaFile\MediaFile" index-by="id.id">
+            <join-table name="plugin_material_picker_material_to_media_file">
+                <join-columns>
+                    <join-column name="material_surrogate_id" referenced-column-name="surrogate_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="media_image_surrogate_id" referenced-column-name="surrogate_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="properties" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\Property" index-by="id.id">
+            <join-table name="plugin_material_picker_material_to_property">
+                <join-columns>
+                    <join-column name="material_surrogate_id" referenced-column-name="surrogate_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="property_surrogate_id" referenced-column-name="surrogate_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

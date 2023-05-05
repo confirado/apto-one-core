@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\MaterialPickerElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

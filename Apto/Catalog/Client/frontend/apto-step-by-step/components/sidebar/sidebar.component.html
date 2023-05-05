@@ -1,0 +1,15 @@
+<section class="sidebar-container">
+    <section class="sidebar">
+        <div class="select-section" apto-open-sections apto-open-sections-section-container=".sidebar-section">
+            <span class="element-number">{{$ctrl.getSelectNumber($ctrl.selectedSection.id)}}</span>
+            <h3 class="uppercase">
+                {{$ctrl.translate($ctrl.selectedSection.name)}}
+                <div ng-class="{'active-section': $ctrl.sectionIsSelected($ctrl.selectedSection.id)}" class="selected-section">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            </h3>
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </div>
+        <apto-sbs-sidebar-section sections="$ctrl.productDetail.sections" selected-section="$ctrl.selectedSection"></apto-sbs-sidebar-section>
+    </section>
+</section>

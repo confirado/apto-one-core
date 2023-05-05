@@ -1,0 +1,65 @@
+apto-product-list-filter {
+  display: block;
+  position: relative;
+  margin: 1.5625rem 0 1.5625rem;
+  border: 1px solid #dddddd;
+  padding: 1.25rem;
+  width: 100%;
+
+  .filter-search-box {
+    display: flex;
+    align-items: center;
+
+    .filter-search-box-label {
+      font-weight: bold;
+    }
+
+    .filter-search-box-input {
+      margin: 0 0 0 1rem;
+      background: transparent;
+      color: @baseBlack;
+      line-height: 2.1875rem;
+      height: 2.1875rem;
+      display: block;
+      border-right: 0;
+
+      &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color: @baseBlack;
+      }
+      &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: @baseBlack;
+        .opacity(1);
+      }
+      &::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: @baseBlack;
+        .opacity(1);
+      }
+      &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: @baseBlack;
+      }
+    }
+
+    .filter-search-box-submit {
+      padding: 0.0625rem 0.75rem;
+    }
+  }
+
+  .filter-name {
+    margin-top: 2rem;
+  }
+
+  .filter-list {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .filter-item {
+    width: 32%;
+    margin-right: 2%;
+
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+}

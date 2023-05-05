@@ -1,0 +1,41 @@
+.close-button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: -16px;
+    right: -16px;
+    z-index: 5;
+
+    &.inner {
+        top: 16px;
+        right: 16px;
+    }
+
+    button {
+        display: flex;
+        flex-grow: 1;
+        flex-basis: auto;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        box-shadow: none;
+        width: 100%;
+        height: 100%;
+
+        ::ng-deep {
+            .mat-button-wrapper {
+                display: flex;
+                align-items: center;
+                padding: 0;
+                line-height: 1;
+
+                .mat-icon {
+                    display: flex;
+                    font-size: 30px;
+                    height: 30px;
+                    width: 30px;
+                }
+            }
+        }
+    }
+}

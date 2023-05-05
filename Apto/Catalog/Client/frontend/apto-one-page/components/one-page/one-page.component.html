@@ -1,0 +1,8 @@
+<div class="container" ng-class="{[$ctrl.productDetail.identifier]: true}">
+    <div class="block-group main-content">
+        <apto-slider></apto-slider>
+        <apto-sidebar product-detail="$ctrl.productDetail" active-section="$ctrl.selectedSection"></apto-sidebar>
+    </div>
+    <apto-favorite-designs></apto-favorite-designs>
+    <apto-info-text ng-if="$ctrl.productDetail.description" description="$ctrl.productDetail.description"></apto-info-text>
+</div>

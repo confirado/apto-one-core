@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup" table="plugin_material_picker_price_group" repository-class="Apto\Plugins\MaterialPickerElement\Infrastructure\MaterialPickerElementBundle\Doctrine\Orm\PriceGroupOrmRepository">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+
+        <field name="name" type="AptoPropertyTranslatedValue" column="name" nullable="true" />
+        <field name="internalName" type="AptoPropertyTranslatedValue" column="internal_name" nullable="true" />
+        <field name="additionalCharge" type="float" column="additional_charge" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceMatrix" name="priceMatrix"/>
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Backend\Model\UserLicence\UserLicence" table="apto_user_licence" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\UserLicenceOrmRepository">
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+        <field name="title" type="string" column="title" length="255"/>
+        <field name="text" type="text" column="text"/>
+        <field name="validSince" type="datetime" column="validSince" unique="true"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+    </entity>
+</doctrine-mapping>

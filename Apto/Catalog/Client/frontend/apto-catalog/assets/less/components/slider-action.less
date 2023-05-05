@@ -1,0 +1,117 @@
+.slider-container {
+  .slider-action-container {
+    position: absolute;
+    bottom: 0;
+
+    .share-button {
+      margin-left: 1.25rem;
+      height: 2.063rem;
+      float: left;
+      font-size: 0.75rem;
+    }
+
+    button, .btn {
+      font-size: 0.75rem;
+      height: 2.063rem;
+      float: left;
+      padding: 0 1.563rem;
+
+      i {
+        display: none;
+      }
+
+      .tool-tip {
+        height: 40px;
+        padding: 0;
+
+        a {
+          display: inline-block;
+          width: 2.5rem;
+          height: 2.5rem;
+          line-height: 2.5rem;
+          padding: 0;
+          font-size: 1.375rem;
+        }
+
+        i {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .roate-container {
+    padding-right: 1.875rem;
+
+    button {
+      &:nth-child(2) {
+        line-height: 1.813rem;
+      }
+    }
+  }
+
+  .zoom-container {
+    button {
+      &:first-child {
+        margin-right: 1.875rem;
+      }
+    }
+  }
+
+  .img-slider-actions {
+    width: 26.875rem;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1.063rem;
+    padding-right: 17.5rem;
+
+    button {
+      padding: 0;
+      background: none;
+      float: left;
+      color: @onePageColorActions;
+
+      &:hover {
+        color: @onePageColorActionsHover;
+      }
+
+      i {
+        display: inline-block;
+        font-size: 1.313rem;
+      }
+    }
+  }
+
+  .change-persp {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 1.875rem;
+    margin: auto;
+
+    button {
+      height: 1.875rem;
+      font-size: 1.875rem;
+      color: @onePageColorActions;
+      padding: 0;
+
+      &:hover {
+        color: @onePageColorActionsHover;
+      }
+
+      &:first-child {
+        padding-left: 5%;
+        float: left;
+      }
+
+      &:last-child {
+        padding-right: 5%;
+        float: right;
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<!-- trumbowyg editor -->
+<div ng-if="$ctrl.isTrumbowygEnabled()"
+        spellcheck=false
+        apto-trumbowyg
+        source-code="$ctrl.sourceCode"
+        on-source-code-changed="$ctrl.onDirectiveSourceCodeChanged(sourceCode)"
+></div>
+
+<!-- default textarea input field  -->
+<textarea
+        ng-if="!$ctrl.isTrumbowygEnabled()"
+        style="display: block;"
+        ng-model="$ctrl.sourceCode"
+        rows="1"
+        ng-change="$ctrl.onChangeTextArea()"
+></textarea>

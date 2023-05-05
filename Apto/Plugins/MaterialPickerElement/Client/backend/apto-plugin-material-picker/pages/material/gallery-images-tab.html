@@ -1,0 +1,38 @@
+<div layout="row" layout-align="start" flex>
+    <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px; margin-bottom: 44px;">
+        <apto-media-icon style="display: block;" file="{path: newGalleryImage.path}" size="128x128"></apto-media-icon>
+    </div>
+    <div flex="5"></div>
+    <apto-media-select on-select-file="onSelectGalleryImage(path)" label="'Pfad'" path="newGalleryImage.path" required="false" flex></apto-media-select>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newGalleryImage.path" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddGalleryImage()">Bild Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:20%;">Vorschau</th>
+            <th md-column style="width:70%;">Dateipfad</th>
+            <th md-column style="width:10%;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="galleryImage in galleryImages">
+            <td md-cell>
+                <apto-media-icon style="padding: 6px 0; display: block;" file="{path: galleryImage.path, extension: galleryImage.extension}" size="64x64"></apto-media-icon>
+            </td>
+            <td md-cell>{{ galleryImage.path }}</td>
+            <td md-cell>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        ng-click="onRemoveGalleryImage(galleryImage.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

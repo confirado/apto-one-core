@@ -1,0 +1,4 @@
+twig:
+  # ...
+  paths:
+    '%kernel.project_dir%/vendor/acme/foo-bar/templates': foo_bar

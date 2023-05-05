@@ -1,0 +1,22 @@
+<div class="apto" ng-if="routeAccess.hasAccess">
+
+    <!-- mobile sidebar -->
+    <apto-sidebar-menu></apto-sidebar-menu>
+
+    <!-- basket -->
+    <apto-basket></apto-basket>
+
+    <div id="page">
+        <apto-header></apto-header>
+
+        <div ng-controller="AptoCatalogController as CatalogCtrl">
+            <div>
+                <apto-home></apto-home>
+            </div>
+        </div>
+
+        <apto-footer></apto-footer>
+    </div>
+</div>
+
+<apto-route-access-failed ng-if="!routeAccess.hasAccess"></apto-route-access-failed>

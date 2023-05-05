@@ -1,0 +1,34 @@
+<md-checkbox
+        aria-label="Markieren"
+        class="apto-checkbox-button"
+        ng-if="$ctrl.config.itemActions.select.show"
+        ng-model="$ctrl.config.itemActions.select.selected[model[$ctrl.config.itemActions.select.field]]"
+        ng-change="$ctrl.actions.select.fnc($ctrl.config.itemActions.select.selected)">
+</md-checkbox>
+
+<md-button
+        title="Bearbeiten"
+        class="md-icon-button md-primary"
+        ng-if="$ctrl.config.itemActions.edit.show && $ctrl.aclIsGranted.allGranted($ctrl.config.itemActions.edit.aclMessagesRequired)"
+        ng-click="$ctrl.actions.edit.fnc($event, model[$ctrl.config.itemActions.edit.field])"
+        apto-show-granted-info="{{ $ctrl.config.itemActions.edit.aclMessagesRequired }}">
+    <md-icon md-font-set="fa">&#xf044</md-icon>
+</md-button>
+
+<md-button
+        title="Kopieren"
+        class="md-icon-button md-primary"
+        ng-if="$ctrl.config.itemActions.copy.show && $ctrl.aclIsGranted.allGranted($ctrl.config.itemActions.copy.aclMessagesRequired)"
+        ng-click="$ctrl.actions.copy.fnc($event, model[$ctrl.config.itemActions.copy.field])"
+        apto-show-granted-info="{{ $ctrl.config.itemActions.copy.aclMessagesRequired }}">
+    <md-icon md-font-set="fa">&#xf24d</md-icon>
+</md-button>
+
+<md-button
+        title="Löschen"
+        class="md-icon-button md-warn"
+        ng-if="$ctrl.config.itemActions.remove.show && $ctrl.aclIsGranted.allGranted($ctrl.config.itemActions.remove.aclMessagesRequired)"
+        apto-confirm-remove="$ctrl.actions.remove.fnc($event, model[$ctrl.config.itemActions.remove.field])"
+        apto-show-granted-info="{{ $ctrl.config.itemActions.remove.aclMessagesRequired }}">
+    <md-icon md-font-set="fa">&#xf014</md-icon>
+</md-button>

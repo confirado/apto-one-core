@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\SelectBoxElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

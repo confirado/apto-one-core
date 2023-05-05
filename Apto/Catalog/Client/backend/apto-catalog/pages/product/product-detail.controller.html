@@ -1,0 +1,63 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="productForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools product-title">
+                <h3>
+                    <span ng-class="'title-headline'" ng-if="productDetail.name">
+                        {{languageFactory.translate( productDetail.name )}}
+                    </span>
+                </h3>
+                <span flex></span>
+                <span ng-class="'title-id'">{{productDetail.id}}</span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Produkt">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/product-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Preise" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/price-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Rabatte" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/discount-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Sektionen" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/section-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Regeln" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/rule-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Domains">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/shop-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Kategorien">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/category-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Benutzerdefinierte Eigenschaften" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/custom-properties-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Berechnete Werte" ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/computed-values-tab.html'"></div>
+                    </md-tab>
+                    <md-tab label="Filter Eigenschaften"  ng-if="productDetail.id">
+                        <div class="apto-tab-content" ng-include="'catalog/pages/product/filter-properties-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="productDetail.id" class="md-raised md-cornered" ng-click="save(productForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!productDetail.id" class="md-raised md-cornered" ng-click="save(productForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

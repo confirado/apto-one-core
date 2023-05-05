@@ -1,0 +1,53 @@
+@media screen and (max-width: 1023px) {
+  .step-by-step {
+    apto-sidebar-summary {
+      h1, ul, p {
+        display: none;
+      }
+      .info-block {
+        position: fixed;
+        bottom: 2.875rem;
+        left: 0;
+        width: 100%;
+        padding: .625rem;
+        border: 0;
+        .price-container {
+          display: block;
+          width: 50%;
+          float: left;
+          h3 {
+            display: none;
+          }
+        }
+        apto-select {
+          width: 50%;
+          display: block;
+          float: right;
+          .select-container {
+            margin: 0;
+          }
+        }
+      }
+      .basket-notification {
+        position: fixed;
+        bottom: 6.75rem;
+        font-size: 0.5rem;
+        width: 100%;
+        left: 0;
+        padding: .625rem;
+        background: @stepByStepInfoBlockBackground;
+        z-index: 900;
+      }
+      #basket-button {
+        z-index: 999;
+        position: fixed;
+        width: 100%;
+        right: 0;
+        bottom: 0;
+        height: 2.875rem;
+        line-height: 2.875rem;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}

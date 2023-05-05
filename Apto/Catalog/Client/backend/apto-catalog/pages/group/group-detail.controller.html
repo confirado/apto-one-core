@@ -1,0 +1,41 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="groupForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ groupDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <apto-translated-value required label="'Name'" type="'input'" translated-value="groupDetail.name" flex></apto-translated-value>
+                </div>
+
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Kennung:</label>
+                        <input ng-model="groupDetail.identifier">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex="20">
+                        <label>Position (Sortierung):</label>
+                        <input type="number" required min="0" step="1" ng-model="groupDetail.position">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="groupDetail.id" class="md-raised md-cornered" ng-click="save(groupForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="groupDetail.id" class="md-raised md-primary md-cornered" ng-click="save(groupForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!groupDetail.id" class="md-raised md-cornered" ng-click="save(groupForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!groupDetail.id" class="md-raised md-primary md-cornered" ng-click="save(groupForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

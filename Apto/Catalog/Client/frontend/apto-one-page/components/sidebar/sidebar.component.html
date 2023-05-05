@@ -1,0 +1,18 @@
+<section class="sidebar-container">
+    <apto-sidebar-elements></apto-sidebar-elements>
+    <section class="sidebar">
+        <div class="select-section" apto-open-sections apto-open-sections-section-container=".sidebar-section">
+            <span class="active-element" ng-style="$ctrl.getSelectBackground($ctrl.selectedSection.id)"></span>
+            <h3 class="uppercase">
+                {{$ctrl.translate($ctrl.selectedSection.name)}}
+                <div ng-class="{'active-section': $ctrl.sectionIsSelected($ctrl.selectedSection.id)}" class="selected-section">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            </h3>
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+        </div>
+        <apto-sidebar-info product="$ctrl.productDetail"></apto-sidebar-info>
+        <apto-sidebar-section sections="$ctrl.productDetail.sections" selected-section="$ctrl.selectedSection"></apto-sidebar-section>
+        <apto-sidebar-basket></apto-sidebar-basket>
+    </section>
+</section>

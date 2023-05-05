@@ -1,0 +1,52 @@
+<div layout="row" layout-align="start" flex>
+    <md-autocomplete
+            md-floating-label="Eigenschaft:"
+            md-require-match="true"
+            md-selected-item="newProperty.property"
+            md-search-text="newProperty.propertySearch"
+            md-item-text="translate(notAssignedProperty.name)"
+            md-items="notAssignedProperty in notAssignedProperties | filter:newProperty.propertySearch"
+            md-no-cache="true"
+            md-clear-button="true"
+            flex
+    >
+        <md-item-template>
+            <span md-highlight-text="newProperty.propertySearch">{{ translate(notAssignedProperty.name) }} ({{ translate(notAssignedProperty.group.name) }})</span>
+        </md-item-template>
+        <md-not-found>
+            Keine Eigenschaften gefunden.
+        </md-not-found>
+    </md-autocomplete>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newProperty.property.id" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddProperty()">Eigenschaft Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30%;">Id</th>
+            <th md-column style="width:35%;">Gruppe</th>
+            <th md-column style="width:35%;">Eigenschaft</th>
+            <th md-column style="width:80px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="property in properties">
+            <td md-cell>{{ property.id }}</td>
+            <td md-cell>{{ translate(property.group.name) }}</td>
+            <td md-cell>{{ translate(property.name) }}</td>
+            <td md-cell>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        ng-click="onRemoveProperty(property.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

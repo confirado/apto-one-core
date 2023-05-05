@@ -1,0 +1,1 @@
+<button id="basket-button" ng-disabled="!$ctrl.configurationIsValid()" ng-click="$ctrl.useStepByStep ? $ctrl.goToSummary() : $ctrl.addToBasket($ctrl.quantity.value)" class="button-primary" ng-bind-html="$ctrl.snippet('addToBasket')"></button>

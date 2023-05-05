@@ -1,0 +1,154 @@
+<form [formGroup]="formElement" *ngIf="element && product">
+	<div class="width-height-element"
+         [class.step-by-step]="product.useStepByStep"
+         [class.one-page]="!product.useStepByStep"
+         [class.open-in-dialog]="isDialog"
+         [attr.type]="'custom'"
+    >
+        <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
+                           [mat-dialog-close]="true"
+                           [inner]="true"
+        ></apto-close-button>
+
+        <div class="header">
+            <div class="title">
+                <h4>{{ element.element.name | translate }}</h4>
+            </div>
+        </div>
+
+        <div class="picture">
+            <apto-element-picture *ngIf="element.element.previewImage"
+                [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+                [width]="'200px'"
+            ></apto-element-picture>
+        </div>
+
+        <div class="height-line" *ngIf="element.element.definition.staticValues.renderingHeight !== 'none'">
+            <div class="height-inner"></div>
+        </div>
+
+        <div class="element height-input" *ngIf="element.element.definition.staticValues.renderingHeight !== 'none'">
+            <div class="height-input-pointer"></div>
+
+            <div class="container">
+<!--                <div class="prefix">{{element.element.definition.staticValues.prefixHeight | translate}}</div>-->
+                <div class="input">
+                    <apto-input-field
+                        *ngIf="element.element.definition.staticValues.renderingHeight === 'input'"
+                        formControlName="height"
+                        [type]="'integer'"
+                        [name]="element.element.definition.staticValues.prefixHeight | translate"
+                        [step]="stepHeight"
+                    >
+                    </apto-input-field>
+
+                    <apto-select-field
+                        *ngIf="element.element.definition.staticValues.renderingHeight === 'select'"
+                        [items]="itemsHeight"
+                        [name]="element.element.definition.staticValues.prefixHeight | translate"
+                        [default]="element.element.definition.staticValues.defaultHeight"
+                        [enableClear]="false"
+                        formControlName="height"
+                    >
+                    </apto-select-field>
+
+                    <apto-select-field
+                        *ngIf="element.element.definition.staticValues.renderingHeight === 'none'"
+                        [name]="element.element.definition.staticValues.prefixHeight | translate"
+                        [default]="element.element.definition.staticValues.defaultHeight"
+                        [enableClear]="false"
+                        [disabled]="true"
+                    >
+                    </apto-select-field>
+                </div>
+<!--                <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>-->
+                <div class="hint">{{this.element.element.definition.properties.height?.[0]?.minimum + ' - ' + this.element.element.definition.properties.height?.[0]?.maximum + ' ' + (this.element.element.definition.staticValues.suffixHeight | translate)}}</div>
+            </div>
+        </div>
+
+        <div class="width-line" *ngIf="element.element.definition.staticValues.renderingWidth !== 'none'">
+            <div class="width-inner"></div>
+        </div>
+
+        <div class="element width-input" *ngIf="element.element.definition.staticValues.renderingWidth !== 'none'">
+            <div class="width-input-pointer"></div>
+
+            <div class="container">
+<!--                <div class="prefix">{{element.element.definition.staticValues.prefixWidth | translate}}</div>-->
+                <div class="input">
+                    <apto-input-field
+                        *ngIf="element.element.definition.staticValues.renderingWidth === 'input'"
+                        formControlName="width"
+                        [type]="'integer'"
+                        [name]="element.element.definition.staticValues.prefixWidth | translate"
+                        [step]="stepWidth"
+                    >
+                    </apto-input-field>
+
+                    <apto-select-field
+                        *ngIf="element.element.definition.staticValues.renderingWidth === 'select'"
+                        formControlName="width"
+                        [items]="itemsWidth"
+                        [name]="element.element.definition.staticValues.prefixWidth | translate"
+                        [default]="element.element.definition.staticValues.defaultWidth"
+                        [enableClear]="false"
+                    >
+                    </apto-select-field>
+
+                    <apto-select-field
+                        *ngIf="element.element.definition.staticValues.renderingWidth === 'none'"
+                        [default]="element.element.definition.staticValues.defaultWidth"
+                        [enableClear]="false"
+                        [name]="element.element.definition.staticValues.prefixWidth | translate"
+                        [disabled]="true"
+                    >
+                    </apto-select-field>
+                </div>
+<!--                <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>-->
+                <div class="hint">{{this.element.element.definition.properties.width?.[0]?.minimum  + ' - ' + this.element.element.definition.properties.width?.[0]?.maximum + ' ' + (this.element.element.definition.staticValues.suffixWidth | translate)}}</div>
+            </div>
+        </div>
+
+        <div class="description"
+             *ngIf="(element.element.description | translate) !== ''"
+             [innerHTML]="element.element.description | translate | safeHtml"
+        ></div>
+
+        <div class="apply-button">
+            <button
+                *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product?.useStepByStep"
+                mat-flat-button
+                color="primary"
+                [mat-dialog-close]="true"
+                (click)="saveInput()"
+                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            </button>
+
+            <button
+                *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
+                mat-flat-button
+                color="primary"
+                (click)="saveInput()"
+                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            </button>
+
+            <button
+                *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
+                mat-flat-button
+                color="accent"
+                (click)="removeInput()"
+            >
+                {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
+            </button>
+            <button
+                *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
+                mat-flat-button
+                color="accent"
+                [mat-dialog-close]="true"
+                (click)="removeInput()"
+            >
+                {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
+            </button>
+        </div>
+    </div>
+</form>

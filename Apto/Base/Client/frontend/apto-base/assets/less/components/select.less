@@ -1,0 +1,37 @@
+.select-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select-container select {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid @baseSelectBorderColor;
+  color: @baseSelectColor;
+  margin: 0;
+  outline: none;
+  background: @baseSelectBackgroundColor;
+  width: 100%;
+  font-size: 0.875rem;
+  .secondary-font;
+}
+
+.select-container:after {
+  content: "\f107";
+  font-family: FontAwesome;
+  position: absolute;
+  border: 1px solid @baseSelectBorderColor;
+  top: 0;
+  right: 0;
+  line-height: 2rem;
+  height: 2rem;
+  background: @baseSelectBackgroundColor;
+  color: @baseSelectColor;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: bold;
+  width: 1.75rem;
+  pointer-events:none;
+  box-sizing: border-box;
+}

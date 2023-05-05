@@ -1,0 +1,11 @@
+{% block aptoLayout %}
+    <apto-install></apto-install>
+{% endblock %}
+
+
+{% if app.environment == 'dev' %}
+    <div class="debug-twig" style="position: relative; z-index: 1;">
+        <div class="md-headline">Twig Debug:</div>
+        {{ dump() }}
+    </div>
+{% endif %}

@@ -1,0 +1,18 @@
+<md-dialog style="min-width: 40%;" aria-label="Media Select dialog">
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Medien</span></h3>
+            <span flex></span>
+            <md-button ng-if="aclAllGranted(aclMessagesRequiredAddDirectory)" apto-show-granted-info="{{ aclMessagesRequiredAddDirectory }}" class="md-icon-button" title="Verzeichnis hinzufügen" ng-click="showAddDirectoryDialog($event)">
+                <md-icon md-font-set="fa">&#xf055</md-icon>
+            </md-button>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <apto-media-list on-select-file="onSelectMediaFile(path)"></apto-media-list>
+    </md-dialog-content>
+</md-dialog>

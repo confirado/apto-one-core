@@ -1,0 +1,10 @@
+<div class="load-session-configuration">
+    <h4 ng-bind-html="snippet('header')"></h4>
+    <p ng-bind-html="snippet('info')"></p>
+    <div class="block-group load-configuration">
+        <button class="block right" ng-click="loadSessionConfiguration()" ng-bind-html="snippet('restore')"></button>
+    </div>
+    <div class="block-group discard-configuration">
+        <button class="block right button-secondary filled" ng-click="discardSessionConfiguration()" ng-bind-html="snippet('continue')"></button>
+    </div>
+</div>

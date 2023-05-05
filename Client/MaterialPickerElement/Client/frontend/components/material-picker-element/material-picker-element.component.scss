@@ -1,0 +1,316 @@
+@import "globals";
+@import "common";
+@import "form-inputs";
+@import "elements";
+
+@mixin box($screen-size: 'mobile') {
+    padding: 34px var(--element-gap) 30px var(--element-gap);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @if ($screen-size == 'mobile') {
+        align-items: center;
+    }
+
+    @if ($screen-size == 'tablet' or $screen-size == 'desktop') {
+        align-items: flex-start;
+    }
+}
+
+@mixin box-element($screen-size: 'mobile') {
+    justify-items: center;
+    margin-top: var(--element-gap);
+
+    @if ($screen-size == 'mobile') {
+        width: var(--input-mobile-width);
+    }
+
+    @if ($screen-size == 'tablet' or $screen-size == 'desktop') {
+        width: 100%;
+    }
+}
+
+
+@mixin colors($element-width: 80px, $color-box-width: 40px, $padding: 10px 10px, $checkbox: 22px) {
+    display: flex;
+    align-items: center;
+    border-radius: var(--border-radius-card);
+    padding: $padding;
+    width: $element-width;
+    cursor: pointer;
+    flex-direction: column;
+    position: relative;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .box {
+        display: flex;
+        position: relative;
+        width: $color-box-width;
+        height: $color-box-width;
+        border-radius: var(--border-radius-card);
+        border: none;
+
+        &.linear-gradient {
+            @include linear-gradient();
+        }
+
+        .circle {
+            display: none;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-card);
+        }
+    }
+
+    .name {
+        @include cut-long-text();
+        text-align: center;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 7px;
+    }
+
+    &.selected {
+        .box {
+            border: solid 2px var(--color-border-selected);
+
+            .circle {
+                @include circle-checkbox($checkbox);
+            }
+        }
+    }
+}
+
+mat-radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    word-break: break-word;
+    width: 100%;
+
+    mat-radio-button:nth-child(2) {
+        margin-top: var(--element-gap);
+    }
+
+    .mat-radio-button {
+        width: 100%;
+    }
+}
+
+.material-picker-element {
+
+    .header + .description:not(:empty) {
+        margin-top: var(--element-gap);
+    }
+
+    .header {
+        @include header();
+        @include title();
+
+        .results {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
+    .color-filter {
+        @include box();
+
+        .available-colors {
+            margin-top: var(--element-gap);
+            display: grid;
+            grid-template-columns: 80px auto;
+            grid-template-areas:
+            "all-color other-colors";
+
+            .elements {
+                display: flex;
+                flex-wrap: wrap;
+
+                &.all-color {
+                    grid-area: all-color;
+                    height: max-content;
+                }
+
+                &.other-colors {
+                    grid-area: other-colors;
+                }
+
+                .element {
+                    @include colors(80px, 40px, 10px 10px, 15px);
+                }
+            }
+        }
+    }
+
+    .search-box {
+        @include box();
+
+        .element {
+            @include box-element();
+        }
+    }
+
+    .properties {
+        @include box();
+
+        .element {
+            @include box-element();
+
+            .input {
+                .prefix {
+                    margin-bottom: var(--input-elements-gap);
+                }
+            }
+
+            .input + .input{
+                margin-top: var(--element-gap);
+            }
+        }
+    }
+
+    .price-group {
+        @include box();
+
+        .element {
+            @include box-element();
+        }
+    }
+
+    .filtered-materials {
+        @include box();
+
+        .elements {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: var(--element-gap);
+
+            .element {
+                @include colors(135px, 95px, 10px 20px, 22px);
+            }
+        }
+    }
+
+    .color-mix {
+        @include box();
+
+        .picture {
+            margin-top: var(--element-gap);
+
+            img {
+                width: calc(2*var(--image-mobile-width));
+            }
+        }
+
+        .element {
+            @include box-element();
+        }
+    }
+
+    .color-order {
+        @include box();
+
+        .element {
+            @include box-element();
+
+            .input + .input {
+                margin-top: var(--element-gap);
+            }
+
+            .input-input {
+                width: 100px;
+            }
+        }
+    }
+
+    .description {
+        @include description();
+    }
+
+    .apply-button {
+        @include buttons();
+        padding: var(--element-gap);
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .material-picker-element {
+        .header {
+            @include header('tablet');
+            @include title('tablet');
+
+            .results {
+            }
+        }
+
+        .color-filter {
+            @include box('tablet');
+        }
+
+        .search-box {
+            @include box('tablet');
+
+            .element {
+                @include box-element('tablet');
+            }
+        }
+
+        .properties {
+            @include box('tablet');
+
+            .element {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+
+                .input {
+                    width: calc(33% - var(--element-gap)/2);
+                    margin-top: var(--element-gap);
+                }
+            }
+        }
+
+        .price-group {
+            @include box('tablet');
+
+            .element {
+                width: calc(33% - var(--element-gap)/2);
+                min-width: var(--input-mobile-width);
+            }
+        }
+
+        .filtered-materials {
+            @include box('tablet');
+        }
+
+        .color-mix {
+            @include box('tablet');
+
+            .element {
+                @include box-element('tablet');
+            }
+        }
+
+        .color-order {
+            @include box('tablet');
+
+            .element {
+                @include box-element('tablet');
+            }
+        }
+
+        .apply-button {
+            @include buttons('tablet');
+        }
+    }
+}

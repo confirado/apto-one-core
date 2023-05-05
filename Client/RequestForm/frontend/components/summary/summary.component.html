@@ -1,0 +1,49 @@
+<ng-container *ngIf="product$ | async as product">
+    <ng-container *ngIf="sumPrice$ | async as sumPrice">
+        <mat-divider></mat-divider>
+        <form [formGroup]="quantityInputGroup" class="quantity-form">
+            <div class="whole-summary">
+                <div class="summary top">
+                    <img *ngIf="renderImage$ | async as renderImage" [src]="renderImage.url" />
+                    <div class="summary basket" *ngIf="showPrices">
+                        <div class="basket price">
+                            <h4>{{ sumPrice }}</h4>
+                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+                        </div>
+                    </div>
+                </div>
+                <apto-request-form
+                    id="summary-request-form"
+                    *ngIf="!requestState.sending && !requestState.success && !requestState.error"
+                    (requestFormChanged)="onRequestFormChanged($event)" (sendRequestForm)="onSendRequestForm()"
+                ></apto-request-form>
+                <apto-request-message-state
+                    *ngIf="requestState.sending || requestState.success || requestState.error"
+                    [state]="requestState"
+                    [success]="{ title: 'Glückwunsch!', subtitle: 'Ihre Anfrage wurde erfolgreich versendet!', message: '' }"
+                    [error]="{ title: 'Ups,', subtitle: 'Da ging etwas schief!', message: '' }"
+                ></apto-request-message-state>
+                <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
+                <div
+                    *ngIf="!requestState.sending && !requestState.success && !requestState.error"
+                    class="summary bottom"
+                >
+                    <div class="basket bottom">
+                        <button color="accent" [routerLink]="['/product', product.seoUrl]" mat-flat-button>
+                            <mat-icon>undo</mat-icon>{{ contentSnippet$ | async | contentSnippet: 'back' }}
+                        </button>
+                        <apto-quantity-input-editable
+                            [size]="'big'"
+                            [width]="'100px'"
+                            [name]="'quantityInput2'"
+                            formControlName="quantityInput"
+                        ></apto-quantity-input-editable>
+                        <button color="primary" [disabled]="requestForm === null || requestForm.invalid" (click)="onSendRequestForm()" mat-flat-button>
+                            Anfrage senden
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</ng-container>

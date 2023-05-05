@@ -1,0 +1,61 @@
+<ng-container *ngIf="product && sumPrice !== undefined">
+	<ng-container *ngIf="product.useStepByStep">
+        <form [formGroup]="quantityInputGroup">
+
+        <div class="step-by-step-summary">
+			<div class="select-basket">
+				<div *ngIf="discount && discount > 0" class="discount">
+					<h4>{{ sumPseudoPrice }}</h4>
+				</div>
+				<h3 class="sum-amount">{{ sumPrice }}</h3>
+				<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+			</div>
+			<div class="add-basket">
+                <apto-quantity-input-editable
+                    [name]="'quantityInput'"
+                    formControlName="quantityInput"
+                    [size]="'small'"
+                    [width]="'100px'"
+                ></apto-quantity-input-editable>
+
+                <button class="sbs-button" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+				</button>
+			</div>
+			<div class="info">
+				<div>
+					<mat-icon>info</mat-icon>
+				</div>
+				<p>Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können</p>
+			</div>
+		</div>
+        </form>
+    </ng-container>
+
+	<ng-container *ngIf="!product.useStepByStep">
+        <form [formGroup]="quantityInputGroup">
+		<div class="one-page-summary">
+			<div class="select-basket">
+				<div class="line-content">
+                    <div *ngIf="discount && discount > 0" class="discount">
+						<h4 class="discount-amount">{{ sumPseudoPrice }}</h4>
+					</div>
+					<h3 class="sum-amount">{{ sumPrice }}</h3>
+					<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+				</div>
+			</div>
+			<div class="add-basket">
+                <apto-quantity-input-editable
+                    [name]="'quantityInput'"
+                    formControlName="quantityInput"
+                    [size]="'big'"
+                    [width]="'120px'"
+                ></apto-quantity-input-editable>
+                <button class="one-page-button" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+				</button>
+			</div>
+		</div>
+        </form>
+	</ng-container>
+</ng-container>

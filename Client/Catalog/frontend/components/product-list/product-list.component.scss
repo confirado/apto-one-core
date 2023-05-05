@@ -1,0 +1,83 @@
+@import "globals";
+
+.image {
+	padding-top: 10px;
+	height: 210px;
+	img {
+		max-height: 200px;
+		max-width: 250px;
+	}
+}
+
+.product-list {
+	background-color: var(--color-background);
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin: 0 auto;
+	gap: 40px;
+	justify-content: center;
+    max-width: var(--layout-max-with);
+    padding: 50px 40px;
+}
+
+.product {
+	width: 310px;
+	background-color: white;
+	border-radius: var(--border-radius-card);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: var(--box-shadow);
+	cursor: pointer;
+	overflow: hidden;
+    gap: 10px;
+}
+
+.product-description {
+	padding: 20px 10px;
+	overflow: auto;
+	border-top: 2px solid var(--color-border);
+	width: 290px;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    gap: 30px;
+    height: 100%;
+	> div {
+		color: var(--color-text);
+        display: flex;
+        flex-grow: 1;
+	}
+	h3 {
+		color: var(--color-title);
+        display: flex;
+        margin: 0;
+        flex-grow: 1;
+	}
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        align-self: center;
+        flex-grow: 0;
+    }
+}
+
+.missing-image {
+	background-color: var(--color-accent);
+	border-radius: var(--border-radius-card);
+	height: 200px;
+	width: 250px;
+}
+
+::-webkit-scrollbar {
+	background-color: var(--color-background-card) !important;
+}
+
+@media only screen and (max-width: $tablet-max-width) {
+	.product-list {
+		padding: 10px;
+    }
+}

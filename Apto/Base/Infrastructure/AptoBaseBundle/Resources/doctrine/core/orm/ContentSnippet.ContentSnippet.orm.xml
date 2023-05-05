@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Apto\Base\Domain\Core\Model\ContentSnippet\ContentSnippet" table="apto_content_snippet" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\ContentSnippetOrmRepository">
+        <unique-constraints>
+            <unique-constraint name="AptoUniqueNameParent" columns="name,parent_id"/>
+        </unique-constraints>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="created" column="created" type="datetime"/>
+        <field name="name" type="string" column="name"/>
+        <field name="active" type="boolean" column="active"/>
+        <field name="content" type="AptoPropertyTranslatedValue" column="content" nullable="true"/>
+        <field name="parentId" column="parent_id" type="integer" nullable="true"/>
+        <field name="html" type="boolean" column="html">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <many-to-one field="parent" target-entity="Apto\Base\Domain\Core\Model\ContentSnippet\ContentSnippet">
+            <join-column name="parent_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

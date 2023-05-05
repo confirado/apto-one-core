@@ -1,0 +1,38 @@
+@import "form-inputs";
+
+.quantity-input-editable {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas:
+        "container";
+    width: max-content;
+
+    .container {
+        grid-area: container;
+
+        &.small {
+            @include container(var(--input-height));
+            @include ripple-controls(var(--input-height));
+        }
+
+        &.big {
+            @include container(var(--input-big-height));
+            @include ripple-controls(var(--input-big-height));
+        }
+
+        input {
+            @include input();
+            text-align: right;
+            padding-left: 8px;
+            padding-right: 4px
+        }
+
+        .quantity-text {
+            flex: 1;
+            font-weight: 600;
+            align-self: center;
+            margin-right: 6px;
+        }
+    }
+}

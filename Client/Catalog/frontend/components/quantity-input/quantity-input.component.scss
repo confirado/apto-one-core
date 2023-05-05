@@ -1,0 +1,50 @@
+.input {
+	display: flex;
+	flex-direction: column;
+	width: 100px;
+
+	.container {
+		display: flex;
+		overflow: hidden;
+		align-items: center;
+
+		background-color: white;
+		border: 1px solid #d6d6d6;
+		border-radius: 10px;
+		height: 40px;
+
+		span {
+			border: 0;
+			outline: none;
+			padding: 2px 5px 2px 20px;
+			box-sizing: border-box;
+			flex: 1;
+		}
+
+		.control {
+			border-left: 1px solid #d6d6d6;
+			border-bottom: 1px solid #d6d6d6;
+			height: 20px;
+			width: 20px;
+			cursor: pointer;
+		}
+	}
+
+	span {
+		height: 20px;
+		padding-left: 20px;
+	}
+
+	.hint {
+		color: #747474;
+		font-size: 12px;
+	}
+}
+
+mat-icon {
+	font-size: 20px;
+	height: 20px;
+	width: 20px;
+	line-height: 20px;
+	color: #d6d6d6;
+}

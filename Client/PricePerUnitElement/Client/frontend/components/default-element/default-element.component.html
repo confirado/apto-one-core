@@ -1,0 +1,16 @@
+<ng-container *ngIf="element && product">
+	<apto-default-element-step-by-step
+		*ngIf="product?.useStepByStep"
+		[element]="element"
+		[section]="section"
+		[product]="product"
+		(click)="clickOnElement(element.state.active)"
+	></apto-default-element-step-by-step>
+	<apto-default-element-one-page
+		*ngIf="!product?.useStepByStep"
+		[element]="element"
+        [product]="product"
+        [section]="section"
+		(click)="clickOnElement(element.state.active)"
+	></apto-default-element-one-page>
+</ng-container>

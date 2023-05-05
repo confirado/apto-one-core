@@ -1,0 +1,8 @@
+<form class="login-form" name="loginForm">
+    <input type="email" ng-attr-placeholder="{{ snippet('form.mail') }}" ng-model="userLogin.email">
+    <input type="password" ng-attr-placeholder="{{ snippet('form.password') }}" ng-model="userLogin.password">
+    <div class="block-group">
+        <button class="block" ng-click="doRegister($event)" ng-bind-html="snippet('form.register')"></button>
+        <button class="block right" ng-click="doLogin(loginForm, $event)" ng-bind-html="snippet('form.login')"></button>
+    </div>
+</form>

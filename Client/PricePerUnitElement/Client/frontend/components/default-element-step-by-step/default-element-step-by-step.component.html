@@ -1,0 +1,41 @@
+<div class="default-element-step-by-step" *ngIf="element && section && product"
+     [class.selected]="element.state.active"
+     [class.step-by-step]="product.useStepByStep"
+     [class.one-page]="!product.useStepByStep"
+     [class.open-in-dialog]="isDialog"
+>
+    <div *ngIf="section.allowMultiple || element.state.active" class="circle" [class.selected]="element.state.active">
+        <mat-icon>done</mat-icon>
+    </div>
+
+    <div class="header">
+        <div class="title">
+            <h4>{{ element.element.name | translate }}</h4>
+        </div>
+    </div>
+
+    <div class="picture">
+        <apto-element-picture *ngIf="element.element.previewImage"
+            [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+        ></apto-element-picture>
+    </div>
+
+    <div class="element"></div>
+
+    <div class="description"
+         *ngIf="(element.element.description | translate) !== ''"
+         [innerHTML]="element.element.description | translate | safeHtml"
+    ></div>
+
+    <!--
+    <div class="element-attachment" *ngFor="let attachment for element.element.attachments">
+        <a class="element-attachment-download" [href]="attachment.url" [download]="attachment.filename">
+            {{ attachment.name | translate }}
+        </a>
+    </div>
+    <div class="element-attachment-download-item">
+        {{ element.element | json }}
+    </div>
+    -->
+    <div class="apply-button"></div>
+</div>

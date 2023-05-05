@@ -1,0 +1,139 @@
+apto-step-by-step {
+  apto-sidebar-navigation {
+    min-width: 17.5rem;
+    width: 17.5rem;
+    position: relative;
+    left: 0;
+    top: 0;
+
+    .sidebar-info {
+      background: @stepByStepSidebarInfoBackgroundColor;
+      color: @stepByStepSidebarInfoColor;
+      h1 {
+        margin: 0;
+        line-height: 1.25rem;
+        font-size: 1.0625rem;
+      }
+      a {
+        font-size: 0.75rem;
+        color: @stepByStepSidebarInfoLinkColor;
+      }
+      small{
+        margin: 3px 0;
+      }
+    }
+
+    .sidebar-image-container {
+      border-bottom: 1px solid @stepByStepSidebarImageBorderColor;
+      position: relative;
+    }
+
+    .slider-container {
+      height: 12rem;
+      padding: 0;
+      float: none;
+
+      .render-image-zoom-button {
+        right: 0.25rem;
+        top: 0.25rem;
+      }
+
+      img.render-image {
+        padding: 0.5rem;
+      }
+
+      .slider-action-container {
+        display: none;
+      }
+
+      .change-persp {
+        button {
+          &:first-child {
+            padding-left: 0.25rem;
+          }
+
+          &:last-child {
+            padding-right: 0.25rem;
+          }
+        }
+      }
+    }
+
+    .section-container {
+      counter-reset: chapter;
+      padding: 0.6875rem 0 1rem;
+      background: @stepByStepSidebarSectionBackground;
+      li {
+        line-height: 2.25rem;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.875rem;
+        counter-reset: topic;
+        color: @stepByStepSidebarInfoBackgroundColor;
+        display: inline-block;
+        width: 100%;
+        &:before {
+          counter-increment: chapter;
+          content: counter(chapter);
+          display: block;
+          width: 1.125rem;
+          height: 1.125rem;
+          background: @stepByStepSidebarInfoBackgroundColor;
+          color: @stepByStepSidebarInfoColor;
+          float: left;
+          border-radius: 50%;
+          line-height: 1.125rem;
+          text-align: center;
+          font-size: 0.6875rem;
+          margin: 0.625rem 0.625rem 0 0;
+        }
+
+        &:hover, &.active-section {
+          background: @stepByStepSidebarSectionBackgroundActive;
+        }
+        &.active {
+          &:before {
+            background: @stepByStepActiveColor;
+            line-height: 1.188rem;
+            content: '\f00c';
+            font-weight: 100;
+            font-family: FontAwesome;
+          }
+        }
+        .active-element-in-section {
+          position: relative;
+          font-size: 0.75rem;
+          line-height: 1rem;
+          .secondary-font;
+          padding-left: 1.75rem;
+          padding-bottom: 0.625rem;
+          padding-right: 1rem;
+          margin-top: -0.3125rem;
+          .fa {
+            position: absolute;
+            top: 0.125rem;
+            right: 0;
+          }
+
+          .active-element-in-section-properties-item {
+            font-size: 0.85em;
+          }
+          .active-element-in-section-properties-item:not(:last-child):after {
+            content: ', ';
+          }
+        }
+      }
+    }
+  }
+  #content {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  apto-step-by-step {
+    apto-sidebar-navigation {
+      display: none;
+    }
+  }
+}

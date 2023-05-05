@@ -1,0 +1,33 @@
+form {
+  input[type="text"], input[type="email"], input[type="password"], textarea {
+    background: @baseBackgroundInput;
+    width: 100%;
+    margin-bottom: 0.625rem;
+    height: 1.875rem;
+    border: 1px solid @baseBorderColorInput;
+    padding-left: 0.3125rem;
+    color: @baseColorInput;
+    font-size: 0.875rem;
+    .secondary-font;
+    &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+      color: @baseColorInput;
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: @baseColorInput;
+      .opacity(1);
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: @baseColorInput;
+      .opacity(1);
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: @baseColorInput;
+    }
+  }
+
+  textarea {
+    height: auto;
+    padding-left: 0.3125rem;
+    resize: vertical;
+  }
+}

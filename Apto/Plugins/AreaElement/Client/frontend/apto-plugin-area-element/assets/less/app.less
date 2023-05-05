@@ -1,0 +1,51 @@
+apto-area-element-input {
+  .description {
+    margin-bottom: 1rem;
+  }
+
+  .input-container {
+    margin-bottom: 0.5rem;
+  }
+
+  .set-value {
+    &.element-value-not-in-sync {
+      box-shadow: 0 0 5px 1px rgba(255, 0, 0, 0.75);
+    }
+  }
+}
+
+.no-dialog-element {
+  margin-bottom: 0.75rem;
+}
+
+.sbs-element {
+  .content-container-no-preview-image{
+    width: 100%;
+    text-align: center;
+  }
+  .input-container {
+    .prefix {
+      display: inline-block;
+      min-width: 4.5rem;
+    }
+  }
+  .sum-of-field-value-max {
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  apto-area-element {
+    .area-element-hide-mobile {
+      display: none;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  apto-area-element {
+    .area-element-hide-desktop {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity
+            name="Apto\Base\Domain\Backend\Model\Acl\AclEntry"
+            table="apto_acl_entry"
+            repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AclEntryOrmRepository">
+
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoShop" columns="shop_id"/>
+            <index name="AptoRole" columns="role_identifier"/>
+            <index name="AptoIdentity" columns="model,entity,field"/>
+            <index name="AptoShopIdentity" columns="shop_id,model,entity,field"/>
+            <index name="AptoShopRoleIdentity" columns="shop_id,role_identifier,model,entity,field"/>
+            <index name="AptoMask" columns="mask"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="shop" column="shop_id" type="AptoPropertyUuid" length="36"  nullable="true"/>
+
+        <embedded name="identity" class="Apto\Base\Domain\Backend\Model\Acl\AclIdentity" use-column-prefix="false"/>
+        <embedded name="mask" class="Apto\Base\Domain\Backend\Model\Acl\AclMask" use-column-prefix="false"/>
+        <embedded name="role" class="Apto\Base\Domain\Backend\Model\UserRole\UserRoleIdentifier" use-column-prefix="true"/>
+
+    </entity>
+</doctrine-mapping>

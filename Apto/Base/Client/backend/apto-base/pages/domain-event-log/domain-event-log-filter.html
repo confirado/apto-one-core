@@ -1,0 +1,76 @@
+<md-expansion-panel-group md-component-id="virtual-repeat-event-log-panel-group" style="width: 100%;">
+    <md-expansion-panel md-component-id="virtual-repeat-event-log-panel" style="margin: 0 0 20px 0;">
+        <md-expansion-panel-collapsed>
+            <div class="md-summary">Filter:</div>
+            <md-expansion-panel-icon></md-expansion-panel-icon>
+        </md-expansion-panel-collapsed>
+        <md-expansion-panel-expanded>
+            <md-expansion-panel-header ng-click="$panel.collapse()">
+                <div class="md-summary">Filter:</div>
+                <md-expansion-panel-icon></md-expansion-panel-icon>
+            </md-expansion-panel-header>
+            <md-expansion-panel-content>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex="25">
+                        <md-datepicker ng-model="filter.fromDate" md-placeholder="Datum von:" md-max-date="filter.toDate ? filter.toDate : filter.maxDate"></md-datepicker>
+                    </md-input-container>
+                    <md-input-container flex="25">
+                        <md-datepicker ng-model="filter.toDate" md-placeholder="Datum bis:" md-min-date="filter.fromDate ? filter.fromDate : null" md-max-date="filter.maxDate"></md-datepicker>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>EventBody durchsuchen:</label>
+                        <input ng-model="filter.eventBody">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start" flex>
+                    <div class="virtualRepeatEventLog" flex="50">
+                        <div class="wrapper">
+                            <div class="apto-md-virtual-repeat-filter">
+                                <md-input-container md-no-float>
+                                    <input ng-model="filter.groupedTypeNamesSearch" placeholder="Events">
+                                </md-input-container>
+                            </div>
+                            <md-virtual-repeat-container class="vertical-container">
+                                <div ng-repeat="typeName in groupedTypeNames | filter:filter.groupedTypeNamesSearch" class="repeated-item" flex>
+                                    <md-input-container flex="50">
+                                        <md-checkbox ng-model="filter.typeNames[typeName.typeName]" aria-label="{{ typeName.typeName }}"></md-checkbox>
+                                    </md-input-container>
+                                    <span>
+                                        <md-tooltip md-direction="right">{{ typeName.typeName }}</md-tooltip>
+                                        {{ typeName.messageName }}
+                                    </span>
+                                </div>
+                            </md-virtual-repeat-container>
+                        </div>
+                    </div>
+                    <div class="virtualRepeatEventLog" flex="50">
+                        <div class="wrapper">
+                            <div class="apto-md-virtual-repeat-filter">
+                                <md-input-container md-no-float>
+                                    <input ng-model="filter.groupedUsersSearch" placeholder="Users">
+                                </md-input-container>
+                            </div>
+                            <md-virtual-repeat-container class="vertical-container">
+                                <div ng-repeat="user in groupedUsers.asArray | filter: filter.groupedUsersSearch" class="repeated-item" flex>
+                                    <md-input-container flex="50">
+                                        <md-checkbox ng-model="filter.userIds[user.id]" aria-label="{{ user.username }}"></md-checkbox>
+                                    </md-input-container>
+                                    <span>
+                                        <md-tooltip md-direction="right">{{ user.id }}</md-tooltip>
+                                        {{ user.username }}
+                                    </span>
+                                </div>
+                            </md-virtual-repeat-container>
+                        </div>
+                    </div>
+                </div>
+            </md-expansion-panel-content>
+            <md-expansion-panel-footer>
+                <md-button class="md-cornered" ng-click="resetFilter()">Zurücksetzen</md-button>
+                <div flex></div>
+                <md-button class="md-cornered" ng-click="$panel.collapse()">Schließen</md-button>
+                <md-button class="md-raised md-primary md-cornered" ng-click="setFilter();">Filtern</md-button>
+            </md-expansion-panel-footer>
+        </md-expansion-panel-expanded>
+    </md-expansion-panel>
+</md-expansion-panel-group>

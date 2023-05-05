@@ -1,0 +1,63 @@
+{% extends '@AptoBase/apto/base/backend/index.html.twig' %}
+
+{% block bodyNgController %}ng-controller="AptoLoginController"{% endblock %}
+
+{% block layout %}
+    <div class="apto-backend-login-content-container">
+        <div class="apto-backend-login-content">
+            {% if error %}
+                <md-card>
+                    <md-toolbar class="md-warn">
+                        <div class="md-toolbar-tools">
+                            <h2 class="md-flex">{{ error.messageKey|trans(error.messageData, 'security') }}</h2>
+                        </div>
+                    </md-toolbar>
+                </md-card>
+            {% endif %}
+            <md-card>
+                <form action="{{ path('apto_base_infrastructure_aptobase_login_login') }}" method="post">
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Login</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        {% if csrf_token %}
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                        {% endif %}
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container flex="100">
+                                <label for="username">Username:</label>
+                                <input required type="text" id="username" name="_username" value="{{ last_username }}" autofocus />
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container flex="100">
+                                <label for="password">Password:</label>
+                                <input required type="password" id="password" name="_password" />
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row" layout-align="start" flex>
+                            <input type="checkbox" id="remember_me" name="_remember_me"/>
+                            <label for="remember_me">Eingeloggt bleiben</label>
+                        </div>
+                        {#
+                        If you want to control the URL the user
+                        is redirected to on success (more details below)
+                        <input type="hidden" name="_target_path" value="/account" />
+                        #}
+
+                    </md-card-content>
+                    <md-card-actions layout="row" layout-align="center" style="justify-content: space-between">
+                        <a class="md-raised md-cornered md-button md-ink-ripple" href="mailto:support@confirado.de">Passwort vergessen</a>
+                        <md-button class="md-raised md-primary md-cornered" type="submit">Login</md-button>
+                    </md-card-actions>
+                </form>
+            </md-card>
+            <div flex></div>
+        </div>
+    </div>
+{% endblock %}
+

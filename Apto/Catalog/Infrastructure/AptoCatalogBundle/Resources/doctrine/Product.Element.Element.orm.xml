@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Catalog\Domain\Core\Model\Product\Element\Element" table="apto_product_element">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="isActive" type="boolean" column="is_active" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="isDefault" type="boolean" column="is_default" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="isMandatory" type="boolean" column="is_mandatory" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="isNotAvailable" type="boolean" column="is_not_available" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="openLinksInDialog" type="boolean" column="open_links_in_dialog" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="isZoomable" type="boolean" column="is_zoomable" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+
+        <field name="priceMatrixActive" type="boolean" column="price_matrix_active" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="priceMatrixRow" type="text" column="price_matrix_row" nullable="false"/>
+        <field name="priceMatrixColumn" type="text" column="price_matrix_column" nullable="false"/>
+        <field name="extendedPriceCalculationActive" type="boolean" column="extended_price_calculation_active" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="extendedPriceCalculationFormula" type="text" column="extended_price_calculation_formula" nullable="false"/>
+        <field name="name" type="AptoPropertyTranslatedValue" column="name" nullable="true"/>
+        <field name="position" type="integer" column="position">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="percentageSurcharge" type="float" column="percentage_surcharge">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="description" type="AptoPropertyTranslatedValue" column="description" nullable="true"/>
+        <field name="errorMessage" type="AptoPropertyTranslatedValue" column="error_message" nullable="true"/>
+        <field name="definition" type="AptoPropertyJsonSerializable" column="definition" nullable="true"/>
+        <field name="created" column="created" type="datetime" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Identifier" use-column-prefix="true" name="identifier"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Element\ZoomFunction" use-column-prefix="false" name="zoomFunction"/>
+
+        <one-to-many field="renderImages" target-entity="Apto\Catalog\Domain\Core\Model\Product\Element\RenderImage" mapped-by="element" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="attachments" target-entity="Apto\Catalog\Domain\Core\Model\Product\Element\Attachment" mapped-by="element" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="gallery" target-entity="Apto\Catalog\Domain\Core\Model\Product\Element\Gallery" mapped-by="element" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one field="priceMatrix" target-entity="Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix">
+            <join-column name="price_matrix_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-one field="previewImage" target-entity="Apto\Base\Domain\Core\Model\MediaFile\MediaFile">
+            <join-column name="preview_image_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-one field="section" target-entity="Apto\Catalog\Domain\Core\Model\Product\Section\Section" inversed-by="elements">
+            <join-column name="section_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-many field="aptoPrices" target-entity="Apto\Base\Domain\Core\Model\AptoPrice\AptoPrice" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_product_element_to_apto_price">
+                <join-columns>
+                    <join-column name="product_element_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="apto_price_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="aptoPriceFormulas" target-entity="Apto\Base\Domain\Core\Model\AptoPriceFormula\AptoPriceFormula" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_product_element_to_apto_price_formula">
+                <join-columns>
+                    <join-column name="product_element_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="apto_price_formula_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="aptoDiscounts" target-entity="Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscount" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_product_element_to_apto_discount">
+                <join-columns>
+                    <join-column name="product_element_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="apto_discount_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="key" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_product_element_to_custom_property">
+                <join-columns>
+                    <join-column name="product_element_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="custom_property_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

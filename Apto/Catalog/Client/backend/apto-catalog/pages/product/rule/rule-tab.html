@@ -1,0 +1,49 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.active" aria-label="Regel aktiv">
+            Regel aktiv
+            <md-tooltip md-direction="right">Aktiviert die Regel</md-tooltip>
+        </md-checkbox>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.softRule" aria-label="Weiche Regel">
+            Weiche Regel
+            <md-tooltip md-direction="right">Erlaubt es dem Kunden die Konfiguration zu bestellen.</md-tooltip>
+        </md-checkbox>
+    </md-input-container>
+</div>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Verknüpfung Bedingung:</label>
+        <md-select multiple="false" ng-model="detail.conditionsOperator">
+            <md-option ng-value="0">
+                UND
+            </md-option>
+            <md-option ng-value="1">
+                ODER
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Verknüpfung Auswirkung:</label>
+        <md-select multiple="false" ng-model="detail.implicationsOperator">
+            <md-option ng-value="0">
+                UND
+            </md-option>
+            <md-option ng-value="1">
+                ODER
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value
+            label="'Fehlermeldung:'"
+            type="'textarea'"
+            translated-value="detail.errorMessage"
+            flex
+    ></apto-translated-value>
+</div>
+

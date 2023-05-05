@@ -1,0 +1,37 @@
+@import "globals";
+@import "dialogs";
+
+.item-light-properties {
+    display: flex;
+    flex-direction: row;
+    justify-items: left;
+    gap: var(--input-elements-gap);
+    justify-content: center;
+
+    .item-light-property {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 90px;
+
+        img {
+            width: 60px;
+            height: 60px;
+        }
+
+        > div {
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-top: calc(var(--input-elements-gap) / 2);
+        }
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .item-light-properties {
+        justify-content: flex-start;
+    }
+}
+
+

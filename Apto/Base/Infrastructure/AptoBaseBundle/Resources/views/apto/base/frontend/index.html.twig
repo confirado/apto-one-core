@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+{% block htmlOpen %}
+<html lang="{{ locale|replace({'_': '-'}) }}" ng-style="IndexCtrl.sidebarRightOpenHTML && {'padding-right':IndexCtrl.scrollbarWidth}" ng-class="{'active-basket':IndexCtrl.sidebarRightOpenHTML}" data-ng-app="AptoFrontend" ng-controller="AptoIndexController as IndexCtrl">
+{% endblock %}
+
+<head>
+    {% block metaViewport %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    {% endblock %}
+
+    {% block metaCharset %}
+        <meta charset="UTF-8" />
+    {% endblock %}
+
+    {% block metaRobots %}
+        <meta name="robots" content="noindex,nofollow" />
+    {% endblock %}
+
+    {% block metaTitle %}
+        <title ng-bind-html="IndexCtrl.getMetaTitle()">{{ metaTitle }}</title>
+    {% endblock %}
+
+    {% block metaDescription %}
+        <meta name="description" ng-attr-content="{{ '{{ IndexCtrl.getMetaDescription() }}' }}" content="{{ metaDescription }}">
+    {% endblock %}
+
+    {% block stylesheetLibs %}{% endblock %}
+
+    {% block webpackFilesCss %}
+        {% for stylesheet in templateLoaderData.webpackFiles.css %}
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+        {% endfor %}
+    {% endblock %}
+
+    {% block customFilesCss %}
+        {% for stylesheet in templateLoaderData.customFiles.css %}
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+        {% endfor %}
+    {% endblock %}
+
+    {% block faviconImage %}
+        <link rel="shortcut icon" type="image/x-icon" ng-href="{{ '{{ IndexCtrl.getFaviconSrc() }}' }}">
+    {% endblock %}
+
+</head>
+<body id="{{ shopTemplate }}" class="{{ shopTemplate }}">
+    {% block aptoSpinner %}
+        <!-- @todo make a spinner component -->
+        <div class="apto-spinner-container apto-spinner-page" ng-if="IndexCtrl.spinnerPage" ng-style="IndexCtrl.spinnerPage && {'display':'block'}" >
+            <div class="apto-spinner">
+                <div class="apto-spinner-icon"></div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block layout %}
+        {% include '@AptoBase/apto/base/frontend/pages/layout.html.twig' %}
+    {% endblock %}
+
+    {% block indexCloseBasket %}
+        <div ng-click="IndexCtrl.closeSidebarRight($event)" ng-class="{'close-on-click': IndexCtrl.sidebarRightOpen}"></div>
+    {% endblock %}
+
+    {% block javascriptInject %}
+    <script type="text/javascript">
+        var AptoFrontendLocale = {{ locale|json_encode()|raw }};
+        var AptoFrontendLanguages = {{ languages|json_encode()|raw }};
+        var AptoPerspectives = {{ perspectives|json_encode()|raw }};
+        var APTO_API = {{ aptoApi|json_encode()|raw }};
+    </script>
+    {% endblock %}
+
+    {% block webpackFilesJs %}
+        {% for javascript in templateLoaderData.webpackFiles.js %}
+            <script src="{{ asset(javascript) }}"></script>
+        {% endfor %}
+    {% endblock %}
+
+    {% block customFilesJs %}
+        {% for javascript in templateLoaderData.customFiles.js %}
+            <script type="text/javascript" src="{{ asset(javascript) }}"></script>
+        {% endfor %}
+    {% endblock %}
+
+    {% block websiteTracking %}
+        <div ng-if="IndexCtrl.snippet('aptoTrackingCodes.scripts')" ng-bind-html="IndexCtrl.snippet('aptoTrackingCodes.scripts', true)"></div>
+    {% endblock %}
+</body>
+</html>

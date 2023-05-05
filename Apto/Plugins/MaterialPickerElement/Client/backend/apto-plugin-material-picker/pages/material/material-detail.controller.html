@@ -1,0 +1,53 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="materialForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3 class="title-headline">
+                    <span ng-class="'title-headline'">{{ translate(material.name) }}</span>
+                </h3>
+                <span flex></span>
+                <span ng-class="'title-id'" style="font-size: 0.875rem">Id: {{ material.id }}</span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Stoff">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/material-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Preise">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/price-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Gallery">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/gallery-images-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Eigenschaften">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/properties-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Farben">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/color-ratings-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Pools">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/pools-tab.html'"></div>
+                    </md-tab>
+                    <md-tab ng-if="materialId" label="Render Images">
+                        <div class="apto-tab-content" ng-include="'plugins/material-picker/pages/material/render-images-tab.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="material.id" class="md-raised md-cornered" ng-click="save(materialForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="material.id" class="md-raised md-primary md-cornered" ng-click="save(materialForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!material.id" class="md-raised md-cornered" ng-click="save(materialForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!material.id" class="md-raised md-primary md-cornered" ng-click="save(materialForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

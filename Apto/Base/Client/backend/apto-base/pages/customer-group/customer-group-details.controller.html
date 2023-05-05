@@ -1,0 +1,65 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="customerGroupForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ details.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <div layout="column" flex>
+                        <md-input-container class="md-block" flex>
+                            <label>Name:</label>
+                            <input required ng-model="details.name">
+                        </md-input-container>
+                    </div>
+                    <div flex="5"></div>
+                    <div layout="column" flex>
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container flex>
+                                <md-checkbox ng-model="details.inputGross" aria-label="Aktiv">
+                                    Eingabe Brutto
+                                </md-checkbox>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <md-checkbox ng-model="details.showGross" aria-label="Versteckt">
+                                    Zeige Brutto
+                                </md-checkbox>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <md-checkbox ng-model="details.fallback" aria-label="Step by Step">
+                                    Fallback
+                                </md-checkbox>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container class="md-block" flex>
+                        <label>Shop Id:</label>
+                        <input required ng-model="details.shopId">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex>
+                        <label>External Id:</label>
+                        <input ng-model="details.externalId">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="!details.id" class="md-raised md-cornered" ng-click="save(customerGroupForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!details.id" class="md-raised md-primary md-cornered" ng-click="save(customerGroupForm, true)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="details.id" class="md-raised md-cornered" ng-click="save(customerGroupForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="details.id" class="md-raised md-primary md-cornered" ng-click="save(customerGroupForm)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

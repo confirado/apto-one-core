@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrixElement" table="apto_price_matrix_element">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <unique-constraints>
+            <unique-constraint columns="price_matrix_id,column_value,row_value" name="unique_column_value_row_value" />
+        </unique-constraints>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrixPosition" use-column-prefix="false" name="position"/>
+
+        <many-to-one field="matrix" target-entity="Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix" inversed-by="elements">
+            <join-column name="price_matrix_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-many field="aptoPrices" target-entity="Apto\Base\Domain\Core\Model\AptoPrice\AptoPrice" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_price_matrix_element_to_apto_price">
+                <join-columns>
+                    <join-column name="price_matrix_element_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="apto_price_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="key" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_price_matrix_element_to_custom_property">
+                <join-columns>
+                    <join-column name="price_matrix_element_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="custom_property_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

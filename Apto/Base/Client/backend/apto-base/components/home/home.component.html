@@ -1,0 +1,3 @@
+<img ng-src="{{ $ctrl.image }}" />
+<p class="apto-versions-tag" ng-repeat="core in $ctrl.versions.core">{{core.name + ' v' + core.version}}</p>
+<p  class="apto-versions-tag" ng-repeat="plugin in $ctrl.versions.plugins">{{plugin.name + ' v' + plugin.version}}</p>

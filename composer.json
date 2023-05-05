@@ -1,0 +1,14 @@
+{
+    "name": "apto-one/core",
+    "version": "2.1.0",
+    "autoload": {
+        "psr-4": {
+            "": ""
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.4",
+        "langleyfoxall/math_eval": "~2.0.0",
+        "scienta/doctrine-json-functions": "~5.0.0"
+    }
+}

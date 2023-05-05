@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Core\Model\MediaFile\MediaFile" table="apto_media_file" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\MediaFileOrmRepository">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoMd5Hash" columns="md5_hash"/>
+            <index name="AptoFilename" columns="filename"/>
+            <index name="AptoExtension" columns="extension"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="size" column="size" type="bigint"/>
+        <field name="md5Hash" column="md5_hash" type="string" length="32" nullable="false">
+            <options>
+                <option name="fixed">1</option>
+            </options>
+        </field>
+
+        <embedded name="id" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false"/>
+        <embedded name="file" class="Apto\Base\Domain\Core\Model\FileSystem\File\File" use-column-prefix="false"/>
+
+        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="key" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_media_file_to_custom_property">
+                <join-columns>
+                    <join-column name="media_file_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="custom_property_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

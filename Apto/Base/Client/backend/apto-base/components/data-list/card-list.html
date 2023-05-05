@@ -1,0 +1,25 @@
+<div ng-repeat-start="model in $ctrl.data" ng-style="$ctrl.cardStyle">
+    <md-card md-whiteframe="2">
+        <md-card-title ng-if="$ctrl.config.listOptions.card.headline.length > 0 || $ctrl.config.listOptions.card.subHeadline.length > 0">
+            <md-card-title-text>
+                    <span class="md-headline"ng-if="$ctrl.config.listOptions.card.headline.length > 0">
+                        <span ng-repeat="headline in $ctrl.config.listOptions.card.headline">{{ $first ? "":", " }}{{ $ctrl.getFieldContent(model, headline) }}</span>
+                    </span>
+                <span class="md-subhead" ng-if="$ctrl.config.listOptions.card.subHeadline.length > 0">
+                        <span ng-repeat="subHeadline in $ctrl.config.listOptions.card.subHeadline">{{ $first ? "":", " }}<strong>{{ $ctrl.config.listFields[subHeadline].label }}:</strong> {{ $ctrl.getFieldContent(model, subHeadline) }}</span>
+                    </span>
+            </md-card-title-text>
+            <md-card-title-media ng-hide="true">
+                <div class="md-media-sm card-media"></div>
+            </md-card-title-media>
+        </md-card-title>
+        <md-card-content ng-if="$ctrl.config.listOptions.card.content.length > 0">
+            <div ng-repeat="content in $ctrl.config.listOptions.card.content">
+                <div><strong>{{ $ctrl.config.listFields[content].label  }}:</strong></div>
+                <div>{{ $ctrl.getFieldContent(model, content) }}</div>
+            </div>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center" ng-include="'item-actions.html'"></md-card-actions>
+    </md-card>
+</div>
+<div ng-repeat-end ng-if="$index % $ctrl.config.listOptions.card.cardColumns == $ctrl.config.listOptions.card.cardColumns - 1 || $last" style="clear: both"></div>

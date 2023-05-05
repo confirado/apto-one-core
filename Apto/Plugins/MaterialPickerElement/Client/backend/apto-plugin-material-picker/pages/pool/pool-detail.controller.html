@@ -1,0 +1,111 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="poolForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3 class="title-headline">
+                    <span ng-class="'title-headline'">{{ translate(pool.name) }}</span>
+                </h3>
+                <span flex></span>
+                <span ng-class="'title-id'" style="font-size: 0.875rem" >Id: {{ pool.id }}</span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <apto-translated-value required label="'Name'" type="'input'" translated-value="pool.name" flex></apto-translated-value>
+                </div>
+
+                <!-- Add PoolItem -->
+                <div ng-if="poolId" layout="row" layout-align="start" flex>
+                    <md-autocomplete
+                            md-floating-label="Stoff:"
+                            md-require-match="true"
+                            md-selected-item="newPoolItem.material"
+                            md-search-text="newPoolItem.materialSearch"
+                            md-item-text="translate(material.name)"
+                            md-items="material in materials | filter:newPoolItem.materialSearch"
+                            md-no-cache="true"
+                            md-clear-button="true"
+                            flex
+                    >
+                        <md-item-template>
+                            <span md-highlight-text="newPoolItem.materialSearch">{{ translate(material.name) }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Keine Stoffe gefunden.
+                        </md-not-found>
+                    </md-autocomplete>
+                    <div flex="5"></div>
+                    <md-autocomplete
+                            md-floating-label="Preisgruppe:"
+                            md-require-match="true"
+                            md-selected-item="newPoolItem.priceGroup"
+                            md-search-text="newPoolItem.priceGroupSearch"
+                            md-item-text="translate(priceGroup.internalName) + ' (' + translate(priceGroup.name) + ')'"
+                            md-items="priceGroup in priceGroups | filter:newPoolItem.priceGroupSearch"
+                            md-no-cache="true"
+                            md-clear-button="true"
+                            flex
+                    >
+                        <md-item-template>
+                            <span md-highlight-text="newPoolItem.priceGroupSearch">{{ translate(priceGroup.internalName) + ' (' + translate(priceGroup.name) + ')' }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                            Keine Preisgruppen gefunden.
+                        </md-not-found>
+                    </md-autocomplete>
+                    <div flex="5"></div>
+                    <md-input-container>
+                        <md-button ng-disabled="!newPoolItem.material || !newPoolItem.priceGroup" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addItem()">Stoff Hinzufügen</md-button>
+                    </md-input-container>
+                </div>
+
+                <!-- PoolItems -->
+                <md-table-container ng-if="poolId" class="md-whiteframe-2dp">
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width:20%;">Id</th>
+                            <th md-column style="width:30%;">Material</th>
+                            <th md-column style="width:30%;">Preisgruppe (Interner Name)</th>
+                            <th md-column style="width:30%;">Preisgruppe</th>
+                            <th md-column style="width:10%;">Aufpreis</th>
+                            <th md-column style="width:60px;">Aktionen</th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="poolItem in poolItems">
+                            <td md-cell>{{poolItem.material.id}}</td>
+                            <td md-cell>{{translate(poolItem.material.name)}}</td>
+                            <td md-cell>{{translate(poolItem.priceGroup.internalName)}}</td>
+                            <td md-cell>{{translate(poolItem.priceGroup.name)}}</td>
+                            <td md-cell>{{poolItem.priceGroup.additionalCharge}}</td>
+                            <td md-cell>
+                                <md-button
+                                        title="Löschen"
+                                        class="md-icon-button md-warn"
+                                        ng-click="removeItem(poolItem.id)">
+                                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                                </md-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="pool.id" class="md-raised md-cornered" ng-click="save(poolForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="pool.id" class="md-raised md-primary md-cornered" ng-click="save(poolForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!pool.id" class="md-raised md-cornered" ng-click="save(poolForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!pool.id" class="md-raised md-primary md-cornered" ng-click="save(poolForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

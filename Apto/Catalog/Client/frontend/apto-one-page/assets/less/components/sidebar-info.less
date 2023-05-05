@@ -1,0 +1,59 @@
+.sidebar-info {
+  background: @onePageSidebarInfoBackground;
+  padding-bottom: 1.125rem;
+  h1 {
+    margin: 0;
+    color: @onePageSidebarInfoProductNameColor;
+    font-size: 1.0625rem;
+    line-height: 1.25rem;
+  }
+  small {
+    display: block;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    .secondary-font;
+    a {
+      color: @onePageSidebarInfoProductCatColor;
+      font-size: 0.75rem;
+      text-decoration: none;
+    }
+  }
+  > span {
+    color: @onePageSidebarInfoPriceColor;
+    font-size: 1.25rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.8125rem;
+    margin-top: 0.75rem;
+    .secondary-font;
+    small {
+      font-weight: normal;
+      font-size: 0.625rem;
+      color: @onePageSidebarInfoMswColor;
+      .secondary-font;
+      a {
+        font-size: 0.625rem;
+        text-decoration: underline;
+        &:hover{
+          color: @onePageSidebarLinkCatColorActive;
+        }
+      }
+    }
+    .pseudo-price {
+      color: @backgroundColorDisabled;
+      font-size: 0.75rem;
+      text-decoration: line-through;
+      padding-left: 0.5rem;
+    }
+  }
+  select{
+    width: 100%;
+    height: 2rem;
+    border: 1px solid #aaaaaa;
+    padding-left: 0.3125rem;
+    font-weight: bold;
+    background: @onePageSidebarInfoBackground;
+    color: @onePageSidebarInfoProductNameColor;
+    position: relative;
+  }
+}

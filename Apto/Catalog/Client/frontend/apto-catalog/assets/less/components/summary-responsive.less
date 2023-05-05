@@ -1,0 +1,61 @@
+@media screen and (max-width: 767px) {
+  apto-summary {
+    .summary-container {
+      padding-top: 2rem;
+      ul {
+        li {
+          height: auto;
+          span {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+          }
+        }
+      }
+      .summary-actions {
+        border: 0;
+        .product-action-container {
+          margin: 1rem auto;
+          float: none;
+          .share-button {
+            float: right;
+          }
+        }
+        apto-select {
+          float: none;
+          margin: 0 auto;
+        }
+      }
+      .price-total-container {
+        text-align: center;
+        border: 0;
+        padding: 1rem 0;
+      }
+      #back-button,
+      #basket-button {
+        width: 100%;
+        margin-top: 1rem;
+        position: relative;
+        height: auto;
+        line-height: 1.125rem;
+      }
+      #offer-button {
+        float: none;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 360px) {
+  apto-summary {
+    .summary-container {
+      .price-total-container {
+        h4 {
+          width: 80%;
+        }
+      }
+    }
+  }
+}

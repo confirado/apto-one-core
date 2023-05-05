@@ -1,0 +1,16 @@
+<div class="item-light-properties">
+    <div class="item-light-property" *ngIf="reflection">
+        <img [src]="clientUrl + 'assets/apto-plugin-base-plugins/reflexion.png'" />
+        <div>{{ contentSnippet$ | async | contentSnippet: 'reflection' }}: {{ reflection }}%</div>
+    </div>
+
+    <div class="item-light-property" *ngIf="transmission">
+        <img [src]="clientUrl + 'assets/apto-plugin-base-plugins/transmission.png'" />
+        <div>{{ contentSnippet$ | async | contentSnippet: 'transmission' }}: {{ transmission }}%</div>
+    </div>
+
+    <div class="item-light-property" *ngIf="absorption">
+        <img [src]="clientUrl + 'assets/apto-plugin-base-plugins/absorption.png'" />
+        <div>{{ contentSnippet$ | async | contentSnippet: 'absorption' }}: {{ absorption }}%</div>
+    </div>
+</div>

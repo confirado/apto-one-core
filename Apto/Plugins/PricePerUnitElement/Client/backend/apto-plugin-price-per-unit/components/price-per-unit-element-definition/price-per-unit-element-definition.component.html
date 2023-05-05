@@ -1,0 +1,243 @@
+<md-tabs md-dynamic-height md-border-bottom ng-if="$ctrl.isPricePerUnitElementDefinition">
+
+    <!-- Tab relation -->
+    <md-tab label="Beziehung">
+        <div class="apto-tab-content">
+
+            <!-- New ElementValue -->
+            <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Sektion:</label>
+                    <md-select ng-model="$ctrl.input.elementValueRef.sectionId" ng-change="$ctrl.updateAvailableElements(true)">
+                        <md-option ng-value="section.id" ng-repeat="section in $ctrl.availableSections">{{ section.identifier }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Element:</label>
+                    <md-select ng-disabled="!$ctrl.input.elementValueRef.sectionId" ng-model="$ctrl.input.elementValueRef.elementId" ng-change="$ctrl.updateAvailableSelectableAndComputableValues()">
+                        <md-option ng-value="element.id" ng-repeat="element in $ctrl.availableElements">{{ element.identifier }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Selectable/Computable:</label>
+                    <md-select ng-disabled="!$ctrl.input.elementValueRef.elementId" ng-model="$ctrl.input.elementValueRef.selectableValueType" ng-change="$ctrl.updateAvailableSelectableAndComputableValues()">
+                        <md-option ng-value="selectableValueType" ng-repeat="selectableValueType in $ctrl.availableSelectableValueTypes">{{ selectableValueType }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Feld:</label>
+                    <md-select
+                            ng-disabled="!$ctrl.input.elementValueRef.selectableValueType"
+                            ng-model="$ctrl.input.elementValueRef.selectableValue"
+                            ng-model-options="{trackBy: '$value'}"
+                            ng-change="$ctrl.updateDefinitionValues()"
+                    >
+                        <md-option ng-if="$ctrl.input.elementValueRef.selectableValueType === 'Selectable'" ng-value="selectableValue" ng-repeat="selectableValue in $ctrl.availableSelectableValues">{{ selectableValue }}</md-option>
+                        <md-option ng-if="$ctrl.input.elementValueRef.selectableValueType === 'Computable'" ng-value="selectableValue" ng-repeat="selectableValue in $ctrl.availableComputableValues">{{ selectableValue }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button
+                        ng-disabled="
+                            !$ctrl.input.elementValueRef.sectionId ||
+                            !$ctrl.input.elementValueRef.elementId ||
+                            !$ctrl.input.elementValueRef.selectableValue ||
+                            !$ctrl.input.elementValueRef.selectableValue
+                        "
+                        style="margin: 0;"
+                        class="md-raised md-primary md-cornered"
+                        ng-click="$ctrl.addElementValueRef()"
+                    >
+                        Hinzufügen
+                    </md-button>
+                </md-input-container>
+            </div>
+
+
+            <!-- ElementValue list -->
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column style="width:30%;">Sektion</th>
+                        <th md-column style="width:30%;">Element</th>
+                        <th md-column style="width:20%;">Selectable/Computable</th>
+                        <th md-column style="width:20%;">Feld</th>
+                        <th md-column style="width:60px;">Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="elementValueRef in $ctrl.values.elementValueRefs">
+                        <td md-cell>{{$ctrl.getSectionIdentifier(elementValueRef.sectionId)}}</td>
+                        <td md-cell>{{$ctrl.getElementIdentifier(elementValueRef.elementId)}}</td>
+                        <td md-cell>{{elementValueRef.selectableValueType}}</td>
+                        <td md-cell>{{elementValueRef.selectableValue}}</td>
+                        <td md-cell>
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeElementValueRef($index, elementValueRef)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+
+    <!-- Tab prices -->
+    <md-tab label="Preise">
+        <div class="apto-tab-content">
+
+            <!-- Conversion factor -->
+            <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Umrechnungsfaktor:</label>
+                    <input ng-model="$ctrl.values.conversionFactor" ng-change="$ctrl.updateDefinitionValues()">
+                </md-input-container>
+                <md-input-container style="margin: 18px 100px;">
+                    <md-checkbox
+                            aria-label="Mindestens mit Faktor 1 rechnen"
+                            ng-model="$ctrl.values.minOne"
+                            ng-change="$ctrl.updateDefinitionValues()">
+                        Mindestens mit Faktor 1 rechnen
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <!-- live price -->
+            <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex>
+                <apto-translated-value label="'Live Preis Prefix'" type="'input'" translated-value="$ctrl.values.livePricePrefix" flex></apto-translated-value>
+                <div flex="5"></div>
+                <apto-translated-value label="'Live Preis Suffix'" type="'input'" translated-value="$ctrl.values.livePriceSuffix" flex></apto-translated-value>
+            </div>
+
+            <!-- New Price -->
+            <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Preis:</label>
+                    <input type="number" ng-model="$ctrl.newPrice.amount">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Währung:</label>
+                    <input ng-model="$ctrl.newPrice.currencyCode">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Kundengruppe:</label>
+                    <md-select ng-model="$ctrl.newPrice.customerGroupId">
+                        <md-option ng-value="group.id" ng-repeat="group in $ctrl.availableCustomerGroups">{{ group.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button ng-disabled="!$ctrl.newPrice.amount || !$ctrl.newPrice.currencyCode || !$ctrl.newPrice.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addPrice()">Preis Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <!-- Price list -->
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column style="width:30%;">Preis</th>
+                        <th md-column style="width:30%;">Währung</th>
+                        <th md-column style="width:40%;">Kundengruppe</th>
+                        <th md-column style="width:60px;">Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="price in $ctrl.pricePerUnitPrices">
+                        <td md-cell>{{price.amount}}</td>
+                        <td md-cell>{{price.currencyCode}}</td>
+                        <td md-cell>{{price.customerGroupId}}</td>
+                        <td md-cell>
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removePrice(price.id)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+        </div>
+    </md-tab>
+
+    <!-- Tab text -->
+    <md-tab label="Text">
+        <div class="apto-tab-content">
+
+            <!-- Enable/disable text, prefix, suffix -->
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox
+                            aria-label="Textbox aktivieren"
+                            ng-model="$ctrl.values.textBoxEnabled"
+                            ng-change="$ctrl.updateDefinitionValues()">
+                        Textbox aktivieren
+                    </md-checkbox>
+                </md-input-container>
+                <div flex="5"></div>
+                <apto-translated-value label="'Prefix'" type="'input'" translated-value="$ctrl.values.textBoxPrefix" flex></apto-translated-value>
+                <div flex="5"></div>
+                <apto-translated-value label="'Suffix'" type="'input'" translated-value="$ctrl.values.textBoxSuffix" flex></apto-translated-value>
+            </div>
+
+            <!-- New text -->
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Textlänge (Minimum):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.text.minLength">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Textlänge (Maximum):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.text.maxLength">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addTextValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <!-- Text list -->
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Länge (Minimum)</th>
+                        <th md-column>Länge (Maximum)</th>
+                        <th md-column style="width: 5%;" ></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="text in $ctrl.values.text">
+                        <td md-cell>{{ text.minLength }}</td>
+                        <td md-cell>{{ text.maxLength }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeTextValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+
+</md-tabs>

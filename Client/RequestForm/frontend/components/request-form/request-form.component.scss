@@ -1,0 +1,94 @@
+@import "globals";
+@import "form-inputs";
+
+:host {
+	display: flex;
+	justify-content: center;
+}
+
+.page {
+    padding: 40px 130px;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.title {
+    text-align: center;
+    padding: 20px;
+
+    h5 {
+        font-size: x-large;
+        font-weight: 500;
+        color: var(--color-title);
+    }
+
+    p {
+        font-size: small;
+        font-weight: 500;
+        margin-top: 10px;
+        color: var(--color-text);
+        opacity: 0.64;
+    }
+}
+
+form {
+    padding: 0 10px;
+}
+
+.request-form {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+    gap: 20px 50px;
+}
+
+.large-textfield {
+    margin-top: 20px;
+    width: 100%;
+    textarea {
+        display: none;
+    }
+}
+
+.agreement {
+	display: flex;
+	gap: 5px;
+	margin-top: 20px;
+
+	p {
+		color: var(--color-text);
+	}
+}
+
+.request-button {
+	display: flex;
+	justify-content: center;
+	margin: 30px 0px 30px 0px;
+}
+
+@media only screen and (max-width: calc($mobile-max-width - 1px)) {
+	.page {
+		padding: 20px;
+		margin: 10px;
+	}
+	.request-form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.large-textfield {
+		display: flex;
+		justify-content: center;
+	}
+
+	.agreement {
+		padding: 10px;
+	}
+
+	.title {
+		padding: 10px;
+	}
+
+	:host {
+		margin: 0px;
+	}
+}

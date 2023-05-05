@@ -1,0 +1,66 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Text">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.renderDialogInOnePageDesktop" aria-label="Die Eingabemaske in der Desktopversion des OnePage Konfigurators im Popup öffnen">
+                        Die Eingabemaske in der Desktopversion des OnePage Konfigurators im Popup öffnen
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Eingabefeld:</label>
+                    <md-select required ng-model="$ctrl.values.rendering">
+                        <md-option ng-value="rendering.id" ng-repeat="rendering in $ctrl.renderings">{{ rendering.label }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <apto-translated-value label="'Placeholder'" type="'input'" translated-value="$ctrl.values.placeholder" flex></apto-translated-value>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Textlänge (Minimum):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.text.minLength">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Textlänge (Maximum):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.text.maxLength">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addTextValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Länge (Minimum)</th>
+                        <th md-column>Länge (Maximum)</th>
+                        <th md-column style="width: 5%;" ></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="text in $ctrl.definitionValues.text">
+                        <td md-cell>{{ text.minLength }}</td>
+                        <td md-cell>{{ text.maxLength }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeTextValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+</md-tabs>

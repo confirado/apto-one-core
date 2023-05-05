@@ -1,0 +1,67 @@
+<div class="block-group">
+    <div class="image-container block">
+        <apto-sbs-preview-image element="$ctrl.element"></apto-sbs-preview-image>
+    </div>
+
+    <div class="content-container block">
+        <h4 class="headline">{{ $ctrl.translate($ctrl.element.name)}}</h4>
+        <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+        <apto-extended-element-description element="$ctrl.element"></apto-extended-element-description>
+        <div class="input-container">
+            <span class="prefix">{{ $ctrl.translate($ctrl.element.definition.staticValues.prefix) }}</span>
+            <div class="input-inner-container">
+                <input ng-model="$ctrl.input.value">
+                <span class="suffix">{{ $ctrl.translate($ctrl.element.definition.staticValues.suffix) }}</span>
+                <div class="valid-values hint">
+                    {{ $ctrl.getHumanReadableValidValue() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-container block-group">
+    <!-- live price -->
+    <div ng-if="$ctrl.reduxProps.livePricePrices" style="text-align: right; font-weight: bold;">
+        {{ $ctrl.snippetFactory.get('plugins.livePrice.label') }}
+        {{ $ctrl.translate($ctrl.element.definition.staticValues.livePricePrefix) }}
+        {{ $ctrl.reduxProps.livePricePrices[$ctrl.element.id].formatted }}
+        {{ $ctrl.translate($ctrl.element.definition.staticValues.livePriceSuffix) }}
+    </div>
+
+    <!-- set value button -->
+    <button class="set-value"
+            ng-class="{
+                'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)
+            }"
+            ng-click="$ctrl.setValues()">
+
+        <!-- not multiple and step by step and not selected -->
+        <span class="select-continue" ng-if="!$ctrl.section.allowMultiple && $ctrl.reduxProps.useStepByStep && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">Auswählen & Weiter »</span>
+
+        <!-- multiple or one page and not selected -->
+        <span class="select" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">Auswählen</span>
+
+        <!-- multiple or one page and selected -->
+        <span class="update" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">Aktualisieren</span>
+    </button>
+
+    <!-- remove button - one page -->
+    <button class="remove-value"
+            ng-if="!$ctrl.reduxProps.useStepByStep && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- selected -->
+        <span class="remove">Abwählen</span>
+    </button>
+
+    <!-- remove button - step by step -->
+    <button class="remove-value"
+            ng-if="$ctrl.reduxProps.useStepByStep && $ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- multiple and selected -->
+        <span class="remove">Abwählen</span>
+    </button>
+</div>

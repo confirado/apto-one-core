@@ -1,0 +1,47 @@
+<div class="md-whiteframe-2dp ng-scope">
+    <div class="apto-tab-content">
+        <div layout="row" layout-align="start" flex>
+            <apto-translated-value label="'Name'" type="'input'" translated-value="newAttachment.name" flex></apto-translated-value>
+            <div flex="5"></div>
+            <apto-media-select on-select-file="onSelectAttachmentFile(path)" label="'Pfad'" path="newAttachment.file" required="false" flex></apto-media-select>
+            <div flex="5"></div>
+        </div>
+    </div>
+</div>
+
+<md-input-container>
+    <md-button ng-disabled="!newAttachment.file || !isAttachmentNameValid()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElementAttachment()">Hinzufügen</md-button>
+</md-input-container>
+
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:10%;">Name</th>
+            <th md-column style="width:20%;">Dateipfad</th>
+            <th md-column style="width:20%;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="attachment in attachments">
+            <td md-cell style="width:10%;">{{ languageFactory.translate(attachment.name) }}</td>
+            <td md-cell style="width:20%;">{{ attachment.mediaFile[0].path }}/{{ attachment.mediaFile[0].filename }}.{{ attachment.mediaFile[0].extension }}</td>
+
+            <td md-cell style="width:20%;">
+                <md-button
+                        title="Editieren"
+                        class="md-icon-button md-primary"
+                        ng-click="editAttachment(attachment)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeAttachment(attachment.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

@@ -1,0 +1,371 @@
+<div ng-if="!$ctrl.reduxProps.useStepByStep">
+    Not implemented yet!
+</div>
+
+<div ng-if="$ctrl.reduxProps.useStepByStep">
+    <article class="sbs-element material-picker-element">
+        <div class="description" ng-bind-html="$ctrl.translate($ctrl.element.description)"></div>
+
+        <div ng-if="$ctrl.steps.currentStep === 'secondary'" class="material-secondary-step">
+            <div class="secondary-step-image">
+                <div style="text-align: center;">
+                    <img style="max-width: 100%;" apto-media-thumbnail="{{$ctrl.steps.image}}"
+                         apto-media-thumbnail-size="550"/>
+                </div>
+            </div>
+            <div class="secondary-step-color-mixing">
+                <div class="filter-group-header" ng-if="$ctrl.snippet('colorMixture')">{{$ctrl.snippet('colorMixture')}}</div>
+                <div>
+                    <div>
+                        <input type="radio" name="colorMixing" ng-model="$ctrl.steps.secondary.colorMixing"
+                               id="colorMixing1" value="monochrome" ng-change="$ctrl.normalizeSecondaryStepValues()">
+                        <label for="colorMixing1" ng-if="$ctrl.snippet('plain')">{{$ctrl.snippet('plain')}}</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="colorMixing" ng-model="$ctrl.steps.secondary.colorMixing"
+                               id="colorMixing2" value="multicolored" ng-change="$ctrl.normalizeSecondaryStepValues()">
+                        <label for="colorMixing2" ng-if="$ctrl.snippet('multicolor')">{{$ctrl.snippet('multicolor')}}</label>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="$ctrl.steps.secondary.colorMixing === 'multicolored'" class="secondary-step-arrangement">
+                <div class="filter-group-header" ng-if="$ctrl.snippet('arrangement')">{{$ctrl.snippet('arrangement')}}</div>
+                <div>
+                    <div>
+                        <input type="radio" name="colorArrangement" ng-model="$ctrl.steps.secondary.colorArrangement"
+                               id="colorArrangement1" value="alternately"
+                               ng-change="$ctrl.normalizeSecondaryStepValues()">
+                        <label for="colorArrangement1" ng-if="$ctrl.snippet('secondaryColor')">{{$ctrl.snippet('secondaryColor')}}</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="colorArrangement" ng-model="$ctrl.steps.secondary.colorArrangement"
+                               id="colorArrangement2" value="input" ng-change="$ctrl.normalizeSecondaryStepValues()">
+                        <label for="colorArrangement2" ng-if="$ctrl.snippet('freeInputSecondaryColor')">{{$ctrl.snippet('freeInputSecondaryColor')}}</label>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="$ctrl.steps.secondary.colorArrangement === 'input'" class="secondary-step-quantity">
+                <div class="filter-group-header" ng-if="$ctrl.snippet('quantity')">{{$ctrl.snippet('quantity')}}</div>
+                <div>
+                    <input type="number" min="1" ng-attr-title="{{$ctrl.snippet('inputFieldQuantity')}}" ng-model="$ctrl.steps.secondary.colorQuantity"
+                           name="colorQuantity">
+                </div>
+            </div>
+            <div class="action-container block-group" ng-if="$ctrl.steps.secondary.colorMixing === 'monochrome'">
+                <button class="set-value" ng-click="$ctrl.setElementProperties()">
+                    <span class="select-continue" ng-if="!$ctrl.section.allowMultiple">{{$ctrl.snippet('selectAndContinue')}}</span>
+                    <span class="select" ng-if="$ctrl.section.allowMultiple">{{$ctrl.snippet('select')}}</span>
+                </button>
+                <button class="remove-value"
+                        ng-if="$ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                        ng-click="$ctrl.removeValues()">
+                    <span class="remove">{{$ctrl.snippet('deselect')}}</span>
+                </button>
+            </div>
+        </div>
+
+        <div ng-if="$ctrl.steps.currentStep === 'primary' || $ctrl.steps.secondary.colorMixing === 'multicolored'"
+             class="material-picker-materials">
+            <div class="filter-color-rating">
+                <div class="filter-group-header" ng-if="!$ctrl.altColorSelect && $ctrl.snippet('colorSelection')">
+                    {{$ctrl.snippet('colorSelection')}}</div>
+                <div class="block-group filter-color-rating-slider" ng-if="!$ctrl.altColorSelect">
+                    <div class="block filter-color-rating-slider-item" ng-click="$ctrl.updateColorRatingFilter(null)">
+                        <div ng-if="!$ctrl.filterColorRating.hex" class="current-filter"></div>
+                    </div>
+                    <div ng-repeat="color in $ctrl.colors" class="block filter-color-rating-slider-item"
+                         ng-click="$ctrl.updateColorRatingFilter(color.hex)" title="{{ color.name }}">
+                        <div ng-if="$ctrl.filterColorRating.hex === color.hex" class="current-filter"></div>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <div class="filter-group-colors" ng-if="$ctrl.altColorSelect && $ctrl.colorSectionActive">
+                        <div class="filter-group-header" ng-if="$ctrl.snippet('colorSection')" >
+                            {{$ctrl.snippet('colorSection')}}</div>
+                        <div ng-class="{'active': $ctrl.filterColorRating.hex === '' || $ctrl.filterColorRating.hex === null}"
+                             class="button-container"
+                        >
+                            <button class="color-rainbow" alt="Alle Farben"
+                                    ng-click="$ctrl.updateColorRatingFilter('','rainbow')">
+                            </button>
+                            <div class="radio-underline">{{$ctrl.snippet('allColors')}}</div>
+                        </div>
+
+                        <div ng-repeat="color in $ctrl.reduxProps.colors"
+                             ng-class="{'active': $ctrl.filterColorRating.hex === color.hex}"
+                             class="button-container" ng-if="color.inPool"
+                        >
+                            <button class="block color-{{color.name}}"
+                                    alt="{{color.name}}"
+                                    ng-click="$ctrl.updateColorRatingFilter(color.hex, color.name)">
+                            </button>
+                            <div class="radio-underline">{{color.name}}</div>
+                        </div>
+                    </div>
+                    <div class="block-group searchbox-container" ng-if="$ctrl.steps.searchboxActive"
+                        ng-class="{'single-in-line': !$ctrl.altColorSelect}">
+                        <div class="filter-group-header" ng-if="$ctrl.snippet('fabricSearch')" >{{$ctrl.snippet('fabricSearch')}}</div>
+                        <div class="searchbox-input-container">
+                            <input
+                                   ng-attr-placeholder="{{$ctrl.snippet('inputFieldSubstanceNumber')}}"
+                                   id="search-item" ng-keyup="$event.keyCode == 13 && $ctrl.onFilterChanged()"
+                                   ng-model="$ctrl.searchTerm">
+                            <button ng-click="$ctrl.onFilterChanged()"><i
+                                    class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-group filter-single-block" ng-if="$ctrl.priceGroupActive">
+                    <div ng-if="!propertyGroup.allowMultiple" class="block"
+                         ng-repeat="propertyGroup in $ctrl.reduxProps.propertyGroups">
+                        <div class="filter-group-header">{{ $ctrl.translate(propertyGroup.name) }}</div>
+                        <div class="select-container">
+                            <select ng-model="$ctrl.filterPropertySingle[propertyGroup.id]"
+                                    ng-change="$ctrl.onFilterChanged()">
+                                <option value="">{{$ctrl.snippet('allProperty')}}</option>
+                                <option ng-repeat="property in propertyGroup.properties | orderBy: 'name' : false : $ctrl.itemOrderByName"
+                                        value="{{property.id}}">{{ $ctrl.translate(property.name) }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="block">
+                        <div class="filter-group-header" ng-if="$ctrl.snippet('priceGroup')" >
+                            {{$ctrl.snippet('priceGroup')}}</div>
+                        <div class="select-container">
+                            <select ng-model="$ctrl.filterPriceGroup" ng-change="$ctrl.onFilterChanged()">
+                                <option value="">{{$ctrl.snippet('allPriceGroups')}}</option>
+                                <option ng-repeat="priceGroup in $ctrl.reduxProps.priceGroups | orderBy: 'name' : false : $ctrl.itemOrderByName"
+                                        value="{{priceGroup.id}}">{{ $ctrl.translate(priceGroup.name) }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-multiple-block">
+                    <div ng-if="propertyGroup.allowMultiple"
+                         ng-repeat="propertyGroup in $ctrl.reduxProps.propertyGroups"
+                         class="multiple-filter-container" data-id="{{$index}}">
+                        <div class="filter-group-header">{{ $ctrl.translate(propertyGroup.name) }}</div>
+                        <div ng-click="$ctrl.showPropertiesToggle($index)" class="filter-group-header-mobile">
+                            {{ $ctrl.translate(propertyGroup.name) }} <i class="fa fa-angle-down"></i></div>
+                        <div class="block-group">
+                            <div class="block" ng-repeat="property in propertyGroup.properties">
+                                <input ng-model="$ctrl.filterPropertyMultiple[property.id]" id="{{property.id}}"
+                                       type="checkbox" ng-change="$ctrl.onFilterChanged()"
+                                       ng-checked="$ctrl.filterPropertyMultiple[property.id]"> <label
+                                    for="{{property.id}}">{{ $ctrl.translate(property.name) }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="margin-bottom: 0;" ng-if="$ctrl.steps.allowMultiple"
+                     class="set-section-complete-container set-section-complete-container-top">
+                    <button ng-if="$ctrl.snippet('currentStepContinueButton')" ng-disabled="
+                    ($ctrl.steps.currentStep === 'primary' && $ctrl.steps.primary.materials.length < 1) ||
+                    ($ctrl.steps.currentStep === 'secondary' && $ctrl.steps.secondary.materials.length < 1)
+                " ng-click="$ctrl.finishCurrentStep()">{{$ctrl.snippet('currentStepContinueButton')}}
+                    </button>
+                </div>
+
+                <div ng-if="$ctrl.reduxProps.poolItemsPopular.length > 0" class="filter-group-header filter-subtitles">
+                    <p ng-if="$ctrl.snippet('mostPopularColors')" >{{$ctrl.snippet('mostPopularColors')}}</p>
+                    <p class="no-left" ng-if="$ctrl.snippet('resultsFound')">{{ $ctrl.reduxProps.numberOfMaterials}} {{$ctrl.snippet('resultsFound')}}</p>
+
+                    <i class="fa fa-sort-amount-asc" aria-hidden="true" ng-if="$ctrl.sortOrderActive && $ctrl.orderBy==='asc'" title="Absteigend sortieren" ng-click="$ctrl.changeOrderBy('desc')"></i>
+                    <i class="fa fa-sort-amount-desc" aria-hidden="true" ng-if="$ctrl.sortOrderActive && $ctrl.orderBy==='desc'" title="Aufsteigend sortieren" ng-click="$ctrl.changeOrderBy('asc')"></i>
+                </div>
+                <div class="block-group pool-items">
+                    <div class="block pool-item-block" ng-repeat="poolItem in $ctrl.reduxProps.poolItemsPopular">
+                        <div class="pool-item" ng-class="{selected: $ctrl.isPoolItemSelected(poolItem)}">
+                            <div class="pool-item-hover">
+                                <div class="pool-item-hover-top">
+                                    <div class="block-group item-light-properties"
+                                         ng-if="$ctrl.hasMaterialLightProperties(poolItem.material)">
+                                        <div class="block" ng-if="null !== poolItem.material.reflection">
+                                            <img ng-src="{{ $ctrl.images.reflexion }}"><br/>
+                                            {{$ctrl.snippet('reflection')}} {{ poolItem.material.reflection }}%
+                                        </div>
+                                        <div class="block" ng-if="null !== poolItem.material.transmission">
+                                            <img ng-src="{{ $ctrl.images.transmission }}"><br/>
+                                            {{$ctrl.snippet('transmission')}} {{ poolItem.material.transmission }}%
+                                        </div>
+                                        <div class="block" ng-if="null !== poolItem.material.absorption">
+                                            <img ng-src="{{ $ctrl.images.absorption }}"><br/>
+                                            {{$ctrl.snippet('absorption')}} {{ poolItem.material.absorption }}%
+                                        </div>
+                                    </div>
+                                    <div class="item-properties"
+                                         ng-if="$ctrl.hasMaterialPropertyIcons(poolItem.material)">
+                                        <div class="item-property" ng-if="materialProperty.icon"
+                                             ng-repeat="materialProperty in poolItem.material.properties">
+                                            <img ng-src="{{ materialProperty.icon.fileUrl }}"
+                                                 title="{{ $ctrl.translate(materialProperty.name) }}">
+                                        </div>
+                                    </div>
+                                    <div ng-if="$ctrl.isFirstGalleryImageInHover(poolItem.material)">
+                                        <img style="max-width: 100%"
+                                             apto-media-thumbnail="{{poolItem.material.galleryImages[0].path}}"
+                                             apto-media-thumbnail-size="128"/>
+                                    </div>
+                                    <div ng-if="$ctrl.isPreviewImageInHover(poolItem.material)">
+                                        <img style="max-width: 100%" ng-if="poolItem.material.previewImage"
+                                             apto-media-thumbnail="{{poolItem.material.previewImage.path}}"
+                                             apto-media-thumbnail-size="128"/>
+                                    </div>
+                                </div>
+                                <div class="pool-item-hover-bottom">
+                                    <p ng-if="$ctrl.snippet('poolItemPriceInfo') && $ctrl.snippet('poolItemPriceInfoPercentage') && poolItem.priceGroup.additionalCharge !== 0">
+                                        <span class="pool-item-price-info" ng-bind-html="$ctrl.snippet('poolItemPriceInfo')"></span>
+                                        <span>{{poolItem.priceGroup.additionalCharge}}</span>
+                                        <span class="pool-item-price-info" ng-bind-html="$ctrl.snippet('poolItemPriceInfoPercentage')"></span>
+                                    </p>
+                                    <div>
+                                        <button ng-if="poolItem.material.isNotAvailable" class="disabled" disabled="disabled">
+                                            <span class="select-continue">{{$ctrl.snippet('isNotAvailable')}}</span>
+                                        </button>
+                                        <button ng-if="!$ctrl.steps.allowMultiple && !poolItem.material.isNotAvailable" class="set-value"
+                                                ng-click="$ctrl.setValues(poolItem.material.id, $ctrl.translate(poolItem.material.name), $ctrl.translate(poolItem.priceGroup.name))">
+                                            <span class="select-continue"
+                                              ng-if="!$ctrl.section.allowMultiple || ($ctrl.steps.secondaryMaterialActive && $ctrl.steps.currentStep === 'primary')">{{$ctrl.snippet('selectAndContinue')}}</span>
+                                            <span class="select"
+                                                  ng-if="$ctrl.section.allowMultiple && !($ctrl.steps.secondaryMaterialActive && $ctrl.steps.currentStep === 'primary')">{{$ctrl.snippet('select')}}</span>
+                                        </button>
+                                        <button ng-if="!$ctrl.isPoolItemSelected(poolItem) && $ctrl.steps.allowMultiple && !poolItem.material.isNotAvailable"
+                                                class="set-value"
+                                                ng-click="$ctrl.setValues(poolItem.material.id, $ctrl.translate(poolItem.material.name), $ctrl.translate(poolItem.priceGroup.name))">
+                                            <span class="select">{{$ctrl.snippet('select')}}</span>
+                                        </button>
+                                        <button ng-if="$ctrl.isPoolItemSelected(poolItem) && $ctrl.steps.allowMultiple && !poolItem.material.isNotAvailable"
+                                                class="set-value" ng-click="$ctrl.removeMaterial(poolItem.material.id)">
+                                            <span class="select">{{$ctrl.snippet('remove')}}</span>
+                                        </button>
+                                    </div>
+                                    <hr/>
+                                    <p class="pool-item-open-details" ng-click="$ctrl.showItemDetails(poolItem)">
+                                        <img ng-src="{{ $ctrl.images.moreInfo }}"></p>
+                                    <p class="pool-item-open-details-text" ng-if="$ctrl.snippet('poolItemOpenDetails')" ng-bind-html="$ctrl.snippet('poolItemOpenDetails')"></p>
+                                </div>
+                            </div>
+                            <div class="preview-image" ng-click="$ctrl.showItemDetails(poolItem)">
+                                <img ng-if="poolItem.material.previewImage"
+                                     apto-media-thumbnail="{{poolItem.material.previewImage.path}}"
+                                     apto-media-thumbnail-size="256"/>
+                            </div>
+                            <div class="material-pricegroup" ng-if="$ctrl.showPriceGroupInMaterialName">{{ $ctrl.translate(poolItem.priceGroup.name) }}</div>
+                            <div class="material-name">{{ $ctrl.translate(poolItem.material.name) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group-header" ng-if="$ctrl.reduxProps.poolItems.length > 0 && $ctrl.snippet('moreColors')">
+                    {{$ctrl.snippet('moreColors')}}</div>
+                <div class="block-group pool-items">
+                    <div class="block pool-item-block" ng-repeat="poolItem in $ctrl.reduxProps.poolItems">
+                        <div class="pool-item" ng-class="{selected: $ctrl.isPoolItemSelected(poolItem)}">
+                            <div class="pool-item-hover">
+                                <div class="pool-item-hover-top">
+                                    <div class="block-group item-light-properties"
+                                         ng-if="$ctrl.hasMaterialLightProperties(poolItem.material)">
+                                        <div class="block" ng-if="poolItem.material.reflection">
+                                            <img ng-src="{{ $ctrl.images.reflexion }}"><br/>
+                                            {{$ctrl.snippet('reflection')}} {{ poolItem.material.reflection }}%
+                                        </div>
+                                        <div class="block" ng-if="poolItem.material.transmission">
+                                            <img ng-src="{{ $ctrl.images.transmission }}"><br/>
+                                            {{$ctrl.snippet('transmission')}} {{ poolItem.material.transmission }}%
+                                        </div>
+                                        <div class="block" ng-if="poolItem.material.absorption">
+                                            <img ng-src="{{ $ctrl.images.absorption }}"><br/>
+                                            {{$ctrl.snippet('absorption')}} {{ poolItem.material.absorption }}%
+                                        </div>
+                                    </div>
+                                    <div class="item-properties"
+                                         ng-if="$ctrl.hasMaterialPropertyIcons(poolItem.material)">
+                                        <div class="item-property" ng-if="materialProperty.icon"
+                                             ng-repeat="materialProperty in poolItem.material.properties">
+                                            <img ng-src="{{ materialProperty.icon.fileUrl }}"
+                                                 title="{{ $ctrl.translate(materialProperty.name) }}">
+                                        </div>
+                                    </div>
+                                    <div ng-if="$ctrl.isFirstGalleryImageInHover(poolItem.material)">
+                                        <img style="max-width: 100%"
+                                             apto-media-thumbnail="{{poolItem.material.galleryImages[0].path}}"
+                                             apto-media-thumbnail-size="128"/>
+                                    </div>
+                                    <div ng-if="$ctrl.isPreviewImageInHover(poolItem.material)">
+                                        <img style="max-width: 100%" ng-if="poolItem.material.previewImage"
+                                             apto-media-thumbnail="{{poolItem.material.previewImage.path}}"
+                                             apto-media-thumbnail-size="128"/>
+                                    </div>
+                                </div>
+                                <div class="pool-item-hover-bottom">
+                                    <p class="pool-item-price-info"
+                                       ng-if="poolItem.priceGroup.additionalCharge !== 0" >
+                                        {{$ctrl.snippet('poolItemPriceInfo')}}
+                                        {{poolItem.priceGroup.additionalCharge}}%.
+                                    </p>
+                                    <div>
+                                        <button ng-if="!$ctrl.steps.allowMultiple" class="set-value"
+                                                ng-click="$ctrl.setValues(poolItem.material.id, $ctrl.translate(poolItem.material.name), $ctrl.translate(poolItem.priceGroup.name))">
+                                        <span class="select-continue"
+                                              ng-if="!$ctrl.section.allowMultiple || ($ctrl.steps.secondaryMaterialActive && $ctrl.steps.currentStep === 'primary')">{{$ctrl.snippet('selectAndContinue')}}</span>
+                                            <span class="select"
+                                                  ng-if="$ctrl.section.allowMultiple && !($ctrl.steps.secondaryMaterialActive && $ctrl.steps.currentStep === 'primary')">{{$ctrl.snippet('select')}}</span>
+                                        </button>
+                                        <button ng-if="!$ctrl.isPoolItemSelected(poolItem) && $ctrl.steps.allowMultiple"
+                                                class="set-value"
+                                                ng-click="$ctrl.setValues(poolItem.material.id, $ctrl.translate(poolItem.material.name), $ctrl.translate(poolItem.priceGroup.name))">
+                                            <span class="select">{{$ctrl.snippet('select')}}</span>
+                                        </button>
+                                        <button ng-if="$ctrl.isPoolItemSelected(poolItem) && $ctrl.steps.allowMultiple"
+                                                class="set-value" ng-click="$ctrl.removeMaterial(poolItem.material.id)">
+                                            <span class="select">{{$ctrl.snippet('remove')}}</span>
+                                        </button>
+                                    </div>
+                                    <hr/>
+                                    <p class="pool-item-open-details" ng-click="$ctrl.showItemDetails(poolItem)">
+                                        <img ng-src="{{ $ctrl.images.moreInfo }}">
+                                        {{$ctrl.snippet('poolItemOpenDetails')}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="preview-image" ng-click="$ctrl.showItemDetails(poolItem)">
+                                <img ng-if="poolItem.material.previewImage"
+                                     apto-media-thumbnail="{{poolItem.material.previewImage.path}}"
+                                     apto-media-thumbnail-size="256"/>
+                            </div>
+                            <div class="material-pricegroup" ng-if="$ctrl.showPriceGroupInMaterialName">{{ $ctrl.translate(poolItem.priceGroup.name) }}</div>
+                            <div class="material-name">{{ $ctrl.translate(poolItem.material.name) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="$ctrl.reduxProps.poolItemsPopular.length < 1 && $ctrl.reduxProps.poolItems.length < 1">{{$ctrl.snippet('noFabricsFound')}}
+                </div>
+
+                <div class="action-container block-group">
+                    <button class="remove-value"
+                            ng-if="$ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+                            ng-click="$ctrl.removeValues()">
+                        <span class="remove">{{$ctrl.snippet('deselect')}}</span>
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 0;" ng-if="$ctrl.steps.allowMultiple"
+                     class="set-section-complete-container set-section-complete-container-top">
+                    <button ng-disabled="
+                    ($ctrl.steps.currentStep === 'primary' && $ctrl.steps.primary.materials.length < 1) ||
+                    ($ctrl.steps.currentStep === 'secondary' && $ctrl.steps.secondary.materials.length < 1)
+                " ng-click="$ctrl.finishCurrentStep()">{{$ctrl.snippet('currentStepContinueButton')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </article>
+</div>

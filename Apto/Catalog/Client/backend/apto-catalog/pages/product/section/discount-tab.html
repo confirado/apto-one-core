@@ -1,0 +1,48 @@
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value label="'Name'" type="'input'" translated-value="newDiscount.name" flex></apto-translated-value>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Rabatt(%):</label>
+        <input ng-model="newDiscount.discount">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Kundengruppe:</label>
+        <md-select ng-model="newDiscount.customerGroupId">
+            <md-option ng-value="group.id" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newDiscount.name || !newDiscount.discount || !newDiscount.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addDiscount()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30%;">Name</th>
+            <th md-column style="width:30%;">Rabatt(%)</th>
+            <th md-column style="width:40%;">Kundengruppe</th>
+            <th md-column style="width:60px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="discount in discounts">
+            <td md-cell>{{languageFactory.translate(discount.name)}}</td>
+            <td md-cell>{{discount.discount}}</td>
+            <td md-cell>
+                <apto-customer-group-name customer-group-id="discount.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
+            </td>
+            <td md-cell>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeDiscount(discount.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

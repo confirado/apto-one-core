@@ -1,0 +1,86 @@
+<div class="apto-many-to-many-list" layout="row">
+    <!-- available entries flat -->
+    <div flex="50" ng-if="!$ctrl.renderAvailableAsTree">
+        <md-subheader class="md-no-sticky">Verfügbar</md-subheader>
+
+        <md-list ng-if="!$ctrl.orderField">
+            <md-list-item class="secondary-button-padding" ng-repeat="assign in $ctrl.available" ng-if="!$ctrl.assignExists(assign)">
+                <p ng-if="!$ctrl.nameFieldTranslate">{{ assign[$ctrl.nameField] }}</p>
+                <p ng-if="$ctrl.nameFieldTranslate">{{ $ctrl.languageFactory.translate(assign[$ctrl.nameField]) }}</p>
+                <md-button class="md-secondary md-icon-button md-primary" title="Hinzufügen" ng-click="$ctrl.assignToggle(assign)">
+                    <md-icon md-font-set="fa">&#xf055</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+
+        <md-list ng-if="$ctrl.orderField">
+            <md-list-item class="secondary-button-padding" ng-repeat="assign in $ctrl.available | orderBy: $ctrl.orderField" ng-if="!$ctrl.assignExists(assign)">
+                <p ng-if="!$ctrl.nameFieldTranslate">{{ assign[$ctrl.nameField] }}</p>
+                <p ng-if="$ctrl.nameFieldTranslate">{{ $ctrl.languageFactory.translate(assign[$ctrl.nameField]) }}</p>
+                <md-button class="md-secondary md-icon-button md-primary" title="Hinzufügen" ng-click="$ctrl.assignToggle(assign)">
+                    <md-icon md-font-set="fa">&#xf055</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </div>
+
+    <!-- available entries tree -->
+    <div flex="50" ng-if="$ctrl.renderAvailableAsTree">
+        <md-subheader style="margin-bottom: 8px;" class="md-no-sticky">Verfügbar</md-subheader>
+
+        <treecontrol ng-if="$ctrl.available.length > 0"
+                     class="tree-dark"
+                     tree-model="$ctrl.available"
+                     options="$ctrl.treeOptions"
+                     on-selection="$ctrl.showSelected(node)"
+                     selected-node="node1">
+            <div layout="row" layout-align="start" flex>
+                <div ng-if="!$ctrl.nameFieldTranslate" class="tree-list-name" flex="100">
+                    {{ node[$ctrl.nameField] }}
+                </div>
+                <div ng-if="$ctrl.nameFieldTranslate" class="tree-list-name" flex="100">
+                    {{ $ctrl.languageFactory.translate(node[$ctrl.nameField]) }}
+                </div>
+                <div class="tree-list-actions" style="flex: 0 0 170px;">
+                    <md-button
+                            title="Hinzufügen"
+                            ng-disabled="$ctrl.assignExists(node)"
+                            class="md-icon-button md-primary"
+                            ng-click="$ctrl.assignToggle(node)"
+                            >
+                        <md-icon md-font-set="fa">&#xf055</md-icon>
+                    </md-button>
+                </div>
+            </div>
+
+        </treecontrol>
+    </div>
+
+    <!-- divider -->
+    <md-divider></md-divider>
+
+    <!-- assigned entries -->
+    <div flex="50">
+        <md-subheader class="md-no-sticky">Zugeordnet</md-subheader>
+
+        <md-list ng-if="!$ctrl.orderField">
+            <md-list-item class="secondary-button-padding" ng-repeat="assign in $ctrl.assigned">
+                <p ng-if="!$ctrl.nameFieldTranslate">{{ assign[$ctrl.nameField] }}</p>
+                <p ng-if="$ctrl.nameFieldTranslate">{{ $ctrl.languageFactory.translate(assign[$ctrl.nameField]) }}</p>
+                <md-button class="md-secondary md-icon-button md-warn" title="Löschen" ng-if="$ctrl.assignExists(assign)" ng-click="$ctrl.assignToggle(assign)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+
+        <md-list ng-if="$ctrl.orderField">
+            <md-list-item class="secondary-button-padding" ng-repeat="assign in $ctrl.assigned | orderBy: $ctrl.orderField">
+                <p ng-if="!$ctrl.nameFieldTranslate">{{ assign[$ctrl.nameField] }}</p>
+                <p ng-if="$ctrl.nameFieldTranslate">{{ $ctrl.languageFactory.translate(assign[$ctrl.nameField]) }}</p>
+                <md-button class="md-secondary md-icon-button md-warn" title="Löschen" ng-if="$ctrl.assignExists(assign)" ng-click="$ctrl.assignToggle(assign)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

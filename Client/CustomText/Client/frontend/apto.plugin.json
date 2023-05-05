@@ -1,0 +1,11 @@
+{
+	"id": "apto-custom-text-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoCustomTextFrontendModule",
+			"file": "apto-custom-text-frontend.module.ts"
+		}
+	]
+}

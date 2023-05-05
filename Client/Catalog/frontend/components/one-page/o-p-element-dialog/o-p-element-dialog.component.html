@@ -1,0 +1,10 @@
+<div class="close">
+	<button mat-mini-fab mat-button mat-dialog-close><mat-icon>close</mat-icon></button>
+</div>
+<ng-container *ngIf="element && element.element && element.element.definition && element.element.definition.staticValues">
+	<apto-slot-outlet
+		[identifier]="element.element.definition.staticValues.aptoElementDefinitionId"
+		[element]="element"
+		[product]="product"
+	></apto-slot-outlet>
+</ng-container>

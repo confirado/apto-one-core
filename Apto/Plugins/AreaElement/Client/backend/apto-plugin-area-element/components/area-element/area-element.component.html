@@ -1,0 +1,259 @@
+<div style="padding: 8px 16px 0 16px;">
+    <div layout="row" layout-align="start" flex>
+        <md-input-container flex>
+            <md-checkbox ng-model="$ctrl.renderDialogInOnePageDesktop" aria-label="Die Eingabemaske in der Desktopversion des OnePage Konfigurators im Popup öffnen">
+                Die Eingabemaske in der Desktopversion des OnePage Konfigurators im Popup öffnen
+            </md-checkbox>
+        </md-input-container>
+    </div>
+</div>
+
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Felder">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Anzahl der Eingabefelder:</label>
+                    <input type="number" min="1" step="1" max="26" ng-model="$ctrl.numberOfFields" ng-change="$ctrl.onChangeNumberOfFields()">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <!-- live price -->
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex>
+                    <apto-translated-value label="'Live Preis Prefix'" type="'input'" translated-value="$ctrl.livePricePrefix" flex></apto-translated-value>
+                    <div flex="5"></div>
+                    <apto-translated-value label="'Live Preis Suffix'" type="'input'" translated-value="$ctrl.livePriceSuffix" flex></apto-translated-value>
+                </div>
+            </div>
+
+            <md-tabs md-dynamic-height md-border-bottom>
+                <!-- see following links why to use ng-init here
+                    https://stackoverflow.com/questions/15256600/passing-2-index-values-within-nested-ng-repeat
+                    http://plnkr.co/52oIhLfeXXI9ZAynTuAJ
+                    https://stackoverflow.com/questions/15256600/passing-2-index-values-within-nested-ng-repeat/31373160#31373160
+                -->
+                <md-tab label="Feld {{ fieldIndex + 1 }}" ng-repeat="field in $ctrl.fields track by $index" ng-init="fieldIndex = $index">
+                    <div class="apto-tab-content">
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container class="md-block" flex>
+                                <label>Eingabefeld:</label>
+                                <md-select required ng-model="field.rendering">
+                                    <md-option ng-value="rendering.id" ng-repeat="rendering in $ctrl.fieldRenderings">{{ rendering.label }}</md-option>
+                                </md-select>
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container class="md-block" flex>
+                                <label>Default:</label>
+                                <input type="number" ng-model="field.default">
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row" layout-align="start" flex>
+                            <apto-translated-value label="'Prefix'" type="'input'" translated-value="field.prefix" flex></apto-translated-value>
+                            <div flex="5"></div>
+                            <apto-translated-value label="'Suffix'" type="'input'" translated-value="field.suffix" flex></apto-translated-value>
+                        </div>
+
+                        <p style="margin-top: 0;">Mögliche Werte:</p>
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container class="md-block" flex>
+                                <label>Minimum:</label>
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.minimum">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container class="md-block" flex>
+                                <label>Maximum:</label>
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.maximum">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container class="md-block" flex>
+                                <label>Step:</label>
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.step">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container>
+                                <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addFieldValue(fieldIndex)">Hinzufügen</md-button>
+                            </md-input-container>
+                        </div>
+
+                        <md-table-container>
+                            <table md-table>
+                                <thead md-head>
+                                <tr md-row>
+                                    <th md-column>Minimum</th>
+                                    <th md-column>Maximum</th>
+                                    <th md-column>Step</th>
+                                    <th md-column style="width: 5%;"></th>
+                                </tr>
+                                </thead>
+                                <tbody md-body>
+                                <tr md-row ng-repeat="value in field.values track by $index" ng-init="valueIndex = $index">
+                                    <td md-cell>{{ value.minimum }}</td>
+                                    <td md-cell>{{ value.maximum }}</td>
+                                    <td md-cell>{{ value.step }}</td>
+                                    <td md-cell style="width: 5%;" >
+                                        <md-button
+                                                title="Löschen"
+                                                class="md-icon-button md-warn"
+                                                ng-click="$ctrl.removeFieldValue(fieldIndex, valueIndex)">
+                                            <md-icon md-font-set="fa">&#xf014</md-icon>
+                                        </md-button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+                    </div>
+                </md-tab>
+
+                <md-tab label="Summe aller Felder">
+                    <div class="apto-tab-content">
+                        <p>Mögliche Werte:</p>
+                        <div layout="row" layout-align="start" flex>
+                            <md-input-container class="md-block" flex>
+                                <label>Minimum:</label>
+                                <input type="number" min="0" step="1" ng-model="$ctrl.fieldValue.minimum">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container class="md-block" flex>
+                                <label>Maximum:</label>
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.maximum">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container class="md-block" flex>
+                                <label>Step:</label>
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.step">
+                            </md-input-container>
+                            <div flex="5"></div>
+                            <md-input-container>
+                                <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addSumOfFieldValues()">Hinzufügen</md-button>
+                            </md-input-container>
+                        </div>
+                        <md-table-container>
+                            <table md-table>
+                                <thead md-head>
+                                <tr md-row>
+                                    <th md-column>Minimum</th>
+                                    <th md-column>Maximum</th>
+                                    <th md-column>Step</th>
+                                    <th md-column style="width: 5%;"></th>
+                                </tr>
+                                </thead>
+                                <tbody md-body>
+                                <tr md-row ng-repeat="value in $ctrl.sumOfFieldValues">
+                                    <td md-cell>{{ value.minimum }}</td>
+                                    <td md-cell>{{ value.maximum }}</td>
+                                    <td md-cell>{{ value.step }}</td>
+                                    <td md-cell style="width: 5%;" >
+                                        <md-button
+                                                title="Löschen"
+                                                class="md-icon-button md-warn"
+                                                ng-click="$ctrl.removeSumOfFieldValues($index)">
+                                            <md-icon md-font-set="fa">&#xf014</md-icon>
+                                        </md-button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </div>
+    </md-tab>
+
+    <md-tab label="Preismatrix">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-autocomplete
+                        md-floating-label="Preismatrix:"
+                        md-require-match="true"
+                        md-selected-item="$ctrl.selectedPriceMatrix"
+                        md-search-text="$ctrl.priceMatrixSearchTerm"
+                        md-item-text="$ctrl.translate(priceMatrix.name)"
+                        md-items="priceMatrix in $ctrl.redux.priceMatrices | filter:$ctrl.priceMatrixSearchTerm"
+                        md-no-cache="true"
+                        md-clear-button="true"
+                        md-selected-item-change="$ctrl.onChangePriceMatrix(priceMatrix)"
+                        flex
+                >
+                    <md-item-template>
+                        <span md-highlight-text="$ctrl.priceMatrixSearchTerm">{{ $ctrl.translate(priceMatrix.name) }}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        Keine Preismatrix gefunden.
+                    </md-not-found>
+                </md-autocomplete>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Reihe (Formel):</label>
+                    <input ng-model="$ctrl.priceMatrix.row">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Spalte (Formel):</label>
+                    <input ng-model="$ctrl.priceMatrix.column">
+                </md-input-container>
+            </div>
+
+            <div>
+                <p>
+                    <strong>Erlaubte Variablen in Formeln:</strong> "f1" für "Feld 1", "f2" für Feld 2 usw.
+                </p>
+                <p>
+                    <strong>Beispiel:</strong><br />
+                    Im Frontend werden folgende Werte eingegeben: Feld 1 = 10, Feld 2 = 20, Feld 3 = 30, Feld 4 = 40
+                </p>
+                <p>
+                    <strong>Annahme:</strong><br />
+                    Reihe setzt sich aus Feld 1 und Feld 2 zusammen, Spalte setzt sich aus Feld 3 und Feld 4 zusammen.<br />
+                    Formel für Reihe: f1+f2<br />
+                    Formel für Spalte: f3+f4<br />
+                    Ergebnis Wert Reihe: 30<br />
+                    Ergebnis Wert Spalte: 70
+                </p>
+                <p>
+                    In der Preismatrix wird nun nach einem Preis in Reihe 30 und Spalte 70 gesucht.
+                </p>
+            </div>
+        </div>
+    </md-tab>
+
+    <md-tab label="Erweiterte Preiskalkulation">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.priceMultiplication.active" aria-label="Aktivieren">
+                        Aktivieren
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Basiswert (Formel):</label>
+                    <input ng-model="$ctrl.priceMultiplication.baseValueFormula">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Factor:</label>
+                    <input ng-model="$ctrl.priceMultiplication.factor">
+                </md-input-container>
+            </div>
+
+            <div>
+                <p>
+                    <strong>Erlaubte Variablen in Formel:</strong> "f1" für "Feld 1", "f2" für Feld 2 usw.
+                </p>
+
+                <p>
+                    <strong>Referenzen als Variablen in Formel:</strong> "{sectionIdentifier|elementIdentifier|property}"
+                </p>
+            </div>
+        </div>
+    </md-tab>
+</md-tabs>
+

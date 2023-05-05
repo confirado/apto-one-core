@@ -1,0 +1,8 @@
+<div class="container" ng-class="{[$ctrl.productDetail.identifier]: true}">
+    <apto-sbs-sidebar product-detail="$ctrl.productDetail" active-section="$ctrl.selectedSection"></apto-sbs-sidebar >
+    <section id="content" class="container">
+        <apto-sidebar-navigation product-detail="$ctrl.productDetail" selected-section="$ctrl.selectedSection"></apto-sidebar-navigation>
+        <apto-elements-container product-detail="$ctrl.productDetail"></apto-elements-container>
+        <apto-sidebar-summary product-detail="$ctrl.productDetail"></apto-sidebar-summary>
+    </section>
+</div>

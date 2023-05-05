@@ -1,0 +1,44 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Farbe</label>
+        <md-select ng-model="newColorRating.color" md-container-class="material-picker-color-rating-select">
+            <md-option ng-repeat="color in colors" ng-value="color.hex">{{ color.name }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Rating:</label>
+        <input type="number" min="0" max="100" step="1" ng-model="newColorRating.rating">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newColorRating.color || !newColorRating.rating" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddColorRating()">Rating Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:20%;">Id</th>
+            <th md-column style="width:35%;">Farbe</th>
+            <th md-column style="width:35%;">Rating</th>
+            <th md-column style="width:180px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="colorRating in colorRatings">
+            <td md-cell>{{ colorRating.id }}</td>
+            <td md-cell>{{ getColorName(colorRating.color) }}</td>
+            <td md-cell>{{ colorRating.rating }}</td>
+            <td md-cell>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        ng-click="onRemoveColorRating(colorRating.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

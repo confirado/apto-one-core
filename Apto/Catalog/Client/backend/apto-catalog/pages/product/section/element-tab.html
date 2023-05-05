@@ -1,0 +1,67 @@
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value label="'Name'" type="'input'" translated-value="newElement.value" flex></apto-translated-value>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!languageFactory.translate(newElement.value)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElement()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:7%;">Default</th>
+            <th md-column style="width:7%;">Aktiv</th>
+            <th md-column style="width:7%;">Pflicht</th>
+            <th md-column style="width:7%;">Position</th>
+            <th md-column style="width:22%;">Kennung</th>
+            <th md-column style="width:30%;">Name</th>
+            <th md-column style="width:20%;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="element in elements">
+            <td md-cell style="width:7%;">
+                <md-input-container flex>
+                    <md-checkbox ng-change="setElementIsDefault(element.id, element.isDefault)" ng-model="element.isDefault" aria-label="Default"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell style="width:7%;">
+                <md-input-container flex>
+                    <md-checkbox ng-change="setElementIsActive(element.id, element.isActive)" ng-model="element.isActive" aria-label="Aktiv"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell style="width:7%;">
+                <md-input-container flex>
+                    <md-checkbox ng-change="setElementIsMandatory(element.id, element.isMandatory)" ng-model="element.isMandatory" aria-label="Pflicht"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell style="width:7%;">{{ element.position }}</td>
+            <td md-cell style="width:22%;">{{ element.identifier }}</td>
+            <td md-cell style="width:30%;">{{ languageFactory.translate(element.name) }}</td>
+            <td md-cell style="width:20%;">
+                <md-button
+                        title="Bearbeiten"
+                        class="md-icon-button md-primary"
+                        ng-click="editElement($event, element.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Kopieren"
+                        class="md-icon-button md-primary"
+                        ng-click="copyElement(element.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf24d</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeElement(element.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

@@ -1,0 +1,405 @@
+{
+  "aptoSliderAction": {
+    "shareLinks": {
+      "twitter": {
+        "link": {
+          "de_DE": "https://twitter.com/share?url={_currentUrl_}"
+        },
+        "target": {
+          "de_DE": "_blank"
+        },
+        "iconClass": {
+          "de_DE": "fa-twitter"
+        }
+      },
+      "facebook": {
+        "link": {
+          "de_DE": "https://www.facebook.com/sharer.php?u={_currentUrl_}"
+        },
+        "iconClass": {
+          "de_DE": "fa-facebook-square"
+        },
+        "target": {
+          "de_DE": "_blank"
+        }
+      }
+    },
+    "share": {
+      "de_DE": "Teilen"
+    },
+    "save": {
+      "de_DE": "Speichern"
+    }
+  },
+  "aptoSidebarInfo": {
+    "shipping": {
+      "link": {
+        "text": {
+          "de_DE": "Versandkosten"
+        },
+        "href": []
+      },
+      "prefix": {
+        "de_DE": "zzgl."
+      }
+    },
+    "tax": {
+      "withoutShop": {
+        "de_DE": "inkl. MwSt."
+      },
+      "withoutTax": {
+        "de_DE": "zzgl. MwSt."
+      },
+      "withTax": {
+        "de_DE": "inkl. MwSt."
+      }
+    }
+  },
+  "aptoDefaultElementDefinition": {
+    "buttons": {
+      "update": {
+        "de_DE": "Aktualisieren"
+      },
+      "remove": {
+        "de_DE": "Abwählen"
+      },
+      "select": {
+        "de_DE": "Auswählen"
+      },
+      "select-continue": {
+        "de_DE": "Auswählen & Weiter"
+      }
+    }
+  },
+  "AptoLoginController": {
+    "form": {
+      "register": {
+        "de_DE": "Registrieren"
+      },
+      "mail": {
+        "de_DE": "Ihre E-Mail Adresse"
+      },
+      "login": {
+        "de_DE": "Anmelden"
+      },
+      "password": {
+        "de_DE": "Passwort"
+      }
+    }
+  },
+  "aptoStepByStep": {
+    "sidebarSummary": {
+      "shippingCostsLink": [],
+      "shippingCosts": {
+        "de_DE": "Versandkosten"
+      },
+      "taxes": {
+        "de_DE": "inkl. MwSt., zzgl."
+      },
+      "sum": {
+        "de_DE": "Summe:"
+      },
+      "basketNotification": {
+        "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
+      },
+      "offerNotification": {
+        "de_DE": "Wenn Sie Fragen haben, oder ein individuelles Angebot wünschen, können Sie dies hier anfordern."
+      },
+      "basketNotificationTitle": {
+        "de_DE": "Hinweis"
+      },
+      "cart": {
+        "de_DE": "In den Warenkorb legen"
+      },
+      "basePrice": {
+        "de_DE": "Grundpreis:"
+      },
+      "summary": {
+        "de_DE": "Zusammenfassung"
+      }
+    },
+    "elementsContainer": {
+      "configure": {
+        "de_DE": "Konfigurieren Sie Ihr Produkt"
+      },
+      "stepBack": {
+        "de_DE": "Schritt zurück"
+      },
+      "stepForward": {
+        "de_DE": "Schritt vor"
+      },
+      "nextStep": {
+        "de_DE": "Weiter"
+      },
+      "filter": {
+        "de_DE": "Nach Eigenschaft filtern"
+      },
+      "nextMultiple": {
+        "de_DE": "Weiter"
+      }
+    }
+  },
+  "aptoSummary": {
+    "tax": {
+      "withoutTax": {
+        "de_DE": "Stückpreis zzgl. MwSt."
+      },
+      "withTax": {
+        "de_DE": "Stückpreis inkl. MwSt."
+      }
+    },
+    "back": {
+      "de_DE": "Zurück"
+    },
+    "addToBasket": {
+      "de_DE": "In den Warenkorb legen"
+    },
+    "headline": {
+      "de_DE": "Zusammenfassung Ihrer Konfiguration"
+    }
+  },
+  "aptoBasket": {
+    "confirmDeleteDialog": {
+      "confirm": {
+        "de_DE": "Konfiguration löschen"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
+      },
+      "text": {
+        "de_DE": "Möchten Sie die Konfiguration <br />wirklich aus dem Warenkorb entfernen?"
+      }
+    },
+    "subtotal": {
+      "de_DE": "Zwischensumme"
+    },
+    "empty": {
+      "de_DE": "<br />Noch kein Artikel im Warenkorb!<br /><br />"
+    },
+    "checkout": {
+      "de_DE": "Zur Kasse"
+    },
+    "cart": {
+      "de_DE": "Zum Warenkorb"
+    },
+    "back": {
+      "de_DE": "Jetzt weiter konfigurieren"
+    },
+    "pricePrefix": {
+      "de_DE": "je"
+    }
+  },
+  "AptoGuestConfigurationDialog": {
+    "mail": {
+      "subject": {
+        "de_DE": "Ihre gespeicherte Konfiguration"
+      },
+      "salutation": {
+        "de_DE": "Hallo,"
+      },
+      "salutationPerson": {
+        "de_DE": "Sehr geehrte/r"
+      },
+      "configurationSaved": {
+        "de_DE": "wir haben Ihre Konfiguration gespeichert."
+      },
+      "configurationLinkPrefix": {
+        "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
+      },
+      "configurationLink": {
+        "de_DE": "Konfiguration laden"
+      },
+      "yourDetails": {
+        "de_DE": "Ihre Angaben:"
+      },
+      "yourConfiguration": {
+        "de_DE": "Ihre gespeicherte Konfiguration:"
+      },
+      "signature": {
+        "de_DE": "<p>Herzlichste Grüße,</p>"
+      }
+    },
+    "form": {
+      "mail": {
+        "de_DE": "Ihre E-Mail Adresse"
+      },
+      "submit": {
+        "de_DE": "Speichern"
+      },
+      "name": {
+        "de_DE": "Name"
+      }
+    },
+    "afterSave": {
+      "info": {
+        "de_DE": "Wir haben Ihnen eine Email mit dem Link zur aktuellen Konfiguration geschickt."
+      },
+      "close": {
+        "de_DE": "Schließen"
+      },
+      "header": {
+        "de_DE": "Konfiguration gespeichert"
+      }
+    },
+    "beforeSave": {
+      "info": {
+        "de_DE": "Sie bekommen einen Link zur aktuellen Konfiguration per E-Mail gesendet."
+      },
+      "header": {
+        "de_DE": "Konfiguration speichern"
+      }
+    }
+  },
+  "AptoOfferConfigurationDialog": {
+    "enabled": {
+      "de_DE": "false"
+    },
+    "mail": {
+      "subject": {
+        "de_DE": "Ihre Anfrage"
+      },
+      "salutation": {
+        "de_DE": "Hallo,"
+      },
+      "salutationPerson": {
+        "de_DE": "Sehr geehrte/r"
+      },
+      "configurationSaved": {
+        "de_DE": "wir haben Ihre Anfrage erhalten."
+      },
+      "configurationLinkPrefix": {
+        "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
+      },
+      "configurationLink": {
+        "de_DE": "Konfiguration laden"
+      },
+      "yourDetails": {
+        "de_DE": "Ihre Angaben:"
+      },
+      "yourConfiguration": {
+        "de_DE": "Ihre gespeicherte Konfiguration:"
+      },
+      "signature": {
+        "de_DE": "<p>Herzlichste Grüße,</p>"
+      }
+    },
+    "form": {
+      "mail": {
+        "de_DE": "Ihre E-Mail Adresse"
+      },
+      "submit": {
+        "de_DE": "Anfragen"
+      },
+      "name": {
+        "de_DE": "Name"
+      }
+    },
+    "afterSave": {
+      "info": {
+        "de_DE": "Wir haben Ihnen eine Email mit dem Link zur aktuellen Konfiguration geschickt."
+      },
+      "close": {
+        "de_DE": "Schließen"
+      },
+      "header": {
+        "de_DE": "Anfrage gesendet"
+      }
+    },
+    "beforeSave": {
+      "info": {
+        "de_DE": "Sie bekommen einen Link zur aktuellen Konfiguration per E-Mail gesendet."
+      },
+      "header": {
+        "de_DE": "Anfrage senden"
+      }
+    }
+  },
+  "aptoOnePage": {
+    "sidebarElements": {
+      "filter": {
+        "de_DE": "Filtern"
+      }
+    }
+  },
+  "AptoSoftRuleDialog": {
+    "title": {
+      "de_DE": "Achtung!"
+    },
+    "accept": {
+      "de_DE": "Auswahl verwerfen"
+    },
+    "refuse": {
+      "de_DE": "Auswahl übernehmen"
+    }
+  },
+  "AptoLoadConfigurationDialog": {
+    "continue": {
+      "de_DE": "Neu Konfigurieren"
+    },
+    "header": {
+      "de_DE": "Konfiguration gefunden"
+    },
+    "restore": {
+      "de_DE": "Konfiguration aufrufen"
+    },
+    "info": {
+      "de_DE": "Auf diesem Gerät wurde bereits eine Konfiguration gestartet."
+    }
+  },
+  "AptoIsNotAvailableElement": {
+    "buttonText": {
+      "de_DE": "derzeit nicht verfügbar"
+    }
+  },
+  "aptoLinksToShop": {
+    "basket": {
+      "de_DE": "Warenkorb"
+    },
+    "account": {
+      "de_DE": "Mein Konto"
+    },
+    "register": {
+      "de_DE": "Anmelden / Registrieren"
+    },
+    "logout": {
+      "de_DE": "Logout"
+    }
+  },
+  "aptoSidebarBasket": {
+    "addToBasket": {
+      "de_DE": "In den Warenkorb legen"
+    }
+  },
+  "aptoFavoriteDesigns": {
+    "favoriteDesigns": {
+      "de_DE": "Beliebte Designs zum konfigurieren"
+    },
+    "price": {
+      "de_DE": "ab 230,00 €"
+    }
+  },
+  "aptoFavoriteDesignsItem": {
+    "productName": {
+      "de_DE": "Produktname"
+    }
+  },
+  "aptoProductList": {
+    "category": {
+      "de_DE": "Kategorien"
+    },
+    "search": {
+      "de_DE": "Suche"
+    },
+    "searchPlaceholder": {
+      "de_DE": "Name, Artikelnummer, Beschreibung ..."
+    }
+  },
+  "aptoRouteAccess": {
+    "failedPrefix": {
+      "de_DE": "Sie müssen sich"
+    },
+    "failedSuffix": {
+      "de_DE": "um diese Seite anzuzeigen."
+    }
+  }
+}

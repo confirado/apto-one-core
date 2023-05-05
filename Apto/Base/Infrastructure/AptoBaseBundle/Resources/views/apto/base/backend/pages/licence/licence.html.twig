@@ -1,0 +1,39 @@
+{% extends '@AptoBase/apto/base/backend/index.html.twig' %}
+
+{% block bodyNgController %}ng-controller="AptoLoginController"{% endblock %}
+
+{% block layout %}
+    <div class="apto-backend-licence-content">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3 class="apto-licence-container" flex="100">
+                    <span>Bestätigung der Apto.ONE Lizenzbedingungen</span>
+                </h3>
+            </div>
+        </md-toolbar>
+        <md-card class="apto-licence-container">
+            <form action="{{ path('apto_base_infrastructure_aptobase_licence_licenceaccept') }}" method="post">
+                <md-card-title>
+                    <md-card-title-text>
+                        <span class="md-headline">{{ licence.title | raw }}</span>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                    {% if csrf_token %}
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                    {% endif %}
+                    <input type="hidden" name="licence_id" value="{{ licence.id }}" />
+                    <div class="apto-licence-text">
+                        {{ licence.text | raw }}
+                    </div>
+
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="end center">
+                    <md-button class="md-raised md-primary md-cornered" type="submit">Akzeptieren</md-button>
+                </md-card-actions>
+            </form>
+        </md-card>
+        <div flex></div>
+    </div>
+{% endblock %}
+

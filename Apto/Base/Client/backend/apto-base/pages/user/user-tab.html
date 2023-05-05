@@ -1,0 +1,46 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex="50">
+        <md-checkbox ng-model="userDetail.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Benutzername:</label>
+        <input required ng-model="userDetail.username">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex ng-if="userDetail.id">
+        <label>Passwort:</label>
+        <input type="password" ng-model="userDetail.plainPassword">
+    </md-input-container>
+    <md-input-container flex ng-if="!userDetail.id">
+        <label>Passwort:</label>
+        <input type="password" required ng-model="userDetail.plainPassword">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>E-Mail:</label>
+        <input required ng-model="userDetail.email">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Api Key:</label>
+        <input ng-model="userDetail.apiKey">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>Api Origin:</label>
+        <input ng-model="userDetail.apiOrigin">
+    </md-input-container>
+</div>

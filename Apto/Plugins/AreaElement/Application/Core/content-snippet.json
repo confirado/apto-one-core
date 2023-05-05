@@ -1,0 +1,26 @@
+{
+  "plugins": {
+    "areaElement": {
+      "sumOfFieldValueMax": {
+        "de_DE": ""
+      },
+      "sumOfFieldValueCurrent": {
+        "de_DE": ""
+      },
+      "buttons": {
+        "select-continue": {
+          "de_DE": "Auswählen & Weiter"
+        },
+        "select": {
+          "de_DE": "Auswählen"
+        },
+        "update": {
+          "de_DE": "Aktualisieren"
+        },
+        "remove": {
+          "de_DE": "Abwählen"
+        }
+      }
+    }
+  }
+}

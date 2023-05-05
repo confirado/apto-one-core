@@ -1,0 +1,35 @@
+<section class="links-to-shop" ng-if="$ctrl.shopConnectorConfigured">
+    <nav class="shop-navigation">
+        <ul class="block-group">
+            <li ng-if="!$ctrl.shopSession.loggedIn">
+                <a class="uppercase login-link" ng-click="$ctrl.openLogin($event)" href="#login">
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippet('register')"></span>
+                    </strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopSession.loggedIn">
+                <a class="uppercase login-link" href="{{$ctrl.shopSession.url.account}}">
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippet('account')"></span>
+                    </strong>
+                </a>
+            </li>
+            <li>
+                <a class="uppercase basket-link" ng-click="$ctrl.openBasket($event)" href="#basket">
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippet('basket')"></span>
+                        <i>{{$ctrl.shopSession.basket.quantity}}</i>
+                    </strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopSession.loggedIn">
+                <a class="uppercase" ng-click="$ctrl.logout($event)" href="#logout">
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippet('logout')"></span>
+                    </strong>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</section>

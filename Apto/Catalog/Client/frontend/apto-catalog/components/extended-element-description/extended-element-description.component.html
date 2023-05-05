@@ -1,0 +1,3 @@
+<div ng-if="$ctrl.element.attachments" class="element-attachment-download-item" ng-repeat="attachment in $ctrl.element.attachments">
+    <a class="element-attachment-download" href="{{$ctrl.mediaUrl + attachment.fileUrl}}" download={{$ctrl.translate(attachment.filename)}}>{{$ctrl.translate(attachment.name)}}</a>
+</div>

@@ -1,0 +1,9 @@
+<section apto-after-window-resize after-window-resize="getLogoSrc()" class="logo">
+    <div class="container">
+        <h1>
+            <a ng-href="{{ $ctrl.snippet('link') }}" target="{{ $ctrl.openNewTab() }}" ng-style="$ctrl.getLogoMeasurements()">
+                <img ng-if="$ctrl.getLogoSrc()" ng-src="{{$ctrl.getLogoSrc()}}">
+            </a>
+        </h1>
+    </div>
+</section>

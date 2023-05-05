@@ -1,0 +1,110 @@
+<form [formGroup]="formElement" *ngIf="element && product">
+    <div class="area-element"
+         [class.step-by-step]="product.useStepByStep"
+         [class.one-page]="!product.useStepByStep"
+         [class.open-in-dialog]="isDialog"
+         [attr.type]="'custom'"
+    >
+        <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
+                           [mat-dialog-close]="true"
+                           [inner]="true"
+        ></apto-close-button>
+
+        <div class="header">
+            <div class="title">
+                <h4>{{ element.element.name | translate }}</h4>
+            </div>
+        </div>
+
+        <div class="picture">
+            <apto-element-picture *ngIf="element.element.previewImage"
+                [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+            ></apto-element-picture>
+        </div>
+
+        <div class="element">
+            <div class="container" *ngFor="let field of this.element.element.definition.properties | keyvalue; index as i">
+                <!--<div class="prefix">
+                    {{element.element.definition.staticValues.fields?.[i]?.prefix | translate}}
+                </div>-->
+
+                <div class="input">
+                    <apto-input-field
+                        *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'input'"
+                        [formControlName]="field.key"
+                        [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
+                        [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
+                        [step]="element.element.definition.properties['field_' + i][0].step"
+                    ></apto-input-field>
+
+                    <apto-select-field
+                        *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'select'"
+                        [default]="element.element.definition.staticValues.fields?.[i]?.default + ''"
+                        [enableClear]="false"
+                        [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
+                        [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
+                        [items]="itemFieldList[i]"
+                        [formControlName]="field.key"
+                    >
+                    </apto-select-field>
+
+                    <div *ngIf="field.key === 'sumOfFieldValue'"><b>Summe aller felder</b></div>
+                </div>
+
+                <div class="hint" *ngIf="field.key !== 'sumOfFieldValue'">
+                    {{element.element.definition.properties['field_'+i][0].minimum + ' - ' + element.element.definition.properties['field_'+i][0].maximum + ' ' + (element.element.definition.staticValues.fields?.[i]?.suffix |translate)}}
+                </div>
+
+                <div class="hint" *ngIf="field.key === 'sumOfFieldValue'">
+                    <div *ngIf="field.key === 'sumOfFieldValue'">{{sumOfFieldValues}}</div>
+                    {{element.element.definition.properties['sumOfFieldValue'][0].minimum + ' - ' + element.element.definition.properties['sumOfFieldValue'][0].maximum}}
+                </div>
+
+<!--                <div class="suffix">-->
+<!--                    {{element.element.definition.staticValues.fields?.[i]?.suffix | translate}}-->
+<!--                </div>-->
+            </div>
+        </div>
+
+        <div class="description"
+             *ngIf="(element.element.description | translate) !== ''"
+             [innerHTML]="element.element.description | translate | safeHtml"
+        ></div>
+
+        <div class="apply-button">
+            <button
+                *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
+                mat-flat-button
+                color="primary"
+                [mat-dialog-close]="true"
+                (click)="saveInput()"
+            >
+                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            </button>
+            <button
+                *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
+                mat-flat-button
+                color="primary"
+                (click)="saveInput()"
+            >
+                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            </button>
+            <button
+                *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
+                mat-flat-button
+                color="accent"
+                (click)="removeInput()"
+            >{{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
+            </button>
+            <button
+                *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
+                mat-flat-button
+                color="accent"
+                [mat-dialog-close]="true"
+                (click)="removeInput()"
+            >
+                {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
+            </button>
+        </div>
+    </div>
+</form>

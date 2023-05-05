@@ -1,0 +1,26 @@
+<section class="sidebar">
+    <div class="sidebar-info gutter-medium-all" ng-class="{'has-category':  $ctrl.productDetail.categories.length != 0}">
+        <h1 class="uppercase">{{$ctrl.translate($ctrl.productDetail.name)}} </h1>
+        <ul ng-if="$ctrl.productDetail.categories.length > 0">
+            <li ng-repeat="category in $ctrl.productDetail.categories">{{$ctrl.translate(category.name)}}</li>
+        </ul>
+    </div>
+    <div ng-if="$ctrl.showAptoSlider" class="sidebar-image-container">
+        <apto-slider></apto-slider>
+    </div>
+    <ul class="section-container">
+        <li ng-repeat="section in $ctrl.productDetail.sections" class="uppercase gutter-medium-left gutter-medium-right"
+            ng-class="{active: $ctrl.sectionIsComplete(section.id), 'active-section': $ctrl.firstNotCompleteSection === section.id}"
+            ng-if="!$ctrl.sectionIsDisabled(section.id) && !$ctrl.sectionIsHidden(section.id)" ng-click="$ctrl.onSelectSection(section.id)">
+            {{$ctrl.translate(section.name)}}
+            <div class="active-element-in-section" ng-repeat="elementId in $ctrl.getActiveSectionElements(section.id)">
+                {{$ctrl.translate($ctrl.getElementById(section.id, elementId).element.name)}}
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                <div class="active-element-in-section-properties">
+                    <span class="active-element-in-section-properties-item" ng-repeat="property in $ctrl.getHumanReadableProperties(section.id, elementId)">{{$ctrl.translate(property)}}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+<apto-product-action></apto-product-action>

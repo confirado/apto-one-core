@@ -1,0 +1,49 @@
+<nav class="footer-nav block-group">
+    <ul>
+        <li ng-if="$ctrl.snippet('menu.entry1.text')">
+            <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippet('menu.entry1.link') ? $ctrl.snippet('menu.entry1.link') : $ctrl.shopUrls.home + 'kontaktformular' }}"
+                    target="_blank"
+            >
+                <strong ng-bind-html="$ctrl.snippet('menu.entry1.text')">Kontakt</strong>
+            </a>
+        </li>
+        <li ng-if="$ctrl.snippet('menu.entry2.text')">
+            <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippet('menu.entry2.link') ? $ctrl.snippet('menu.entry2.link') : $ctrl.shopUrls.additional.imprint }}"
+                    target="_blank"
+            >
+                <strong ng-bind-html="$ctrl.snippet('menu.entry2.text')">Impressum</strong>
+            </a>
+        </li>
+        <li ng-if="$ctrl.snippet('menu.entry3.text')">
+            <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippet('menu.entry3.link') ? $ctrl.snippet('menu.entry3.link') : $ctrl.shopUrls.additional.termsOfService }}"
+                    target="_blank"
+            >
+                <strong ng-bind-html="$ctrl.snippet('menu.entry3.text')">AGB</strong>
+            </a>
+        </li>
+        <li ng-if="$ctrl.snippet('menu.entry4.text')">
+            <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippet('menu.entry4.link') ? $ctrl.snippet('menu.entry4.link') : $ctrl.shopUrls.additional.rightOfWithdrawal }}"
+                    target="_blank"
+            >
+                <strong ng-bind-html="$ctrl.snippet('menu.entry4.text')">Widerrufsrecht</strong>
+            </a>
+        </li>
+        <li ng-if="$ctrl.snippet('menu.entry5.text')">
+            <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippet('menu.entry5.link') ? $ctrl.snippet('menu.entry5.link') : $ctrl.shopUrls.additional.protectionOfPrivacy }}"
+                    target="_blank"
+            >
+                <strong ng-bind-html="$ctrl.snippet('menu.entry5.text')">Datenschutz</strong>
+            </a>
+        </li>
+    </ul>
+</nav>

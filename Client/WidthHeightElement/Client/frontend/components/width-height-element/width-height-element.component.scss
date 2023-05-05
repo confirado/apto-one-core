@@ -1,0 +1,228 @@
+@import "globals";
+@import "elements";
+@import "form-inputs";
+@import "dialogs";
+
+.width-height-element {
+    @include element-grid();
+    @include border-color();
+
+    grid-template-areas:
+            "header"
+            "picture"
+            "height-line"
+            "width-line"
+            "height-input"
+            "width-input"
+            "description"
+            "buttons";
+
+    @include element-margins();
+    @include element-content-margins();
+
+    .header {
+        grid-area: header;
+        @include header();
+        @include title();
+    }
+
+    .height-line {
+        grid-area: height-line;
+        border-top: solid 1px var(--color-border-dimensions);
+        border-bottom: solid 1px var(--color-border-dimensions);
+        justify-content: flex-start;
+        width: 20px;
+        height: 100%;
+        display: none;
+        margin-left: var(--input-elements-gap);
+
+        .height-inner {
+            height: 100%;
+            display: flex;
+            width: 50%;
+            border-right: solid 1px var(--color-border-dimensions);
+        }
+    }
+
+    .width-line {
+        grid-area: width-line;
+        align-items: flex-end;
+        border-left: solid 1px var(--color-border-dimensions);
+        border-right: solid 1px var(--color-border-dimensions);
+        height: 20px;
+        width: 100%;
+        display: none;
+        margin-top: var(--input-elements-gap);
+
+        .width-inner {
+            display: flex;
+            border-top: solid 1px var(--color-border-dimensions);
+            width: 100%;
+            height: 50%;
+        }
+    }
+
+    .picture {
+        grid-area: picture;
+    }
+
+    .element {
+        grid-template-rows: auto;
+        grid-template-areas:
+                "picture"
+                "element"
+                "element";
+        margin-top: var(--element-gap);
+        @include element();
+
+        .container {
+            @include element-input-grid();
+
+            .input {
+                grid-area: input;
+            }
+
+            .hint {
+                grid-area: hint;
+                @include hint();
+            }
+
+            .prefix {
+                grid-area: prefix;
+                @include prefix();
+            }
+
+            .suffix {
+                grid-area: suffix;
+                @include suffix();
+            }
+        }
+
+        &.height-input {
+            grid-area: height-input;
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+
+            .height-input-pointer {
+                display: none;
+                position: absolute;
+                border-top: solid 1px var(--color-border-dimensions);
+                width: 16px;
+                left: calc(-1 * var(--element-gap) - var(--element-gap)/2);
+                height: 0;
+                top: calc(50% - 38px);
+            }
+        }
+
+        &.width-input {
+            grid-area: width-input;
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+
+            .width-input-pointer {
+                display: none;
+                position: absolute;
+                border-left: solid 1px var(--color-border-dimensions);
+                width: 0;
+                left: calc(50% - 38px);
+                height: 16px;
+                top: calc(-1 * var(--element-gap) - var(--element-gap)/2);
+            }
+        }
+    }
+
+    .description {
+        grid-area: description;
+        @include description();
+    }
+
+    .apply-button {
+        grid-area: buttons;
+        @include buttons();
+    }
+}
+
+
+@media only screen and (min-width: $mobile-max-width) {
+
+    .width-height-element {
+        grid-template-areas:
+            "header         header          header"
+            "picture        height-line     height-input"
+            "width-line     ...             ..."
+            "width-input    ...             ..."
+            "description    description     description"
+            "buttons        buttons         buttons"
+        ;
+        justify-items: flex-start;
+        grid-template-columns: calc(200px + var(--input-elements-gap)) 20px auto;
+        @include element-margins('tablet');
+
+        .header {
+            @include header('tablet');
+            @include title('tablet');
+
+            margin-bottom: var(--element-gap);
+        }
+
+        .picture {}
+
+        .height-line {
+            display: flex;
+            .height-inner {
+            }
+        }
+
+        .width-line {
+            display: flex;
+            .width-inner {
+            }
+        }
+
+        .element {
+            @include element('tablet');
+
+            .container {
+                @include element-input-grid('tablet', '100px');
+
+                .input {}
+                .hint {}
+                .prefix {}
+                .suffix {}
+            }
+
+            &.height-input {
+                margin-left: calc(var(--element-gap) + 9px);
+                margin-top: 0;
+
+                .container {
+                    grid-template-columns: 0 100px 1fr;
+                }
+
+                .height-input-pointer {
+                    display: flex;
+                }
+            }
+
+            &.width-input {
+                .width-input-pointer {
+                    display: flex;
+                }
+            }
+        }
+
+        .description {}
+
+        .apply-button {
+            @include buttons('tablet');
+        }
+    }
+}

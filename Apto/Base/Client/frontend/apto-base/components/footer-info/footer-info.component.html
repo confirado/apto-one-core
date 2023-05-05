@@ -1,0 +1,9 @@
+<section class="footer-info">
+    <strong class="uppercase" ng-if="$ctrl.snippet('copyright')">
+        Copyright © {{date | date:'yyyy'}} {{$ctrl.snippet('copyright')}}
+    </strong>
+
+    <strong class="uppercase" ng-if="!$ctrl.snippet('copyright')">
+        Copyright © {{date | date:'yyyy'}} Confirado - alle Rechte vorbehalten
+    </strong>
+</section>

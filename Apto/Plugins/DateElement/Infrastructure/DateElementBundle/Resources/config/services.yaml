@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\DateElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

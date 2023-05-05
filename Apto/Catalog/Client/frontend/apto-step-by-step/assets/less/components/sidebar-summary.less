@@ -1,0 +1,155 @@
+apto-sidebar-summary {
+  width: 17.5rem;
+  position: relative;
+  min-width: 17.5rem;
+  right: 0;
+  top: 0;
+  .summary {
+    font-size: 1.063rem;
+    line-height: 0.75rem;
+    margin: 0;
+    color: @stepByStepSummaryHeadlineColor;
+    background: @stepByStepSummaryHeadlineBackgroundColor;
+  }
+  .selected-section-container {
+    color: @stepByStepSectionSummaryColor;
+    background: @stepByStepSectionSummaryBackgroundColor;
+    font-weight: bold;
+    font-size: 0.875rem;
+    overflow: hidden;
+    .set-border-summary;
+    li {
+      display: flex;
+      justify-content: space-between;
+      line-height: 1.25rem;
+      color: @baseWhite;
+      &:nth-last-child(1) {
+        padding-bottom: 0;
+      }
+      span {
+        &:nth-child(2) {
+          .pseudo-price-total {
+            color: @backgroundColorDisabled;
+            text-decoration: line-through;
+            font-size: 0.625rem;
+          }
+        }
+      }
+      &.discount-name {
+        color: @catalogPriceTotalPriceColor;
+        font-weight: normal;
+        padding-bottom: 0;
+      }
+      &.tax-and-delivery {
+        display: block;
+        font-size: 0.625rem;
+        font-weight: normal;
+        a {
+          color: @baseWhite;
+        }
+      }
+    }
+  }
+  .info-block {
+    background: @stepByStepInfoBlockBackground;
+    color: @stepByStepInfoBlockColor;
+    z-index: 999;
+    h3 {
+      font-size: 0.875rem;
+      line-height: 0.625rem;
+      margin: 0;
+    }
+    span {
+      color: @stepByStepInfoBlockPriceColor;
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-top: 0.3125rem;
+      display: block;
+      small {
+        color: @stepByStepInfoBlockColor;
+        font-size: 0.625rem;
+        .tertiary-font;
+        font-weight: normal;
+        a {
+          color: @stepByStepInfoBlockColor;
+        }
+      }
+    }
+    .price-container {
+      display: none;
+    }
+    .select-container {
+      margin-top: 0;
+    }
+    .set-border-summary;
+    border-bottom: 1px solid @stepByStepInfoBlockSelectBorderColor;
+  }
+  .basket-notification {
+    margin-top: 0.9375rem;
+    i {
+      width: 1.125rem;
+      height: 1.125rem;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 1.125rem;
+      color: @stepByStepBasketNotificationInfoColor;
+      background: @stepByStepBasketNotificationInfoBackgroundColor;
+      font-size: 0.75rem;
+      float: left;
+      margin-right: 0.625rem;
+    }
+    p {
+      color: @stepByStepBasketNotificationColor;
+      font-size: 0.75rem;
+      width: 14.38rem;
+      float: left;
+      margin: 0;
+    }
+  }
+  #basket-button.invalid {
+    cursor: default;
+    background: @backgroundColorDisabled;
+  }
+  #offer-button {
+    margin-top: 1rem;
+  }
+}
+
+.set-border-summary {
+  border-top: 1px solid @stepByStepInfoBlockSelectBorderColor;
+  border-left: 1px solid @stepByStepInfoBlockSelectBorderColor;
+}
+
+//basket-error-message if configuration is invalid
+.sbs-error-message {
+  .ngdialog-content {
+    top: 25vh;
+  }
+
+  div {
+    padding: 1rem;
+  }
+
+  &.ngdialog {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+
+    &.ngdialog-theme-default.apto-ngdialog-scroll {
+      margin: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .basket-notification {
+    display: none;
+  }
+
+  apto-sidebar-summary {
+    min-width: 0;
+    width: 0;
+  }
+}

@@ -1,0 +1,28 @@
+.border-radius (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius:    @radius;
+  border-radius:         @radius;
+}
+
+.border-radius-left(@radius: 5px){
+  border-bottom-left-radius: @radius;
+  border-top-left-radius: @radius;
+}
+
+.border-radius-right(@radius: 5px){
+  border-bottom-right-radius: @radius;
+  border-top-right-radius: @radius;
+}
+
+.borderTop(@color, @size: 1px){
+  border-bottom: @size solid @color;
+}
+
+.borderBottom(@color, @size: 1px){
+  border-bottom: @size solid @color;
+}
+
+.borderTopBottom(@color, @size: 1px){
+  border-top: @size solid @color;
+  border-bottom: @size solid @color;
+}

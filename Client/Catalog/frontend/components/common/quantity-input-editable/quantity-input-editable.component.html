@@ -1,0 +1,14 @@
+<div class="quantity-input-editable">
+	<div class="container" *ngIf="quantity$ | async as quantity" [style.width]="width" [class]="size">
+        <input [formControl]="formElement"/>
+        <span class="quantity-text">St.</span>
+        <div class="ripple-controls">
+			<div class="control" mat-ripple (click)="setQuantity(quantity + step)">
+				<mat-icon>arrow_drop_up</mat-icon>
+			</div>
+			<div class="control" mat-ripple (click)="setQuantity(quantity - step)">
+				<mat-icon>arrow_drop_down</mat-icon>
+			</div>
+		</div>
+	</div>
+</div>

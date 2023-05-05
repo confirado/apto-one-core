@@ -1,0 +1,37 @@
+h4 {
+    font-weight: 600;
+    font-size: 31px;
+    color: var(--color-text);
+}
+
+p {
+    font-weight: 500;
+}
+
+.finished-message {
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    border-radius: var(--border-radius-bubble);
+    height: 41px;
+    width: 41px;
+    font-size: x-large;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: 1rem;
+
+    &.finished {
+        border: 2px solid var(--color-background-completed);
+        background-color: var(--color-background-completed);
+        color: var(--color-completed);
+    }
+
+    mat-icon {
+        font-weight: 700;
+    }
+}

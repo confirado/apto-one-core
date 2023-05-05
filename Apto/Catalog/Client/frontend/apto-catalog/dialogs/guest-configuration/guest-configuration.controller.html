@@ -1,0 +1,16 @@
+<form ng-if="!guestConfiguration.finish" class="add-guest-configuration-form" name="addGuestConfigurationForm">
+    <h4 ng-bind-html="snippet('beforeSave.header')"></h4>
+    <p ng-bind-html="snippet('beforeSave.info')"></p>
+    <input type="email" ng-attr-placeholder="{{ snippet('form.mail') }}" ng-model="guestConfiguration.email" required>
+    <input type="text" ng-attr-placeholder="{{ snippet('form.name') }}" ng-model="guestConfiguration.name">
+    <div class="block-group">
+        <button class="block right" ng-click="addGuestConfiguration(addGuestConfigurationForm, $event)" ng-bind-html="snippet('form.submit')"></button>
+    </div>
+</form>
+<div ng-if="guestConfiguration.finish">
+    <h4 ng-bind-html="snippet('afterSave.header')"></h4>
+    <p ng-bind-html="snippet('afterSave.info')"></p>
+    <div class="block-group">
+        <button class="block right" ng-click="close()" ng-bind-html="snippet('afterSave.close')"></button>
+    </div>
+</div>

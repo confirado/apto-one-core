@@ -1,0 +1,17 @@
+services:
+  Apto\Base\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'
+
+  Apto\Base\Infrastructure\AptoBaseBundle\EventListener\LocaleListener:
+    autoconfigure: true
+    arguments:
+      - '@Apto\Base\Application\Core\Query\Language\LanguageFinder'
+      - '%kernel.default_locale%'
+
+  Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer: '@error_handler.error_renderer.html'
+  Symfony\Component\Config\FileLocator: '@file_locator'
+  Twig\Loader\FilesystemLoader: '@twig.loader.native_filesystem'

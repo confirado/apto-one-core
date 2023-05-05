@@ -1,0 +1,254 @@
+@media print {
+
+    /* General Settings */
+    * {
+        font-family: "Verdana", sans-serif;
+    }
+
+    a {
+        color: #67aabf;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .remove-padding {
+        padding: 0;
+    }
+
+    /* Header */
+    header {
+        padding-bottom: 20px;
+        padding-top: 8px;
+        margin: 74px 10px 0 70px;
+        margin-left: 30px;
+        margin-right: 45px;
+        margin-top: 20px;
+    }
+
+    .header-table {
+        width: 100%;
+        border-bottom: 1px dotted #808080;
+    }
+
+    .logo {
+        max-width: 196px;
+        max-height: 48px;
+        margin-bottom: 36px;
+        margin-left: -3px;
+    }
+
+    .company-name {
+        font-weight: bold;
+    }
+
+    .company-address {
+        font-size: 13px;
+        padding-bottom: 15px;
+    }
+
+    .company-contact {
+        font-size: 10px;
+    }
+
+    .header-link {
+        color: #000;
+        text-decoration: none;
+    }
+
+    /* Body */
+    .container {
+        width: 100%;
+        padding-left: 35px;
+        padding-right: 45px;
+
+    }
+
+    .consignor-container {
+        margin-bottom: 10px;
+    }
+
+    .consignor {
+        font-size: 9px;
+        text-decoration: underline;
+    }
+
+    customer-address {
+        padding-bottom: 50px;
+    }
+
+    .title-table {
+        width: 100%;
+        padding-top: 55px;
+        padding-bottom: 60px;
+    }
+
+    .title-table th {
+        padding: 0;
+    }
+
+    .title-table h3 {
+        margin-left: -5px;
+    }
+
+    .head-line {
+        margin-left: -5px;
+        text-indent: -5px;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    .introduction {
+        font-size: 14px;
+    }
+
+    .order-table {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .table-prio {
+        padding-bottom: 250px;
+    }
+
+    .order-item-name {
+        border-top: 1px solid #000;
+        width: 170px;
+        padding-left: 5px;
+    }
+
+    .order-item-description {
+        border-top: 1px solid #000;
+        border-right: 1px solid #000;
+        border-left: 1px solid #000;
+        padding: 5px;
+    }
+
+    .order-item-price {
+        border-top: 1px solid #000;
+        width: 130px;
+        padding-top: 10px;
+        padding-right: 10px;
+        text-align: right;
+    }
+
+    .order-table thead {
+        border-bottom: 1px solid #000;
+    }
+
+    .title-performance {
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        padding-left: 5px;
+        padding-bottom: 5px;
+    }
+
+    .title-price{
+        padding-left: 5px;
+        padding-bottom: 5px;
+    }
+
+    .order-item-price{
+        text-align: right;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .order-item {
+    }
+
+    .order-item td {
+        vertical-align: top;
+        text-align: left;
+    }
+
+    .order-number {
+        border-right: 1px dotted;
+        width: 130px;
+        font-size: 13px;
+        text-align: left;
+        font-style: italic;
+        padding-left: 10px;
+    }
+
+    .order-date {
+        width: 110px;
+        font-size: 13px;
+        text-align: right;
+        padding-right: 10px;
+    }
+
+    .title-info {
+        border: 1px dotted;
+    }
+
+    .info-text {
+        font-size: 13px;
+    }
+
+    .payment-title {
+        font-size: 12px;
+        padding-top: 45px;
+    }
+
+    .payment-text {
+        font-size: 12px;
+    }
+
+    /* Footer */
+    footer {
+        margin: 0 32px 40px;
+    }
+
+    .footer-table {
+        width: 100%;
+        border: none;
+        border-top: 1px dotted #808080;
+        padding: 9px 10px 25px;
+        color: #808080;
+        font-style: italic;
+        font-size: 9px;
+        line-height: 8px;
+    }
+
+    .footer-link {
+        color: #0563c1;
+    }
+
+    .table-no-spacing {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .splitter {
+        border-right: 1px solid #808080;
+        padding: 0 13px 0 0;
+    }
+
+    .left-block {
+        width: 50%;
+        float: left;
+        text-align: left;
+    }
+
+    .right-block {
+        width: 50%;
+        float: left;
+        text-align: right;
+    }
+
+    .right {
+        float: right;
+    }
+
+    .hide-text {
+        color: #fff;
+        text-indent: -9999px;
+    }
+
+    .text-left {
+        text-align: left;
+        padding-left: 5px;
+    }
+}

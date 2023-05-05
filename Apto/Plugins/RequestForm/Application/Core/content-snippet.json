@@ -1,0 +1,235 @@
+{
+  "plugins": {
+    "requestForm": {
+      "aptoSummary": {
+        "values": {
+          "gender": {
+            "ms": {
+              "de_DE": "Frau"
+            },
+            "mr": {
+              "de_DE": "Herr"
+            },
+            "di": {
+              "de_DE": "keine Angabe"
+            }
+          }
+        },
+        "beforeSend": {
+          "headline": {
+            "de_DE": "Ihre Kontaktdaten"
+          }
+        },
+        "labels": {
+          "phone": {
+            "de_DE": "Telefon"
+          },
+          "email": {
+            "de_DE": "E-Mail"
+          },
+          "gender": {
+            "de_DE": "Anrede"
+          },
+          "zipCode": {
+            "de_DE": "PLZ"
+          },
+          "requirePhone": {
+            "de_DE": "false"
+          },
+          "name": {
+            "de_DE": "Name"
+          },
+          "message": {
+            "de_DE": "Ihre Nachricht"
+          },
+          "city": {
+            "de_DE": "Ort"
+          },
+          "street": {
+            "de_DE": "Adresse"
+          },
+          "company": {
+            "de_DE": "Firma"
+          }
+        },
+        "afterSend": {
+          "headline": {
+            "de_DE": "Ihre Anfrage wurde erfolgreich versendet!"
+          }
+        },
+        "declarationOfConsent": {
+          "de_DE": "Durch das Absenden des Formulares erklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw. zur Kontaktaufnahme verwenden.<br />\nWeitere Informationen zum Datenschutz finden Sie in unserer <a href=\"https://www.confirado.de/rechtliches/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>.<br />\nAlle auf confirado.de genannten Preise sind Nettopreise (zzgl 19% USt.)."
+        },
+        "sendForm": {
+          "de_DE": "Anfrage senden"
+        },
+        "requiredMessage": {
+          "de_DE": "Alle Pflichtfelder sind mit einem Stern (*) gekennzeichnet."
+        },
+        "back": {
+          "de_DE": "zurück"
+        }
+      },
+      "mail": {
+        "customer": {
+          "dear": {
+            "de_DE": "Guten Tag,"
+          },
+          "dearMisses": {
+            "de_DE": "Sehr geehrte Frau"
+          },
+          "dearMister": {
+            "de_DE": "Sehr geehrter Herr"
+          },
+          "title": {
+            "de_DE": "Produktanfrage"
+          },
+          "orderNumber": {
+            "de_DE": "Bestellnummer: "
+          },
+          "priceText": {
+            "de_DE": "Gesamtbetrag inkl. MwSt.: "
+          },
+          "configurationLinkPrefix": {
+            "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
+          },
+          "configurationLink": {
+            "de_DE": "Konfiguration laden"
+          },
+          "WeHaveReceivedYourConfiguration": {
+            "de_DE": "Vielen Dank, dass Sie unseren Konfigurator genutzt haben."
+          },
+          "YoursSincerely": {
+            "de_DE": "<p>Herzlichste Grüße,</p>"
+          }
+        }
+      },
+      "pdf": {
+        "body": {
+          "salutationW": {
+            "de_DE": "Sehr geehrte Frau"
+          },
+          "signatureText": {
+            "de_DE": "Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt."
+          },
+          "signature": [],
+          "salutationM": {
+            "de_DE": "Sehr geehrter Herr"
+          },
+          "salutationD": {
+            "de_DE": "Sehr geehrte Damen und Herren"
+          },
+          "paymentTitle": [],
+          "paymentPlan": [],
+          "payment3": [],
+          "payment2": {
+            "de_DE": "- Individuelle Anpassungen werden schrittweise durchgeführt"
+          },
+          "payment1": {
+            "de_DE": "- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten."
+          },
+          "ourOffer": {
+            "de_DE": "Unser Vorabangebot"
+          },
+          "price": {
+            "de_DE": "Preis"
+          },
+          "productTitle": [],
+          "quotationInfo": {
+            "de_DE": "Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot."
+          },
+          "coverLetter2": {
+            "de_DE": "Ihre konfigurierbaren Produkte:"
+          },
+          "performance": {
+            "de_DE": "Leistung"
+          },
+          "coverLetter1": {
+            "de_DE": "die Umsetzung  möchten wir Ihnen wie folgt anbieten."
+          },
+          "briefingInfo": {
+            "de_DE": "Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen."
+          },
+          "betweenOffers": {
+            "de_DE": "Optional zu unserer Lösung bieten wir Ihnen im folgenden an. Diese muss unabhängig der Produktanzahl nur einmalig erworben werden."
+          },
+          "termsAndConditions1": {
+            "de_DE": "Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter"
+          },
+          "termsAndConditionsLink": {
+            "de_DE": "https://www.confirado.de/agb/"
+          },
+          "termsAndConditionsLinkText": {
+            "de_DE": "www.confirado.de/agb/"
+          },
+          "yoursSincerely": {
+            "de_DE": "Mit freundlichen Grüßen"
+          },
+          "termsAndConditions2": {
+            "de_DE": "einzusehen sind."
+          }
+        },
+        "header": {
+          "phone": [],
+          "mail": [],
+          "logo": []
+        },
+        "company": {
+          "phone": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "name": {
+            "de_DE": "Confirado GmbH & Co. KG"
+          },
+          "mail": {
+            "de_DE": "info@confirado.de"
+          },
+          "website": {
+            "de_DE": "www.confirado.de"
+          },
+          "websiteLink": {
+            "de_DE": "https://www.confirado.de/"
+          },
+          "zip": {
+            "de_DE": "97616"
+          },
+          "city": {
+            "de_DE": "Bad Neustadt"
+          },
+          "street": {
+            "de_DE": "Salzpforte"
+          }
+        },
+        "footer": {
+          "titleAddress": {
+            "de_DE": "Adresse:"
+          },
+          "titleInternet": {
+            "de_DE": "Internet:"
+          },
+          "city": {
+            "de_DE": "Bad Neustadt an der Saale"
+          },
+          "titleMail": {
+            "de_DE": "E-Mail:"
+          },
+          "titlePhone": {
+            "de_DE": "Tel.:"
+          }
+        },
+        "refuse": {
+          "de_DE": "Auswahl übernehmen"
+        },
+        "title": {
+          "de_DE": "Achtung!"
+        },
+        "accept": {
+          "de_DE": "Auswahl verwerfen"
+        },
+        "fileNamePrefix": {
+          "de_DE": "Angebot-Nr._"
+        }
+      }
+    }
+  }
+}

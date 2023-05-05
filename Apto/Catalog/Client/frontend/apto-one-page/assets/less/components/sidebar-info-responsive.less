@@ -1,0 +1,36 @@
+@media screen and (max-width: 767px) {
+  .sidebar-info {
+    position: fixed;
+    left: 0;
+    bottom: 2.875rem;
+    width: 100%;
+    height: 3.25rem;
+    padding-bottom: 0.625rem;
+    border-top: 1px solid @onePageSidebarInfoBorderColor;
+    h1, small {
+      display: none;
+    }
+    > span {
+      width: 50%;
+      font-size: 1rem;
+      line-height: 1rem;
+      float: left;
+      display: block;
+      margin: 0;
+      small{
+        display: block;
+        font-size: 0.5rem;
+        line-height: 0.75rem;
+        margin-bottom: 0;
+      }
+    }
+    label.select-container {
+      width: 50%;
+      float: right;
+      select{
+        font-size: 0.625rem;
+        padding-top: 0.188rem;
+      }
+    }
+  }
+}

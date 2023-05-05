@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\ColorRating" table="plugin_material_picker_color_rating">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="rating" type="integer" column="rating" />
+        <field name="created" column="created" type="datetime" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Base\Domain\Core\Model\Color" name="color"/>
+
+        <many-to-one field="material" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\Material" inversed-by="colorRatings">
+            <join-column name="material_id" referenced-column-name="surrogate_id" nullable="false"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

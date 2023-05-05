@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\RequestForm\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

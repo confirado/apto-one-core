@@ -1,0 +1,47 @@
+.apto-product-list-container {
+  margin: 0 1rem;
+
+  apto-product-list-item {
+    display: block;
+    position: relative;
+    margin-bottom: 1.5625rem;
+    border: 1px solid #dddddd;
+    padding: 1.25rem 1.25rem 3.3125rem 1.25rem;
+    width: 32%;
+    margin-right: 2%;
+
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+
+    h3 a {
+      text-decoration: none;
+      color: @baseBlack;
+    }
+
+    .product-list-content {
+      margin-bottom: 1.5625rem;
+    }
+
+    .action-container {
+      position: absolute;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      text-align: right;
+
+      .btn {
+        display: inline-block;
+        padding: 0 0.75rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .apto-product-list-container {
+    apto-product-list-item {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+}

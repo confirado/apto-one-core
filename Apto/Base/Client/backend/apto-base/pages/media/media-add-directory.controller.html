@@ -1,0 +1,25 @@
+<md-dialog style="min-width: 40%;" aria-label="Create directory dialog">
+    <form name="mediaAddDirectoryForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Verzeichnis: {{ currentDirectory }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block" flex>
+                    <label>Name:</label>
+                    <input required ng-model="addDirectoryDetails.name" md-autofocus>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+            <md-button ng-disabled="!addDirectoryDetails.name" class="md-raised md-primary md-cornered" ng-click="save(mediaAddDirectoryForm)" type="submit">Hinzufügen</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

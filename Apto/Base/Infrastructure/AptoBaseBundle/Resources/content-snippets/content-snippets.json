@@ -1,0 +1,79 @@
+{
+  "aptoFooterNav": {
+    "menu": {
+      "entry5": {
+        "link": [],
+        "text": {
+          "de_DE": "Datenschutz"
+        }
+      },
+      "entry1": {
+        "link": [],
+        "text": {
+          "de_DE": "Kontakt"
+        }
+      },
+      "entry2": {
+        "link": [],
+        "text": {
+          "de_DE": "Impressum"
+        }
+      },
+      "entry4": {
+        "link": [],
+        "text": {
+          "de_DE": "Widerrufsrecht"
+        }
+      },
+      "entry3": {
+        "link": [],
+        "text": {
+          "de_DE": "AGB"
+        }
+      }
+    }
+  },
+  "aptoSelect": {
+    "suffix": {
+      "de_DE": "Stück"
+    }
+  },
+  "aptoLanguageSwitch": {
+    "switch": {
+      "de_DE": "Sprache wählen:"
+    }
+  },
+  "aptoLogo": {
+    "logoImg": {
+      "de_DE": "/logo.png"
+    },
+    "openInNewTab": {
+      "de_DE": "active"
+    },
+    "logoImgMobile": {
+      "de_DE": "/logo-mobile.png"
+    },
+    "link": {
+      "de_DE": "/"
+    }
+  },
+  "aptoTrackingCodes": {
+    "scripts": []
+  },
+  "aptoFooterPaymentProvider": {
+    "paymentImage": {
+      "de_DE": "/paymentimage.png"
+    }
+  },
+  "aptoProductIsNotAvailable": {
+    "message": {
+      "de_DE": "Das Produkt ist nicht verfügbar. Bitte wenden Sie sich an den Shopbetreiber."
+    }
+  },
+  "aptoPageNotFound": {
+    "info": {
+      "de_DE": "<h2>Seite wurde nicht gefunden.</h2>",
+      "en_GB": "<h2>Page not found.</h2>"
+    }
+  }
+}

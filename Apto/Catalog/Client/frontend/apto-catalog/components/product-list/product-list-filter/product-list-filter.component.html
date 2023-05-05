@@ -1,0 +1,13 @@
+<form class="filter-search-box" ng-submit="$ctrl.onSearchSubmit()">
+    <label class="filter-search-box-label" for="filterSearchBoxInput">{{$ctrl.snippet('search')}}</label>
+    <input class="filter-search-box-input" id="filterSearchBoxInput" type="text" ng-model="$ctrl.searchString" ng-attr-placeholder="{{$ctrl.snippet('searchPlaceholder')}}">
+    <button class="filter-search-box-submit" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+</form>
+
+<h3 ng-if="$ctrl.categoryFilter.length > 0" class="filter-name">{{$ctrl.snippet('category')}}</h3>
+<div ng-if="$ctrl.categoryFilter.length > 0" class="filter-list">
+    <div class="filter-item" ng-repeat="category in $ctrl.categoryFilter | orderBy: 'position'">
+        <input ng-attr-id="category-{{ category.id }}" type="checkbox" ng-checked="category.checked" ng-click="$ctrl.onToggleCategory($event, category)">
+        <label ng-attr-for="category-{{ category.id }}">{{ $ctrl.translate(category.name) }}</label>
+    </div>
+</div>

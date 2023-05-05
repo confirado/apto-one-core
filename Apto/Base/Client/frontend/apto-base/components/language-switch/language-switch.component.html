@@ -1,0 +1,12 @@
+<section ng-class="{active: $ctrl.menuActive}" class="change-lang block" ng-if="$ctrl.state.languages.length > 1">
+    <div ng-click="$ctrl.toggleMenu()" class="change-lang-container">
+        <strong class="uppercase" ng-bind-html="$ctrl.snippet('switch')"></strong>
+        <span class="current-language">{{ $ctrl.translate($ctrl.state.activeLanguage.name) }}</span>
+        <i class="fa fa-angle-down" aria-hidden="true"></i>
+    </div>
+    <nav>
+        <ul>
+            <li ng-repeat="language in $ctrl.state.languages" ng-click="$ctrl.changeLanguageAndCloseMenu(language.isocode)">{{ $ctrl.translate(language.name) }}</li>
+        </ul>
+    </nav>
+</section>

@@ -1,0 +1,35 @@
+.footer-nav {
+  ul {
+    text-align: center;
+
+    li {
+      display: inline-block;
+      font-size: 0.75rem;
+      line-height: 1.25rem;
+
+      &:after {
+        display: inline-block;
+        content: "|";
+        padding: 0 0.5625rem;
+      }
+
+      &:last-child {
+        &:after {
+          display: none;
+        }
+      }
+
+      a {
+        color: @baseFooterNavColor;
+        font-size: 0.75rem;
+        text-decoration: none;
+
+        &:hover,
+        &:active,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

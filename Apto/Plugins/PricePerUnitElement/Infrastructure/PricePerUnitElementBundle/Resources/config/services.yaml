@@ -1,0 +1,8 @@
+services:
+  Apto\Plugins\PricePerUnitElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'
+

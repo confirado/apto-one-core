@@ -1,0 +1,12 @@
+<h3 class="filter-name">{{$ctrl.snippet('category')}}</h3>
+<treecontrol ng-if="$ctrl.categoryTree.length > 0"
+             class="tree-classic filter-list"
+             tree-model="$ctrl.categoryTree"
+             options="$ctrl.treeOptions"
+             on-selection="$ctrl.onChangeCategoryFilter($event, node)"
+             selected-node="$ctrl.selectedNode"
+             expanded-nodes="$ctrl.expandedNodes"
+>
+    {{$ctrl.translate(node.name)}}
+
+</treecontrol>

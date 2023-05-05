@@ -1,0 +1,119 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Upload">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Maximale Dateigröße (MB):</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.file.maxFileSize">
+                </md-input-container>
+            </div>
+            <p style="margin-top: 0;">Dateityp hinzufügen:</p>
+            <div layout="row"  layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Dateityp (z.B.: jpg)</label>
+                    <input type="text" ng-model="$ctrl.newAllowedFileType">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" ng-disabled="$ctrl.allowedFileTypeIsDuplicate($ctrl.newAllowedFileType) || !$ctrl.newAllowedFileType" class="md-raised md-primary md-cornered" ng-click="$ctrl.addAllowedFileTypeValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Erlaubte Dateitypen</th>
+                        <th md-column style="width: 5%;" ></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="file in $ctrl.values.file.allowedFileTypes">
+                        <td md-cell>{{ file }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeAllowedFileTypeValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+
+    <md-tab label="Werte">
+        <div class="apto-tab-content">
+            <!-- Enable/disable text, prefix, suffix -->
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox
+                            aria-label="Textbox aktivieren"
+                            ng-model="$ctrl.values.needsValue"
+                            ng-change="$ctrl.updateDefinitionValues()">
+                        Aktivieren
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div ng-if="$ctrl.values.needsValue" layout="row" layout-align="start" flex>
+                <apto-translated-value label="'Prefix'" type="'input'" translated-value="$ctrl.values.valuePrefix" flex></apto-translated-value>
+                <div flex="5"></div>
+                <apto-translated-value label="'Suffix'" type="'input'" translated-value="$ctrl.values.valueSuffix" flex></apto-translated-value>
+            </div>
+
+            <!-- New value -->
+            <div ng-if="$ctrl.values.needsValue" layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Minimum:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.value.minimum">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Maximum:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.value.maximum">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Wert Step:</label>
+                    <input type="number" min="0" step="0.001" ng-model="$ctrl.input.value.step">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <!-- Value list -->
+            <md-table-container ng-if="$ctrl.values.needsValue && $ctrl.values.value">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Minimum</th>
+                        <th md-column>Maximum</th>
+                        <th md-column>Step</th>
+                        <th md-column style="width: 5%;"></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="value in $ctrl.definitionValues.value">
+                        <td md-cell>{{ value.minimum }}</td>
+                        <td md-cell>{{ value.maximum }}</td>
+                        <td md-cell>{{ value.step }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+</md-tabs>

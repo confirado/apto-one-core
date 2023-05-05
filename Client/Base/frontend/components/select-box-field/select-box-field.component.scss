@@ -1,0 +1,38 @@
+@import "form-inputs";
+
+:host {
+    @include input-host();
+}
+
+.select-box-field {
+    @include input-grid();
+
+    .prefix {
+        grid-area: prefix;
+        @include prefix();
+    }
+
+    .name {
+        grid-area: name;
+        @include name();
+    }
+
+    .container {
+        grid-area: container;
+        @include container();
+        @include select();
+        @include clear-input();
+    }
+
+    .suffix {
+        grid-area: suffix;
+        @include suffix();
+    }
+
+    .hint {
+        grid-area: hint;
+        @include hint();
+    }
+}
+
+@include select-overlay();

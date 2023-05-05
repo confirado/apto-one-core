@@ -1,0 +1,19 @@
+<div class="save-dialog" [attr.type]="'custom'">
+    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+
+    <h1 mat-dialog-title>Konfiguration abspeichern</h1>
+
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <mat-dialog-content>
+            <apto-input-field [fullWidth]="true" [name]="'E-mail'" [type]="'text'" formControlName="email"></apto-input-field>
+            <apto-input-field [fullWidth]="true" [name]="'Name'" [type]="'text'" formControlName="name"></apto-input-field>
+        </mat-dialog-content>
+
+        <mat-dialog-actions>
+            <button mat-flat-button color="accent" [mat-dialog-close]="true" type="button">Abbrechen</button>
+            <button mat-flat-button color="primary" type="submit">Speichern</button>
+        </mat-dialog-actions>
+    </form>
+</div>

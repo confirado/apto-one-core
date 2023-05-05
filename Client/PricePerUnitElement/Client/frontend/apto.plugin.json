@@ -1,0 +1,11 @@
+{
+	"id": "apto-price-per-unit-element-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoPricePerUnitElementFrontendModule",
+			"file": "apto-price-per-unit-element-frontend.module.ts"
+		}
+	]
+}

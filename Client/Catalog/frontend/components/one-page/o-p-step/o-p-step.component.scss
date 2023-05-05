@@ -1,0 +1,40 @@
+@import "globals";
+@import "elements";
+@import "form-inputs";
+@import "common";
+
+mat-expansion-panel {
+    border-radius: var(--border-radius-card) !important;
+    .mat-expansion-panel-header.mat-expanded {
+        height: 64px;
+    }
+    &:not([class*=mat-elevation-z]) {
+        box-shadow: var(--box-shadow);
+    }
+
+    .circle-one-page {
+        @include circle-checkbox(21px, 'center');
+
+        position: relative;
+        margin-left: var(--input-elements-gap);
+    }
+}
+
+.divider-line {
+    border-bottom: 2px solid var(--color-border);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.one-page-elements {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding-top: 30px;
+	gap: 30px;
+    justify-content: flex-start;
+}
+
+apto-slot-outlet {
+    display: none;
+}

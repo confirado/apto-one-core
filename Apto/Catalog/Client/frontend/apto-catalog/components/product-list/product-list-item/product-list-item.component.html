@@ -1,0 +1,17 @@
+<a ng-href="{{ $ctrl.getProductUrl() }}" ng-if="$ctrl.getPreviewImage()">
+    <img ng-src="{{$ctrl.getPreviewImage()}}">
+</a>
+
+<h3 ng-click="$ctrl.getProductUrl()">
+    <a ng-href="{{ $ctrl.getProductUrl() }}">
+        {{ $ctrl.translate($ctrl.product.name) }}
+    </a>
+</h3>
+
+<div class="product-list-content"
+     ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.product.description)">
+</div>
+
+<div class="action-container">
+    <a class="btn" ng-href="{{ $ctrl.getProductUrl() }}">Jetzt konfigurieren</a>
+</div>

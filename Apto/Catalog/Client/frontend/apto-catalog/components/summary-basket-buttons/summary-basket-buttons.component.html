@@ -1,0 +1,11 @@
+<div class="block-group basket-buttons">
+    <button id="basket-button" class="block uppercase button-primary"
+            ng-click="$ctrl.addToBasket($ctrl.quantity.value, null, $ctrl.computedValues)" ng-bind-html="$ctrl.snippet('addToBasket')"></button>
+    <button id="back-button" class="block uppercase button-secondary" ng-click="$ctrl.goBack()"
+            ng-bind-html="$ctrl.snippet('back')"></button>
+</div>
+
+<div ng-if="$ctrl.isOfferEnabled()" class="block-group basket-buttons">
+    <button id="offer-button" class="block uppercase button-primary"
+            ng-click="$ctrl.openOfferConfigurationDialog($event)" ng-bind-html="$ctrl.snippet('requestOffer')"></button>
+</div>

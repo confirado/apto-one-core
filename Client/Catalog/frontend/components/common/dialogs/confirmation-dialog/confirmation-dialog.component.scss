@@ -1,0 +1,52 @@
+@import "globals";
+@import "dialogs";
+
+.confirm-dialog {
+    @include dialog-wrapper();
+    @include border-color();
+
+    justify-content: center;
+    align-items: center;
+
+    .dialog-icon {
+        margin-bottom: 36px;
+        @include dialog-icon();
+    }
+
+    h1.mat-dialog-title {
+        @include mat-dialog-title();
+        margin: 0;
+    }
+
+    mat-dialog-content {
+        @include mat-dialog-content();
+    }
+
+    mat-dialog-actions {
+        @include mat-dialog-actions();
+
+        button {
+            @include button();
+        }
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .confirm-dialog {
+        @include dialog-wrapper('tablet');
+
+        .mat-dialog-title {}
+
+        mat-dialog-content {
+            @include mat-dialog-content('tablet');
+        }
+
+        mat-dialog-actions {
+            @include mat-dialog-actions('tablet');
+
+            button {
+                @include button('tablet');
+            }
+        }
+    }
+}

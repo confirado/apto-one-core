@@ -1,0 +1,25 @@
+<md-dialog md-theme="" class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <md-toolbar class="apto-md-toolbar-dark">
+        <div class="md-toolbar-tools">
+            <h3><span>Message: {{ message.messageName }}</span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <div>
+                <p><strong>Id:</strong> {{ message.uuid }}</p>
+                <p><strong>Message:</strong> {{ message.message }}</p>
+                <p><strong>Dauer:</strong> {{ message.duration }}</p>
+                <p><strong>Datum:</strong> {{ message.date }}</p>
+                <iframe ng-src="{{ message.url }}" width="1024" height="640"></iframe>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+    </md-dialog-actions>
+</md-dialog>

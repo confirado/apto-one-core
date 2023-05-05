@@ -1,0 +1,77 @@
+<div class="selectbox-element" *ngIf="element && product"
+     [class.step-by-step]="product.useStepByStep"
+     [class.one-page]="!product.useStepByStep"
+     [class.open-in-dialog]="isDialog"
+>
+    <div class="header">
+        <div class="title">
+            <h4>{{ element.element.name | translate }}</h4>
+        </div>
+    </div>
+
+    <div class="picture">
+        <apto-element-picture *ngIf="element.element.previewImage"
+            [previewImage]="element.element.previewImage" [isZoomable]="element.element.isZoomable"
+        ></apto-element-picture>
+    </div>
+
+    <div class="element">
+        <div class="select-box">
+            <div class="container">
+                <div class="prefix"></div>
+                <div class="input">
+                    <apto-select-box-field
+                        *ngIf="element.element.definition.staticValues.enableMultiSelect"
+                        [default]="element.element.definition.staticValues.defaultItem?.id"
+                        [items]="items"
+                        [formControl]="formElement"
+                    >
+                    </apto-select-box-field>
+                    <apto-select-field
+                        *ngIf="!element.element.definition.staticValues.enableMultiSelect"
+                        [asArray]="true"
+                        [items]="items"
+                        [default]="setBoxName(formElement.value?.[0]) | translate"
+                        [formControl]="formElement"
+                    >
+                    </apto-select-field>
+                </div>
+                <div class="suffix"></div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="element.element.definition.staticValues.enableMultiplier && currentFormArray.length > 0 && currentFormArray[0].id">
+            <div class="input-multiplier">
+                <div class="container" *ngFor="let item of currentFormArray">
+                    <div class="prefix">
+                        {{element.element.definition.staticValues.multiplierPrefix | translate}}
+                    </div>
+
+                    <div class="input">
+                        <apto-input-field
+                            *ngIf="item.name"
+                            [type]="'integer'"
+                            [formControl]="item.multi"
+                        >
+                        </apto-input-field>
+                    </div>
+
+                    <div class="suffix">
+                        {{element.element.definition.staticValues.multiplierSuffix | translate}}
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="description"
+         *ngIf="(element.element.description | translate) !== ''"
+         [innerHTML]="element.element.description | translate | safeHtml"
+    ></div>
+
+    <div class="apply-button">
+        <button mat-flat-button color="primary" (click)="saveInput()">
+            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+        </button>
+    </div>
+</div>

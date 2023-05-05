@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\AreaElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

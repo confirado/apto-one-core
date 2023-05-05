@@ -1,0 +1,62 @@
+//Override base/catalog variables if needed
+@stepByStepPrimaryColor: @basePrimaryColor;
+@stepByStepSecondaryFont: @baseSecondaryFont;
+@stepByStepWhite: @baseWhite;
+@stepByStepActiveColor: @baseActiveColor;
+
+//Sidebar Navigation
+@stepByStepSidebarInfoBackgroundColor: @stepByStepPrimaryColor;
+@stepByStepSidebarInfoColor: @stepByStepWhite;
+@stepByStepSidebarInfoLinkColor: #cccccc;
+@stepByStepSidebarImageBorderColor: #dddddd;
+@stepByStepSidebarZoomColor: #999999;
+@stepByStepSidebarZoomColorHover: #333333;
+@stepByStepSidebarSectionBackground: #f7f7f7;
+@stepByStepSidebarSectionBackgroundActive: @stepByStepWhite;
+@stepByStepSidebarSectionColor: @stepByStepSidebarInfoBackgroundColor;
+@stepByStepSidebarInfoColor: @stepByStepWhite;
+
+//Sidebar Navigation Mobile
+@stepByStepSidebarSectionNumber: @stepByStepSidebarInfoColor;
+@stepByStepSidebarSectionNumberBackground: @stepByStepSidebarInfoBackgroundColor;
+
+//Sidebar Summary
+@stepByStepSummaryHeadlineColor: @stepByStepWhite;
+@stepByStepSummaryHeadlineBackgroundColor: @stepByStepPrimaryColor;
+@stepByStepSectionSummaryBackgroundColor: @stepByStepPrimaryColor;
+@stepByStepSectionSummaryColor: @stepByStepPrimaryColor;
+@stepByStepSummaryBorderColor: #dddddd;
+
+@stepByStepInfoBlockBackground: #f7f7f7;
+@stepByStepInfoBlockColor: @stepByStepPrimaryColor;
+@stepByStepInfoBlockPriceColor: @stepByStepActiveColor;
+@stepByStepInfoBlockSelectBorderColor: #aaaaaa;
+@stepByStepInfoBlockSelectColor: @stepByStepPrimaryColor;
+@stepByStepBasketNotificationInfoColor: @stepByStepWhite;
+@stepByStepBasketNotificationInfoBackgroundColor: #aaaaaa;
+@stepByStepBasketNotificationColor: #333333;
+
+// never ever use important again
+@import "never-ever-use-important-styles";
+
+// Layout
+@import "layout";
+
+// Components
+@import "components/sbs-element";
+@import "components/step-by-step";
+@import "components/sidebar-navigation";
+@import "components/sidebar-section";
+@import "components/sidebar-section-responsiv";
+@import "components/sidebar-navigation-responsiv";
+@import "components/sidebar-summary";
+@import "components/sidebar-summary-responsiv";
+@import "components/elements-container";
+@import "components/elements-container-responsiv";
+@import "components/product-action";
+@import "components/product-action-responsiv";
+@import "components/default-element-definition";
+@import "components/default-element-definition-responsiv";
+@import "components/select";
+@import "components/sidebar-responsive";
+@import "components/sbs-preview-image";

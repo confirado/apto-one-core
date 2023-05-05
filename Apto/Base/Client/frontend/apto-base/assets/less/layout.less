@@ -1,0 +1,60 @@
+// General Settings
+@fontFamily: @basePrimaryFont;
+
+html {
+  height: 100%;
+}
+
+body {
+  font-size: 16px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+  font-family: @fontFamily;
+  overflow-x: hidden;
+  &.sidebar-menu-is-open{
+    overflow-y: hidden;
+  }
+}
+
+#page {
+  position: relative;
+  left: 0;
+  .transition(all 0.3s ease-in-out);
+  &.sidebar-is-open {
+  }
+}
+
+
+.main-content {
+  position: relative;
+  overflow: hidden;
+}
+
+.small-container {
+  width: 90.625%;
+  margin: 3.75rem auto 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style: none;
+  }
+}
+
+.apto * {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+  position: relative;
+}
+
+.relative-container{
+  width: 100%;
+  position: relative;
+}

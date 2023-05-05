@@ -1,0 +1,83 @@
+<div class="block-group pool-item-details">
+    <div class="block pool-item-details-left">
+        <div class="pool-item-details-left-content">
+            <img ng-src="{{ ngDialogData.poolItemImage }}" />
+        </div>
+    </div>
+
+    <div class="block pool-item-details-right">
+        <div class="block-group item-light-properties" ng-if="ngDialogData.hasMaterialLightProperties(ngDialogData.poolItem.material)">
+            <div class="block" ng-if="null !== ngDialogData.poolItem.material.reflection">
+                <img ng-src="{{ ngDialogData.images.reflexion }}"><br />
+                Reflexion: {{ ngDialogData.poolItem.material.reflection }}%
+            </div>
+            <div class="block" ng-if="null !== ngDialogData.poolItem.material.transmission">
+                <img ng-src="{{ ngDialogData.images.transmission }}"><br />
+                Transmission: {{ ngDialogData.poolItem.material.transmission }}%
+            </div>
+            <div class="block" ng-if="null !== ngDialogData.poolItem.material.absorption">
+                <img ng-src="{{ ngDialogData.images.absorption }}"><br />
+                Absorption: {{ ngDialogData.poolItem.material.absorption }}%
+            </div>
+        </div>
+
+        <div class="item-properties" ng-if="ngDialogData.hasMaterialPropertyIcons(ngDialogData.poolItem.material)">
+            <div class="item-property" ng-if="materialProperty.icon" ng-repeat="materialProperty in ngDialogData.poolItem.material.properties">
+                <img ng-src="{{ materialProperty.icon.fileUrl }}" title="{{ ngDialogData.component.translate(materialProperty.name) }}">
+            </div>
+        </div>
+
+        <div class="pool-item-details-name">
+            <h3>Stoff/Farbe</h3>
+            <p>{{ ngDialogData.component.translate(ngDialogData.poolItem.material.name) }}</p>
+        </div>
+
+        <div class="pool-item-details-property-list" ng-if="ngDialogData.poolItem.material.properties.length > 0">
+            <h3>Eigenschaften</h3>
+            <div ng-repeat="(key, value) in ngDialogData.poolItem.material.properties | groupBy: 'group.id'">
+                <div style="font-weight: bold;">{{ ngDialogData.component.translate(value[0].group.name) }}: </div>
+                <p>
+                    <span ng-repeat="(propertyKey, property) in value"><span ng-if="propertyKey !== 0">, </span>{{ ngDialogData.component.translate(property.name) }}</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="pool-item-details-description" ng-bind-html="ngDialogData.component.translateTrustAsHtml(ngDialogData.poolItem.material.description)"></div>
+
+        <div class="pool-item-details-set-values">
+            <button ng-if="ngDialogData.poolItem.material.isNotAvailable" class="disabled" disabled="disabled">
+                <span class="select-continue">{{ngDialogData.component.snippet('isNotAvailable')}}</span>
+            </button>
+            <button class="set-value" ng-if="!ngDialogData.component.steps.allowMultiple && !ngDialogData.poolItem.material.isNotAvailable" ng-click="ngDialogData.setValuesAndClose(ngDialogData.component, ngDialogData.poolItem.material.id, ngDialogData.component.translate(ngDialogData.poolItem.material.name), ngDialogData.component.translate(ngDialogData.poolItem.priceGroup.name))">
+                <span class="select-continue" ng-if="!ngDialogData.component.section.allowMultiple || (ngDialogData.component.steps.secondaryMaterialActive && ngDialogData.component.steps.currentStep === 'primary')">Auswählen & Weiter</span>
+                <span class="select" ng-if="ngDialogData.component.section.allowMultiple && !(ngDialogData.component.steps.secondaryMaterialActive && ngDialogData.component.steps.currentStep === 'primary')">Auswählen</span>
+            </button>
+            <button ng-if="!ngDialogData.component.isPoolItemSelected(ngDialogData.poolItem) && ngDialogData.component.steps.allowMultiple && !ngDialogData.poolItem.material.isNotAvailable" class="set-value" ng-click="ngDialogData.setValuesAndClose(ngDialogData.component, ngDialogData.poolItem.material.id, ngDialogData.component.translate(ngDialogData.poolItem.material.name), ngDialogData.component.translate(ngDialogData.poolItem.priceGroup.name))">
+                <span class="select">Auswählen</span>
+            </button>
+            <button ng-if="ngDialogData.component.isPoolItemSelected(ngDialogData.poolItem) && ngDialogData.component.steps.allowMultiple && !ngDialogData.poolItem.material.isNotAvailable" class="set-value" ng-click="ngDialogData.removeMaterialAndClose(ngDialogData.component, ngDialogData.poolItem.material.id)">
+                <span class="select">Entfernen</span>
+            </button>
+        </div>
+
+        <div class="block-group pool-item-details-gallery-images" ng-if="ngDialogData.poolItem.material.galleryImages.length > 0">
+            <div class="block pool-item-details-gallery-image"
+                 ng-click="ngDialogData.setPoolItemImage(ngDialogData, ngDialogData.poolItem.material.previewImage.fileUrl)"
+                 ng-class="{'gallery-image-selected':ngDialogData.poolItemImage === ngDialogData.poolItem.material.previewImage.fileUrl}"
+            >
+                <img ng-src="{{ ngDialogData.poolItem.material.previewImage.fileUrl }}" />
+            </div>
+            <div class=" block pool-item-details-gallery-image"
+                 ng-repeat="galleryImage in ngDialogData.poolItem.material.galleryImages"
+                 ng-click="ngDialogData.setPoolItemImage(ngDialogData, galleryImage.fileUrl)"
+                 ng-class="{'gallery-image-selected':ngDialogData.poolItemImage === galleryImage.fileUrl}"
+            >
+                <img apto-media-thumbnail="{{galleryImage.path}}" apto-media-thumbnail-size="80" />
+            </div>
+        </div>
+        <div class="block">
+            <p ng-if="ngDialogData.additionalCharge !== 0" >Bei dieser Farb-/Stoffauswahl berechnen wir einen Aufpreis von
+                {{ngDialogData.additionalCharge}}%.</p>
+        </div>
+    </div>
+</div>

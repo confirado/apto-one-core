@@ -1,0 +1,92 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="priceMatrixForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ priceMatrixDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <!-- Name -->
+                <div layout="row" layout-align="start" flex>
+                    <apto-translated-value required label="'Name'" type="'input'" translated-value="priceMatrixDetail.name" flex></apto-translated-value>
+                </div>
+
+                <!-- new Element -->
+                <div ng-if="priceMatrixId" layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Spalte:</label>
+                        <input ng-model="newElement.columnValue">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Reihe:</label>
+                        <input ng-model="newElement.rowValue">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container>
+                        <md-button ng-disabled="!newElement.columnValue || !newElement.rowValue" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElement()">Zelle Hinzufügen</md-button>
+                    </md-input-container>
+                </div>
+
+                <!-- Matrix -->
+                <md-table-container ng-if="priceMatrixId" class="md-whiteframe-2dp">
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width:60px;text-align: center;">Matrix</th>
+                            <th ng-repeat="column in matrixTable.columns" md-column style="width:60px;text-align: center;">{{column}}</th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="row in matrixTable.rows">
+                            <td md-cell style="width:60px;text-align: center;">{{row}}</td>
+                            <td ng-repeat="column in matrixTable.columns" md-cell style="width:60px;text-align: center;">
+                                <div ng-if="matrixTable.cells[(row + '_' + column)]">
+                                    <div class="matrix-table-content" style="padding-top: 12px;">
+                                        Anzahl Preise: {{matrixTable.cells[(row + '_' + column)].priceCount}}<br>
+                                        Eigenschaften: {{matrixTable.cells[(row + '_' + column)].customPropertiesCount}}<br>
+                                    </div>
+                                    <div class="matrix-table-actions" style="white-space: nowrap;">
+                                        <md-button
+                                                class="md-icon-button"
+                                                ng-class="{'md-primary':matrixTable.cells[(row + '_' + column)].hasPricesOrCustomProperties }"
+                                                title="Preis Hinzufügen"
+                                                ng-click="openElementPriceDialog($event, matrixTable.cells[(row + '_' + column)])">
+                                            <md-icon ng-if="!matrixTable.cells[(row + '_' + column)].hasPricesOrCustomProperties" md-font-set="fa">&#xf055</md-icon>
+                                            <md-icon ng-if="matrixTable.cells[(row + '_' + column)].hasPricesOrCustomProperties" md-font-set="fa">&#xf044</md-icon>
+                                        </md-button>
+                                        <md-button
+                                                title="Löschen"
+                                                class="md-icon-button md-warn"
+                                                apto-confirm-remove="removeElement(matrixTable.cells[(row + '_' + column)].cellId)">
+                                            <md-icon md-font-set="fa">&#xf014</md-icon>
+                                        </md-button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="priceMatrixDetail.id" class="md-raised md-cornered" ng-click="openImportDialog()">Import</md-button>
+            <md-button ng-if="priceMatrixDetail.id" class="md-raised md-cornered" ng-click="openExportDialog()">Export</md-button>
+
+            <md-button ng-if="priceMatrixDetail.id" class="md-raised md-cornered" ng-click="save(priceMatrixForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="priceMatrixDetail.id" class="md-raised md-primary md-cornered" ng-click="save(priceMatrixForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!priceMatrixDetail.id" class="md-raised md-cornered" ng-click="save(priceMatrixForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!priceMatrixDetail.id" class="md-raised md-primary md-cornered" ng-click="save(priceMatrixForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

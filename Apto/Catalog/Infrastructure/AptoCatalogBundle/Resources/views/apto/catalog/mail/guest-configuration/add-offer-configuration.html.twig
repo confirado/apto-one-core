@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include '@AptoCatalog/apto/catalog/mail/guest-configuration/partials/styles.html.twig' %}
+    <title>Apto Konfigurator</title>
+</head>
+
+<body>
+    <div class="mail-container">
+        <p>
+            {% if customer.name %}
+                {{ mail.salutationPerson[locale]|default('') }} {{ customer.name }},
+            {% else %}
+                {{ mail.salutation[locale]|default('') }}
+            {% endif %}
+        </p>
+        <p>
+            {{ mail.configurationSaved[locale]|default('') }}<br />
+            {{ mail.configurationLinkPrefix[locale]|default('') }} <a href="{% if payload.swProductUrl is defined %}{{ payload.swProductUrl }}{% elseif payload.shopProductUrl is defined %}{{ payload.shopProductUrl }}{% else %}{{ url('apto_base_infrastructure_aptobase_frontend_index') }}{% endif %}#!/configuration/guest/{{ configurationId }}">{{ mail.configurationLink[locale]|default('Konfiguration laden') }}</a>
+        </p>
+
+        <p>
+            <strong>{{ mail.yourDetails[locale]|default('') }}</strong>
+        </p>
+        <table class="user-info">
+            <tbody>
+            <tr>
+                <td>{{ form.mail[locale]|default('Ihre E-Mail Adresse') }}</td>
+                <td>{{ customer.email }}</td>
+            </tr>
+            {% if customer.name %}
+            <tr>
+                <td>{{ form.name[locale]|default('Name') }}</td>
+                <td>{{ customer.name }}</td>
+            </tr>
+            {% endif %}
+            {% for key, field in form.fields %}
+                <tr>
+                    <td>
+                        {{ field.label[locale]|default('') }}
+                    </td>
+                    <td>
+                        {{ payload.formData[key]|default('') }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if payload.humanReadableState is defined %}
+        <p>
+            <strong>{{ mail.yourConfiguration[locale]|default('') }}</strong>
+        </p>
+
+        <div class="mail-summary">
+            {% for key in payload.humanReadableState|keys %}
+                <div {% if loop.index is odd %}class="mail-summary-section odd"{% else %}class="mail-summary-section"{% endif %}>
+                    <p class="mail-summary-section-name">
+                        <strong>{{ key }}</strong>
+                    </p>
+                    <table>
+                        {% for element in payload.humanReadableState[key] %}
+                            <tr>
+                                <td style="vertical-align: top;">
+                                    {% if element.previewImage %}
+                                        <img style="width: 50px; margin-bottom: 10px; margin-right: 10px;" src="{{ element.previewImage }}">
+                                    {% endif %}
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <p class="mail-summary-element-name">
+                                        {{ element.name }}
+                                    </p>
+                                    {% if element.values|length > 0 %}
+                                        {% for valueKey in element.values|keys %}
+                                            <p class="mail-summary-property-name">
+                                                {{ element.values[valueKey] }}
+                                            </p>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div>
+            {{ mail.signature[locale]|default('') | raw }}
+        </div>
+    </div>
+</body>
+</html>

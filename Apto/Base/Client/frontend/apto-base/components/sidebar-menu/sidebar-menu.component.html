@@ -1,0 +1,115 @@
+<section class="sidebar-menu">
+    <nav>
+        <ul>
+            <li ng-if="$ctrl.snippetGlobal('aptoHeader.link')">
+                <a
+                   class="uppercase"
+                   ng-href="{{ $ctrl.snippetGlobal('aptoHeader.link')}}"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoHeader.text')">Home</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.snippetGlobal('aptoFooterNav.menu.entry1.text')">
+                <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippetGlobal('aptoFooterNav.menu.entry1.link') ? $ctrl.snippetGlobal('aptoFooterNav.menu.entry1.link') : $ctrl.shopSession.url.home + 'kontaktformular' }}"
+                    target="_blank"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoFooterNav.menu.entry1.text')">Kontakt</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.snippetGlobal('aptoFooterNav.menu.entry2.text')">
+                <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippetGlobal('aptoFooterNav.menu.entry2.link') ? $ctrl.snippetGlobal('aptoFooterNav.menu.entry2.link') : $ctrl.shopSession.url.additional.imprint }}"
+                    target="_blank"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoFooterNav.menu.entry2.text')">Impressum</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.snippetGlobal('aptoFooterNav.menu.entry3.text')">
+                <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippetGlobal('aptoFooterNav.menu.entry3.link') ? $ctrl.snippetGlobal('aptoFooterNav.menu.entry3.link') : $ctrl.shopSession.url.additional.termsOfService }}"
+                    target="_blank"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoFooterNav.menu.entry3.text')">AGB</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.snippetGlobal('aptoFooterNav.menu.entry4.text')">
+                <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippetGlobal('aptoFooterNav.menu.entry4.link') ? $ctrl.snippetGlobal('aptoFooterNav.menu.entry4.link') : $ctrl.shopSession.url.additional.rightOfWithdrawal }}"
+                    target="_blank"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoFooterNav.menu.entry4.text')">Widerrufsrecht</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.snippetGlobal('aptoFooterNav.menu.entry5.text')">
+                <a
+                    class="uppercase"
+                    ng-href="{{ $ctrl.snippetGlobal('aptoFooterNav.menu.entry5.link') ? $ctrl.snippetGlobal('aptoFooterNav.menu.entry5.link') : $ctrl.shopSession.url.additional.protectionOfPrivacy }}"
+                    target="_blank"
+                >
+                    <strong ng-bind-html="$ctrl.snippetGlobal('aptoFooterNav.menu.entry5.text')">Datenschutz</strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopConnectorConfigured && !$ctrl.shopSession.loggedIn">
+                <a
+                    apto-open-sidebar-menu
+                    apto-open-sidebar-menu-content=".sidebar-menu"
+                    apto-open-sidebar-menu-other-content=".hamburger-menu-container"
+                    apto-open-sidebar-menu-not-scroll-content="body"
+                    apto-open-sidebar-menu-open-button=".hamburger-menu"
+                    class="uppercase login-link"
+                    ng-click="$ctrl.openLogin($event)"
+                    href="#login"
+                >
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippetGlobal('aptoLinksToShop.register')"></span>
+                    </strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopConnectorConfigured && $ctrl.shopSession.loggedIn">
+                <a class="uppercase login-link" href="{{$ctrl.shopSession.url.account}}">
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippetGlobal('aptoLinksToShop.account')"></span>
+                    </strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopConnectorConfigured">
+                <a
+                    apto-open-sidebar-menu
+                    apto-open-sidebar-menu-content=".sidebar-menu"
+                    apto-open-sidebar-menu-other-content=".hamburger-menu-container"
+                    apto-open-sidebar-menu-not-scroll-content="body"
+                    apto-open-sidebar-menu-open-button=".hamburger-menu"
+                    class="uppercase"
+                    ng-click="$ctrl.openBasket($event)"
+                    href="#basket"
+                >
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippetGlobal('aptoLinksToShop.basket')"></span>&nbsp<span>({{$ctrl.shopSession.basket.quantity ? $ctrl.shopSession.basket.quantity : 0}})</span>
+                    </strong>
+                </a>
+            </li>
+            <li ng-if="$ctrl.shopConnectorConfigured && $ctrl.shopSession.loggedIn">
+                <a
+                    apto-open-sidebar-menu
+                    apto-open-sidebar-menu-content=".sidebar-menu"
+                    apto-open-sidebar-menu-other-content=".hamburger-menu-container"
+                    apto-open-sidebar-menu-not-scroll-content="body"
+                    apto-open-sidebar-menu-open-button=".hamburger-menu"
+                    class="uppercase"
+                    ng-click="$ctrl.logout($event)"
+                    href="#logout"
+                >
+                    <strong>
+                        <span ng-bind-html="$ctrl.snippetGlobal('aptoLinksToShop.logout')"></span>
+                    </strong>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="sidebar-menu-shadow"></div>
+</section>

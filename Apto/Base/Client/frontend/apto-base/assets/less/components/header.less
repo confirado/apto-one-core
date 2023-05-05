@@ -1,0 +1,89 @@
+header.main {
+  .header-content {
+    background: @baseBackgroundHeader;
+    color: @baseColorHeader;
+    font-size:  0.6875rem;
+    line-height: 2rem;
+    height: 2rem;
+
+    .header-home-button {
+      display: block;
+      float: right;
+      line-height: 2rem;
+      text-decoration: none;
+      margin-left: 1.375rem;
+
+      i {
+        display: block;
+        line-height: 2rem;
+        color: #ffffff;
+      }
+    }
+
+    .container {
+      z-index: 2;
+    }
+  }
+}
+
+.hamburger-menu-container {
+ .transition(all 0.5s ease-in-out);
+  position: absolute;
+  width: 1.688rem;
+  z-index: 9999;
+  left: 0.65rem;
+  .hamburger-menu {
+    display: none;
+    width: 1.688rem;
+    height: 1.25rem;
+    position: relative;
+    cursor: pointer;
+    .transition(0.5s ease-in-out);
+    .rotate(0deg);
+    z-index: 999;
+    span {
+      display: block;
+      position: absolute;
+      height: 0.25rem;
+      width: 100%;
+      background: @baseColorHeader;
+      left: 0;
+      .border-radius(3px);
+      .opacity(1);
+      .rotate(0deg);
+      .transition(0.25s ease-in-out);
+      .transform-origin(left center);
+      &:nth-child(1) {
+        top: 0;
+      }
+      &:nth-child(2) {
+        top:0.4375rem;
+      }
+      &:nth-child(3) {
+        top: 0.875rem;
+      }
+    }
+    &.active {
+      margin-top: -0.3125rem;
+      span {
+        left: 0.5rem;
+        &:nth-child(1) {
+          top: 0.25rem;
+          .rotate(45deg);
+        }
+        &:nth-child(2) {
+          width: 0;
+          .opacity(0);
+        }
+        &:nth-child(3) {
+          top: 1.438rem;
+          .rotate(-45deg);
+        }
+      }
+    }
+  }
+  &.pushed {
+    left: 100%;
+    margin-left: -3.125rem;
+  }
+}

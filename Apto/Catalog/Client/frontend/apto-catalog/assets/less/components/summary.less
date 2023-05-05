@@ -1,0 +1,270 @@
+apto-summary .summary-container {
+  max-width: 41.88rem;
+
+  h1 {
+    color: @catalogSummaryHeadlineColor;
+    text-align: center;
+    font-size: 1.063rem;
+    margin: 0;
+    padding-bottom: 1.313rem;
+  }
+
+  .product-image-container {
+    position: relative;
+    .borderTopBottom(@catalogSummaryImageContainerBorderBottom);
+  }
+
+  .slider-container {
+    height: 16rem;
+    padding: 0;
+    float: none;
+
+    img.render-image {
+      padding: 0.5rem;
+    }
+
+    .slider-action-container {
+      display: none;
+    }
+  }
+
+  .configuration {
+    h4 {
+      width: 80%;
+      margin: 0;
+      color: @catalogColorList;
+    }
+  }
+
+  .products {
+    margin-bottom: 0.9375rem;
+    padding-bottom: 0.9375rem;
+    .borderBottom(@catalogSummaryBorderColor);
+  }
+
+  .product,
+  .section {
+    position: relative;
+    background: @catalogSummaryListColorOdd;
+    padding: 0.8125rem 1.5625rem 0.8125rem 3.3125rem;
+    &:nth-child(odd) {
+      background: @catalogSummaryListColorEven;
+    }
+  }
+
+  .product {
+    padding-left: 1.5625rem;
+  }
+
+  .sections {
+    counter-reset: chapter;
+  }
+
+  .section {
+    counter-reset: topic;
+
+    &:before {
+      position: absolute;
+      left: 1.5625rem;
+      top: 0.8125rem;
+      counter-increment: chapter;
+      content: counter(chapter);
+      display: block;
+      width: 1.125rem;
+      height: 1.125rem;
+      background: @catalogSummaryListInfoDotBackgroundColor;
+      color: @catalogSummaryListInfoDotColor;
+      .border-radius(50%);
+      line-height: 1.125rem;
+      text-align: center;
+      font-size: 0.6875rem;
+      /*margin: 0 0.625rem 0.625rem;*/
+    }
+
+    h4 {
+      position: relative;
+      cursor: pointer;
+      font-size: 0.875rem;
+      padding-left: 1.125rem;
+
+      .fa-pencil {
+        position: absolute;
+        left: 0;
+        top: 3px;
+      }
+
+      &:hover {
+        color: @catalogActiveColor;
+      }
+    }
+
+    span {
+      color: @catalogColorList;
+      line-height: 1.5rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  .elements {
+    padding-top: 0.5rem;
+  }
+
+  .element {
+    .element-selection {
+      width: 80%;
+      margin-top: 5px;
+
+      img {
+        height: 50px;
+      }
+
+      .has-preview-image .element-content {
+        margin-left: 1rem;
+      }
+    }
+
+    .properties {
+      position: relative;
+      display: block;
+      font-size: 0.75rem;
+      list-style-type: none;
+    }
+
+    .properties li {
+      display: inline-block;
+    }
+
+    .properties li:not(:last-child):after {
+      content: ', ';
+      padding-right: 0.25rem;
+    }
+
+    &:not(:last-child) .properties {
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  .pseudo-price {
+    color: @backgroundColorDisabled;
+    text-decoration: line-through;
+    font-size: 0.625rem;
+  }
+
+  .product-price,
+  .section-price,
+  .element-price {
+    width: 20%;
+    text-align: right;
+    color: @catalogColorList;
+    font-weight: bold;
+    font-size: 0.75rem;
+  }
+
+  .summary-actions {
+    padding: 0.9375rem 0;
+    .borderTopBottom(@catalogSummaryBorderColor);
+
+    .product-action-container {
+      width: 15rem;
+      padding: 0;
+      float: left;
+    }
+
+    apto-select {
+      width: 15rem;
+      display: block;
+      float: right;
+
+      label{
+        margin: 0;
+
+        &:after {
+          border-color: @catalogSummarySelectBorderColorImportant;
+        }
+      }
+
+      select {
+        padding-left: 1.25rem;
+        border-color: @catalogSummarySelectBorderColorImportant;
+        font-weight: bold;
+      }
+
+      .select-container:after, select, label {
+        background: @catalogSelectBackground;
+        color: @catalogSelectColor;
+        border-color: @catalogSelectBorder;
+      }
+    }
+  }
+
+  .price-total-container {
+    border-bottom: 1px solid @catalogSummaryBorderColor;
+    text-align: right;
+    padding: 2.625rem 0;
+
+    h4 {
+      color: @catalogPriceTotalHeadlineColor;
+      font-size: 0.875rem;
+      margin: 0 auto;
+
+      .price-total {
+        color: @catalogPriceTotalPriceColor;
+        font-size: 1.25rem;
+        padding-left: 1.563rem;
+      }
+
+      .pseudo-price-total {
+        color: @backgroundColorDisabled;
+        font-size: 0.75rem;
+        text-decoration: line-through;
+        padding-left: 0.5rem;
+      }
+    }
+  }
+
+  .basket-buttons {
+    button {
+      line-height: 1.125rem;
+      font-size: 0.875rem;
+      margin: 1.563rem 0 0;
+      padding: 1rem 2.5rem;
+      width: auto;
+    }
+  }
+
+  #basket-button {
+    float: right;
+    border: 1px solid @baseActiveColor;
+  }
+
+  #back-button {
+    border: 1px solid @backgroundColorDisabled;
+    background: @backgroundColorDisabled;
+    float: left;
+
+    &:hover {
+      color: @baseActiveColor;
+      border-color: @baseActiveColor;
+      background-color: transparent;
+    }
+  }
+
+  #offer-button {
+    min-width: 17.4375rem;
+    border: 1px solid @backgroundColorDisabled;
+    background-color: @backgroundColorDisabled;
+    float: right;
+    margin-top: 1rem;
+
+    &:hover {
+      color: @baseActiveColor;
+      border-color: @baseActiveColor;
+      background-color: transparent;
+    }
+  }
+
+  .discount-name {
+    color: @catalogPriceTotalPriceColor;
+    font-weight: normal;
+  }
+}

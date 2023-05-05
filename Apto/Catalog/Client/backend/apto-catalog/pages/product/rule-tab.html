@@ -1,0 +1,45 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Regelname:</label>
+        <input ng-model="newRuleName.value">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newRuleName.value" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addRule()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30px;">Aktiv</th>
+            <th md-column>Name</th>
+            <th md-column style="width:120px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="rule in rules">
+            <td md-cell>
+                <md-input-container flex>
+                    <md-checkbox ng-change="setRuleActive(rule)" ng-model="rule.active" aria-label="Aktiv"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell ng-click="editRuleName($event, rule)">{{ rule.name }}</td>
+            <td md-cell>
+                <md-button
+                        title="Bearbeiten"
+                        class="md-icon-button md-primary"
+                        ng-click="editRule($event, rule.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeRule(rule.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

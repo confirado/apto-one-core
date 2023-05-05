@@ -1,0 +1,36 @@
+apto_base_backend:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\BackendController
+  type:     annotation
+
+apto_base_frontend:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\FrontendController
+  type:     annotation
+
+apto_base_backend_licence:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\LicenceController
+  type:     annotation
+
+apto_base_backend_login:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\LoginController
+  type:     annotation
+
+apto_base_frontend_login:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\FrontendLoginController
+  type:     annotation
+
+apto_base_install:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\InstallController
+  type: annotation
+
+apto_base_media:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\MediaController
+  type:     annotation
+
+apto_base_message_bus:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\MessageBusController
+  type:     annotation
+
+apto_base_thumb_nail:
+  resource: Apto\Base\Infrastructure\AptoBaseBundle\Controller\ThumbnailController
+  prefix: '%thumb_route_path%'
+  type: annotation

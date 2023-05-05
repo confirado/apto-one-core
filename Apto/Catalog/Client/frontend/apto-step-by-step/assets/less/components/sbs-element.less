@@ -1,0 +1,99 @@
+.sbs-element-container {
+  position: relative;
+  margin-bottom: 1.5625rem;
+  border: 1px solid #dddddd;
+
+  &.selected {
+    border-color: #c2a26f;
+    background: #f7f7f7;
+  }
+
+  .description {
+    ul {
+      padding-left: 1rem;
+      li {
+        list-style: initial;
+      }
+    }
+  }
+}
+
+.sbs-element {
+  position: relative;
+  display: block;
+
+  .image-container {
+    width: 30.2548%;
+    text-align: center;
+    padding: 0 1.25rem 0.625rem 0;
+    line-height: 0;
+    apto-sbs-preview-image {
+      position: relative;
+      display: block;
+    }
+    img {
+      max-width: 100%;
+      max-height: 146px;
+      display: block;
+      padding-right: 2rem;
+    }
+  }
+
+  .input-inner-container {
+    display: inline-block;
+    vertical-align: top;
+    input {
+      width: 4rem;
+      padding-top: 0.1rem;
+    }
+  }
+
+  .valid-values {
+    font-size: 0.75em;
+  }
+
+  .height {
+    height: 90%;
+    position: absolute;
+    .input-container {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+  .width, .height {
+    text-align: center;
+  }
+  .width {
+    width: 100%;
+  }
+
+  .content-container {
+    width: 69.7452%;
+    float: right;
+    .input-container {
+      input {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .action-container {
+    width: 100%;
+    button {
+      height: 2.0625rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      font-family: @basePrimaryFont;
+      text-transform: uppercase;
+      &.set-value {
+        padding: 0 1.625rem;
+        float: right;
+      }
+    }
+  }
+  .error {
+    color: #990000;
+  }
+}
+@import "sbs-element-responsive";

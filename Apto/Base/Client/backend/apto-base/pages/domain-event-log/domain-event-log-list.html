@@ -1,0 +1,55 @@
+<div style="margin: 8px;">
+    <div ng-include="'base/pages/domain-event-log/domain-event-log-filter.html'"></div>
+    <md-table-container class="md-whiteframe-2dp">
+        <table md-table>
+            <thead md-head>
+            <tr md-row>
+                <th md-column>Event Id</th>
+                <th md-column>Event</th>
+                <th md-column>Event Body</th>
+                <th md-column>Datum</th>
+                <th md-column>User Id</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row ng-repeat="domainEvent in domainEvents">
+                <td md-cell style="width: 5%;">{{ domainEvent.eventId }}</td>
+                <td md-cell style="width: 30%;">
+                    <span>
+                        <md-tooltip md-direction="right">{{ domainEvent.typeName }}</md-tooltip>
+                        {{ domainEvent.messageName }}
+                    </span>
+                </td>
+                <td md-cell style="width: 40%;">
+                    <div style="padding: 5px;">
+                        <md-expansion-panel-group md-component-id="{{ domainEvent.eventId }}-panel-group" style="width: 100%;">
+                            <md-expansion-panel md-component-id="{{ domainEvent.eventId }}-panel" style="margin: 0;">
+                                <md-expansion-panel-collapsed>
+                                    <div class="md-summary">Entity Id: {{ domainEvent.eventBody.id }}</div>
+                                    <md-expansion-panel-icon></md-expansion-panel-icon>
+                                </md-expansion-panel-collapsed>
+                                <md-expansion-panel-expanded>
+                                    <md-expansion-panel-header ng-click="$panel.collapse()">
+                                        <div class="md-summary">Entity Id: {{ domainEvent.eventBody.id }}</div>
+                                        <md-expansion-panel-icon></md-expansion-panel-icon>
+                                    </md-expansion-panel-header>
+                                    <md-expansion-panel-content>
+                                        <pre ng-bind-html="domainEvent.eventBody | json | prettify"></pre>
+                                    </md-expansion-panel-content>
+                                </md-expansion-panel-expanded>
+                            </md-expansion-panel>
+                        </md-expansion-panel-group>
+                    </div>
+                </td>
+                <td md-cell style="width: 10%;">{{ domainEvent.occurredOn }}</td>
+                <td md-cell style="width: 15%;">
+                    <span>
+                        <md-tooltip md-direction="left">{{ domainEvent.userId }}</md-tooltip>
+                        {{ groupedUsers.asObject[domainEvent.userId].username }}
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+</div>

@@ -1,0 +1,48 @@
+<!-- input type media select -->
+<md-input-container class="md-block" style="margin-bottom: 0;" flex="100" ng-if="$ctrl.inputType === 'manual'">
+    <label>{{ $ctrl.label }}:</label>
+
+    <!-- input with form tag -->
+    <input
+            ng-if="$ctrl.form"
+            ng-attr-form="{{ $ctrl.form }}"
+            ng-model="$ctrl.path"
+            ng-required="$ctrl.required"
+            ng-blur="$ctrl.onSelectMediaFile($ctrl.path)"
+    >
+
+    <!-- input without form tag -->
+    <input
+            ng-if="!$ctrl.form"
+            ng-model="$ctrl.path"
+            ng-required="$ctrl.required"
+            ng-blur="$ctrl.onSelectMediaFile($ctrl.path)"
+    >
+</md-input-container>
+
+<!-- input type media select -->
+<md-input-container class="md-block" style="margin-bottom: 0;" flex="100" ng-if="$ctrl.inputType === 'mediaSelect'">
+    <label>{{ $ctrl.label }}:</label>
+
+    <!-- input with form tag -->
+    <input
+            ng-if="$ctrl.form"
+            ng-attr-form="{{ $ctrl.form }}"
+            ng-model="$ctrl.path"
+            ng-required="$ctrl.required"
+            ng-focus="$ctrl.showMediaDialog($event)"
+    >
+
+    <!-- input without form tag -->
+    <input
+            ng-if="!$ctrl.form"
+            ng-model="$ctrl.path"
+            ng-required="$ctrl.required"
+            ng-focus="$ctrl.showMediaDialog($event)"
+    >
+    <md-icon md-font-set="fa" style="display:inline-block; color: rgba(0,0,0,0.54); cursor: pointer;" ng-click="$ctrl.clearPath($event)">&#xf12d</md-icon>
+</md-input-container>
+
+<md-switch ng-click="$ctrl.toggleInputType()" aria-label="Switch 2" class="md-ink-ripple" flex="100" ng-cloak style="margin-top: 0; margin-bottom: 24px">
+    {{ $ctrl.getToggleInputTypeText() }}
+</md-switch>

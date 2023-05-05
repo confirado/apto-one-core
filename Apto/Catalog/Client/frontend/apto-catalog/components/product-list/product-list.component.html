@@ -1,0 +1,8 @@
+<apto-product-list-filter
+    category-filter="$ctrl.categoryFilter"
+    on-update-category-filter="$ctrl.onUpdateCategoryFilter(category)"
+    on-update-search-string="$ctrl.onUpdateSearchString(searchString)"
+></apto-product-list-filter>
+<div class="product-list">
+    <apto-product-list-item ng-if="!product.hidden" ng-repeat="product in $ctrl.state.products" product="product"></apto-product-list-item>
+</div>

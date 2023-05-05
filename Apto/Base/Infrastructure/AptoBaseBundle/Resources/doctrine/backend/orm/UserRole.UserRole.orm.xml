@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Backend\Model\UserRole\UserRole" table="apto_user_role" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\UserRoleOrmRepository">
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="name" type="string" column="name" length="255" nullable="false"/>
+        
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Base\Domain\Backend\Model\UserRole\UserRoleIdentifier" use-column-prefix="false" name="identifier"/>
+
+        <many-to-many field="children" inversed-by="parents" target-entity="Apto\Base\Domain\Backend\Model\UserRole\UserRole">
+            <join-table name="apto_user_role_to_user_role">
+                <join-columns>
+                    <join-column name="parent_id" referenced-column-name="surrogate_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="child_id" referenced-column-name="surrogate_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+        <many-to-many field="parents" mapped-by="children" target-entity="Apto\Base\Domain\Backend\Model\UserRole\UserRole"/>
+    </entity>
+</doctrine-mapping>

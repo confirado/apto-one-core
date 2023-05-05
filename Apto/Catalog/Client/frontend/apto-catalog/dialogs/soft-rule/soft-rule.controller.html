@@ -1,0 +1,20 @@
+<div class="chose-soft-rule">
+    <h4>{{snippet('title')}}</h4>
+    <div ng-repeat="message in ngDialogData.messages">
+        <p>{{translate(message)}}</p>
+    </div>
+    <div ng-if="ngDialogData.messages.length < 1">
+        <p>{{snippet('defaultErrorMessage')}}</p>
+    </div>
+
+    <div class="gutter-medium-bottom block">
+        <button class="block right" ng-click="closeDialog(false)">
+            {{snippet('accept')}}
+        </button>
+    </div>
+    <div class="block-group discard-configuration">
+        <button class="block right button-secondary filled" ng-click="closeDialog(true)">
+            {{snippet('refuse')}}
+        </button>
+    </div>
+</div>

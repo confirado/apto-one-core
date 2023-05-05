@@ -1,0 +1,134 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="ruleForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ detail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Name:</label>
+                        <input ng-model="detail.name" required>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Formel:</label>
+                        <input ng-model="detail.formula">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start" flex>
+
+                    <!-- section select box -->
+                    <md-input-container flex>
+                        <label>Sektion:</label>
+                        <md-select
+                                multiple="false"
+                                ng-model="selectedSection"
+                                ng-model-options="{trackBy: '$value.id'}"
+                                ng-change="onChangeSelectedSection()"
+                        >
+                            <md-option ng-value="null"></md-option>
+                            <md-option ng-repeat="section in sections" ng-value="section">
+                                {{section.identifier}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+
+                    <!-- element select box -->
+                    <md-input-container flex>
+                        <label>Element:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="selectedSection === null || selectedSection.elements.length <= 0"
+                                ng-model="selectedElement"
+                                ng-model-options="{trackBy: '$value.id'}"
+                                ng-change="onChangeSelectedElement()"
+                        >
+                            <md-option ng-value="null"></md-option>
+                            <md-option ng-if="selectedSection" ng-repeat="element in selectedSection.elements" ng-value="element">
+                                {{element.identifier}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+
+                    <!-- properties select box -->
+                    <md-input-container flex>
+                        <label>Feld:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="selectableProperties === null"
+                                ng-model="selectedProperty"
+                        >
+                            <md-option ng-value="''"></md-option>
+                            <md-option ng-repeat="property in selectableProperties" ng-value="property">
+                                {{property}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+
+                    <!-- value text field -->
+                    <md-input-container flex>
+                        <label>Alias(e, i, p ist nicht erlaubt):</label>
+                        <input maxlength = "1" ng-disabled="$parent.selectedElement === null" ng-model="newAlias">
+                    </md-input-container>
+                    <div flex="5"></div>
+
+                    <!-- add button -->
+                    <md-input-container>
+                        <md-button ng-disabled="!isValidAlias()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addAlias()">Hinzufügen</md-button>
+                    </md-input-container>
+                </div>
+
+                <md-table-container class="md-whiteframe-2dp">
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width:19%;">Sektion</th>
+                            <th md-column style="width:19%;">Element</th>
+                            <th md-column style="width:19%;">Feld</th>
+                            <th md-column style="width:19%;">Alias</th>
+                            <th md-column style="width:5%;"></th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="alias in detail.aliases">
+                            <td md-cell style="width:19%;">{{ getSectionIdentifier(alias.sectionId) }}</td>
+                            <td md-cell style="width:19%;">{{ getElementIdentifier(alias.sectionId, alias.elementId) }}</td>
+                            <td md-cell style="width:19%;">{{ alias.property }}</td>
+                            <td md-cell style="width:19%;">{{ alias.name }}</td>
+                            <td md-cell style="width:5%;">
+                                <md-button
+                                        title="Löschen"
+                                        class="md-icon-button md-warn"
+                                        apto-confirm-remove="removeAlias(alias.id)">
+                                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                                </md-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-input-container>
+                <md-button class="md-raised md-cornered" type="submit" ng-click="save(true)">
+                    Speichern und schließen
+                </md-button>
+                <md-button class="md-raised md-primary md-cornered" ng-click="save()">
+                    Speichern
+                </md-button>
+            </md-input-container>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

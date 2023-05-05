@@ -1,0 +1,354 @@
+<div class="md-whiteframe-2dp ng-scope">
+    <md-tabs md-dynamic-height md-border-bottom>
+
+        <!-- Tab image -->
+        <md-tab label="Bild">
+            <div class="apto-tab-content">
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container class="md-block" flex>
+                        <label>Name:</label>
+                        <input type="text" ng-model="renderImageOptions.name">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex="10">
+                        <label>Statisch/Wiederholbar:</label>
+                        <md-select ng-model="renderImageOptions.input.type">
+                            <md-option ng-value="type" ng-repeat="type in renderImageOptions.types">{{ type }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <apto-media-select on-select-file="onSelectRenderImageFile(path)" label="'Pfad'" path="renderImageOptions.file" required="false" flex></apto-media-select>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Perspektive:</label>
+                        <md-select ng-model="renderImageOptions.perspective">
+                            <md-option ng-value="perspective" ng-repeat="perspective in perspectives">{{ perspective }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex="10">
+                        <label>Layer:</label>
+                        <input ng-model="renderImageOptions.layer">
+                    </md-input-container>
+                </div>
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex ng-if="renderImageOptions.input.type == 'Wiederholbar'">
+                    <md-input-container class="md-block" flex>
+                        <label>Formel Horizontal:</label>
+                        <input type="text" ng-model="renderImageOptions.input.formulaHorizontal">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex>
+                        <label>Formel Vetikal:</label>
+                        <input type="text" ng-model="renderImageOptions.input.formulaVertical">
+                    </md-input-container>
+                </div>
+                <!-- New ElementValue -->
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex ng-if="renderImageOptions.input.type == 'Wiederholbar'">
+                    <md-input-container flex>
+                        <label>Sektion:</label>
+                        <md-select ng-model="renderImageOptions.input.elementValueRef.sectionId" ng-change="updateAvailableElements(true, 'renderImageOptions')">
+                            <md-option ng-value="section.id" ng-repeat="section in availableSections">{{ section.identifier }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Element:</label>
+                        <md-select ng-disabled="!renderImageOptions.input.elementValueRef.sectionId" ng-model="renderImageOptions.input.elementValueRef.elementId" ng-change="updateAvailableSelectableAndComputableValues('renderImageOptions')">
+                            <md-option ng-value="element.id" ng-repeat="element in renderImageOptions.availableElements">{{ element.identifier }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Selectable/Computable:</label>
+                        <md-select ng-disabled="!renderImageOptions.input.elementValueRef.elementId" ng-model="renderImageOptions.input.elementValueRef.selectableValueType" ng-change="updateAvailableSelectableAndComputableValues('renderImageOptions')">
+                            <md-option ng-value="selectableValueType" ng-repeat="selectableValueType in renderImageOptions.availableSelectableValueTypes">{{ selectableValueType }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Feld:</label>
+                        <md-select
+                                ng-disabled="!renderImageOptions.input.elementValueRef.selectableValueType"
+                                ng-model="renderImageOptions.input.elementValueRef.selectableValue"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-if="renderImageOptions.input.elementValueRef.selectableValueType === 'Selectable'" ng-value="selectableValue" ng-repeat="selectableValue in renderImageOptions.availableSelectableValues">{{ selectableValue }}</md-option>
+                            <md-option ng-if="renderImageOptions.input.elementValueRef.selectableValueType === 'Computable'" ng-value="selectableValue" ng-repeat="selectableValue in renderImageOptions.availableComputableValues">{{ selectableValue }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex>
+                        <label>Variablenname:</label>
+                        <md-select
+                                ng-disabled="
+                            !renderImageOptions.input.elementValueRef.sectionId ||
+                            !renderImageOptions.input.elementValueRef.elementId ||
+                            !renderImageOptions.input.elementValueRef.selectableValue ||
+                            !renderImageOptions.input.elementValueRef.selectableValue
+                            "
+                                ng-model="renderImageOptions.input.elementValueRef.alias"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-value="alias" ng-repeat="alias in renderImageOptions.availableAliases">{{ alias }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container>
+                        <md-button
+                                ng-disabled="
+                            !renderImageOptions.input.elementValueRef.sectionId ||
+                            !renderImageOptions.input.elementValueRef.elementId ||
+                            !renderImageOptions.input.elementValueRef.selectableValue ||
+                            !renderImageOptions.input.elementValueRef.selectableValue ||
+                            !renderImageOptions.input.elementValueRef.alias
+                        "
+                                style="margin: 0;"
+                                class="md-raised md-primary md-cornered"
+                                ng-click="addElementValueRef('renderImageOptions')"
+                        >
+                            Hinzufügen
+                        </md-button>
+                    </md-input-container>
+                </div>
+
+                <!-- ElementValue list -->
+                <md-table-container ng-if="renderImageOptions.input.type == 'Wiederholbar'">
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width:25%;">Sektion</th>
+                            <th md-column style="width:25%;">Element</th>
+                            <th md-column style="width:10%;">Selectable/Computable</th>
+                            <th md-column style="width:10%;">Feld</th>
+                            <th md-column style="width:20%;">Variablenname</th>
+                            <th md-column style="width:60px;">Aktionen</th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="elementValueRef in renderImageOptions.elementValueRefs">
+                            <td md-cell>{{getSectionIdentifier(elementValueRef.sectionId)}}</td>
+                            <td md-cell>{{getElementIdentifier(elementValueRef.elementId)}}</td>
+                            <td md-cell>{{elementValueRef.selectableValueType}}</td>
+                            <td md-cell>{{elementValueRef.selectableValue}}</td>
+                            <td md-cell>{{elementValueRef.alias}}</td>
+                            <td md-cell>
+                                <md-button
+                                        title="Löschen"
+                                        class="md-icon-button md-warn"
+                                        ng-click="removeElementValueRef($index, 'renderImageOptions')">
+                                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                                </md-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-tab>
+
+
+        <!-- Tab offset -->
+        <md-tab label="Versatz">
+            <div class="apto-tab-content">
+                <md-input-container flex="10">
+                    <label>Statisch/Berechnend:</label>
+                    <md-select ng-model="offsetOptions.input.type">
+                        <md-option ng-value="type" ng-repeat="type in offsetOptions.types">{{ type }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex ng-if="offsetOptions.input.type !== 'Berechnend'">
+                    <md-input-container flex="25">
+                        <label>Versatz X:</label>
+                        <input type="number" step=".01" ng-model="offsetOptions.offsetX">
+                        <div class="hint" ng-show="offsetOptions.offsetUnitX == 1">Nachkommastellen werden für Pixel-Angaben nicht beachtet.</div>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex="15">
+                        <label>Einheit Versatz X:</label>
+                        <md-select ng-model="offsetOptions.offsetUnitX" ng-change="updateAvailableElements(true, 'offsetOptions')">
+                            <md-option ng-value="offsetUnit.id" ng-repeat="offsetUnit in offsetOptions.availableOffsetUnits">{{ offsetUnit.title }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="10"></div>
+                    <md-input-container flex="25">
+                        <label>Versatz Y:</label>
+                        <input type="number" step=".01" ng-model="offsetOptions.offsetY">
+                        <div class="hint" ng-show="offsetOptions.offsetUnitY == 1">Nachkommastellen werden für Pixel-Angaben nicht beachtet.</div>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex="15">
+                        <label>Einheit Versatz Y:</label>
+                        <md-select ng-model="offsetOptions.offsetUnitY" ng-change="updateAvailableElements(true, 'offsetOptions')">
+                            <md-option ng-value="offsetUnit.id" ng-repeat="offsetUnit in offsetOptions.availableOffsetUnits">{{ offsetUnit.title }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex ng-if="offsetOptions.input.type === 'Berechnend'">
+                    <md-input-container class="md-block" flex>
+                        <label>Formel Versatz X:</label>
+                        <input type="text" ng-model="offsetOptions.input.formulaOffsetX">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex>
+                        <label>Formel Versatz Y:</label>
+                        <input type="text" ng-model="offsetOptions.input.formulaOffsetY">
+                    </md-input-container>
+                </div>
+                <!-- New ElementValue -->
+                <div style="padding: 12px 0 0 0;" layout="row" layout-align="start" flex ng-if="offsetOptions.input.type === 'Berechnend'">
+                    <md-input-container flex>
+                        <label>Sektion:</label>
+                        <md-select ng-model="offsetOptions.input.elementValueRef.sectionId" ng-change="updateAvailableElements(true, 'offsetOptions')">
+                            <md-option ng-value="section.id" ng-repeat="section in availableSections">{{ section.identifier }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Element:</label>
+                        <md-select ng-disabled="!offsetOptions.input.elementValueRef.sectionId" ng-model="offsetOptions.input.elementValueRef.elementId" ng-change="updateAvailableSelectableAndComputableValues('offsetOptions')">
+                            <md-option ng-value="element.id" ng-repeat="element in offsetOptions.availableElements">{{ element.identifier }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Selectable/Computable:</label>
+                        <md-select ng-disabled="!offsetOptions.input.elementValueRef.elementId" ng-model="offsetOptions.input.elementValueRef.selectableValueType" ng-change="updateAvailableSelectableAndComputableValues('offsetOptions')">
+                            <md-option ng-value="selectableValueType" ng-repeat="selectableValueType in offsetOptions.availableSelectableValueTypes">{{ selectableValueType }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Feld:</label>
+                        <md-select
+                                ng-disabled="!offsetOptions.input.elementValueRef.selectableValueType"
+                                ng-model="offsetOptions.input.elementValueRef.selectableValue"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-if="offsetOptions.input.elementValueRef.selectableValueType === 'Selectable'" ng-value="selectableValue" ng-repeat="selectableValue in offsetOptions.availableSelectableValues">{{ selectableValue }}</md-option>
+                            <md-option ng-if="offsetOptions.input.elementValueRef.selectableValueType === 'Computable'" ng-value="selectableValue" ng-repeat="selectableValue in offsetOptions.availableComputableValues">{{ selectableValue }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container class="md-block" flex>
+                        <label>Variablenname:</label>
+                        <md-select
+                                ng-disabled="
+                            !offsetOptions.input.elementValueRef.sectionId ||
+                            !offsetOptions.input.elementValueRef.elementId ||
+                            !offsetOptions.input.elementValueRef.selectableValue ||
+                            !offsetOptions.input.elementValueRef.selectableValue
+                            "
+                                ng-model="offsetOptions.input.elementValueRef.alias"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-value="alias" ng-repeat="alias in offsetOptions.availableAliases">{{ alias }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container>
+                        <md-button
+                                ng-disabled="
+                            !offsetOptions.input.elementValueRef.sectionId ||
+                            !offsetOptions.input.elementValueRef.elementId ||
+                            !offsetOptions.input.elementValueRef.selectableValue ||
+                            !offsetOptions.input.elementValueRef.selectableValue ||
+                            !offsetOptions.input.elementValueRef.alias
+                        "
+                                style="margin: 0;"
+                                class="md-raised md-primary md-cornered"
+                                ng-click="addElementValueRef('offsetOptions')"
+                        >
+                            Hinzufügen
+                        </md-button>
+                    </md-input-container>
+                </div>
+                <!-- ElementValue list -->
+                <md-table-container ng-if="offsetOptions.input.type == 'Berechnend'">
+                    <table md-table>
+                        <thead md-head>
+                        <tr md-row>
+                            <th md-column style="width:25%;">Sektion</th>
+                            <th md-column style="width:25%;">Element</th>
+                            <th md-column style="width:10%;">Selectable/Computable</th>
+                            <th md-column style="width:10%;">Feld</th>
+                            <th md-column style="width:20%;">Variablenname</th>
+                            <th md-column style="width:60px;">Aktionen</th>
+                        </tr>
+                        </thead>
+                        <tbody md-body>
+                        <tr md-row ng-repeat="elementValueRef in offsetOptions.elementValueRefs">
+                            <td md-cell>{{getSectionIdentifier(elementValueRef.sectionId)}}</td>
+                            <td md-cell>{{getElementIdentifier(elementValueRef.elementId)}}</td>
+                            <td md-cell>{{elementValueRef.selectableValueType}}</td>
+                            <td md-cell>{{elementValueRef.selectableValue}}</td>
+                            <td md-cell>{{elementValueRef.alias}}</td>
+                            <td md-cell>
+                                <md-button
+                                        title="Löschen"
+                                        class="md-icon-button md-warn"
+                                        ng-click="removeElementValueRef($index, 'offsetOptions')">
+                                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                                </md-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-tab>
+    </md-tabs>
+</div>
+
+<md-input-container>
+    <md-button ng-disabled="!renderImageOptions.file || !renderImageOptions.layer || !renderImageOptions.perspective" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElementRenderImage()">Hinzufügen</md-button>
+</md-input-container>
+
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:10%;">Name</th>
+            <th md-column style="width:20%;">Bild</th>
+            <th md-column style="width:20%;">Dateipfad</th>
+            <th md-column style="width:10%;">Perspektive</th>
+            <th md-column style="width:10%;">Layer</th>
+            <th md-column style="width:5%;">Versatz X</th>
+            <th md-column style="width:5%;">Versatz Y</th>
+            <th md-column style="width:20%;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="renderImage in renderImages">
+            <td md-cell style="width:10%;">{{ renderImage.renderImageOptions.renderImageOptions.name }}</td>
+            <td md-cell style="width:20%;"><apto-media-icon style="padding: 6px 0; display: block;" file="{path: renderImage.mediaFile[0].path + '/' + renderImage.mediaFile[0].filename + '.' + renderImage.mediaFile[0].extension, extension: renderImage.mediaFile[0].extension}" size="128x128"></apto-media-icon></td>
+            <td md-cell style="width:20%;">{{ renderImage.mediaFile[0].path }}/{{ renderImage.mediaFile[0].filename }}.{{ renderImage.mediaFile[0].extension }}</td>
+            <td md-cell style="width:10%;">{{ renderImage.perspective }}</td>
+            <td md-cell style="width:10%;">{{ renderImage.layer }}</td>
+            <td md-cell style="width:5%">{{ renderImage.offsetX }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitX == 0 ? '%' : 'px' }}</td>
+            <td md-cell style="width:5%">{{ renderImage.offsetY }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitY == 0 ? '%' : 'px' }}</td>
+            <td md-cell style="width:20%;">
+                <md-button
+                        title="Editieren"
+                        class="md-icon-button md-primary"
+                        ng-click="editRenderImage(renderImage)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Kopieren"
+                        class="md-icon-button md-primary"
+                        ng-click="editRenderImage(renderImage, true)">
+                    <md-icon md-font-set="fa">&#xf24d</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeRenderImage(renderImage.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

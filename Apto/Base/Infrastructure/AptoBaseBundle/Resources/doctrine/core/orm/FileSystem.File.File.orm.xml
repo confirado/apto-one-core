@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="Apto\Base\Domain\Core\Model\FileSystem\File\File">
+        <field name="filename" column="filename" type="string" length="255" nullable="false"/>
+        <field name="extension" column="extension" type="string" length="255" nullable="false"/>
+        <embedded name="directory" class="Apto\Base\Domain\Core\Model\FileSystem\Directory\Directory" use-column-prefix="false"/>
+    </embeddable>
+</doctrine-mapping>

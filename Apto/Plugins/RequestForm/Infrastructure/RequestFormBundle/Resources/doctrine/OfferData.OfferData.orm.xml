@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\RequestForm\Domain\Core\Model\OfferData\OfferData" table="apto_plugin_request_form_offer_data" repository-class="Apto\Plugins\RequestForm\Infrastructure\RequestFormBundle\Doctrine\Orm\OfferDataOrmRepository">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="number" column="number" type="string"/>
+        <field name="data" column="data" type="text"/>
+
+    </entity>
+</doctrine-mapping>

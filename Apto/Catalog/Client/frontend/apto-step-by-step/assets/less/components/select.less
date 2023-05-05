@@ -1,0 +1,29 @@
+.select-container {
+  margin-top: 1.125rem;
+  height: 2rem;
+  line-height: 2rem;
+  background: @stepByStepInfoBlockBackground;
+  select {
+    height: 2rem;
+    line-height: 2rem;
+    background: @stepByStepInfoBlockBackground;
+    color: @stepByStepInfoBlockSelectColor;
+    font-weight: bold;
+    font-size: 0.875rem;
+    padding-left: 0.625rem;
+  }
+
+  &:after {
+    background: @stepByStepInfoBlockBackground;
+    color: @stepByStepInfoBlockSelectColor;
+    width: 1.875rem;
+  }
+}
+
+@media screen and (max-width: 767px){
+  .sidebar-info{
+    .select-container{
+      margin: 0;
+    }
+  }
+}

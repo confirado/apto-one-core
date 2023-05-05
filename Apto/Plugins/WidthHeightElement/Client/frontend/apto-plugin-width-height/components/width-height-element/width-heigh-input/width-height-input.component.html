@@ -1,0 +1,165 @@
+<style>
+    .width-height-property-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    .width-height-property-label {
+        width: 50px;
+    }
+
+    .width-height-property-valid-values {
+        font-size: 0.7rem;
+        text-align: center;
+    }
+
+    .width-height-element.element-disabled {
+        background: red;
+    }
+
+    .width-height-element-input {
+        width: 4rem;
+    }
+
+    .width-height-element-sbs-left {
+        width: 60%;
+    }
+
+    .width-height-element-sbs-right {
+        width: 40%;
+    }
+
+    .width-height-element-sbs-width {
+        text-align: center;
+    }
+
+    .width-height-element-sbs-height {
+        text-align: center;
+    }
+
+    .width-height-element-sbs-preview-image {
+        margin-bottom: 1rem;
+    }
+
+    .width-height-element-sbs-preview-image img {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .width-height-element-sbs {
+        display: flex;
+        align-items: center;
+    }
+
+    .width-height-element .sbs-default-element-actions {
+        position: relative;
+        text-align: right;
+        margin: 1rem 0;
+    }
+
+</style>
+
+<div class="block-group relative-container" ng-class="{'no-preview-image' : !$ctrl.element.previewImage}">
+    <h4 class="headline" ng-if="$ctrl.translate($ctrl.element.name)">{{ $ctrl.translate($ctrl.element.name) }}</h4>
+    <div ng-if="$ctrl.element.previewImage" class="image-container block">
+        <apto-sbs-preview-image element="$ctrl.element"></apto-sbs-preview-image>
+    </div>
+
+    <div ng-if="$ctrl.staticValues.renderingHeight !== 'none'" class="height block">
+        <div class="input-container">
+            <span class="prefix">{{ $ctrl.translate($ctrl.staticValues.prefixHeight) }}</span>
+            <div class="input-inner-container">
+                <input ng-if="!$ctrl.elementValueSelect.height" ng-model="$ctrl.input.height" ng-change="$ctrl.onChangeHeight()">
+                <select ng-if="$ctrl.elementValueSelect.height" ng-model="$ctrl.input.height" ng-change="$ctrl.onChangeHeight()">
+                    <option value="{{null}}" disabled="disabled">bitte wählen</option>
+                    <option ng-repeat="value in $ctrl.elementValueSelect.height" ng-value="{{value}}">{{value}}
+                    </option>
+                </select>
+                <span class="suffix">{{ $ctrl.translate($ctrl.staticValues.suffixHeight) }}</span>
+                <div ng-if="!$ctrl.elementValueSelect.height" class="valid-values hint">
+                    {{
+                    $ctrl.elementValuesService.getHumanReadableString($ctrl.element.definition.properties.height,
+                    '', $ctrl.translate($ctrl.staticValues.suffixHeight)) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block-group" ng-class="{'no-preview-image' : !$ctrl.element.previewImage}">
+    <div ng-if="$ctrl.staticValues.renderingWidth !== 'none'" class="width block">
+        <div class="input-container">
+            <span class="prefix">{{ $ctrl.translate($ctrl.staticValues.prefixWidth) }}</span>
+            <div class="input-inner-container">
+                <input ng-if="!$ctrl.elementValueSelect.width" ng-model="$ctrl.input.width" ng-change="$ctrl.onChangeWidth()">
+                <select ng-if="$ctrl.elementValueSelect.width" ng-model="$ctrl.input.width" ng-change="$ctrl.onChangeWidth()">
+                    <option value="{{null}}" disabled="disabled">bitte wählen</option>
+                    <option ng-repeat="value in $ctrl.elementValueSelect.width" ng-value="{{value}}">{{value}}</option>
+                </select>
+                <span class="suffix">{{ $ctrl.translate($ctrl.staticValues.suffixWidth) }}</span>
+                <div ng-if="!$ctrl.elementValueSelect.width" class="valid-values hint">
+                    {{$ctrl.elementValuesService.getHumanReadableString($ctrl.element.definition.properties.width,
+                    '', $ctrl.translate($ctrl.staticValues.suffixWidth)) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-container block-group">
+    <!-- live price -->
+    <div ng-if="$ctrl.reduxProps.livePricePrices" style="text-align: right; font-weight: bold;">
+        {{ $ctrl.snippetFactory.get('plugins.livePrice.label') }}
+        {{ $ctrl.translate($ctrl.staticValues.livePricePrefix) }}
+        {{ $ctrl.reduxProps.livePricePrices[$ctrl.element.id].formatted }}
+        {{ $ctrl.translate($ctrl.staticValues.livePriceSuffix) }}
+    </div>
+
+    <!-- set value button -->
+    <button class="set-value"
+            ng-class="{
+                'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id),
+                'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id),
+                'element-value-not-in-sync': !$ctrl.inputInSync.height || !$ctrl.inputInSync.width
+            }"
+            ng-click="$ctrl.setValues()">
+
+        <!-- not multiple and step by step and not selected -->
+        <span
+            class="select-continue"
+            ng-if="!$ctrl.section.allowMultiple && $ctrl.reduxProps.useStepByStep && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+        >Auswählen & Weiter »</span>
+
+        <!-- multiple or one page and not selected -->
+        <span class="select" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && !$ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">Auswählen</span>
+
+        <!-- multiple or one page and selected -->
+        <span class="update" ng-if="($ctrl.section.allowMultiple || !$ctrl.reduxProps.useStepByStep) && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)">Aktualisieren</span>
+    </button>
+
+    <!-- remove button - one page -->
+    <button class="remove-value"
+            ng-if="!$ctrl.reduxProps.useStepByStep && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- selected -->
+        <span class="remove">Abwählen</span>
+    </button>
+
+    <!-- remove button - step by step -->
+    <button class="remove-value"
+            ng-if="$ctrl.reduxProps.useStepByStep && $ctrl.section.allowMultiple && $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)"
+            ng-click="$ctrl.removeValues()">
+
+        <!-- multiple and selected -->
+        <span class="remove">Abwählen</span>
+    </button>
+</div>
+
+<div class="block-group">
+    <div class="content-container block">
+        <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+        <apto-extended-element-description element="$ctrl.element"></apto-extended-element-description>
+    </div>
+</div>

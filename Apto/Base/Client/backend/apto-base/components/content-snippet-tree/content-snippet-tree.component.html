@@ -1,0 +1,49 @@
+<treecontrol ng-if="$ctrl.data.length > 0"
+             class="tree-dark"
+             tree-model="$ctrl.data"
+             options="$ctrl.treeOptions"
+             on-selection="$ctrl.showSelected(node)"
+             selected-node="node1">
+    <div layout="row" layout-align="start" flex>
+        <div class="tree-list-name" flex="25">
+            {{node.name}}
+        </div>
+        <div class="tree-list-content" flex="75">
+            <div  ng-if="!$ctrl.allowAdd(node)">
+                {{$ctrl.translate(node.content)}}
+            </div>
+            <div ng-if="$ctrl.allowAdd(node)">
+            </div>
+        </div>
+        <div class="tree-list-actions" style="flex: 0 0 170px;">
+            <md-button
+                    ng-if="$ctrl.allowAdd(node)"
+                    title="Neu"
+                    class="md-icon-button md-primary"
+                    ng-click="$ctrl.actions.addBelow.fnc($event, node.id)">
+                <md-icon md-font-set="fa">&#xf055</md-icon>
+            </md-button>
+            <md-button
+                    ng-if="!$ctrl.allowAdd(node)"
+                    title="Neu"
+                    disabled
+                    class="md-icon-button md-primary disabled"
+            >
+                <md-icon md-font-set="fa">&#xf055</md-icon>
+            </md-button>
+            <md-button
+                title="Bearbeiten"
+                class="md-icon-button md-primary"
+                ng-click="$ctrl.actions.edit.fnc($event, node.id)">
+                <md-icon md-font-set="fa">&#xf044</md-icon>
+            </md-button>
+            <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    apto-confirm-remove="$ctrl.actions.remove.fnc($event, node.id)">
+                <md-icon md-font-set="fa">&#xf014</md-icon>
+            </md-button>
+        </div>
+    </div>
+
+</treecontrol>

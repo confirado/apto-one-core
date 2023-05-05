@@ -1,0 +1,17 @@
+<ng-container *ngIf="product$ | async as product">
+	<ng-container *ngIf="!product.useStepByStep">
+		<div *ngIf="steps$ | async as steps">
+			<mat-accordion class="section-list">
+				<apto-o-p-step
+					*ngFor="let step of steps.steps; index as i; trackBy: stepTrackBy"
+					[status]="step.status"
+					[section]="step"
+					[elements]="step.elements"
+					[description]="step.description"
+					[product]="product"
+					[index]="i"
+				></apto-o-p-step>
+			</mat-accordion>
+		</div>
+	</ng-container>
+</ng-container>

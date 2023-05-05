@@ -1,0 +1,90 @@
+@import "globals";
+
+:host {
+	display: flex;
+	flex-direction: column;
+    background-color: white;
+}
+
+::-webkit-scrollbar {
+    background-color: var(--color-background-card) !important;
+}
+
+.mat-expansion-panel {
+    .mat-expansion-panel-header {
+        padding: 0;
+        height: auto;
+
+        ::ng-deep .mat-content {
+            margin-right: 0;
+
+            mat-panel-title {
+                margin-right: 0;
+
+                h1.headline {
+                    width: 100%;
+                    border: none;
+                    font-size: 1.8125rem;
+                    font-weight: 600;
+                    padding: 20px;
+                    color: var(--color-title);
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    ::ng-deep .mat-expansion-panel-content {
+        .mat-expansion-panel-body {
+            padding: 0 20px;
+        }
+    }
+
+    &.mat-expanded {
+        .mat-expansion-panel-header {
+            ::ng-deep .mat-content {
+                mat-panel-title {
+                    h1.headline {
+                        border-bottom: 2px solid var(--color-details);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.scroll {
+    margin: 25px 0;
+    width: 100%;
+
+    .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+
+        .vLine {
+            width: 2px;
+            height: 100%;
+            background-color: var(--color-details);
+            position: absolute;
+            top: 0;
+            left: 21px;
+            z-index: -1;
+        }
+    }
+}
+
+@media only screen and (min-width: $desktop-max-width) {
+    :host {
+        height: 100%;
+    }
+
+    .mat-expansion-panel {
+        &:not([class*=mat-elevation-z]) {
+            box-shadow: none;
+        }
+    }
+}

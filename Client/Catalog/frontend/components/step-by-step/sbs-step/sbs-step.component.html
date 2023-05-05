@@ -1,0 +1,33 @@
+<ng-container *ngIf="section">
+    <ng-container *ngIf="product?.useStepByStep">
+        <div class="section" [ngClass]="status || ''">
+            <!--<div class="circle" *ngIf="status != 'COMPLETED' || !section.fulfilled">
+                <ng-container *ngIf="!section.fulfilled || !opened(section.section.id, sectionList)">
+                    {{ index }}
+                </ng-container>
+                <ng-container *ngIf="section.fulfilled && opened(section.section.id, sectionList)">
+                    <mat-icon>done</mat-icon>
+                </ng-container>
+            </div>
+            <div class="circle" *ngIf="status == 'COMPLETED' && section.fulfilled">
+                <mat-icon>done</mat-icon>
+            </div>-->
+            <div class="circle" *ngIf="status != 'COMPLETED'">
+                {{ index }}
+            </div>
+            <div class="circle" *ngIf="status == 'COMPLETED'">
+                <mat-icon>done</mat-icon>
+            </div>
+            <div *ngIf="last" class="white-overlay"></div>
+            <div (click)="setStep(section)" class="step" [class.select]="status === 'COMPLETED' || status === 'CURRENT'">
+                <div class="title"> {{ section.section.name | translate }}</div>
+                <div *ngFor="let element of section.elements">
+                    <div class="elements" *ngIf="element.state.active">
+                        <span class="element-title"> {{ element.element.name | translate }} </span>
+                        <div class="element-value" *ngFor="let value of getElementValues(element.element) | async">{{ value | translate }} </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

@@ -1,0 +1,43 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="filterCategoryForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Id: {{ filterCategoryDetail.id }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <apto-translated-value required label="'Name'" type="'input'" translated-value="filterCategoryDetail.name" flex></apto-translated-value>
+                </div>
+
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Kennung:</label>
+                        <input ng-model="filterCategoryDetail.identifier">
+                    </md-input-container>
+                </div>
+
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Position:</label>
+                        <input type="number" min="0" step="1" ng-model="filterCategoryDetail.position">
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="filterCategoryDetail.id" class="md-raised md-cornered" ng-click="save(filterCategoryForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="filterCategoryDetail.id" class="md-raised md-primary md-cornered" ng-click="save(filterCategoryForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!filterCategoryDetail.id" class="md-raised md-cornered" ng-click="save(filterCategoryForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!filterCategoryDetail.id" class="md-raised md-primary md-cornered" ng-click="save(filterCategoryForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

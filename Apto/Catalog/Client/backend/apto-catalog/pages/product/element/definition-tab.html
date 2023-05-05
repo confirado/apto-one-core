@@ -1,0 +1,13 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex="">
+        <label>Element Definition</label>
+        <md-select multiple="false" ng-model="$parent.selectedDefinition" ng-model-options="{trackBy: '$value.className'}" ng-change="onChangeSelectedDefinition()">
+            <md-option ng-repeat="registeredDefinition in registeredDefinitions" ng-value="registeredDefinition">
+                {{registeredDefinition.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div ng-repeat="registeredDefinition in registeredDefinitions">
+    <div ng-if="registeredDefinition.className == $parent.selectedDefinition.className" class="md-whiteframe-2dp" bind-html-compile="registeredDefinition.backendComponent"></div>
+</div>

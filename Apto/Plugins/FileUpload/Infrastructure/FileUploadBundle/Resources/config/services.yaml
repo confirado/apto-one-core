@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\FileUpload\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

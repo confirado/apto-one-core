@@ -1,0 +1,50 @@
+@import "globals";
+@import "elements";
+
+:host {
+    .headline {
+        @include headline('mobile');
+    }
+
+    .element-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--element-gap);
+        margin-bottom: var(--element-gap);
+
+        .element {
+            color: var(--color-text);
+            background-color: var(--color-background-card);
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius-card);
+            max-width: calc(100vw - var(--element-gap));
+            overflow: visible; // when hidden popups in material picker element are not visible on second material
+        }
+    }
+
+    .step-navigation-container {
+        justify-content: center;
+        flex-wrap: wrap-reverse;
+        margin-top: 1rem;
+        display: flex;
+        gap: var(--button-gap);
+        flex-direction: row;
+    }
+}
+
+
+@media only screen and (min-width: $mobile-max-width) {
+    :host {
+        .headline {
+            @include headline('tablet');
+        }
+
+        .step-navigation-container {
+            flex-direction: row;
+        }
+
+        .element-list {
+            gap: 40px;
+        }
+	}
+}

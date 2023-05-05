@@ -1,0 +1,40 @@
+<header>
+    <table class="header-table">
+        <tr>
+            <td nowrap>
+            <th align="left">
+                <table class="table-no-spacing">
+                    <tr>
+                        <td>
+                            {% if contentSnippets.header.logo[locale]|default('') %}
+                                <img class="logo" src="{{mediaUrl}}{{contentSnippets.header.logo[locale]|default('')}}">
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </th>
+            <th align="right">
+                <table class="table-no-spacing right">
+                    <tr>
+                        <td class="company-address">
+                            <p>
+                                <span class="company-name">{{contentSnippets.company.name[locale]|default('')}}</span> <br>
+                                {{contentSnippets.company.street[locale]|default('')}}<br>
+                                {{contentSnippets.company.zip[locale]|default('')}} {{contentSnippets.company.city[locale]|default('')}}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="company-contact">
+                                {{contentSnippets.header.phone[locale]|default('')}} {{contentSnippets.company.phone[locale]|default('')}} <br>
+                                {{contentSnippets.header.mail[locale]|default('')}} <a class="header-link" href="mailto:{{contentSnippets.company.mail[locale]|default('')}}">{{contentSnippets.company.mail[locale]|default('')}}</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </th>
+            </td>
+        </tr>
+    </table>
+</header>

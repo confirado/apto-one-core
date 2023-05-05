@@ -1,0 +1,43 @@
+@media screen and (max-width: 767px) {
+  .slider-container {
+    .slider-action-container {
+      bottom: 0;
+      left: 0;
+      .action {
+        padding-top: 3.5rem;
+      }
+      .share-button, .save-button {
+        span{
+          display: none;
+        }
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        i {
+          display: block;
+        }
+      }
+      .share-button{
+        margin-left: 0.625rem;
+        border-radius: 2px;
+        i{
+          margin-top: 0.5rem;
+        }
+      }
+    }
+    .change-persp{
+      button {
+        &:first-child {
+          padding-left: 0.5rem;
+        }
+        &:last-child {
+          padding-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.debug-twig {
+  display: none;
+}

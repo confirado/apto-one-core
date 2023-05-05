@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+{% block htmlOpen %}
+<html lang="{{ locale|replace({'_': '-'}) }}">
+{% endblock %}
+
+<head>
+    {% block metaViewport %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    {% endblock %}
+
+    {% block metaCharset %}
+        <meta charset="UTF-8" />
+    {% endblock %}
+
+    {% block metaRobots %}
+        <meta name="robots" content="noindex,nofollow" />
+    {% endblock %}
+
+    {% block metaTitle %}
+        <title>Apto.ONE Installation</title>
+    {% endblock %}
+
+    {% block webpackFilesCss %}
+        {% for stylesheet in templateLoaderData.webpackFiles.css %}
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+        {% endfor %}
+    {% endblock %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+</head>
+<body>
+    {% block layout %}
+        {% include '@AptoBase/apto/base/install/pages/layout.html.twig' %}
+    {% endblock %}
+
+    {% block javascriptInject %}
+    <script type="text/javascript">
+        var APTO_API = {{ aptoApi|json_encode()|raw }};
+    </script>
+    {% endblock %}
+
+    {% block webpackFilesJs %}
+        {% for javascript in templateLoaderData.webpackFiles.js %}
+            <script src="{{ asset(javascript) }}"></script>
+        {% endfor %}
+    {% endblock %}
+</body>
+</html>

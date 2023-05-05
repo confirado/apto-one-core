@@ -1,0 +1,91 @@
+@import "globals";
+
+:host {
+    display: block;
+    position: relative;
+    border-bottom: 3px solid var(--color-optic-lines);
+    background-color: var(--color-background-header);
+    box-shadow: var(--box-shadow);
+}
+
+mat-toolbar {
+    display: grid;
+    grid-template-rows: 100px;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-content: stretch;
+    grid-template-areas:
+        "language-desktop logo language-mobile";
+    max-width: var(--layout-max-with);
+    margin: 0 auto;
+    padding: 5px 40px;
+	position: relative;
+    background-color: var(--color-background-header);
+    height: auto;
+    .language-desktop {
+        grid-area: language-desktop;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        font-size: 1rem;
+        mat-select {
+            width: 110px;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+    }
+    .logo {
+        grid-area: logo;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+    .language-mobile {
+        grid-area: language-mobile;
+        display: none;
+        justify-content: flex-end;
+        align-items: flex-end;
+        font-size: 1rem;
+        mat-select {
+            width: auto;
+            color: var(--color-text);
+            font-weight: 600;
+            padding-bottom: 0;
+            display: flex;
+            ::ng-deep .mat-select-arrow-wrapper {
+                display: none;
+            }
+            .language-icon {
+                display: flex;
+            }
+        }
+    }
+}
+
+::ng-deep .language-mobile-popup {
+    min-width: calc(100% + 12px) !important;
+}
+
+.visible-mobile {
+	display: none;
+}
+.visible-desktop {
+	display: block;
+}
+
+@media (max-width: $mobile-max-width) {
+	.visible-mobile {
+		display: block;
+	}
+	.visible-desktop {
+		display: none;
+	}
+
+    mat-toolbar {
+        .language-mobile {
+            display: flex;
+        }
+        .language-desktop {
+            display: none;
+        }
+    }
+}

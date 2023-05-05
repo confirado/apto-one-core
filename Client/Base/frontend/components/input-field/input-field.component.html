@@ -1,0 +1,21 @@
+<div class="input-field" [style.width]="width ? 'max-content' : '100%'">
+    <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
+    <div class="name" *ngIf="name" [class.integer]="type === 'integer'">{{ name }}</div>
+
+    <div class="container" [style.width]="width">
+        <input *ngIf="type === 'integer' || type === 'float'" onfocus="this.value == 0 ? this.value='': this.value" [formControl]="formElement" [placeholder]="placeholder" />
+        <input *ngIf="type !== 'integer' && type !== 'float'" [formControl]="formElement" [placeholder]="placeholder" />
+
+        <div class="ripple-controls" *ngIf="type === 'integer' || type === 'float'">
+            <div class="control" mat-ripple (click)="increase()">
+                <mat-icon>arrow_drop_up</mat-icon>
+            </div>
+            <div class="control" mat-ripple (click)="decrease()">
+                <mat-icon>arrow_drop_down</mat-icon>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint" *ngIf="hint" [class.integer]="type === 'integer'">{{ hint }}</div>
+    <div class="suffix" *ngIf="suffix">{{ suffix }}</div>
+</div>

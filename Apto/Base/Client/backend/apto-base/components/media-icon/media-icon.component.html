@@ -1,0 +1,5 @@
+<div class="apto-media-icon">
+    <i ng-if="$ctrl.file.isDir" class="fa fa-folder-o"></i>
+    <i ng-if="!$ctrl.file.isDir && !$ctrl.hasThumbnail($ctrl.file.extension)" class="fa {{ $ctrl.getIcon($ctrl.file.extension) }}"></i>
+    <img style="display: block;" ng-if="!$ctrl.file.isDir && $ctrl.hasThumbnail($ctrl.file.extension)" ng-src="{{ $ctrl.getThumbnail($ctrl.file.path) }}">
+</div>

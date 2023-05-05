@@ -1,0 +1,55 @@
+<form ng-if="!offerConfiguration.finish" class="add-guest-configuration-form" name="addOfferConfigurationForm">
+    <h4 ng-bind-html="snippet('beforeSave.header')"></h4>
+    <p ng-bind-html="snippet('beforeSave.info')"></p>
+    <input type="email" ng-attr-placeholder="{{ snippet('form.mail') }}" ng-model="offerConfiguration.email" required>
+    <input type="text" ng-attr-placeholder="{{ snippet('form.name') }}" ng-model="offerConfiguration.name">
+
+    <div ng-repeat="field in offerConfiguration.fields">
+        <select
+                ng-if="field.type === 'select'"
+                ng-model="$parent.input[field.key]"
+                ng-required="field.required"
+                ng-attr-name="{{ field.key }}"
+        >
+            <option value="" ng-disabled="field.required">{{ field.label }}{{ field.required ? '*' : '' }}</option>
+            <option ng-repeat="option in field.select" value="{{ option }}">{{ option }}</option>
+        </select>
+
+        <input
+                ng-if="field.type === 'text'"
+                ng-model="$parent.input[field.key]"
+                ng-required="field.required"
+                ng-attr-type="{{ field.type }}"
+                ng-attr-name="{{ field.key }}"
+                ng-attr-placeholder="{{ field.label }}{{ field.required ? '*' : '' }}"
+        />
+
+        <input
+                ng-if="field.type === 'email'"
+                ng-model="$parent.input[field.key]"
+                ng-required="field.required"
+                ng-attr-type="{{ field.type }}"
+                ng-attr-name="{{ field.key }}"
+                ng-attr-placeholder="{{ field.label }}{{ field.required ? '*' : '' }}"
+        />
+
+        <textarea ng-if="field.type === 'textarea'"
+                  ng-model="$parent.input[field.key]"
+                  ng-required="field.required"
+                  ng-attr-name="{{ field.key }}"
+                  ng-attr-placeholder="{{ field.label }}{{ field.required ? '*' : '' }}"
+                  rows="3"
+        ></textarea>
+    </div>
+
+    <div class="block-group">
+        <button class="block right" ng-click="addOfferConfiguration(addOfferConfigurationForm, $event)" ng-bind-html="snippet('form.submit')"></button>
+    </div>
+</form>
+<div ng-if="offerConfiguration.finish">
+    <h4 ng-bind-html="snippet('afterSave.header')"></h4>
+    <p ng-bind-html="snippet('afterSave.info')"></p>
+    <div class="block-group">
+        <button class="block right" ng-click="close()" ng-bind-html="snippet('afterSave.close')"></button>
+    </div>
+</div>

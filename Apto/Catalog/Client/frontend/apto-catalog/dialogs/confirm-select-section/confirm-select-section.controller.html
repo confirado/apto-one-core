@@ -1,0 +1,13 @@
+<div class="chose-soft-rule">
+    <h4>{{snippet('title')}}</h4>
+    <div ng-bind-html="snippet('message')"></div>
+
+    <div class="block-group apto-confirm-dialog-actions">
+        <button class="block button-secondary filled" ng-click="closeDialog(false)">
+            {{snippet('buttonCancel')}}
+        </button>
+        <button class="block right" ng-click="closeDialog(true)">
+            {{snippet('buttonAccept')}}
+        </button>
+    </div>
+</div>

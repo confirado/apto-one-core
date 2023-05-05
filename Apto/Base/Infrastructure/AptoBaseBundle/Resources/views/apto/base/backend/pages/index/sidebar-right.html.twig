@@ -1,0 +1,23 @@
+<md-sidenav
+        md-theme="apto-dark"
+        class="md-sidenav-right md-whiteframe-4dp"
+        md-component-id="right"
+        md-is-locked-open="IndexController.lockSidebarRight"
+        md-disable-backdrop
+>
+    <md-content class="message-bus-log" layout-padding>
+        <h3 class="md-title">
+            Message Bus Log
+            <md-button class="md-icon-button md-warn" title="Log leeren" ng-click="IndexController.clearMessageLog()">
+                <md-icon md-font-set="fa">&#xf014</md-icon>
+            </md-button>
+        </h3>
+        <md-divider></md-divider>
+        <div ng-click="IndexController.showMessageLogDetail(message, $event)" class="message-bus-log-entry" ng-class="{error: message.error === true}" ng-repeat="message in IndexController.messageLog.messages">
+            <h3>{{ '{{ message.message }}' }}</h3>
+            <div ng-if="message.uuid">Id: {{ '{{ message.uuid }}' }}</div>
+            <div>Dauer: {{ '{{ message.duration }}' }}</div>
+            <div>Datum: {{ '{{ message.date }}' }}</div>
+        </div>
+    </md-content>
+</md-sidenav>

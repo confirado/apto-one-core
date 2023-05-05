@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>Apto.ONE Backend</title>
+    {% for stylesheet in templateLoaderData.webpackFiles.css %}
+        <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+    {% endfor %}
+</head>
+
+<body data-ng-app="AptoBackend" {% block bodyNgController %}ng-controller="AptoIndexController as IndexController"{% endblock %} layout="column">
+
+    {% block layout %}
+        {% include '@AptoBase/apto/base/backend/pages/index/layout.html.twig' %}
+    {% endblock %}
+
+    <script type="text/javascript">
+        var aptoBackendCurrentUserName = '{{ currentUsername }}';
+        var AptoEnvironment = JSON.parse('{{ aptoEnvironment|json_encode()|raw }}');
+        var AptoPerspectives = {{ perspectives|json_encode()|raw }};
+        var APTO_API = {{ aptoApi|json_encode()|raw }};
+    </script>
+
+    {% for javascript in templateLoaderData.webpackFiles.js %}
+        <script src="{{ asset(javascript) }}"></script>
+    {% endfor %}
+
+    {% for angularTemplate in templateLoaderData.templates.angularTemplates %}
+        <script type="text/ng-template" id="{{ angularTemplate }}">
+            {% include angularTemplate %}
+        </script>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "id": "apto-base-backend",
+  "app": "backend",
+  "priority": 250,
+  "imports": [{
+    "class": "AptoBaseBackendModule",
+    "file": "apto-base-backend.module.ts"
+  }, {
+    "class": "AptoBaseBackendRoutingModule",
+    "file": "apto-base-backend-routing.module.ts"
+  }]
+}

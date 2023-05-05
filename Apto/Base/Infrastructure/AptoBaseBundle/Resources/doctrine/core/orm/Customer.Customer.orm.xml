@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Core\Model\Customer\Customer" table="apto_customer" repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\CustomerOrmRepository">
+        <unique-constraints>
+            <unique-constraint name="AptoUniqueShopIdExternalId" columns="shop_id,external_id"/>
+        </unique-constraints>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime" />
+        <field name="email" type="string" column="email" length="255" nullable="true"/>
+        <field name="active" type="boolean" column="active"/>
+        <field name="firstName" type="string" column="first_name" nullable="true"/>
+        <field name="lastName" type="string" column="last_name" nullable="true"/>
+        <field name="shopId" type="AptoPropertyUuid" column="shop_id" nullable="true"/>
+        <field name="externalId" type="string" column="external_id" nullable="true"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\Customer\Gender" use-column-prefix="false" name="gender"/>
+        <embedded class="Apto\Base\Domain\Core\Model\Customer\CustomerUserName" use-column-prefix="false" name="username"/>
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+    </entity>
+</doctrine-mapping>

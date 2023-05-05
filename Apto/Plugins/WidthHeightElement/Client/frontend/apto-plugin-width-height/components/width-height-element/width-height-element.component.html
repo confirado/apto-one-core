@@ -1,0 +1,32 @@
+<div>
+    <!-- one pager -->
+    <article
+        ng-if="!$ctrl.reduxProps.useStepByStep" class="default-element tool-tip-container"
+        apto-tool-tip
+        ng-class="{'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id), 'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id), 'width-height-hide-desktop': !$ctrl.staticValues.renderDialogInOnePageDesktop}"
+        ng-click="$ctrl.openInputDialog()"
+    >
+        <img ng-if="$ctrl.element.previewImage" ng-src="{{$ctrl.element.previewImage.fileUrl}}" style="display: block; width: 100%; height: 100%;" />
+        <div ng-if="!$ctrl.element.previewImage" style="background: #ffffff; width: 100%; height: 100%;"></div>
+        <div class="tool-tip">
+            {{ $ctrl.translate($ctrl.element.name) }}
+        </div>
+    </article>
+
+    <!-- one pager inline -->
+    <article
+            ng-if="!$ctrl.reduxProps.useStepByStep && !$ctrl.staticValues.renderDialogInOnePageDesktop" class="no-dialog-element width-height block-group width-height-hide-mobile"
+            ng-class="{'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id)}"
+    >
+        <apto-width-height-input section="$ctrl.section" element="$ctrl.element"></apto-width-height-input>
+    </article>
+
+    <!-- step by step -->
+    <article
+        ng-if="$ctrl.reduxProps.useStepByStep"
+        class="sbs-element width-height block-group"
+        ng-class="{'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id)}"
+    >
+        <apto-width-height-input section="$ctrl.section" element="$ctrl.element"></apto-width-height-input>
+    </article>
+</div>

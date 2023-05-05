@@ -1,0 +1,22 @@
+<md-content id="content" flex>
+    <div>
+        <md-button hide-gt-sm class="md-icon-button" ng-click="IndexController.toggleSidebar()" aria-label="Show User List">
+            <md-icon md-font-set="fa">&#xf0c9</md-icon>
+        </md-button>
+        <div data-ng-view autoscroll="true"></div>
+        {% if app.environment == 'dev' %}
+            <div style="position: relative; z-index: 1;">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline">Twig Debug:</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content>
+                        {{ dump() }}
+                    </md-card-content>
+                </md-card>
+            </div>
+        {% endif %}
+    </div>
+</md-content>

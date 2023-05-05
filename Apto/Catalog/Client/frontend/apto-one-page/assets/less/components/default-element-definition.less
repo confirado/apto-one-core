@@ -1,0 +1,38 @@
+.default-element {
+  float: left;
+  width:  1.875rem;
+  height:  1.875rem;
+  border: 1px solid @onePageDefaultElementBorderColor;
+  margin: 0 0.75rem 0.75rem 0;
+  &.element-disabled {
+    background-color: #8c8c8c;
+    img, div{
+      opacity: 0.5;
+    }
+  }
+  &.element-selected {
+    img, div{
+      box-shadow: 0 0 5px 1px rgba(68,68,68,0.75);
+    }
+  }
+  img, div{
+    .transition(box-shadow 0.1s ease-in-out);
+  }
+}
+
+.element-container .material:nth-child(6n +6) .default-element {
+  margin: 0 0 0.75rem 0;
+}
+
+@media screen and (max-width: 767px) {
+  .default-element {
+    margin: 0 0.75rem 0 0;
+  }
+  .element-container .material:nth-child(6n +6) .default-element {
+    margin: 0 0.75rem 0 0;
+  }
+
+  .element-container .material:last-child .default-element {
+    margin: 0;
+  }
+}

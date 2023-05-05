@@ -1,0 +1,23 @@
+<header class="main">
+    <div class="hamburger-menu-container">
+        <div class="gutter-medium-left hamburger-menu" apto-open-sidebar-menu apto-open-sidebar-menu-content=".sidebar-menu" apto-open-sidebar-menu-other-content=".hamburger-menu-container" apto-open-sidebar-menu-not-scroll-content="body">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="header-content gutter-medium-right gutter-medium-left">
+        <div class="container">
+            <a ng-if="$ctrl.snippet('link')"
+               class="header-home-button uppercase"
+               ng-href="{{ $ctrl.snippet('link')}}"
+            >
+                <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+            </a>
+            <apto-language-switch></apto-language-switch>
+            <apto-links-to-shop></apto-links-to-shop>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <apto-logo></apto-logo>
+</header>

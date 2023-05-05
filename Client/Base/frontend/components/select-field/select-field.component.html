@@ -1,0 +1,47 @@
+<div class="select-field" [style.width]="width ? 'max-content' : '100%'">
+    <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
+    <div class="name" *ngIf="name">{{ name }}</div>
+
+    <div class="container"  [class.open-left]="isOverlayOpen" [class.open-right]="isOverlayOpen && !enableClear" [style.width]="width">
+        <div class="select"
+             mat-ripple
+             [matRippleDisabled]="disabled"
+             (click)="disabled || toggleOverlay()"
+             cdkOverlayOrigin
+             #overlayContent
+             #outletContent="cdkOverlayOrigin"
+        >
+            <div class="selected-value-wrapper" [class.value-disabled]="!disabled">
+                <div *ngIf="!item" class="selected-value"> {{ default }} </div>
+                <div *ngIf="item" class="selected-value">{{ item.name | translate }}</div>
+            </div>
+
+            <div *ngIf="!disabled" class="dropdown">
+                <mat-icon>{{ isOverlayOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon>
+            </div>
+        </div>
+
+        <div *ngIf="enableClear" class="clear-input" mat-ripple (click)="clear()">
+            <mat-icon>close</mat-icon>
+        </div>
+    </div>
+
+    <div class="hint" *ngIf="hint">{{ hint }}</div>
+    <div class="suffix" *ngIf="suffix">{{ suffix }}</div>
+</div>
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="outletContent"
+    [cdkConnectedOverlayOpen]="isOverlayOpen"
+    [cdkConnectedOverlayWidth]="overlayWidth + 'px'"
+    (overlayOutsideClick)="toggleOverlay(); $event.stopPropagation()"
+>
+    <div class="overlay" [style.width]="overlayWidth + 'px'">
+        <div class="items" *ngFor="let item of _items" (click)="selectItem(item)">
+            <div class="item" mat-ripple>
+                <span class="text">{{ item.name | translate }}</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
