@@ -7,6 +7,7 @@
         }
     },
     "require": {
+        "mpdf/mpdf": "^8.0",
         "ramsey/uuid": "^4.2",
         "moneyphp/money": "^3.3",
         "guzzlehttp/guzzle": "^7.4",
