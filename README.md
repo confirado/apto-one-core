@@ -2,6 +2,14 @@
     <img width="250" src="https://www.confirado.de/files/images/confirado/logos/Apto.ONE/logo_apto_blau_gr%C3%BCn.png">
 </a></p>
 
+## Apto.ONE is build up of the following components:
+
+- Backend (PHP + Symfony)
+- Administration Frontend (AngularJS, AngularJS Material)
+- End-User Frontend (Angular 14+)
+
+You can find our Documentation here: https://docs.apto.one
+
 ## Installation
 
 add the following lines to your config/bundles.php file
