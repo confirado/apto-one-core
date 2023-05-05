@@ -368,9 +368,9 @@ class TemplateLoader
                 'version' => $package['version']
             ];
 
-            if (substr($currentPackage['name'], 0, 5) === "apto-one/") {
+            if (substr($currentPackage['name'], 0, 9) === "apto-one/") {
                 $versions['core'][] = $currentPackage;
-            } else if (substr($currentPackage['name'], 0, 12) === "apto-one-plugin/") {
+            } else if (substr($currentPackage['name'], 0, 16) === "apto-one-plugin/") {
                 $versions['plugins'][] = $currentPackage;
             }
         }
