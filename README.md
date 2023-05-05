@@ -1,5 +1,9 @@
-Installation
-========================
+<p align='center'><a href="https://apto.one/" target="_blank" rel="noopener noreferrer">
+    <img width="250" src="https://www.confirado.de/files/images/confirado/logos/Apto.ONE/logo_apto_blau_gr%C3%BCn.png">
+</a></p>
+
+## Installation
+
 add the following lines to your config/bundles.php file
 
     Apto\Base\Infrastructure\AptoBaseBundle\AptoBaseBundle::class => ['all' => true],
