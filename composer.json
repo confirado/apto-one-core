@@ -7,6 +7,8 @@
         }
     },
     "require": {
+        "ramsey/uuid": "^4.2",
+        "moneyphp/money": "^3.3",
         "guzzlehttp/guzzle": "^7.4",
         "langleyfoxall/math_eval": "~2.0.0",
         "scienta/doctrine-json-functions": "~5.0.0"
