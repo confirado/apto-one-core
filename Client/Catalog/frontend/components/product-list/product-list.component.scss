@@ -3,6 +3,9 @@
 .image {
 	padding-top: 10px;
 	height: 210px;
+    display: flex;
+    align-items: center;
+    flex: none;
 	img {
 		max-height: 200px;
 		max-width: 250px;
