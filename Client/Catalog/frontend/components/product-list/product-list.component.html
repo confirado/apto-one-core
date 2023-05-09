@@ -8,7 +8,7 @@
             <h3>
 				{{ product.name | translate }}
 			</h3>
-            <div [innerHTML]="product.description | translate | safeHtml"></div>
+            <div *ngIf="(product.description | translate) !== '' " [innerHTML]="product.description | translate | safeHtml"></div>
             <button mat-flat-button color="primary" [routerLink]="['/product', product.seoUrl ?? product.id]">Konfigurieren</button>
         </div>
 	</div>
