@@ -26,6 +26,7 @@
 
 .product {
 	width: 310px;
+    max-height: 600px;
 	background-color: white;
 	border-radius: var(--border-radius-card);
 	display: flex;
@@ -51,6 +52,8 @@
 		color: var(--color-text);
         display: flex;
         flex-grow: 1;
+        max-height: 200px;
+        overflow: auto;
 	}
 	h3 {
 		color: var(--color-title);
