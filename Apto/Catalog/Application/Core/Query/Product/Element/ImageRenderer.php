@@ -2,10 +2,7 @@
 
 namespace Apto\Catalog\Application\Core\Query\Product\Element;
 
-use Apto\Base\Domain\Core\Model\FileSystem\Exception\FileNotCreatableException;
-use Apto\Base\Domain\Core\Model\FileSystem\Exception\FileNotRemovableException;
-use Apto\Base\Domain\Core\Model\FileSystem\Exception\FilePermissionSetFailedException;
-use Apto\Base\Domain\Core\Model\FileSystem\Exception\FileSystemMountedReadOnlyException;
+use Apto\Base\Domain\Core\Model\FileSystem\File\File;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 
 interface ImageRenderer
@@ -20,6 +17,16 @@ interface ImageRenderer
      * @return string
      */
     public function getImageByImageList(array $imageList, string $perspective, State $state, bool $createThumb = false, bool $returnUrl = true, string $productId = null): string;
+
+    /**
+     * @param array $imageList
+     * @param string $perspective
+     * @param State $state
+     * @param bool $createThumb
+     * @param string|null $productId
+     * @return File|null
+     */
+    public function getImageFileByImageList(array $imageList, string $perspective, State $state, bool $createThumb = false, string $productId = null): ?File;
 
     /**
      * @param array $imageList
