@@ -5,5 +5,5 @@
 		</div>
 	</div>
 	<div class="paymentOptions"><img [src]="mediaUrl + (contentSnippetPayment$ | async | contentSnippet: 'paymentImage')" /></div>
-	<div *ngIf="contentSnippetFooterInfo$ | async | contentSnippet: 'copyright'" class="copyright"> {{ currentYear }} {{ contentSnippetFooterInfo$ | async | contentSnippet: 'copyright' }} </div>
+	<div *ngIf="contentSnippetFooterInfo$ | async | contentSnippet: 'copyright'" class="copyright">Copyright © {{ currentYear }} {{ contentSnippetFooterInfo$ | async | contentSnippet: 'copyright' }} </div>
 </mat-toolbar>
