@@ -30,6 +30,7 @@ export enum ConfigurationActionTypes {
 	HumanReadableStateLoadSuccess = '[HumanReadableState] Load success',
 	AddGuestConfiguration = '[Configuration] Add guest configuration',
 	AddGuestConfigurationSuccess = '[Configuration] Add guest configuration success',
+  SetHideOnePage = '[OnePage] Hide One Page',
 	OnError = '[Configuration] Error',
 }
 
@@ -146,5 +147,7 @@ export const addGuestConfiguration = createAction(
 );
 
 export const addGuestConfigurationSuccess = createAction(ConfigurationActionTypes.AddGuestConfigurationSuccess);
+
+export const setHideOnePage = createAction(ConfigurationActionTypes.SetHideOnePage, props<{ payload: boolean }>());
 
 export const onError = createAction(ConfigurationActionTypes.OnError, props<{ message: MessageBusResponseMessage }>());

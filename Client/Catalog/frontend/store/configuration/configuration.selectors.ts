@@ -7,6 +7,10 @@ import { Element, Section } from '../product/product.model';
 
 export const selectConfiguration = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration);
 
+export const selectHideOnePage = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.hideOnePage);
+
+export const selectConfigurationLoading = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.loading);
+
 export const selectProduct = createSelector(featureSelector, (state: CatalogFeatureState) => state.product);
 
 function getDescription(section: Section, state: CatalogFeatureState, locale: string | null): string {
@@ -140,6 +144,22 @@ export const selectRenderImage = createSelector(featureSelector, (state: Catalog
 
 	return currentRenderImage;
 });
+
+export const selectRenderImageByPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImage | null => {
+    let currentRenderImage: RenderImage | null = null;
+
+    // search current render image
+    state.configuration.renderImages.every((renderImage) => {
+      if (renderImage.perspective === perspective) {
+        currentRenderImage = renderImage;
+        return false;
+      }
+      return true;
+    });
+
+    return currentRenderImage;
+  }
+);
 
 export const selectSumPrice = createSelector(featureSelector, (state: CatalogFeatureState) => {
 	if (state.configuration.statePrice === null) {
