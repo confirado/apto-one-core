@@ -52,7 +52,7 @@
 		color: var(--color-text);
         display: flex;
         flex-grow: 1;
-        max-height: 200px;
+        max-height: 193px;
         overflow: auto;
 	}
 	h3 {
@@ -70,11 +70,14 @@
     }
 }
 
-.missing-image {
-	background-color: var(--color-accent);
-	border-radius: var(--border-radius-card);
-	height: 200px;
-	width: 250px;
+.image.no-image {
+    height: 0;
+    + .product-description {
+        border: none;
+        > div {
+            max-height: 395px;
+        }
+    }
 }
 
 ::-webkit-scrollbar {

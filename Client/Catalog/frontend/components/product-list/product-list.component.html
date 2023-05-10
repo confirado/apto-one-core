@@ -1,8 +1,7 @@
 <div class="product-list">
 	<div class="product" *ngFor="let product of productList$ | async" [routerLink]="['/product', product.seoUrl]">
-		<div class="image">
+		<div class="image"[ngClass]="{'no-image': !product.previewImage}">
 			<img *ngIf="product.previewImage" [src]="product.previewImage" />
-			<div *ngIf="!product.previewImage" class="missing-image"></div>
 		</div>
 		<div class="product-description">
             <h3>
