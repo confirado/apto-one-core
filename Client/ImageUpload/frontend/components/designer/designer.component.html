@@ -1,0 +1,30 @@
+<ng-container *ngIf="canvas">
+    <div class="designer">
+        <div class="left">
+            <pre>{{ canvasStyle | json }}</pre>
+        </div>
+        <div #htmlMiddle (resized)="onResizedMiddle($event)" class="middle">
+            <img #htmlRenderImage (resized)="onResizedBackground($event)" [src]='canvas.element.renderImage.url'>
+            <div class="designer-canvas-container" [ngStyle]="canvasStyle">
+                <canvas
+                    #htmlCanvas
+                    id="designer-fabric-canvas"
+                    [width]="canvasWidth"
+                    [height]="canvasHeight"
+                ></canvas>
+                <div
+                    id="print-area"
+                    [ngStyle]="{ width: printArea.width + 'px', height: printArea.height + 'px', left: printArea.left + 'px', top: printArea.top + 'px' }"
+                ></div>
+            </div>
+        </div>
+        <div class="right">
+            right
+        </div>
+    </div>
+
+    <div class="designer-actions">
+        <button color="accent" mat-flat-button (click)="cancel()">Verwerfen</button>
+        <button color="primary" mat-flat-button (click)="finish()">Übernehmen</button>
+    </div>
+</ng-container>

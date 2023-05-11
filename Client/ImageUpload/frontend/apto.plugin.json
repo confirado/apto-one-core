@@ -1,0 +1,11 @@
+{
+	"id": "apto-image-upload-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoImageUploadFrontendModule",
+			"file": "apto-image-upload-frontend.module.ts"
+		}
+	]
+}

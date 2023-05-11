@@ -1,0 +1,16 @@
+<ng-container *ngIf="element && element.element.name && product"
+              [class.step-by-step]="product.useStepByStep"
+              [class.one-page]="!product.useStepByStep"
+>
+    <div class="container" (click)="hideOnePage()">
+        <div class="single-element">
+            <div [class.selected]="element.state.active">
+                <div *ngIf="element.state.active" [class.selected]="element.state.active" class="circle"><mat-icon>done</mat-icon></div>
+                <div class="element-img"><img [src]="element.element.previewImage" /></div>
+            </div>
+        </div>
+        <div class="element-name">
+            <p>{{ element.element.name | translate }}</p>
+        </div>
+    </div>
+</ng-container>
