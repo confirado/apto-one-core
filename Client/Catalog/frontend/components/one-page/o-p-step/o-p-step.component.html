@@ -4,7 +4,7 @@
             <div>
                 <mat-panel-title>
                     {{ section.section.name | translate }}
-                    <div *ngIf="section.fulfilled" [class.selected]="section.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
+                    <div *ngIf="section.fulfilled && section.active" [class.selected]="section.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
                 </mat-panel-title>
             </div>
         </mat-expansion-panel-header>
