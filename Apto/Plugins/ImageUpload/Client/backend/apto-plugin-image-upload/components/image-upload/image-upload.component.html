@@ -1,0 +1,343 @@
+<div style="padding: 8px 16px 0 16px;">
+    <div layout="row" layout-align="start" flex>
+        <md-input-container flex>
+            <label>Druckbereich:</label>
+            <md-select ng-model="$ctrl.values.canvas.source">
+                <md-option ng-value="source" ng-repeat="source in $ctrl.canvasSources">{{ source }}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+    <div layout="row" layout-align="start" flex ng-if="$ctrl.values.canvas.source === 'Global'">
+        <md-autocomplete
+                flex
+                required="required"
+                md-floating-label="Druckbereich:"
+                md-require-match="true"
+                md-selected-item="$ctrl.selectedCanvas"
+                md-search-text="$ctrl.canvasSearchTerm"
+                md-item-text="canvas.identifier"
+                md-items="canvas in $ctrl.canvasIds | filter:$ctrl.canvasSearchTerm"
+                md-no-cache="true"
+                md-clear-button="true"
+                md-selected-item-change="$ctrl.onSelectCanvas(canvas)"
+        >
+            <md-item-template>
+                <span md-highlight-text="$ctrl.canvasSearchTerm">{{ canvas.identifier }}</span>
+            </md-item-template>
+            <md-not-found>
+                Kein Druckbereich gefunden.
+            </md-not-found>
+        </md-autocomplete>
+    </div>
+</div>
+
+<!-- @deprecated local canvas settings -->
+<md-tabs md-dynamic-height md-border-bottom ng-if="$ctrl.values.canvas.source === 'Element'">
+    <md-tab label="Bilderupload">
+        <div class="apto-tab-content">
+            <h4>Upload</h4>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.user.active" aria-label="Aktiv">
+                        Aktiv
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Maximale Dateigröße (MB):</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.user.maxFileSize">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Default Größe (px):</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.user.previewSize">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Minimale Breite (px):</label>
+                    <input required type="number" min="0" step="1" ng-model="$ctrl.values.user.minWidth">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Minimale Höhe (px):</label>
+                    <input required type="number" min="0" step="1" ng-model="$ctrl.values.user.minHeight">
+                </md-input-container>
+            </div>
+
+            <h4>Dateitypen</h4>
+            <div layout="row"  layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Dateityp (z.B.: jpg)</label>
+                    <input type="text" ng-model="$ctrl.newAllowedFileType">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button style="margin: 0;" ng-disabled="$ctrl.allowedFileTypeIsDuplicate($ctrl.newAllowedFileType) || !$ctrl.newAllowedFileType" class="md-raised md-primary md-cornered" ng-click="$ctrl.addAllowedFileTypeValue()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Erlaubte Dateitypen</th>
+                        <th md-column style="width: 5%;" ></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="file in $ctrl.values.user.allowedFileTypes">
+                        <td md-cell>{{ file }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeAllowedFileTypeValue($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+
+    <md-tab label="Text">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.text.active" aria-label="Aktiv">
+                        Aktiv
+                    </md-checkbox>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.text.multiline" aria-label="Aktiv">
+                        Mehrzeilig
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Text:</label>
+                    <input type="text" ng-model="$ctrl.values.text.default">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Schriftgröße:</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.text.fontSize">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Textausrichtung:</label>
+                    <input type="text" ng-model="$ctrl.values.text.textAlign">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Farbe:</label>
+                    <input type="text" ng-model="$ctrl.values.text.fill">
+                </md-input-container>
+            </div>
+
+            <h4>Schriftart hinzufügen</h4>
+            <div layout="row"  layout-align="start" flex>
+                <apto-media-select on-select-file="$ctrl.onSelectNewFont(path)" label="'Pfad'" path="$ctrl.newFont.file" required="false" flex></apto-media-select>
+                <div flex="5"></div>
+                <md-input-container flex="10">
+                    <label>Schriftartname</label>
+                    <input ng-model="$ctrl.newFont.name">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button ng-disabled="!$ctrl.newFont.file || !$ctrl.newFont.name|| $ctrl.newFontIsDuplicate() || !$ctrl.newFontFileTypeIsAllowed()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addNewFont()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+
+            <md-table-container>
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Aktiv</th>
+                        <th md-column>Default</th>
+                        <th md-column>Schriftartname</th>
+                        <th md-column>Schriftart-Datei</th>
+                        <th md-column>3D-Schrift</th>
+                        <th md-column style="width: 5%;" ></th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="font in $ctrl.values.text.fonts">
+                        <td md-cell style="width:7%;">
+                            <md-input-container flex>
+                                <md-checkbox ng-change="$ctrl.setFontIsActive($index, font.isActive)" ng-model="font.isActive" aria-label="Aktiv"></md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td md-cell style="width:7%;">
+                            <md-input-container flex>
+                                <md-checkbox ng-change="$ctrl.setDefaultFont($index)" ng-model="font.isDefault" aria-label="Default"></md-checkbox>
+                            </md-input-container>
+                        </td>
+                        <td md-cell>{{ font.name }}</td>
+                        <td md-cell>{{ font.file }}</td>
+                        <td md-cell style="width: 5%;" >
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    ng-click="$ctrl.removeFont($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+    <md-tab label="Hintergrund">
+        <div class="apto-tab-content">
+            <h3>Produktbild</h3>
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Breite (px):</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.background.width">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Höhe (px):</label>
+                    <input type="number" min="1" step="1" ng-model="$ctrl.values.background.height">
+                </md-input-container>
+            </div>
+
+            <h3>Bearbeitungsbereich</h3>
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Breite (px):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.values.background.area.width">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Höhe (px):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.values.background.area.height">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Abstand links (px):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.values.background.area.left">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Abstand oben (px):</label>
+                    <input type="number" min="0" step="1" ng-model="$ctrl.values.background.area.top">
+                </md-input-container>
+            </div>
+
+            <h3>Render Image</h3>
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Perspective:</label>
+                    <input type="text" ng-model="$ctrl.values.background.perspective">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Layer:</label>
+                    <input type="text" ng-model="$ctrl.values.background.layer">
+                </md-input-container>
+            </div>
+
+            <p ng-if="false" style="margin-top: 0;">Bearbeitungshintergrund:</p>
+            <div ng-if="false" layout="row" layout-align="start" flex>
+                <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">
+                    <apto-media-icon ng-if="$ctrl.values.background.image" style="display: block;" file="{ path: $ctrl.values.background.image }" size="128x128"></apto-media-icon>
+                </div>
+                <div flex="5"></div>
+                <apto-media-select on-select-file="$ctrl.onSelectPreviewImage(path)" label="'Pfad'" path="$ctrl.values.background.image" required="false" flex></apto-media-select>
+            </div>
+        </div>
+    </md-tab>
+    <md-tab label="Preisaufschlag">
+        <div class="apto-tab-content">
+            <h4>Preisaufschlag</h4>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.user.useSurchargeAsReplacement" aria-label="Aktiv">
+                        höchsten Preis verwenden
+                    </md-checkbox>
+                </md-input-container>
+            </div>
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Preis:</label>
+                    <input ng-model="$ctrl.newPrice.amount">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Währung:</label>
+                    <input  minlength="3" maxlength="3" ng-model="$ctrl.newPrice.currencyCode">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Kundengruppe:</label>
+                    <md-select ng-model="$ctrl.newPrice.customerGroupId">
+                        <md-option ng-value="group.id" ng-repeat="group in $ctrl.availableCustomerGroups">{{ group.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Bild / Text:</label>
+                    <md-select ng-model="$ctrl.newPrice.type">
+                        <md-option ng-value="type" ng-repeat="type in $ctrl.priceTypes">{{ type }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container>
+                    <md-button ng-disabled="!$ctrl.newPrice.amount || !$ctrl.newPrice.currencyCode || !$ctrl.newPrice.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addSurchargePrice()">Hinzufügen</md-button>
+                </md-input-container>
+            </div>
+            <div>
+            </div>
+            <md-table-container class="md-whiteframe-2dp">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column>Preis</th>
+                        <th md-column>Währung</th>
+                        <th md-column>Kundengruppe</th>
+                        <th md-column>Bild/Text</th>
+                        <th md-column style="width:5%;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="price in $ctrl.values.user.surchargePrices">
+                        <td md-cell>{{price.amount}}</td>
+                        <td md-cell>{{price.currencyCode}}</td>
+                        <td md-cell>
+                            <apto-customer-group-name customer-group-id="price.customerGroupId" available-customer-groups="$ctrl.availableCustomerGroups"></apto-customer-group-name>
+                        </td>
+                        <td md-cell>{{price.type}}</td>
+                        <td md-cell style="width: 5%;">
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    apto-confirm-remove="$ctrl.removePrice($index)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-tab>
+</md-tabs>

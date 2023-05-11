@@ -1,0 +1,69 @@
+<h4>Upload</h4>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.imageSettings.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Maximale Dateigröße (MB):</label>
+        <input type="number" min="1" step="1" ng-model="detail.imageSettings.maxFileSize">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Default Größe (px):</label>
+        <input type="number" min="1" step="1" ng-model="detail.imageSettings.previewSize">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Minimale Breite (px):</label>
+        <input required type="number" min="0" step="1" ng-model="detail.imageSettings.minWidth">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Minimale Höhe (px):</label>
+        <input required type="number" min="0" step="1" ng-model="detail.imageSettings.minHeight">
+    </md-input-container>
+</div>
+
+<h4>Dateitypen</h4>
+<div layout="row"  layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Dateityp (z.B.: jpg)</label>
+        <input type="text" ng-model="newAllowedFileType.value">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button style="margin: 0;" ng-disabled="allowedFileTypeIsDuplicate(newAllowedFileType.value) || !newAllowedFileType.value" class="md-raised md-primary md-cornered" ng-click="addAllowedFileTypeValue()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container>
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Erlaubte Dateitypen</th>
+            <th md-column style="width: 5%;" ></th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="file in detail.imageSettings.allowedFileTypes">
+            <td md-cell>{{ file }}</td>
+            <td md-cell style="width: 5%;" >
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        ng-click="removeAllowedFileTypeValue($index)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

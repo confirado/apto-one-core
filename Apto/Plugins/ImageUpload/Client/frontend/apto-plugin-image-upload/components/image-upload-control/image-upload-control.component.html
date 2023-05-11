@@ -1,0 +1,12 @@
+<div class="image-upload-control-container" ng-if="$ctrl.state.editable">
+    <img ng-if="$ctrl.state.background" ng-src="{{ $ctrl.mediaUrl + $ctrl.state.background }}" class="preview-background render-image" />
+    <canvas
+            id="image-upload-canvas"
+            apto-fabric-canvas
+            fabric-options="$ctrl.options"
+            fabric-adapt-dimensions="'apto-slider .render-image'"
+            on-canvas-created="$ctrl.onCanvasCreated(canvas)"
+            on-canvas-destroyed="$ctrl.onCanvasDestroyed(canvas)"
+    ></canvas>
+    <div id="print-area"></div>
+</div>

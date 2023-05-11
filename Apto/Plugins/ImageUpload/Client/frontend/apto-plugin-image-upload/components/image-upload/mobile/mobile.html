@@ -1,0 +1,21 @@
+<!-- mobile upload -->
+<article
+        ng-if="!$ctrl.reduxProps.useStepByStep && $ctrl.staticValues.user.active"
+        class="default-element tool-tip-container"
+        ng-click="$ctrl.toggleShowMobile('image')"
+>
+    <div class="image-upload-mobile-show-icon">
+        <i class="fa fa-picture-o" aria-hidden="true"></i>
+    </div>
+</article>
+
+<!-- mobile text -->
+<article
+        ng-if="!$ctrl.reduxProps.useStepByStep && $ctrl.staticValues.text.active"
+        class="default-element tool-tip-container"
+        ng-click="$ctrl.toggleShowMobile('text')"
+>
+    <div class="image-upload-mobile-show-icon">
+        <i class="fa fa-font" aria-hidden="true"></i>
+    </div>
+</article>

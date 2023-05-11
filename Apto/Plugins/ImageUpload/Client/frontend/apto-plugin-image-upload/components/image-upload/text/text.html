@@ -1,0 +1,125 @@
+<!-- mobile close --->
+<div class="object-action-item-mobile-close object-action-item-wrapper">
+    <button
+            title="Schließen"
+            class="object-action-item"
+            ng-click="$ctrl.toggleShowMobile('text')"
+    ></button>
+    <i class="fa fa-times" aria-hidden="true"></i>
+</div>
+
+<!-- text -->
+<div>Texteingabe</div>
+
+<div class="input-text-fields">
+    <div class="input-container input-text-container">
+        <input
+                ng-if="!$ctrl.staticValues.text.multiline"
+                class="input-text"
+                ng-disabled="!$ctrl.reduxProps.editable"
+                ng-model="$ctrl.input.userText.text" ng-change="$ctrl.updateUserText()"
+        />
+
+        <textarea
+                ng-if="$ctrl.staticValues.text.multiline"
+                rows="2"
+                class="input-text"
+                ng-disabled="!$ctrl.reduxProps.editable"
+                ng-model="$ctrl.input.userText.text" ng-change="$ctrl.updateUserText()"
+                ng-style="{'text-align': $ctrl.reduxProps.userText.textAlign}"
+        ></textarea>
+        <div>Schriftart</div>
+        <label class="select-container select-no-top-margin">
+            <select
+                    ng-change="$ctrl.fontChanged()"
+                    ng-model="$ctrl.selectedFont"
+                    ng-disabled="!$ctrl.reduxProps.editable"
+                    ng-options="font as font.family for font in $ctrl.fonts track by font.family"
+            ></select>
+        </label>
+    </div>
+
+    <!-- add -->
+    <div class="object-action-item-add object-action-item-wrapper">
+        <button
+                title="Hinzufügen"
+                class="object-action-item"
+                ng-click="$ctrl.onAddText()"
+                ng-disabled="!$ctrl.reduxProps.editable"
+        ></button>
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </div>
+</div>
+
+<div class="object-actions-container">
+    <div class="object-action-item-wrapper">
+        <button
+                title="Zentrieren"
+                class="object-action-item"
+                ng-click="$ctrl.centerElement()"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-arrows" aria-hidden="true"></i>
+    </div>
+    <div class="object-action-item-wrapper">
+        <button
+                title="Zentrieren"
+                class="object-action-item"
+                ng-click="$ctrl.scaleToFitHandler()"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+    </div>
+
+    <!-- color -->
+    <div class="object-action-item-wrapper">
+        <input
+            title="Farbe wählen"
+            class="object-action-item input-color"
+            readonly="readonly"
+            apto-color-picker
+            color-picker-color="$ctrl.input.userText.fill"
+            on-color-selected="$ctrl.onUserTextColorSelected(color)"
+            ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        />
+        <i class="fa fa-paint-brush" aria-hidden="true"></i>
+    </div>
+
+    <!-- text align -->
+    <div class="object-action-item-wrapper" ng-if="$ctrl.staticValues.text.multiline">
+        <button
+                title="Linksbündig"
+                class="object-action-item"
+                ng-click="$ctrl.alignText('left')"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-align-left" aria-hidden="true"></i>
+    </div>
+    <div class="object-action-item-wrapper" ng-if="$ctrl.staticValues.text.multiline">
+        <button
+                title="Mittig"
+                class="object-action-item"
+                ng-click="$ctrl.alignText('center')"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-align-center" aria-hidden="true"></i>
+    </div>
+    <div class="object-action-item-wrapper" ng-if="$ctrl.staticValues.text.multiline">
+        <button
+                title="Rechtsbündig"
+                class="object-action-item"
+                ng-click="$ctrl.alignText('right')"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-align-right" aria-hidden="true"></i>
+    </div>
+    <div class="object-action-item-wrapper" ng-if="$ctrl.staticValues.text.multiline">
+        <button
+                title="Blocksatz"
+                class="object-action-item"
+                ng-click="$ctrl.alignText('justify')"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'text'"
+        ></button>
+        <i class="fa fa-align-justify" aria-hidden="true"></i>
+    </div>
+</div>

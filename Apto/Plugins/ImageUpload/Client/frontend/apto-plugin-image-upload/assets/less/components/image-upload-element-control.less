@@ -1,0 +1,77 @@
+apto-image-upload-element-control {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  #print-area {
+    content: "";
+    background: red;
+    position: absolute;
+    display: block;
+    border: 2px dashed white;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.3;
+  }
+
+  .canvas-container {
+    z-index: 2;
+  }
+
+  #image-upload-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .image-upload-control-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .image-upload-file {
+    width: 100%;
+    height: 10rem;
+    background: red;
+  }
+
+  .image-upload-drag-resize {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 2rem;
+    height: 2rem;
+    cursor: se-resize;
+    background: rgba(194,162,111,0.5);
+
+    &:before {
+      position: absolute;
+      left: 1px;
+      top: 1px;
+      width: 2rem;
+      height: 2rem;
+      line-height: 2rem;
+      font-size: 20px;
+      font-family: FontAwesome;
+      content: '\f065';
+      -webkit-transform: rotate(90deg);
+      transform: rotate(90deg);
+      text-align: center;
+      color: rgba(255,255,255,0.75);;
+    }
+  }
+
+  #image-upload:hover {
+    .image-upload-drag-resize {
+      display: block;
+    }
+  }
+}

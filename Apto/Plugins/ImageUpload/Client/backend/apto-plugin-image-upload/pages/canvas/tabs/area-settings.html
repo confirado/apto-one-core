@@ -1,0 +1,57 @@
+<h3>Produktbild</h3>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Breite (px):</label>
+        <input type="number" min="1" step="1" ng-model="detail.areaSettings.width">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Höhe (px):</label>
+        <input type="number" min="1" step="1" ng-model="detail.areaSettings.height">
+    </md-input-container>
+</div>
+
+<h3>Bearbeitungsbereich</h3>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Breite (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.width">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Höhe (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.height">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Abstand links (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.left">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Abstand oben (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.top">
+    </md-input-container>
+</div>
+
+<h3>Render Image</h3>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Perspective:</label>
+        <input type="text" ng-model="detail.areaSettings.perspective">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Layer:</label>
+        <input type="text" ng-model="detail.areaSettings.layer">
+    </md-input-container>
+</div>
+
+<p ng-if="false" style="margin-top: 0;">Bearbeitungshintergrund:</p>
+<div ng-if="false" layout="row" layout-align="start" flex>
+    <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">
+        <apto-media-icon ng-if="detail.areaSettings.image" style="display: block;" file="{ path: detail.areaSettings.image }" size="128x128"></apto-media-icon>
+    </div>
+    <div flex="5"></div>
+    <apto-media-select on-select-file="onSelectPreviewImage(path)" label="'Pfad'" path="detail.areaSettings.image" required="false" flex></apto-media-select>
+</div>

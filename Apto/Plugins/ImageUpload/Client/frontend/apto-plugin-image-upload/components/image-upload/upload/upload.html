@@ -1,0 +1,90 @@
+<!-- mobile close --->
+<div class="object-action-item-mobile-close object-action-item-wrapper">
+    <button
+            title="Schließen"
+            class="object-action-item"
+            ng-click="$ctrl.toggleShowMobile('image')"
+    ></button>
+    <i class="fa fa-times" aria-hidden="true"></i>
+</div>
+
+<!-- upload -->
+<div>Bildupload</div>
+
+<div class="image-upload-errors">
+    <div class="image-upload-error" ng-repeat="error in $ctrl.reduxProps.userImageUploadErrors">
+        <p ng-if="error.type === 'pattern'">
+            <span ng-bind-html="$ctrl.snippet('error.pattern')"></span> {{ $ctrl.allowedFileTypes }}
+        </p>
+        <p ng-if="error.type === 'maxSize'">
+            <span ng-bind-html="$ctrl.snippet('error.maxSize.prefix')"></span> {{ $ctrl.validate.size.max }} <span ng-bind-html="$ctrl.snippet('error.maxSize.suffix')"></span>
+        </p>
+        <p ng-if="error.type === 'minDimensions'">
+            <span ng-bind-html="$ctrl.snippet('error.minDimensions.prefix')"></span> {{ $ctrl.validate.width.min }} x {{ $ctrl.validate.height.min }} <span ng-bind-html="$ctrl.snippet('error.minDimensions.suffix')"></span>
+        </p>
+        <p ng-if="error.type === 'default'">
+            <span ng-bind-html="$ctrl.snippet('error.default')"></span>
+        </p>
+    </div>
+</div>
+
+<div class="image-upload-file"
+     ng-if="!$ctrl.reduxProps.userImage"
+     ng-disabled="!$ctrl.reduxProps.editable"
+     ng-class="{'disabled':!$ctrl.reduxProps.editable}"
+     ngf-select="$ctrl.onUserImageFileUpload($files, $invalidFiles)"
+     ngf-validate="$ctrl.validate"
+     ngf-validate-force="boolean"
+     ngf-fix-orientation="true"
+     ngf-drop="$ctrl.onUserImageFileUpload($files, $invalidFiles)"
+     ngf-drag-over-class="'dragover'"
+     ng-attr-accept="{{ $ctrl.allowedMimeTypes }}"
+>
+    <div class="image-upload-file-icon">
+        <i class="fa fa-upload" aria-hidden="true"></i>
+    </div>
+    <div class="image-upload-file-info" ng-bind-html="$ctrl.snippet('upload.dragover')"></div>
+</div>
+<div class="image-upload-preview" ng-if="$ctrl.reduxProps.userImage">
+    <img class="image-upload-preview-img" ng-src="{{ $ctrl.api.thumb + $ctrl.reduxProps.userImage.path + '_200x200.jpg' }}" />
+</div>
+
+<!--
+Needs styling to be used, maybe as dialog
+<div class="list-uploads" ng-if="$ctrl.reduxProps.userUploads.length > 0">
+    <hr class="option">
+    <div class="upload-item-container">
+        <div ng-repeat="uploadItem in $ctrl.reduxProps.userUploads"
+             class="upload-item"
+             ng-click="$ctrl.onAddImage(uploadItem)"
+        >
+            <div class="click-event-container"></div>
+            <img class="preview-image"
+                 apto-media-thumbnail="{{uploadItem.path}}"
+                 apto-media-thumbnail-size="120"/>
+        </div>
+    </div>
+    <hr class="option">
+</div>
+-->
+
+<div class="object-actions-container">
+    <div class="object-action-item-wrapper">
+        <button
+                title="Zentrieren"
+                class="object-action-item"
+                ng-click="$ctrl.centerElement()"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'image'"
+        ></button>
+        <i class="fa fa-arrows" aria-hidden="true"></i>
+    </div>
+    <div class="object-action-item-wrapper">
+        <button
+                title="Zentrieren"
+                class="object-action-item"
+                ng-click="$ctrl.scaleToFitHandler()"
+                ng-disabled="!$ctrl.reduxProps.editable || $ctrl.getSelectedItemType() !== 'image'"
+        ></button>
+        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+    </div>
+</div>

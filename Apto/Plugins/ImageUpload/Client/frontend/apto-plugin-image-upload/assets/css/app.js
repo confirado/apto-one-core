@@ -1,0 +1,1 @@
+require('../../libs/jquery-wheelcolorpicker-3.0.9/css/wheelcolorpicker.css');

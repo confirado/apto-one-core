@@ -1,0 +1,7 @@
+<div ng-repeat="poolItem in ngDialogData.poolItems">
+    <div class="preview-image" ng-click="ngDialogData.selectClipArt(ngDialogData.component, poolItem)">
+        <img ng-if="poolItem.material.previewImage"
+             apto-media-thumbnail="{{poolItem.material.previewImage.path}}"
+             apto-media-thumbnail-size="50"/>
+    </div>
+</div>

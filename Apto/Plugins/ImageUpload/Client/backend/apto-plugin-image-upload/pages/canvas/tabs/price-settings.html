@@ -1,0 +1,71 @@
+<h4>Preisaufschlag</h4>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.priceSettings.useSurchargeAsReplacement" aria-label="Aktiv">
+            höchsten Preis verwenden
+        </md-checkbox>
+    </md-input-container>
+</div>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Preis:</label>
+        <input ng-model="newPrice.amount">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Währung:</label>
+        <input  minlength="3" maxlength="3" ng-model="newPrice.currencyCode">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Kundengruppe:</label>
+        <md-select ng-model="newPrice.customerGroupId">
+            <md-option ng-value="group.id" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Bild / Text:</label>
+        <md-select ng-model="newPrice.type">
+            <md-option ng-value="type" ng-repeat="type in priceTypes">{{ type }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newPrice.amount || !newPrice.currencyCode || !newPrice.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addSurchargePrice()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+<div>
+</div>
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Preis</th>
+            <th md-column>Währung</th>
+            <th md-column>Kundengruppe</th>
+            <th md-column>Bild/Text</th>
+            <th md-column style="width:5%;">Actions</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="price in detail.priceSettings.surchargePrices">
+            <td md-cell>{{price.amount}}</td>
+            <td md-cell>{{price.currencyCode}}</td>
+            <td md-cell>
+                <apto-customer-group-name customer-group-id="price.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
+            </td>
+            <td md-cell>{{price.type}}</td>
+            <td md-cell style="width: 5%;">
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removePrice($index)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

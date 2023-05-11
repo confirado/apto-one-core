@@ -1,0 +1,58 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="detailForm">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3 class="title-headline">
+                    <span ng-class="'title-headline'">{{ detail.identifier }}</span>
+                </h3>
+                <span flex></span>
+                <span ng-class="'title-id'" style="font-size: 0.875rem">Id: {{ detail.id }}</span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container class="md-block" flex>
+                        <label>Kennung:</label>
+                        <input required ng-model="detail.identifier">
+                    </md-input-container>
+                </div>
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Bilder">
+                        <div class="apto-tab-content" ng-include="'plugins/image-upload/pages/canvas/tabs/image-settings.html'"></div>
+                    </md-tab>
+                    <md-tab label="Text">
+                        <div class="apto-tab-content" ng-include="'plugins/image-upload/pages/canvas/tabs/text-settings.html'"></div>
+                    </md-tab>
+                    <md-tab label="Druckbereich">
+                        <div class="apto-tab-content" ng-include="'plugins/image-upload/pages/canvas/tabs/area-settings.html'"></div>
+                    </md-tab>
+                    <md-tab label="Preisaufschlag">
+                        <div class="apto-tab-content" ng-include="'plugins/image-upload/pages/canvas/tabs/price-settings.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="detail.id" class="md-raised md-cornered" ng-click="save(detailForm, true)"
+                       type="submit">Speichern und schließen
+            </md-button>
+            <md-button ng-if="detail.id" class="md-raised md-primary md-cornered" ng-click="save(detailForm)"
+                       type="submit">Speichern
+            </md-button>
+
+            <md-button ng-if="!detail.id" class="md-raised md-cornered" ng-click="save(detailForm)"
+                       type="submit">Speichern und hinzufügen
+            </md-button>
+            <md-button ng-if="!detail.id" class="md-raised md-primary md-cornered"
+                       ng-click="save(detailForm, true)" type="submit">Speichern
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

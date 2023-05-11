@@ -1,0 +1,20 @@
+<section class="slider-container block">
+    <div class="slider-container-inner">
+        <!-- @todo make a spinner component -->
+        <div class="apto-spinner-container apto-spinner-render-image" ng-if="$ctrl.spinnerRenderImage" ng-style="$ctrl.spinnerRenderImage && {'display':'block'}" >
+            <div class="apto-spinner">
+                <div class="apto-spinner-icon"></div>
+            </div>
+        </div>
+
+        <!-- render image -->
+        <img class="render-image" ng-if="$ctrl.currentRenderImage" ng-src="{{$ctrl.currentRenderImage}}">
+        <a ng-if="$ctrl.currentRenderImage" class="render-image-zoom-button fa fa-search-plus" apto-fancybox-plus ng-href="{{$ctrl.currentRenderImage}}"></a>
+
+        <!-- image upload control -->
+        <apto-image-upload-element-control></apto-image-upload-element-control>
+
+        <!-- slider actions -->
+        <apto-slider-action ng-if="!$ctrl.editable"></apto-slider-action>
+    </div>
+</section>
