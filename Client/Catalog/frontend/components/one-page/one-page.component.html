@@ -2,7 +2,7 @@
 	<div class="one-page">
 		<div class="content">
 			<div class="render-img-menu">
-				<apto-o-p-full-screen
+				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !(renderImage$ | async)}"
 					[perspectives]="perspectives$ | async"
 					[renderImage]="renderImage$ | async"
 					[product]="product"
