@@ -38,6 +38,23 @@
     </md-input-container>
 </div>
 
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>OffsetX (px):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.left">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>OffsetX (px):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.top">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>Radius (px, 0 = keine Biegung):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.radius">
+    </md-input-container>
+</div>
+
 <h4>Schriftart hinzufügen</h4>
 <div layout="row"  layout-align="start" flex>
     <apto-media-select on-select-file="onSelectNewFont(path)" label="'Pfad'" path="newFont.file" required="false" flex></apto-media-select>

@@ -150,6 +150,23 @@
                 </md-input-container>
             </div>
 
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>OffsetX (px):</label>
+                    <input type="text" ng-model="$ctrl.values.text.left">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>OffsetX (px):</label>
+                    <input type="text" ng-model="$ctrl.values.text.top">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container class="md-block" flex>
+                    <label>Radius (px, 0 = keine Biegung):</label>
+                    <input type="text" ng-model="$ctrl.values.text.radius">
+                </md-input-container>
+            </div>
+
             <h4>Schriftart hinzufügen</h4>
             <div layout="row"  layout-align="start" flex>
                 <apto-media-select on-select-file="$ctrl.onSelectNewFont(path)" label="'Pfad'" path="$ctrl.newFont.file" required="false" flex></apto-media-select>
@@ -206,19 +223,6 @@
     </md-tab>
     <md-tab label="Hintergrund">
         <div class="apto-tab-content">
-            <h3>Produktbild</h3>
-            <div layout="row" layout-align="start" flex>
-                <md-input-container flex>
-                    <label>Breite (px):</label>
-                    <input type="number" min="1" step="1" ng-model="$ctrl.values.background.width">
-                </md-input-container>
-                <div flex="5"></div>
-                <md-input-container flex>
-                    <label>Höhe (px):</label>
-                    <input type="number" min="1" step="1" ng-model="$ctrl.values.background.height">
-                </md-input-container>
-            </div>
-
             <h3>Bearbeitungsbereich</h3>
             <div layout="row" layout-align="start" flex>
                 <md-input-container flex>

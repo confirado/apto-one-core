@@ -58,6 +58,9 @@ class ImageUploadController {
                 default: 'Mein Text!',
                 fontSize: 25,
                 textAlign: 'center',
+                left: 0,
+                top: 0,
+                radius: 0,
                 fill: '#ffffff',
                 multiline: false,
                 fonts: []
