@@ -2,10 +2,10 @@
 
 namespace Apto\Plugins\ImageUpload\Infrastructure\ImageUploadBundle\MessageBus\QueryHandler\Core;
 
-use Apto\Plugins\ImageUpload\Application\Core\Query\Canvas\CanvasQueryHandler;
+use Apto\Plugins\ImageUpload\Application\Core\Query\RenderImage\RenderImageQueryHandler;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 
-class Canvas extends CanvasQueryHandler implements MessageSubscriberInterface
+class RenderImage extends RenderImageQueryHandler implements MessageSubscriberInterface
 {
 
 }

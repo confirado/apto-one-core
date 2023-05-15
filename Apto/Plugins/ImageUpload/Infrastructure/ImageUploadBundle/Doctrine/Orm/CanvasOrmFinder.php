@@ -7,7 +7,7 @@ use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AptoOrmFinder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlPaginatorBuilder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlQueryBuilder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
-use Apto\Plugins\ImageUpload\Application\Core\Query\CanvasFinder;
+use Apto\Plugins\ImageUpload\Application\Core\Query\Canvas\CanvasFinder;
 use Apto\Plugins\ImageUpload\Domain\Core\Model\Canvas\Canvas;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;

@@ -6,7 +6,7 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Application\Core\Service\ElementDefinitionRegistry\ElementStaticValuesProvider;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
-use Apto\Plugins\ImageUpload\Application\Core\Query\CanvasFinder;
+use Apto\Plugins\ImageUpload\Application\Core\Query\Canvas\CanvasFinder;
 use Apto\Plugins\ImageUpload\Domain\Core\Model\Product\Element\ImageUploadDefinition;
 use Apto\Plugins\ImageUpload\Domain\Core\Model\Service\Converter\MimeTypeExtensionConverter;
 

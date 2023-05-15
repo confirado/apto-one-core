@@ -1,6 +1,6 @@
 <?php
 
-namespace Apto\Plugins\ImageUpload\Application\Core\Query;
+namespace Apto\Plugins\ImageUpload\Application\Core\Query\ImageMetaData;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;

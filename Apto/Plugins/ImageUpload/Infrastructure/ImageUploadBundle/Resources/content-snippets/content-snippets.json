@@ -26,20 +26,31 @@
         }
       },
       "upload": {
-        "cancel": {
-          "de_DE": "Abbrechen"
-        },
         "dragover": {
           "de_DE": "Datei-Upload via Drag'n'Drop oder Klick"
         },
         "edit": {
           "de_DE": "Bearbeiten"
         },
+        "cancel": {
+          "de_DE": "Verwerfen"
+        },
+        "cancelMessage": {
+          "de_DE": "Deine aktuellen Änderungen werden verworfen."
+        },
         "reset": {
-          "de_DE": "Löschen"
+          "de_DE": "Zurücksetzen"
+        },
+        "resetMessage": {
+          "de_DE": "Dein komplettes Design wird gelöscht."
         },
         "save": {
-          "de_DE": "Speichern"
+          "de_DE": "Übernehmen"
+        }
+      },
+      "text": {
+        "label": {
+          "de_DE": "Texteingabe:"
         }
       }
     }
