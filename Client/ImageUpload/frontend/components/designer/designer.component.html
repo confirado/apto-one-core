@@ -1,10 +1,9 @@
 <ng-container *ngIf="canvas">
     <div class="designer">
         <div class="left">
-            <pre>{{ canvasStyle | json }}</pre>
         </div>
         <div #htmlMiddle (resized)="onResizedMiddle($event)" class="middle">
-            <img #htmlRenderImage (resized)="onResizedBackground($event)" [src]='canvas.element.renderImage.url'>
+            <img #htmlRenderImage (resized)="onResizedBackground($event)" [src]='canvas.renderImage.url'>
             <div class="designer-canvas-container" [ngStyle]="canvasStyle">
                 <canvas
                     #htmlCanvas
@@ -19,12 +18,20 @@
             </div>
         </div>
         <div class="right">
-            right
+            <div class="input-field">
+                <div class="name">{{ contentSnippet$ | async | contentSnippet: 'text.label' }}</div>
+                <div class="container">
+                    <input maxlength="17" type="text" [ngModel]="textSettings.default" (ngModelChange)="updateText($event)" >
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="designer-actions">
-        <button color="accent" mat-flat-button (click)="cancel()">Verwerfen</button>
-        <button color="primary" mat-flat-button (click)="finish()">Übernehmen</button>
+        <div class="designer-actions-left">
+            <button color="accent" mat-flat-button (click)="reset()">{{ contentSnippet$ | async | contentSnippet: 'upload.reset' }}</button>
+            <button color="accent" mat-flat-button (click)="cancel()">{{ contentSnippet$ | async | contentSnippet: 'upload.cancel' }}</button>
+        </div>
+        <button color="primary" mat-flat-button (click)="save()">{{ contentSnippet$ | async | contentSnippet: 'upload.save' }}</button>
     </div>
 </ng-container>

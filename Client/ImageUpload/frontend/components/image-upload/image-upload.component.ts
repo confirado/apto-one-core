@@ -4,7 +4,7 @@ import { ProgressElement, RenderImage } from '@apto-catalog-frontend/store/confi
 import { Store } from '@ngrx/store';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { setHideOnePage } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { setCanvasElement } from '@apto-image-upload-frontend/store/canvas/canvas.actions';
+import { findEditableRenderImage, setCanvasElement } from '@apto-image-upload-frontend/store/canvas/canvas.actions';
 import { selectRenderImageByPerspective } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Component({
@@ -30,18 +30,29 @@ export class ImageUploadComponent implements OnInit {
     })
   }
 
-  public hideOnePage(): void {
+  public showDesigner(): void {
     this.store.dispatch(
       setCanvasElement({
         payload: {
-          elementId: this.element?.element.id,
-          sectionId: this.element?.element.sectionId,
-          staticValues: this.element?.element.definition.staticValues,
-          state: this.element?.state.values,
+          element: {
+            elementId: this.element?.element.id,
+            sectionId: this.element?.element.sectionId,
+            staticValues: this.element?.element.definition.staticValues,
+            state: this.element?.state.values,
+          },
           renderImage: this.renderImage
         }
       })
     );
+
+    if (this.element?.state.values.payload && this.element?.state.values.payload.renderImage) {
+      this.store.dispatch(findEditableRenderImage({
+        payload: {
+          perspective: this.element?.state.values.payload.renderImage.perspective,
+          renderImageHash: this.element?.state.values.payload.renderImage.renderImageId
+        }
+      }));
+    }
 
     this.store.dispatch(
       setHideOnePage({

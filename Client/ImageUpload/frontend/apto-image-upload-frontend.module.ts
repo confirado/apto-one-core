@@ -6,6 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { AngularResizeEventModule } from 'angular-resize-event';
 
 import { featureKey, reducers } from '@apto-image-upload-frontend/store/feature';
@@ -13,6 +14,7 @@ import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
+import { CanvasEffects } from '@apto-image-upload-frontend/store/canvas/canvas.effects';
 import { ImageUploadComponent } from '@apto-image-upload-frontend/components/image-upload/image-upload.component';
 import { DesignerComponent } from '@apto-image-upload-frontend/components/designer/designer.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
 		CommonModule,
 		HttpClientModule,
 		StoreModule.forFeature(featureKey, reducers),
+    EffectsModule.forFeature([CanvasEffects]),
 		AptoBaseCoreModule,
 		AptoBaseFrontendModule,
 		ReactiveFormsModule,
