@@ -10,7 +10,7 @@ class Controller extends Presentational {
         }
 
         const productUrl = this.product.seoUrl ? this.product.seoUrl : this.product.id;
-        return APTO_API.root + '/#!/product/' + productUrl;
+        return APTO_API.root + '/#/product/' + productUrl;
     }
 
     getPreviewImage() {

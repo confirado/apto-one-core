@@ -16,7 +16,7 @@
         </p>
         <p>
             {{ mail.configurationSaved[locale]|default('') }}<br />
-            {{ mail.configurationLinkPrefix[locale]|default('') }} <a href="{% if payload.swProductUrl is defined %}{{ payload.swProductUrl }}{% elseif payload.shopProductUrl is defined %}{{ payload.shopProductUrl }}{% else %}{{ url('apto_base_infrastructure_aptobase_frontend_index') }}{% endif %}#!/configuration/guest/{{ configurationId }}">{{ mail.configurationLink[locale]|default('Konfiguration laden') }}</a>
+            {{ mail.configurationLinkPrefix[locale]|default('') }} <a href="{% if payload.swProductUrl is defined %}{{ payload.swProductUrl }}{% elseif payload.shopProductUrl is defined %}{{ payload.shopProductUrl }}{% else %}{{ url('apto_base_infrastructure_aptobase_frontend_index') }}{% endif %}#/configuration/guest/{{ configurationId }}">{{ mail.configurationLink[locale]|default('Konfiguration laden') }}</a>
         </p>
 
         <p>
