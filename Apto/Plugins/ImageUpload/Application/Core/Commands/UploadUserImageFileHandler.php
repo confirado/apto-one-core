@@ -3,9 +3,12 @@
 namespace Apto\Plugins\ImageUpload\Application\Core\Commands;
 
 use Apto\Base\Application\Core\CommandHandlerInterface;
-use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\FileSystem\Directory\Directory;
+use Apto\Base\Domain\Core\Model\FileSystem\Exception\DirectoryNotCreatableException;
+use Apto\Base\Domain\Core\Model\FileSystem\Exception\FileNotCreatableException;
+use Apto\Base\Domain\Core\Model\FileSystem\Exception\FileSystemMountedReadOnlyException;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;
+use Apto\Base\Domain\Core\Model\FileSystem\File\FileForbiddenExtension;
 use Apto\Base\Domain\Core\Model\FileSystem\FileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\RootFileSystemConnector;
@@ -33,17 +36,17 @@ class UploadUserImageFileHandler implements CommandHandlerInterface
     /**
      * @var StringSanitizer
      */
-    protected $sanitizer;
+    protected StringSanitizer $sanitizer;
 
     /**
      * @var FileSystemConnector
      */
-    protected $mediaConnector;
+    protected FileSystemConnector $mediaConnector;
 
     /**
      * @var FileSystemConnector
      */
-    protected $rootConnector;
+    protected FileSystemConnector $rootConnector;
 
     /**
      * @param StringSanitizer $sanitizer
@@ -59,22 +62,25 @@ class UploadUserImageFileHandler implements CommandHandlerInterface
 
     /**
      * @param UploadUserImageFile $command
-     * @throws \Apto\Base\Domain\Core\Model\FileSystem\Exception\FileNotCreatableException
-     * @throws \Apto\Base\Domain\Core\Model\FileSystem\File\FileForbiddenExtension
+     * @return void
+     * @throws DirectoryNotCreatableException
+     * @throws FileForbiddenExtension
+     * @throws FileNotCreatableException
+     * @throws FileSystemMountedReadOnlyException
      */
     public function handle(UploadUserImageFile $command)
     {
         // get command data
         $dstDirectory = new Directory($command->getPath());
         $overwriteExisting = true;
-        $aptoUuid = new AptoUuid($command->getAptoUuid());
+        $aptoUuid = $command->getHash();
         $extension = $command->getExtension();
 
         foreach ($command->getFiles() as $srcPath => $orgFilename) {
 
             // create Files for src and dst
             $srcFile = File::createFromPath($srcPath);
-            $dstFile = new File($dstDirectory, $this->sanitizer->sanitizeFilename($aptoUuid->getId() . '.' . $extension));
+            $dstFile = new File($dstDirectory, $this->sanitizer->sanitizeFilename($aptoUuid . '.' . $extension));
 
             // exclude forbidden extensions
             $dstFile->assertHasNotExtension(self::FORBIDDEN_EXTENSIONS);
