@@ -201,7 +201,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       dialogMessage = translate(next.content, this.locale);
     });
 
-    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Ok' ).afterClosed().subscribe((next) => {
+    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Zurücksetzen' ).afterClosed().subscribe((next) => {
       if (true === next) {
         this.store.dispatch(
           updateConfigurationState({
@@ -233,7 +233,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       dialogMessage = translate(next.content, this.locale);
     });
 
-    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Ok' ).afterClosed().subscribe((next) => {
+    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Verwerfen' ).afterClosed().subscribe((next) => {
       if (true === next) {
         this.store.dispatch(
           setHideOnePage({
