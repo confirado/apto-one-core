@@ -90,3 +90,18 @@
         @include ripple-controls(var(--input-height));
     }
 }
+
+@media only screen and (max-width: $mobile-max-width) {
+    .designer {
+        display: block;
+
+        .middle {
+            margin-bottom: 40px;
+        }
+
+        .left,
+        .right {
+            width: 100%;
+        }
+    }
+}
