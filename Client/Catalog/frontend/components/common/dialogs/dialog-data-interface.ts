@@ -5,7 +5,7 @@ export interface DialogDataInterface {
   size?: DialogSizesEnum,
   title?: string,
   descriptionText?: string,
-  buttonText?: string,
-  secondButtonText?: string,
+  cancelButtonText?: string,
+  confirmButtonText?: string,
   type?: DialogTypesEnum
 }

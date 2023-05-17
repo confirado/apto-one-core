@@ -116,7 +116,7 @@ p {
 .section-right {
     border-left: 2px solid var(--color-border);
     padding: 15px;
-    align-items: end;
+    align-items: flex-end;
     display: flex;
     flex-direction: column;
     width: 125px;

@@ -1,0 +1,109 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.textSettings.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.textSettings.multiline" aria-label="Aktiv">
+            Mehrzeilig
+        </md-checkbox>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Text:</label>
+        <input type="text" ng-model="detail.textSettings.default">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Schriftgröße:</label>
+        <input type="number" min="1" step="1" ng-model="detail.textSettings.fontSize">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Textausrichtung:</label>
+        <input type="text" ng-model="detail.textSettings.textAlign">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>Farbe:</label>
+        <input type="text" ng-model="detail.textSettings.fill">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>OffsetX (px):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.left">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>OffsetY (px):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.top">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>Radius (px, 0 = keine Biegung):</label>
+        <input type="number" min="0" ng-model="detail.textSettings.radius">
+    </md-input-container>
+</div>
+
+<h4>Schriftart hinzufügen</h4>
+<div layout="row"  layout-align="start" flex>
+    <apto-media-select on-select-file="onSelectNewFont(path)" label="'Pfad'" path="newFont.file" required="false" flex></apto-media-select>
+    <div flex="5"></div>
+    <md-input-container flex="10">
+        <label>Schriftartname</label>
+        <input ng-model="newFont.name">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newFont.file || !newFont.name|| newFontIsDuplicate() || !newFontFileTypeIsAllowed()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewFont()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container>
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Aktiv</th>
+            <th md-column>Default</th>
+            <th md-column>Schriftartname</th>
+            <th md-column>Schriftart-Datei</th>
+            <th md-column>3D-Schrift</th>
+            <th md-column style="width: 5%;" ></th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="font in detail.textSettings.fonts">
+            <td md-cell style="width:7%;">
+                <md-input-container flex>
+                    <md-checkbox ng-change="setFontIsActive($index, font.isActive)" ng-model="font.isActive" aria-label="Aktiv"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell style="width:7%;">
+                <md-input-container flex>
+                    <md-checkbox ng-change="setDefaultFont($index)" ng-model="font.isDefault" aria-label="Default"></md-checkbox>
+                </md-input-container>
+            </td>
+            <td md-cell>{{ font.name }}</td>
+            <td md-cell>{{ font.file }}</td>
+            <td md-cell style="width: 5%;" >
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        ng-click="removeFont($index)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

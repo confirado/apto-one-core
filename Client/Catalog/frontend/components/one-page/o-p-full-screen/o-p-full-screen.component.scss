@@ -54,5 +54,6 @@
 @media only screen and (min-width: $mobile-max-width) {
 	img {
         max-width: calc(100vw - 100px);
+        max-height: calc(100vh - 100px);
     }
 }

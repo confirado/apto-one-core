@@ -172,17 +172,36 @@ class ImageRenderer implements ImageRendererInterface
      * @throws FilePermissionSetFailedException
      * @throws FileSystemMountedReadOnlyException
      * @throws InvalidUuidException
-     * @throws Exception
      */
     public function getRenderImageByImageList(State $state, array $imageList, string $perspective, bool $createThumb = false, bool $returnUrl = true): string
     {
+        $renderImageFile = $this->getRenderImageFileByImageList($state, $imageList, $perspective, $createThumb);
+        if (true === $returnUrl) {
+            return $this->dstFilesystem->getFileUrl($renderImageFile);
+        }
+
+        return $this->dstFilesystem->getAbsolutePath($renderImageFile->getPath());
+    }
+
+    /**
+     * @param State $state
+     * @param array $imageList
+     * @param string $perspective
+     * @param bool $createThumb
+     * @return File
+     * @throws AptoJsonSerializerException
+     * @throws DirectoryNotCreatableException
+     * @throws FileNotCreatableException
+     * @throws FileNotRemovableException
+     * @throws FilePermissionSetFailedException
+     * @throws FileSystemMountedReadOnlyException
+     * @throws InvalidUuidException
+     */
+    public function getRenderImageFileByImageList(State $state, array $imageList, string $perspective, bool $createThumb = false): File
+    {
         $renderedDstFile = $this->getRenderedDstFile($state, $imageList, $perspective, $createThumb);
         if ($this->dstFilesystem->existsFile($renderedDstFile) && $this->useImageCache === true){
-            if (true === $returnUrl) {
-                return $this->dstFilesystem->getFileUrl($renderedDstFile);
-            }
-
-            return $this->dstFilesystem->getAbsolutePath($renderedDstFile->getPath());
+            return $renderedDstFile;
         }
 
         $srcIsLocalFileSystem = $this->srcFilesystem instanceof LocalFileSystem;
@@ -213,11 +232,7 @@ class ImageRenderer implements ImageRendererInterface
             $this->localFilesystem->removeFile($dstFile);
         }
 
-        if (true === $returnUrl) {
-            return $this->dstFilesystem->getFileUrl($renderedDstFile);
-        }
-
-        return $this->dstFilesystem->getAbsolutePath($renderedDstFile->getPath());
+        return $renderedDstFile;
     }
 
     /**
@@ -247,6 +262,34 @@ class ImageRenderer implements ImageRendererInterface
         $imageList = $this->sortImageListByLayer($imageList);
 
         return $this->getRenderImageByImageList($state, $imageList, $perspective, $createThumb, $returnUrl);
+    }
+
+    /**
+     * @param array $imageList
+     * @param string $perspective
+     * @param State $state
+     * @param bool $createThumb
+     * @param string|null $productId
+     * @return File|null
+     * @throws AptoJsonSerializerException
+     * @throws DirectoryNotCreatableException
+     * @throws FileNotCreatableException
+     * @throws FileNotRemovableException
+     * @throws FilePermissionSetFailedException
+     * @throws FileSystemMountedReadOnlyException
+     * @throws InvalidUuidException
+     */
+    public function getImageFileByImageList(array $imageList, string $perspective, State $state, bool $createThumb = false, string $productId = null): ?File
+    {
+        $imageList = $this->getProviderAndReducerImages($imageList, $perspective, $state, $productId);
+
+        if (empty($imageList)) {
+            return null;
+        }
+
+        $imageList = $this->sortImageListByLayer($imageList);
+
+        return $this->getRenderImageFileByImageList($state, $imageList, $perspective, $createThumb);
     }
 
     /**

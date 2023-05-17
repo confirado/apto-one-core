@@ -1,16 +1,16 @@
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
-	getConfigurationStateSuccess,
-	getCurrentRenderImageSuccess,
-	getRenderImagesSuccess,
-	humanReadableStateLoadSuccess,
-	initConfigurationSuccess,
-	setNextPerspective,
-	setNextStep,
-	setPrevPerspective,
-	setPrevStep,
-	setQuantity,
-	setStep,
+  getConfigurationStateSuccess,
+  getCurrentRenderImageSuccess,
+  getRenderImagesSuccess,
+  humanReadableStateLoadSuccess,
+  initConfigurationSuccess, setHideOnePage,
+  setNextPerspective,
+  setNextStep,
+  setPrevPerspective,
+  setPrevStep,
+  setQuantity,
+  setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ComputedValues, Configuration, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
@@ -28,6 +28,7 @@ export interface ConfigurationState {
 	connector: SelectConnector | null;
 	humanReadableState: any | null;
 	quantity: number;
+  hideOnePage: boolean;
 }
 
 export const configurationInitialState: ConfigurationState = {
@@ -47,6 +48,7 @@ export const configurationInitialState: ConfigurationState = {
 	connector: null,
 	humanReadableState: null,
 	quantity: 1,
+  hideOnePage: false
 };
 
 const _configurationReducer = createReducer(
@@ -58,7 +60,12 @@ const _configurationReducer = createReducer(
 	})),
     */
 
-
+  on(updateConfigurationState, (state, action) => {
+    return {
+      ...state,
+      loading: true
+    }
+  }),
   on(initConfigurationSuccess, (state, action) => {
     /*
       productId: string | null;
@@ -218,7 +225,11 @@ const _configurationReducer = createReducer(
 	on(setStep, (state, action) => ({
 		...state,
 		currentStep: action.payload.id,
-	}))
+	})),
+  on(setHideOnePage, (state, action) => ({
+    ...state,
+    hideOnePage: action.payload
+  })),
 );
 
 export function configurationReducer(state: ConfigurationState | undefined, action: Action): ConfigurationState {

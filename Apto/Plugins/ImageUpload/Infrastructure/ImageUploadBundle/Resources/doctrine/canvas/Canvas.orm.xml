@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\ImageUpload\Domain\Core\Model\Canvas\Canvas" table="plugin_image_upload_canvas" repository-class="Apto\Plugins\ImageUpload\Infrastructure\ImageUploadBundle\Doctrine\Orm\CanvasOrmRepository">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+            <index name="AptoSearchId" columns="id"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="imageSettings" column="image_settings" type="array" />
+        <field name="textSettings" column="text_settings" type="array" />
+        <field name="areaSettings" column="area_settings" type="array" />
+        <field name="priceSettings" column="price_settings" type="array" />
+        <field name="created" column="created" type="datetime" />
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Identifier" use-column-prefix="true" name="identifier" />
+    </entity>
+</doctrine-mapping>

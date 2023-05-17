@@ -38,38 +38,38 @@ export class DialogService {
     return this.matDialog.open(component, { ...{...options, ...{width: size}}, ...{data: {...data, ...{size: size}}}});
   }
 
-  openConfirmationDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, buttonText?: string, secondButtonText?: string) {
+  openConfirmationDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, cancelButtonText?: string, confirmButtonText?: string) {
     return this.openCustomDialog(
       ConfirmationDialogComponent,
       size,
-      {title, descriptionText, buttonText, secondButtonText, type: this.dialogTypesEnum.CONFIRM},
+      {title, descriptionText, cancelButtonText, confirmButtonText, type: this.dialogTypesEnum.CONFIRM},
       {width: size}
     );
   }
 
-  openErrorDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, buttonText?: string, secondButtonText?: string) {
+  openErrorDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, cancelButtonText?: string, confirmButtonText?: string) {
     return this.openCustomDialog(
       ConfirmationDialogComponent,
       size,
-      {title, descriptionText, buttonText, secondButtonText, type: this.dialogTypesEnum.ERROR},
+      {title, descriptionText, cancelButtonText, confirmButtonText, type: this.dialogTypesEnum.ERROR},
       {width: size}
     );
   }
 
-  openWarningDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, buttonText?: string, secondButtonText?: string) {
+  openWarningDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, cancelButtonText?: string, confirmButtonText?: string) {
     return this.openCustomDialog(
       ConfirmationDialogComponent,
       size,
-      {title, descriptionText, buttonText, secondButtonText, type: this.dialogTypesEnum.WARNING},
+      {title, descriptionText, cancelButtonText, confirmButtonText, type: this.dialogTypesEnum.WARNING},
       {width: size}
     );
   }
 
-  openInfoDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, buttonText?: string, secondButtonText?: string) {
+  openInfoDialog(size: DialogSizesEnum, title?: string, descriptionText?: string, cancelButtonText?: string, confirmButtonText?: string) {
     return this.openCustomDialog(
       ConfirmationDialogComponent,
       size,
-      {title, descriptionText, buttonText, secondButtonText, type: this.dialogTypesEnum.INFO},
+      {title, descriptionText, cancelButtonText, confirmButtonText, type: this.dialogTypesEnum.INFO},
       {width: size}
     );
   }

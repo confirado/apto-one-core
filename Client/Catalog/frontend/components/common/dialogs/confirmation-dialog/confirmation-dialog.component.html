@@ -1,5 +1,5 @@
 <div class="confirm-dialog" [attr.type]="data.type">
-    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+    <apto-close-button [mat-dialog-close]="false" [inner]="true"></apto-close-button>
 
     <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.ERROR"><mat-icon [attr.type]="data.type">close</mat-icon></div>
     <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.WARNING"><mat-icon [attr.type]="data.type">warning</mat-icon></div>
@@ -7,14 +7,14 @@
     <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.INFO"><mat-icon [attr.type]="data.type">info</mat-icon></div>
     <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CUSTOM"><mat-icon [attr.type]="data.type">info</mat-icon></div>
 
-    <h1 mat-dialog-title>{{data.title}}</h1>
+    <h1 *ngIf="data.title" mat-dialog-title>{{data.title}}</h1>
 
-    <mat-dialog-content>
+    <mat-dialog-content *ngIf="data.descriptionText">
         <p>{{data.descriptionText}}</p>
     </mat-dialog-content>
 
     <mat-dialog-actions>
-        <button *ngIf="data.buttonText" mat-flat-button color="accent" [mat-dialog-close]="true" type="button">{{data.buttonText}}</button>
-        <button *ngIf="data.secondButtonText" mat-flat-button color="primary" type="submit">{{data.secondButtonText}}</button>
+        <button *ngIf="data.cancelButtonText" mat-flat-button color="accent" [mat-dialog-close]="false" type="button">{{data.cancelButtonText}}</button>
+        <button *ngIf="data.confirmButtonText" mat-flat-button color="primary" [mat-dialog-close]="true">{{data.confirmButtonText}}</button>
     </mat-dialog-actions>
 </div>

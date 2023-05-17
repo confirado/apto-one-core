@@ -1,0 +1,58 @@
+{
+  "plugins": {
+    "imageUpload": {
+      "error": {
+        "default": {
+          "de_DE": "Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+        },
+        "maxSize": {
+          "prefix": {
+            "de_DE": "Die Dateigröße darf"
+          },
+          "suffix": {
+            "de_DE": "nicht überschreiten."
+          }
+        },
+        "pattern": {
+          "de_DE": "Folgende Dateitypen sind erlaubt:"
+        },
+        "minDimensions": {
+          "prefix": {
+            "de_DE": "Die Auflösung muss mindestens"
+          },
+          "suffix": {
+            "de_DE": "Pixel betragen."
+          }
+        }
+      },
+      "upload": {
+        "dragover": {
+          "de_DE": "Datei-Upload via Drag'n'Drop oder Klick"
+        },
+        "edit": {
+          "de_DE": "Bearbeiten"
+        },
+        "cancel": {
+          "de_DE": "Verwerfen"
+        },
+        "cancelMessage": {
+          "de_DE": "Deine aktuellen Änderungen werden verworfen."
+        },
+        "reset": {
+          "de_DE": "Zurücksetzen"
+        },
+        "resetMessage": {
+          "de_DE": "Dein komplettes Design wird gelöscht."
+        },
+        "save": {
+          "de_DE": "Übernehmen"
+        }
+      },
+      "text": {
+        "label": {
+          "de_DE": "Texteingabe:"
+        }
+      }
+    }
+  }
+}

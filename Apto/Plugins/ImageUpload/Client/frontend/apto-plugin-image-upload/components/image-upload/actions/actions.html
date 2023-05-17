@@ -1,0 +1,26 @@
+<div class="block-group">
+    <div class="block image-upload-button-container left">
+        <button ng-if="!$ctrl.reduxProps.editable" class="image-upload-button button-secondary filled" ng-click="$ctrl.onReset()">
+            <span ng-bind-html="$ctrl.snippet('upload.reset')"></span>
+        </button>
+    </div>
+
+    <!-- @todo remove inline style on reactivate reset button -->
+    <div class="block image-upload-button-container right" style="float: right">
+        <button ng-if="!$ctrl.reduxProps.editable" class="image-upload-button" ng-click="$ctrl.onEdit()">
+            <span ng-bind-html="$ctrl.snippet('upload.edit')"></span>
+        </button>
+    </div>
+
+    <div class="block image-upload-button-container left">
+        <button ng-if="$ctrl.reduxProps.editable" class="image-upload-button button-secondary filled" ng-click="$ctrl.onCancel()">
+            <span ng-bind-html="$ctrl.snippet('upload.cancel')"></span>
+        </button>
+    </div>
+
+    <div class="block image-upload-button-container right">
+        <button ng-if="$ctrl.reduxProps.editable" class="image-upload-button" ng-click="$ctrl.onSave()">
+            <span ng-bind-html="$ctrl.snippet('upload.save')"></span>
+        </button>
+    </div>
+</div>

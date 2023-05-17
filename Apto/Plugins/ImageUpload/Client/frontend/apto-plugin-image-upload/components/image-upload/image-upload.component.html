@@ -1,0 +1,21 @@
+<!-- Font Preloader (may look sketchy, but seems to be the most reliable way to preload fonts) -->
+<div ng-repeat="font in $ctrl.fonts" ng-if="font.url">
+    <style>
+        @font-face {
+            font-family:{{font.family}};
+            src: url({{font.url}});
+        }
+    </style>
+    <div style="width: 0; height: 0; font-size: 0">
+        <span style="font-family: {{font.family}}">.</span>
+    </div>
+</div>
+
+
+<div class="image-upload-mobile" ng-include="$ctrl.templates.mobile"></div>
+
+<div class="image-upload-editor" ng-class="{'show-mobile' : $ctrl.showMobile.show}">
+    <div class="image-upload-upload" ng-class="{'show-mobile' : $ctrl.showMobile.image}" ng-if="$ctrl.staticValues.user.active" ng-include="$ctrl.templates.upload"></div>
+    <div class="image-upload-text" ng-class="{'show-mobile' : $ctrl.showMobile.text}" ng-if="$ctrl.staticValues.text.active" ng-include="$ctrl.templates.text"></div>
+    <div class="image-upload-buttons" ng-if="$ctrl.staticValues.user.active || $ctrl.staticValues.text.active" ng-include="$ctrl.templates.actions"></div>
+</div>

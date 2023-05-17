@@ -1,6 +1,13 @@
 <ng-container *ngIf="product$ | async as product">
 	<div class="one-page">
 		<div class="content">
+            <div *ngIf="(configurationLoading$ | async)" class="loading-container">
+                <div class="loading-overlay"></div>
+                <div class="loading-spinner">
+                    <mat-spinner diameter="75" color='primary'></mat-spinner>
+                </div>
+            </div>
+
 			<div class="render-img-menu">
 				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !(renderImage$ | async)}"
 					[perspectives]="perspectives$ | async"
@@ -12,26 +19,27 @@
                     [perspectives]="perspectives$ | async"
                     [renderImage]="renderImage$ | async"
                     [product]="product">
-				</apto-sidebar-summary-render-image>
-				<apto-o-p-button></apto-o-p-button>
-			</div>
-			<div class="section-list-menu">
-				<div class="title">
-					<div class="headline">
-						<h1>{{ product.name | translate }}</h1>
-					</div>
-				</div>
-				<div class="section-list">
+                </apto-sidebar-summary-render-image>
+                <apto-o-p-button></apto-o-p-button>
+            </div>
+            <div class="section-list-menu">
+                <div class="title">
+                    <div class="headline">
+                        <h1>{{ product.name | translate }}</h1>
+                    </div>
+                </div>
+                <div class="section-list">
                     <div class="section-list-content">
                         <apto-o-p-steps></apto-o-p-steps>
                     </div>
-				</div>
-				<apto-sidebar-summary> </apto-sidebar-summary>
-			</div>
-		</div>
-		<div class="description">
-			<h2>Produktdetails</h2>
-			<div [innerHTML]="product.description | translate | safeHtml"></div>
-		</div>
-	</div>
+                </div>
+                <apto-sidebar-summary> </apto-sidebar-summary>
+            </div>
+        </div>
+        <apto-slot-outlet *ngIf="(hideOnePage$ | async)" identifier="one-page-designer"></apto-slot-outlet>
+        <div class="description">
+            <h2>Produktdetails</h2>
+            <div [innerHTML]="product.description | translate | safeHtml"></div>
+        </div>
+    </div>
 </ng-container>
