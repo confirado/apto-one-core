@@ -43,7 +43,7 @@ abstract class AptoContainerAwareCommand extends Command
         parent::initialize($input, $output);
         $this->user = new User($this->getName(), $this->getName(), $this->getName(), '', true, [['identifier' => 'ROLE_APTO_CLI_COMMAND']], null, null, null);
 
-        $token = new UsernamePasswordToken($this->user, null, $this->getName());
+        $token = new UsernamePasswordToken($this->user, null, ['ROLE_APTO_CLI_COMMAND']);
         $this->tokenStorage->setToken($token);
     }
 }

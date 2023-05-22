@@ -145,7 +145,6 @@ class ProductCommandHandler extends ProductChildHandler
             $this->productRepository->nextIdentity(),
             $newIdentifier,
             $productName,
-            $this->buildShopCollection($command->getShops()),
             $shops
         );
 
@@ -529,12 +528,12 @@ class ProductCommandHandler extends ProductChildHandler
 
     /**
      * @param Identifier $identifier
-     * @param null $id
+     * @param string|null $id
      * @param int $currentIteration
-     * @return Identifier|null
+     * @return Identifier
      * @throws ProductIdentifierAlreadyExists
      */
-    protected function findNextIdentifier(Identifier $identifier, $id = null, $currentIteration = 0): Identifier
+    protected function findNextIdentifier(Identifier $identifier, ?string $id = null, int $currentIteration = 0): Identifier
     {
         try {
             $this->checkUniqueConstraints($identifier, $id);
@@ -619,7 +618,7 @@ class ProductCommandHandler extends ProductChildHandler
         // update DomainProperties
         foreach ($remainingDomainProperties as $domainProperties) {
             $domainPropertiesObject = $this->domainPropertiesRepository->findById($domainProperties['id']);
-            $domainPropertiesObject->setPriceModifier(str_replace(',', ',', $domainProperties['priceModifier']));
+            $domainPropertiesObject->setPriceModifier((float) str_replace(',', ',', $domainProperties['priceModifier']));
 
             if ($domainProperties['previewImage']) {
                 $mediaFile = $this->getMediaFile($domainProperties['previewImage']);
@@ -680,10 +679,11 @@ class ProductCommandHandler extends ProductChildHandler
 
     /**
      * @param Identifier $identifier
-     * @param null $id
+     * @param string|null $id
+     * @return void
      * @throws ProductIdentifierAlreadyExists
      */
-    protected function checkUniqueConstraints(Identifier $identifier, $id = null)
+    protected function checkUniqueConstraints(Identifier $identifier, ?string $id = null)
     {
         $productAlreadyExists = $this->productRepository->findByIdentifier($identifier);
 

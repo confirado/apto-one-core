@@ -11,7 +11,7 @@ class PasswordEncoder
     const MAX_PASSWORD_LENGTH = 72;
 
     /**
-     * @var string
+     * @var int
      */
     private $cost = 10;
 

@@ -18,6 +18,7 @@ class Material extends AptoAggregate
     use AptoPrices;
 
     /**
+     * @phpstan-ignore-next-line
      * @var Collection
      */
     private $poolItems;
@@ -28,7 +29,7 @@ class Material extends AptoAggregate
     protected $active;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $identifier;
 
@@ -48,7 +49,7 @@ class Material extends AptoAggregate
     private $clicks;
 
     /**
-     * @var MediaFile
+     * @var MediaFile|null
      */
     private $previewImage;
 
@@ -635,7 +636,7 @@ class Material extends AptoAggregate
     }
 
     /**
-     * @param int|null $value
+     * @param mixed|null $value
      * @param array|null $range
      */
     private function assertValidIntOrNullValue($value, $range = null)

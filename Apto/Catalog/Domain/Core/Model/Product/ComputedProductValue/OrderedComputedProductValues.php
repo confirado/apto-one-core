@@ -6,13 +6,13 @@ class OrderedComputedProductValues
 {
 
     /**
-     * @var ComputedProductValue
+     * @var array
      */
     protected $values;
 
     /**
      * @param array $computedValues
-     * @return static
+     * @return self
      */
     public static function fromArray(array $computedValues): self
     {
@@ -22,7 +22,7 @@ class OrderedComputedProductValues
     }
 
     /**
-     * @param ComputedProductValue[] $values
+     * @param array $values
      */
     public function __construct(array $values)
     {
@@ -30,7 +30,7 @@ class OrderedComputedProductValues
     }
 
     /**
-     * @return ComputedProductValue[]
+     * @return array
      */
     public function getValues(): array
     {

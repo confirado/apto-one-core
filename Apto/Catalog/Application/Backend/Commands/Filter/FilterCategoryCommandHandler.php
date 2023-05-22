@@ -90,6 +90,8 @@ class FilterCategoryCommandHandler extends AbstractCommandHandler
 
     /**
      * @param string $identifier
+     * @param string $id
+     * @return void
      * @throws FilterCategoryIdentifierAlreadyExists
      */
     private function checkUniqueConstraints(string $identifier, string $id ="")
@@ -97,10 +99,6 @@ class FilterCategoryCommandHandler extends AbstractCommandHandler
         $filterCategoryAlreadyExists = $this->filterCategoryRepository->findByIdentifier($identifier);
 
         if (null !== $filterCategoryAlreadyExists && $id !== $filterCategoryAlreadyExists->getId()->getId()) {
-            if (null === $identifier) {
-                throw new FilterCategoryIdentifierAlreadyExists('FilterCategory Identifier already set on FilterCategory with Identifier: ' . $filterCategoryAlreadyExists->getId()->getId() . '.');
-            }
-
             if ($filterCategoryAlreadyExists->getId()->getId() !== $identifier) {
                 throw new FilterCategoryIdentifierAlreadyExists('FilterCategory Identifier already set on FilterCategory with Identifier: ' . $filterCategoryAlreadyExists->getId()->getId() . '.');
             }

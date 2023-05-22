@@ -18,6 +18,7 @@ class ImmutableConfigurationOrmRepository extends AptoOrmRepository implements I
      */
     public function update(ImmutableConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

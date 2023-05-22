@@ -8,12 +8,13 @@ use Apto\Base\Domain\Backend\Model\UserLicence\UserLicenceRepository;
 class UserLicenceOrmRepository extends AptoOrmRepository implements UserLicenceRepository
 {
     const ENTITY_CLASS = UserLicence::class;
-    
+
     /**
      * @param UserLicence $model
      */
     public function update(UserLicence $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

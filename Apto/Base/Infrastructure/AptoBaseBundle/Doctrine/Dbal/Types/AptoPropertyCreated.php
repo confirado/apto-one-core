@@ -49,7 +49,7 @@ class AptoPropertyCreated extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): ?DateTimeImmutable
     {
-        if (null === $value && false === $value) {
+        if (null === $value || false === $value) {
             return null;
         }
 

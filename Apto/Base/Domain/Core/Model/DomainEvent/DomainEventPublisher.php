@@ -21,10 +21,10 @@ class DomainEventPublisher
      */
     public static function instance(): DomainEventPublisher
     {
-        if (null === static::$instance) {
-            static::$instance = new static();
+        if (null === self::$instance) {
+            self::$instance = new self();
         }
-        return static::$instance;
+        return self::$instance;
     }
 
     /**

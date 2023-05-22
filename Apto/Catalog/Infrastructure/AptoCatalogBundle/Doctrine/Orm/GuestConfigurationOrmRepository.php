@@ -16,6 +16,7 @@ class GuestConfigurationOrmRepository extends AptoOrmRepository implements Guest
      */
     public function update(GuestConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -101,7 +101,7 @@ class Element extends AptoEntity
     protected $gallery;
 
     /**
-     * @var MediaFile
+     * @var MediaFile|null
      */
     protected $previewImage;
 

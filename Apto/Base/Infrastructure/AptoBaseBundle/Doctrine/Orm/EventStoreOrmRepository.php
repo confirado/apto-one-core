@@ -69,7 +69,7 @@ class EventStoreOrmRepository extends ServiceEntityRepository implements EventSt
     }
 
     /**
-     * @return null
+     * @return string|null
      */
     private function getUserId()
     {

@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class Gallery extends AptoEntity
 {
     /**
-     * @var string
+     * @var AptoTranslatedValue
      */
     protected $name;
 

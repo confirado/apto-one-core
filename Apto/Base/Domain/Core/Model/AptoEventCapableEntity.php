@@ -18,7 +18,7 @@ abstract class AptoEventCapableEntity
     protected $surrogateId;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|\DateTime
      */
     protected $created;
 
@@ -35,7 +35,7 @@ abstract class AptoEventCapableEntity
     {
         $this->id = $id;
         do {
-            $this->created = \DateTimeImmutable::createFromFormat('U.u', microtime(true));
+            $this->created = \DateTimeImmutable::createFromFormat('U.u', (string) microtime(true));
         } while($this->created === false);
     }
 

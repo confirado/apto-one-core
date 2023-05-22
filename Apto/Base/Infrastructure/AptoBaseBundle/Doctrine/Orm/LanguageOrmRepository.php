@@ -21,6 +21,7 @@ class LanguageOrmRepository extends AptoOrmRepository implements LanguageReposit
      */
     public function update(Language $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

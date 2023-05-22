@@ -89,6 +89,7 @@ class RegisteredPricePerUnitElementDefinition implements RegisteredElementDefini
             $definitionValues['elementValueRefs'] = [];
         }
 
+        /** @phpstan-ignore-next-line  */
         if (!isset($definitionValues['minOne'])) {
             $definitionValues['minOne'] = false;
         }

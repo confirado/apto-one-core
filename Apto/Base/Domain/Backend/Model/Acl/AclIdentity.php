@@ -45,7 +45,7 @@ class AclIdentity
     }
 
     /**
-     * @param string|object $model
+     * @param string|object|null $model
      * @return AclIdentity
      * @throws AclIdentityInvalidModelException
      */
@@ -85,7 +85,7 @@ class AclIdentity
      */
     private function setEntityId(int $id = null): AclIdentity
     {
-        if (!is_null($id) && !is_int($id) && $id < 0) {
+        if (!is_null($id) && $id < 0) {
             throw new AclIdentityInvalidEntityIdException('The given entity id \'' . $id . '\' is invalid.');
         }
 

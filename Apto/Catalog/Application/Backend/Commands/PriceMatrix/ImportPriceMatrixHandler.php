@@ -89,7 +89,7 @@ class ImportPriceMatrixHandler implements CommandHandlerInterface
             }
 
             // run import
-            $this->priceMatrixImport->importCsvFile($file, $command->getCsvType());
+            $this->priceMatrixImport->importCsvFile($file);
             $fileErrors = $this->priceMatrixImport->getErrors();
             if (!empty($fileErrors)) {
                 $errors[] = 'Während des Imports der Datei "' . $filename . '" traten folgende Fehler auf:' . "\n" . implode("\n", $fileErrors);

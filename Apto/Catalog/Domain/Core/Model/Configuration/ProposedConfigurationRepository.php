@@ -14,6 +14,11 @@ interface ProposedConfigurationRepository extends AptoRepository
     /**
      * @param ProposedConfiguration $model
      */
+    public function update(ProposedConfiguration $model);
+
+    /**
+     * @param ProposedConfiguration $model
+     */
     public function remove(ProposedConfiguration $model);
 
     /**

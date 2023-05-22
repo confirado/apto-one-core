@@ -15,6 +15,7 @@ class ProposedConfigurationOrmRepository extends AptoOrmRepository implements Pr
      */
     public function update(ProposedConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

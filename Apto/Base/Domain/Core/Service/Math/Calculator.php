@@ -68,7 +68,7 @@ class Calculator
      */
     public function div(string $a, string $b): string
     {
-        if ($b === 0) {
+        if ($b === '0') {
             throw new DivisionByZeroException('Uncaught DivisionByZeroException: Division by zero.');
         }
 
@@ -463,7 +463,7 @@ class Calculator
     }
 
     /**
-     * @param int|float $number
+     * @param int|float|mixed $number
      * @return string
      */
     private function nativeToString($number): string

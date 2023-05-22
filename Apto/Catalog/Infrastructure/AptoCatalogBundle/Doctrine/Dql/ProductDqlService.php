@@ -277,7 +277,8 @@ class ProductDqlService extends AbstractDqlService
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findNextSectionPosition(string $id) {
+    public function findNextSectionPosition(string $id)
+    {
         $dql = 'SELECT
                   MAX(s.position) as max_position
               FROM
@@ -298,9 +299,9 @@ class ProductDqlService extends AbstractDqlService
         else {
             $newPosition = round($maxPosition/10) * 10;
             if ($newPosition <= $maxPosition) {
-                return $newPosition + 10;
+                return (int) $newPosition + 10;
             }
-            return $newPosition;
+            return (int) $newPosition;
         }
     }
 
@@ -337,9 +338,9 @@ class ProductDqlService extends AbstractDqlService
         else {
             $newPosition = round($maxPosition/10) * 10;
             if ($newPosition <= $maxPosition) {
-                return $newPosition + 10;
+                return (int) $newPosition + 10;
             }
-            return $newPosition;
+            return (int) $newPosition;
         }
     }
 }

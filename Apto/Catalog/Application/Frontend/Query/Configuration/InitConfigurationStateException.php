@@ -8,7 +8,7 @@ class InitConfigurationStateException extends InvalidStateException
 {
     /**
      * @param InvalidStateException $e
-     * @return static
+     * @return self
      */
     public static function fromInvalidConfigurationStateException(InvalidStateException $e): self
     {

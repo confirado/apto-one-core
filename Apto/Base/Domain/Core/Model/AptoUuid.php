@@ -13,7 +13,7 @@ class AptoUuid implements \JsonSerializable
 
     /**
      * @param string|null $id
-     * @return static|null
+     * @return self|null
      * @throws InvalidUuidException
      */
     public static function fromId(?string $id): ?self

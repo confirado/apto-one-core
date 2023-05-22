@@ -105,10 +105,11 @@ class GroupCommandHandler extends AbstractCommandHandler
 
     /**
      * @param IdentifierNullable $identifier
-     * @param null $id
+     * @param string|null $id
+     * @return void
      * @throws GroupIdentifierAlreadyExists
      */
-    protected function checkUniqueConstraints(IdentifierNullable $identifier, $id = null)
+    protected function checkUniqueConstraints(IdentifierNullable $identifier, string $id = null)
     {
         $groupAlreadyExists = $this->groupRepository->findByIdentifier($identifier);
 

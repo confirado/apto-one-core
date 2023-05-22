@@ -21,7 +21,7 @@ class UserLicence extends AptoAggregate
     protected $text;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|\DateTime
      */
     protected $validSince;
 

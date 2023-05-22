@@ -19,6 +19,7 @@ class GroupOrmRepository extends AptoOrmRepository implements GroupRepository
      */
     public function update(Group $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -8,12 +8,11 @@ use Apto\Base\Domain\Core\Model\DomainEvent\AbstractDomainEvent;
 class PriceMatrixElementCustomPropertyRemoved extends AbstractDomainEvent
 {
     /**
-     * @var AptoUuid
+     * @var string
      */
     private $key;
 
     /**
-     * PriceMatrixElementCustomPropertyRemoved constructor.
      * @param AptoUuid $id
      * @param string $key
      */

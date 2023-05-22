@@ -330,7 +330,7 @@ class MaterialPickerElementPriceProvider implements ElementPriceProvider
         if ($pricePostProcessFormula) {
             $computedValues['_preis_'] = $priceFromPriceMatrix->getAmount();
             $pricePostProcessValue = round($this->calculateFormula($pricePostProcessFormula, $computedValues));
-            $priceFromPriceMatrix = new Money($pricePostProcessValue, $priceFromPriceMatrix->getCurrency());
+            $priceFromPriceMatrix = new Money((string) $pricePostProcessValue, $priceFromPriceMatrix->getCurrency());
         }
 
         // add preferred price

@@ -15,6 +15,7 @@ class PriceGroupOrmRepository extends AptoOrmRepository implements PriceGroupRep
      */
     public function update(PriceGroup $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -18,6 +18,7 @@ class FloatInputItemOrmRepository extends AptoOrmRepository implements FloatInpu
      */
     public function update(FloatInputItem $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

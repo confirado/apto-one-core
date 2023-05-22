@@ -14,6 +14,7 @@ class CustomerGroupOrmRepository extends AptoOrmRepository implements CustomerGr
      */
     public function update(CustomerGroup $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

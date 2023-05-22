@@ -22,11 +22,6 @@ class PriceCommandHandler implements CommandHandlerInterface
     private $calculator;
 
     /**
-     * @var array
-     */
-    private $errors;
-
-    /**
      * PriceCommandHandler constructor.
      * @param PriceRegistry $priceRegistry
      */

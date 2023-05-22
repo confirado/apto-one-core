@@ -123,7 +123,7 @@ class ElementSingleValue implements ElementValue
     /**
      * @return array
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
             'type' => 'single',

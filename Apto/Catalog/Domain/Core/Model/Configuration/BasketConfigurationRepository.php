@@ -14,6 +14,11 @@ interface BasketConfigurationRepository extends AptoRepository
     /**
      * @param BasketConfiguration $model
      */
+    public function update(BasketConfiguration $model);
+
+    /**
+     * @param BasketConfiguration $model
+     */
     public function remove(BasketConfiguration $model);
 
     /**

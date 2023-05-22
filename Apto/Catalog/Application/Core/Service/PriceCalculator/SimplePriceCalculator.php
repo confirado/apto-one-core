@@ -73,7 +73,7 @@ class SimplePriceCalculator implements PriceCalculator
     protected $state;
 
     /**
-     * @var Currency
+     * @var Currency|null
      */
     protected $currency;
 
@@ -83,7 +83,7 @@ class SimplePriceCalculator implements PriceCalculator
     protected $customerGroup;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $fallbackCustomerGroupOrNull;
 
@@ -174,6 +174,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->aptoJsonSerializer = $aptoJsonSerializer;
         $this->taxCalculator = null;
         $this->displayPrices = true;
+        $this->currency = null;
         $this->fallbackCustomerGroupOrNull = null;
         $this->fallbackCurrency = new Currency('EUR');
         $this->currencyFactor = 1.0;
@@ -254,7 +255,7 @@ class SimplePriceCalculator implements PriceCalculator
     /**
      * @return TaxCalculator|null
      */
-    public function getTaxCalculator(): TaxCalculator
+    public function getTaxCalculator(): ?TaxCalculator
     {
         return $this->taxCalculator;
     }
@@ -541,9 +542,9 @@ class SimplePriceCalculator implements PriceCalculator
 
     /**
      * @param string $formula
-     * @return float
+     * @return string
      */
-    protected function parsePriceFormula(string $formula): float
+    protected function parsePriceFormula(string $formula): string
     {
         $values = array_merge($this->computedValues, [
             '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
@@ -557,7 +558,7 @@ class SimplePriceCalculator implements PriceCalculator
             );
         }
         catch (FormulaParserException $e) {
-            return 0;
+            return '0';
         }
     }
 
@@ -588,7 +589,7 @@ class SimplePriceCalculator implements PriceCalculator
                 );
 
                 return new Money(
-                    round(floatval($result)),
+                    (string) round(floatval($result)),
                     $taxAdaptedElementPrice->getCurrency()
                 );
             }

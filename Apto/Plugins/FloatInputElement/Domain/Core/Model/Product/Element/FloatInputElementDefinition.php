@@ -123,7 +123,7 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
 
     /**
      * @param array $selectedValues
-     * @return mixed|null
+     * @return array
      */
     public function getComputableValues(array $selectedValues): array
     {

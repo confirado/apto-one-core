@@ -18,6 +18,7 @@ class QueryBus
 
     /**
      * @var MessageBusInterface
+     * @phpstan-ignore-next-line
      */
     private $messageBus;
 

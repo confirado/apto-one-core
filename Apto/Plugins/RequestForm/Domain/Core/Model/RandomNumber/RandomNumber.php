@@ -8,6 +8,7 @@ class RandomNumber extends AptoAggregate
 {
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $number;

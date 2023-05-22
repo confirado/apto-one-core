@@ -16,7 +16,7 @@ class SelectBoxElementDefinition implements ElementDefinition
     const FRONTEND_COMPONENT = '<select-box-element-definition section-ctrl="$ctrl.section" section="section" element="element"></select-box-element-definition>';
 
     /**
-     * @var string
+     * @var array|null
      */
     private $defaultItem;
 
@@ -109,37 +109,39 @@ class SelectBoxElementDefinition implements ElementDefinition
             return [];
         }
 
-        $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
-        $humanReadableBoxes = [];
-        foreach ($selectedValues['boxes'] as $box) {
-            $name = AptoTranslatedValue::fromArray($box['name']);
-            $multiplier_de = $this->multiplierPrefix->getTranslation($de_DE, null, true)->getValue() .
-                            ' ' . $box['multi'] . ' ' .
-                            $this->multiplierSuffix->getTranslation($de_DE, null, true)->getValue() .
-                            ' - ';
-            $multiplier_en = $this->multiplierPrefix->getTranslation($en_EN, null, true)->getValue() .
-                            ' ' . $box['multi'] . ' ' .
-                            $this->multiplierSuffix->getTranslation($en_EN, null, true)->getValue() .
-                            ' - ';
-            $name_de = $name->getTranslation($de_DE, null, true)->getValue();
-            $name_en = $name->getTranslation($en_EN, null, true)->getValue();
-            if ($this->enableMultiplier) {
-                $box_de = $multiplier_de . $name_de;
-                $box_en = $multiplier_en . $name_en;
-            }
-            else {
-                $box_de = $name_de;
-                $box_en = $name_en;
-            }
-            $humanReadableBoxes[] = AptoTranslatedValue::fromArray([
-                'de_DE' =>
-                    $box_de,
-                'en_EN' =>
-                    $box_en
-            ]);
-        }
         try {
+            $de_DE = new AptoLocale('de_DE');
+            $en_EN = new AptoLocale('en_EN');
+            $humanReadableBoxes = [];
+
+            foreach ($selectedValues['boxes'] as $box) {
+                $name = AptoTranslatedValue::fromArray($box['name']);
+                $multiplier_de = $this->multiplierPrefix->getTranslation($de_DE, null, true)->getValue() .
+                                ' ' . $box['multi'] . ' ' .
+                                $this->multiplierSuffix->getTranslation($de_DE, null, true)->getValue() .
+                                ' - ';
+                $multiplier_en = $this->multiplierPrefix->getTranslation($en_EN, null, true)->getValue() .
+                                ' ' . $box['multi'] . ' ' .
+                                $this->multiplierSuffix->getTranslation($en_EN, null, true)->getValue() .
+                                ' - ';
+                $name_de = $name->getTranslation($de_DE, null, true)->getValue();
+                $name_en = $name->getTranslation($en_EN, null, true)->getValue();
+                if ($this->enableMultiplier) {
+                    $box_de = $multiplier_de . $name_de;
+                    $box_en = $multiplier_en . $name_en;
+                }
+                else {
+                    $box_de = $name_de;
+                    $box_en = $name_en;
+                }
+                $humanReadableBoxes[] = AptoTranslatedValue::fromArray([
+                    'de_DE' =>
+                        $box_de,
+                    'en_EN' =>
+                        $box_en
+                ]);
+            }
+
             return $humanReadableBoxes;
         }
         catch (\Exception $e) {

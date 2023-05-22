@@ -34,7 +34,7 @@ abstract class AbstractAclPermission implements AclPermission, CommandInterface
     /**
      * @var array
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * AddAclPermission constructor.

@@ -68,15 +68,15 @@ abstract class RuleCriterion extends AptoEntity
      * @throws RuleCriterionInvalidValueException
      * @throws RuleCriterionInvalidTypeException
      */
-    public function __construct(
+    final public function __construct(
         AptoUuid $id,
         Rule $rule,
+        RuleCriterionOperator $operator,
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        RuleCriterionOperator $operator,
         ?string $value = null
     ) {
         parent::__construct($id);
@@ -200,14 +200,14 @@ abstract class RuleCriterion extends AptoEntity
         $rule = $entityMapping->get($this->rule->getId()->getId());
 
         // set section id
-        /** @var Section|null $section */
         $orgSectionId = $this->getSectionId();
+        /** @var Section|null $section */
         $section = null === $orgSectionId ? null : $entityMapping->get($orgSectionId->getId());
         $sectionId = null === $section ? null : $section->getId();
 
         // set element id
-        /** @var Element|null $element */
         $orgElementId = $this->getElementId();
+        /** @var Element|null $element */
         $element = null === $orgElementId ? null : $entityMapping->get($orgElementId->getId());
         $elementId = null === $element ? null : $element->getId();
 
@@ -218,12 +218,12 @@ abstract class RuleCriterion extends AptoEntity
         return new static(
             $id,
             $rule,
+            $this->getOperator(),
             $this->getType(),
             $sectionId,
             $elementId,
             $this->getProperty(),
             $computedProductValue,
-            $this->getOperator(),
             $this->getValue()
         );
     }

@@ -86,16 +86,15 @@ class ProductRuleHandler extends ProductChildHandler
             }
         }
 
-
         if (null !== $product) {
             $product->addRuleCondition(
                 new AptoUuid($command->getRuleId()),
+                new RuleCriterionOperator($command->getOperator()),
                 $command->getType(),
                 null !== $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null,
                 null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
                 $command->getProperty(),
                 $computedProductValue,
-                new RuleCriterionOperator($command->getOperator()),
                 $command->getValue()
             );
             $this->productRepository->update($product);
@@ -126,12 +125,12 @@ class ProductRuleHandler extends ProductChildHandler
         if (null !== $product) {
             $product->addRuleImplication(
                 new AptoUuid($command->getRuleId()),
+                new RuleCriterionOperator($command->getOperator()),
                 $command->getType(),
                 new AptoUuid($command->getSectionId()),
                 null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
                 $command->getProperty(),
                 $computedProductValue,
-                new RuleCriterionOperator($command->getOperator()),
                 $command->getValue()
             );
 

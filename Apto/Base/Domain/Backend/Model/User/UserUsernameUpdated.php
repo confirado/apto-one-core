@@ -8,7 +8,7 @@ use Apto\Base\Domain\Core\Model\DomainEvent\AbstractDomainEvent;
 class UserUsernameUpdated extends AbstractDomainEvent
 {
     /**
-     * @var string
+     * @var UserName
      */
     private $username;
 

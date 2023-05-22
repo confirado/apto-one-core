@@ -89,6 +89,7 @@ class ElementJsonValue implements ElementValue
             $value = @json_encode($value, JSON_UNESCAPED_UNICODE);
             return $value !== false;
         }
+        /** @phpstan-ignore-next-line  */
         catch (\Exception $e) {
             return false;
         }
@@ -97,7 +98,7 @@ class ElementJsonValue implements ElementValue
     /**
      * @return array
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
             'type' => 'json'

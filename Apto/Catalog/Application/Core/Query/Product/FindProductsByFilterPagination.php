@@ -23,8 +23,9 @@ class FindProductsByFilterPagination extends PaginationQuery implements PublicQu
         parent::__construct($pageNumber, $recordsPerPage, $filter['searchString']);
         $this->filter = $filter;
     }
+
     /**
-     * @return array|null
+     * @return array
      */
     public function getFilter(): array
     {

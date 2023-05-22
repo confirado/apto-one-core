@@ -27,11 +27,10 @@ class AddSelectBoxItems implements CommandInterface
     protected $items;
 
     /**
-     * AddSelectBoxItem constructor.
      * @param string $productId
      * @param string $sectionId
      * @param string $elementId
-     * @param array $name
+     * @param array $items
      */
     public function __construct(string $productId, string $sectionId, string $elementId, array $items)
     {

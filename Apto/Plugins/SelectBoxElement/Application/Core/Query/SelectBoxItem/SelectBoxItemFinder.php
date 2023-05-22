@@ -20,7 +20,7 @@ interface SelectBoxItemFinder extends AptoFinder
 
     /**
      * @param string $id
-     * @return array|null
+     * @return array
      */
     public function findPrices(string $id): array;
 

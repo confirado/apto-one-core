@@ -22,9 +22,9 @@ class RandomNumberOrmRepository extends AptoOrmRepository implements RandomNumbe
 
     /**
      * @param $number
-     * @return bool
+     * @return RandomNumber
      */
-    public function findByNumber($number): bool
+    public function findByNumber($number): ?RandomNumber
     {
         $dql = 'SELECT r.number FROM ' . RandomNumber::class . ' r WHERE r.number = :number';
 
@@ -35,6 +35,6 @@ class RandomNumberOrmRepository extends AptoOrmRepository implements RandomNumbe
             ])
             ->getResult();
 
-        return count($result) > 0;
+        return count($result) > 0 ? $result : null;
     }
 }

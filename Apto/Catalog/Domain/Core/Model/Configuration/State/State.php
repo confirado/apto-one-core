@@ -366,7 +366,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     /**
      * Return a JSON serialized representation
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->state;
     }

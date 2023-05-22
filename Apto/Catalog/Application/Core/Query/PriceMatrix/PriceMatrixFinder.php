@@ -68,21 +68,21 @@ interface PriceMatrixFinder extends AptoFinder
 
     /**
      * @param string $id
-     * @return array|null
+     * @return array
      */
     public function findElements(string $id): array;
 
     /**
      * @param string $id
      * @param string $elementId
-     * @return array|null
+     * @return array
      */
     public function findElementPrices(string $id, string $elementId): array;
 
     /**
      * @param string $id
      * @param string $elementId
-     * @return array|null
+     * @return array
      */
     public function findElementCustomProperties(string $id, string $elementId): array;
 

@@ -18,6 +18,7 @@ class FrontendUserOrmRepository extends AptoOrmRepository implements FrontendUse
      */
     public function update(FrontendUser $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

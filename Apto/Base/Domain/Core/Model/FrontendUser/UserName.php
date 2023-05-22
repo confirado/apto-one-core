@@ -29,10 +29,6 @@ class UserName implements \JsonSerializable
     {
         $username = strtolower($username);
 
-        if (null === $username) {
-            throw new InvalidUserNameException('Null is not a valid username.');
-        }
-
         if (strlen($username) < 4) {
             throw new InvalidUserNameException('A username must have at least 4 characters.');
         }
@@ -70,7 +66,7 @@ class UserName implements \JsonSerializable
     /**
      * @return string
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         return $this->__toString();
     }

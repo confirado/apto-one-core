@@ -5,9 +5,9 @@ namespace Apto\Base\Application\Core\Service\ContentSnippet;
 class ContentSnippetRegistry
 {
     /**
-     * @var string
+     * @var array
      */
-    private $contentSnippetProviders;
+    private array $contentSnippetProviders;
 
 
     /**

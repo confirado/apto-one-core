@@ -25,6 +25,7 @@ class ProductOrmRepository extends AptoOrmRepository implements ProductRepositor
      */
     public function update(Product $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
         $this->invalidateCache($model->getId()->getId(), $model->getSeoUrl());
     }
@@ -130,7 +131,7 @@ class ProductOrmRepository extends AptoOrmRepository implements ProductRepositor
      */
     public function flush($entity = null)
     {
-        $this->_em->flush($entity);
+        $this->_em->flush();
     }
 
     /**

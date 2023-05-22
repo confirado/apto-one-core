@@ -15,6 +15,7 @@ class CategoryOrmRepository extends AptoOrmRepository implements CategoryReposit
      */
     public function update(Category $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

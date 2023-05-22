@@ -134,10 +134,10 @@ class ElementRangeValue implements ElementValue
         }
 
         $offset = $value - $this->minimum;
-        if (self::modulo($offset, $this->step) == 0) {
+        if (self::modulo((string) $offset, (string) $this->step) == 0) {
             $offset -= $this->step;
         } else {
-            $offset -= self::modulo($offset, $this->step);
+            $offset -= (float) self::modulo((string) $offset, (string) $this->step);
         }
 
         $result = $this->minimum + $offset;
@@ -166,10 +166,10 @@ class ElementRangeValue implements ElementValue
         }
 
         $offset = $value - $this->minimum;
-        if (self::modulo($offset, $this->step) == 0) {
+        if (self::modulo((string) $offset, (string) $this->step) == 0) {
             $offset += $this->step;
         } else {
-            $offset -= self::modulo($offset, $this->step) - $this->step;
+            $offset -= (float) self::modulo((string) $offset, (string) $this->step) - $this->step;
         }
 
         $result = $this->minimum + $offset;
@@ -198,7 +198,7 @@ class ElementRangeValue implements ElementValue
         }
 
         $offset = $value - $this->minimum;
-        if (self::modulo($offset, $this->step) != 0) {
+        if (self::modulo((string) $offset, (string) $this->step) != 0) {
             return null;
         }
 
@@ -285,7 +285,7 @@ class ElementRangeValue implements ElementValue
     /**
      * @return array
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
             'type' => 'range',

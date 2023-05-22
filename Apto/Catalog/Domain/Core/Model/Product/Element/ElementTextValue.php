@@ -148,7 +148,7 @@ class ElementTextValue implements ElementValue
     /**
      * @return array
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
             'type' => 'text',

@@ -8,11 +8,13 @@ class OfferData extends AptoAggregate
 {
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $number;
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $data;

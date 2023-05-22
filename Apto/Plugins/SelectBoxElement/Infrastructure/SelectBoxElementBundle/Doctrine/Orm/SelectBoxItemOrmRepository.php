@@ -18,6 +18,7 @@ class SelectBoxItemOrmRepository extends AptoOrmRepository implements SelectBoxI
      */
     public function update(SelectBoxItem $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -39,7 +39,7 @@ class PriceMatrixPriceExportProvider extends AbstractPriceExportProvider
     /**
      * @param array $productIds
      * @param array $filter
-     * @return array|bool[]
+     * @return array|PriceItem[]
      * @throws InvalidUuidException
      */
     public function getPrices(array $productIds, array $filter): array

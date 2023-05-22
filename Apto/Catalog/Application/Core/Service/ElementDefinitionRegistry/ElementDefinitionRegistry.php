@@ -70,7 +70,7 @@ class ElementDefinitionRegistry implements \JsonSerializable
 
     /**
      * @param string $elementDefinitionClass
-     * @return ElementStaticValuesProvider|null
+     * @return ElementStaticValuesProvider
      */
     public function getStaticValuesProvider(string $elementDefinitionClass): ElementStaticValuesProvider
     {
@@ -84,7 +84,7 @@ class ElementDefinitionRegistry implements \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $definitions = [];
 

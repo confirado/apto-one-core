@@ -2,6 +2,7 @@
 
 namespace Apto\Catalog\Application\Core\Service\Translation;
 
+use _PHPStan_a3459023a\Nette\Neon\Exception;
 use Apto\Base\Application\Core\Query\AptoFinder;
 use Apto\Base\Application\Core\Service\Translation\Exceptions\TranslationTypeNotFoundException;
 use Apto\Base\Application\Core\Service\Translation\TranslationItem;
@@ -19,10 +20,12 @@ class ProductTranslationExportProvider extends AbstractTranslationExportProvider
      * @var ProductFinder
      */
     private $productFinder;
+
     /**
      * @var ProductSectionFinder
      */
     private $sectionFinder;
+
     /**
      * @var ProductElementFinder
      */
@@ -228,10 +231,17 @@ class ProductTranslationExportProvider extends AbstractTranslationExportProvider
         return  array_merge($section, $nestedFields);
     }
 
-    function getNestedFields(AptoFinder $finder, string $entityId, $rules = false) {
+    /**
+     * @param AptoFinder $finder
+     * @param string $entityId
+     * @param bool $rules
+     * @return array
+     */
+    private function getNestedFields(AptoFinder $finder, string $entityId, bool $rules = false)
+    {
         $result = [];
 
-        if ($rules) {
+        if ($rules && $finder instanceof ProductFinder) {
             // get Rules
             $result['rules'] = $this->getRules($finder, $entityId);
         }
@@ -246,11 +256,11 @@ class ProductTranslationExportProvider extends AbstractTranslationExportProvider
     }
 
     /**
-     * @param AptoFinder $finder
+     * @param ProductFinder $finder
      * @param string $entityId
      * @return mixed
      */
-    private function getRules(AptoFinder $finder, string $entityId)
+    private function getRules(ProductFinder $finder, string $entityId)
     {
         return $finder->findRules($entityId)['rules'];
     }
@@ -262,7 +272,11 @@ class ProductTranslationExportProvider extends AbstractTranslationExportProvider
      */
     private function getDiscounts(AptoFinder $finder, string $entityId)
     {
-        return $finder->findDiscounts($entityId);
+        if ($finder instanceof ProductFinder || $finder instanceof ProductSectionFinder || $finder instanceof ProductElementFinder) {
+            return $finder->findDiscounts($entityId);
+        }
+
+        throw new Exception('Finder must be an instance of "ProductFinder", "ProductSectionFinder" or "ProductElementFinder".');
     }
 
     /**
@@ -272,8 +286,12 @@ class ProductTranslationExportProvider extends AbstractTranslationExportProvider
      */
     private function getCustomProperties(AptoFinder $finder, string $entityId)
     {
-        $customProperties = $finder->findCustomProperties($entityId)['customProperties'];
-        return $this->filterCustomProperties($customProperties);
+        if ($finder instanceof ProductFinder || $finder instanceof ProductSectionFinder || $finder instanceof ProductElementFinder) {
+            $customProperties = $finder->findCustomProperties($entityId)['customProperties'];
+            return $this->filterCustomProperties($customProperties);
+        }
+
+        throw new Exception('Finder must be an instance of "ProductFinder", "ProductSectionFinder" or "ProductElementFinder".');
     }
 
     /**

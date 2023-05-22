@@ -15,6 +15,7 @@ class FilterPropertyOrmRepository extends AptoOrmRepository implements FilterPro
      */
     public function update(FilterProperty $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

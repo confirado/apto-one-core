@@ -15,6 +15,7 @@ class CustomerConfigurationOrmRepository extends AptoOrmRepository implements Cu
      */
     public function update(CustomerConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

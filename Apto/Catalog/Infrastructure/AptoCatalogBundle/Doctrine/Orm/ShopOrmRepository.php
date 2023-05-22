@@ -21,6 +21,7 @@ class ShopOrmRepository extends AptoOrmRepository implements ShopRepository
      */
     public function update(Shop $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -71,8 +71,8 @@ class PropertyCommandHandler extends AbstractCommandHandler
         }
 
         if ($oldMultiple && !$command->getAllowMultiple()) {
-            /** @var Property $property */
             $firstDefaultSkipped = false;
+            /** @var Property $property */
             foreach ($group->getProperties() as $property) {
                 if ($property->isDefault()) {
                     if ($firstDefaultSkipped) {

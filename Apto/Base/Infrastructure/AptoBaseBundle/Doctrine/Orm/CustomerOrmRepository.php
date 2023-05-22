@@ -14,6 +14,7 @@ class CustomerOrmRepository extends AptoOrmRepository implements CustomerReposit
      */
     public function update(Customer $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

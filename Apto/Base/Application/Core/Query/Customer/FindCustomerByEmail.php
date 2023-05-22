@@ -17,7 +17,7 @@ class FindCustomerByEmail implements PublicQueryInterface
      */
     public function __construct(string $email)
     {
-        $this->externalId = $email;
+        $this->email = $email;
     }
 
     /**

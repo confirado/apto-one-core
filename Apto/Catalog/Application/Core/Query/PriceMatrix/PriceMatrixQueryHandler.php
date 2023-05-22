@@ -125,7 +125,7 @@ class PriceMatrixQueryHandler implements QueryHandlerInterface
         $shopCurrency = $query->getShopCurrency();
         $shopCurrencyObj = new Currency($shopCurrency['currency']);
         $customerGroupExternalId = $query->getCustomerGroupExternalId();
-        
+
         // get shop id
         $connector = $this->shopFinder->findConnectorConfigByDomain($this->requestStore->getHttpHost());
         $customerGroup = $this->getCustomerGroup($connector['shopId'], $customerGroupExternalId);
@@ -364,20 +364,6 @@ class PriceMatrixQueryHandler implements QueryHandlerInterface
             }
         }
         return $csvArray;
-    }
-
-    /**
-     * @param array $csvArray
-     * @return array
-     */
-    private function getMatrixHeader(array $csvArray)
-    {
-        // create Matrix Header
-        $header = [];
-        foreach ($csvArray as $element) {
-            $header[] = [ $element['Breite'] => null ];
-        }
-        return $header;
     }
 
     /**

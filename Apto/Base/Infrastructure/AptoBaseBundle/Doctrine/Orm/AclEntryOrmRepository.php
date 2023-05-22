@@ -9,12 +9,13 @@ use Apto\Base\Domain\Backend\Model\Acl\AclIdentity;
 class AclEntryOrmRepository extends AptoOrmRepository implements AclEntryRepository
 {
     const ENTITY_CLASS = AclEntry::class;
-    
+
     /**
      * @param AclEntry $model
      */
     public function update(AclEntry $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

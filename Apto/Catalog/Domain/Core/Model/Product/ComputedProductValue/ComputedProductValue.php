@@ -262,7 +262,7 @@ class ComputedProductValue extends AptoEntity
     public function getValue(State $state, array $calculatedValues = [], ?MediaFileSystemConnector $mediaFileSystem = null): string
     {
         if (!$this->formula) {
-            return 0;
+            return '0';
         }
 
         $filledFormula = $this->fillNestedValues(array_merge($calculatedValues, [
@@ -276,7 +276,7 @@ class ComputedProductValue extends AptoEntity
                 $variables
             );
         } catch (\Exception $exception) {
-            return 0;
+            return '0';
         }
     }
 

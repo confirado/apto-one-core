@@ -8,21 +8,25 @@ class OfferHtml extends AptoAggregate
 {
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $number;
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $header;
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $footer;
 
     /**
+     * @phpstan-ignore-next-line
      * @var string
      */
     private $body;

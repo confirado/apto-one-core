@@ -92,6 +92,7 @@ class ConfigurationEventHandler implements EventHandlerInterface
 
         $bccAddresses = explode(',', $bccCS);
         $bcc = [];
+        /** @phpstan-ignore-next-line  */
         if ($bccCS && count($bccAddresses) > 0) {
             foreach ($bccAddresses as $bccAddress) {
                 $bcc[] = [

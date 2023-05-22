@@ -88,7 +88,7 @@ class FloatInputElementPriceProvider implements ElementPriceProvider, Additional
         // add preferred price
         $conversionFactor = array_key_exists('conversionFactor', $staticValues) ? $staticValues['conversionFactor'] : '1';
         $preferredPrice = $priceCalculator->getTaxAdaptedPriceByPreferredCustomerGroup($prices);
-        return $elementPrice->add($preferredPrice->multiply($this->calculator->mul($conversionFactor, $value)));
+        return $elementPrice->add($preferredPrice->multiply($this->calculator->mul($conversionFactor, (string) $value)));
     }
 
     public function getAdditionalInformation(

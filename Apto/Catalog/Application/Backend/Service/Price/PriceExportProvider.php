@@ -7,7 +7,7 @@ interface PriceExportProvider
     /**
      * @param array $productIds
      * @param array $filter
-     * @return array[PriceItem]
+     * @return array<PriceItem>
      */
     public function getPrices(array $productIds, array $filter): array;
 

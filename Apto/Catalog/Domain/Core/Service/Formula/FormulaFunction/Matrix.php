@@ -14,7 +14,7 @@ class Matrix extends AbstractFormulaFunction
     protected $fileSystemConnector;
 
     /**
-     * @param MediaFileSystemConnector|null $fileSystemConnector
+     * @param MediaFileSystemConnector $fileSystemConnector
      */
     public function __construct(MediaFileSystemConnector $fileSystemConnector)
     {

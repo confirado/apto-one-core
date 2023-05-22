@@ -15,6 +15,7 @@ class FilterCategoryOrmRepository extends AptoOrmRepository implements FilterCat
      */
     public function update(FilterCategory $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 
