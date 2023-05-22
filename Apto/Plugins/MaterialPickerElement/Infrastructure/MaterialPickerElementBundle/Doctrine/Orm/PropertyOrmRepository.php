@@ -16,6 +16,7 @@ class PropertyOrmRepository extends AptoOrmRepository implements PropertyReposit
      */
     public function update(Property $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
         $this->invalidateCache();
     }

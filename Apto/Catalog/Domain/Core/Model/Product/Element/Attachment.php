@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
 class Attachment extends AptoEntity
 {
     /**
-     * @var string
+     * @var AptoTranslatedValue
      */
     protected $name;
 

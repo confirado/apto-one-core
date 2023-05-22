@@ -10,6 +10,7 @@ use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup;
 class PoolItem extends AptoEntity
 {
     /**
+     * @phpstan-ignore-next-line
      * @var Pool
      */
     private $pool;

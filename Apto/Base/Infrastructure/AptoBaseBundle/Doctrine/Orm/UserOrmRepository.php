@@ -12,13 +12,14 @@ class UserOrmRepository extends AptoOrmRepository implements UserRepository
 {
 
     const ENTITY_CLASS = User::class;
-    
+
     /**
      * @param User $model
      * @throws ORMException
      */
     public function update(User $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

@@ -32,7 +32,7 @@ class Category extends AptoAggregate
     protected $parentId;
 
     /**
-     * @var MediaFile
+     * @var MediaFile|null
      */
     protected $previewImage;
 

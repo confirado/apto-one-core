@@ -48,10 +48,9 @@ class ImageMagickThumbnailService extends ThumbnailService
 
 
     /**
-     * ThumbnailService constructor.
      * @param ThumbFileSystemConnector $thumbConnector
      * @param RootFileSystemConnector $rootConnector
-     * @param string $convertPath
+     * @param AptoParameterInterface $aptoParameter
      */
     public function __construct(ThumbFileSystemConnector $thumbConnector, RootFileSystemConnector $rootConnector, AptoParameterInterface $aptoParameter)
     {
@@ -96,11 +95,11 @@ class ImageMagickThumbnailService extends ThumbnailService
         }
 
         if ($width > self::MAX_WIDTH || $height > self::MAX_HEIGHT) {
-            throw new ThumbnailServiceMaxSizeExceededException($width, $height);
+            throw new ThumbnailServiceMaxSizeExceededException((string) $width, (string) $height);
         }
 
         if (!in_array($mode, self::SUPPORTED_MODES)) {
-            throw new ThumbnailServiceInvalidModeException($mode);
+            throw new ThumbnailServiceInvalidModeException((string) $mode);
         }
 
         $thumbnailFile = $this->allocateThumbnailFile($sourceFile, $sourceConnector, $width, $height, $thumbnailExtension);
@@ -150,8 +149,8 @@ class ImageMagickThumbnailService extends ThumbnailService
         FileSystemConnector $sourceConnector,
         $width = null,
         $height = null,
-        int $mode,
-        string $thumbnailExtension
+        int $mode = self::MODE_SHRINK,
+        string $thumbnailExtension = self::DEFAULT_THUMBNAIL_EXTENSION
     ) {
         // get content to local temp file
         $tempFile = $this->allocateLocalTempFile();

@@ -27,9 +27,8 @@ class PriceQueryHandler implements QueryHandlerInterface
      * @return array
      * @throws \Exception
      */
-    public function handleFindPrices (FindPrices $query)
+    public function handleFindPrices (FindPrices $query): array
     {
-        /** @var $prices[PriceItem] */
         $prices = [];
         /** @var PriceExportProvider $priceExportProvider */
         foreach ($this->priceRegistry->getPriceExportProviders() as $priceExportProvider) {

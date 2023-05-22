@@ -382,14 +382,30 @@ class BasketItemFactory
 
             // sort elements in section
             usort($sortedProperties[$sectionCount]['elements'], function($first, $second) {
-                return $first['position'] > $second['position'];
+                if ($first['position'] > $second['position']) {
+                    return 1;
+                }
+
+                if ($first['position'] < $second['position']) {
+                    return -1;
+                }
+
+                return 0;
             });
             $sectionCount++;
         }
 
         // sort sections
         usort($sortedProperties, function($first, $second) {
-            return $first['position'] > $second['position'];
+            if ($first['position'] > $second['position']) {
+                return 1;
+            }
+
+            if ($first['position'] < $second['position']) {
+                return -1;
+            }
+
+            return 0;
         });
 
         return $sortedProperties;
@@ -459,7 +475,7 @@ class BasketItemFactory
             $groupExternalId = $customerGroup['externalId'];
 
             $taxCalculator = new SimpleTaxCalculator(
-                $basketConfiguration->getProduct()->getTaxRate(),
+                (string) $basketConfiguration->getProduct()->getTaxRate(),
                 $customerGroup['inputGross'],
                 $customerGroup['showGross']
             );
@@ -674,10 +690,6 @@ class BasketItemFactory
         $currencies = new ISOCurrencies();
         $moneyFormatter = new DecimalMoneyFormatter($currencies);
         $formattedAmount = $moneyFormatter->format($configurationPrice);
-
-        if (false === $formattedAmount) {
-            throw new Exception('Can\'t format Money Object.');
-        }
 
         return $formattedAmount;
     }

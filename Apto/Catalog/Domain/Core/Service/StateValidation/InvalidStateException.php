@@ -10,7 +10,7 @@ class InvalidStateException extends StateException
      * @param string $section
      * @param string|null $element
      * @param string|null $property
-     * @param null $value
+     * @param mixed|null $value
      */
     public function __construct(string $message, string $product, string $section, ?string $element = null, ?string $property = null, $value = null)
     {

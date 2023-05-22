@@ -56,7 +56,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
      */
     public function getAnyValue()
     {
-        /** @var ElementValue $value */
+        /** @var ElementValue $element */
         foreach ($this->collection as $element) {
             $guess = $element->getAnyValue();
             if (null !== $guess) {
@@ -76,7 +76,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
     {
         $result = null;
 
-        /** @var ElementValue $value */
+        /** @var ElementValue $element */
         foreach ($this->collection as $element) {
             $guess = $element->getValueLowerThan($value);
             if (null !== $guess) {
@@ -94,7 +94,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
      */
     public function getEqualValue($value)
     {
-        /** @var ElementValue $value */
+        /** @var ElementValue $element */
         foreach ($this->collection as $element) {
             $guess = $element->getValueEqualTo($value);
             if (null !== $guess) {
@@ -114,7 +114,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
     {
         $result = null;
 
-        /** @var ElementValue $value */
+        /** @var ElementValue $element */
         foreach ($this->collection as $element) {
             $guess = $element->getValueGreaterThan($value);
             if (null !== $guess) {
@@ -132,7 +132,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
      */
     public function getNotEqualValue($value)
     {
-        /** @var ElementValue $value */
+        /** @var ElementValue $element */
         foreach ($this->collection as $element) {
             $guess = $element->getValueNotEqualTo($value);
             if (null !== $guess) {
@@ -182,7 +182,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
             try {
                 if (class_exists($item['class'])) {
                     $fullClassName = '\\' . $item['class'];
-                    /** @var ElementValue $fullClassName */
+                    /** @var ElementValue $object */
                     $object = $fullClassName::jsonDecode($item);
                     if (!($object instanceof ElementValue)) {
                         throw new \InvalidArgumentException('Instance of ElementValue expected, but \'' . $fullClassName . '\' given.');
@@ -201,7 +201,7 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $collection = [];
 

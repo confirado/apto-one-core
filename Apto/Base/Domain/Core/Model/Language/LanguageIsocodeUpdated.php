@@ -9,7 +9,7 @@ use Apto\Base\Domain\Core\Model\DomainEvent\AbstractDomainEvent;
 class LanguageIsocodeUpdated extends AbstractDomainEvent
 {
     /**
-     * @var string
+     * @var AptoLocale
      */
     private $aptoLocale;
 

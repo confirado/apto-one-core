@@ -42,7 +42,7 @@ class User extends AptoAggregate
     protected $userLicenceHash;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|\DateTime|null
      */
     protected $userLicenceSignatureTimestamp;
 

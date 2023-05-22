@@ -18,6 +18,7 @@ class DomainPropertiesOrmRepository extends AptoOrmRepository implements DomainP
      */
     public function update(DomainProperties $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 
@@ -59,6 +60,6 @@ class DomainPropertiesOrmRepository extends AptoOrmRepository implements DomainP
      */
     public function flush($entity = null)
     {
-        $this->_em->flush($entity);
+        $this->_em->flush();
     }
 }

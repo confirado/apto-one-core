@@ -15,6 +15,7 @@ class BasketConfigurationOrmRepository extends AptoOrmRepository implements Bask
      */
     public function update(BasketConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

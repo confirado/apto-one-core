@@ -355,8 +355,8 @@ class PricePerUnitElementDefinition implements ElementDefinition, ElementDefinit
         $json = json_encode($this->jsonEncode());
 
         // replace all old entity ids with new ones
-        /** @var AptoEntity $entity */
         foreach ($entityMapping->getKeys() as $key) {
+            /** @var AptoEntity $entity */
             $entity = $entityMapping->get($key);
             $json = str_replace($key, $entity->getId()->getId(), $json);
         }

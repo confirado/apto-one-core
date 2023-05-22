@@ -8,12 +8,13 @@ use Apto\Base\Domain\Backend\Model\UserRole\UserRoleRepository;
 class UserRoleOrmRepository extends AptoOrmRepository implements UserRoleRepository
 {
     const ENTITY_CLASS = UserRole::class;
-    
+
     /**
      * @param UserRole $model
      */
     public function update(UserRole $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

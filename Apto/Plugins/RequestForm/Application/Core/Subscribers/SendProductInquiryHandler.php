@@ -87,7 +87,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
     private $mediaFileSystemConnector;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $config;
 
@@ -97,12 +97,12 @@ class SendProductInquiryHandler implements EventHandlerInterface
     private $mediaRelativePath;
 
     /**
-     * @var true
+     * @var bool
      */
     private $sendPDFToCustomer;
 
     /**
-     * @var int
+     * @var string|int
      */
     private $randomNumber;
 
@@ -112,12 +112,12 @@ class SendProductInquiryHandler implements EventHandlerInterface
     private $randomNumberPrefix;
 
     /**
-     * @var false
+     * @var bool
      */
     private $prioritySeperate;
 
     /**
-     * @var false
+     * @var bool
      */
     private $priorityOnly;
 
@@ -493,13 +493,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         // get Template File
         if (array_key_exists('seperatePartnerMail', $this->config) && $this->config['seperatePartnerMail']){
             // specific Customer Mail for different Partners
-            try {
-                $templatePath = '@RequestForm/mail/customer/mail-'.$this->partnerID.'.html.twig';
-
-            } catch (\Throwable $th) {
-                // Fallback Mail
-                $templatePath = '@RequestForm/mail/customer/mail.html.twig';
-            }
+            $templatePath = '@RequestForm/mail/customer/mail-'.$this->partnerID.'.html.twig';
         } else {
             $templatePath = '@RequestForm/mail/customer/mail.html.twig';
         }
@@ -930,6 +924,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         else if($prioData && $hasPriorities) {
             return $priorities;
         }
+        /** @phpstan-ignore-next-line  */
         else if ($prioData && !$hasPriorities) {
             return null;
         }
@@ -987,7 +982,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $attempt = $min_value;
 
         while ($attempt < $max_attempts) {
-            $number = $this->randomNumberPrefix . str_pad(mt_rand($min_value, $max_value), 8, '0', STR_PAD_LEFT);
+            $number = $this->randomNumberPrefix . str_pad((string) mt_rand($min_value, $max_value), 8, '0', STR_PAD_LEFT);
 
             //isCodeUnique
             $item = $this->randomNumberRepository->findByNumber($number);

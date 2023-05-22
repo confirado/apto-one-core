@@ -4,7 +4,7 @@ namespace Apto\Catalog\Domain\Core\Factory\ConfigurableProduct;
 
 use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Service\ConfigurableProduct\ConfigurableProductBuilder;
-use Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm\ProductOrmRepository;
+use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
 
 class ConfigurableProductFactory
 {
@@ -14,15 +14,15 @@ class ConfigurableProductFactory
     protected $configurableProductBuilder;
 
     /**
-     * @var ProductOrmRepository
+     * @var ProductRepository
      */
     protected $productRepository;
 
     /**
      * @param ConfigurableProductBuilder $configurableProductBuilder
-     * @param ProductOrmRepository $productRepository
+     * @param ProductRepository $productRepository
      */
-    public function __construct(ConfigurableProductBuilder $configurableProductBuilder, ProductOrmRepository $productRepository)
+    public function __construct(ConfigurableProductBuilder $configurableProductBuilder, ProductRepository $productRepository)
     {
         $this->configurableProductBuilder = $configurableProductBuilder;
         $this->productRepository = $productRepository;
@@ -47,7 +47,6 @@ class ConfigurableProductFactory
             return null;
         }
         $product = $this->productRepository->findById($configurableProduct['id']);
-        return $configurableProduct ? new ConfigurableProduct($configurableProduct, $product) : null;
+        return new ConfigurableProduct($configurableProduct, $product);
     }
-
 }

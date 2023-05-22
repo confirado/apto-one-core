@@ -39,11 +39,6 @@ class InstallController extends AbstractController
     private const ADMIN_GROUP_ID = '80368e25-ab66-4833-aa4c-b1496e3aa1b4';
 
     /**
-     * @var KernelInterface
-     */
-    private KernelInterface $kernel;
-
-    /**
      * @var CommandBus
      */
     private CommandBus $commandBus;
@@ -74,7 +69,6 @@ class InstallController extends AbstractController
     private bool $installer;
 
     /**
-     * @param KernelInterface $kernel
      * @param CommandBus $commandBus
      * @param InstallTemplateLoader $templateLoader
      * @param PasswordEncoder $passwordEncoder
@@ -82,14 +76,12 @@ class InstallController extends AbstractController
      * @param Connection $connection
      */
     public function __construct(
-        KernelInterface $kernel,
         CommandBus $commandBus,
         InstallTemplateLoader $templateLoader,
         PasswordEncoder $passwordEncoder,
         AptoParameterInterface $aptoParameter,
         Connection $connection
     ) {
-        $this->kernel = $kernel;
         $this->commandBus = $commandBus;
         $this->templateLoader = $templateLoader;
         $this->passwordEncoder = $passwordEncoder;
@@ -272,11 +264,6 @@ class InstallController extends AbstractController
             $db = $this->connection->getDriver()->connect($data['database']);
             $db->exec($clearSql);
             $db->exec($importSql);
-
-            // clear cache
-            // disabled because it causes errors sometimes if you clear cache on runtime
-            // changes in .env.local seems to take effect also without clearing the cache in production
-            //$this->clearCache();
         } catch (\Exception $exception) {
             $result = ['success' => false, 'message' => $exception->getMessage()];
         }
@@ -311,11 +298,6 @@ class InstallController extends AbstractController
                 $this->projectDir . '/.env.local',
                 "APTO_INSTALLER=disabled\nSA_HASH='" . $this->passwordEncoder->encodePassword($result['superadmin']) . "'\n" . file_get_contents($this->projectDir . '/.env.local')
             );
-
-            // clear cache
-            // disabled because it causes errors sometimes if you clear cache on runtime
-            // changes in .env.local seems to take effect also without clearing the cache in production
-            //$this->clearCache();
         } catch (\Exception $exception) {
             $result = ['success' => false, 'message' => $exception->getMessage()];
         }
@@ -394,25 +376,5 @@ class InstallController extends AbstractController
     private function getMailerDsn(array $data): string
     {
         return sprintf('smtp://%s:%s@%s:%s', $data['user'], urlencode($data['password']), $data['host'], $data['port']);
-    }
-
-    /**
-     * @return void
-     * @throws \Exception
-     */
-    private function clearCache()
-    {
-        $env = $this->kernel->getEnvironment();
-
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-
-        $input = new ArrayInput(array(
-            'command' => 'cache:clear',
-            '--env' => $env
-        ));
-
-        $output = new BufferedOutput();
-        $application->run($input, $output);
     }
 }

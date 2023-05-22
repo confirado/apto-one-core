@@ -14,6 +14,11 @@ interface CodeConfigurationRepository extends AptoRepository
     /**
      * @param CodeConfiguration $model
      */
+    public function update(CodeConfiguration $model);
+
+    /**
+     * @param CodeConfiguration $model
+     */
     public function remove(CodeConfiguration $model);
 
     /**

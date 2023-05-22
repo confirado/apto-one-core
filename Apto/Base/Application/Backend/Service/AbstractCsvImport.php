@@ -122,8 +122,9 @@ abstract class AbstractCsvImport
             }
 
             // use column index as key for current values and check for mismatch
-            $fields = @array_combine($this->colIndex, $fields);
-            if (false === $fields) {
+            try {
+                $fields = array_combine($this->colIndex, $fields);
+            } catch (\ValueError $error) {
                 $this->errors[] = 'Zeile #' . $this->lineNumber . ': Anzahl der Spalten stimmt nicht mit erster Zeile überein.';
                 continue;
             }

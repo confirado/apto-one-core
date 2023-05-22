@@ -369,11 +369,12 @@ class ImageRenderer implements ImageRendererInterface
      * @param array $imageList
      * @throws Exception
      */
-    protected function createRenderedImage(State $state, FileSystemConnector $srcFileSystem, FileSystemConnector $dstFileSystem, array $srcFiles, File $dstFile, bool $createThumb = false, array $imageList)
+    protected function createRenderedImage(State $state, FileSystemConnector $srcFileSystem, FileSystemConnector $dstFileSystem, array $srcFiles, File $dstFile, bool $createThumb = false, array $imageList = [])
     {
         $convertPath = $this->convertPath;
         $renderedImageExtension = self::RENDERED_IMAGE_EXTENSION;
         $renderedImageQuality = self::RENDERED_IMAGE_QUALITY;
+        $dimensions = null;
 
         if (true === $createThumb) {
             $convertPath = $this->convertPathThumb;
@@ -400,7 +401,7 @@ class ImageRenderer implements ImageRendererInterface
                 throw new Exception('Cant render image because a required render image has not been found.');
             }
 
-            if ($index === 0) {
+            if (null === $dimensions) {
                 $dimensions = getimagesize($srcFileSystem->getAbsolutePath($srcFile->getPath()));
             }
 
@@ -708,7 +709,7 @@ class ImageRenderer implements ImageRendererInterface
     protected function removeLocalTemporaryFiles(array $tmpFiles)
     {
         foreach ($tmpFiles as $tmpFile) {
-            /** @var File $srcFile */
+            /** @var File $tmpFile */
             $this->localFilesystem->removeFile($tmpFile);
         }
     }

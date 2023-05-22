@@ -14,6 +14,7 @@ class AptoCustomPropertyOrmRepository extends AptoOrmRepository implements AptoC
      */
     public function update(AptoCustomProperty $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

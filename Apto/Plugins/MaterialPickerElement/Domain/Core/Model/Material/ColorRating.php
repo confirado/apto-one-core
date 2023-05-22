@@ -39,6 +39,14 @@ class ColorRating extends AptoEntity
     }
 
     /**
+     * @return Material
+     */
+    public function getMaterial(): Material
+    {
+        return $this->material;
+    }
+
+    /**
      * @return Color
      */
     public function getColor(): Color

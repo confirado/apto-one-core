@@ -27,12 +27,12 @@ class FormulaParser
     private $mediaFileSystem;
 
     /**
-     * @var AptoUuid
+     * @var AptoUuid|null
      */
     private $productId;
 
     /**
-     * @var State
+     * @var State|null
      */
     private $state;
 
@@ -47,12 +47,14 @@ class FormulaParser
         $this->computedProductValueCalculator = $computedProductValueCalculator;
         $this->mediaFileSystem = $mediaFileSystem;
         $this->computedValues = [];
+        $this->productId = null;
+        $this->state = null;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getProductId(): string
+    public function getProductId(): ?string
     {
         return $this->productId;
     }
@@ -68,9 +70,9 @@ class FormulaParser
     }
 
     /**
-     * @return State
+     * @return State|null
      */
-    public function getState(): State
+    public function getState(): ?State
     {
         return $this->state;
     }
@@ -96,10 +98,10 @@ class FormulaParser
      */
     public function calculateFormula(string $formula, bool $parseComputedValues = false, int $precision = 0) :float
     {
-        if ($parseComputedValues && !$this->productId) {
+        if ($parseComputedValues && null !==$this->productId) {
             throw new NoProductIdGivenException("No ProductId given");
         }
-        if ($parseComputedValues && !$this->state) {
+        if ($parseComputedValues && null !== $this->state) {
             throw new NoStateGivenException("No State given");
         }
         if ($parseComputedValues) {
@@ -117,24 +119,4 @@ class FormulaParser
             $precision
         );
     }
-
-    /**
-     * @param string $formula
-     */
-    private function parseFormula(string &$formula)
-    {
-        $pattern = '/\\{.*?\\}/';
-        $variables = [];
-        preg_match_all($pattern, $formula, $variables);
-
-        foreach ($variables[0] as $variable) {
-            $variableName = str_replace('{', '', str_replace('}', '', $variable));
-
-            if (array_key_exists($variableName, $this->computedValues)) {
-                $formula = str_replace($variable, $this->computedValues[$variableName], $formula);
-            }
-        }
-        $formula = FunctionParser::parse($formula, $this->computedValues, $this->mediaFileSystem);
-    }
-
 }

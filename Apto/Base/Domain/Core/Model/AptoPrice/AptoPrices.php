@@ -61,7 +61,7 @@ trait AptoPrices
 
     /**
      * @param AptoUuid $priceId
-     * @return AptoPrices
+     * @return self
      */
     public function removeAptoPrice(AptoUuid $priceId): self
     {
@@ -174,7 +174,7 @@ trait AptoPrices
     }
 
     /**
-     * @return AptoPrices
+     * @return self
      */
     public function clearAptoPrices(): self
     {

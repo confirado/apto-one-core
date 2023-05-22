@@ -99,12 +99,12 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
         $operatorsToFulfill = $query->getIntention()['repair']['operators'] ?? null;
         $selectEmptySections = $query->getIntention()['repair']['selectEmptySections'] ?? null;
 
-        // assert valid sections, elements, properties and values (if set)
-        $this->valueValidationService->assertValidValues($product, $enrichedState->getState());
-
         // init state
         if ($query->getIntention()['init'] ?? false) {
             try {
+                // assert valid sections, elements, properties and values (if set)
+                $this->valueValidationService->assertValidValues($product, $enrichedState->getState());
+                
                 $this->applyInit($product, $enrichedState);
             } catch (InvalidStateException $e) {
                 throw InitConfigurationStateException::fromInvalidConfigurationStateException($e);

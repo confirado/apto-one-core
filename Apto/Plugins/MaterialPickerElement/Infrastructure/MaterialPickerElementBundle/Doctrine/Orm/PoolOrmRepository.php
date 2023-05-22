@@ -16,6 +16,7 @@ class PoolOrmRepository extends AptoOrmRepository implements PoolRepository
      */
     public function update(Pool $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
         $this->invalidateCache();
     }

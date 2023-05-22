@@ -26,12 +26,12 @@ class PricePerUnitElementPriceProvider implements ElementPriceProvider, Addition
     protected $pricePerUnitItemFinder;
 
     /**
-     * @var PricePerUnitItemFinder
+     * @var ProductElementFinder
      */
     protected $productElementFinder;
 
     /**
-     * @var PricePerUnitItemFinder
+     * @var AptoJsonSerializer
      */
     protected $aptoJsonSerializer;
 
@@ -41,7 +41,6 @@ class PricePerUnitElementPriceProvider implements ElementPriceProvider, Addition
     protected $calculator;
 
     /**
-     * PricePerUnitElementPriceProvider constructor.
      * @param PricePerUnitItemFinder $pricePerUnitItemFinder
      * @param ProductElementFinder $productElementFinder
      * @param AptoJsonSerializer $aptoJsonSerializer
@@ -136,14 +135,14 @@ class PricePerUnitElementPriceProvider implements ElementPriceProvider, Addition
         // skip, if value is not set
         if ($value === null) {
             if (isset($staticValues['minOne']) && $staticValues['minOne']) {
-                $value = $this->calculator->div(1, $conversionFactor);
+                $value = $this->calculator->div('1', $conversionFactor);
             } else {
                 return $elementPrice;
             }
         }
 
         if ((isset($staticValues['minOne']) && $staticValues['minOne'] && $this->calculator->mul($conversionFactor, $value) < 1)) {
-            $value = $this->calculator->div(1, $conversionFactor);
+            $value = $this->calculator->div('1', $conversionFactor);
         }
 
         // increases the value to 1 if the value is smaller and it is desired.

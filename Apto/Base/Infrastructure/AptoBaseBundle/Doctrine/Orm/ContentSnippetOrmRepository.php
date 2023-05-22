@@ -18,6 +18,7 @@ class ContentSnippetOrmRepository extends AptoOrmRepository implements ContentSn
      */
     public function update(ContentSnippet $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
         $this->invalidateCache();
     }

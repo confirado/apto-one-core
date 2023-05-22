@@ -102,7 +102,7 @@ class ImageUploadDefinition implements ElementDefinition, ElementDefinitionDefau
     public function getHumanReadableValues(array $selectedValues): array
     {
         return [];
-        $fabricItemsOnCanvas = $selectedValues['fabricItemsOnCanvas'];
+        /*$fabricItemsOnCanvas = $selectedValues['fabricItemsOnCanvas'];
         if (!is_array($fabricItemsOnCanvas)) {
             return [];
         }
@@ -142,7 +142,7 @@ class ImageUploadDefinition implements ElementDefinition, ElementDefinitionDefau
         $result['UserImage'] = AptoTranslatedValue::fromArray($humanReadableImages);
         $result['UserText'] = AptoTranslatedValue::fromArray($human2DReadableText);
 
-        return $result;
+        return $result;*/
     }
 
     /**
@@ -291,12 +291,12 @@ class ImageUploadDefinition implements ElementDefinition, ElementDefinitionDefau
      * @param array $fabricItemsOnCanvas
      * @param string $type
      * @return bool
-     */
+
     private function hasStickAreaItemsOnCanvas(array $fabricItemsOnCanvas, string $type): bool
     {
         if (count($fabricItemsOnCanvas[$type]) > 0) {
             return true;
         }
         return false;
-    }
+    }*/
 }

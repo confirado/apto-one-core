@@ -89,7 +89,7 @@ class EventStoreOrmFinder extends AptoOrmFinder implements DomainEventFinder
 
     /**
      * @param array $filter
-     * @return string
+     * @return array
      */
     private function getFilterWhere($filter)
     {

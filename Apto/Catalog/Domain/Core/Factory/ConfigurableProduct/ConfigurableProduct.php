@@ -344,11 +344,11 @@ class ConfigurableProduct implements \JsonSerializable
     }
 
     /**
-     * @return ComputedProductValue[]
+     * @return OrderedComputedProductValues
      */
-    public function getOrderedComputedValues(): array
+    public function getOrderedComputedValues(): OrderedComputedProductValues
     {
-        return $this->computedValues;
+        return $this->orderedComputedProductValues;
     }
 
     /**

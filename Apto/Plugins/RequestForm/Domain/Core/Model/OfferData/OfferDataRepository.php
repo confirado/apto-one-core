@@ -8,7 +8,7 @@ interface OfferDataRepository extends AptoRepository
 {
 
     /**
-     * @param OfferHtml $model
+     * @param OfferData $model
      */
     public function add(OfferData $model);
 }

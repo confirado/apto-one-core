@@ -54,7 +54,7 @@ class ProductElementRenderImageHandler extends ProductChildHandler
         $product->addElementRenderImage(
             $sectionId,
             $elementId,
-            $renderImageOptions->getLayer(),
+            (int) $renderImageOptions->getLayer(),
             $renderImageOptions->getPerspective(),
             $mediaFile,
             $renderImageOptions->getOffsetX(),

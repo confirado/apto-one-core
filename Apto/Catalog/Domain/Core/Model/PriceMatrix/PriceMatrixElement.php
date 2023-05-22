@@ -44,4 +44,12 @@ class PriceMatrixElement extends AptoEntity
     {
         return $this->position;
     }
+
+    /**
+     * @return PriceMatrix
+     */
+    public function getMatrix(): PriceMatrix
+    {
+        return $this->matrix;
+    }
 }

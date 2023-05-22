@@ -47,7 +47,7 @@ class ComputedProductValueCriterion extends Criterion
     }
 
     /**
-     * @return string|null
+     * @return string
      */
     public function getComputedProductValueId(): string
     {

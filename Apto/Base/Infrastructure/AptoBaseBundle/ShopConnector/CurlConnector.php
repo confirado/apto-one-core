@@ -42,6 +42,7 @@ class CurlConnector
         curl_setopt_array($curl, $setOpt);
         $response = curl_exec($curl);
 
+        /** @phpstan-ignore-next-line  */
         if (true === $debug) {
             print_r(curl_getinfo($curl));
             print_r($response);

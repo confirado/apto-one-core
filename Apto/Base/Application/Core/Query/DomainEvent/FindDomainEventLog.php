@@ -8,12 +8,11 @@ use Apto\Base\Application\Core\PublicQueryInterface;
 class FindDomainEventLog extends PaginationQuery implements PublicQueryInterface
 {
     /**
-     * @var string|null
+     * @var array
      */
-    private $filter;
+    private array $filter;
 
     /**
-     * FindDomainEventLog constructor.
      * @param int $pageNumber
      * @param int $recordsPerPage
      * @param string $searchString
@@ -26,9 +25,9 @@ class FindDomainEventLog extends PaginationQuery implements PublicQueryInterface
     }
 
     /**
-     * @return null|string
+     * @return array
      */
-    public function getFilter()
+    public function getFilter(): array
     {
         return $this->filter;
     }

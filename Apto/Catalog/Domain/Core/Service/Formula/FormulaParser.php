@@ -11,7 +11,7 @@ class FormulaParser
      * @param string $formula
      * @param array $variables
      * @param MediaFileSystemConnector|null $fileSystemConnector
-     * @return void
+     * @return string
      * @throws Exception\FormulaParserException
      */
     public static function parse(string $formula, array $variables = [], ?MediaFileSystemConnector $fileSystemConnector = null): string

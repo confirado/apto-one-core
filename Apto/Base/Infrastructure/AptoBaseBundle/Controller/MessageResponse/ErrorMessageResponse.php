@@ -37,7 +37,7 @@ class ErrorMessageResponse extends MessageResponse
      * @param \Exception $e
      * @param string $exceptionUuid
      * @param string $exceptionUrl
-     * @return static
+     * @return self
      */
     public static function fromException(string $name, string $message, float $duration, \Exception $e, string $exceptionUuid, string $exceptionUrl): self
     {

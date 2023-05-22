@@ -9,25 +9,24 @@ use Apto\Base\Domain\Core\Model\DomainEvent\AbstractDomainEvent;
 class ContentSnippetContentChanged extends AbstractDomainEvent
 {
     /**
-     * @var AptoTranslatedValue
+     * @var AptoTranslatedValue|null
      */
     private $content;
 
     /**
-     * ContentSnippetContentChanged constructor.
      * @param AptoUuid $id
-     * @param AptoTranslatedValue $content
+     * @param AptoTranslatedValue|null $content
      */
-    public function __construct(AptoUuid $id, AptoTranslatedValue $content)
+    public function __construct(AptoUuid $id, ?AptoTranslatedValue $content)
     {
         parent::__construct($id);
         $this->content = $content;
     }
 
     /**
-     * @return bool
+     * @return AptoTranslatedValue|null
      */
-    public function getContent(): AptoTranslatedValue
+    public function getContent(): ?AptoTranslatedValue
     {
         return $this->content;
     }

@@ -20,6 +20,7 @@ class CanvasOrmRepository extends AptoOrmRepository implements CanvasRepository
      */
     public function update(Canvas $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 
@@ -43,7 +44,7 @@ class CanvasOrmRepository extends AptoOrmRepository implements CanvasRepository
 
     /**
      * @param AptoUuid $id
-     * @return Canvas|float|int|mixed|string|null
+     * @return Canvas|null
      * @throws NonUniqueResultException
      */
     public function findById(AptoUuid $id): ?Canvas
@@ -52,7 +53,13 @@ class CanvasOrmRepository extends AptoOrmRepository implements CanvasRepository
             ->where('Canvas.id.id = :id')
             ->setParameter('id', $id->getId());
 
-        return $builder->getQuery()->getOneOrNullResult();
+        $result = $builder->getQuery()->getOneOrNullResult();
+
+        if ($result instanceof Canvas) {
+            return $result;
+        }
+
+        return null;
     }
 
     /**

@@ -8,7 +8,7 @@ use Apto\Base\Domain\Core\Model\DomainEvent\AbstractDomainEvent;
 class ProductArticleNumberUpdated extends AbstractDomainEvent
 {
     /**
-     * @var bool
+     * @var string
      */
     private $articleNumber;
 

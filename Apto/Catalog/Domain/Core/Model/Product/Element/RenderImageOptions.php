@@ -182,8 +182,7 @@ class RenderImageOptions implements \JsonSerializable
             !array_key_exists('elementValueRefs', $options) ||
             !$options['file'] ||
             !$options['perspective'] ||
-            !$options['type'] ||
-            (!$options['layer'] && (int) $options['layer'] !== 0)
+            !$options['type']
         ) {
             throw new InvalidArgumentException('Missing value in renderImageOptions');
         }
@@ -205,9 +204,7 @@ class RenderImageOptions implements \JsonSerializable
             !array_key_exists('elementValueRefs', $options) ||
             !$options['type'] ||
             (!$options['formulaOffsetX'] && (string) $options['formulaOffsetX'] !== '0' && $options['type'] === 'Berechnend') ||
-            (!$options['formulaOffsetY'] && (string) $options['formulaOffsetY'] !== '0' && $options['type'] === 'Berechnend') ||
-            (!$options['offsetX'] && (int) $options['offsetX'] !== 0) ||
-            (!$options['offsetY'] && (int) $options['offsetY'] !== 0)
+            (!$options['formulaOffsetY'] && (string) $options['formulaOffsetY'] !== '0' && $options['type'] === 'Berechnend')
         ) {
             throw new InvalidArgumentException('Missing value in offsetOptions');
         }

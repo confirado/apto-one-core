@@ -15,6 +15,7 @@ class MediaFileOrmRepository extends AptoOrmRepository implements MediaFileRepos
      */
     public function update(MediaFile $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

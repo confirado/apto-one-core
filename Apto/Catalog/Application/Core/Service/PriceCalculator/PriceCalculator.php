@@ -58,7 +58,7 @@ interface PriceCalculator
     /**
      * @return TaxCalculator|null
      */
-    public function getTaxCalculator(): TaxCalculator;
+    public function getTaxCalculator(): ?TaxCalculator;
 
     /**
      * @return array

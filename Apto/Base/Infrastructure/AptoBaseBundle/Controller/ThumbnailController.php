@@ -28,8 +28,8 @@ class ThumbnailController extends AbstractController
             throw new NotFoundHttpException();
         }
         $originalFilename = $matches[1];
-        $width = $matches[2];
-        $height = $matches[3];
+        $width = (int) $matches[2];
+        $height = (int) $matches[3];
         $thumbnailFormat = $matches[4];
 
         // exit if both width and height are empty

@@ -98,7 +98,7 @@ class FrontendUser implements UserInterface, EquatableInterface, \Serializable, 
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getSalt()
     {

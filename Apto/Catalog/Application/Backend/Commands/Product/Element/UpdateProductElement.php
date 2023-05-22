@@ -130,7 +130,7 @@ class UpdateProductElement extends ProductChildCommand
      * @param array $elementDescription
      * @param array $elementErrorMessage
      * @param array $definition
-     * @param $previewImage
+     * @param string|null $previewImage
      * @param int $position
      * @param float $percentageSurcharge
      * @param bool|null $isActive
@@ -156,7 +156,7 @@ class UpdateProductElement extends ProductChildCommand
         array $elementDescription,
         array $elementErrorMessage,
         array $definition = [],
-        $previewImage,
+        ?string $previewImage = null,
         int $position = 0,
         float $percentageSurcharge = 0.0,
         bool $isActive = null,
@@ -258,7 +258,7 @@ class UpdateProductElement extends ProductChildCommand
     /**
      * @return null|string
      */
-    public function getPreviewImage()
+    public function getPreviewImage(): ?string
     {
         return $this->previewImage;
     }

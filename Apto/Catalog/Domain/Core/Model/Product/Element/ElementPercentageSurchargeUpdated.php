@@ -18,12 +18,11 @@ class ElementPercentageSurchargeUpdated extends AbstractDomainEvent
     private $elementId;
 
     /**
-     * @var int
+     * @var float
      */
     private $percentageSurcharge;
 
     /**
-     * ElementPositionUpdated constructor.
      * @param AptoUuid $id
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId

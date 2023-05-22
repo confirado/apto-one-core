@@ -15,6 +15,7 @@ class PriceMatrixOrmRepository extends AptoOrmRepository implements PriceMatrixR
      */
     public function update(PriceMatrix $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

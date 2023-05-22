@@ -110,14 +110,6 @@ class AptoTranslatedValue implements \JsonSerializable
     }
 
     /**
-     * @return int
-     */
-    private function countTranslations()
-    {
-        return count($this->translations);
-    }
-
-    /**
      * @param AptoTranslatedValue $aptoTranslatedValue
      * @return AptoTranslatedValue
      */
@@ -146,7 +138,7 @@ class AptoTranslatedValue implements \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->__toArray();
     }

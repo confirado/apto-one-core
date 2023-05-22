@@ -13,7 +13,7 @@ class AclEntry
     protected $surrogateId;
 
     /**
-     * @var string|null
+     * @var AptoUuid|null
      */
     protected $shop;
 
@@ -33,13 +33,12 @@ class AclEntry
     protected $mask;
 
     /**
-     * AclEntry constructor.
      * @param AptoUuid|null $shop
      * @param UserRoleIdentifier $role
      * @param AclIdentity $identity
      * @param AclMask $mask
      */
-    public function __construct($shop, UserRoleIdentifier $role, AclIdentity $identity, AclMask $mask)
+    public function __construct(?AptoUuid $shop, UserRoleIdentifier $role, AclIdentity $identity, AclMask $mask)
     {
         $this->shop = $shop;
         $this->role = $role;
@@ -59,7 +58,7 @@ class AclEntry
     /**
      * @return AptoUuid|null
      */
-    public function getShop()
+    public function getShop(): ?AptoUuid
     {
         return $this->shop;
     }

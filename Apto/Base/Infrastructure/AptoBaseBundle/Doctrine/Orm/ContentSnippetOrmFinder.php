@@ -219,29 +219,6 @@ class ContentSnippetOrmFinder extends AptoOrmFinder implements ContentSnippetFin
         }
     }
 
-    private function mapTree(array $tree): array
-    {
-        $result = [];
-        foreach ($tree as $node) {
-            if (count($node['children']) > 0) {
-                return $this->mapTree($node['children']);
-            }
-            $result;
-        }
-
-        return $result;
-    }
-
-    private function mapChildren(array $children): array
-    {
-        if (count($children['children']) > 0) {
-            return $this->mapChildren($children['children']);
-        }
-
-        $children['content']['de_DE'] = 'here we are';
-        return $children;
-    }
-
     /**
      * @return array
      * @throws DqlBuilderException
@@ -266,10 +243,10 @@ class ContentSnippetOrmFinder extends AptoOrmFinder implements ContentSnippetFin
     /**
      * @param string $property
      * @param string $value
-     * @return null
+     * @return array|null
      * @throws DqlBuilderException
      */
-    protected function findByProperty(string $property, string $value)
+    protected function findByProperty(string $property, string $value): ?array
     {
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder

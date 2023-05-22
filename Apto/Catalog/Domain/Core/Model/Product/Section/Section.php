@@ -58,7 +58,7 @@ class Section extends AptoEntity
     protected $isZoomable;
 
     /**
-     * @var MediaFile
+     * @var MediaFile|null
      */
     protected $previewImage;
 
@@ -303,7 +303,7 @@ class Section extends AptoEntity
      */
     public function elementIdentifierExists(Identifier $identifier): bool
     {
-        /** @var Section $section */
+        /** @var Element $element */
         foreach ($this->elements as $element) {
             if ($element->getIdentifier()->equals($identifier)) {
                 return true;
@@ -464,15 +464,15 @@ class Section extends AptoEntity
         if (null !== $defaultElement) {
             /** @var Element $element */
             foreach ($this->elements as $element) {
-                if ($element->getDefault() === true) {
+                if ($element->getIsDefault() === true) {
                     if ($element->getId()->getId() !== $defaultElement->getId()->getId()) {
-                        $element->setDefault(false);
-                        $defaultElement->setDefault(true);
+                        $element->setIsDefault(false);
+                        $defaultElement->setIsDefault(true);
                     }
                     return $this;
                 }
             }
-            $defaultElement->setDefault(true);
+            $defaultElement->setIsDefault(true);
         }
         return $this;
     }

@@ -359,7 +359,7 @@ class MessageBusController extends AbstractSaveExceptionController
         $files = [];
 
         if ($this->isUploadRequest($request)) {
-            /** @var UploadedFile $file */
+            /** @var UploadedFile|array $file */
             foreach ($request->files as $file) {
                 if (is_array($file)) {
                     /** @var UploadedFile $subFile */
@@ -616,7 +616,7 @@ class MessageBusController extends AbstractSaveExceptionController
             $response = ErrorMessageResponse::fromException(
                 'MessagesIsGranted',
                 'MessagesIsGranted schlug fehl.',
-                $duration,
+                0,
                 $e,
                 $exceptionUuid,
                 $this->getExceptionUrl($exceptionUuid)

@@ -228,7 +228,12 @@ class ProductQueryHandler implements QueryHandlerInterface
     {
         /* @var $state State */
         $state = $this->aptoJsonSerializer->jsonUnSerialize($configuration['state']);
-        return $state->getStateWithoutParameters();
+
+        if ($state instanceof State) {
+            return $state->getStateWithoutParameters();
+        }
+
+        return [];
     }
 
     /**

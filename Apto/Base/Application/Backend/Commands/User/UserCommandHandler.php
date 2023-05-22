@@ -143,10 +143,10 @@ class UserCommandHandler implements CommandHandlerInterface
      * @param string $username
      * @param string $email
      * @param string|null $apiKey
-     * @param null $id
+     * @param string|null $id
      * @throws UserAlreadyExistsException
      */
-    protected function checkUniqueConstraints(string $username, string $email, string $apiKey = null, $id = null)
+    protected function checkUniqueConstraints(string $username, string $email, string $apiKey = null, ?string $id = null)
     {
         // check unique user name
         $userNameExists = $this->userRepository->findOneByUsername($username);

@@ -197,7 +197,7 @@ class AreaElementPriceProvider implements BasePriceProvider, AdditionalPriceInfo
      * @param ElementDefinition $elementDefinition
      * @param AptoUuid $ownSectionId
      * @param AptoUuid $ownElementId
-     * @return string|null
+     * @return string
      * @throws InvalidUuidException
      */
     private function getPriceMultiplication(
@@ -206,7 +206,7 @@ class AreaElementPriceProvider implements BasePriceProvider, AdditionalPriceInfo
         ElementDefinition $elementDefinition,
         AptoUuid $ownSectionId,
         AptoUuid $ownElementId
-    ): ?string {
+    ): string {
         if (
             !array_key_exists('active', $priceMultiplication) ||
             !array_key_exists('baseValueFormula', $priceMultiplication) ||

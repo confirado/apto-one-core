@@ -50,12 +50,7 @@ class AptoPropertyTranslatedValue extends TextType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): AptoTranslatedValue
     {
-        try {
-            $value = json_decode($value, JSON_OBJECT_AS_ARRAY);
-        }
-        catch (\Exception $e) {
-            throw new AptoPropertyTranslatedValueException('Cannot convert database value to Type \'AptoTranslatedValue\' due to malformed JSON data');
-        }
+        $value = json_decode($value, true);
 
         //@todo how to handle null/empty values?
         if (null === $value || '' === $value) {

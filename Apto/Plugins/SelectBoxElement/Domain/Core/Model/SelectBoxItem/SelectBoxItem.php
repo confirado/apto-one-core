@@ -154,7 +154,10 @@ class SelectBoxItem extends AptoAggregate
     }
 
     /**
-     * @param array $productEntityMapping
+     * @param AptoUuid $newId
+     * @param AptoUuid $newProductId
+     * @param AptoUuid $newSectionId
+     * @param AptoUuid $newElementId
      * @return SelectBoxItem
      * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
      */

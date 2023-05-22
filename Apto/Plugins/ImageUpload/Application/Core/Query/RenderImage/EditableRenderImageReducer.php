@@ -17,7 +17,7 @@ class EditableRenderImageReducer implements RenderImageReducer
      */
     public function __construct(string $renderImageHash = null)
     {
-        $this->renderImageHash = null;
+        $this->renderImageHash = $renderImageHash;
     }
 
     /**

@@ -24,6 +24,7 @@ class CodeConfigurationOrmRepository extends AptoOrmRepository implements CodeCo
      */
     public function update(CodeConfiguration $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

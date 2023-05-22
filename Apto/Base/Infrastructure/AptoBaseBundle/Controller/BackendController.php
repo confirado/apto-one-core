@@ -2,6 +2,7 @@
 
 namespace Apto\Base\Infrastructure\AptoBaseBundle\Controller;
 
+use Apto\Base\Infrastructure\AptoBaseBundle\Security\User\User;
 use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -114,6 +115,9 @@ class BackendController extends AbstractController
     protected function hasValidUserLicence(): bool
     {
         $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw new Exception('User must be an Instance of "' . User::class . '".');
+        }
 
         // super users do not need any licence
         if ($user->getUserIdentifier() === UserName::USERNAME_SUPERUSER) {
@@ -151,7 +155,7 @@ class BackendController extends AbstractController
 
     /**
      * @param $size
-     * @return int|string
+     * @return float
      */
     protected function convertPHPSizeToBytes($size)
     {
@@ -159,7 +163,7 @@ class BackendController extends AbstractController
            return $size;
         }
         $suffix = substr($size, -1);
-        $value = substr($size, 0, -1);
+        $value = (float) substr($size, 0, -1);
         switch(strtoupper($suffix)){
             case 'P':
                 $value *= 1024;

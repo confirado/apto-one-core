@@ -19,8 +19,9 @@ class FindProductIdsByFilter implements PublicQueryInterface
     {
         $this->filter = $filter;
     }
+
     /**
-     * @return array|null
+     * @return array
      */
     public function getFilter(): array
     {

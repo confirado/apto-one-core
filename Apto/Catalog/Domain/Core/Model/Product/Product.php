@@ -68,7 +68,7 @@ class Product extends AptoAggregate
     protected $identifier;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $seoUrl;
 
@@ -169,7 +169,7 @@ class Product extends AptoAggregate
     protected $priceCalculatorId;
 
     /**
-     * @var MediaFile
+     * @var MediaFile|null
      */
     protected $previewImage;
 
@@ -2220,7 +2220,7 @@ class Product extends AptoAggregate
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @return array|null
+     * @return array
      */
     public function getElementRenderImages(AptoUuid $sectionId, AptoUuid $elementId): array
     {
@@ -2836,7 +2836,7 @@ class Product extends AptoAggregate
 
     /**
      * @param AptoUuid $ruleId
-     * @param string $type
+     * @param int $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
      * @param string|null $property
@@ -2850,19 +2850,19 @@ class Product extends AptoAggregate
      */
     public function addRuleCondition(
         AptoUuid $ruleId,
-        string $type = 'default',
-        ?AptoUuid $sectionId,
-        ?AptoUuid $elementId,
-        string $property = null,
-        ?ComputedProductValue $computedProductValue,
         RuleCriterionOperator $operator,
-        $value
+        int $type = 0,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
     ): Product
     {
         $rule = $this->getRule($ruleId);
 
         if (null !== $rule) {
-            $rule->addCondition($type, $sectionId, $elementId, $property, $computedProductValue, $operator, $value);
+            $rule->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
         }
 
         return $this;
@@ -2870,7 +2870,7 @@ class Product extends AptoAggregate
 
     /**
      * @param AptoUuid $ruleId
-     * @param string $type
+     * @param int $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
      * @param string|null $property
@@ -2884,19 +2884,19 @@ class Product extends AptoAggregate
      */
     public function addRuleImplication(
         AptoUuid $ruleId,
-        string $type = 'default',
-        ?AptoUuid $sectionId,
-        ?AptoUuid $elementId,
-        string $property = null,
-        ?ComputedProductValue $computedProductValue,
         RuleCriterionOperator $operator,
-        $value
+        int $type = 0,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
     ): Product
     {
         $rule = $this->getRule($ruleId);
 
         if (null !== $rule) {
-            $rule->addImplication($type, $sectionId, $elementId, $property, $computedProductValue, $operator, $value);
+            $rule->addImplication($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
         }
 
         return $this;

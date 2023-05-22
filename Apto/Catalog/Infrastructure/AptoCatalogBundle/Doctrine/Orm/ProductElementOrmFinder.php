@@ -30,6 +30,7 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
             return $renderImageOptions->jsonSerialize();
         }
 
+        /** @phpstan-ignore-next-line  */
         return null;
     }
 

@@ -19,19 +19,11 @@ class AclEntryHandler implements CommandHandlerInterface
     private $aclEntryRepository;
 
     /**
-     * @var UserRoleRepository
-     */
-    private $userRoleRepository;
-
-    /**
-     * AclEntryHandler constructor.
      * @param AclEntryRepository $aclEntryRepository
-     * @param UserRoleRepository $userRoleRepository
      */
-    public function __construct(AclEntryRepository $aclEntryRepository, UserRoleRepository $userRoleRepository)
+    public function __construct(AclEntryRepository $aclEntryRepository)
     {
         $this->aclEntryRepository = $aclEntryRepository;
-        $this->userRoleRepository = $userRoleRepository;
     }
 
     /**
@@ -44,10 +36,6 @@ class AclEntryHandler implements CommandHandlerInterface
 
         $aclEntry = $this->aclEntryRepository->findByShopRoleIdentity(null, $command->getRoleId(), $aclIdentity);
         if (null !== $aclEntry) {
-            if (is_array($aclEntry)) {
-                $this->throwNonUniqueAclEntryException($command, $aclIdentity);
-            }
-
             // if mask to add is not in existing mask, add it
             if (!$aclEntry->getMask()->matchedBy($aclMask)) {
                 $aclMask = AclMaskBuilder::addMasks($aclEntry->getMask(), $aclMask);
@@ -76,10 +64,6 @@ class AclEntryHandler implements CommandHandlerInterface
 
         $aclEntry = $this->aclEntryRepository->findByShopRoleIdentity(null, $command->getRoleId(), $aclIdentity);
         if (null !== $aclEntry) {
-            if (is_array($aclEntry)) {
-                $this->throwNonUniqueAclEntryException($command, $aclIdentity);
-            }
-
             // if mask to remove is in existing mask, subtract it
             if ($aclEntry->getMask()->matchedBy($aclMask)) {
                 $aclMask = AclMaskBuilder::subtractMasks($aclEntry->getMask(), $aclMask);
@@ -114,16 +98,6 @@ class AclEntryHandler implements CommandHandlerInterface
         $aclMaskBuilder = new AclMaskBuilder();
         $aclMaskBuilder->add($command->getPermissions());
         return $aclMaskBuilder->get();
-    }
-
-    /**
-     * @param AclPermission $command
-     * @param AclIdentity $aclIdentity
-     * @throws NonUniqueAclEntryException
-     */
-    private function throwNonUniqueAclEntryException(AclPermission $command, AclIdentity $aclIdentity)
-    {
-        throw new NonUniqueAclEntryException('An AclEntry with the following properties already exists: shopId('.$command->getShopId().'), userRoleId('.$command->getRoleId().'), entityClass('.$aclIdentity->getModelClass().'), entityId('.$aclIdentity->getEntityId().'), entityFieldName('.$aclIdentity->getFieldName().').');
     }
 
     /**

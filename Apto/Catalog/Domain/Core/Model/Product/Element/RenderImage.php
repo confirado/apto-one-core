@@ -185,6 +185,7 @@ class RenderImage extends AptoEntity
     public function getRenderImageOptions(): RenderImageOptions
     {
         // backwards compatibility for old render images
+        /** @phpstan-ignore-next-line  */
         if (!$this->renderImageOptions) {
             return RenderImageOptions::fromArray([
                 'renderImageOptions' => [

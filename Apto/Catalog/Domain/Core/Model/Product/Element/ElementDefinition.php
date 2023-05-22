@@ -23,7 +23,7 @@ interface ElementDefinition extends AptoJsonSerializable
     /**
      * Returns all static values
      * static values do not depend on values entered by users in FE
-     * @return mixed
+     * @return array
      */
     public function getStaticValues(): array;
 

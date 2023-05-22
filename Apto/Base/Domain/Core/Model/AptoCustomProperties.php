@@ -14,7 +14,7 @@ trait AptoCustomProperties
 
     /**
      * @param AptoCustomProperty $property
-     * @return AptoCustomProperties
+     * @return self
      */
     protected function setAptoCustomProperty(AptoCustomProperty $property): self
     {
@@ -33,7 +33,7 @@ trait AptoCustomProperties
 
     /**
      * @param AptoCustomProperty $property
-     * @return AptoCustomProperties
+     * @return self
      */
     protected function removeAptoCustomProperty(AptoCustomProperty $property): self
     {
@@ -63,7 +63,7 @@ trait AptoCustomProperties
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return AptoCustomProperties
+     * @return self
      * @throws AptoCustomPropertyException
      */
     public function setCustomProperty(string $key, string $value, bool $translatable = false): self
@@ -77,7 +77,7 @@ trait AptoCustomProperties
 
     /**
      * @param string $key
-     * @return AptoCustomProperties
+     * @return self
      */
     public function removeCustomProperty(string $key): self
     {
@@ -114,7 +114,7 @@ trait AptoCustomProperties
     }
 
     /**
-     * @return AptoCustomProperties
+     * @return self
      */
     public function clearCustomProperties(): self
     {

@@ -57,13 +57,13 @@ interface ProductFinder extends AptoFinder
 
     /**
      * @param string $id
-     * @return array|null
+     * @return array
      */
     public function findPrices(string $id): array;
 
     /**
      * @param string $id
-     * @return array|null
+     * @return array
      */
     public function findDiscounts(string $id): array;
 

@@ -25,13 +25,7 @@ class AptoJsonSerializer
      */
     public function jsonUnSerialize($jsonEncoded): AptoJsonSerializable
     {
-        try {
-            $jsonEncoded = json_decode($jsonEncoded, JSON_OBJECT_AS_ARRAY);
-        }
-        catch (\Exception $e) {
-            throw new AptoJsonSerializerException('Cannot convert database value to object due to malformed JSON data.');
-        }
-
+        $jsonEncoded = json_decode($jsonEncoded, true);
         $this->assertValidJsonEncoded($jsonEncoded);
 
         /** @var AptoJsonSerializable $fullClassName */

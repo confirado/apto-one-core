@@ -63,7 +63,7 @@ trait AptoPriceFormulas
 
     /**
      * @param AptoUuid $priceFormulaId
-     * @return AptoPriceFormulas
+     * @return self
      */
     public function removeAptoPriceFormula(AptoUuid $priceFormulaId): self
     {
@@ -176,7 +176,7 @@ trait AptoPriceFormulas
     }
 
     /**
-     * @return AptoPriceFormulas
+     * @return self
      */
     public function clearAptoPriceFormulas(): self
     {

@@ -102,10 +102,10 @@ class CanvasCommandHandler implements CommandHandlerInterface
 
     /**
      * @param Identifier $identifier
-     * @param null $id
+     * @param string|null $id
      * @throws CanvasIdentifierAlreadyExists
      */
-    protected function checkUniqueConstraints(Identifier $identifier, $id = null)
+    protected function checkUniqueConstraints(Identifier $identifier, ?string $id = null)
     {
         $groupAlreadyExists = $this->canvasRepository->findByIdentifier($identifier);
 

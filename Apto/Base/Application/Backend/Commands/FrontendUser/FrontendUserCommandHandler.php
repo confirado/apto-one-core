@@ -39,10 +39,10 @@ class FrontendUserCommandHandler extends AbstractCommandHandler
     /**
      * @param string $username
      * @param string $email
-     * @param null $id
+     * @param string|null $id
      * @throws UserAlreadyExistsException
      */
-    protected function checkUniqueConstraints(string $username, string $email, $id = null)
+    protected function checkUniqueConstraints(string $username, string $email, ?string $id = null)
     {
         // check unique user name
         $userNameExists = $this->frontendUserRepository->findOneByUsername($username);

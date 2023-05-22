@@ -24,17 +24,17 @@ class PriceMatrixImport extends AbstractCsvImport
     ];
 
     /**
-     * @var Currency
+     * @var Currency|null
      */
     protected $currency;
 
     /**
-     * @var CustomerGroup
+     * @var CustomerGroup|null
      */
     protected $customerGroup;
 
     /**
-     * @var PriceMatrix
+     * @var PriceMatrix|null
      */
     protected $priceMatrix;
 

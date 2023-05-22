@@ -18,6 +18,7 @@ class PricePerUnitItemOrmRepository extends AptoOrmRepository implements PricePe
      */
     public function update(PricePerUnitItem $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
     }
 

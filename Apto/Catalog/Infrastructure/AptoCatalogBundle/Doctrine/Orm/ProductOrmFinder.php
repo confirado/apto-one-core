@@ -2103,9 +2103,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
         else {
             $newPosition = round($maxPosition/10) * 10;
             if ($newPosition <= $maxPosition) {
-                return $newPosition + 10;
+                return (int) $newPosition + 10;
             }
-            return $newPosition;
+            return (int) $newPosition;
         }
     }
 }

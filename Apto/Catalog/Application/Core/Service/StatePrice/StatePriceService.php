@@ -119,7 +119,7 @@ class StatePriceService
 
         // create tax calculator
         $taxCalculator = new SimpleTaxCalculator(
-            $this->productFinder->findTaxRateById($productId->getId()),
+            (string) $this->productFinder->findTaxRateById($productId->getId()),
             $customerGroup['inputGross'],
             $customerGroup['showGross']
         );
@@ -140,7 +140,7 @@ class StatePriceService
                     array_key_exists('result', $taxState) &&
                     is_array($taxState['result']) &&
                     array_key_exists('taxState', $taxState['result']) &&
-                    trim($taxState['result']['taxState'] === 'tax-free')
+                    trim($taxState['result']['taxState']) === 'tax-free'
                 ) {
                     $taxCalculator->setTaxFree(true);
                 }

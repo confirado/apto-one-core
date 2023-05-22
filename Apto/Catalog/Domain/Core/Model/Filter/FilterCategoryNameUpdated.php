@@ -14,9 +14,8 @@ class FilterCategoryNameUpdated extends AbstractDomainEvent
     private $name;
 
     /**
-     * CategoryNameUpdated constructor.
      * @param AptoUuid $id
-     * @param AptoTranslatedValue name
+     * @param AptoTranslatedValue $name
      */
     public function __construct(AptoUuid $id, AptoTranslatedValue $name)
     {

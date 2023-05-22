@@ -212,10 +212,10 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $width - $this->minimumWidth;
-            if (self::modulo($offset, $this->stepWidth) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepWidth) == 0) {
                 $offset -= $this->stepWidth;
             } else {
-                $offset -= self::modulo($offset, $this->stepWidth);
+                $offset -= (float) self::modulo((string) $offset, (string) $this->stepWidth);
             }
 
             $resultValue = $this->minimumWidth + $offset;
@@ -234,10 +234,10 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $height - $this->minimumHeight;
-            if (self::modulo($offset, $this->stepHeight) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepHeight) == 0) {
                 $offset -= $this->stepHeight;
             } else {
-                $offset -= self::modulo($offset, $this->stepHeight);
+                $offset -= (float) self::modulo((string) $offset, (string) $this->stepHeight);
             }
 
             $resultValue = $this->minimumHeight + $offset;
@@ -275,10 +275,10 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $width - $this->minimumWidth;
-            if (self::modulo($offset, $this->stepWidth) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepWidth) == 0) {
                 $offset += $this->stepWidth;
             } else {
-                $offset -= self::modulo($offset, $this->stepWidth) - $this->stepWidth;
+                $offset -= (float) self::modulo((string) $offset, (string) $this->stepWidth) - $this->stepWidth;
             }
 
             $resultValue = $this->minimumWidth + $offset;
@@ -297,10 +297,10 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $height - $this->minimumHeight;
-            if (self::modulo($offset, $this->stepHeight) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepHeight) == 0) {
                 $offset += $this->stepHeight;
             } else {
-                $offset -= self::modulo($offset, $this->stepHeight) - $this->stepHeight;
+                $offset -= (float) self::modulo((string) $offset, (string) $this->stepHeight) - $this->stepHeight;
             }
 
             $resultValue = $this->minimumHeight + $offset;
@@ -339,7 +339,7 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $width - $this->minimumWidth;
-            if (self::modulo($offset, $this->stepWidth) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepWidth) == 0) {
                 $result['width'] = $width;
             }
         }
@@ -353,7 +353,7 @@ class ElementAreaRangeValue implements ElementValue
 
         if($continue) {
             $offset = $height - $this->minimumWidth;
-            if (self::modulo($offset, $this->stepWidth) == 0) {
+            if (self::modulo((string) $offset, (string) $this->stepWidth) == 0) {
                 $result['height'] = $height;
             }
         }
@@ -482,7 +482,7 @@ class ElementAreaRangeValue implements ElementValue
     /**
      * @return array
      */
-    function jsonSerialize()
+    function jsonSerialize(): array
     {
         return [
             'type' => 'areaRange',

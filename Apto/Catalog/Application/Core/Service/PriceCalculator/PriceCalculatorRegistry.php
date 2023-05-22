@@ -100,7 +100,7 @@ class PriceCalculatorRegistry
 
     /**
      * @param string $elementDefinition
-     * @return PriceProvider|null
+     * @return PriceProvider
      */
     public function getPriceProvider(string $elementDefinition): PriceProvider
     {

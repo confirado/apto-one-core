@@ -6,6 +6,7 @@ class StoredEvent implements DomainEvent
 {
     /**
      * @var mixed
+     * @phpstan-ignore-next-line
      */
     private $eventId;
 
@@ -15,7 +16,7 @@ class StoredEvent implements DomainEvent
     private $eventBody;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|\DateTime
      */
     private $occurredOn;
 

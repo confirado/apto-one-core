@@ -13,6 +13,7 @@ class Property extends AptoAggregate
     use AptoCustomProperties;
 
     /**
+     * @phpstan-ignore-next-line
      * @var Group
      */
     private $group;

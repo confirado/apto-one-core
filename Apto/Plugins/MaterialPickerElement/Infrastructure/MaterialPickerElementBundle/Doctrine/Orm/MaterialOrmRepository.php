@@ -16,6 +16,7 @@ class MaterialOrmRepository extends AptoOrmRepository implements MaterialReposit
      */
     public function update(Material $model)
     {
+        /** @phpstan-ignore-next-line */
         $this->_em->merge($model);
         $this->invalidateCache();
     }

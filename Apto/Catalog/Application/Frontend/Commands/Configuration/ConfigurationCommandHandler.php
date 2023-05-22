@@ -356,7 +356,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
 
         // create tax calculator
         $taxCalculator = new SimpleTaxCalculator(
-            $customerConfiguration->getProduct()->getTaxRate(),
+            (string) $customerConfiguration->getProduct()->getTaxRate(),
             true,
             true
         );

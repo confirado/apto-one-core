@@ -184,13 +184,13 @@ class Rule extends AptoEntity
     }
 
     /**
-     * @param int $type
+     * @param RuleCriterionOperator $operator
+     * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
-     * @param RuleCriterionOperator $operator
-     * @param string $value
+     * @param string|null $value
      * @return $this
      * @throws RuleCriterionInvalidOperatorException
      * @throws RuleCriterionInvalidPropertyException
@@ -198,30 +198,30 @@ class Rule extends AptoEntity
      * @throws RuleCriterionInvalidValueException
      */
     public function addCondition(
-        int $type = Criterion::TYPE,
-        ?AptoUuid $sectionId,
-        ?AptoUuid $elementId,
-        ?string $property,
-        ?ComputedProductValue $computedProductValue,
         RuleCriterionOperator $operator,
-        string $value
-    ): Rule
-    {
+        ?int $type = Criterion::TYPE,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
+    ): Rule {
         $conditionId = $this->nextConditionId();
         $this->conditions->set(
             $conditionId->getId(),
             new RuleCondition(
                 $conditionId,
                 $this,
+                $operator,
                 $type,
                 $sectionId,
                 $elementId,
                 $property,
                 $computedProductValue,
-                $operator,
                 $value
             )
         );
+
         return $this;
     }
 
@@ -325,27 +325,27 @@ class Rule extends AptoEntity
     }
 
     /**
-     * @param int $type
+     * @param RuleCriterionOperator $operator
+     * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
-     * @param RuleCriterionOperator $operator
-     * @param string $value
+     * @param string|null $value
      * @return $this
      * @throws RuleCriterionInvalidOperatorException
      * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
      * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
      */
     public function addImplication(
-        int $type = Criterion::TYPE,
-        ?AptoUuid $sectionId,
-        ?AptoUuid $elementId,
-        ?string $property,
-        ?ComputedProductValue $computedProductValue,
         RuleCriterionOperator $operator,
-        string $value
+        ?int $type = Criterion::TYPE,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
     ): Rule
     {
         $implicationId = $this->nextImplicationId();
@@ -354,12 +354,12 @@ class Rule extends AptoEntity
             new RuleImplication(
                 $implicationId,
                 $this,
+                $operator,
                 $type,
                 $sectionId,
                 $elementId,
                 $property,
                 $computedProductValue,
-                $operator,
                 $value
             )
         );

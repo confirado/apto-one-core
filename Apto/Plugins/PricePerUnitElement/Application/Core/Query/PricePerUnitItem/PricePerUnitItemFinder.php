@@ -20,7 +20,7 @@ interface PricePerUnitItemFinder extends AptoFinder
 
     /**
      * @param string $elementId
-     * @return array|null
+     * @return array
      */
     public function findPrices(string $elementId): array;
 

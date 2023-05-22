@@ -75,7 +75,7 @@ class MaterialRenderImageProvider implements RenderImageProvider
             $materials[] = $element['materialIdSecondary'];
         }
 
-        if (array_key_exists('materials', $materials) && count($element['materials']) > 0) {
+        if (array_key_exists('materials', $element) && count($element['materials']) > 0) {
             foreach ($element['materials'] as $material) {
                 $materials[] = $material['id'];
             }

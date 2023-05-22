@@ -23,7 +23,7 @@ interface GuestConfigurationRepository extends AptoRepository
 
     /**
      * @param $id
-     * @return ImmutableConfiguration|null
+     * @return GuestConfiguration|null
      */
     public function findById($id);
 }
