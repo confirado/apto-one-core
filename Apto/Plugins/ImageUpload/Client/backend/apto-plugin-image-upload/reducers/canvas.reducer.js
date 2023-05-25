@@ -17,6 +17,13 @@ const Reducer = function(AptoReducersProvider) {
                 minHeight: 0,
                 allowedFileTypes: ['jpg', 'jpeg', 'png']
             },
+            motiveSettings: {
+                active: false,
+                previewSize: 250,
+                folder: null,
+                left: 0,
+                top: 0
+            },
             textSettings: {
                 active: false,
                 default: 'Mein Text!',
@@ -40,7 +47,8 @@ const Reducer = function(AptoReducersProvider) {
                     height: 0,
                     left: 0,
                     top: 0
-                }
+                },
+                areas: []
             },
             priceSettings: {
                 surchargePrices: [],

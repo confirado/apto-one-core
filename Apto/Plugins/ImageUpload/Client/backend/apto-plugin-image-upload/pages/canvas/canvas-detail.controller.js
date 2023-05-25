@@ -1,5 +1,6 @@
 import {Promise} from "es6-promise";
 import ImageTab from './tabs/image-settings.html';
+import MotiveTab from './tabs/motive-settings.html';
 import TextTab from './tabs/text-settings.html';
 import AreaTab from './tabs/area-settings.html';
 import PriceTab from './tabs/price-settings.html';
@@ -7,6 +8,7 @@ import PriceTab from './tabs/price-settings.html';
 const ControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'canvasId', 'ImageUploadCanvasActions', 'ProductActions'];
 const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, canvasId, ImageUploadCanvasActions, ProductActions) {
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/image-settings.html', ImageTab);
+    $templateCache.put('plugins/image-upload/pages/canvas/tabs/motive-settings.html', MotiveTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/text-settings.html', TextTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/area-settings.html', AreaTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/price-settings.html', PriceTab);

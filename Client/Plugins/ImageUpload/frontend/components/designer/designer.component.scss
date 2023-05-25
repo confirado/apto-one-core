@@ -71,6 +71,39 @@
     gap: 20px;
 }
 
+.motive-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.motive-item {
+    max-width: 67px;
+    cursor: pointer;
+
+    img {
+        display: block;
+        max-width: 100%;
+        box-shadow: rgba(117, 117, 117, 0.75) 0px 0px 3px 0px;
+        background: var(--color-primary);
+    }
+
+    &:hover {
+        img {
+            background: var(--color-primary-hover);
+        }
+    }
+}
+
+.motive-item-name {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+}
+
 .input-field {
     @include input-grid();
 

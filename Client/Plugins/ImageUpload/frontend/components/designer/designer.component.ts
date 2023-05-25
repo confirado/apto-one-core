@@ -34,8 +34,10 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   @ViewChild('htmlRenderImage') htmlRenderImage: ElementRef;
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
-  public canvas: CanvasState | null = null;
   private locale: string;
+
+  public canvas: CanvasState | null = null;
+  public mediaUrl: string = environment.api.media;
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.imageUpload'));
   public readonly cancelMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.cancelMessage'));
@@ -51,7 +53,21 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   public canvasLeft: number = 0;
 
   public fabricText: any = null;
+  public fabricMotive: any = null;
   public textSettings: any = {};
+  public controlOptions = {
+    selectable: false,
+    editable: false,
+    hasControls: false,
+    lockMovementX: true,
+    lockMovementY: true,
+    lockRotation: true,
+    lockScalingFlip: true,
+    lockScalingX: true,
+    lockScalingY: true,
+    lockSkewingX: true,
+    lockSkewingY: true
+  };
 
   public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService) {
     // set default locale
@@ -79,19 +95,6 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       this.textSettings = Object.assign({}, this.canvas.element.staticValues.text);
       this.updateCanvasStyle();
       this.calculatePrintArea();
-      let controlOptions = {
-        selectable: false,
-        editable: false,
-        hasControls: false,
-        lockMovementX: true,
-        lockMovementY: true,
-        lockRotation: true,
-        lockScalingFlip: true,
-        lockScalingX: true,
-        lockScalingY: true,
-        lockSkewingX: true,
-        lockSkewingY: true
-      }
 
       this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
         preserveObjectStacking: true,
@@ -113,7 +116,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
         this.fabricText = new fabric.Text(this.textSettings.default, {
           ...textOptions,
-          ...controlOptions
+          ...this.controlOptions
         });
 
         if (this.textSettings.radius > 0) {
@@ -127,11 +130,39 @@ export class DesignerComponent implements OnInit, AfterViewInit {
           this.setCanvasSize();
 
           this.fabricCanvas.getObjects().forEach((object) => {
-            object.setOptions(controlOptions);
-            this.textSettings.default = object.get('text');
+            console.error(object.get('type'));
+            if (object.get('type') === 'text') {
+              this.fabricText = object;
+              this.fabricText.setOptions(this.controlOptions);
+              this.textSettings.default = this.fabricText.get('text');
+            }
+            if (object.get('type') === 'image') {
+              this.fabricMotive = object;
+              this.fabricMotive.setOptions(this.controlOptions);
+            }
           });
         });
       }
+    });
+  }
+
+  public addImage(url) {
+    fabric.Image.fromURL(url, (fabricImage) => {
+      if (null !== this.fabricMotive) {
+        this.fabricCanvas.remove(this.fabricMotive);
+      }
+
+      const imageOptions = {
+        left: this.canvas.element.staticValues.motive.left,
+        top: this.canvas.element.staticValues.motive.top
+      }
+
+      this.fabricMotive = fabricImage;
+      this.fabricMotive.setOptions({
+        ...imageOptions,
+        ...this.controlOptions
+      });
+      this.fabricCanvas.add(this.fabricMotive);
     });
   }
 
@@ -188,9 +219,12 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   public updateText(text) {
     this.textSettings.default = text;
     this.fabricCanvas.getObjects().forEach((object) => {
-      object.setOptions({
-        text: this.textSettings.default
-      });
+      if (object.get('type') === 'text') {
+        object.setOptions({
+          text: this.textSettings.default
+        });
+      }
+
       this.fabricCanvas.renderAll();
     });
   }
