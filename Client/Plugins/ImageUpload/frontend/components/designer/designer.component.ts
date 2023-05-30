@@ -134,6 +134,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
           this.fabricCanvas.getObjects().forEach((object) => {
             if (object.get('type') === 'text') {
+              object.setOptions(this.controlOptions);
               this.fabricTextBoxes.push(object);
             }
 
