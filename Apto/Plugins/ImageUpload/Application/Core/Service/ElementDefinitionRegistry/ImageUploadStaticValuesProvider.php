@@ -120,6 +120,10 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
     {
         $files = [];
 
+        if (!array_key_exists('folder', $motiveSettings) || !$motiveSettings['folder']) {
+            return $files;
+        }
+
         $directory = new Directory($motiveSettings['folder']);
         foreach ($this->mediaFileSystemConnector->getDirectoryContent($directory) as $content) {
             if (true === $content['isDir']) {
