@@ -329,7 +329,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         renderImageId: fileName + '-' + area.identifier,
         productId: productId,
         directory: directory,
-        path: directory + this.canvas.element.elementId + 'png',
+        path: directory + fileName + '-' + area.identifier + '.png',
         extension: 'png',
         perspective: area.perspective,
         layer: area.layer,
