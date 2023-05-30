@@ -198,6 +198,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     if (!this.canvas) {
       return;
     }
+    this.printAreas = [];
     let factor = this.canvasWidth / this.canvas.renderImage.width;
 
     this.canvas.element.staticValues.area.forEach((area) => {
