@@ -9,8 +9,8 @@ export class CanvasRepository {
   constructor(private messageBus: MessageBusService) {
   }
 
-  findEditableRenderImage(state, productId, perspective, renderImageHash): any {
-    return this.messageBus.query('ImageUploadFindEditableRenderImage', [state, productId, perspective, renderImageHash]).pipe(
+  findEditableRenderImage(state, productId, perspective, renderImageIds): any {
+    return this.messageBus.query('ImageUploadFindEditableRenderImage', [state, productId, perspective, renderImageIds]).pipe(
       map(response => {
         return response.result;
       })

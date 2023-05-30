@@ -25,7 +25,12 @@ export class ImageUploadComponent implements OnInit {
   public constructor(private store: Store) {}
 
   public ngOnInit(): void {
-    this.store.select(selectRenderImageByPerspective(this.element?.element.definition.staticValues.background.perspective)).subscribe((next) => {
+    let perspective = 'persp1';
+    if (this.element?.element.definition.staticValues.area[0]) {
+      perspective = this.element?.element.definition.staticValues.area[0].perspective;
+    }
+
+    this.store.select(selectRenderImageByPerspective(perspective)).subscribe((next) => {
       this.renderImage = next;
     })
   }
@@ -45,11 +50,16 @@ export class ImageUploadComponent implements OnInit {
       })
     );
 
-    if (this.element?.state.values.payload && this.element?.state.values.payload.renderImage) {
+    if (this.element?.state.values.payload && this.element?.state.values.payload.renderImages) {
+      let renderImageIds = [];
+      this.element?.state.values.payload.renderImages.forEach((renderImage) => {
+        renderImageIds.push(renderImage.renderImageId);
+      });
+
       this.store.dispatch(findEditableRenderImage({
         payload: {
-          perspective: this.element?.state.values.payload.renderImage.perspective,
-          renderImageHash: this.element?.state.values.payload.renderImage.renderImageId
+          perspective: this.element?.state.values.payload.renderImages[0].perspective,
+          renderImageIds: renderImageIds
         }
       }));
     }

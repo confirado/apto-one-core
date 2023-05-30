@@ -67,7 +67,7 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
         $staticValues['motive'] = $canvas['motiveSettings'];
         $staticValues['motive']['files'] = $this->getMotiveFiles($staticValues['motive']);
         $staticValues['text'] = $canvas['textSettings'];
-        $staticValues['background'] = $canvas['areaSettings'];
+        $staticValues['area'] = $canvas['areaSettings'];
         $staticValues['price'] = $canvas['priceSettings'];
 
         // add mime types
@@ -85,19 +85,29 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
      */
     private function convertElementStaticValuesToCanvasStaticValues(array $staticValues)
     {
-        if (!array_key_exists('user', $staticValues)) {
-            return $staticValues;
+        if (array_key_exists('background', $staticValues)) {
+            $area = $staticValues['background']['area'];
+            if (array_key_exists('perspective', $staticValues['background'])) {
+                $area['perspective'] = $staticValues['background']['perspective'];
+            }
+            if (array_key_exists('layer', $staticValues['background'])) {
+                $area['layer'] = $staticValues['background']['layer'];
+            }
+            $staticValues['area'] = [$area];
+            unset($staticValues['background']);
         }
 
-        $staticValues['price'] = [
-            'surchargePrices' => $staticValues['user']['surchargePrices'],
-            'useSurchargeAsReplacement' => $staticValues['user']['useSurchargeAsReplacement']
-        ];
-        unset($staticValues['user']['surchargePrices']);
-        unset($staticValues['user']['useSurchargeAsReplacement']);
+        if (array_key_exists('user', $staticValues)) {
+            $staticValues['price'] = [
+                'surchargePrices' => $staticValues['user']['surchargePrices'],
+                'useSurchargeAsReplacement' => $staticValues['user']['useSurchargeAsReplacement']
+            ];
+            unset($staticValues['user']['surchargePrices']);
+            unset($staticValues['user']['useSurchargeAsReplacement']);
 
-        $staticValues['image'] = $staticValues['user'];
-        unset($staticValues['user']);
+            $staticValues['image'] = $staticValues['user'];
+            unset($staticValues['user']);
+        }
 
         return $staticValues;
     }

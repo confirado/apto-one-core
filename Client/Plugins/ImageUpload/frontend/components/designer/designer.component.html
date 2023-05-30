@@ -23,21 +23,30 @@
                     [height]="canvasHeight"
                 ></canvas>
                 <div
-                    id="print-area"
+                    *ngFor="let printArea of printAreas"
+                    class="print-area"
                     [ngStyle]="{ width: printArea.width + 'px', height: printArea.height + 'px', left: printArea.left + 'px', top: printArea.top + 'px' }"
                 ></div>
             </div>
         </div>
         <div class="right">
             <ng-container *ngIf="canvas.element.staticValues.text.active">
-                <div class="input-field">
-                    <div class="name">{{ contentSnippet$ | async | contentSnippet: 'text.label' }}</div>
-                    <div class="container">
-                        <input maxlength="17" type="text" [ngModel]="textSettings.default" (ngModelChange)="updateText($event)" >
+                <ng-container *ngFor="let box of fabricTextBoxes">
+                    <div class="input-field">
+                        <div class="name">{{ getTextBoxProperty(box.identifier, 'name') }}</div>
+                        <div class="container">
+                            <input maxlength="17" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)">
+                        </div>
                     </div>
-                </div>
+                </ng-container>
             </ng-container>
         </div>
+    </div>
+
+    <div class="designer-areas">
+        <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" value="{{ getPrintAreaId(canvas.element.staticValues.area[currentArea]) }}">
+            <mat-button-toggle (click)="setPrintArea(index)" selected="selected" value="{{ getPrintAreaId(area) }}" *ngFor="let area of canvas.element.staticValues.area; let index=index;">{{ area.name ? area.name : area.perspective }}</mat-button-toggle>
+        </mat-button-toggle-group>
     </div>
 
     <div class="designer-actions">

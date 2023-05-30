@@ -33,7 +33,7 @@
             top: 0;
         }
 
-        #print-area {
+        .print-area {
             position: absolute;
             top: 0;
             background: red;
@@ -58,6 +58,15 @@
         width: 250px;
         min-width: 250px;
     }
+}
+
+.designer-areas {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: 200px;
+    margin-right: 300px;
+    margin-bottom: 40px;
 }
 
 .designer-actions {
@@ -105,6 +114,7 @@
 }
 
 .input-field {
+    margin-bottom: 20px;
     @include input-grid();
 
     .name {

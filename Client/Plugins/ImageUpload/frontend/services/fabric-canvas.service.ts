@@ -10,7 +10,7 @@ export class FabricCanvasService {
   public constructor(private http: HttpClient) {
   }
 
-  public uploadLayerImage(fabricCanvas, printArea, renderImage, fileName, callback) {
+  public uploadLayerImage(fabricCanvas, printAreas, renderImage, fileNameIn, callback) {
     // create a copy from fabric original canvas
     let canvasCopyBuffer = document.createElement('canvas');
     let canvasCopy = new fabric.Canvas(canvasCopyBuffer);
@@ -21,17 +21,20 @@ export class FabricCanvasService {
       canvasCopy.setZoom(1);
       canvasCopy.renderAll();
 
-      let dataUrl = canvasCopy.toDataURL({
-        format: 'png',
-        left: printArea.left,
-        top: printArea.top,
-        width: printArea.width,
-        height: printArea.height
-      });
+      printAreas.forEach((printArea) => {
+        let fileName = fileNameIn + '-' + printArea.identifier;
+        let dataUrl = canvasCopy.toDataURL({
+          format: 'png',
+          left: printArea.left,
+          top: printArea.top,
+          width: printArea.width,
+          height: printArea.height
+        });
 
-      let blob = this.dataUrlToBlob(dataUrl);
-      let file = this.blobToFile(blob, fileName + '.png');
-      this.uploadFile(file, fileName, callback);
+        let blob = this.dataUrlToBlob(dataUrl);
+        let file = this.blobToFile(blob, fileName + '.png');
+        callback(this.uploadFile(file, fileName));
+      });
     });
   }
 
@@ -49,7 +52,7 @@ export class FabricCanvasService {
     return blob;
   }
 
-  private uploadFile(file, fileName, callback) {
+  private uploadFile(file, fileName) {
     const formData = new FormData();
     formData.append('file[0]', file);
     formData.append('command', 'UploadUserImageFile');
@@ -57,8 +60,7 @@ export class FabricCanvasService {
     formData.append('arguments[1]', 'png');
     formData.append('arguments[2]', '/apto-plugin-image-upload/render-images/2023/05');
 
-    const upload$ = this.http.post(environment.api.command, formData);
-    callback(upload$);
+    return this.http.post(environment.api.command, formData);
   }
 
   public updateTextElementForBending(textElement, bendValue) {

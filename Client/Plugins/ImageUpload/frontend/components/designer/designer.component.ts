@@ -38,13 +38,14 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
   public canvas: CanvasState | null = null;
   public mediaUrl: string = environment.api.media;
+  public currentArea = 0;
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.imageUpload'));
   public readonly cancelMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.cancelMessage'));
   public readonly resetMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.resetMessage'));
 
   public fabricCanvas: any = null;
-  public printArea: { width: number, height: number, left: number, top: number } = { width: 0, height: 0, left: 0, top: 0 };
+  public printAreas: { width: number, height: number, left: number, top: number }[] = [];
   public canvasStyle: { width: string, height: string, left: string } = { width: '0px', height: '0px', left: '0px' };
 
   public middleWidth: number = 0;
@@ -52,9 +53,8 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   public canvasHeight: number = 0;
   public canvasLeft: number = 0;
 
-  public fabricText: any = null;
+  public fabricTextBoxes: any[] = [];
   public fabricMotive: any = null;
-  public textSettings: any = {};
   public controlOptions = {
     selectable: false,
     editable: false,
@@ -90,11 +90,10 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     setTimeout(() => {
-      this.textSettings = Object.assign({}, this.canvas.element.staticValues.text);
       this.updateCanvasStyle();
-      this.calculatePrintArea();
+      this.calculatePrintAreas();
 
       this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
         preserveObjectStacking: true,
@@ -102,40 +101,42 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       });
 
       if (!this.canvas.element.state.payload) {
-        let textOptions = {
-          fontSize: this.textSettings.fontSize,
-          fill: this.textSettings.fill,
-          textAlign: this.textSettings.textAlign,
-          left: this.textSettings.left,
-          top: this.textSettings.top,
-          fontFamily: 'Montserrat',
-          originX: "center",
-          originY: "center"
-        }
+        this.canvas.element.staticValues.text.boxes.forEach((box) => {
+          let textOptions = {
+            identifier: box.identifier,
+            fontSize: box.fontSize,
+            fill: box.fill,
+            textAlign: box.textAlign,
+            left: box.left,
+            top: box.top,
+            fontFamily: 'Montserrat',
+            originX: "center",
+            originY: "center"
+          }
 
-        // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
-        this.fabricText = new fabric.Text(this.textSettings.default, {
-          ...textOptions,
-          ...this.controlOptions
+          // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
+          let fabricText = new fabric.Text(box.default, {
+            ...textOptions,
+            ...this.controlOptions
+          });
+
+          if (box.radius > 0) {
+            this.fabricCanvasService.updateTextElementForBending(fabricText, box.radius);
+          }
+
+          this.fabricCanvas.add(fabricText);
+          this.fabricTextBoxes.push(fabricText);
         });
-
-        if (this.textSettings.radius > 0) {
-          this.fabricCanvasService.updateTextElementForBending(this.fabricText, this.textSettings.radius);
-        }
-
-        this.fabricCanvas.add(this.fabricText);
         this.setCanvasSize();
       } else {
         this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
           this.setCanvasSize();
 
           this.fabricCanvas.getObjects().forEach((object) => {
-            console.error(object.get('type'));
             if (object.get('type') === 'text') {
-              this.fabricText = object;
-              this.fabricText.setOptions(this.controlOptions);
-              this.textSettings.default = this.fabricText.get('text');
+              this.fabricTextBoxes.push(object);
             }
+
             if (object.get('type') === 'image') {
               this.fabricMotive = object;
               this.fabricMotive.setOptions(this.controlOptions);
@@ -144,6 +145,14 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  public setPrintArea(index) {
+    this.currentArea = index;
+  }
+
+  public getPrintAreaId(area) {
+    return area.perspective + area.layer + area.width + area.height + area.left + area.top;
   }
 
   public addImage(url) {
@@ -171,7 +180,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       return;
     }
     this.updateCanvasStyle();
-    this.calculatePrintArea();
+    this.calculatePrintAreas();
     this.setCanvasSize();
   }
 
@@ -180,19 +189,24 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       return;
     }
     this.updateCanvasStyle();
-    this.calculatePrintArea();
+    this.calculatePrintAreas();
     this.setCanvasSize();
   }
 
-  calculatePrintArea() {
+  calculatePrintAreas() {
     if (!this.canvas) {
       return;
     }
     let factor = this.canvasWidth / this.canvas.renderImage.width;
-    this.printArea.width = this.canvas.element.staticValues.background.area.width * factor;
-    this.printArea.height = this.canvas.element.staticValues.background.area.height * factor;
-    this.printArea.left = this.canvas.element.staticValues.background.area.left * factor;
-    this.printArea.top = this.canvas.element.staticValues.background.area.top * factor;
+
+    this.canvas.element.staticValues.area.forEach((area) => {
+      this.printAreas.push({
+        width: area.width * factor,
+        height: area.height * factor,
+        left: area.left * factor,
+        top: area.top * factor
+      });
+    });
   }
 
   setCanvasSize() {
@@ -216,17 +230,30 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     this.canvasStyle.left = this.canvasLeft + 'px';
   }
 
-  public updateText(text) {
-    this.textSettings.default = text;
+  public updateText(event, identifier) {
     this.fabricCanvas.getObjects().forEach((object) => {
-      if (object.get('type') === 'text') {
+      if (object.get('type') === 'text' && object.get('identifier') === identifier) {
         object.setOptions({
-          text: this.textSettings.default
+          text: event.target.value
         });
       }
 
       this.fabricCanvas.renderAll();
     });
+  }
+
+  public getTextBoxProperty(identifier, property) {
+    const boxes = this.canvas.element.staticValues.text.boxes;
+
+    for (let i = 0; i < boxes.length; i++) {
+      if (identifier !== boxes[i].identifier) {
+        continue;
+      }
+
+      return boxes[i][property];
+    }
+
+    return null;
   }
 
   public reset() {
@@ -279,25 +306,39 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   }
 
   public save(): void {
-    const fabricCanvasJson = JSON.stringify(this.fabricCanvas);
+    let fabricCanvas = this.fabricCanvas.toJSON(['identifier']);
+    fabricCanvas.objects = [];
+
+    this.fabricCanvas.getObjects().forEach((object) => {
+      fabricCanvas.objects.push(object.toJSON(['identifier']));
+    });
+
+    const fabricCanvasJson = JSON.stringify(fabricCanvas);
+    const productId = 'fe65066c-41b9-46da-a500-044777a1d4b5';
+    const directory = '/apto-plugin-image-upload/render-images/2023/05/';
     const fileName = sha1(fabricCanvasJson);
+
     const payload = {
       json: fabricCanvasJson,
-      renderImage: {
-        fileName: fileName,
-        renderImageId: fileName,
-        productId: 'fe65066c-41b9-46da-a500-044777a1d4b5',
-        directory: '/apto-plugin-image-upload/render-images/2023/05/',
-        path: '/apto-plugin-image-upload/render-images/2023/05/' + this.canvas.element.elementId + 'png',
-        extension: 'png',
-        perspective: this.canvas.element.staticValues.background.perspective,
-        layer: this.canvas.element.staticValues.background.layer,
-        offsetX: this.canvas.element.staticValues.background.area.left * 100 / this.canvas.renderImage.width,
-        offsetY: this.canvas.element.staticValues.background.area.top * 100 / this.canvas.renderImage.height
-      }
+      renderImages: []
     }
 
-    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.background.area, this.canvas.renderImage, fileName, (upload: Observable<any>) => {
+    this.canvas.element.staticValues.area.forEach((area) => {
+      payload.renderImages.push({
+        fileName: fileName + '-' + area.identifier,
+        renderImageId: fileName + '-' + area.identifier,
+        productId: productId,
+        directory: directory,
+        path: directory + this.canvas.element.elementId + 'png',
+        extension: 'png',
+        perspective: area.perspective,
+        layer: area.layer,
+        offsetX: area.left * 100 / this.canvas.renderImage.width,
+        offsetY: area.top * 100 / this.canvas.renderImage.height
+      });
+    });
+
+    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.canvas.renderImage, fileName, (upload: Observable<any>) => {
       upload.subscribe((next) => {
         if (next.message.error === false) {
           this.store.dispatch(

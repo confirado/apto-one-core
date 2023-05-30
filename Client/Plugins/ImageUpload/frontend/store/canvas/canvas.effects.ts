@@ -22,7 +22,7 @@ export class CanvasEffects {
         configuration.state.compressedState,
         configuration.productId,
         action.payload.perspective,
-        action.payload.renderImageHash
+        action.payload.renderImageIds
       )),
       map((productList) => findEditableRenderImageSuccess({ payload: productList }))
     )

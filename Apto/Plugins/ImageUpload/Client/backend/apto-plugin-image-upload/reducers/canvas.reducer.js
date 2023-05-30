@@ -34,22 +34,10 @@ const Reducer = function(AptoReducersProvider) {
                 textAlign: 'center',
                 fill: '#ffffff',
                 multiline: false,
-                fonts: []
+                fonts: [],
+                boxes: []
             },
-            areaSettings: {
-                image: null,
-                width: 1000,
-                height: 600,
-                perspective: 'persp1',
-                layer: '0',
-                area: {
-                    width: 0,
-                    height: 0,
-                    left: 0,
-                    top: 0
-                },
-                areas: []
-            },
+            areaSettings: [],
             priceSettings: {
                 surchargePrices: [],
                 useSurchargeAsReplacement: false

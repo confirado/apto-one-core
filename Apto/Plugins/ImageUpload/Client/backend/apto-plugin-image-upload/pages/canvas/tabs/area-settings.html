@@ -1,35 +1,122 @@
-<h3>Bearbeitungsbereich</h3>
+<h4>Druckbereich hinzufügen</h4>
+<h5>Druckbereich</h5>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Name: *</label>
+        <input type="text" ng-model="newArea.name">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Kennung:</label>
+        <input type="text" ng-model="newArea.identifier">
+    </md-input-container>
+</div>
+
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
         <label>Breite (px):</label>
-        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.width">
+        <input type="number" min="0" step="1" ng-model="newArea.width">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Höhe (px):</label>
-        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.height">
+        <input type="number" min="0" step="1" ng-model="newArea.height">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Abstand links (px):</label>
-        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.left">
+        <input type="number" min="0" step="1" ng-model="newArea.left">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Abstand oben (px):</label>
-        <input type="number" min="0" step="1" ng-model="detail.areaSettings.area.top">
+        <input type="number" min="0" step="1" ng-model="newArea.top">
     </md-input-container>
 </div>
 
-<h3>Render Image</h3>
+<h5>Render Image</h5>
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
-        <label>Perspective:</label>
-        <input type="text" ng-model="detail.areaSettings.perspective">
+        <label>Perspective: *</label>
+        <input type="text" ng-model="newArea.perspective">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
-        <label>Layer:</label>
-        <input type="text" ng-model="detail.areaSettings.layer">
+        <label>Layer: *</label>
+        <input type="text" ng-model="newArea.layer">
     </md-input-container>
 </div>
+
+<div layout="row" layout-align="start" flex style="justify-content: space-between;">
+    <md-input-container>
+        <md-button ng-if="newAreaEditMode" style="margin: 0;" class="md-raised md-cornered" ng-click="cancelEditArea()">Neuer Druckbereich</md-button>
+    </md-input-container>
+    <md-input-container ng-if="!newAreaEditMode">
+        <md-button ng-disabled="!newArea.perspective || !newArea.layer || !newArea.name || areaIdentifierExists()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewArea()">Hinzufügen</md-button>
+    </md-input-container>
+    <md-input-container ng-if="newAreaEditMode">
+        <md-button ng-disabled="!newArea.perspective || !newArea.layer || !newArea.name || areaIdentifierExists()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewArea()">Speichern</md-button>
+    </md-input-container>
+</div>
+
+<h4>Druckbereiche</h4>
+<md-table-container>
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width: 15%;">Name</th>
+            <th md-column style="width: 15%;">Kennung</th>
+            <th md-column style="width: 10%;">Breite</th>
+            <th md-column style="width: 10%;">Höhe</th>
+            <th md-column style="width: 10%;">Abstand links</th>
+            <th md-column style="width: 10%;">Abstand oben</th>
+            <th md-column style="width: 10%;">Perspective</th>
+            <th md-column style="width: 10%;">Layer</th>
+            <th md-column style="width: 10%;"></th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="area in detail.areaSettings">
+            <td md-cell>
+                {{ area.name }}
+            </td>
+            <td md-cell>
+                {{ area.identifier }}
+            </td>
+            <td md-cell>
+                {{ area.width }}
+            </td>
+            <td md-cell>
+                {{ area.height }}
+            </td>
+            <td md-cell>
+                {{ area.left }}
+            </td>
+            <td md-cell>
+                {{ area.top }}
+            </td>
+            <td md-cell>
+                {{ area.perspective }}
+            </td>
+            <td md-cell>
+                {{ area.layer }}
+            </td>
+            <td md-cell>
+                <md-button
+                    class="md-icon-button md-primary"
+                    title="Bearbeiten"
+                    ng-click="editArea($index)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    ng-click="removeArea($index)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

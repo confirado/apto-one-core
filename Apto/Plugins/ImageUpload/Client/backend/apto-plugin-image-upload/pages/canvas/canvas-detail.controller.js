@@ -4,9 +4,10 @@ import MotiveTab from './tabs/motive-settings.html';
 import TextTab from './tabs/text-settings.html';
 import AreaTab from './tabs/area-settings.html';
 import PriceTab from './tabs/price-settings.html';
+import angular from 'angular';
 
-const ControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'canvasId', 'ImageUploadCanvasActions', 'ProductActions'];
-const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, canvasId, ImageUploadCanvasActions, ProductActions) {
+const ControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'canvasId', 'ImageUploadCanvasActions', 'ProductActions', 'SanitizerFactory'];
+const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, canvasId, ImageUploadCanvasActions, ProductActions, SanitizerFactory) {
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/image-settings.html', ImageTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/motive-settings.html', MotiveTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/text-settings.html', TextTab);
@@ -32,9 +33,20 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         initNewAllowedFileType();
         initNewFont();
         initNewPrice();
+        initNewArea();
+        initNewTextBox();
 
         if (typeof canvasId !== "undefined") {
-            $scope.fetchCanvas(canvasId);
+            $scope.fetchCanvas(canvasId).then(() => {
+                if (!$scope.detail.textSettings.boxes) {
+                    $scope.detail.textSettings.boxes = [];
+                } else {
+                    $scope.detail.textSettings = {
+                        active: $scope.detail.textSettings.active,
+                        boxes: $scope.detail.textSettings.boxes
+                    }
+                }
+            });
         }
     }
 
@@ -64,6 +76,35 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         };
     }
 
+    function initNewArea() {
+        $scope.newArea = {
+            name: '',
+            identifier: '',
+            width: 0,
+            height: 0,
+            left: 0,
+            top: 0,
+            perspective: 'persp1',
+            layer: '0'
+        }
+    }
+
+    function initNewTextBox() {
+        $scope.newTextBox = {
+            area: null,
+            name: '',
+            identifier: '',
+            default: 'Mein Text!',
+            fontSize: 25,
+            textAlign: 'center',
+            fill: '#ffffff',
+            multiline: false,
+            left: 0,
+            top: 0,
+            radius: 0
+        }
+    }
+
     function save(detailForm, closeForm) {
         if(detailForm.$valid) {
             $scope.saveCanvas($scope.detail).then(() => {
@@ -80,10 +121,6 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     function close() {
         $scope.resetCanvas();
         $mdDialog.cancel();
-    }
-
-    function onSelectPreviewImage(path) {
-        $scope.detail.areaSettings.image = path;
     }
 
     function onSelectNewFont(path) {
@@ -167,6 +204,98 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         }
     }
 
+    function addNewArea() {
+        if (!$scope.newArea.identifier) {
+            $scope.newArea.identifier = SanitizerFactory.sanitizeIdentifier($scope.newArea.name);
+        }
+
+        if ($scope.detail.areaSettings.indexOf($scope.newArea) === -1) {
+            $scope.detail.areaSettings.push($scope.newArea);
+        }
+
+        initNewArea();
+        $scope.newAreaEditMode = false;
+    }
+
+    function editArea(index) {
+        $scope.newAreaEditMode = true;
+        $scope.newArea = $scope.detail.areaSettings[index];
+    }
+
+    function cancelEditArea() {
+        initNewArea();
+        $scope.newAreaEditMode = false;
+    }
+
+    function removeArea(index) {
+        $scope.detail.areaSettings.splice(index, 1);
+    }
+
+    function areaIdentifierExists() {
+        for (let i = 0; i < $scope.detail.areaSettings.length; i++) {
+            // skip currently processed area
+            if ($scope.detail.areaSettings.indexOf($scope.newArea) === i) {
+                continue;
+            }
+
+            let identifier = $scope.newArea.identifier;
+            if (!identifier) {
+                identifier = SanitizerFactory.sanitizeIdentifier($scope.newArea.name);
+            }
+
+            if ($scope.detail.areaSettings[i].identifier === identifier) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function addNewTextBox() {
+        if (!$scope.newTextBox.identifier) {
+            $scope.newTextBox.identifier = SanitizerFactory.sanitizeIdentifier($scope.newTextBox.name);
+        }
+
+        if ($scope.detail.textSettings.boxes.indexOf($scope.newTextBox) === -1) {
+            $scope.detail.textSettings.boxes.push($scope.newTextBox);
+        }
+
+        initNewTextBox();
+        $scope.newTextBoxEditMode = false;
+    }
+
+    function editTextBox(index) {
+        $scope.newTextBoxEditMode = true;
+        $scope.newTextBox = $scope.detail.textSettings.boxes[index];
+    }
+
+    function cancelEditTextBox() {
+        initNewTextBox();
+        $scope.newTextBoxEditMode = false;
+    }
+
+    function removeTextBox(index) {
+        $scope.detail.textSettings.boxes.splice(index, 1);
+    }
+
+    function textBoxIdentifierExists() {
+        for (let i = 0; i < $scope.detail.textSettings.boxes.length; i++) {
+            // skip currently processed area
+            if ($scope.detail.textSettings.boxes.indexOf($scope.newTextBox) === i) {
+                continue;
+            }
+
+            let identifier = $scope.newTextBox.identifier;
+            if (!identifier) {
+                identifier = SanitizerFactory.sanitizeIdentifier($scope.newTextBox.name);
+            }
+
+            if ($scope.detail.textSettings.boxes[i].identifier === identifier) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function addSurchargePrice() {
         if (priceExist($scope.newPrice)) {
             return;
@@ -196,10 +325,11 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     }
 
     $scope.allowedFontFileExtensions = ['ttf', 'otf', 'woff', 'woff2', 'svg', 'eot'];
-    $scope.priceTypes = ['Bild', 'Text']
+    $scope.priceTypes = ['Bild', 'Text'];
+    $scope.newAreaEditMode = false;
+    $scope.newTextBoxEditMode = false;
     $scope.save = save;
     $scope.close = close;
-    $scope.onSelectPreviewImage = onSelectPreviewImage;
     $scope.onSelectNewFont = onSelectNewFont;
     $scope.addAllowedFileTypeValue = addAllowedFileTypeValue;
     $scope.removeAllowedFileTypeValue = removeAllowedFileTypeValue;
@@ -211,6 +341,16 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     $scope.setDefaultFont = setDefaultFont;
     $scope.setFontThreeD = setFontThreeD;
     $scope.removeFont = removeFont;
+    $scope.addNewArea = addNewArea;
+    $scope.editArea = editArea;
+    $scope.removeArea = removeArea;
+    $scope.cancelEditArea = cancelEditArea;
+    $scope.areaIdentifierExists = areaIdentifierExists;
+    $scope.addNewTextBox = addNewTextBox;
+    $scope.editTextBox = editTextBox;
+    $scope.removeTextBox = removeTextBox;
+    $scope.cancelEditTextBox = cancelEditTextBox;
+    $scope.textBoxIdentifierExists = textBoxIdentifierExists;
     $scope.addSurchargePrice = addSurchargePrice;
     $scope.removePrice = removePrice;
 

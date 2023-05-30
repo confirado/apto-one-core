@@ -105,7 +105,8 @@ export interface StaticValues {
   monochromeImage: string;
   multicoloredImageAlternately: string;
   multicoloredImageInput: string;
-  background: any
+  background: any;
+  area: any;
 }
 
 export interface RangeField {
