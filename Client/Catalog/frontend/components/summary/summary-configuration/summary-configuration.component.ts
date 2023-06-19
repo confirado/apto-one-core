@@ -64,6 +64,10 @@ export class SummaryConfigurationComponent implements OnInit {
     let dialogButtonAccept = '';
 
     this.popUp$.subscribe((next) => {
+      if (next === null) {
+        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+        return;
+      }
       next.children.forEach((value) => {
         if (value.name === 'title') {
           dialogTitle = translate(value.content, this.locale);
@@ -78,12 +82,11 @@ export class SummaryConfigurationComponent implements OnInit {
           dialogButtonAccept = translate(value.content, this.locale);
         }
       })
-    })
-
-    this.dialogService.openWarningDialog(DialogSizesEnum.md, dialogTitle, dialogMessage, dialogButtonCancel, dialogButtonAccept).afterClosed().subscribe((next) => {
-      if (next === true) {
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-      }
+      this.dialogService.openWarningDialog(DialogSizesEnum.md, dialogTitle, dialogMessage, dialogButtonCancel, dialogButtonAccept).afterClosed().subscribe((next) => {
+        if (next === true) {
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+        }
+      })
     })
   }
 
