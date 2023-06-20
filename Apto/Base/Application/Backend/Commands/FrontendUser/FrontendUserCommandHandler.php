@@ -102,7 +102,8 @@ class FrontendUserCommandHandler extends AbstractCommandHandler
 
         $user
             ->setActive($command->getActive())
-            ->setExternalCustomerGroupId($command->getExternalCustomerGroupId());
+            ->setExternalCustomerGroupId($command->getExternalCustomerGroupId())
+            ->setCustomerNumber($command->getCustomerNumber());
 
 
         $this->frontendUserRepository->add($user);
@@ -139,7 +140,8 @@ class FrontendUserCommandHandler extends AbstractCommandHandler
                 ->setActive($command->getActive())
                 ->setUsername(new UserName($command->getUsername()))
                 ->setEmail(new Email($command->getEmail()))
-                ->setExternalCustomerGroupId($command->getExternalCustomerGroupId());
+                ->setExternalCustomerGroupId($command->getExternalCustomerGroupId())
+                ->setCustomerNumber($command->getCustomerNumber());
 
             if ($command->getPlainPassword()) {
                 $password = $this->passwordEncoder->encodePassword($command->getPlainPassword());

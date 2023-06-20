@@ -23,6 +23,7 @@ class FrontendUserOrmFinder extends AptoOrmFinder implements FrontendUserFinder
             ['username.username', 'username'],
             'email',
             'externalCustomerGroupId',
+            'customerNumber',
             'active',
             'created'
         ];
@@ -94,6 +95,7 @@ class FrontendUserOrmFinder extends AptoOrmFinder implements FrontendUserFinder
                     ['username.username', 'username'],
                     'email',
                     'externalCustomerGroupId',
+                    'customerNumber',
                     'active',
                     'created'
                 ],
@@ -153,6 +155,7 @@ class FrontendUserOrmFinder extends AptoOrmFinder implements FrontendUserFinder
             ['username.username', 'username'],
             'email',
             'externalCustomerGroupId',
+            'customerNumber',
             'active',
             'created'
         ];

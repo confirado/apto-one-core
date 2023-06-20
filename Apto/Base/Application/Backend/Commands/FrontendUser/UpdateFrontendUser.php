@@ -10,17 +10,17 @@ class UpdateFrontendUser extends AbstractAddFrontendUser
     private $id;
 
     /**
-     * UpdateFrontendUser constructor.
      * @param string $id
      * @param bool $active
      * @param string $username
-     * @param $plainPassword
+     * @param string|null $plainPassword
      * @param string $email
      * @param string $externalCustomerGroupId
+     * @param string $customerNumber
      */
-    public function __construct(string $id, bool $active, string $username, $plainPassword, string $email, string $externalCustomerGroupId)
+    public function __construct(string $id, bool $active, string $username, ?string $plainPassword, string $email, string $externalCustomerGroupId, string $customerNumber)
     {
-        parent::__construct($active, $username, $plainPassword, $email, $externalCustomerGroupId);
+        parent::__construct($active, $username, $plainPassword, $email, $externalCustomerGroupId, $customerNumber);
         $this->id = $id;
     }
 

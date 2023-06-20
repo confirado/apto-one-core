@@ -32,20 +32,26 @@ abstract class AbstractAddFrontendUser implements CommandInterface
     private $externalCustomerGroupId;
 
     /**
-     * AddFrontendUser constructor.
+     * @var string
+     */
+    private $customerNumber;
+
+    /**
      * @param bool $active
      * @param string $username
-     * @param $plainPassword
+     * @param string|null $plainPassword
      * @param string $email
      * @param string $externalCustomerGroupId
+     * @param string $customerNumber
      */
-    public function __construct(bool $active, string $username, $plainPassword, string $email, string $externalCustomerGroupId)
+    public function __construct(bool $active, string $username, ?string $plainPassword, string $email, string $externalCustomerGroupId, string $customerNumber)
     {
         $this->active = $active;
         $this->username = strtolower($username);
         $this->plainPassword = $plainPassword;
         $this->email = strtolower($email);
         $this->externalCustomerGroupId = $externalCustomerGroupId;
+        $this->customerNumber = $customerNumber;
     }
 
     /**
@@ -67,7 +73,7 @@ abstract class AbstractAddFrontendUser implements CommandInterface
     /**
      * @return string|null
      */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -86,5 +92,13 @@ abstract class AbstractAddFrontendUser implements CommandInterface
     public function getExternalCustomerGroupId(): string
     {
         return $this->externalCustomerGroupId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerNumber(): string
+    {
+        return $this->customerNumber;
     }
 }

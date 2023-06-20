@@ -34,6 +34,11 @@ class FrontendUser extends AptoAggregate
     protected $externalCustomerGroupId;
 
     /**
+     * @var string
+     */
+    protected $customerNumber;
+
+    /**
      * FrontendUser constructor.
      * @param AptoUuid $id
      * @param UserName $username
@@ -52,7 +57,8 @@ class FrontendUser extends AptoAggregate
             ->setPassword($password)
             ->setEmail($email)
             ->setActive(true)
-            ->setExternalCustomerGroupId('');
+            ->setExternalCustomerGroupId('')
+            ->setCustomerNumber('');
     }
 
     /**
@@ -188,6 +194,35 @@ class FrontendUser extends AptoAggregate
             new FrontendUserExternalCustomerGroupIdUpdated(
                 $this->getId(),
                 $this->externalCustomerGroupId
+            )
+        );
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerNumber(): string
+    {
+        return $this->customerNumber;
+    }
+
+    /**
+     * @param string $customerNumber
+     * @return FrontendUser
+     */
+    public function setCustomerNumber(string $customerNumber): FrontendUser
+    {
+        if ($this->customerNumber === $customerNumber) {
+            return $this;
+        }
+
+        $this->customerNumber = $customerNumber;
+
+        $this->publish(
+            new FrontendUserCustomerNumberUpdated(
+                $this->getId(),
+                $this->getCustomerNumber()
             )
         );
         return $this;

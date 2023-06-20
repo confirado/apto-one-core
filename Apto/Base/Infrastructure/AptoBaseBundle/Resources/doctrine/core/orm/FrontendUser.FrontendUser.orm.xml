@@ -14,6 +14,7 @@
         <field name="password" type="string" column="password" length="255" nullable="true"/>
         <field name="email" type="string" column="email" length="255" nullable="true" unique="true"/>
         <field name="externalCustomerGroupId" type="string" column="external_customer_group_id" length="255" nullable="false" />
+        <field name="customerNumber" type="string" column="customer_number" length="255" nullable="true" />
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
         <embedded class="Apto\Base\Domain\Core\Model\FrontendUser\UserName" use-column-prefix="false" name="username"/>
