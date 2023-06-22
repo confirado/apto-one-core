@@ -34,7 +34,7 @@ export class ContentSnippetPipe implements PipeTransform {
 
   transform(value: ContentSnippet | null, path: string): string {
     if (value === null) {
-      return '[ContentSnippet: No value given!]';
+      return '';
     }
 
     const pathSegments = (value.name + '.' + path).split('.');
@@ -67,6 +67,6 @@ export class ContentSnippetPipe implements PipeTransform {
       }
     }
 
-    return '[ContentSnippet: ' + value?.name + '.' + path + ']';
+    return '';
   }
 }
