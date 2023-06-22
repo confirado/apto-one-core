@@ -41,6 +41,7 @@ class CanvasCommandHandler implements CommandHandlerInterface
         $canvas = new Canvas($this->canvasRepository->nextIdentity(), $identifier);
         $canvas
             ->setImageSettings($command->getImageSettings())
+            ->setMotiveSettings($command->getMotiveSettings())
             ->setTextSettings($command->getTextSettings())
             ->setAreaSettings($command->getAreaSettings())
             ->setPriceSettings($command->getPriceSettings())
@@ -70,6 +71,7 @@ class CanvasCommandHandler implements CommandHandlerInterface
         $canvas
             ->setIdentifier($identifier)
             ->setImageSettings($command->getImageSettings())
+            ->setMotiveSettings($command->getMotiveSettings())
             ->setTextSettings($command->getTextSettings())
             ->setAreaSettings($command->getAreaSettings())
             ->setPriceSettings($command->getPriceSettings())

@@ -18,6 +18,7 @@ import { CanvasEffects } from '@apto-image-upload-frontend/store/canvas/canvas.e
 import { ImageUploadComponent } from '@apto-image-upload-frontend/components/image-upload/image-upload.component';
 import { DesignerComponent } from '@apto-image-upload-frontend/components/designer/designer.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [ImageUploadComponent, DesignerComponent],
@@ -35,8 +36,9 @@ import { MatButtonModule } from '@angular/material/button';
 		FormsModule,
 		MatDialogModule,
 		MatIconModule,
+    MatButtonModule,
+    MatButtonToggleModule,
 		AptoCatalogFrontendModule,
-		MatButtonModule,
 		AngularResizeEventModule,
 		NgOptimizedImage,
 	],

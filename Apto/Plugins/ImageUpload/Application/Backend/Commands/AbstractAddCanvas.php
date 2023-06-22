@@ -17,6 +17,11 @@ abstract class AbstractAddCanvas
     /**
      * @var array
      */
+    private $motiveSettings;
+
+    /**
+     * @var array
+     */
     private $textSettings;
 
     /**
@@ -32,14 +37,16 @@ abstract class AbstractAddCanvas
     /**
      * @param string $identifier
      * @param array $imageSettings
+     * @param array $motiveSettings
      * @param array $textSettings
      * @param array $areaSettings
      * @param array $priceSettings
      */
-    public function __construct(string $identifier, array $imageSettings, array $textSettings, array $areaSettings, array $priceSettings)
+    public function __construct(string $identifier, array $imageSettings, array $motiveSettings, array $textSettings, array $areaSettings, array $priceSettings)
     {
         $this->identifier = $identifier;
         $this->imageSettings = $imageSettings;
+        $this->motiveSettings = $motiveSettings;
         $this->textSettings = $textSettings;
         $this->areaSettings = $areaSettings;
         $this->priceSettings = $priceSettings;
@@ -59,6 +66,14 @@ abstract class AbstractAddCanvas
     public function getImageSettings(): array
     {
         return $this->imageSettings;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMotiveSettings(): array
+    {
+        return $this->motiveSettings;
     }
 
     /**

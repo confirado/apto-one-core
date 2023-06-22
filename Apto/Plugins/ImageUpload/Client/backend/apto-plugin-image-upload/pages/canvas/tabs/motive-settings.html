@@ -1,0 +1,33 @@
+<h4>Motive</h4>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="detail.motiveSettings.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Motive (beliebiger Ordner in der Mediabibliothek):</label>
+        <input type="text" ng-model="detail.motiveSettings.folder">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Default Größe (px):</label>
+        <input type="number" min="1" step="1" ng-model="detail.motiveSettings.previewSize">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container class="md-block" flex>
+        <label>Abstand links (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.motiveSettings.left">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Abstand oben (px):</label>
+        <input type="number" min="0" step="1" ng-model="detail.motiveSettings.top">
+    </md-input-container>
+</div>

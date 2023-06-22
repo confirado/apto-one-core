@@ -65,7 +65,7 @@ class ImageUploadPriceProvider implements BasePriceProvider
         $useTextPrice = false;
         $useImagePrice = false;
         $staticValues = $this->staticValuesProvider->getStaticValues($elementDefinition);
-        $useHighest = $staticValues['user']['useSurchargeAsReplacement'];
+        $useHighest = $staticValues['price']['useSurchargeAsReplacement'];
 
         // use surcharge?
         if (array_key_exists('fabricItemsOnCanvas', $elementState) && is_array($elementState['fabricItemsOnCanvas']) && array_key_exists('text', $elementState['fabricItemsOnCanvas'])) {
@@ -73,7 +73,7 @@ class ImageUploadPriceProvider implements BasePriceProvider
             $useImagePrice = $this->isImagePresent($elementState);
         }
 
-        $prices = $staticValues['user']['surchargePrices'];
+        $prices = $staticValues['price']['surchargePrices'];
 
         $prices = $this->filterPrices(
             $prices,

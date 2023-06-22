@@ -31,6 +31,7 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier'],
                     'imageSettings',
+                    'motiveSettings',
                     'textSettings',
                     'areaSettings',
                     'priceSettings',
@@ -40,6 +41,7 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
             ->setPostProcess([
                 'c' => [
                     'imageSettings' => [self::class, 'decodeSerialized'],
+                    'motiveSettings' => [self::class, 'decodeSerialized'],
                     'textSettings' => [self::class, 'decodeSerialized'],
                     'areaSettings' => [self::class, 'decodeSerialized'],
                     'priceSettings' => [self::class, 'decodeSerialized']
@@ -70,6 +72,7 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier'],
                     'imageSettings',
+                    'motiveSettings',
                     'textSettings',
                     'areaSettings',
                     'priceSettings',
@@ -85,6 +88,7 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
             ->setPostProcess([
                 'c' => [
                     'imageSettings' => [self::class, 'decodeSerialized'],
+                    'motiveSettings' => [self::class, 'decodeSerialized'],
                     'textSettings' => [self::class, 'decodeSerialized'],
                     'areaSettings' => [self::class, 'decodeSerialized'],
                     'priceSettings' => [self::class, 'decodeSerialized']

@@ -22,34 +22,36 @@ class ImageUploadRenderImageProvider implements RenderImageProvider
                 $element['aptoElementDefinitionId'] !== 'apto-element-image-upload' ||
 
                 // has no render image in state
-                !array_key_exists('renderImage', $element['payload']) ||
-
-                // has no render image in state
-                !is_array($element['payload']['renderImage']) ||
-
-                // has no render image in state
-                !array_key_exists('perspective', $element['payload']['renderImage']) ||
-
-                // render image not matches requested perspective
-                $perspective !== $element['payload']['renderImage']['perspective']
+                !array_key_exists('renderImages', $element['payload']) ||
+                !is_array($element['payload']['renderImages'])
             ) {
                 continue;
             }
 
-            // add render image to list
-            $renderImage = $element['payload']['renderImage'];
-            $imageList[] = [
-                'productId' => $renderImage['productId'],
-                'renderImageId' => $renderImage['renderImageId'],
-                'perspective' => $renderImage['perspective'],
-                'layer' => $renderImage['layer'],
-                'offsetX' => $renderImage['offsetX'],
-                'offsetY' => $renderImage['offsetY'],
-                'path' => $renderImage['directory'],
-                'filename' => $renderImage['fileName'],
-                'extension' => $renderImage['extension'],
-                'renderImageOptions' => null
-            ];
+            $renderImages = $element['payload']['renderImages'];
+            foreach ($renderImages as $renderImage) {
+                if (
+                    // render image not matches requested perspective
+                    !array_key_exists('perspective', $renderImage) ||
+                    $perspective !== $renderImage['perspective']
+                ) {
+                    continue;
+                }
+
+                // add render image to list
+                $imageList[] = [
+                    'productId' => $renderImage['productId'],
+                    'renderImageId' => $renderImage['renderImageId'],
+                    'perspective' => $renderImage['perspective'],
+                    'layer' => $renderImage['layer'],
+                    'offsetX' => $renderImage['offsetX'],
+                    'offsetY' => $renderImage['offsetY'],
+                    'path' => $renderImage['directory'],
+                    'filename' => $renderImage['fileName'],
+                    'extension' => $renderImage['extension'],
+                    'renderImageOptions' => null
+                ];
+            }
         }
 
         return $imageList;

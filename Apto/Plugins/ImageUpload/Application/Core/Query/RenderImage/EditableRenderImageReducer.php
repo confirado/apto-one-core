@@ -8,24 +8,25 @@ use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 class EditableRenderImageReducer implements RenderImageReducer
 {
     /**
-     * @var string|null
+     * @var array
      */
-    private ?string $renderImageHash;
+    private array $renderImageIds;
 
     /**
-     * @param string|null $renderImageHash
+     * @param array $renderImageIds
      */
-    public function __construct(string $renderImageHash = null)
+    public function __construct(array $renderImageIds = [])
     {
-        $this->renderImageHash = $renderImageHash;
+        $this->renderImageIds = $renderImageIds;
     }
 
     /**
-     * @param string|null $renderImageHash
+     * @param array $renderImageIds
+     * @return void
      */
-    public function setRenderImageHash(?string $renderImageHash): void
+    public function setRenderImageIds(array $renderImageIds): void
     {
-        $this->renderImageHash = $renderImageHash;
+        $this->renderImageIds = $renderImageIds;
     }
 
     /**
@@ -37,13 +38,11 @@ class EditableRenderImageReducer implements RenderImageReducer
      */
     public function getRenderImageList(string $perspective, State $state, array $imageList, string $productId = null): array
     {
-        if (null === $this->renderImageHash) {
-            return $imageList;
-        }
-
         foreach ($imageList as $key => $image) {
-            if ($image['renderImageId'] === $this->renderImageHash) {
-                unset($imageList[$key]);
+            foreach ($this->renderImageIds as $renderImageId) {
+                if ($image['renderImageId'] === $renderImageId) {
+                    unset($imageList[$key]);
+                }
             }
         }
         return $imageList;

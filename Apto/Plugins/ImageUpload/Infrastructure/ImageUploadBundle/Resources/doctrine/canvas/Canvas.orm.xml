@@ -16,6 +16,11 @@
         </id>
 
         <field name="imageSettings" column="image_settings" type="array" />
+        <field name="motiveSettings" column="motive_settings" type="array">
+            <options>
+                <option name="default">a:3:{s:6:"active";b:0;s:11:"previewSize";i:250;s:6:"folder";N;}</option>
+            </options>
+        </field>
         <field name="textSettings" column="text_settings" type="array" />
         <field name="areaSettings" column="area_settings" type="array" />
         <field name="priceSettings" column="price_settings" type="array" />

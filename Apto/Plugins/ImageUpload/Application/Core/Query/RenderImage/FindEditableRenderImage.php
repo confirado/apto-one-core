@@ -22,22 +22,22 @@ class FindEditableRenderImage implements PublicQueryInterface
     private string $perspective;
 
     /**
-     * @var string
+     * @var array
      */
-    private string $renderImageHash;
+    private array $renderImageIds;
 
     /**
      * @param array $state
      * @param string $productId
      * @param string $perspective
-     * @param string $renderImageHash
+     * @param array $renderImageIds
      */
-    public function __construct(array $state, string $productId, string $perspective, string $renderImageHash)
+    public function __construct(array $state, string $productId, string $perspective, array $renderImageIds)
     {
         $this->state = $state;
         $this->productId = $productId;
         $this->perspective = $perspective;
-        $this->renderImageHash = $renderImageHash;
+        $this->renderImageIds = $renderImageIds;
     }
 
     /**
@@ -65,10 +65,10 @@ class FindEditableRenderImage implements PublicQueryInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getRenderImageHash(): string
+    public function getRenderImageIds(): array
     {
-        return $this->renderImageHash;
+        return $this->renderImageIds;
     }
 }

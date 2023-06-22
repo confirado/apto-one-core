@@ -44,6 +44,7 @@ const Actions = function (MessageBusFactory, PageHeaderActions) {
 
             commandArguments.push(details.identifier);
             commandArguments.push(details.imageSettings);
+            commandArguments.push(details.motiveSettings);
             commandArguments.push(details.textSettings);
             commandArguments.push(details.areaSettings);
             commandArguments.push(details.priceSettings);

@@ -62,7 +62,7 @@ class RenderImageQueryHandler implements QueryHandlerInterface
         foreach ($this->renderImageRegistry->getRenderImageReducers() as $renderImageReducer) {
             if ($renderImageReducer instanceof EditableRenderImageReducer) {
                 $editableRenderImageReducer = $renderImageReducer;
-                $editableRenderImageReducer->setRenderImageHash($query->getRenderImageHash());
+                $editableRenderImageReducer->setRenderImageIds($query->getRenderImageIds());
                 break;
             }
         }

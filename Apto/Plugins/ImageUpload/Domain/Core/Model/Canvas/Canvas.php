@@ -21,6 +21,11 @@ class Canvas extends AptoAggregate
     /**
      * @var array
      */
+    private $motiveSettings;
+
+    /**
+     * @var array
+     */
     private $textSettings;
 
     /**
@@ -59,29 +64,20 @@ class Canvas extends AptoAggregate
             'allowedFileTypes' => ['jpg', 'jpeg', 'png']
         ];
 
-        $this->textSettings = [
+        $this->motiveSettings = [
             'active' => false,
-            'default' => 'Mein Text!',
-            'fontSize' => 25,
-            'textAlign' => 'center',
-            'fill' => '#ffffff',
-            'multiline' => false,
-            'fonts' => []
+            'previewSize' => 250,
+            'folder' => null,
+            'left' => 0,
+            'top' => 0
         ];
 
-        $this->areaSettings = [
-            'image' => null,
-            'width' => 1000,
-            'height' => 600,
-            'perspective' => 'persp1',
-            'layer' => '0',
-            'area' => [
-                'width' => 0,
-                'height' => 0,
-                'left' => 0,
-                'top' => 0
-            ]
+        $this->textSettings = [
+            'active' => false,
+            'boxes' => []
         ];
+
+        $this->areaSettings = [];
 
         $this->priceSettings = [
             'surchargePrices' => [],
@@ -139,6 +135,24 @@ class Canvas extends AptoAggregate
     /**
      * @return array
      */
+    public function getMotiveSettings(): array
+    {
+        return $this->motiveSettings;
+    }
+
+    /**
+     * @param array $motiveSettings
+     * @return $this
+     */
+    public function setMotiveSettings(array $motiveSettings): self
+    {
+        $this->motiveSettings = $motiveSettings;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function getTextSettings(): array
     {
         return $this->textSettings;
@@ -169,6 +183,16 @@ class Canvas extends AptoAggregate
     public function setAreaSettings(array $areaSettings): self
     {
         $this->areaSettings = $areaSettings;
+        if (array_key_exists('area', $this->areaSettings)) {
+            $area = $this->areaSettings['area'];
+            if (array_key_exists('perspective', $this->areaSettings)) {
+                $area['perspective'] = $this->areaSettings['perspective'];
+            }
+            if (array_key_exists('layer', $this->areaSettings)) {
+                $area['layer'] = $this->areaSettings['layer'];
+            }
+            $this->areaSettings = [$area];
+        }
         return $this;
     }
 
