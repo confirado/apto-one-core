@@ -57,14 +57,14 @@ export class SummaryConfigurationComponent implements OnInit {
     return this.store.select(selectSectionPrice(section));
   }
 
-  public openPopUp() {
+  public openPopUp(isStepByStep: boolean) {
     let dialogMessage = '';
     let dialogTitle = '';
     let dialogButtonCancel = '';
     let dialogButtonAccept = '';
 
     this.popUp$.subscribe((next) => {
-      if (next === null) {
+      if (next === null || isStepByStep === false) {
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
         return;
       }
@@ -101,7 +101,7 @@ export class SummaryConfigurationComponent implements OnInit {
           })
         );
       }
-      this.openPopUp();
+      this.openPopUp(isStepByStep);
     }
   }
 }
