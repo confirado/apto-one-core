@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { Store } from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
@@ -26,6 +26,6 @@ export class SidebarSummaryPriceComponent {
   });
 
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
-
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
 	public constructor(private store: Store) {}
 }

@@ -8,7 +8,7 @@
                     <div class="summary basket" *ngIf="showPrices">
                         <div class="basket price">
                             <h4>{{ sumPrice }}</h4>
-                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</span>
                         </div>
                     </div>
                 </div>

@@ -8,7 +8,16 @@
 					<h4>{{ sumPseudoPrice }}</h4>
 				</div>
 				<h3 class="sum-amount">{{ sumPrice }}</h3>
-				<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+				<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+                    <span>
+                        <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
+                            {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
+                        </a>
+                    </span>
+                    <span>
+                        <p *ngIf="!(sidebarSummary$ | async | contentSnippet: 'shippingCostsLink')">{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</p>
+                    </span>
+                </span>
 			</div>
 			<div class="add-basket">
                 <apto-quantity-input-editable
@@ -18,15 +27,15 @@
                     [width]="'100px'"
                 ></apto-quantity-input-editable>
 
-                <button class="sbs-button" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+                <button class="sbs-button add-to-basket" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
 					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
 				</button>
 			</div>
-			<div class="info">
+			<div *ngIf="sidebarSummary$ | async | contentSnippet: 'basketNotification' " class="info">
 				<div>
 					<mat-icon>info</mat-icon>
 				</div>
-				<p>Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können</p>
+				<p>{{ sidebarSummary$ | async | contentSnippet: 'basketNotification' }}</p>
 			</div>
 		</div>
         </form>
@@ -41,7 +50,16 @@
 						<h4 class="discount-amount">{{ sumPseudoPrice }}</h4>
 					</div>
 					<h3 class="sum-amount">{{ sumPrice }}</h3>
-					<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+					<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+                        <span>
+                            <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
+                                {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
+                            </a>
+                        </span>
+                        <span>
+                            <p *ngIf="!(sidebarSummary$ | async | contentSnippet: 'shippingCostsLink')">{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</p>
+                        </span>
+                    </span>
 				</div>
 			</div>
 			<div class="add-basket">
@@ -51,7 +69,7 @@
                     [size]="'big'"
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
-                <button class="one-page-button" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+                <button class="one-page-button add-to-basket" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
 					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
 				</button>
 			</div>
