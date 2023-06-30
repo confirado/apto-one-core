@@ -196,16 +196,29 @@ export class ConfigurationEffects {
 	public getConfigurationState$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(getConfigurationState),
-			switchMap((action) =>
-				this.configurationRepository.getConfigurationState(action.payload).pipe(
-					filter((result): result is Configuration => result !== null),
-					map((result) => ({
-						connector: action.payload.connector,
-						productId: action.payload.productId,
-						configuration: result,
-						currentPerspective: action.payload.currentPerspective,
-					}))
-				)
+			switchMap((action) => {
+          let payload = {
+            ...action.payload,
+            updates: {
+              ...action.payload.updates,
+              repair: {
+                maxTries: 10,
+                operators: [0,1],
+                selectEmptySections: true
+              }
+            }
+          }
+
+          return this.configurationRepository.getConfigurationState(payload).pipe(
+            filter((result): result is Configuration => result !== null),
+            map((result) => ({
+              connector: action.payload.connector,
+              productId: action.payload.productId,
+              configuration: result,
+              currentPerspective: action.payload.currentPerspective,
+            })),
+          );
+        }
 			),
 			switchMap((result) =>
 				forkJoin([
