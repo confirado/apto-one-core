@@ -1,0 +1,39 @@
+{
+  "plugins": {
+    "frontendUsers": {
+      "LoginNotSuccessFull": {
+        "de_DE": "LoginNotSuccessFull"
+      },
+      "AccountIsDisabled": {
+        "de_DE": "AccountIsDisabled"
+      },
+      "InvalidCredentials": {
+        "de_DE": "InvalidCredentials"
+      },
+      "login": {
+        "de_DE": "Anmelden"
+      },
+      "logout": {
+        "de_DE": "Abmelden"
+      },
+      "EMailUsername": {
+        "de_DE": "Benutzername"
+      },
+      "Password": {
+        "de_DE": "Passwort"
+      },
+      "dialogLogin": {
+        "de_DE": "Login"
+      },
+      "dialogUserInfo1": {
+        "de_DE": "dialogUserInfo1"
+      },
+      "dialogUserInfo2": {
+        "de_DE": "dialogUserInfo2"
+      },
+      "dialogLogout": {
+        "de_DE": "Logout"
+      }
+    }
+  }
+}
