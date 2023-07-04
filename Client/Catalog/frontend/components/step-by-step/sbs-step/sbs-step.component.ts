@@ -1,11 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import {translate, TranslatedValue} from '@apto-base-core/store/translated-value/translated-value.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement, ProgressState, ProgressStep } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectElementValues } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import {DialogSizesEnum} from "@apto-frontend/src/configs-static/dialog-sizes-enum";
+import {DialogService} from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
+import { environment } from '@apto-frontend/src/environments/environment';
+import {ActivatedRoute, Router} from '@angular/router';
+
 
 @Component({
 	selector: 'apto-sbs-step',
@@ -40,7 +46,13 @@ export class SbsStepComponent implements OnInit {
 	@Input()
 	public state: ProgressState | undefined;
 
-	public constructor(private store: Store) {}
+  public readonly popUp$ = this.store.select(selectContentSnippet('aptoSummary.confirmSelectSectionDialog'));
+  public locale: string;
+
+
+	public constructor(private store: Store, private activatedRoute: ActivatedRoute, private dialogService: DialogService, private router: Router) {
+    this.locale = environment.defaultLocale;
+  }
 
 	public opened(id: string, sectionList: string[]): boolean {
 		return sectionList.includes(id);
@@ -50,17 +62,56 @@ export class SbsStepComponent implements OnInit {
 		return this.store.select(selectElementValues(element));
 	}
 
-	public setStep(section: ProgressStep | undefined): void {
+  public openPopUp(isStepByStep: boolean, callback: () => void) {
+    let dialogMessage = '';
+    let dialogTitle = '';
+    let dialogButtonCancel = '';
+    let dialogButtonAccept = '';
+
+    this.popUp$.subscribe((next) => {
+      if (next === null || isStepByStep === false) {
+        callback();
+        return;
+      }
+      next.children.forEach((value) => {
+        if (value.name === 'title') {
+          dialogTitle = translate(value.content, this.locale);
+        }
+        if (value.name === 'message') {
+          dialogMessage = translate(value.content, this.locale);
+        }
+        if (value.name === 'buttonCancel') {
+          dialogButtonCancel = translate(value.content, this.locale);
+        }
+        if (value.name === 'buttonAccept') {
+          dialogButtonAccept = translate(value.content, this.locale);
+        }
+      });
+      this.dialogService
+        .openWarningDialog(DialogSizesEnum.md, dialogTitle, dialogMessage, dialogButtonCancel, dialogButtonAccept)
+        .afterClosed()
+        .subscribe((next) => {
+          if (next === true) {
+            callback();
+          }
+        });
+    });
+  }
+
+	public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {
 		// eslint-disable-next-line no-restricted-globals
 		if (section && !this.state?.afterSteps.includes(section)) {
-			scrollTo(0, 0);
-			this.store.dispatch(
-				setStep({
-					payload: {
-						id: section.section.id,
-					},
-				})
-			);
+      if (isStepByStep) {
+        this.openPopUp(isStepByStep, () => {
+          this.store.dispatch(
+            setStep({
+              payload: {
+                id: section.section.id,
+              },
+            })
+          );
+        });
+      }
 		}
 	}
 
