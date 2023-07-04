@@ -1,6 +1,9 @@
 {
   "plugins": {
     "frontendUsers": {
+      "loginRequired": {
+        "de_DE": "inactive"
+      },
       "LoginNotSuccessFull": {
         "de_DE": "LoginNotSuccessFull"
       },

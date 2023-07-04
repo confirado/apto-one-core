@@ -34,6 +34,8 @@ import { SelectBoxFieldComponent } from './components/select-box-field/select-bo
 import { SelectFieldComponent } from './components/select-field/select-field.component';
 import { TextInputFieldComponent } from './components/text-input-field/text-input-field.component';
 import { PortalModule } from '@angular/cdk/portal';
+import { FrontendUserEffects } from '@apto-base-frontend/store/frontend-user/frontend-user.effects';
+import { FrontendUserRepository } from '@apto-base-frontend/store/frontend-user/frontend-user.repository';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -62,25 +64,30 @@ RouterRegistry.registerRoutes(Routes);
 		SelectBoxFieldComponent,
 	],
   imports: [
-	CommonModule,
-	RouterModule,
-	AptoBaseCoreModule,
-	StoreModule.forFeature(featureKey, reducers),
-	EffectsModule.forFeature([ShopEffects]),
-	MatToolbarModule,
-	MatSelectModule,
-	BrowserAnimationsModule,
-	MatSidenavModule,
-	MatButtonModule,
-	MatIconModule,
-	OverlayModule,
-	MatRippleModule,
-	FormsModule,
-	ReactiveFormsModule,
-	MatCheckboxModule,
-	PortalModule,
+    CommonModule,
+    RouterModule,
+    AptoBaseCoreModule,
+    StoreModule.forFeature(featureKey, reducers),
+    EffectsModule.forFeature([ShopEffects, FrontendUserEffects]),
+    MatToolbarModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    OverlayModule,
+    MatRippleModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    PortalModule,
   ],
-	providers: [ContentSnippetRepository, ShopRepository, { provide: OverlayContainer, useClass: FullscreenOverlayContainer }],
+	providers: [
+    ContentSnippetRepository,
+    ShopRepository,
+    FrontendUserRepository,
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer }
+  ],
 })
 export class AptoBaseFrontendModule {
 	public constructor() {

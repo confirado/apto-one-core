@@ -23,10 +23,10 @@ class FrontendLogoutListener implements EventSubscriberInterface
      */
     public function onLogout(LogoutEvent $event): void
     {
-        // get the security token of the session that is about to be logged out
-        $user = $event->getToken()->getUser();
+        $token = $event->getToken();
 
-        if ($user instanceof FrontendUser) {
+        // get the security token of the session that is about to be logged out
+        if (null === $token || $token->getUser() instanceof FrontendUser) {
             $event->setResponse(new JsonResponse([
                 'isLoggedIn' => false
             ]));
