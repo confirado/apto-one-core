@@ -2,13 +2,13 @@
 <button (click)="logout()">Logout</button>
 <button (click)="status()">Status</button>
 
-<ng-container *ngIf="(shop$ | async) && ((isLoggedIn$ | async) || (csFrontendUsers$ | async | contentSnippet : 'loginRequired') !== 'active')">
+<ng-container>
     <mat-drawer-container>
         <mat-drawer #drawer fixedInViewport="true" class="drawer" mode="over" position="end">
             <apto-basket></apto-basket>
         </mat-drawer>
         <apto-slot-outlet identifier="header"></apto-slot-outlet>
-        <router-outlet></router-outlet>
+        <router-outlet *ngIf="accessGranted()"></router-outlet>
         <apto-slot-outlet identifier="footer"></apto-slot-outlet>
     </mat-drawer-container>
 </ng-container>

@@ -1,4 +1,6 @@
 <mat-toolbar>
+    <div *ngIf="showLoginButton()" (click)="login()">Login</div>
+    <div *ngIf="showLogoutButton()" (click)="logout()">Logout</div>
     <ng-container *ngIf="languages$ | async as languages">
         <div class="language-desktop">
             <div *ngIf="languages.length === 1"></div>
