@@ -9,13 +9,14 @@ import {
 	RenderImage,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable } from 'rxjs';
+import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
 @Injectable()
 export class ConfigurationRepository {
 	public constructor(private catalogMessageBusService: CatalogMessageBusService) {}
 
-	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector): Observable<string> {
-		return this.catalogMessageBusService.findPriceByState(productId, compressedState, connector);
+	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+		return this.catalogMessageBusService.findPriceByState(productId, compressedState, connector, currentUser);
 	}
 
 	public getRenderImages(productId: string, perspectives: string[], compressedState: any): Observable<RenderImage[] | undefined> {

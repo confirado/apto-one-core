@@ -4,7 +4,7 @@
 
     <div class="container" [style.width]="width">
         <input *ngIf="type === 'integer' || type === 'float'" onfocus="this.value == 0 ? this.value='': this.value" [formControl]="formElement" [placeholder]="placeholder" />
-        <input *ngIf="type !== 'integer' && type !== 'float'" [formControl]="formElement" [placeholder]="placeholder" />
+        <input *ngIf="type !== 'integer' && type !== 'float'" [formControl]="formElement" [placeholder]="placeholder" [type]="type === 'password' ? 'password' : 'text'" />
 
         <div class="ripple-controls" *ngIf="type === 'integer' || type === 'float'">
             <div class="control" mat-ripple (click)="increase()">

@@ -31,6 +31,8 @@ import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
 import { Configuration } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
+import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
+import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 
 @Injectable()
 export class ConfigurationEffects {
@@ -49,9 +51,10 @@ export class ConfigurationEffects {
 			withLatestFrom(
 				this.store$.select(selectConnector),
 				this.store$.select(selectCurrentPerspective),
-				this.store$.select(selectConfiguration)
+				this.store$.select(selectConfiguration),
+        this.store$.select(selectCurrentUser)
 			),
-			switchMap(([action, connector, currentPerspective, c]) =>
+			switchMap(([action, connector, currentPerspective, c, currentUser]) =>
 				this.productRepository.findConfigurableProduct(action.payload.id, action.payload.type).pipe(
 					switchMap((product) => {
 						if (c.productId === product.product.id) {
@@ -77,6 +80,7 @@ export class ConfigurationEffects {
 								product,
 								configuration: configuration as Configuration,
 								currentPerspective,
+                currentUser,
 							}))
 						);
 					})
@@ -86,7 +90,7 @@ export class ConfigurationEffects {
 				forkJoin([
 					this.configurationRepository.getComputedValues(result.product.product.id, result.configuration.compressedState),
 					this.configurationRepository.getPerspectives(result.product.product.id, result.configuration.compressedState),
-					this.configurationRepository.getStatePrice(result.product.product.id, result.configuration.compressedState, result.connector),
+					this.configurationRepository.getStatePrice(result.product.product.id, result.configuration.compressedState, result.connector, result.currentUser),
 				]).pipe(
 					map((joinResult) => ({
 						...result,
@@ -123,8 +127,11 @@ export class ConfigurationEffects {
 	public updateConfiguration$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(updateConfigurationState),
-			withLatestFrom(this.store$.select(selectConfiguration)),
-			map(([action, store]) =>
+			withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectCurrentUser)
+      ),
+			map(([action, store, currentUser]) =>
 				getConfigurationState({
 					payload: {
 						productId: store.productId,
@@ -132,11 +139,80 @@ export class ConfigurationEffects {
 						connector: store.connector,
 						updates: action.updates,
 						currentPerspective: store.currentPerspective,
+            currentUser: currentUser
 					},
 				})
 			)
 		)
 	);
+
+  public getConfigurationState$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getConfigurationState),
+      switchMap((action) =>
+        this.configurationRepository.getConfigurationState(action.payload).pipe(
+          filter((result): result is Configuration => result !== null),
+          map((result) => ({
+            connector: action.payload.connector,
+            productId: action.payload.productId,
+            configuration: result,
+            currentPerspective: action.payload.currentPerspective,
+            currentUser: action.payload.currentUser
+          }))
+        )
+      ),
+      switchMap((result) =>
+        forkJoin([
+          this.configurationRepository.getComputedValues(result.productId, result.configuration.compressedState),
+          this.configurationRepository.getPerspectives(result.productId, result.configuration.compressedState),
+          this.configurationRepository.getStatePrice(result.productId, result.configuration.compressedState, result.connector, result.currentUser),
+        ]).pipe(
+          map((joinResult) => ({
+            productId: result.productId,
+            configuration: result.configuration,
+            computedValues: joinResult[0],
+            perspectives: joinResult[1],
+            currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
+            statePrice: joinResult[2],
+          }))
+        )
+      ),
+      map((state) =>
+        getConfigurationStateSuccess({
+          payload: {
+            productId: state.productId,
+            configuration: state.configuration,
+            computedValues: state.computedValues,
+            perspectives: state.perspectives,
+            currentPerspective: state.currentPerspective,
+            statePrice: state.statePrice,
+          },
+        })
+      )
+    )
+  );
+
+  public loginStatusChanged$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginSuccess, logoutSuccess),
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectCurrentUser)
+      ),
+      map(([action, store, currentUser]) =>
+        getConfigurationState({
+          payload: {
+            productId: store.productId,
+            compressedState: store.state.compressedState,
+            connector: store.connector,
+            updates: {},
+            currentPerspective: store.currentPerspective,
+            currentUser: currentUser
+          },
+        })
+      )
+    )
+  );
 
 	public addGuestConfiguration$ = createEffect(() =>
 		this.actions$.pipe(
@@ -191,51 +267,6 @@ export class ConfigurationEffects {
 				})
 			),
 		{ dispatch: false }
-	);
-
-	public getConfigurationState$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(getConfigurationState),
-			switchMap((action) =>
-				this.configurationRepository.getConfigurationState(action.payload).pipe(
-					filter((result): result is Configuration => result !== null),
-					map((result) => ({
-						connector: action.payload.connector,
-						productId: action.payload.productId,
-						configuration: result,
-						currentPerspective: action.payload.currentPerspective,
-					}))
-				)
-			),
-			switchMap((result) =>
-				forkJoin([
-					this.configurationRepository.getComputedValues(result.productId, result.configuration.compressedState),
-					this.configurationRepository.getPerspectives(result.productId, result.configuration.compressedState),
-					this.configurationRepository.getStatePrice(result.productId, result.configuration.compressedState, result.connector),
-				]).pipe(
-					map((joinResult) => ({
-						productId: result.productId,
-						configuration: result.configuration,
-						computedValues: joinResult[0],
-						perspectives: joinResult[1],
-						currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
-						statePrice: joinResult[2],
-					}))
-				)
-			),
-			map((state) =>
-				getConfigurationStateSuccess({
-					payload: {
-						productId: state.productId,
-						configuration: state.configuration,
-						computedValues: state.computedValues,
-						perspectives: state.perspectives,
-						currentPerspective: state.currentPerspective,
-						statePrice: state.statePrice,
-					},
-				})
-			)
-		)
 	);
 
 	public getCurrentRenderImage$ = createEffect(() =>
