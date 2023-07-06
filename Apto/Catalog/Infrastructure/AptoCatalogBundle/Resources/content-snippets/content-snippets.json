@@ -421,5 +421,47 @@
     "shippingCosts": {
       "de_DE": "zzgl. Versandkosten"
     }
+  },
+  "summaryProgress": {
+    "progress=0": {
+      "headline": {
+        "de_DE": "Leg los!"
+      },
+      "text": {
+        "de_DE": "Schließe Sektionen ab um in der Konfiguration voranzuschreiten"
+      }
+    },
+    "progress1to49": {
+      "headline": {
+        "de_DE": "Guter Start!"
+      },
+      "text": {
+        "de_DE": "Schritt für Schritt zum perfekten Produkt"
+      }
+    },
+    "progress50to74": {
+      "headline": {
+        "de_DE": "Die Hälfte ist erledigt!"
+      },
+      "text": {
+        "de_DE": "Deine Konfiguration ist gleich fertig!"
+      }
+    },
+    "progress75to99": {
+      "headline": {
+        "de_DE": "Gleich ist es geschafft!"
+      },
+      "text": {
+        "de_DE": "Deine Konfiguration ist gleich fertig!"
+      }
+    },
+    "progress=100": {
+      "headline": {
+        "de_DE": "Geschafft!"
+      },
+      "text": {
+        "de_DE": "Deine Konfiguration ist fertig!"
+      }
+    }
   }
 }
