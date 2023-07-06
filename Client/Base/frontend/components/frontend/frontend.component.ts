@@ -1,17 +1,15 @@
+import { Store } from '@ngrx/store';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
+import { environment } from '@apto-frontend/src/environments/environment';
 import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { SelectConnector, Shop } from '@apto-base-frontend/store/shop/shop.model';
 import { selectConnector, selectShop } from '@apto-base-frontend/store/shop/shop.selectors';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { checkLoginStatus, login, logout } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
+import { checkLoginStatus } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 import { selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { environment } from '@apto-frontend/src/environments/environment';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { untilDestroyed } from '@ngneat/until-destroy';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 
 @Component({
@@ -89,20 +87,5 @@ export class FrontendComponent implements OnInit, AfterViewInit {
     }
 
     return true;
-  }
-
-  login() {
-    console.error('login');
-    this.store.dispatch(login({payload:{username: 'test', password: 'testtest'}}));
-  }
-
-  logout() {
-    console.error('logout');
-    this.store.dispatch(logout());
-  }
-
-  status() {
-    console.error('status');
-    this.store.dispatch(checkLoginStatus());
   }
 }

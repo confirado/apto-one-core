@@ -9,6 +9,11 @@ import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { login, logout } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import {
+  FrontendUsersLoginComponent
+} from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 
 @Component({
 	selector: 'apto-header',
@@ -25,7 +30,7 @@ export class HeaderComponent {
   public isLoggedIn: boolean;
   public loginActive: boolean;
 
-	constructor(private store: Store) {
+	constructor(private store: Store, private dialogService: DialogService) {
     this.store.select(selectLocale).subscribe((locale) => {
       if (locale !== null) {
         this.locale = locale;
@@ -78,12 +83,10 @@ export class HeaderComponent {
   }
 
   login() {
-    console.error('login');
-    this.store.dispatch(login({payload:{username: 'test', password: 'testtest'}}));
+    this.dialogService.openCustomDialog(FrontendUsersLoginComponent, DialogSizesEnum.md)
   }
 
   logout() {
-    console.error('logout');
     this.store.dispatch(logout());
   }
 }

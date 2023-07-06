@@ -2,19 +2,13 @@
   "plugins": {
     "frontendUsers": {
       "loginActive": {
-        "de_DE": "active"
+        "de_DE": "inactive"
       },
       "loginRequired": {
-        "de_DE": "active"
+        "de_DE": "inactive"
       },
       "LoginNotSuccessFull": {
-        "de_DE": "LoginNotSuccessFull"
-      },
-      "AccountIsDisabled": {
-        "de_DE": "AccountIsDisabled"
-      },
-      "InvalidCredentials": {
-        "de_DE": "InvalidCredentials"
+        "de_DE": "Es trat ein Fehler auf. Bitte versuchen Sie es erneut."
       },
       "login": {
         "de_DE": "Anmelden"
@@ -32,10 +26,10 @@
         "de_DE": "Login"
       },
       "dialogUserInfo1": {
-        "de_DE": "dialogUserInfo1"
+        "de_DE": "Sie sind angemeldet als: "
       },
       "dialogUserInfo2": {
-        "de_DE": "dialogUserInfo2"
+        "de_DE": ""
       },
       "dialogLogout": {
         "de_DE": "Logout"

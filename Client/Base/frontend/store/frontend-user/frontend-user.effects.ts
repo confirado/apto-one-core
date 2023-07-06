@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs/operators';
-
 import { FrontendUserRepository } from '@apto-base-frontend/store/frontend-user/frontend-user.repository';
 import {
-  login, loginSuccess,
+  login, loginSuccess, loginError,
   logout, logoutSuccess,
-  checkLoginStatus, checkLoginStatusSuccess,
+  checkLoginStatus, checkLoginStatusSuccess
 } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
+import { catchError, of } from 'rxjs';
 
 @Injectable()
 export class FrontendUserEffects {
@@ -23,14 +23,18 @@ export class FrontendUserEffects {
         return this.frontendUserRepository.login(
           action.payload.username,
           action.payload.password
+        ).pipe(
+          map((result) => {
+            return loginSuccess({
+              payload: {
+                currentUser: result
+              }
+            });
+          }),
+          catchError((response: any) => {
+            return of(loginError());
+          })
         );
-      }),
-      map((result) => {
-        return loginSuccess({
-          payload: {
-            currentUser: result
-          }
-        });
       })
     )
   );

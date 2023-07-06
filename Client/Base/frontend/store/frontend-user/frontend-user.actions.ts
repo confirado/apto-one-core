@@ -4,6 +4,7 @@ import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-u
 export enum FrontendUserActionTypes {
   Login              = '[FrontendUser] Login',
   LoginSuccess       = '[FrontendUser] Login Success',
+  LoginError       = '[FrontendUser] Login Error',
   Logout             = '[FrontendUser] Logout',
   LogoutSuccess      = '[FrontendUser] Logout Success',
   LoginStatus        = '[FrontendUser] Login Status',
@@ -18,6 +19,10 @@ export const login = createAction(
 export const loginSuccess = createAction(
   FrontendUserActionTypes.LoginSuccess,
   props<{ payload: { currentUser: FrontendUser | null }; }>()
+);
+
+export const loginError = createAction(
+  FrontendUserActionTypes.LoginError
 );
 
 export const logout = createAction(

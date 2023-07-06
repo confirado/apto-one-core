@@ -1,19 +1,20 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
-import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import {
   checkLoginStatusSuccess,
-  login,
+  login, loginError,
   loginSuccess,
   logoutSuccess,
 } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 
 export interface FrontendUserState {
-  currentUser: FrontendUser | null
+  currentUser: FrontendUser | null,
+  loginError: boolean
 }
 
 export const frontendUserInitialState: FrontendUserState = {
-  currentUser: null
+  currentUser: null,
+  loginError: false
 };
 
 const _frontendUserReducer = createReducer(
@@ -21,7 +22,15 @@ const _frontendUserReducer = createReducer(
   on(loginSuccess, (state, action) => {
     return {
       ...state,
-      currentUser: action.payload.currentUser
+      currentUser: action.payload.currentUser,
+      loginError: false
+    };
+  }),
+  on(loginError, (state, action) => {
+    return {
+      ...state,
+      currentUser: null,
+      loginError: true
     };
   }),
   on(logoutSuccess, (state, action) => {
