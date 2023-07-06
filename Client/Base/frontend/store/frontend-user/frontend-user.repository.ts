@@ -50,7 +50,7 @@ export class FrontendUserRepository {
           return {
             isLoggedIn: true,
             id: response.user.id,
-            userName: response.user.userName,
+            userName: response.user.username,
             email: response.user.email,
             externalCustomerGroupId: response.user.externalCustomerGroupId,
             customerNumber: response.user.customerNumber
