@@ -4,7 +4,7 @@
             <apto-basket></apto-basket>
         </mat-drawer>
         <apto-slot-outlet identifier="header"></apto-slot-outlet>
-        <router-outlet *ngIf="accessGranted()"></router-outlet>
+        <router-outlet *ngIf="shop && loginInitialized && accessGranted()"></router-outlet>
         <apto-slot-outlet identifier="footer"></apto-slot-outlet>
     </mat-drawer-container>
 </ng-container>

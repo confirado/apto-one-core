@@ -9,12 +9,14 @@ import {
 
 export interface FrontendUserState {
   currentUser: FrontendUser | null,
-  loginError: boolean
+  loginError: boolean,
+  initialized: boolean
 }
 
 export const frontendUserInitialState: FrontendUserState = {
   currentUser: null,
-  loginError: false
+  loginError: false,
+  initialized: false
 };
 
 const _frontendUserReducer = createReducer(
@@ -42,7 +44,8 @@ const _frontendUserReducer = createReducer(
   on(checkLoginStatusSuccess, (state, action) => {
     return {
       ...state,
-      currentUser: action.payload.currentUser
+      currentUser: action.payload.currentUser,
+      initialized: true
     };
   })
 );

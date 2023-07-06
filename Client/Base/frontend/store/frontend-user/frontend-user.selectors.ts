@@ -12,3 +12,7 @@ export const selectCurrentUser = createSelector(featureSelector, (state: BaseFea
 export const selectLoginError = createSelector(featureSelector, (state: BaseFeatureState) => {
   return state.frontendUser.loginError;
 });
+
+export const selectFrontendUserInitialized = createSelector(featureSelector, (state: BaseFeatureState) => {
+  return state.frontendUser.initialized;
+});

@@ -7,7 +7,7 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { SelectConnector, Shop } from '@apto-base-frontend/store/shop/shop.model';
 import { selectConnector, selectShop } from '@apto-base-frontend/store/shop/shop.selectors';
 import { checkLoginStatus } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
-import { selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
+import { selectFrontendUserInitialized, selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
@@ -24,6 +24,7 @@ export class FrontendComponent implements OnInit, AfterViewInit {
   public isLoggedIn: boolean;
   public loginActive: boolean;
   public loginRequired: boolean;
+  public loginInitialized: boolean;
 
 	@ViewChild('drawer', { static: true }) public drawer!: MatDrawer;
 
@@ -44,6 +45,10 @@ export class FrontendComponent implements OnInit, AfterViewInit {
 
     this.store.select(selectIsLoggedIn).subscribe((next) => {
       this.isLoggedIn = next;
+    });
+
+    this.store.select(selectFrontendUserInitialized).subscribe((next) => {
+      this.loginInitialized = next;
     });
 
     this.store.select(selectContentSnippet('plugins.frontendUsers.loginRequired')).subscribe((next) => {
