@@ -1,4 +1,4 @@
-<div class="step-by-step-container">
+<div *ngIf="product$ | async as product" class="step-by-step-container {{ product.identifier }}">
 	<apto-sbs-steps></apto-sbs-steps>
 	<apto-sbs-elements></apto-sbs-elements>
 	<apto-sidebar-summary></apto-sidebar-summary>

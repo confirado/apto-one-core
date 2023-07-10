@@ -9,7 +9,7 @@
                     <div class="summary basket">
                         <div class="basket price" *ngIf="showPrices">
                             <h4>{{ sumPrice }}</h4>
-                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />Zzgl. Versandkosten</span>
+                            <span>{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}<br />{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</span>
                         </div>
                         <div class="basket buttons">
                             <apto-quantity-input-editable
@@ -18,7 +18,7 @@
                                 [size]="'big'"
                                 [width]="'100px'"
                             ></apto-quantity-input-editable>
-                            <button color="primary" (click)="addBasket()" mat-flat-button>
+                            <button class="add-to-basket" color="primary" (click)="addBasket()" mat-flat-button>
                                 {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
                             </button>
                         </div>
@@ -36,7 +36,7 @@
                             [name]="'quantityInput2'"
                             formControlName="quantityInput"
                         ></apto-quantity-input-editable>
-                        <button color="primary" (click)="addBasket()" mat-flat-button>
+                        <button class="add-to-basket" color="primary" (click)="addBasket()" mat-flat-button>
                             {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
                         </button>
                     </div>
