@@ -2,10 +2,10 @@
   "plugins": {
     "frontendUsers": {
       "loginActive": {
-        "de_DE": "active"
+        "de_DE": "inactive"
       },
       "loginRequired": {
-        "de_DE": "active"
+        "de_DE": "inactive"
       },
       "LoginNotSuccessFull": {
         "de_DE": "Es trat ein Fehler auf. Bitte versuchen Sie es erneut."
