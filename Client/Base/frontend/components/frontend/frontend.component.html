@@ -5,6 +5,7 @@
         </mat-drawer>
         <apto-slot-outlet identifier="header"></apto-slot-outlet>
         <router-outlet *ngIf="shop && loginInitialized && accessGranted()"></router-outlet>
+        <apto-frontend-users-login class="apto-frontend-users-login" *ngIf="shop && loginInitialized && !accessGranted()"></apto-frontend-users-login>
         <apto-slot-outlet identifier="footer"></apto-slot-outlet>
     </mat-drawer-container>
 </ng-container>
