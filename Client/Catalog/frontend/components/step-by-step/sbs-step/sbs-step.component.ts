@@ -46,7 +46,7 @@ export class SbsStepComponent implements OnInit {
 	@Input()
 	public state: ProgressState | undefined;
 
-  public readonly popUp$ = this.store.select(selectContentSnippet('aptoSummary.confirmSelectSectionDialog'));
+  public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   public locale: string;
 
 

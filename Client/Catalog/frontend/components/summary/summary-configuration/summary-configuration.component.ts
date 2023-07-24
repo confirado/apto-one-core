@@ -35,7 +35,7 @@ export class SummaryConfigurationComponent implements OnInit {
   public readonly sumPrice$ = this.store.select(selectSumPrice);
   public readonly steps$ = this.store.select(selectProgressState);
   public readonly basicPrice$ = this.store.select(selectBasicPrice);
-  public readonly popUp$ = this.store.select(selectContentSnippet('aptoSummary.confirmSelectSectionDialog'));
+  public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   public locale: string;
   @Input() public showPrices: boolean = true;
   constructor(private store: Store, private router: Router, private activatedRoute: ActivatedRoute, private dialogService: DialogService) {

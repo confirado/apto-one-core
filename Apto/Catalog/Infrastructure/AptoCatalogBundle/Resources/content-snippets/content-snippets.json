@@ -149,20 +149,20 @@
     },
     "headline": {
       "de_DE": "Zusammenfassung Ihrer Konfiguration"
+    }
+  },
+  "confirmSelectSectionDialog": {
+    "title": {
+      "de_DE": "Achtung!"
     },
-    "confirmSelectSectionDialog": {
-      "title": {
-        "de_DE": "Achtung!"
-      },
-      "message": {
-        "de_DE": "Wenn Sie auf 'Fortfahren' klicken, wird Ihre bisherige Konfiguration bis zu dieser Sektion gelöscht."
-      },
-      "buttonCancel": {
-        "de_DE": "Abbrechen"
-      },
-      "buttonAccept": {
-        "de_DE": "Fortfahren"
-      }
+    "message": {
+      "de_DE": "Wenn Sie auf 'Fortfahren' klicken, wird Ihre bisherige Konfiguration bis zu dieser Sektion gelöscht."
+    },
+    "buttonCancel": {
+      "de_DE": "Abbrechen"
+    },
+    "buttonAccept": {
+      "de_DE": "Fortfahren"
     }
   },
   "aptoBasket": {
