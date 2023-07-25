@@ -194,6 +194,12 @@
     },
     "pricePrefix": {
       "de_DE": "je"
+    },
+    "sum": {
+      "de_DE": "Summe:"
+    },
+    "shoppingCartHeadline": {
+      "de_DE": "Warenkorb"
     }
   },
   "AptoGuestConfigurationDialog": {

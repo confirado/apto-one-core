@@ -1,6 +1,6 @@
 <div class="whole-basket" *ngIf="connector$ | async as connector">
 	<div class="title flex justify-between items-center">
-		<h3>Warenkorb</h3>
+		<h3>{{ aptoBasket$ | async | contentSnippet: 'shoppingCartHeadline' }}</h3>
 		<button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -22,8 +22,8 @@
 	</div>
 
 	<div class="summery flex justify-between">
-		<h4 class="text-base color sum">Summe:</h4>
-		<h4 class="text-base color amount">{{ 000 }}</h4>
+		<h4 class="text-base color sum">{{ aptoBasket$ | async | contentSnippet: 'sum' }}</h4>
+		<h4 class="text-base color amount">{{ connector.basket.amount }}</h4>
 	</div>
 
     <div class="buttons">
