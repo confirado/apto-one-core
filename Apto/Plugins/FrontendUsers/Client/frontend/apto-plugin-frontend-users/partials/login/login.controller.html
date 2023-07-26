@@ -1,0 +1,18 @@
+<div ng-if="!isLoggedIn">
+    <div class="error-message">{{error}}</div>
+    <form class="login-form" name="loginForm">
+        <input type="text" ng-attr-placeholder="{{snippet('EMailUsername')}}" ng-model="userLogin.email">
+        <input type="password" ng-attr-placeholder="{{snippet('Password')}}" ng-model="userLogin.password">
+        <div class="block-group">
+            <button class="block right" ng-click="doLogin()">{{snippet('dialogLogin')}}</button>
+        </div>
+    </form>
+</div>
+<div ng-if="isLoggedIn">
+    <div class="block-group">
+        <p>
+            {{snippet('dialogUserInfo1')}} {{currentUserName}} {{snippet('dialogUserInfo2')}}
+        </p>
+        <button class="block right" ng-click="doLogout()">{{snippet('dialogLogout')}}</button>
+    </div>
+</div>

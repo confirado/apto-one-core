@@ -1,0 +1,104 @@
+<md-dialog class="apto-md-dialog-element-usage-detail" aria-label="List dialog" xmlns="http://www.w3.org/1999/html">
+
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Element Identifier: {{ elementUsageDetails.element.identifier }}</span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Anzahl:</label>
+                    <input ng-model="elementUsageDetails.quantity">
+                </md-input-container>
+            </div>
+            <div ng-if="elementUsageDetails.element.selectableValues.length > 0 || elementUsageDetails.element.computableValues.length > 0">
+                <h4>Berechnung:</h4>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <md-checkbox
+                                ng-disabled="!(elementUsageDetails.element.selectableValues.length > 0 || elementUsageDetails.element.computableValues.length > 0)"
+                                ng-model="elementUsageDetails.quantityCalculation.active"
+                                aria-label="Aktiv">
+                            Aktiv
+                        </md-checkbox>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Gleichung:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="!elementUsageDetails.quantityCalculation.active"
+                                ng-model="elementUsageDetails.quantityCalculation.fieldPosition"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-repeat="fieldPosition in elementUsageDetails.fieldPositions" ng-value="fieldPosition">
+                                <span ng-if="fieldPosition === 'right'"><strong>Anzahl</strong> { add | sub | mul | div } <strong>Feld</strong></span>
+                                <span ng-if="fieldPosition === 'left'"><strong>Feld</strong> { add | sub | mul | div } <strong>Anzahl</strong></span>
+                                <span ng-if="fieldPosition !== 'right' && fieldPosition !== 'left'">{{fieldPosition}}</span>
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Operation:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="!elementUsageDetails.quantityCalculation.active"
+                                ng-model="elementUsageDetails.quantityCalculation.operation"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-repeat="operation in elementUsageDetails.operations" ng-value="operation">
+                                {{operation}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Feldtyp:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="!(elementUsageDetails.quantityCalculation.active && elementUsageDetails.quantityCalculation.operation)"
+                                ng-model="elementUsageDetails.quantityCalculation.fieldType"
+                                ng-model-options="{trackBy: '$value'}"
+                                ng-change="onChangeFieldType()"
+                        >
+                            <md-option ng-repeat="fieldType in elementUsageDetails.fieldTypes" ng-value="fieldType">
+                                {{fieldType}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Feld:</label>
+                        <md-select
+                                multiple="false"
+                                ng-disabled="!(elementUsageDetails.quantityCalculation.active && elementUsageDetails.quantityCalculation.operation && elementUsageDetails.quantityCalculation.fieldType)"
+                                ng-model="elementUsageDetails.quantityCalculation.field"
+                                ng-model-options="{trackBy: '$value'}"
+                        >
+                            <md-option ng-if="elementUsageDetails.quantityCalculation.fieldType === 'selectable'" ng-repeat="field in elementUsageDetails.element.selectableValues" ng-value="field">
+                                {{field}}
+                            </md-option>
+                            <md-option ng-if="elementUsageDetails.quantityCalculation.fieldType === 'computable'" ng-repeat="field in elementUsageDetails.element.computableValues" ng-value="field">
+                                {{field}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+        <md-button class="md-raised md-primary md-cornered" ng-click="save()">Speichern</md-button>
+    </md-dialog-actions>
+</md-dialog>

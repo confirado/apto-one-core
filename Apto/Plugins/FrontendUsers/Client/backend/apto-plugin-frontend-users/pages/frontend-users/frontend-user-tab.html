@@ -1,0 +1,48 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="frontendUserDetail.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>Kundennummer</label>
+        <input ng-model="frontendUserDetail.customerNumber">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>Kundengruppe (External Id):</label>
+        <md-select ng-model="frontendUserDetail.externalCustomerGroupId">
+            <md-option ng-value="group.externalId" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
+        </md-select>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Benutzername:</label>
+        <input required ng-model="frontendUserDetail.username">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex ng-if="frontendUserDetail.id">
+        <label>Passwort:</label>
+        <input type="password" ng-model="frontendUserDetail.plainPassword">
+    </md-input-container>
+    <md-input-container flex ng-if="!frontendUserDetail.id">
+        <label>Passwort:</label>
+        <input type="password" required ng-model="frontendUserDetail.plainPassword">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>E-Mail:</label>
+        <input required ng-model="frontendUserDetail.email">
+    </md-input-container>
+</div>

@@ -61,6 +61,7 @@ export interface Connector {
 	displayCurrency: Currency;
 	shopCurrency: Currency;
 	basket: ConnectorBasket;
+  configured: boolean;
 }
 
 export interface SelectConnector {
@@ -71,4 +72,5 @@ export interface SelectConnector {
 	shopCurrency: Currency;
 	locale: string;
 	customerGroupExternalId: string | null;
+  configured: boolean;
 }

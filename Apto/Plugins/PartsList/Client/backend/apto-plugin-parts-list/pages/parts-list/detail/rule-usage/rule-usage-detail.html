@@ -1,0 +1,210 @@
+<md-dialog class="apto-md-dialog-element-usage-detail" aria-label="List dialog" xmlns="http://www.w3.org/1999/html">
+
+    <md-toolbar class="apto-md-toolbar-dark" style="z-index: 1;">
+        <div class="md-toolbar-tools">
+            <h3><span>Rule Id: {{ ruleUsageDetails.id }}</span></h3>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="close()">
+                <md-icon md-font-set="fa">&#xf00d</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <label>Regelname:</label>
+                    <input ng-model="ruleUsageDetails.name">
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <md-checkbox
+                            ng-model="ruleUsageDetails.active"
+                            aria-label="Aktiv">
+                        Aktiv
+                    </md-checkbox>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Verknüpfung Bedingung:</label>
+                    <md-select required multiple="false" ng-model="ruleUsageDetails.conditionsOperator">
+                        <md-option ng-value="0">
+                            UND
+                        </md-option>
+                        <md-option ng-value="1">
+                            ODER
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Anzahl:</label>
+                    <input ng-model="ruleUsageDetails.quantity">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+
+                <!-- product select box -->
+                <md-input-container flex="">
+                    <label>Produkt:</label>
+                    <md-select
+                            multiple="false"
+                            ng-model="currentProduct"
+                            ng-model-options="{trackBy: '$value.id'}"
+                            ng-change="onChangeProduct()"
+                    >
+                        <md-option ng-repeat="product in products" ng-value="product">
+                            {{product.identifier}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- computed values select box -->
+                <md-input-container flex="">
+                    <label>Berechnete Werte:</label>
+                    <md-select
+                            multiple="false"
+                            ng-model="currentComputedValue"
+                            ng-model-options="{trackBy: '$value.id'}"
+                            ng-disabled="currentProduct === null"
+                            ng-change="onChangeComputedValue()"
+                    >
+                        <md-option ng-if="currentProduct" ng-repeat="computedValue in currentProduct.computedProductValues" ng-value="computedValue">
+                            {{computedValue.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- section select box -->
+                <md-input-container flex="">
+                    <label>Sektion:</label>
+                    <md-select
+                            multiple="false"
+                            ng-model="currentSection"
+                            ng-model-options="{trackBy: '$value.id'}"
+                            ng-disabled="currentProduct === null"
+                            ng-change="onChangeSection()"
+                    >
+                        <md-option ng-if="currentProduct" ng-repeat="section in currentProduct.sections" ng-value="section">
+                            {{section.identifier}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- element select box -->
+                <md-input-container flex="">
+                    <label>Element:</label>
+                    <md-select
+                            multiple="false"
+                            ng-hide="currentComputedValue !== null"
+                            ng-disabled="currentSection === null"
+                            ng-model="currentElement"
+                            ng-model-options="{trackBy: '$value.id'}"
+                            ng-change="onChangeElement()"
+                    >
+                        <md-option ng-if="currentSection" ng-repeat="element in currentSection.elements" ng-value="element">
+                            {{element.identifier}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- properties select box -->
+                <md-input-container flex="">
+                    <label>Feld:</label>
+                    <md-select
+                            multiple="false"
+                            ng-hide="currentComputedValue !== null"
+                            ng-disabled="availableProperties === null"
+                            ng-model="currentProperty"
+                            ng-change="onChangeProperty()"
+                    >
+                        <md-option ng-if="availableProperties" ng-repeat="property in availableProperties" ng-value="property">
+                            {{property}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- operator select box -->
+                <md-input-container flex="">
+                    <label>Operator:</label>
+                    <md-select
+                            multiple="false"
+                            ng-model="currentOperator"
+                            ng-model-options="{trackBy: '$value.id'}"
+                            ng-change="onChangeOperator()"
+                    >
+                        <md-option ng-repeat="operator in availableOperators" ng-value="operator">
+                            {{operator.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- value text field -->
+                <md-input-container flex="">
+                    <label>Wert:</label>
+                    <input ng-disabled="currentOperator === null || currentOperator.id === 0 || currentOperator.id === 1" ng-model="currentValue">
+                </md-input-container>
+                <div flex="5"></div>
+
+                <!-- add button -->
+                <md-input-container>
+                    <md-button ng-if="currentId === null" ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()">Hinzufügen</md-button>
+                    <md-button ng-if="currentId !== null" ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()">Speichern</md-button>
+                </md-input-container>
+            </div>
+            <md-table-container class="md-whiteframe-2dp">
+                <table md-table>
+                    <thead md-head>
+                    <tr md-row>
+                        <th md-column style="width:15%;">Produkt</th>
+                        <th md-column style="width:15%;">Sektion</th>
+                        <th md-column style="width:15%;">Element</th>
+                        <th md-column style="width:15%;">Feld</th>
+                        <th md-column style="width:15%;">Operator</th>
+                        <th md-column style="width:15%;">Wert</th>
+                        <th md-column style="width:10%;">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody md-body>
+                    <tr md-row ng-repeat="condition in ruleUsageDetails.conditions">
+                        <td md-cell>{{getProductIdentifier(condition.productId)}}</td>
+                        <td md-cell>{{getSectionIdentifier(condition.sectionId,condition.productId)}}</td>
+                        <td md-cell>{{getElementIdentifier(condition.elementId, condition.sectionId,condition.productId)}}</td>
+                        <td md-cell>{{getPropertyName(condition)}}</td>
+                        <td md-cell>{{getOperatorValue(condition.operator)}}</td>
+                        <td md-cell>{{condition.value}}</td>
+                        <td md-cell style="text-align: center;">
+                            <md-button
+                                    title="Bearbeiten"
+                                    class="md-icon-button md-primary"
+                                    ng-click="editCondition($event, $index)">
+                                <md-icon md-font-set="fa">&#xf044</md-icon>
+                            </md-button>
+                            <md-button
+                                    title="Löschen"
+                                    class="md-icon-button md-warn"
+                                    apto-confirm-remove="removeCondition(condition.id)">
+                                <md-icon md-font-set="fa">&#xf014</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+        <md-button class="md-raised md-cornered" ng-click="save(true)">Speichern und Schliessen</md-button>
+        <md-button class="md-raised md-primary md-cornered" ng-click="save()">Speichern</md-button>
+    </md-dialog-actions>
+</md-dialog>

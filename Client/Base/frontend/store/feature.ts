@@ -2,6 +2,7 @@ import { Action, ActionReducerMap, createFeatureSelector } from "@ngrx/store";
 import { contentSnippetsReducer, ContentSnippetsState } from "@apto-base-frontend/store/content-snippets/content-snippets.reducer";
 import { languageReducer, LanguageState } from "@apto-base-frontend/store/language/language.reducer";
 import { shopReducer, ShopState } from "@apto-base-frontend/store/shop/shop.reducer";
+import { frontendUserReducer, FrontendUserState } from '@apto-base-frontend/store/frontend-user/frontend-user.reducer';
 
 export const featureKey = 'aptoBase';
 export const featureSelector = createFeatureSelector<BaseFeatureState>(featureKey);
@@ -10,6 +11,7 @@ export interface BaseFeatureState {
   contentSnippets: ContentSnippetsState;
   language: LanguageState;
   shop: ShopState;
+  frontendUser: FrontendUserState;
 }
 
 export interface PayloadAction extends Action {
@@ -19,7 +21,8 @@ export interface PayloadAction extends Action {
 export const reducers: ActionReducerMap<BaseFeatureState, PayloadAction> = {
   contentSnippets: contentSnippetsReducer,
   language: languageReducer,
-  shop: shopReducer
+  shop: shopReducer,
+  frontendUser: frontendUserReducer
 }
 
 // @todo: we have a loading flag for product and content snippets, is it possible with rxjs, to react to all actions that set a loading flag?

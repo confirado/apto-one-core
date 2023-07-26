@@ -1,0 +1,46 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <md-checkbox ng-model="details.active" aria-label="Aktiv">
+            Aktiv
+        </md-checkbox>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value required label="'Name'" type="'input'" translated-value="details.name" flex></apto-translated-value>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Teilenummer:</label>
+        <input ng-model="details.partNumber">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Bezugsgröße (Preis / X):</label>
+        <input ng-model="details.baseQuantity">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Einheit:</label>
+        <md-select ng-model="$parent.selectedUnitId"
+                   md-on-close="clearUnitSearchTerm()"
+                   data-md-container-class="apto-md-select-search-container"
+                   style="min-width: 200px;"
+        >
+            <md-select-header class="apto-md-select-header">
+                <input ng-model="$parent.unitSearchTerm"
+                       ng-keydown="$event.stopPropagation()"
+                       type="search"
+                       placeholder="Suchen:"
+                       class="apto-md-header-search-box md-text">
+            </md-select-header>
+            <md-optgroup label="Einheiten">
+                <md-option ng-value="null">keine</md-option>
+                <md-option ng-value="unit.id" ng-repeat="unit in availableUnits | filter:unitSearchTerm">{{ unit.unit }}</md-option>
+            </md-optgroup>
+        </md-select>
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <apto-translated-value label="'Beschreibung'" type="'trumbowyg'" translated-value="details.description" flex></apto-translated-value>
+</div>

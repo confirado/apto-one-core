@@ -1,0 +1,6 @@
+<a href="#" class="open-frontend-login" ng-click="$ctrl.showLoginDialog($event)">
+    <strong>
+        <span ng-if="!$ctrl.state.isLoggedIn">{{$ctrl.snippet('login')}}</span>
+        <span ng-if="$ctrl.state.isLoggedIn">{{$ctrl.snippet('logout')}}</span>
+    </strong>
+</a>

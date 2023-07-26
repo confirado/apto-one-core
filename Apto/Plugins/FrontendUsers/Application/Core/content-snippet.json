@@ -1,0 +1,39 @@
+{
+  "plugins": {
+    "frontendUsers": {
+      "loginActive": {
+        "de_DE": "inactive"
+      },
+      "loginRequired": {
+        "de_DE": "inactive"
+      },
+      "LoginNotSuccessFull": {
+        "de_DE": "Es trat ein Fehler auf. Bitte versuchen Sie es erneut."
+      },
+      "login": {
+        "de_DE": "Anmelden"
+      },
+      "logout": {
+        "de_DE": "Abmelden"
+      },
+      "EMailUsername": {
+        "de_DE": "Benutzername"
+      },
+      "Password": {
+        "de_DE": "Passwort"
+      },
+      "dialogLogin": {
+        "de_DE": "Login"
+      },
+      "dialogUserInfo1": {
+        "de_DE": "Sie sind angemeldet als: "
+      },
+      "dialogUserInfo2": {
+        "de_DE": ""
+      },
+      "dialogLogout": {
+        "de_DE": "Logout"
+      }
+    }
+  }
+}

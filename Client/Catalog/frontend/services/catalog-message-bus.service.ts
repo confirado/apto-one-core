@@ -15,6 +15,7 @@ import { onError } from '@apto-catalog-frontend/store/configuration/configuratio
 import { ComputedValues, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
+import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -54,13 +55,18 @@ export class CatalogMessageBusService {
 		return this.query<RenderImage[] | undefined>('FindRenderImagesByState', [compressedState, perspectives, productId]);
 	}
 
-	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector): Observable<string> {
+	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+    let customerGroupId = connector.customerGroup.id;
+    if (currentUser !== null && connector.configured === false) {
+      customerGroupId = currentUser.externalCustomerGroupId
+    }
+
 		return this.query('FindPriceByState', [
 			productId,
 			compressedState,
 			connector.shopCurrency,
 			connector.displayCurrency,
-			connector.customerGroup.id,
+      customerGroupId,
 			connector.locale,
 			connector.sessionCookies,
 			connector.taxState,

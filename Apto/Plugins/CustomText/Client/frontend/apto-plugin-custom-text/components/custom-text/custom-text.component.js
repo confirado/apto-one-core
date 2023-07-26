@@ -26,7 +26,6 @@ class Controller {
         }
 
         this.staticValues = this.element.definition.staticValues;
-        console.error(this.staticValues);
         this.boundedEvents.push(
             this.reduxConnect()
         );

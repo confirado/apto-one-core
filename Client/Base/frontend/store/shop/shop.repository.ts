@@ -26,7 +26,7 @@ export class ShopRepository {
 					withCredentials: true,
 				}
 			)
-			.pipe(map((response: any) => response.result));
+			.pipe(map((response: any) => ({...response.result, configured: true})));
 	}
 
 	public findShopContext(): Observable<{ shop: Shop; languages: Language[]; locale: string }> {
