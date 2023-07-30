@@ -26,8 +26,27 @@
 		<h4 class="text-base color amount">{{ 000 }}</h4>
 	</div>
 
-    <div class="buttons">
-        <button color="primary" mat-flat-button>Zur Kasse</button>
-        <button color="accent" mat-flat-button>Zum Warenkorb</button>
+    <div
+        *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || (csAptoBasket$ | async | contentSnippet: 'cartLink')"
+        class="buttons"
+    >
+        <a
+            *ngIf="csAptoBasket$ | async | contentSnippet: 'checkoutLink'"
+            [href]="csAptoBasket$ | async | contentSnippet: 'checkoutLink'"
+            color="primary"
+            mat-flat-button
+            target='_blank'
+        >
+            {{ csAptoBasket$ | async | contentSnippet: 'checkout' }}
+        </a>
+        <a
+            *ngIf="csAptoBasket$ | async | contentSnippet: 'cartLink'"
+            [href]="csAptoBasket$ | async | contentSnippet: 'cartLink'"
+            color="accent"
+            mat-flat-button
+            target='_blank'
+        >
+            {{ csAptoBasket$ | async | contentSnippet: 'cart' }}
+        </a>
     </div>
 </div>
