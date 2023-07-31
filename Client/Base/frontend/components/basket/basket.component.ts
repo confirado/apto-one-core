@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { selectFullConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { Store } from '@ngrx/store';
-import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 
 @Component({
 	selector: 'apto-basket',
@@ -10,6 +10,8 @@ import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/c
 	styleUrls: ['./basket.component.scss'],
 })
 export class BasketComponent {
+  public readonly csAptoBasket$ = this.store.select(selectContentSnippet('aptoBasket'));
+
 	public toggleSideBar(): void {
 		this.basketService.sideBar?.toggle();
 	}
@@ -37,7 +39,6 @@ export class BasketComponent {
 	}
 
 	public connector$ = this.store.select(selectFullConnector);
-  public aptoBasket$ = this.store.select(selectContentSnippet('aptoBasket'))
 
 	public constructor(private store: Store, private basketService: BasketService) {}
 }

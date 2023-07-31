@@ -1,3 +1,5 @@
+@import "globals";
+
 :host {
 	background-color: var(--color-background);
 	width: 430px;
@@ -50,11 +52,12 @@
     }
 
     .buttons {
-        button {
+        a {
             width: 100%;
+            line-height: var(--button-mobile-height);
         }
 
-        button + button {
+        a + a {
             margin-top: var(--button-gap);
         }
     }
@@ -88,6 +91,26 @@
             .delete {
                 display: flex;
                 justify-content: center;
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .whole-basket {
+        .buttons {
+            a {
+                line-height: var(--button-tablet-height);
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: $tablet-max-width) {
+    .whole-basket {
+        .buttons {
+            a {
+                line-height: var(--input-big-height);
             }
         }
     }
