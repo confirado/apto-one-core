@@ -11,6 +11,7 @@ export interface Product {
 	useStepByStep: boolean;
 	position: number;
 	customProperties: CustomProperty[];
+  hidden: boolean;
 }
 
 export interface Group {

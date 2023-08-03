@@ -411,6 +411,9 @@
     },
     "searchPlaceholder": {
       "de_DE": "Name, Artikelnummer, Beschreibung ..."
+    },
+    "button": {
+      "de_DE": "Konfigurieren"
     }
   },
   "aptoRouteAccess": {
