@@ -131,6 +131,7 @@ export class ProductRepository {
 					isZoomable: element.isZoomable,
 					position: element.position,
 					customProperties: element.customProperties,
+          attachments: element.attachments,
 				});
 			});
 		});

@@ -112,6 +112,7 @@ export class ConfigurationRepository {
 					disabled: element.state.disabled,
 					mandatory: element.isMandatory,
 					values: element.state.values,
+          attachments: element.attachments,
 				});
 			}
 		}

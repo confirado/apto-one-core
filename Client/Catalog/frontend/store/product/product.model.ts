@@ -142,4 +142,5 @@ export interface Element<DefinitionProperties = unknown> {
 	isZoomable: boolean;
 	position: number;
 	customProperties: CustomProperty[];
+  attachments: any;
 }

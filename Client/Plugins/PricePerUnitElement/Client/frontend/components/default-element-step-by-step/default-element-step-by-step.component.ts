@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
+import {environment} from "@apto-frontend/src/environments/environment";
 
 @Component({
 	selector: 'apto-default-element-step-by-step',
@@ -18,4 +19,6 @@ export class DefaultElementStepByStepComponent {
 
   @Input()
   public isDialog = false;
+
+  public mediaUrl = environment.api.media;
 }
