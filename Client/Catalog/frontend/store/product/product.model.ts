@@ -11,6 +11,7 @@ export interface Product {
 	useStepByStep: boolean;
 	position: number;
 	customProperties: CustomProperty[];
+  hidden: boolean;
 }
 
 export interface Group {
@@ -141,4 +142,5 @@ export interface Element<DefinitionProperties = unknown> {
 	isZoomable: boolean;
 	position: number;
 	customProperties: CustomProperty[];
+  attachments: any;
 }

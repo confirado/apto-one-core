@@ -20,6 +20,7 @@ export interface ElementState {
 	disabled: boolean;
 	mandatory: boolean;
 	values: any;
+  attachments: any;
 }
 export interface Configuration {
 	compressedState: any;
