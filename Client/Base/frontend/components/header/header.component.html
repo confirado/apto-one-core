@@ -20,7 +20,7 @@
     <div *ngIf="contentSnippets$ | async" class="logo">
         <a
             [href]="contentSnippets$ | async | contentSnippet: 'link'"
-            [target]="(contentSnippets$ | async | contentSnippet: 'openInNewTab') === 'active' ? '_blank' : undefined"
+            [target]="(contentSnippets$ | async | contentSnippet: 'openInNewTab') === 'active' ? '_blank' : '_self'"
         >
             <img *ngIf="contentSnippets$ | async | contentSnippet: 'logoImg'" class="visible-desktop" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImg')" />
             <img *ngIf="contentSnippets$ | async | contentSnippet: 'logoImgMobile'" class="visible-mobile" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImgMobile')" />
