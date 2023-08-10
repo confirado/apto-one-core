@@ -527,16 +527,16 @@
             "de_DE": "Name Ihres Unternehmens"
           },
           "emailHeadline": {
-            "de_DE": "E-Mail *"
+            "de_DE": "E-Mail"
           },
           "emailPlaceholder": {
-            "de_DE": "Ihre E-Mail-Adresse *"
+            "de_DE": "Ihre E-Mail-Adresse"
           },
           "genderHeadline": {
-            "de_DE": "Anrede *"
+            "de_DE": "Anrede"
           },
           "genderPlaceholder": {
-            "de_DE": "Anrede *"
+            "de_DE": "Anrede"
           },
           "messageHeadline": {
             "de_DE": "Ihre Nachricht"
@@ -545,10 +545,10 @@
             "de_DE": "Anmerkung, Wünsche, Notizen"
           },
           "nameHeadline": {
-            "de_DE": "Name *"
+            "de_DE": "Name"
           },
           "namePlaceholder": {
-            "de_DE": "Ihr Name *"
+            "de_DE": "Ihr Name"
           },
           "phoneHeadline": {
             "de_DE": "Telefon"

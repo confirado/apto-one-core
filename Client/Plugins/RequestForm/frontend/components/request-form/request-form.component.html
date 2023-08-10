@@ -14,23 +14,23 @@
 		<div class="request-form">
 			<apto-select-field
 				formControlName="gender"
-				[name]= "requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderHeadline'"
+				[name]= "(requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderHeadline') + ' *'"
 				[items]="[diverse, herr, frau]"
 				[enableClear]="false"
-                [default]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder'"
+                [default]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
 			></apto-select-field>
 			<apto-input-field
 				formControlName="name"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.nameHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder'"
+				[name]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.nameHeadline') + ' *'"
+				[placeholder]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="email"
                 [fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder'"
+				[name]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailHeadline') + ' *'"
+				[placeholder]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
