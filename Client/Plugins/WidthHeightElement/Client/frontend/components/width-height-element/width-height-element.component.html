@@ -35,8 +35,13 @@
         <div class="element height-input" *ngIf="element.element.definition.staticValues.renderingHeight !== 'none'">
             <div class="height-input-pointer"></div>
 
-            <div [ngClass]="{'input-border': element.element.definition.staticValues.renderingHeight !== 'none'}" class="container">
-<!--                <div class="prefix">{{element.element.definition.staticValues.prefixHeight | translate}}</div>-->
+            <div class="container">
+
+                <!--
+                <div class="prefix">{{element.element.definition.staticValues.prefixHeight | translate}}
+                </div>
+                -->
+
                 <div class="input">
                     <apto-input-field
                         *ngIf="element.element.definition.staticValues.renderingHeight === 'input'"
