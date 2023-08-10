@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
+import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 
 @Component({
 	selector: 'apto-request-form',
@@ -60,4 +61,6 @@ export class RequestFormComponent {
 	public onSendRequestForm(): void {
 		this.sendRequestForm.emit();
 	}
+
+  public readonly requestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
 }

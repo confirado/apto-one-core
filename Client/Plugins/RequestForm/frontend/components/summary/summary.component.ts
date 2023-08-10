@@ -26,6 +26,7 @@ import { selectHumanReadableState } from '@apto-request-form-frontend/store/huma
 export class SummaryComponent implements OnInit{
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+  public readonly requestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
   public product$ = this.store.select(selectProduct);
   public configuration$ = this.store.select(selectConfiguration);
   public readonly renderImage$ = this.store.select(selectRenderImage);
