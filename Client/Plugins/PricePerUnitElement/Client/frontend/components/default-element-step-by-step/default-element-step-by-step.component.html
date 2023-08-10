@@ -26,7 +26,7 @@
     >
     </div>
     <div class="element-attachment-download-item element" *ngIf="element.element.attachments.length !== 0">
-        <a class="element-attachment-download" *ngFor="let attachment of element.element.attachments" [href]="mediaUrl + attachment.fileUrl" [download]="attachment.mediaFile.filename | translate">{{ attachment.name | translate }}</a>
+        <a (click)="$event.stopPropagation()" class="element-attachment-download" *ngFor="let attachment of element.element.attachments" [href]="mediaUrl + attachment.fileUrl" [download]="attachment.mediaFile.filename | translate">{{ attachment.name | translate }}</a>
     </div>
     <div class="apply-button"></div>
 </div>
