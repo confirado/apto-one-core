@@ -24,55 +24,55 @@
           }
         },
         "labels": {
-          "cityHeadline": {
+          "city": {
             "de_DE": "Ort"
           },
           "cityPlaceholder": {
             "de_DE": "Ihr Ort"
           },
-          "companyHeadline": {
+          "company": {
             "de_DE": "Unternehmen"
           },
           "companyPlaceholder": {
             "de_DE": "Name Ihres Unternehmens"
           },
-          "emailHeadline": {
+          "email": {
             "de_DE": "E-Mail"
           },
           "emailPlaceholder": {
             "de_DE": "Ihre E-Mail-Adresse"
           },
-          "genderHeadline": {
+          "gender": {
             "de_DE": "Anrede"
           },
           "genderPlaceholder": {
             "de_DE": "Anrede"
           },
-          "messageHeadline": {
+          "message": {
             "de_DE": "Ihre Nachricht"
           },
           "messagePlaceholder": {
             "de_DE": "Anmerkung, Wünsche, Notizen"
           },
-          "nameHeadline": {
+          "name": {
             "de_DE": "Name"
           },
           "namePlaceholder": {
             "de_DE": "Ihr Name"
           },
-          "phoneHeadline": {
+          "phone": {
             "de_DE": "Telefon"
           },
           "phonePlaceholder": {
             "de_DE": "Ihre Telefonnummer"
           },
-          "streetHeadline": {
+          "street": {
             "de_DE": "Adresse"
           },
           "streetPlaceholder": {
             "de_DE": "Straße, Hausnummer"
           },
-          "zipCodeHeadline": {
+          "zipCode": {
             "de_DE": "Postleitzahl"
           },
           "zipCodePlaceholder": {

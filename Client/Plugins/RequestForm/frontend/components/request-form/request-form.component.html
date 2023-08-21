@@ -14,7 +14,7 @@
 		<div class="request-form">
 			<apto-select-field
 				formControlName="gender"
-				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderHeadline') + ' *'"
+				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.gender') + ' *'"
 				[items]="[diverse, herr, frau]"
 				[enableClear]="false"
                 [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
@@ -22,49 +22,49 @@
 			<apto-input-field
 				formControlName="name"
 				[fullWidth]="true"
-				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.nameHeadline') + ' *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
 				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="email"
                 [fullWidth]="true"
-				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailHeadline') + ' *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
 				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="phone"
 				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phoneHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="company"
 				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="street"
 				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="zipCode"
 				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodeHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="city"
 				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
@@ -72,7 +72,7 @@
 		<div class="large-textfield">
 			<apto-text-input-field
 				formControlName="message"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messageHeadline'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.message'"
 				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
                 [rows]="6"
 			></apto-text-input-field>
