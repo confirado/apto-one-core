@@ -29,6 +29,24 @@ export class ShopRepository {
 			.pipe(map((response: any) => ({...response.result, configured: true})));
 	}
 
+  public deleteBasketItem(url: string, basketItemId: string): Observable<Connector> {
+    return this.http
+      .post(
+        url,
+        {
+          data: {
+            query: 'RemoveFromBasket',
+            arguments: [basketItemId],
+          },
+          encode: 'json',
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(map((response: any) => ({...response.result, configured: true})));
+  }
+
 	public findShopContext(): Observable<{ shop: Shop; languages: Language[]; locale: string }> {
 		return this.messageBus
 			.query('FindShopContext', [window.location.host])
