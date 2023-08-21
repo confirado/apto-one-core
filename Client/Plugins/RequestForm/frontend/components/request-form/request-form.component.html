@@ -2,11 +2,11 @@
 	<form [formGroup]="requestForm">
 		<div class="title">
 			<h5>
-                {{ requestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
             </h5>
 			<div class="break-text">
 				<p>
-                    {{ requestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
+                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
                 </p>
 			</div>
 		</div>
@@ -14,82 +14,82 @@
 		<div class="request-form">
 			<apto-select-field
 				formControlName="gender"
-				[name]= "(requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderHeadline') + ' *'"
+				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderHeadline') + ' *'"
 				[items]="[diverse, herr, frau]"
 				[enableClear]="false"
-                [default]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
+                [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
 			></apto-select-field>
 			<apto-input-field
 				formControlName="name"
 				[fullWidth]="true"
-				[name]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.nameHeadline') + ' *'"
-				[placeholder]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.nameHeadline') + ' *'"
+				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="email"
                 [fullWidth]="true"
-				[name]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailHeadline') + ' *'"
-				[placeholder]="(requestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailHeadline') + ' *'"
+				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="phone"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.phoneHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phoneHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="company"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.companyHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="street"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.streetHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="zipCode"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodeHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodeHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="city"
 				[fullWidth]="true"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.cityHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 		</div>
 		<div class="large-textfield">
 			<apto-text-input-field
 				formControlName="message"
-				[name]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.messageHeadline'"
-				[placeholder]="requestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messageHeadline'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
                 [rows]="6"
 			></apto-text-input-field>
 		</div>
         <div class="title break-text">
             <p>
-                {{ requestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
             </p>
         </div>
 		<div class="agreement">
 			<mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
-                <span [innerHTML]="requestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
+                <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
             </mat-checkbox>
 		</div>
 		<div class="request-button">
 			<button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">
-                {{ requestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
             </button>
 		</div>
 	</form>

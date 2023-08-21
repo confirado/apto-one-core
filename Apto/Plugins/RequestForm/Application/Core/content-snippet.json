@@ -18,42 +18,78 @@
         "beforeSend": {
           "headline": {
             "de_DE": "Ihre Kontaktdaten"
+          },
+          "subline": {
+            "de_DE": "Bitte geben Sie uns Ihre Daten, damit wir mit einem Angebot auf Sie zukommen können"
           }
         },
         "labels": {
-          "phone": {
-            "de_DE": "Telefon"
-          },
-          "email": {
-            "de_DE": "E-Mail"
-          },
-          "gender": {
-            "de_DE": "Anrede"
-          },
-          "zipCode": {
-            "de_DE": "PLZ"
-          },
-          "requirePhone": {
-            "de_DE": "false"
-          },
-          "name": {
-            "de_DE": "Name"
-          },
-          "message": {
-            "de_DE": "Ihre Nachricht"
-          },
-          "city": {
+          "cityHeadline": {
             "de_DE": "Ort"
           },
-          "street": {
+          "cityPlaceholder": {
+            "de_DE": "Ihr Ort"
+          },
+          "companyHeadline": {
+            "de_DE": "Unternehmen"
+          },
+          "companyPlaceholder": {
+            "de_DE": "Name Ihres Unternehmens"
+          },
+          "emailHeadline": {
+            "de_DE": "E-Mail"
+          },
+          "emailPlaceholder": {
+            "de_DE": "Ihre E-Mail-Adresse"
+          },
+          "genderHeadline": {
+            "de_DE": "Anrede"
+          },
+          "genderPlaceholder": {
+            "de_DE": "Anrede"
+          },
+          "messageHeadline": {
+            "de_DE": "Ihre Nachricht"
+          },
+          "messagePlaceholder": {
+            "de_DE": "Anmerkung, Wünsche, Notizen"
+          },
+          "nameHeadline": {
+            "de_DE": "Name"
+          },
+          "namePlaceholder": {
+            "de_DE": "Ihr Name"
+          },
+          "phoneHeadline": {
+            "de_DE": "Telefon"
+          },
+          "phonePlaceholder": {
+            "de_DE": "Ihre Telefonnummer"
+          },
+          "streetHeadline": {
             "de_DE": "Adresse"
           },
-          "company": {
-            "de_DE": "Firma"
+          "streetPlaceholder": {
+            "de_DE": "Straße, Hausnummer"
+          },
+          "zipCodeHeadline": {
+            "de_DE": "Postleitzahl"
+          },
+          "zipCodePlaceholder": {
+            "de_DE": "Ihre Postleitzahl"
           }
         },
         "afterSend": {
-          "headline": {
+          "headlineError": {
+            "de_DE": "Ups,"
+          },
+          "headlineSuccess": {
+            "de_DE": "Glückwunsch!"
+          },
+          "sublineError": {
+            "de_DE": "Da ging etwas schief!"
+          },
+          "sublineSuccess": {
             "de_DE": "Ihre Anfrage wurde erfolgreich versendet!"
           }
         },
