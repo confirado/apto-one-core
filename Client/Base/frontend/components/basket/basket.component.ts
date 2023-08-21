@@ -3,6 +3,7 @@ import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { selectFullConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { Store } from '@ngrx/store';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import {deleteBasketItem} from "@apto-base-frontend/store/shop/shop.actions";
 
 @Component({
 	selector: 'apto-basket',
@@ -41,4 +42,8 @@ export class BasketComponent {
 	public connector$ = this.store.select(selectFullConnector);
 
 	public constructor(private store: Store, private basketService: BasketService) {}
+
+  removeBasketItem(basketItemId: string): void {
+    this.store.dispatch(deleteBasketItem({payload: { basketItemId: basketItemId } }));
+  }
 }

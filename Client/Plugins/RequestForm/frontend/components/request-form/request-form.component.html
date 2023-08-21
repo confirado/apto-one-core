@@ -1,87 +1,96 @@
 <div class="page">
 	<form [formGroup]="requestForm">
 		<div class="title">
-			<h5>Ihre Kontaktdaten</h5>
+			<h5>
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
+            </h5>
 			<div class="break-text">
-				<p>Bitte geben Sie uns Ihre Daten, damit wir mit einem Angebot auf Sie zukommen können</p>
+				<p>
+                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
+                </p>
 			</div>
 		</div>
 
 		<div class="request-form">
 			<apto-select-field
 				formControlName="gender"
-				[name]="'Anrede *'"
+				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.gender') + ' *'"
 				[items]="[diverse, herr, frau]"
 				[enableClear]="false"
-                [default]="'Anrede *'"
+                [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
 			></apto-select-field>
 			<apto-input-field
 				formControlName="name"
 				[fullWidth]="true"
-				[name]="'Name *'"
-				[placeholder]="'Ihr Name *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
+				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="email"
                 [fullWidth]="true"
-				[name]="'E-Mail Adresse *'"
-				[placeholder]="'Ihre E-mail Adresse *'"
+				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
+				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="phone"
 				[fullWidth]="true"
-				[name]="'Telefonnummer'"
-				[placeholder]="'Ihre Telefonnummer'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="company"
 				[fullWidth]="true"
-				[name]="'Unternehmen'"
-				[placeholder]="'Name Ihres Unternehmen'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="street"
 				[fullWidth]="true"
-				[name]="'Anschrift'"
-				[placeholder]="'Straße, Hausnummer'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="zipCode"
 				[fullWidth]="true"
-				[name]="'Postleitzahl'"
-				[placeholder]="'Ihre Postleitzahl'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
                 formControlName="city"
 				[fullWidth]="true"
-				[name]="'Ort'"
-				[placeholder]="'Ihr Ort'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
 				[type]="'text'"
 			></apto-input-field>
 		</div>
 		<div class="large-textfield">
 			<apto-text-input-field
 				formControlName="message"
-				[name]="'Ihre Nachricht'"
-				[placeholder]="'Anmerkung, Wünsche, Notizen'"
+				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.message'"
+				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
                 [rows]="6"
 			></apto-text-input-field>
 		</div>
+        <div class="title break-text">
+            <p>
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
+            </p>
+        </div>
 		<div class="agreement">
 			<mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
-                Durch das Absenden des Formulareserklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw.
-                zur Kontaktaufnahme verwenden. Weitere Informationen zum Datenschutz finden Sie in unserer Datenschutzerklärung. Alle auf
-                confirado.de genannten Preise sind Nettopreise (zzgl 19% USt.)
+                <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
             </mat-checkbox>
 		</div>
 		<div class="request-button">
-			<button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">Anfrage senden</button>
+			<button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">
+                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
+            </button>
 		</div>
 	</form>
 </div>

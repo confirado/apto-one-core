@@ -20,8 +20,10 @@
                 <apto-request-message-state
                     *ngIf="requestState.sending || requestState.success || requestState.error"
                     [state]="requestState"
-                    [success]="{ title: 'Glückwunsch!', subtitle: 'Ihre Anfrage wurde erfolgreich versendet!', message: '' }"
-                    [error]="{ title: 'Ups,', subtitle: 'Da ging etwas schief!', message: '' }"
+                    [success]="{ title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineSuccess',
+                    subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineSuccess', message: '' }"
+                    [error]="{ title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineError',
+                    subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineError', message: '' }"
                 ></apto-request-message-state>
                 <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
                 <div

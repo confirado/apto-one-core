@@ -18,42 +18,78 @@
         "beforeSend": {
           "headline": {
             "de_DE": "Ihre Kontaktdaten"
+          },
+          "subline": {
+            "de_DE": "Bitte geben Sie uns Ihre Daten, damit wir mit einem Angebot auf Sie zukommen können"
           }
         },
         "labels": {
-          "phone": {
-            "de_DE": "Telefon"
+          "city": {
+            "de_DE": "Ort"
+          },
+          "cityPlaceholder": {
+            "de_DE": "Ihr Ort"
+          },
+          "company": {
+            "de_DE": "Unternehmen"
+          },
+          "companyPlaceholder": {
+            "de_DE": "Name Ihres Unternehmens"
           },
           "email": {
             "de_DE": "E-Mail"
           },
+          "emailPlaceholder": {
+            "de_DE": "Ihre E-Mail-Adresse"
+          },
           "gender": {
             "de_DE": "Anrede"
           },
-          "zipCode": {
-            "de_DE": "PLZ"
-          },
-          "requirePhone": {
-            "de_DE": "false"
-          },
-          "name": {
-            "de_DE": "Name"
+          "genderPlaceholder": {
+            "de_DE": "Anrede"
           },
           "message": {
             "de_DE": "Ihre Nachricht"
           },
-          "city": {
-            "de_DE": "Ort"
+          "messagePlaceholder": {
+            "de_DE": "Anmerkung, Wünsche, Notizen"
+          },
+          "name": {
+            "de_DE": "Name"
+          },
+          "namePlaceholder": {
+            "de_DE": "Ihr Name"
+          },
+          "phone": {
+            "de_DE": "Telefon"
+          },
+          "phonePlaceholder": {
+            "de_DE": "Ihre Telefonnummer"
           },
           "street": {
             "de_DE": "Adresse"
           },
-          "company": {
-            "de_DE": "Firma"
+          "streetPlaceholder": {
+            "de_DE": "Straße, Hausnummer"
+          },
+          "zipCode": {
+            "de_DE": "Postleitzahl"
+          },
+          "zipCodePlaceholder": {
+            "de_DE": "Ihre Postleitzahl"
           }
         },
         "afterSend": {
-          "headline": {
+          "headlineError": {
+            "de_DE": "Ups,"
+          },
+          "headlineSuccess": {
+            "de_DE": "Glückwunsch!"
+          },
+          "sublineError": {
+            "de_DE": "Da ging etwas schief!"
+          },
+          "sublineSuccess": {
             "de_DE": "Ihre Anfrage wurde erfolgreich versendet!"
           }
         },

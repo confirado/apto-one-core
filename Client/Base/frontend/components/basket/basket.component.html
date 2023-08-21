@@ -7,15 +7,19 @@
 	</div>
 
 	<div class="product-list">
-		<div class="product" *ngFor="let product of connector.basket.articles">
+		<div class="product" *ngFor="let basketItem of connector.basket.articles">
 			<div class="image"></div>
 			<div class="content">
 				<div>
-					<h5>{{ product.quantity }}x {{ product.name }}</h5>
-					<p>{{ product.price }}</p>
+					<h5>{{ basketItem.quantity }}x {{ basketItem.name }}</h5>
+					<p>{{ basketItem.price }}</p>
 				</div>
 				<div class="delete">
-					<mat-icon class="color">delete</mat-icon>
+					<mat-icon
+                        class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id)"
+                    >
+                        delete
+                    </mat-icon>
 				</div>
 			</div>
 		</div>

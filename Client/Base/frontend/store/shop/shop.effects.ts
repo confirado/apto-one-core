@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
 import { ContentSnippetRepository } from '@apto-base-frontend/store/content-snippets/content-snippet.repository';
-import { initShop, initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
+import {deleteBasketItem, initShop, initShopSuccess} from '@apto-base-frontend/store/shop/shop.actions';
 import { shopInitialState } from '@apto-base-frontend/store/shop/shop.reducer';
 import { ShopRepository } from '@apto-base-frontend/store/shop/shop.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { forkJoin, iif, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {Store} from "@ngrx/store";
+import {selectShop} from "@apto-base-frontend/store/shop/shop.selectors";
+import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
+import {selectLocale} from "@apto-base-frontend/store/language/language.selectors";
 
 @Injectable()
 export class ShopEffects {
 	public constructor(
 		private actions$: Actions,
 		private shopRepository: ShopRepository,
-		private contentSnippetRepository: ContentSnippetRepository
+		private contentSnippetRepository: ContentSnippetRepository,
+    private store$: Store
 	) {}
 
 	public loadShops$ = createEffect(() =>
@@ -49,4 +54,23 @@ export class ShopEffects {
 			)
 		)
 	);
+
+  public deleteBasketItem$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteBasketItem),
+      withLatestFrom(this.store$.select(selectShop), this.store$.select(selectLocale)),
+      switchMap(([action, shop, language]) => {
+        return this.shopRepository.deleteBasketItem(
+          translate(shop.connectorUrl, language),
+          action.payload.basketItemId
+        );
+      }),
+      map((result) => {
+        //@todo: initshop has too many queries that are not needed. We need to create a new action "updateShop",
+        //@todo: in which only the "getConnectorState" is queried.
+        return initShop();
+      })
+    )
+  );
 }
+

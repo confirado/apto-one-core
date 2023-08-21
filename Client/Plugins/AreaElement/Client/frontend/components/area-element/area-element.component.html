@@ -4,7 +4,12 @@
          [class.one-page]="!product.useStepByStep"
          [class.open-in-dialog]="isDialog"
          [attr.type]="'custom'"
+         [class.selected]="element.state.active"
     >
+
+        <div *ngIf="element.state.active" class="circle" [class.selected]="element.state.active">
+            <mat-icon>done</mat-icon>
+        </div>
         <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                            [mat-dialog-close]="true"
                            [inner]="true"
