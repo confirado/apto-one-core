@@ -25,6 +25,10 @@
     }
     .image-wrapper {
         position: relative;
+        max-width: calc(100vw - 100px);
+        max-height: calc(100vh - 100px);
+        width: calc(100vw - 100px);
+        height: calc(100vh - 100px);
         img {
             &:hover {
                 cursor: pointer;

@@ -21,6 +21,11 @@ class RenderImageQueryHandler implements QueryHandlerInterface
     private ImageRenderer $imageRenderer;
 
     /**
+     * @var RenderImageFactory
+     */
+    private RenderImageFactory $renderImageFactory;
+
+    /**
      * @var AptoParameterInterface
      */
     private AptoParameterInterface $aptoParameter;
@@ -36,24 +41,27 @@ class RenderImageQueryHandler implements QueryHandlerInterface
     private CacheFileSystemConnector $cacheFileSystemConnector;
 
     /**
-     * @param ProductElementFinder $productElementFinder
-     * @param ImageRenderer $imageRenderer
-     * @param AptoParameterInterface $aptoParameter
-     * @param RequestStore $requestStore
+     * @param ProductElementFinder     $productElementFinder
+     * @param ImageRenderer            $imageRenderer
+     * @param AptoParameterInterface   $aptoParameter
+     * @param RequestStore             $requestStore
      * @param CacheFileSystemConnector $cacheFileSystemConnector
+     * @param RenderImageFactory       $renderImageFactory
      */
     public function __construct(
         ProductElementFinder $productElementFinder,
         ImageRenderer $imageRenderer,
         AptoParameterInterface $aptoParameter,
         RequestStore $requestStore,
-        CacheFileSystemConnector $cacheFileSystemConnector
+        CacheFileSystemConnector $cacheFileSystemConnector,
+        RenderImageFactory $renderImageFactory
     ) {
         $this->productElementFinder = $productElementFinder;
         $this->imageRenderer = $imageRenderer;
         $this->aptoParameter = $aptoParameter;
         $this->requestStore = $requestStore;
         $this->cacheFileSystemConnector = $cacheFileSystemConnector;
+        $this->renderImageFactory = $renderImageFactory;
     }
 
     /**
@@ -84,15 +92,15 @@ class RenderImageQueryHandler implements QueryHandlerInterface
 
         foreach ($query->getPerspectives() as $perspective) {
             $imageList = $this->productElementFinder->findRenderImagesByState($state, $perspective);
-            $renderImageFile = $this->imageRenderer->getImageFileByImageList($imageList, $perspective, $state, false, $query->getProductId());
+            $renderImageFile = $this->renderImageFactory->getRenderImagesByImageList($imageList, $perspective, $state, $query->getProductId());
 
             if ($renderImageFile) {
-                $imageSize = getimagesize($this->cacheFileSystemConnector->getAbsolutePath($renderImageFile->getPath()));
                 $renderImages[] = [
                     'perspective' => $perspective,
-                    'url' => $this->requestStore->getSchemeAndHttpHost() . $this->cacheFileSystemConnector->getFileUrl($renderImageFile),
-                    'width' => $imageSize[0],
-                    'height' => $imageSize[1],
+                    'url' => '',
+                    'width' => 0,
+                    'height' => 0,
+                    'images' => $renderImageFile
                 ];
             }
         }

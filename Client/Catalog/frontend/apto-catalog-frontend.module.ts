@@ -63,6 +63,7 @@ import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/c
 import { TooltipDirective } from './components/common/tooltip.directive';
 import { SummaryConfigurationComponent } from '@apto-catalog-frontend/components/summary/summary-configuration/summary-configuration.component';
 import { SummaryFinishMessageComponent } from '@apto-catalog-frontend/components/summary/summary-finish-message/summary-finish-message.component';
+import { ImageCanvasComponent } from '@apto-catalog-frontend/components/common/image-canvas/image-canvas.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -97,7 +98,8 @@ RouterRegistry.registerRoutes(Routes);
     CloseButtonComponent,
     ConfirmationDialogComponent,
     TooltipDirective,
-	],
+    ImageCanvasComponent,
+  ],
   exports: [
     QuantityInputEditableComponent,
     SummaryConfigurationComponent,

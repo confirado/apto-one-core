@@ -3,6 +3,7 @@ import { setNextPerspective, setPrevPerspective } from '@apto-catalog-frontend/s
 import { RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
+import { selectRenderImage } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Component({
 	selector: 'apto-sidebar-summary-render-image',
@@ -19,7 +20,11 @@ export class SidebarSummaryRenderImageComponent {
 	@Input()
 	public product: Product | null | undefined;
 
-	public constructor(private store: Store) {}
+  public readonly renderImage$ = this.store.select(selectRenderImage);
+
+  public isCanvasReady = false;
+
+  public constructor(private store: Store) {}
 
 	public prevRenderImage(): void {
 		this.store.dispatch(setPrevPerspective());
@@ -28,4 +33,8 @@ export class SidebarSummaryRenderImageComponent {
 	public nextRenderImage(): void {
 		this.store.dispatch(setNextPerspective());
 	}
+
+  public onAfterCanvasReady(): void {
+    this.isCanvasReady = true;
+  }
 }

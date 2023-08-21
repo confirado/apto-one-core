@@ -1,6 +1,10 @@
 <ng-container *ngIf="product?.useStepByStep">
-	<div class="divider-line element-content" *ngIf="renderImage">
-		<img class="image" [src]="renderImage.url" />
+	<div class="divider-line element-content" *ngIf="renderImage$ | async as renderImages">
+        <div class="image-wrapper" >
+            <apto-image-canvas
+                (afterCanvasReady)="onAfterCanvasReady()"
+            ></apto-image-canvas>
+        </div>
 
 		<ng-container *ngIf="perspectives">
             <div *ngIf="perspectives.length > 1" class="arrows">
@@ -11,16 +15,22 @@
 	</div>
 </ng-container>
 
-<ng-container *ngIf="!product?.useStepByStep && renderImage && renderImage.url">
+<ng-container *ngIf="!product?.useStepByStep">
     <ng-container *ngIf="perspectives">
-        <div class="img-content">
-            <div class="image-wrapper">
-                <img class="one-page img" [src]="renderImage.url" />
+        <ng-container *ngIf="renderImage$ | async">
+            <div class="img-content">
+                <div class="image-wrapper" >
+                    <div *ngIf="!isCanvasReady" class="no-render-image">Nicht genügend konfiguriert um eine Demo darzustellen!</div>
+
+                    <apto-image-canvas
+                        (afterCanvasReady)="onAfterCanvasReady()"
+                    ></apto-image-canvas>
+                </div>
+                <div *ngIf="perspectives.length > 1" class="arrows">
+                    <mat-icon (click)="prevRenderImage()" class="previous-image">arrow_back_ios</mat-icon>
+                    <mat-icon (click)="nextRenderImage()" class="next-image">arrow_forward_ios</mat-icon>
+                </div>
             </div>
-            <div *ngIf="perspectives.length > 1" class="arrows">
-                <mat-icon (click)="prevRenderImage()" class="previous-image">arrow_back_ios</mat-icon>
-                <mat-icon (click)="nextRenderImage()" class="next-image">arrow_forward_ios</mat-icon>
-            </div>
-        </div>
+        </ng-container>
     </ng-container>
 </ng-container>
