@@ -51,7 +51,7 @@ export class BasketComponent {
     this.locale = environment.defaultLocale;
   }
 
-  removeBasketItem(basketItemId: string): void {
+  removeBasketItem(basketItemId: string, basketItemName: string): void {
     let dialogMessage = '';
     let dialogTitle = '';
     let dialogButtonCancel = '';
@@ -68,7 +68,13 @@ export class BasketComponent {
           dialogTitle = translate(value.content, this.locale);
         }
         if (value.name === 'text') {
-          dialogMessage = translate(value.content, this.locale);
+          dialogMessage = translate(
+            value.content,
+            this.locale
+          ).replace(
+            '{_productName_}',
+            basketItemName
+          );
         }
         if (value.name === 'cancel') {
           dialogButtonCancel = translate(value.content, this.locale);

@@ -16,7 +16,7 @@
 				</div>
 				<div class="delete">
 					<mat-icon
-                        class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id)"
+                        class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id, basketItem.name)"
                     >
                         delete
                     </mat-icon>
