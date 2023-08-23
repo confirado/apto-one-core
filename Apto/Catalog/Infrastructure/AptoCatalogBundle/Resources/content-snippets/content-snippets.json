@@ -173,8 +173,11 @@
       "cancel": {
         "de_DE": "Abbrechen"
       },
+      "title": {
+        "de_DE": "Konfiguration löschen?"
+      },
       "text": {
-        "de_DE": "Möchten Sie die Konfiguration <br />wirklich aus dem Warenkorb entfernen?"
+        "de_DE": "Möchten Sie die Konfiguration <strong>{_productName_}</strong> <br />wirklich aus dem Warenkorb entfernen?"
       }
     },
     "subtotal": {

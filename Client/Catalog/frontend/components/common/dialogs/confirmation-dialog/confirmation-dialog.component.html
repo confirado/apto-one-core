@@ -10,7 +10,9 @@
     <h1 *ngIf="data.title" mat-dialog-title>{{data.title}}</h1>
 
     <mat-dialog-content *ngIf="data.descriptionText">
-        <p>{{data.descriptionText}}</p>
+        <div
+            [innerHTML]="data.descriptionText | safeHtml"
+        ></div>
     </mat-dialog-content>
 
     <mat-dialog-actions>
