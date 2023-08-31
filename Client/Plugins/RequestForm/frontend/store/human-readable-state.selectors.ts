@@ -47,7 +47,7 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
         elementName = element.identifier;
       }
 
-      // add element to human-readable state
+      // collect element definition values from configurations readable state
       let values = {};
       if (configurationHumanReadableState.hasOwnProperty(element.id)) {
         Object.keys(configurationHumanReadableState[element.id]).forEach((value) => {
@@ -55,6 +55,7 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
         });
       }
 
+      // add element to human-readable state
       humanReadableState[sectionName].push({
         id: element.id,
         name: elementName,
