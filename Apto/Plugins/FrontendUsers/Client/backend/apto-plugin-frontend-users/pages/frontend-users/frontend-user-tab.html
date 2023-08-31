@@ -16,7 +16,7 @@
 
     <md-input-container flex>
         <label>Kundengruppe (External Id):</label>
-        <md-select ng-model="frontendUserDetail.externalCustomerGroupId">
+        <md-select required ng-model="frontendUserDetail.externalCustomerGroupId">
             <md-option ng-value="group.externalId" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
         </md-select>
     </md-input-container>
