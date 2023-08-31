@@ -1,16 +1,12 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import {select, Store} from '@ngrx/store';
-import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
-import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
-
-interface Gender {
-  surrogateId: string,
-  id: string,
-  name: TranslatedValue,
-  isDefault: boolean,
-  aptoPrices: [],
-};
+import { FormBuilder, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
+import { FieldsWhenUserIsLoggedInEnum, Gender } from '@apto-request-form-frontend/store/request-form.model';
 
 @Component({
 	selector: 'apto-request-form',
@@ -26,6 +22,9 @@ export class RequestFormComponent {
 
   public readonly csRequestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
   public readonly csGenders$ = this.store.select(selectContentSnippet('plugins.requestForm.aptoSummary.values.gender'));
+  public readonly csFieldsWhenUserIsLoggedIn$ = this.store.select(selectContentSnippet('plugins.requestForm.aptoSummary.fieldsWhenUserIsLoggedIn'));
+  public readonly currentUser$ = this.store.select(selectCurrentUser);
+  public readonly locale$ = this.store.select(selectLocale);
 
   public diverse: Gender = {
     surrogateId: 'd',
@@ -52,17 +51,20 @@ export class RequestFormComponent {
 	};
 
   public requestForm = this._formBuilder.group({
-    gender: [null, Validators.required],
-    name: [null, Validators.required],
-    email: [null, [Validators.required, Validators.email]],
-    phone: [null],
-    company: [null],
-    street: [null],
-    zipCode: [null],
-    city: [null],
-    message: [null],
-    declarationOfConsent: [null, Validators.requiredTrue]
+    customerNumber: [''],
+    gender: ['', Validators.required],
+    name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: [''],
+    company: [''],
+    street: [''],
+    zipCode: [''],
+    city: [''],
+    message: [''],
+    declarationOfConsent: [false, Validators.requiredTrue]
   });
+
+  public fieldsWhenUserIsLoggedIn: FieldsWhenUserIsLoggedInEnum = FieldsWhenUserIsLoggedInEnum.ALL;
 
 	public constructor(private store: Store, private _formBuilder: FormBuilder) {
     this.requestForm.valueChanges.subscribe(() => {
@@ -87,6 +89,27 @@ export class RequestFormComponent {
         }
       });
     });
+
+    combineLatest([this.csFieldsWhenUserIsLoggedIn$, this.currentUser$, this.locale$]).subscribe(([csFieldsWhenUserIsLoggedIn, currentUser ,locale]) => {
+      if (!currentUser) {
+        this.requestForm.get('customerNumber').setValue('');
+        this.fieldsWhenUserIsLoggedIn = FieldsWhenUserIsLoggedInEnum.ALL;
+        return;
+      }
+
+      if (translate(csFieldsWhenUserIsLoggedIn.content, locale) === FieldsWhenUserIsLoggedInEnum.ONLY_MESSAGE) {
+        this.requestForm.get('gender').setValue('d');
+        this.fieldsWhenUserIsLoggedIn = FieldsWhenUserIsLoggedInEnum.ONLY_MESSAGE;
+      }
+
+      this.requestForm.get('email').setValue(currentUser.email);
+      this.requestForm.get('name').setValue(currentUser.userName);
+      this.requestForm.get('customerNumber').setValue(currentUser.customerNumber);
+    });
+  }
+
+  public isFieldVisible(): boolean {
+    return this.fieldsWhenUserIsLoggedIn !== FieldsWhenUserIsLoggedInEnum.ONLY_MESSAGE;
   }
 
 	public onSendRequestForm(): void {
