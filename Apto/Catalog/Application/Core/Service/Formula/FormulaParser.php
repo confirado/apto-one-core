@@ -5,36 +5,37 @@ namespace Apto\Catalog\Application\Core\Service\Formula;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
-use Apto\Catalog\Domain\Core\Service\Formula\FunctionParser;
+use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 
 class FormulaParser
 {
     /**
      * @var ComputedProductValueCalculator
      */
-    private $computedProductValueCalculator;
+    private ComputedProductValueCalculator $computedProductValueCalculator;
 
     /**
      * @var array
      */
-    private $computedValues;
+    private array $computedValues;
 
     /**
      * @var MediaFileSystemConnector
      */
-    private $mediaFileSystem;
+    private MediaFileSystemConnector $mediaFileSystem;
 
     /**
      * @var AptoUuid|null
      */
-    private $productId;
+    private ?AptoUuid $productId;
 
     /**
      * @var State|null
      */
-    private $state;
+    private ?State $state;
 
     /**
      * @param ComputedProductValueCalculator $computedProductValueCalculator
@@ -52,9 +53,9 @@ class FormulaParser
     }
 
     /**
-     * @return string|null
+     * @return AptoUuid|null
      */
-    public function getProductId(): ?string
+    public function getProductId(): ?AptoUuid
     {
         return $this->productId;
     }
@@ -95,13 +96,15 @@ class FormulaParser
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      */
-    public function calculateFormula(string $formula, bool $parseComputedValues = false, int $precision = 0) :float
+    public function calculateFormula(string $formula, bool $parseComputedValues = false, int $precision = 0): float
     {
-        if ($parseComputedValues && null !==$this->productId) {
+        if ($parseComputedValues && null === $this->productId) {
             throw new NoProductIdGivenException("No ProductId given");
         }
-        if ($parseComputedValues && null !== $this->state) {
+        if ($parseComputedValues && null === $this->state) {
             throw new NoStateGivenException("No State given");
         }
         if ($parseComputedValues) {
