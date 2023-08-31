@@ -23,7 +23,7 @@ export class FrontendUserRepository {
             id: response.user.id,
             userName: response.user.username,
             email: response.user.email,
-            externalCustomerGroupId: response.user.externalCustomerGroupId,
+            customerGroup: response.user.customerGroup,
             customerNumber: response.user.customerNumber
           };
         }
@@ -52,7 +52,7 @@ export class FrontendUserRepository {
             id: response.user.id,
             userName: response.user.username,
             email: response.user.email,
-            externalCustomerGroupId: response.user.externalCustomerGroupId,
+            customerGroup: response.user.customerGroup,
             customerNumber: response.user.customerNumber
           };
         }

@@ -13,6 +13,7 @@
 
 		<div class="request-form">
 			<apto-select-field
+                *ngIf="isFieldVisible()"
 				formControlName="gender"
 				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.gender') + ' *'"
 				[items]="[diverse, herr, frau]"
@@ -20,6 +21,7 @@
                 [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
 			></apto-select-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
 				formControlName="name"
 				[fullWidth]="true"
 				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
@@ -27,6 +29,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="email"
                 [fullWidth]="true"
 				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
@@ -34,6 +37,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="phone"
 				[fullWidth]="true"
 				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
@@ -41,6 +45,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="company"
 				[fullWidth]="true"
 				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
@@ -48,6 +53,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="street"
 				[fullWidth]="true"
 				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
@@ -55,6 +61,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="zipCode"
 				[fullWidth]="true"
 				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
@@ -62,6 +69,7 @@
 				[type]="'text'"
 			></apto-input-field>
 			<apto-input-field
+                *ngIf="isFieldVisible()"
                 formControlName="city"
 				[fullWidth]="true"
 				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"

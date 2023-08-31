@@ -2,6 +2,9 @@
   "plugins": {
     "requestForm": {
       "aptoSummary": {
+        "fieldsWhenUserIsLoggedIn": {
+          "de_DE": "all"
+        },
         "values": {
           "gender": {
             "ms": {

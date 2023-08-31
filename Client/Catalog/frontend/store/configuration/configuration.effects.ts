@@ -368,13 +368,26 @@ export class ConfigurationEffects {
 	public addToBasket$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(addToBasket),
-			withLatestFrom(this.store$.select(selectConfiguration)),
-			switchMap(([{ payload }, configurationState]) => {
+			withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectCurrentUser)
+      ),
+			switchMap(([{ payload }, configurationState, currentUser]) => {
 				if (!configurationState.productId) {
 					return EMPTY;
 				}
 				let additionalData: any = {};
 				if (payload.type === 'REQUEST_FORM') {
+          let customerGroup = configurationState.connector?.customerGroup;
+          if (currentUser) {
+            customerGroup = {
+              id: currentUser.customerGroup.externalId,
+              name: currentUser.customerGroup.name,
+              inputGross: currentUser.customerGroup.inputGross,
+              showGross: currentUser.customerGroup.showGross,
+            };
+          }
+
 					additionalData = {
 						formData: {
               customer: payload.formData,
@@ -390,8 +403,8 @@ export class ConfigurationEffects {
 						compressedState: configurationState.state.compressedState,
 						shopCurrency: configurationState.connector?.shopCurrency,
 						displayCurrency: configurationState.connector?.displayCurrency,
-						customerGroup: configurationState.connector?.customerGroup,
-            customerGroupExternalId: configurationState.connector?.customerGroup.id,
+						customerGroup: customerGroup,
+            customerGroupExternalId: customerGroup.id,
             productId: configurationState.productId,
 					};
 				}

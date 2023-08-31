@@ -58,7 +58,7 @@ export class CatalogMessageBusService {
 	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
     let customerGroupId = connector.customerGroup.id;
     if (currentUser !== null && connector.configured === false) {
-      customerGroupId = currentUser.externalCustomerGroupId
+      customerGroupId = currentUser.customerGroup.externalId
     }
 
 		return this.query('FindPriceByState', [
