@@ -2,6 +2,8 @@
 
 namespace Apto\Plugins\RequestForm\Application\Core\Subscribers;
 
+use Exception;
+use Money\Currency;
 use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
 use Mpdf\MpdfException;
@@ -33,73 +35,74 @@ use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\RandomNumberReposito
 use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\RandomNumber;
 use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\AllRandomNumbersHasUsedException;
 use Apto\Plugins\FileUpload\Domain\Core\Model\Service\Converter\MimeTypeExtensionConverter;
+use Apto\Plugins\PartsList\Application\Core\Service\Converter\CsvStringConverter;
 
 class SendProductInquiryHandler implements EventHandlerInterface
 {
     /**
      * @var RequestStore
      */
-    protected $requestSessionStore;
+    protected RequestStore $requestSessionStore;
 
     /**
      * @var RandomNumberRepository
      */
-    private $randomNumberRepository;
+    private RandomNumberRepository $randomNumberRepository;
 
     /**
      * @var OfferHtmlRepository
      */
-    private $offerHtmlRepository;
+    private OfferHtmlRepository $offerHtmlRepository;
 
     /**
      * @var OfferDataRepository
      */
-    private $offerDataRepository;
+    private OfferDataRepository $offerDataRepository;
 
     /**
      * @var ProductFinder
      */
-    protected $productFinder;
+    protected ProductFinder $productFinder;
 
     /**
      * @var ContentSnippetFinder
      */
-    private $contentSnippetFinder;
+    private ContentSnippetFinder $contentSnippetFinder;
 
     /**
      * @var StatePriceService
      */
-    protected $statePriceService;
+    protected StatePriceService $statePriceService;
 
     /**
      * @var TemplateMailerInterface
      */
-    protected $templateMailer;
+    protected TemplateMailerInterface $templateMailer;
 
     /**
      * @var TemplateRendererInterface
      */
-    private $templateRenderer;
+    private TemplateRendererInterface $templateRenderer;
 
     /**
      * @var MediaFileSystemConnector
      */
-    private $mediaFileSystemConnector;
+    private MediaFileSystemConnector $mediaFileSystemConnector;
 
     /**
      * @var array|null
      */
-    private $config;
+    private ?array $config;
 
     /**
      * @var string
      */
-    private $mediaRelativePath;
+    private string $mediaRelativePath;
 
     /**
      * @var bool
      */
-    private $sendPDFToCustomer;
+    private bool $sendPDFToCustomer;
 
     /**
      * @var string|int
@@ -114,52 +117,57 @@ class SendProductInquiryHandler implements EventHandlerInterface
     /**
      * @var bool
      */
-    private $prioritySeperate;
+    private bool $prioritySeperate;
 
     /**
      * @var bool
      */
-    private $priorityOnly;
+    private bool $priorityOnly;
 
     /**
      * @var string
      */
-    private $partnerMail;
+    private string $partnerMail;
 
     /**
      * @var string
      */
-    private $partnerName;
+    private string $partnerName;
 
     /**
      * @var string
      */
-    private $partnerID;
+    private string $partnerID;
 
     /**
      * @var BasketItem|null
      */
-    private $basketItem;
+    private ?BasketItem $basketItem;
 
     /**
      * @var array
      */
-    private $prices;
+    private array $prices;
 
     /**
      * @var array
      */
-    private $elementAttachments;
+    private array $elementAttachments;
 
     /**
      * @var array
      */
-    private $contentSnippets;
+    private array $contentSnippets;
 
     /**
      * @var array|null
      */
-    protected $shop;
+    protected ?array $shop;
+
+    /**
+     * @var CsvStringConverter
+     */
+    private CsvStringConverter $csvStringConverter;
 
     /**
      * @param RequestStore $requestSessionStore
@@ -174,6 +182,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param TemplateRendererInterface $templateRenderer
      * @param AptoParameterInterface $aptoParameter
      * @param MediaFileSystemConnector $mediaFileSystemConnector
+     * @param CsvStringConverter $csvStringConverter
      */
     public function __construct(
         RequestStore $requestSessionStore,
@@ -187,7 +196,8 @@ class SendProductInquiryHandler implements EventHandlerInterface
         TemplateMailerInterface $templateMailer,
         TemplateRendererInterface $templateRenderer,
         AptoParameterInterface $aptoParameter,
-        MediaFileSystemConnector $mediaFileSystemConnector
+        MediaFileSystemConnector $mediaFileSystemConnector,
+        CsvStringConverter $csvStringConverter
     ) {
         $this->requestSessionStore = $requestSessionStore;
         $this->randomNumberRepository = $randomNumberRepository;
@@ -199,6 +209,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $this->templateMailer = $templateMailer;
         $this->templateRenderer = $templateRenderer;
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
+        $this->csvStringConverter = $csvStringConverter;
         $this->contentSnippets = $this->contentSnippetFinder->getTree(true, $this->requestSessionStore->getHttpHost());
 
         // params
@@ -437,6 +448,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $pdf = '';
         $adminPdf = '';
         $customerPdf = '';
+        $partsListCsv = '';
 
         if (
             array_key_exists('generateAdminPDF', $this->config) && $this->config['generateAdminPDF'] ||
@@ -455,14 +467,30 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $customerPdf = $pdf;
         }
 
+        // set parts list csv
+        if ($this->hasAdminPartsListAttachment() || $this->hasCustomerPartsListAttachment() || $this->hasPartsListFtpUpload()) {
+            $partsListCsv = $this->csvStringConverter->convert(
+                new AptoUuid($productInquiry->getProductId()),
+                new State($productInquiry->getCompressedState()),
+                new Currency($productInquiry->getDisplayCurrency()['currency']),
+                $this->shop['id'],
+                $this->getCustomerGroup($productInquiry)['id']
+            );
+        }
+
         // send admin mail if config exists
         if (array_key_exists('admin_mail', $this->config)) {
-            $this->sendAdminMail($productInquiry, $customer, $adminPdf, $product);
+            $this->sendAdminMail($productInquiry, $customer, $adminPdf, $product, $partsListCsv);
         }
 
         // send customer mail if config exists
         if (array_key_exists('customer_mail', $this->config)) {
-            $this->sendCustomerMail($productInquiry, $customer, $customerPdf, $product);
+            $this->sendCustomerMail($productInquiry, $customer, $customerPdf, $product, $partsListCsv);
+        }
+
+        // upload parts list
+        if ($this->hasPartsListFtpUpload()) {
+            $this->uploadPartsList($partsListCsv);
         }
     }
 
@@ -471,8 +499,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param array $customer
      * @param string $pdf
      * @param array $product
+     * @param $partsListCsv
+     * @return void
      */
-    protected function sendCustomerMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product)
+    protected function sendCustomerMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product, $partsListCsv)
     {
         $locale = new AptoLocale($productInquiry->getLocale());
         $hasBcc = array_key_exists('bcc', $this->config['customer_mail']);
@@ -519,6 +549,15 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->hasCustomerElementAttachments()
         );
 
+        // add parts list attachment
+        if ($this->hasCustomerPartsListAttachment()) {
+            $mailCustomer['attachments'][] = [
+                'content' => $partsListCsv,
+                'name' => 'stückliste.csv',
+                'contentType' => 'text/csv'
+            ];
+        }
+
         // send customer mail
         $this->templateMailer->send($mailCustomer);
     }
@@ -528,8 +567,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param array $customer
      * @param string $pdf
      * @param array $product
+     * @param string $partsListCsv
+     * @return void
      */
-    protected function sendAdminMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product)
+    protected function sendAdminMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product, string $partsListCsv)
     {
         $locale = new AptoLocale($productInquiry->getLocale());
 
@@ -578,8 +619,54 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->hasAdminElementAttachments()
         );
 
+        // add parts list attachment
+        if ($this->hasAdminPartsListAttachment()) {
+            $mailAdmin['attachments'][] = [
+                'content' => $partsListCsv,
+                'name' => 'stückliste.csv',
+                'contentType' => 'text/csv'
+            ];
+        }
+
         // create admin mail
         $this->templateMailer->send($mailAdmin);
+    }
+
+    /**
+     * @param string $partsListCsv
+     * @return void
+     * @throws Exception
+     */
+    private function uploadPartsList(string $partsListCsv): void
+    {
+        $ftpConfig = $this->config['ftp_upload_parts_list'];
+        $fileName = 'stueckliste_' . $this->basketItem->getConfigurationId() . '.csv';
+        $stream = fopen('php://memory','r+');
+        fwrite($stream, $partsListCsv);
+        rewind($stream);
+
+        // connect to ftp server
+        $ftp = ftp_connect($ftpConfig['host'], $ftpConfig['port'] ?? 21, $ftpConfig['timeout'] ?? 10,);
+        if (!$ftp) {
+            fclose($stream);
+            throw new Exception('Could not connect to ftp server. ErrorCode: "RF-FUPL-C".');
+        }
+
+        // login to ftp server
+        $login = ftp_login($ftp, $ftpConfig['user'], $ftpConfig['password']);
+        if (!$login) {
+            fclose($stream);
+            throw new Exception('Could not connect to ftp server. ErrorCode: "RF-FUPL-L".');
+        }
+
+        // upload to ftp server
+        $success = ftp_fput($ftp, '/' . $ftpConfig['folder'] . '/' . $fileName, $stream, FTP_ASCII);
+        if (!$success) {
+            fclose($stream);
+            throw new Exception('Could not connect to ftp server. ErrorCode: "RF-FUPL-U".');
+        }
+
+        fclose($stream);
     }
 
     /**
@@ -1055,10 +1142,52 @@ class SendProductInquiryHandler implements EventHandlerInterface
     /**
      * @return bool
      */
+    private function hasAdminPartsListAttachment(): bool
+    {
+        if (
+            array_key_exists('add_parts_list_attachment', $this->config['admin_mail']) && $this->config['admin_mail']['add_parts_list_attachment']
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     private function hasCustomerElementAttachments(): bool
     {
         if (
             array_key_exists('add_element_attachments', $this->config['customer_mail']) && $this->config['customer_mail']['add_element_attachments']
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasCustomerPartsListAttachment(): bool
+    {
+        if (
+            array_key_exists('add_parts_list_attachment', $this->config['customer_mail']) && $this->config['customer_mail']['add_parts_list_attachment']
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasPartsListFtpUpload(): bool
+    {
+        if (
+            array_key_exists('ftp_upload_parts_list', $this->config) && array_key_exists('active', $this->config['ftp_upload_parts_list']) && $this->config['ftp_upload_parts_list']['active']
         ) {
             return true;
         }
