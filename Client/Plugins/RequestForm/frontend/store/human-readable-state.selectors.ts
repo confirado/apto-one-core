@@ -2,8 +2,9 @@ import { createSelector } from '@ngrx/store';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { selectHumanReadableState as selectConfigurationHumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
-export const selectHumanReadableState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
+export const selectHumanReadableState = createSelector(featureSelector, selectLocale, selectConfigurationHumanReadableState, (state: CatalogFeatureState, locale: string | null, configurationHumanReadableState) => {
   let humanReadableState: any = {};
   if (!locale) {
     return humanReadableState;
@@ -47,11 +48,17 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
       }
 
       // add element to human-readable state
-      //@todo set values for human-readable state
+      let values = {};
+      if (configurationHumanReadableState.hasOwnProperty(element.id)) {
+        Object.keys(configurationHumanReadableState[element.id]).forEach((value) => {
+          values[value] = translate(configurationHumanReadableState[element.id][value], locale);
+        });
+      }
+
       humanReadableState[sectionName].push({
         id: element.id,
         name: elementName,
-        values: {}
+        values: values
       });
     });
   });
