@@ -538,13 +538,22 @@ class Product extends AptoAggregate
     /**
      * @param int $minPurchase
      * @return Product
+     *
+     * @return $this
+     * @throws ProductMinPurchaseException
      */
     public function setMinPurchase(int $minPurchase): Product
     {
         if ($this->minPurchase === $minPurchase) {
             return $this;
         }
+
         $this->minPurchase = $minPurchase;
+
+        if ($this->minPurchase > $this->maxPurchase) {
+            throw new ProductMinPurchaseException('Product "Mindestabnahme('.$this->minPurchase.')" can not be bigger then "Maximalabnahme('.$this->maxPurchase.')"');
+        }
+
         $this->publish(
             new ProductMinPurchaseUpdated(
                 $this->getId(),
@@ -568,13 +577,22 @@ class Product extends AptoAggregate
     /**
      * @param int $maxPurchase
      * @return Product
+     *
+     * @return $this
+     * @throws ProductMinPurchaseException
      */
     public function setMaxPurchase(int $maxPurchase): Product
     {
         if ($this->maxPurchase === $maxPurchase) {
             return $this;
         }
+
         $this->maxPurchase = $maxPurchase;
+
+        if ($this->maxPurchase < $this->minPurchase) {
+            throw new ProductMinPurchaseException('Product "Mindestabnahme('.$this->minPurchase.')" can not be bigger then "Maximalabnahme('.$this->maxPurchase.')"');
+        }
+
         $this->publish(
             new ProductMaxPurchaseUpdated(
                 $this->getId(),
