@@ -95,7 +95,7 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
       return;
     }
 
-    const inputValue = (event.target as HTMLInputElement).value;
+    const inputValue = this.inputRef.nativeElement.value;
     const { selectionStart, selectionEnd } = this.inputRef.nativeElement;
 
     /*  At this point, we can have only either numeric characters or allowed characters like backspace, delete and so on.
@@ -114,10 +114,10 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
       // We prevent the user from typing a number out of the allowed range (they are set in backend).
       if (!this.isQuantityInRange(quantity)) {
         if (this.isQuantityValid(quantity)) {
-          if (quantity < this.minValue) {
+          if (quantity < this.minValue && this.isQuantityValid(this.minValue)) {
             this.userInput$.next(this.minValue);
             this.inputRef.nativeElement.value = this.minValue;
-          } else if (quantity > this.maxValue) {
+          } else if (quantity > this.maxValue && this.isQuantityValid(this.maxValue)) {
             this.userInput$.next(this.maxValue);
             this.inputRef.nativeElement.value = this.maxValue;
           }
@@ -135,11 +135,12 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
    * @param event
    */
   public onKeyUp(event: KeyboardEvent):void {
-    const inputValue = (event.target as HTMLInputElement).value;
+    const inputValue = this.inputRef.nativeElement.value;
     const quantity = parseInt(inputValue, 10);
 
-    // we don't make any checking here because all is done in keyDown method
-    this.userInput$.next(quantity);
+    if (this.isQuantityValid(quantity) && this.isQuantityInRange(quantity)) {
+      this.userInput$.next(quantity);
+    }
   }
 
   /**
