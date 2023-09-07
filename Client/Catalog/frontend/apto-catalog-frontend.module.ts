@@ -63,6 +63,7 @@ import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/c
 import { TooltipDirective } from './components/common/tooltip.directive';
 import { SummaryConfigurationComponent } from '@apto-catalog-frontend/components/summary/summary-configuration/summary-configuration.component';
 import { SummaryFinishMessageComponent } from '@apto-catalog-frontend/components/summary/summary-finish-message/summary-finish-message.component';
+import { SectionPictureComponent } from "@apto-catalog-frontend/components/common/section-picture/section-picture.component";
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -94,6 +95,7 @@ RouterRegistry.registerRoutes(Routes);
     SummaryConfigurationComponent,
     SummaryFinishMessageComponent,
     ElementPictureComponent,
+    SectionPictureComponent,
     CloseButtonComponent,
     ConfirmationDialogComponent,
     TooltipDirective,
@@ -102,10 +104,11 @@ RouterRegistry.registerRoutes(Routes);
     QuantityInputEditableComponent,
     SummaryConfigurationComponent,
     OPElementDialogComponent,
-    QuantityInputEditableComponent,
-    ElementPictureComponent,
-    CloseButtonComponent,
-    TooltipDirective,
+	  QuantityInputEditableComponent,
+	  ElementPictureComponent,
+    SectionPictureComponent,
+	  CloseButtonComponent,
+	  TooltipDirective,
   ],
 	imports: [
 		RouterModule,

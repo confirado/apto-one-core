@@ -107,6 +107,7 @@ export class ProductRepository {
 				position: section.position,
 				customProperties: section.customProperties,
         previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
+        isZoomable: section.isZoomable,
 			});
 
 			section.elements.forEach((element: any) => {
@@ -128,10 +129,10 @@ export class ProductRepository {
 					errorMessage: element.errorMessage,
 					previewImage: previewImage ? this.mediaUrl + previewImage : null,
 					isMandatory: element.isMandatory,
-					isZoomable: element.isZoomable,
 					position: element.position,
 					customProperties: element.customProperties,
           attachments: element.attachments,
+          zoomFunction: element.zoomFunction,
 				});
 			});
 		});

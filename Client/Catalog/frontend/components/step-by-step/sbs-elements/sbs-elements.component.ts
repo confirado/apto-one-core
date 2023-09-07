@@ -9,6 +9,7 @@ import {
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs';
+import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
 
 @Component({
 	selector: 'apto-sbs-elements',
@@ -41,4 +42,11 @@ export class SbsElementsComponent {
 	public nextStep(): void {
 		this.store.dispatch(setNextStep());
 	}
+
+  getZoomFunction(isZoomable: boolean): any {
+     if (true === isZoomable) {
+       return ElementZoomFunctionEnum.IMAGE_PREVIEW;
+     }
+     return ElementZoomFunctionEnum.DEACTIVATED;
+  }
 }

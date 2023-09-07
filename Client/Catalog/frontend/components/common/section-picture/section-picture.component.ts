@@ -1,12 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
 
 @Component({
-  selector: 'apto-element-picture',
-  templateUrl: './element-picture.component.html',
-  styleUrls: ['./element-picture.component.scss']
+  selector: 'apto-section-picture',
+  templateUrl: './section-picture.component.html',
+  styleUrls: ['./section-picture.component.scss']
 })
-export class ElementPictureComponent implements OnInit {
+export class SectionPictureComponent implements OnInit {
 
   @Input()
   public previewImage: string | null;
@@ -15,7 +14,7 @@ export class ElementPictureComponent implements OnInit {
   public width: string;
 
   @Input()
-  public zoomFunction: ElementZoomFunctionEnum;
+  public isZoomable: boolean;
 
   public imgStyles: string = '';
 
@@ -44,6 +43,6 @@ export class ElementPictureComponent implements OnInit {
   }
 
   isZoomEnabled(): boolean {
-    return this.zoomFunction == ElementZoomFunctionEnum.IMAGE_PREVIEW;
+    return this.isZoomable;
   }
 }
