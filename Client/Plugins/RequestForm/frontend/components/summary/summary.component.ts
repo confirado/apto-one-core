@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -9,25 +10,27 @@ import { addToBasket, addToBasketSuccess, onError } from '@apto-catalog-frontend
 import { selectConfiguration, selectRenderImage, selectSumPrice } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
+import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 
 @Component({
   selector: 'apto-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss'],
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
   public readonly requestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
   public product$ = this.store.select(selectProduct);
   public configuration$ = this.store.select(selectConfiguration);
-  public readonly renderImage$ = this.store.select(selectRenderImage);
   public readonly sumPrice$ = this.store.select(selectSumPrice);
   private humanReadableState: any;
   public showPrices: boolean = true;
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
   });
+  public renderImage = null;
   public requestForm: FormGroup | null = null;
   public requestState: { sending: boolean, success: boolean, error: boolean } = {
     sending: false,
@@ -35,12 +38,26 @@ export class SummaryComponent implements OnInit {
     error: false,
   };
 
-  public constructor(private store: Store, private router: Router, activatedRoute: ActivatedRoute, private actions$: Actions, private scroller: ViewportScroller) {
+  public constructor(
+    private store: Store,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private renderImageService: RenderImageService,
+    private actions$: Actions,
+    private scroller: ViewportScroller
+  ) {
     this.configuration$.subscribe((c) => {
       if (!c.loading && c.state.sections.length === 0) {
         router.navigate(['..'], { relativeTo: activatedRoute });
       }
     });
+
+    this.renderImageService.init();
+    this.subscriptions.push(
+      this.renderImageService.outputSrcSubject.subscribe((next) => {
+        this.renderImage = next;
+      })
+    );
 
     this.store.select(selectHumanReadableState).subscribe((result) => {
       this.humanReadableState = result;
@@ -80,5 +97,11 @@ export class SummaryComponent implements OnInit {
 
   public onRequestFormChanged(requestForm: FormGroup): void {
     this.requestForm = requestForm;
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    })
   }
 }
