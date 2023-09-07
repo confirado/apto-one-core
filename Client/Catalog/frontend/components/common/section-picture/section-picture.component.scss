@@ -1,0 +1,59 @@
+@import "globals";
+@import "common";
+
+.element-picture {
+    position: relative;
+
+    &.is-zoomable {
+        margin-right: -27px;
+        img {
+            width: var(--image-tablet-width);
+            margin: 0 14px 0 -15px;
+        }
+    }
+
+    img {
+        width: 100%;
+    }
+
+    .zoom-icon {
+        position: absolute;
+        top: -2px;
+        right: 10px;
+        cursor: pointer;
+
+        mat-icon {
+            width: 26px;
+            height: 26px;
+            font-size: 26px;
+        }
+    }
+}
+
+.zoomed-in {
+    @include blurry-background();
+
+    .image-wrapper {
+        position: relative;
+
+        img {
+            max-width: calc(100vw - 100px);
+            max-height: calc(100vh - 100px);
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .element-picture {
+        &.is-zoomable {
+            img {
+                width: var(--image-mobile-width);
+                margin: 1px;
+            }
+        }
+
+        .zoom-icon {
+            right: -6px;
+        }
+    }
+}

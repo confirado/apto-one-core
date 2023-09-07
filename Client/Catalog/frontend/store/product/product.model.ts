@@ -34,6 +34,7 @@ export interface Section {
 	position: number;
 	customProperties: CustomProperty[];
   previewImage: string | null;
+  isZoomable: boolean;
 }
 
 export interface Conditions {
@@ -139,8 +140,14 @@ export interface Element<DefinitionProperties = unknown> {
 	errorMessage: TranslatedValue;
 	previewImage: string | null;
 	isMandatory: boolean;
-	isZoomable: boolean;
 	position: number;
 	customProperties: CustomProperty[];
   attachments: any;
+  zoomFunction: ElementZoomFunctionEnum;
+}
+
+export enum ElementZoomFunctionEnum {
+  DEACTIVATED = 'deactivated',
+  IMAGE_PREVIEW = 'image_preview',
+  GALLERY = 'gallery'
 }
