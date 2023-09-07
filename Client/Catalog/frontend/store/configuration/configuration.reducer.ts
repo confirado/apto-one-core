@@ -76,6 +76,7 @@ const _configurationReducer = createReducer(
     return {
       ...state,
       state: action.payload.configuration,
+      renderImages: action.payload.renderImages,
       computedValues: action.payload.computedValues,
       perspectives: action.payload.perspectives,
       currentPerspective: action.payload.currentPerspective,
@@ -96,6 +97,7 @@ const _configurationReducer = createReducer(
     return {
       ...state,
       state: action.payload.configuration,
+      renderImages: action.payload.renderImages,
       computedValues: action.payload.computedValues,
       perspectives: action.payload.perspectives,
       currentPerspective: action.payload.currentPerspective,

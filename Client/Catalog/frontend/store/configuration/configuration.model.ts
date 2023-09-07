@@ -32,9 +32,27 @@ export interface ComputedValues {
 	[name: string]: string;
 }
 
+export interface RenderImageData {
+  productId: string,
+  renderImageId: string,
+  layer: number,
+  perspective: string,
+  offsetX: number,
+  offsetY: number,
+  renderImageOptions: any,
+  path: string,
+  filename: string,
+  extension: string,
+  realWidth: number,
+  realHeight: number,
+  realOffsetX: number,
+  realOffsetY: number
+}
+
 export interface RenderImage {
 	perspective: string;
 	url: string;
+	images?: RenderImageData[];
 }
 
 export interface AreaElementDefinitionProperties {

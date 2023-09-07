@@ -1,6 +1,11 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { ProgressState, ProgressStep, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  ProgressState,
+  ProgressStep,
+  RenderImage,
+  RenderImageData,
+} from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';
@@ -134,28 +139,41 @@ export const selectRenderImage = createSelector(featureSelector, (state: Catalog
 	let currentRenderImage: RenderImage | null = null;
 
 	// search current render image
-	state.configuration.renderImages.every((renderImage) => {
-		if (renderImage.perspective === state.configuration.currentPerspective) {
-			currentRenderImage = renderImage;
-			return false;
-		}
-		return true;
-	});
+	// state.configuration.renderImages.every((renderImage) => {
+	// 	if (renderImage.perspective === state.configuration.currentPerspective) {
+	// 		currentRenderImage = renderImage;
+	// 		return false;
+	// 	}
+	// 	return true;
+	// });
 
 	return currentRenderImage;
+});
+
+export const selectCurrentRenderImages = createSelector(featureSelector, (state: CatalogFeatureState): RenderImageData[] => {
+  let currentRenderImages: RenderImageData[] = [];
+
+  // search current render image
+  Object.keys(state.configuration.renderImages).forEach((key,index) => {
+    if (key === state.configuration.currentPerspective) {
+      currentRenderImages = state.configuration.renderImages[key];
+    }
+  });
+
+  return currentRenderImages;
 });
 
 export const selectRenderImageByPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImage | null => {
     let currentRenderImage: RenderImage | null = null;
 
     // search current render image
-    state.configuration.renderImages.every((renderImage) => {
-      if (renderImage.perspective === perspective) {
-        currentRenderImage = renderImage;
-        return false;
-      }
-      return true;
-    });
+    // state.configuration.renderImages.every((renderImage) => {
+    //   if (renderImage.perspective === perspective) {
+    //     currentRenderImage = renderImage;
+    //     return false;
+    //   }
+    //   return true;
+    // });
 
     return currentRenderImage;
   }
@@ -176,9 +194,11 @@ export const selectCurrentPerspective = createSelector(
 export const selectPerspectives = createSelector(featureSelector, (state: CatalogFeatureState) => {
 	const perspectives: string[] = [];
 
-	state.configuration.renderImages.forEach((renderImage) => {
-		perspectives.push(renderImage.perspective);
-	});
+  Object.keys(state.configuration.renderImages).forEach((key,index) => {
+    if (state.configuration.renderImages[key].length > 0) {
+      perspectives.push(key);
+    }
+  });
 
 	return perspectives;
 });

@@ -1,4 +1,4 @@
-<ng-container *ngIf="canvas">
+<ng-container *ngIf="canvas && renderImage">
     <div class="designer">
         <div class="left">
             <ng-container *ngIf="canvas.element.staticValues.motive.active && canvas.element.staticValues.motive.files.length > 0">
@@ -14,7 +14,8 @@
             </ng-container>
         </div>
         <div #htmlMiddle (resized)="onResizedMiddle($event)" class="middle">
-            <img #htmlRenderImage (resized)="onResizedBackground($event)" [src]='canvas.renderImage.url'>
+            <img #htmlRenderImage (resized)="onResizedBackground($event)" [src]="renderImage.src">
+
             <div class="designer-canvas-container" [ngStyle]="canvasStyle">
                 <canvas
                     #htmlCanvas
