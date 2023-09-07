@@ -21,6 +21,7 @@ export enum ConfigurationActionTypes {
 	SetStepSuccess = '[Configuration] Set step success',
 	GetRenderImagesSuccess = '[RenderImage] Get RenderImages success',
 	GetCurrentRenderImageSuccess = '[RenderImage] Get current RenderImage success',
+  SetRenderImages = '[RenderImage] Set Render Images',
 	SetPrevPerspective = '[Perspective] Set prev Perspective',
 	SetNextPerspective = '[Perspective] Set next Perspective',
 	SetQuantity = '[Quantity] Set Quantity',
@@ -60,6 +61,7 @@ export const initConfigurationSuccess = createAction(
 			currentPerspective: string | null;
 			statePrice: any;
 			connector: any;
+      renderImages: [];
 		};
 	}>()
 );
@@ -81,6 +83,7 @@ export const getConfigurationStateSuccess = createAction(
 			perspectives: string[];
 			currentPerspective: string | null;
 			statePrice: any;
+      renderImages: [];
 		};
 	}>()
 );

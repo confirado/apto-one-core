@@ -99,7 +99,7 @@ RouterRegistry.registerRoutes(Routes);
     CloseButtonComponent,
     ConfirmationDialogComponent,
     TooltipDirective,
-	],
+  ],
   exports: [
     QuantityInputEditableComponent,
     SummaryConfigurationComponent,
@@ -141,7 +141,7 @@ RouterRegistry.registerRoutes(Routes);
 	providers: [
     ProductRepository,
     ConfigurationRepository,
-    DialogService
+    DialogService,
   ],
 })
 export class AptoCatalogFrontendModule {

@@ -5,6 +5,7 @@ namespace Apto\Catalog\Domain\Core\Service\JavascriptStateCreatorService;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\EnrichedState\EnrichedState;
@@ -20,11 +21,17 @@ class JavascriptStateCreatorService
     protected RulePayloadFactory $rulePayloadFactory;
 
     /**
+     * @var RenderImageFactory
+     */
+    protected RenderImageFactory $renderImageFactory;
+
+    /**
      * @param RulePayloadFactory $rulePayloadFactory
      */
-    public function __construct(RulePayloadFactory $rulePayloadFactory)
+    public function __construct(RulePayloadFactory $rulePayloadFactory, RenderImageFactory $renderImageFactory)
     {
         $this->rulePayloadFactory = $rulePayloadFactory;
+        $this->renderImageFactory = $renderImageFactory;
     }
 
     /**
@@ -45,7 +52,8 @@ class JavascriptStateCreatorService
             'failedRules' => $this->createFailedRules($product, $state, $ruleValidationResult),
             'ignoredRules' => $this->createIgnoredRules($product, $state, $ruleValidationResult),
             'cachedProduct' => $product->isCached(),
-            'intention' => $intention
+            'intention' => $intention,
+            'renderImages' => $this->renderImageFactory->getRenderImagesByImageList($state->getState(), $product->getId()->getId())
         ];
 
         if ($appEnv === 'dev') {

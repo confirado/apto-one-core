@@ -19,10 +19,3 @@ export const findEditableRenderImage = createAction(
     payload: any;
   }>()
 );
-
-export const findEditableRenderImageSuccess = createAction(
-  CanvasActionTypes.FindEditableRenderImageSuccess,
-  props<{
-    payload: any;
-  }>()
-);

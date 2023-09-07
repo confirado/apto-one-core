@@ -11,11 +11,11 @@
 	</div>
 </ng-container>
 
-<ng-container *ngIf="!product?.useStepByStep && renderImage && renderImage.url">
+<ng-container *ngIf="!product?.useStepByStep && renderImage">
     <ng-container *ngIf="perspectives">
         <div class="img-content">
             <div class="image-wrapper">
-                <img class="one-page img" [src]="renderImage.url" />
+                <img class="one-page img" [src]="renderImage.src" />
             </div>
             <div *ngIf="perspectives.length > 1" class="arrows">
                 <mat-icon (click)="prevRenderImage()" class="previous-image">arrow_back_ios</mat-icon>

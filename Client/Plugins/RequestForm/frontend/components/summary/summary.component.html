@@ -4,7 +4,7 @@
         <form [formGroup]="quantityInputGroup" class="quantity-form">
             <div class="whole-summary">
                 <div class="summary top">
-                    <img *ngIf="renderImage$ | async as renderImage" [src]="renderImage.url" />
+                    <img *ngIf="renderImage" [src]="renderImage.src" />
                     <div class="summary basket" *ngIf="showPrices">
                         <div class="basket price">
                             <h4>{{ sumPrice }}</h4>

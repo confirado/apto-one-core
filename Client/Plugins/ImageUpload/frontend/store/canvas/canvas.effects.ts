@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { CanvasRepository } from '@apto-image-upload-frontend/store/canvas/canvas.repository';
-import {
-  findEditableRenderImage,
-  findEditableRenderImageSuccess,
-} from '@apto-image-upload-frontend/store/canvas/canvas.actions';
 import { selectConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { Store } from '@ngrx/store';
-
+import { getRenderImagesSuccess } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { CanvasRepository } from '@apto-image-upload-frontend/store/canvas/canvas.repository';
+import { findEditableRenderImage } from '@apto-image-upload-frontend/store/canvas/canvas.actions';
 
 @Injectable()
 export class CanvasEffects {
@@ -24,7 +21,7 @@ export class CanvasEffects {
         action.payload.perspective,
         action.payload.renderImageIds
       )),
-      map((productList) => findEditableRenderImageSuccess({ payload: productList }))
+      map((renderImages) => getRenderImagesSuccess({ payload: {renderImages: renderImages} }))
     )
   );
 }

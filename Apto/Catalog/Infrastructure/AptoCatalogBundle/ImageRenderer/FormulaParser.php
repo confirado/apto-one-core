@@ -44,7 +44,7 @@ trait FormulaParser
         }
 
         // get mappings
-        list($variablesToChars, $charsToValues) = $this->mapAliasesToChars($aliases);
+        list('aliasesToChars' => $variablesToChars, 'charsToValues' => $charsToValues) = $this->mapAliasesToChars($aliases);
 
         // replace aliases with chars
         $formula = str_replace(
@@ -72,6 +72,7 @@ trait FormulaParser
         $charsToValues = [];
         $i = 0;
 
+        // todo check mapping!
         foreach ($aliases as $alias => $value) {
             $char = $availableChars[$i++];
             $aliasesToChars[$alias] = $char;

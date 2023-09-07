@@ -2,6 +2,7 @@
 
 namespace Apto\Catalog\Application\Frontend\Query\Configuration;
 
+use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
 use Psr\Cache;
 use Symfony\Component\Cache\Exception\CacheException;
 
@@ -60,19 +61,21 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
      * @param ConfigurableProductBuilder $configurableProductBuilder
      * @param ProductOrmRepository $productRepository
      * @param RuleValidationService $ruleValidationService
-     * @param rulePayloadFactory $rulePayloadFactory
+     * @param RulePayloadFactory $rulePayloadFactory
+     * @param RenderImageFactory $renderImageFactory
      */
     public function __construct(
         ConfigurableProductBuilder $configurableProductBuilder,
         ProductOrmRepository $productRepository,
         RuleValidationService $ruleValidationService,
-        RulePayloadFactory $rulePayloadFactory
+        RulePayloadFactory $rulePayloadFactory,
+        RenderImageFactory $renderImageFactory
     ) {
         $this->configurableProductFactory = new ConfigurableProductFactory($configurableProductBuilder, $productRepository);
         $this->valueValidationService = new ValueValidationService();
         $this->ruleValidationService = $ruleValidationService;
         $this->ruleRepairService = new RuleRepairService($ruleValidationService);
-        $this->javaScriptStateCreatorService = new JavascriptStateCreatorService($rulePayloadFactory);
+        $this->javaScriptStateCreatorService = new JavascriptStateCreatorService($rulePayloadFactory, $renderImageFactory);
         $this->rulePayloadFactory = $rulePayloadFactory;
     }
 
@@ -104,7 +107,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             try {
                 // assert valid sections, elements, properties and values (if set)
                 $this->valueValidationService->assertValidValues($product, $enrichedState->getState());
-                
+
                 $this->applyInit($product, $enrichedState);
             } catch (InvalidStateException $e) {
                 throw InitConfigurationStateException::fromInvalidConfigurationStateException($e);
