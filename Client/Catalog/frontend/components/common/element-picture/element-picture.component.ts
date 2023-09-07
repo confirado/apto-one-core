@@ -44,6 +44,6 @@ export class ElementPictureComponent implements OnInit {
   }
 
   isZoomEnabled(): boolean {
-    return this.zoomFunction !== ElementZoomFunctionEnum.DEACTIVATED;
+    return this.zoomFunction == ElementZoomFunctionEnum.IMAGE_PREVIEW;
   }
 }

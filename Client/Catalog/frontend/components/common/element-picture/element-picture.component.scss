@@ -2,11 +2,12 @@
 @import "common";
 
 .element-picture {
-    position: relative;
+    display: flex;
+    margin-right: 10px;
 
     &.is-zoomable {
         img {
-            width: calc(100% - 2*var(--element-gap));
+            width: 100%;
         }
     }
 
@@ -15,7 +16,6 @@
     }
 
     .zoom-icon {
-        position: absolute;
         top: -2px;
         right: 10px;
         cursor: pointer;
