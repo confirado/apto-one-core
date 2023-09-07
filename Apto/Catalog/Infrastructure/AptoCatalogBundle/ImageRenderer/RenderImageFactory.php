@@ -6,6 +6,8 @@ use Apto\Base\Domain\Core\Model\FileSystem\Directory\Directory;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;
 use Apto\Base\Domain\Core\Model\FileSystem\FileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
+use Apto\Base\Domain\Core\Service\AptoParameterInterface;
+use Apto\Catalog\Application\Core\Query\Product\Element\ProductElementFinder;
 use Apto\Catalog\Application\Core\Service\RenderImage\RenderImageProvider;
 use Apto\Catalog\Application\Core\Service\RenderImage\RenderImageReducer;
 use Apto\Catalog\Application\Core\Service\RenderImage\RenderImageRegistry;
@@ -28,29 +30,51 @@ class RenderImageFactory implements RenderImageFactoryInterface
     private RenderImageRegistry $renderImageRegistry;
 
     /**
+     * @var AptoParameterInterface
+     */
+    private AptoParameterInterface $aptoParameter;
+
+    /**
      * @param MediaFileSystemConnector $srcFilesystem
      * @param RenderImageRegistry $renderImageRegistry
+     * @param ProductElementFinder $productElementFinder
+     * @param AptoParameterInterface $aptoParameter
      */
     public function __construct(
         MediaFileSystemConnector $srcFilesystem,
         RenderImageRegistry $renderImageRegistry,
+        ProductElementFinder $productElementFinder,
+        AptoParameterInterface $aptoParameter
     ) {
         $this->srcFilesystem = $srcFilesystem;
         $this->renderImageRegistry = $renderImageRegistry;
+        $this->productElementFinder = $productElementFinder;
+        $this->aptoParameter = $aptoParameter;
     }
 
-    public function getRenderImagesByImageList(array $imageList, string $perspective, State $state, string $productId = null): array
+    public function getRenderImagesByImageList(State $state, string $productId = null): array
     {
-        $imageList = $this->getProviderAndReducerImages($imageList, $perspective, $state, $productId);
+        $images = [];
+        $perspectives = $this->aptoParameter->get('perspectives');
+        if (is_array($perspectives) && array_key_exists('perspectives', $perspectives)) {
+            $perspectives = $perspectives['perspectives'];
 
-        if (empty($imageList)) {
-            return [];
+            foreach ($perspectives as $perspective) {
+                $elementsImageList = $this->productElementFinder->findRenderImagesByState($state, $perspective);
+                $imageList = $this->getProviderAndReducerImages($elementsImageList, $perspective, $state, $productId);
+
+                if (empty($imageList)) {
+                    $images[$perspective] = [];
+                    continue;
+                }
+
+                $imageList = $this->sortImageListByLayer($imageList);
+                $srcFiles = $this->getSrcFiles($imageList);
+                $images[$perspective] = $this->getRenderedImagesData($state, $this->srcFilesystem, $srcFiles, $imageList);
+            }
         }
 
-        $imageList = $this->sortImageListByLayer($imageList);
-        $srcFiles = $this->getSrcFiles($imageList);
-
-        return $this->getRenderedImagesData($state, $this->srcFilesystem, $srcFiles, $imageList);
+        return $images;
     }
 
     /**
@@ -152,6 +176,7 @@ class RenderImageFactory implements RenderImageFactoryInterface
     private function getRenderedImagesData(State $state, FileSystemConnector $srcFileSystem, array $srcFiles, array $imageList = []): array
     {
         $images = [];
+        $productImageDimensions = null;
         foreach ($srcFiles as $index => $srcFile) {
             $currentImage = $imageList[$index];
 
@@ -161,6 +186,9 @@ class RenderImageFactory implements RenderImageFactoryInterface
             }
 
             $dimensions = getimagesize($srcFileSystem->getAbsolutePath($srcFile->getPath()));
+            if (null === $productImageDimensions) {
+                $productImageDimensions = $dimensions;
+            }
             $currentImage['realWidth'] = (int)$dimensions[0];
             $currentImage['realHeight'] = (int)$dimensions[1];
 
@@ -176,7 +204,7 @@ class RenderImageFactory implements RenderImageFactoryInterface
                 $offset = $this->getCalculatedOffset($state, $renderImageOptions);
             } else if ($currentImage['offsetX'] != 0 || $currentImage['offsetY'] != 0 ) {
                 // when you save static offset in render image then switch to calculated the old static value stays
-                $offset = $this->getStaticOffset($currentImage, $dimensions);
+                $offset = $this->getStaticOffset($currentImage, $productImageDimensions);
             } else {
                 $offset = ['x' => 0, 'y' => 0];
             }

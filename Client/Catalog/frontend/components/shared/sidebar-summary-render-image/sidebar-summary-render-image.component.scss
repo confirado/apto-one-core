@@ -4,8 +4,8 @@
     .arrows {
         color: #999999;
         position: absolute;
-        left: 0;
-        right: 0;
+        left: 15px;
+        right: 15px;
         top: 0;
         bottom: 0;
         height: 1.875rem;
@@ -42,17 +42,6 @@
     position: relative;
     @include arrows();
 
-    display: block;
-    width: 100%;
-    position: relative;
-    height: auto;
-
-    .image-wrapper {
-        height: auto;
-        width: 100%;
-        min-height: 150px;
-    }
-
     img.image {
         height: auto;
         width: auto;
@@ -64,40 +53,40 @@
     display: block;
     width: 100%;
     position: relative;
-    height: auto;
     @include arrows();
 
     .image-wrapper {
-        width: calc(100% - 70px);
+        width: 100%;
         height: 100%;
         position: relative;
-        margin: 0 auto;
-
-        .no-render-image {
-            height: 200px;
-            width: 250px;
-            border-radius: var(--border-radius-card);
-            background-color: var(--color-background-card);
-            text-align: center;
-            padding: 20px;
-            box-shadow: var(--box-shadow);
-            margin: 20px;
-
+        .one-page.img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            padding-right: 4rem;
+            padding-left: 4rem;
+            box-sizing: border-box;
         }
     }
 
-    &.has-content {
-        min-height: 150px;
-    }
-
     @media (max-width: $tablet-max-width) {
-        min-height: 150px;
+        .image-wrapper {
+            .one-page.img {
+                padding-right: 2rem;
+                padding-left: 2rem;
+                position: relative;
+            }
+        }
+        .arrows {
+            mat-icon {
+                width: auto;
+            }
+        }
     }
 }

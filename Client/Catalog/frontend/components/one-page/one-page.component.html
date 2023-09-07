@@ -9,15 +9,13 @@
             </div>
 
 			<div class="render-img-menu">
-				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !(renderImage$ | async)}"
+				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !renderImage}"
 					[perspectives]="perspectives$ | async"
-					[renderImage]="renderImage$ | async"
 					[product]="product"
 				></apto-o-p-full-screen>
-				<div *ngIf="!(renderImage$ | async)" class="no-render-image">Nicht genügend konfiguriert um eine Demo darzustellen!</div>
-				<apto-sidebar-summary-render-image *ngIf="renderImage$ | async"
+				<div *ngIf="!renderImage" class="no-render-image">Nicht genügend konfiguriert um eine Demo darzustellen!</div>
+				<apto-sidebar-summary-render-image *ngIf="renderImage"
                     [perspectives]="perspectives$ | async"
-                    [renderImage]="renderImage$ | async"
                     [product]="product">
                 </apto-sidebar-summary-render-image>
                 <apto-o-p-button></apto-o-p-button>

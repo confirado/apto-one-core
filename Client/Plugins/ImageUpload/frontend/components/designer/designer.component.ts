@@ -1,44 +1,47 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { fabric } from 'fabric';
+import { Observable, Subscription } from 'rxjs';
 import { ResizedEvent } from 'angular-resize-event';
+import { fabric } from 'fabric';
 
 import { environment } from '@apto-frontend/src/environments/environment';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { sha1 } from '@apto-base-core/helper/encrypt';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
   setHideOnePage,
   updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 
 import { selectCanvas } from '@apto-image-upload-frontend/store/canvas/canvas.selectors';
-import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-
-import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.reducer';
-
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
-import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
-import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+
 
 @Component({
   selector: 'apto-designer',
   templateUrl: './designer.component.html',
   styleUrls: ['./designer.component.scss'],
 })
-export class DesignerComponent implements OnInit, AfterViewInit {
+export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('htmlCanvas') htmlCanvas: ElementRef;
   @ViewChild('htmlRenderImage') htmlRenderImage: ElementRef;
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
   private locale: string;
+  private initialized: boolean = false;
+  private subscriptions: Subscription[] = [];
 
   public canvas: CanvasState | null = null;
   public mediaUrl: string = environment.api.media;
   public currentArea = 0;
+  public renderImage: any = null;
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.imageUpload'));
   public readonly cancelMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.cancelMessage'));
@@ -69,7 +72,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     lockSkewingY: true
   };
 
-  public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService) {
+  public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService, public renderImageService: RenderImageService) {
     // set default locale
     this.locale = environment.defaultLocale;
   }
@@ -91,6 +94,30 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
+    this.renderImageService.init();
+    this.subscriptions.push(
+      this.renderImageService.outputSrcSubject.subscribe((next) => {
+        this.renderImage = next;
+        if (null !== next && this.initialized === false) {
+          this.init();
+        }
+      })
+    );
+
+    if (this.renderImage && this.initialized === false) {
+      this.init();
+    }
+  }
+
+  afterRenderImageChanged(renderImage: any) {
+    console.error(renderImage);
+    this.renderImage = renderImage;
+    if (this.initialized === false) {
+      this.init();
+    }
+  }
+
+  public init() {
     setTimeout(() => {
       this.updateCanvasStyle();
       this.calculatePrintAreas();
@@ -145,6 +172,8 @@ export class DesignerComponent implements OnInit, AfterViewInit {
           });
         });
       }
+
+      this.initialized = true;
     });
   }
 
@@ -199,7 +228,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       return;
     }
     this.printAreas = [];
-    let factor = this.canvasWidth / this.canvas.renderImage.width;
+    let factor = this.canvasWidth / this.renderImage.width;
 
     this.canvas.element.staticValues.area.forEach((area) => {
       this.printAreas.push({
@@ -215,13 +244,16 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     if (!this.fabricCanvas || !this.canvas || this.canvasWidth < 1 || this.canvasHeight < 1) {
       return;
     }
-    let factor = this.canvasWidth / this.canvas.renderImage.width;
+    let factor = this.canvasWidth / this.renderImage.width;
     this.fabricCanvas.setWidth(this.canvasWidth);
     this.fabricCanvas.setHeight(this.canvasHeight);
     this.fabricCanvas.setZoom(factor);
   }
 
   updateCanvasStyle() {
+    if (!this.htmlRenderImage) {
+      return;
+    }
     this.canvasWidth = this.htmlRenderImage.nativeElement.clientWidth;
     this.canvasHeight = this.htmlRenderImage.nativeElement.clientHeight;
     this.middleWidth = this.htmlMiddle.nativeElement.clientWidth;
@@ -335,12 +367,12 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         extension: 'png',
         perspective: area.perspective,
         layer: area.layer,
-        offsetX: area.left * 100 / this.canvas.renderImage.width,
-        offsetY: area.top * 100 / this.canvas.renderImage.height
+        offsetX: area.left * 100 / this.renderImage.width,
+        offsetY: area.top * 100 / this.renderImage.height
       });
     });
 
-    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.canvas.renderImage, fileName, (upload: Observable<any>) => {
+    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.renderImage, fileName, (upload: Observable<any>) => {
       upload.subscribe((next) => {
         if (next.message.error === false) {
           this.store.dispatch(
@@ -369,5 +401,11 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         }
       })
     });
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    })
   }
 }

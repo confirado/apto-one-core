@@ -1,18 +1,17 @@
-<button (click)="isOpen = !isOpen" color="accent" mat-flat-button class="full-screen-button"><mat-icon>fullscreen</mat-icon></button>
-<ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isOpen">
-	<div class="full-screen">
-		<div *ngIf="perspectives && perspectives.length > 1" class="arrows left">
-			<mat-icon (click)="prevRenderImage()">arrow_back_ios</mat-icon>
-		</div>
-        <div class="image-wrapper">
-            <apto-image-canvas
-                (click)="isOpen = !isOpen"
-            ></apto-image-canvas>
-
-            <apto-close-button [mat-dialog-close]="true" (clicked)="isOpen = !isOpen"></apto-close-button>
+<ng-container *ngIf="renderImage">
+    <button (click)="isOpen = !isOpen" color="accent" mat-flat-button class="full-screen-button"><mat-icon>fullscreen</mat-icon></button>
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isOpen">
+        <div class="full-screen">
+            <div *ngIf="perspectives && perspectives.length > 1" class="arrows left">
+                <mat-icon (click)="prevRenderImage()">arrow_back_ios</mat-icon>
+            </div>
+            <div class="image-wrapper">
+                <img (click)="isOpen = !isOpen" [src]="renderImage.src" />
+                <apto-close-button [mat-dialog-close]="true" (clicked)="isOpen = !isOpen"></apto-close-button>
+            </div>
+            <div *ngIf="perspectives && perspectives.length > 1" class="arrows right">
+                <mat-icon (click)="nextRenderImage()">arrow_forward_ios</mat-icon>
+            </div>
         </div>
-		<div *ngIf="perspectives && perspectives.length > 1" class="arrows right">
-			<mat-icon (click)="nextRenderImage()">arrow_forward_ios</mat-icon>
-		</div>
-	</div>
-</ng-template>
+    </ng-template>
+</ng-container>

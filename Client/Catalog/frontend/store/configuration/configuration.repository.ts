@@ -36,7 +36,7 @@ export class ConfigurationRepository {
 		return this.catalogMessageBusService.findProductComputedValuesCalculated(productId, compressedState);
 	}
 
-	public getConfigurationState(params: any): Observable<Configuration | null> {
+	public getConfigurationState(params: any): Observable<{state: Configuration | null, renderImages: []}> {
 		const args = [params.productId, params.compressedState, params.updates];
 
 		return this.catalogMessageBusService
@@ -68,11 +68,11 @@ export class ConfigurationRepository {
 		);
 	}
 
-	private responseToConfigurationState(result: any): Configuration | null {
+	private responseToConfigurationState(result: any): { state: Configuration | null, renderImages: [] } {
 		const state: Configuration = {
 			compressedState: result.compressedState || [],
 			sections: [],
-			elements: [],
+			elements: []
 		};
 		const responseState = result.configurationState;
 
@@ -115,6 +115,6 @@ export class ConfigurationRepository {
 			}
 		}
 
-		return state;
+		return { state: state, renderImages: result.renderImages };
 	}
 }

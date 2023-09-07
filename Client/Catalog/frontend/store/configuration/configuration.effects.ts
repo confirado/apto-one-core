@@ -29,8 +29,13 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration } from './configuration.model';
+import { Configuration, ElementState, SectionState } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
+
+interface GetConfigurationResult {
+  state: Configuration,
+  renderImages: []
+}
 
 @Injectable()
 export class ConfigurationEffects {
@@ -75,7 +80,8 @@ export class ConfigurationEffects {
 							map((configuration) => ({
 								connector,
 								product,
-								configuration: configuration as Configuration,
+								configuration: configuration.state as Configuration,
+                renderImages: configuration.renderImages,
 								currentPerspective,
 							}))
 						);
@@ -114,6 +120,7 @@ export class ConfigurationEffects {
 						perspectives: result.perspectives,
 						currentPerspective: result.currentPerspective,
 						statePrice: result.statePrice,
+            renderImages: result.renderImages
 					},
 				});
 			})
@@ -198,11 +205,12 @@ export class ConfigurationEffects {
 			ofType(getConfigurationState),
 			switchMap((action) =>
 				this.configurationRepository.getConfigurationState(action.payload).pipe(
-					filter((result): result is Configuration => result !== null),
+					filter((result): result is GetConfigurationResult => result !== null),
 					map((result) => ({
 						connector: action.payload.connector,
 						productId: action.payload.productId,
-						configuration: result,
+						configuration: result.state,
+            renderImages: result.renderImages,
 						currentPerspective: action.payload.currentPerspective,
 					}))
 				)
@@ -216,6 +224,7 @@ export class ConfigurationEffects {
 					map((joinResult) => ({
 						productId: result.productId,
 						configuration: result.configuration,
+            renderImages: result.renderImages,
 						computedValues: joinResult[0],
 						perspectives: joinResult[1],
 						currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
@@ -228,6 +237,7 @@ export class ConfigurationEffects {
 					payload: {
 						productId: state.productId,
 						configuration: state.configuration,
+            renderImages: state.renderImages,
 						computedValues: state.computedValues,
 						perspectives: state.perspectives,
 						currentPerspective: state.currentPerspective,
@@ -235,31 +245,6 @@ export class ConfigurationEffects {
 					},
 				})
 			)
-		)
-	);
-
-	public getCurrentRenderImage$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(initConfigurationSuccess, getConfigurationStateSuccess),
-			switchMap((result) => {
-				const perspectives = [];
-
-				if (result.payload.currentPerspective) {
-					perspectives.push(result.payload.currentPerspective);
-				}
-
-				return this.configurationRepository
-					.getRenderImages(result.payload.productId, perspectives, result.payload.configuration.compressedState)
-					.pipe(
-						map((renderImagesResult) => ({
-							renderImages: renderImagesResult,
-							perspectives: result.payload.perspectives,
-							compressedState: result.payload.configuration.compressedState,
-							productId: result.payload.productId,
-						}))
-					);
-			}),
-			map((state) => getCurrentRenderImageSuccess({ payload: state }))
 		)
 	);
 

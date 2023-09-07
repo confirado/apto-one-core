@@ -1,18 +1,18 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { setNextPerspective, setPrevPerspective } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { Store } from '@ngrx/store';
-import { selectRenderImage } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 
 @Component({
 	selector: 'apto-sidebar-summary-render-image',
 	templateUrl: './sidebar-summary-render-image.component.html',
 	styleUrls: ['./sidebar-summary-render-image.component.scss'],
 })
-export class SidebarSummaryRenderImageComponent {
-	@Input()
-	public renderImage: RenderImage | undefined | null;
+export class SidebarSummaryRenderImageComponent implements OnDestroy{
+  private subscriptions: Subscription[] = [];
 
 	@Input()
 	public perspectives: string[] | undefined | null;
@@ -20,11 +20,16 @@ export class SidebarSummaryRenderImageComponent {
 	@Input()
 	public product: Product | null | undefined;
 
-  public readonly renderImage$ = this.store.select(selectRenderImage);
+  public renderImage = null;
 
-  public isCanvasReady = false;
-
-  public constructor(private store: Store) {}
+	public constructor(private store: Store, private renderImageService: RenderImageService) {
+    this.renderImageService.init();
+    this.subscriptions.push(
+      this.renderImageService.outputSrcSubject.subscribe((next) => {
+        this.renderImage = next;
+      })
+    );
+  }
 
 	public prevRenderImage(): void {
 		this.store.dispatch(setPrevPerspective());
@@ -34,7 +39,9 @@ export class SidebarSummaryRenderImageComponent {
 		this.store.dispatch(setNextPerspective());
 	}
 
-  public onAfterCanvasReady(): void {
-    this.isCanvasReady = true;
+  public ngOnDestroy() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    })
   }
 }
