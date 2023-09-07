@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\PartsList\Domain\Core\Model\Part\PartProductAssociation" table="plugin_parts_list_part_product_association">
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="count" column="count" type="integer" nullable="false"/>
+
+        <many-to-one field="part" target-entity="Apto\Plugins\PartsList\Domain\Core\Model\Part\Part" inversed-by="associatedProducts">
+            <join-column name="part_surrogate_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <many-to-one field="product" target-entity="Apto\Catalog\Domain\Core\Model\Product\Product">
+            <join-column name="product_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+
+    </entity>
+</doctrine-mapping>

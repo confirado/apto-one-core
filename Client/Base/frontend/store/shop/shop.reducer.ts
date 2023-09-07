@@ -25,6 +25,7 @@ export const shopInitialState: ShopState = {
 			articles: [],
 		},
 		customerGroupExternalId: null,
+    configured: false
 	},
 	loading: false,
 };

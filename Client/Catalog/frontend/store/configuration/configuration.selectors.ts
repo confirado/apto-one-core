@@ -247,3 +247,5 @@ export const selectElementValues = (element: Element): any =>
 
     return [];
 	});
+
+export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);

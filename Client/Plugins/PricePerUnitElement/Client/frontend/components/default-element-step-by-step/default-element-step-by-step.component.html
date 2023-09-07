@@ -20,22 +20,13 @@
         ></apto-element-picture>
     </div>
 
-    <div class="element"></div>
-
     <div class="description"
          *ngIf="(element.element.description | translate) !== ''"
          [innerHTML]="element.element.description | translate | safeHtml"
-    ></div>
-
-    <!--
-    <div class="element-attachment" *ngFor="let attachment for element.element.attachments">
-        <a class="element-attachment-download" [href]="attachment.url" [download]="attachment.filename">
-            {{ attachment.name | translate }}
-        </a>
+    >
     </div>
-    <div class="element-attachment-download-item">
-        {{ element.element | json }}
+    <div class="element-attachment-download-item element" *ngIf="element.element.attachments.length !== 0">
+        <a (click)="$event.stopPropagation()" class="element-attachment-download" *ngFor="let attachment of element.element.attachments" [href]="mediaUrl + attachment.fileUrl" [download]="attachment.mediaFile.filename | translate">{{ attachment.name | translate }}</a>
     </div>
-    -->
     <div class="apply-button"></div>
 </div>

@@ -1,10 +1,15 @@
 <form [formGroup]="formElement" *ngIf="element && product">
-	<div class="width-height-element"
+    <div class="width-height-element"
          [class.step-by-step]="product.useStepByStep"
          [class.one-page]="!product.useStepByStep"
          [class.open-in-dialog]="isDialog"
          [attr.type]="'custom'"
+         [class.selected]="element.state.active"
     >
+
+        <div *ngIf="element.state.active" class="circle" [class.selected]="element.state.active">
+            <mat-icon>done</mat-icon>
+        </div>
         <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                            [mat-dialog-close]="true"
                            [inner]="true"
@@ -31,7 +36,12 @@
             <div class="height-input-pointer"></div>
 
             <div class="container">
-<!--                <div class="prefix">{{element.element.definition.staticValues.prefixHeight | translate}}</div>-->
+
+                <!--
+                <div class="prefix">{{element.element.definition.staticValues.prefixHeight | translate}}
+                </div>
+                -->
+
                 <div class="input">
                     <apto-input-field
                         *ngIf="element.element.definition.staticValues.renderingHeight === 'input'"

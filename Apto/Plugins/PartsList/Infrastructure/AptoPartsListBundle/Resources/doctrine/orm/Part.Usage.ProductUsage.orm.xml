@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ProductUsage" table="plugin_parts_list_part_product_usage">
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <unique-constraints>
+            <unique-constraint columns="part_surrogate_id,usage_for_uuid_id" name="part_surrogate_id_usage_for_uuid_id" />
+        </unique-constraints>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="productId" type="string" column="product_id" nullable="true"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="true" column-prefix="usage_for_uuid_" name="usageForUuid"/>
+        <embedded class="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity" use-column-prefix="false" name="quantity"/>
+
+        <many-to-one field="part" target-entity="Apto\Plugins\PartsList\Domain\Core\Model\Part\Part" inversed-by="productUsages">
+            <join-column name="part_surrogate_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

@@ -19,6 +19,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class SummaryComponent {
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
 	public product$ = this.store.select(selectProduct);
 	public configuration$ = this.store.select(selectConfiguration);
 	public readonly renderImage$ = this.store.select(selectRenderImage);

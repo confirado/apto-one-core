@@ -43,6 +43,7 @@ export class ProductRepository {
 			useStepByStep: response.useStepByStep,
 			position: response.position,
 			customProperties: response.customProperties,
+      hidden: response.hidden,
 		};
 	}
 
@@ -130,6 +131,7 @@ export class ProductRepository {
 					isZoomable: element.isZoomable,
 					position: element.position,
 					customProperties: element.customProperties,
+          attachments: element.attachments,
 				});
 			});
 		});

@@ -1,0 +1,66 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Element:</label>
+        <md-select ng-model="element"
+                   ng-change="onElementChange(element)"
+                   md-on-close="clearElementSearchTerm()"
+                   data-md-container-class="apto-md-select-search-container"
+                   style="min-width: 200px;"
+        >
+            <md-select-header class="apto-md-select-header">
+                <input ng-model="$parent.elementSearchTerm"
+                       ng-keydown="$event.stopPropagation()"
+                       type="search"
+                       placeholder="Suchen:"
+                       class="apto-md-header-search-box md-text">
+            </md-select-header>
+            <md-optgroup label="Anzahl">
+                <md-option ng-value="null">keine</md-option>
+                <md-option ng-value="element" ng-repeat="element in availableElements | filter:elementSearchTerm">{{ element.identifier }}</md-option>
+            </md-optgroup>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
+        <label>Anzahl:</label>
+        <input ng-model="newElementUsage.quantity">
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container>
+        <md-button ng-disabled="!newElementUsage.usedForUuid || !newElementUsage.quantity" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElementUsage()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container class="md-whiteframe-2dp">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width:30%;">Id</th>
+            <th md-column style="width:30%;">verwendet für</th>
+            <th md-column style="width:25%;">Anzahl</th>
+            <th md-column style="width:15%; text-align: center;">Actions</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="elementUsage in elementUsages">
+            <td md-cell>{{elementUsage.id}}</td>
+            <td md-cell>{{getUsageIdentifierByUsageForUuid(elementUsage.usageForUuid, 'element')}}</td>
+            <td md-cell>{{elementUsage.quantity}}</td>
+            <td md-cell style="text-align: center;">
+                <md-button
+                        title="Bearbeiten"
+                        class="md-icon-button md-primary"
+                        ng-click="showElementUsageDetails($event, elementUsage.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                        title="Löschen"
+                        class="md-icon-button md-warn"
+                        apto-confirm-remove="removeElementUsage(elementUsage.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

@@ -24,7 +24,6 @@ export class SidebarSummaryComponent implements OnInit {
 	public readonly product$ = this.store.select(selectProduct);
 	public readonly sumPseudoPrice$ = this.store.select(selectSumPseudoPrice);
 	public readonly configuration$ = this.store.select(selectConfiguration);
-
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
 
 	public constructor(private store: Store) {}

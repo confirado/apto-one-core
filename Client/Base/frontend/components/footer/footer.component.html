@@ -1,9 +1,11 @@
-<mat-toolbar>
-	<div class="entrys">
-		<div *ngFor="let entry of links$ | async">
-			<a target="_blank" [href]="entry | contentSnippet: 'link'">{{ entry | contentSnippet: 'text' }}</a>
-		</div>
-	</div>
-	<div class="paymentOptions"><img [src]="mediaUrl + (contentSnippetPayment$ | async | contentSnippet: 'paymentImage')" /></div>
-	<div *ngIf="contentSnippetFooterInfo$ | async | contentSnippet: 'copyright'" class="copyright">Copyright © {{ currentYear }} {{ contentSnippetFooterInfo$ | async | contentSnippet: 'copyright' }} </div>
-</mat-toolbar>
+<ng-container *ngIf="links$ | async as links">
+    <mat-toolbar>
+        <div class="entrys">
+            <div *ngFor="let entry of links.children">
+                <a target="_blank" [href]="entry | contentSnippet: 'link'">{{ entry | contentSnippet: 'text' }}</a>
+            </div>
+        </div>
+        <div *ngIf="contentSnippetPayment$ | async | contentSnippet: 'paymentImage' " class="paymentOptions"><img [src]="mediaUrl + (contentSnippetPayment$ | async | contentSnippet: 'paymentImage')" /></div>
+        <div *ngIf="contentSnippetFooterInfo$ | async | contentSnippet: 'copyright'" class="copyright">Copyright © {{ currentYear }} {{ contentSnippetFooterInfo$ | async | contentSnippet: 'copyright' }} </div>
+    </mat-toolbar>
+</ng-container>

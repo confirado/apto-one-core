@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\PartsList\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'

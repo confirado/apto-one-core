@@ -1,0 +1,46 @@
+<md-dialog class="apto-md-dialog-fullscreen" aria-label="List dialog">
+    <form name="detailsForm"  ng-submit="submit()">
+        <md-toolbar class="apto-md-toolbar-dark">
+            <div class="md-toolbar-tools">
+                <h3><span>Teil: {{ translate(details.name) }}</span></h3>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="close()">
+                    <md-icon md-font-set="fa">&#xf00d</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="Teil" ng-click="closeEditDialog()">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/part.html'"></div>
+                    </md-tab>
+                    <md-tab label="Preise" ng-click="closeEditDialog()" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/price.html'"></div>
+                    </md-tab>
+                    <md-tab label="Produkte" ng-click="closeEditDialog()" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/products.html'"></div>
+                    </md-tab>
+                    <md-tab label="Sektionen" ng-click="closeEditDialog()" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/sections.html'"></div>
+                    </md-tab>
+                    <md-tab label="Elemente" ng-click="closeEditDialog()" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/elements.html'"></div>
+                    </md-tab>
+                    <md-tab label="Regeln" ng-click="closeEditDialog()" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/rules.html'"></div>
+                    </md-tab>
+                </md-tabs>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+
+            <md-button ng-if="details.id" class="md-raised md-cornered" ng-click="save(detailsForm, true)" type="submit">Speichern und schließen</md-button>
+            <md-button ng-if="details.id" class="md-raised md-primary md-cornered" ng-click="save(detailsForm)" type="submit">Speichern</md-button>
+
+            <md-button ng-if="!details.id" class="md-raised md-cornered" ng-click="save(detailsForm)" type="submit">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!details.id" class="md-raised md-primary md-cornered" ng-click="save(detailsForm, true)" type="submit">Speichern</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

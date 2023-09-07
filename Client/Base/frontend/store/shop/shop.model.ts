@@ -26,7 +26,7 @@ export interface ConnectorUser {
 	lastName: string;
 }
 
-export interface CustomerGroup {
+export interface ExternalCustomerGroup {
 	id: string;
 	name: string;
 	inputGross: boolean;
@@ -56,19 +56,21 @@ export interface Connector {
 	user: ConnectorUser | null;
 	loggedIn: boolean;
 	taxState: string;
-	customerGroup: CustomerGroup;
+	customerGroup: ExternalCustomerGroup;
 	customerGroupExternalId: string | null;
 	displayCurrency: Currency;
 	shopCurrency: Currency;
 	basket: ConnectorBasket;
+  configured: boolean;
 }
 
 export interface SelectConnector {
 	sessionCookies: any;
 	taxState: string;
-	customerGroup: CustomerGroup;
+	customerGroup: ExternalCustomerGroup;
 	displayCurrency: Currency;
 	shopCurrency: Currency;
 	locale: string;
 	customerGroupExternalId: string | null;
+  configured: boolean;
 }

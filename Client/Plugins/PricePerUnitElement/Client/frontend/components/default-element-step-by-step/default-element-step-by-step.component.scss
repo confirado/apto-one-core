@@ -32,6 +32,8 @@
 
     .element {
         @include element();
+        align-items: flex-start;
+        margin-top: 20px;
     }
 
     .description {

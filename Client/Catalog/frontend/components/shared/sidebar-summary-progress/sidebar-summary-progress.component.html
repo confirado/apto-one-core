@@ -8,19 +8,54 @@
 	</div>
 	<div class="info">
 		<ng-container *ngIf="progress == 0">
-			<div><h4>Leg los!</h4><p>Schließe Sektionen ab um in der Konfiguartion voranzuschreiten</p></div>
+			<div>
+                <h4>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress=0.headline' }}
+                </h4>
+                <p>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress=0.text' }}
+                </p>
+            </div>
 		</ng-container>
 		<ng-container *ngIf="progress > 0 && progress < 50">
-			<div><h4>Guter Start!</h4><p>Schritt für Schritt zum perfekten Produkt</p></div>
+			<div>
+                <h4>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress1to49.headline' }}
+                </h4>
+                <p>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress1to49.text' }}
+                </p>
+            </div>
 		</ng-container>
 		<ng-container *ngIf="progress >= 50 && progress <= 74">
-			<div><h4>Die Hälfte ist erledigt!</h4><p>Deine Konfiguartion ist gleich fertig!</p></div>
+			<div>
+                <h4>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress50to74.headline' }}
+                </h4>
+                <p>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress50to74.text' }}
+                </p>
+            </div>
 		</ng-container>
 		<ng-container *ngIf="progress >= 75 && progress < 100">
-			<div><h4>Gleich ist es geschafft!</h4><p>Deine Konfiguartion ist gleich fertig!</p></div>
+			<div>
+                <h4>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress75to99.headline' }}
+                </h4>
+                <p>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress75to99.text' }}
+                </p>
+            </div>
 		</ng-container>
 		<ng-container *ngIf="progress == 100">
-			<div><h4>Geschafft!</h4><p>Deine Konfiguartion ist fertig!</p></div>
+			<div>
+                <h4>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress=100.headline' }}
+                </h4>
+                <p>
+                    {{ summaryProgress$ | async | contentSnippet: 'progress=100.text' }}
+                </p>
+            </div>
 		</ng-container>
 	</div>
 </div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <embeddable name="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation">
+        <field name="active" type="boolean" column="active" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="operation" column="operation" type="string" nullable="true" />
+        <field name="fieldType" column="field_type" type="string" nullable="true" />
+        <field name="field" column="field" type="string" nullable="true" />
+        <field name="fieldPosition" column="field_position" type="string" nullable="true" />
+    </embeddable>
+</doctrine-mapping>

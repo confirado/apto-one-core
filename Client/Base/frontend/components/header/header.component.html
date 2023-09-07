@@ -1,4 +1,7 @@
 <mat-toolbar>
+    <div class="login-button" *ngIf="showLoginButton()" (click)="login()">Login</div>
+    <div class="login-button" *ngIf="showLogoutButton()" (click)="logout()">Logout</div>
+
     <ng-container *ngIf="languages$ | async as languages">
         <div class="language-desktop">
             <div *ngIf="languages.length === 1"></div>
@@ -14,13 +17,13 @@
             </mat-select>
         </div>
     </ng-container>
-    <div class="logo">
+    <div *ngIf="contentSnippets$ | async" class="logo">
         <a
             [href]="contentSnippets$ | async | contentSnippet: 'link'"
-            [target]="(contentSnippets$ | async | contentSnippet: 'openInNewTab') === 'active' ? '_blank' : undefined"
+            [target]="(contentSnippets$ | async | contentSnippet: 'openInNewTab') === 'active' ? '_blank' : '_self'"
         >
-            <img class="visible-desktop" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImg')" />
-            <img class="visible-mobile" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImgMobile')" />
+            <img *ngIf="contentSnippets$ | async | contentSnippet: 'logoImg'" class="visible-desktop" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImg')" />
+            <img *ngIf="contentSnippets$ | async | contentSnippet: 'logoImgMobile'" class="visible-mobile" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImgMobile')" />
         </a>
     </div>
     <ng-container *ngIf="languages$ | async as languages">

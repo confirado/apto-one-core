@@ -1,10 +1,11 @@
-<mat-drawer-container>
-	<mat-drawer #drawer fixedInViewport="true" class="drawer" mode="over" position="end">
-		<apto-basket></apto-basket>
-	</mat-drawer>
-	<ng-container *ngIf="shop$ | async">
-		<apto-slot-outlet identifier="header"></apto-slot-outlet>
-		<router-outlet></router-outlet>
-		<apto-slot-outlet identifier="footer"></apto-slot-outlet>
-	</ng-container>
-</mat-drawer-container>
+<ng-container>
+    <mat-drawer-container>
+        <mat-drawer #drawer fixedInViewport="true" class="drawer" mode="over" position="end">
+            <apto-basket></apto-basket>
+        </mat-drawer>
+        <apto-slot-outlet identifier="header"></apto-slot-outlet>
+        <router-outlet *ngIf="shop && loginInitialized && accessGranted()"></router-outlet>
+        <apto-frontend-users-login class="apto-frontend-users-login" *ngIf="shop && loginInitialized && !accessGranted()"></apto-frontend-users-login>
+        <apto-slot-outlet identifier="footer"></apto-slot-outlet>
+    </mat-drawer-container>
+</ng-container>

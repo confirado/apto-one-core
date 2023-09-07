@@ -1,5 +1,5 @@
 <ng-container *ngIf="product$ | async as product">
-	<div class="one-page">
+	<div class="one-page {{ product.identifier }}">
 		<div class="content" [ngClass]="{ hidden: hideOnePage$ | async }">
             <div *ngIf="(configurationLoading$ | async)" class="loading-container">
                 <div class="loading-overlay"></div>

@@ -31,7 +31,7 @@ export class InputFieldComponent implements ControlValueAccessor, OnChanges {
 	public placeholder: string | undefined = '';
 
 	@Input()
-	public type: 'text' | 'integer' | 'float' = 'text';
+	public type: 'text' | 'integer' | 'float' | 'password' = 'text';
 
 	@Input()
 	public step: number = 1;
