@@ -75,6 +75,7 @@ const _configurationReducer = createReducer(
      */
     return {
       ...state,
+      quantity: action.payload.product.minPurchase === 0 ? 1 : action.payload.product.minPurchase,
       state: action.payload.configuration,
       renderImages: action.payload.renderImages,
       computedValues: action.payload.computedValues,

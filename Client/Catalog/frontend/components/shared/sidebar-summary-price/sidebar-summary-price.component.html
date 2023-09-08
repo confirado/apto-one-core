@@ -21,6 +21,8 @@
 			</div>
 			<div class="add-basket">
                 <apto-quantity-input-editable
+                    [minValue]="product.minPurchase"
+                    [maxValue]="product.maxPurchase"
                     [name]="'quantityInput'"
                     formControlName="quantityInput"
                     [size]="'small'"
@@ -64,9 +66,11 @@
 			</div>
 			<div class="add-basket">
                 <apto-quantity-input-editable
+                    [minValue]="product.minPurchase"
+                    [maxValue]="product.maxPurchase"
                     [name]="'quantityInput'"
                     formControlName="quantityInput"
-                    [size]="'big'"
+                    [size]="'middle'"
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
                 <button class="one-page-button add-to-basket" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>

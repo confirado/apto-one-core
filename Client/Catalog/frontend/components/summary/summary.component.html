@@ -13,6 +13,8 @@
                         </div>
                         <div class="basket buttons">
                             <apto-quantity-input-editable
+                                [minValue]="product.minPurchase"
+                                [maxValue]="product.maxPurchase"
                                 [name]="'quantityInput1'"
                                 formControlName="quantityInput"
                                 [size]="'big'"
@@ -31,6 +33,8 @@
                             <mat-icon>undo</mat-icon>{{ contentSnippet$ | async | contentSnippet: 'back' }}
                         </button>
                         <apto-quantity-input-editable
+                            [minValue]="product.minPurchase"
+                            [maxValue]="product.maxPurchase"
                             [size]="'big'"
                             [width]="'100px'"
                             [name]="'quantityInput2'"

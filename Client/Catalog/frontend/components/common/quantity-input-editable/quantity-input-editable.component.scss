@@ -16,6 +16,11 @@
             @include ripple-controls(var(--input-height));
         }
 
+        &.middle {
+            @include container(var(--button-tablet-height));
+            @include ripple-controls(var(--button-tablet-height));
+        }
+
         &.big {
             @include container(var(--input-big-height));
             @include ripple-controls(var(--input-big-height));
@@ -25,7 +30,7 @@
             @include input();
             text-align: right;
             padding-left: 8px;
-            padding-right: 4px
+            padding-right: 4px;
         }
 
         .quantity-text {

@@ -12,6 +12,8 @@ export interface Product {
 	position: number;
 	customProperties: CustomProperty[];
   hidden: boolean;
+  minPurchase: number;
+  maxPurchase: number;
 }
 
 export interface Group {
