@@ -159,13 +159,21 @@ class ProductCommandHandler extends ProductChildHandler
             ->setMetaTitle($this->getTranslatedValue($command->getMetaTitle()))
             ->setMetaDescription($this->getTranslatedValue($command->getMetaDescription()))
             ->setStock($command->getStock())
-            ->setMinPurchase($command->getMinPurchase())
-            ->setMaxPurchase($command->getMaxPurchase())
             ->setDeliveryTime($command->getDeliveryTime())
             ->setWeight($command->getWeight())
             ->setTaxRate($command->getTaxRate())
             ->setSeoUrl($command->getSeoUrl())
             ->setPriceCalculatorId($command->getPriceCalculatorId());
+
+        // reset min and max purchase to prevent error caused by the validation
+        $product
+            ->setMinPurchase(0)
+            ->setMaxPurchase(0);
+
+        // set max before min to prevent error caused by the validation
+        $product
+            ->setMaxPurchase($command->getMaxPurchase())
+            ->setMinPurchase($command->getMinPurchase());
 
         if ($command->getPreviewImage()) {
             $mediaFile = $this->getMediaFile($command->getPreviewImage());
@@ -214,13 +222,21 @@ class ProductCommandHandler extends ProductChildHandler
                 ->setMetaTitle($this->getTranslatedValue($command->getMetaTitle()))
                 ->setMetaDescription($this->getTranslatedValue($command->getMetaDescription()))
                 ->setStock($command->getStock())
-                ->setMinPurchase($command->getMinPurchase())
-                ->setMaxPurchase($command->getMaxPurchase())
                 ->setDeliveryTime($command->getDeliveryTime())
                 ->setWeight($command->getWeight())
                 ->setTaxRate($command->getTaxRate())
                 ->setSeoUrl($command->getSeoUrl())
                 ->setPriceCalculatorId($command->getPriceCalculatorId());
+
+            // reset min and max purchase to prevent error caused by the validation
+            $product
+                ->setMinPurchase(0)
+                ->setMaxPurchase(0);
+
+            // set max before min to prevent error caused by the validation
+            $product
+                ->setMaxPurchase($command->getMaxPurchase())
+                ->setMinPurchase($command->getMinPurchase());
 
             if ($command->getPreviewImage()) {
                 $mediaFile = $this->getMediaFile($command->getPreviewImage());

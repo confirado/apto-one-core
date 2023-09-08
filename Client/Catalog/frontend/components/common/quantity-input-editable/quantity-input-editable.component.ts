@@ -163,7 +163,8 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
   }
 
   private isQuantityInRange(quantity): boolean {
-    return quantity <= this.maxValue && quantity >= this.minValue;
+    // max value 0 means infinite in that case
+    return (quantity <= this.maxValue || this.maxValue === 0) && quantity >= this.minValue;
   }
 
   private isAllowedCharacter(key: string): boolean {
