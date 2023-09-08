@@ -10,7 +10,7 @@ export class FabricCanvasService {
   public constructor(private http: HttpClient) {
   }
 
-  public uploadLayerImage(fabricCanvas, printAreas, renderImage, fileNameIn, callback) {
+  public uploadLayerImage(fabricCanvas, printAreas, renderImage, fileNameId, directory, callback) {
     // create a copy from fabric original canvas
     let canvasCopyBuffer = document.createElement('canvas');
     let canvasCopy = new fabric.Canvas(canvasCopyBuffer);
@@ -22,7 +22,7 @@ export class FabricCanvasService {
       canvasCopy.renderAll();
 
       printAreas.forEach((printArea) => {
-        let fileName = fileNameIn + '-' + printArea.identifier;
+        let fileName = fileNameId + '-' + printArea.identifier;
         let dataUrl = canvasCopy.toDataURL({
           format: 'png',
           left: printArea.left,
@@ -33,7 +33,7 @@ export class FabricCanvasService {
 
         let blob = this.dataUrlToBlob(dataUrl);
         let file = this.blobToFile(blob, fileName + '.png');
-        callback(this.uploadFile(file, fileName));
+        callback(this.uploadFile(file, fileName, directory));
       });
     });
   }
@@ -52,13 +52,13 @@ export class FabricCanvasService {
     return blob;
   }
 
-  private uploadFile(file, fileName) {
+  private uploadFile(file, fileName, directory) {
     const formData = new FormData();
     formData.append('file[0]', file);
     formData.append('command', 'UploadUserImageFile');
     formData.append('arguments[0]', fileName);
     formData.append('arguments[1]', 'png');
-    formData.append('arguments[2]', '/apto-plugin-image-upload/render-images/2023/05');
+    formData.append('arguments[2]', directory);
 
     return this.http.post(environment.api.command, formData);
   }

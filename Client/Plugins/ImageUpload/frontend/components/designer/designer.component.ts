@@ -18,11 +18,12 @@ import {
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
+import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
+import { Product } from '@apto-catalog-frontend/store/product/product.model';
 
 import { selectCanvas } from '@apto-image-upload-frontend/store/canvas/canvas.selectors';
 import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.reducer';
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
-
 
 @Component({
   selector: 'apto-designer',
@@ -50,6 +51,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   public fabricCanvas: any = null;
   public printAreas: { width: number, height: number, left: number, top: number }[] = [];
   public canvasStyle: { width: string, height: string, left: string } = { width: '0px', height: '0px', left: '0px' };
+  public product: Product;
 
   public middleWidth: number = 0;
   public canvasWidth: number = 0;
@@ -79,7 +81,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnInit(): void {
     // subscribe for locale store value
-    this.store.select(selectLocale).subscribe((locale) => {
+    this.store.select(selectLocale).subscribe((locale: string) => {
       if (locale === null) {
         this.locale = environment.defaultLocale;
       } else {
@@ -87,8 +89,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
+    this.store.select(selectProduct).subscribe((next: Product) => {
+      this.product = next;
+    });
+
     // subscribe for canvas
-    this.store.select(selectCanvas).subscribe((next) => {
+    this.store.select(selectCanvas).subscribe((next: CanvasState) => {
       this.canvas = next;
     });
   }
@@ -105,14 +111,6 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     if (this.renderImage && this.initialized === false) {
-      this.init();
-    }
-  }
-
-  afterRenderImageChanged(renderImage: any) {
-    console.error(renderImage);
-    this.renderImage = renderImage;
-    if (this.initialized === false) {
       this.init();
     }
   }
@@ -347,9 +345,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       fabricCanvas.objects.push(object.toJSON(['identifier']));
     });
 
+    const date: Date = new Date();
     const fabricCanvasJson = JSON.stringify(fabricCanvas);
-    const productId = 'fe65066c-41b9-46da-a500-044777a1d4b5';
-    const directory = '/apto-plugin-image-upload/render-images/2023/05/';
+    const productId = this.product.id;
+    const directory = '/apto-plugin-image-upload/render-images/' + date.getFullYear() + '/' + (date.getMonth() + 1).toString().padStart(2, '0') + '/';
     const fileName = sha1(fabricCanvasJson);
 
     const payload = {
@@ -372,7 +371,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.renderImage, fileName, (upload: Observable<any>) => {
+    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.renderImage, fileName, directory, (upload: Observable<any>) => {
       upload.subscribe((next) => {
         if (next.message.error === false) {
           this.store.dispatch(
