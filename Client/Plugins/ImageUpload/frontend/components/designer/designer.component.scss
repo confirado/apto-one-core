@@ -126,12 +126,28 @@
         grid-area: container;
         @include container();
 
-        input {
+        .text-input {
             @include input();
         }
 
         @include ripple-controls(var(--input-height));
     }
+}
+
+.color-picker-input {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    visibility: hidden;
+    opacity: 0;
+    display: block;
+    height: 0;
+    outline: 0;
+    border: none;
+}
+
+.color-picker-select {
+    background: var(--color-accent);
 }
 
 @media only screen and (max-width: $mobile-max-width) {

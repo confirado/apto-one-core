@@ -36,7 +36,12 @@
                     <div class="input-field">
                         <div class="name">{{ getTextBoxProperty(box.identifier, 'name') }}</div>
                         <div class="container">
-                            <input maxlength="17" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)">
+                            <input *ngIf="box.payload.box.colorPicker" class="color-picker-input" [ngxMatColorPicker]="picker" [value]="getColorFromHex(getObjectValue('text', box.identifier, 'fill'))" (colorChange)="updateTextColor($event, box.identifier)"  >
+                            <input class="text-input" maxlength="17" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)">
+                            <span  class="color-picker-select">
+                                <ngx-mat-color-toggle *ngIf="box.payload.box.colorPicker" matSuffix [for]="picker" ></ngx-mat-color-toggle>
+                                <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
+                            </span>
                         </div>
                     </div>
                 </ng-container>

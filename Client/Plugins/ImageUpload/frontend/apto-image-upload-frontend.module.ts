@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AngularResizeEventModule } from 'angular-resize-event';
+import { MAT_COLOR_FORMATS, NgxMatColorPickerModule, NGX_MAT_COLOR_FORMATS } from '@angular-material-components/color-picker';
 
 import { featureKey, reducers } from '@apto-image-upload-frontend/store/feature';
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
@@ -41,8 +42,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		AptoCatalogFrontendModule,
 		AngularResizeEventModule,
 		NgOptimizedImage,
+    NgxMatColorPickerModule
 	],
-  providers: [],
+  providers: [
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS }
+  ],
 })
 export class AptoImageUploadFrontendModule {
   public constructor() {

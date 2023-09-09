@@ -102,7 +102,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             left: 0,
             top: 0,
             radius: 0,
-            locked: true
+            locked: true,
+            colorPicker: true
         }
     }
 

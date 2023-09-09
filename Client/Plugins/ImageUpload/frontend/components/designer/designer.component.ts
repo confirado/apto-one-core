@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { ResizedEvent } from 'angular-resize-event';
 import { fabric } from 'fabric';
+import { Color, stringInputToObject } from '@angular-material-components/color-picker';
 
 import { environment } from '@apto-frontend/src/environments/environment';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
@@ -280,15 +281,42 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public updateText(event, identifier) {
+    this.updateTextPropery(identifier, 'text', event.target.value);
+  }
+
+  public updateTextColor(event, identifier) {
+    this.updateTextPropery(identifier, 'fill', '#' + event.value.hex, { color: event.value });
+  }
+
+  private updateTextPropery(identifier, property, value, payload = {}) {
     this.fabricCanvas.getObjects().forEach((object) => {
       if (object.get('type') === 'text' && object.get('identifier') === identifier) {
         object.setOptions({
-          text: event.target.value
+          [property]: value,
+          payload: {
+            ...object.payload,
+            ...payload
+          }
         });
+        this.fabricCanvas.renderAll();
       }
-
-      this.fabricCanvas.renderAll();
     });
+  }
+
+  public getObjectValue(type, identifier, property): Color {
+    const object = this.fabricCanvas.getObjects().find((o) => o.get('type') === type && o.get('identifier') === identifier);
+    if (!object || !object.hasOwnProperty(property)) {
+      return null;
+    }
+    return object[property];
+  }
+
+  public getColorFromHex(hex) {
+    if (hex === null) {
+      return new Color(0, 0, 0, 1);
+    }
+    const { r, g, b, a } = stringInputToObject(hex);
+    return new Color(r, g, b, a);
   }
 
   public getTextBoxProperty(identifier, property) {
