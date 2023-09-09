@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric';
 import { environment } from '@apto-frontend/src/environments/environment';
+import { PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
 
 @Injectable({
   providedIn: 'root',

@@ -1,3 +1,20 @@
+<!-- Font Preloader (may look sketchy, but seems to be the most reliable way to preload fonts) -->
+<div *ngFor="let font of fonts">
+    <ng-container *ngIf="font.url">
+        <svg style="display: none" width="0" height="0">
+            <style>
+                @font-face {
+                    font-family: '{{font.family}}';
+                    src: url('{{font.url}}');
+                }
+            </style>
+        </svg>
+        <div style="display: none">
+            <span style='font-family: "{{font.family}}"'></span>
+        </div>
+    </ng-container>
+</div>
+
 <ng-container *ngIf="canvas && renderImage">
     <div class="designer">
         <div class="left">
@@ -45,6 +62,16 @@
                         </div>
                     </div>
                 </ng-container>
+                <div class="input-field" *ngIf="fonts.length > 0">
+                    <div class="name">Schriftart:</div>
+                    <div class="container">
+                        <mat-select class="text-input" [value]="selectedFont" (selectionChange)="updateTextFont($event)">
+                            <mat-option *ngFor="let font of fonts" [value]="font">
+                                {{ font.family }}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
             </ng-container>
         </div>
     </div>

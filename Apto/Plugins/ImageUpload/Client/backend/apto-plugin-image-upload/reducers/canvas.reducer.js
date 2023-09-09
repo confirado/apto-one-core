@@ -26,14 +26,6 @@ const Reducer = function(AptoReducersProvider) {
             },
             textSettings: {
                 active: false,
-                default: 'Mein Text!',
-                fontSize: 25,
-                left: 0,
-                top: 0,
-                radius: 0,
-                textAlign: 'center',
-                fill: '#ffffff',
-                multiline: false,
                 fonts: [],
                 boxes: []
             },
@@ -97,16 +89,6 @@ const Reducer = function(AptoReducersProvider) {
                 });
                 break;
             }
-        }
-
-        switch (action.type) {
-            case getType('FETCH_CANVAS_LIST_FULFILLED'):
-                state = update(state, {
-                    list: {
-                        $set: action.payload.data.result.data
-                    }
-                });
-                break;
         }
 
         return state;

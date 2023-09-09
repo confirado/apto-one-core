@@ -40,11 +40,10 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             $scope.fetchCanvas(canvasId).then(() => {
                 if (!$scope.detail.textSettings.boxes) {
                     $scope.detail.textSettings.boxes = [];
-                } else {
-                    $scope.detail.textSettings = {
-                        active: $scope.detail.textSettings.active,
-                        boxes: $scope.detail.textSettings.boxes
-                    }
+                }
+
+                if (!$scope.detail.textSettings.fonts) {
+                    $scope.detail.textSettings.fonts = [];
                 }
             });
         }

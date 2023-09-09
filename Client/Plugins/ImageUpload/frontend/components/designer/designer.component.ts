@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { ResizedEvent } from 'angular-resize-event';
 import { fabric } from 'fabric';
 import { Color, stringInputToObject } from '@angular-material-components/color-picker';
+import FontFaceObserver from 'fontfaceobserver';
 
 import { environment } from '@apto-frontend/src/environments/environment';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
@@ -25,6 +26,7 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { selectCanvas } from '@apto-image-upload-frontend/store/canvas/canvas.selectors';
 import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.reducer';
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
+import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
 
 @Component({
   selector: 'apto-designer',
@@ -50,8 +52,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   public readonly resetMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.resetMessage'));
 
   public fabricCanvas: any = null;
-  public printAreas: { width: number, height: number, left: number, top: number }[] = [];
-  public canvasStyle: { width: string, height: string, left: string } = { width: '0px', height: '0px', left: '0px' };
+  public printAreas: PrintArea[] = [];
+  public canvasStyle: CanvasStyle = { width: '0px', height: '0px', left: '0px' };
   public product: Product;
 
   public middleWidth: number = 0;
@@ -88,6 +90,9 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     lockSkewingX: false,
     lockSkewingY: false
   };
+
+  public fonts: Font[] = [];
+  public selectedFont: Font | null = null;
 
   public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService, public renderImageService: RenderImageService) {
     // set default locale
@@ -131,66 +136,93 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public init() {
-    setTimeout(() => {
-      this.updateCanvasStyle();
-      this.calculatePrintAreas();
+    this.initFonts().then(() => {
+      setTimeout(() => {
+        this.updateCanvasStyle();
+        this.calculatePrintAreas();
 
-      this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
-        preserveObjectStacking: true,
-        selection: false
-      });
-
-      if (!this.canvas.element.state.payload) {
-        this.canvas.element.staticValues.text.boxes.forEach((box) => {
-          let textOptions = {
-            identifier: box.identifier,
-            fontSize: box.fontSize,
-            fill: box.fill,
-            textAlign: box.textAlign,
-            left: box.left,
-            top: box.top,
-            fontFamily: 'Montserrat',
-            originX: "center",
-            originY: "center",
-            payload: {
-              box: box
-            }
-          }
-
-          // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
-          let fabricText = new fabric.Text(box.default, {
-            ...textOptions,
-            ...this.getTextBoxControlOptions(box)
-          });
-
-          if (box.radius > 0) {
-            this.fabricCanvasService.updateTextElementForBending(fabricText, box.radius);
-          }
-
-          this.fabricCanvas.add(fabricText);
-          this.fabricTextBoxes.push(fabricText);
+        this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
+          preserveObjectStacking: true,
+          selection: false
         });
-        this.setCanvasSize();
-      } else {
-        this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
+
+        if (!this.canvas.element.state.payload) {
+          this.canvas.element.staticValues.text.boxes.forEach((box) => {
+            let textOptions = {
+              identifier: box.identifier,
+              fontSize: box.fontSize,
+              fill: box.fill,
+              textAlign: box.textAlign,
+              left: box.left,
+              top: box.top,
+              fontFamily: this.selectedFont ? this.selectedFont.family : 'Montserrat',
+              originX: "center",
+              originY: "center",
+              payload: {
+                box: box
+              }
+            }
+
+            // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
+            let fabricText = new fabric.Text(box.default, {
+              ...textOptions,
+              ...this.getTextBoxControlOptions(box)
+            });
+
+            if (box.radius > 0) {
+              this.fabricCanvasService.updateTextElementForBending(fabricText, box.radius);
+            }
+
+            this.fabricCanvas.add(fabricText);
+            this.fabricTextBoxes.push(fabricText);
+          });
           this.setCanvasSize();
+        } else {
+          this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
+            this.setCanvasSize();
 
-          this.fabricCanvas.getObjects().forEach((object) => {
-            if (object.get('type') === 'text') {
-              object.setOptions(this.getTextBoxControlOptions(object.payload.box));
-              this.fabricTextBoxes.push(object);
-            }
+            this.fabricCanvas.getObjects().forEach((object) => {
+              if (object.get('type') === 'text') {
+                object.setOptions(this.getTextBoxControlOptions(object.payload.box));
+                this.fabricTextBoxes.push(object);
+              }
 
-            if (object.get('type') === 'image') {
-              this.fabricMotive = object;
-              this.fabricMotive.setOptions(this.controlOptionsLocked);
-            }
+              if (object.get('type') === 'image') {
+                this.fabricMotive = object;
+                this.fabricMotive.setOptions(this.controlOptionsLocked);
+              }
+            });
           });
-        });
-      }
+        }
 
-      this.initialized = true;
+        this.initialized = true;
+      });
     });
+  }
+
+  initFonts() {
+    this.fonts = [];
+    this.selectedFont = null;
+    let promises = [(new FontFaceObserver('Montserrat')).load()];
+
+    for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
+      const font = this.canvas.element.staticValues.text.fonts[i];
+      if (font.isActive) {
+
+        this.fonts.push({
+          family: font.name,
+          url: this.mediaUrl + font.file,
+        });
+
+        if (font.isDefault) {
+          this.selectedFont = this.fonts[this.fonts.length - 1];
+        }
+
+        promises.push((new FontFaceObserver(font.name)).load());
+      }
+    }
+
+    return Promise.all(promises);
   }
 
   public setPrintArea(index) {
@@ -286,6 +318,18 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public updateTextColor(event, identifier) {
     this.updateTextPropery(identifier, 'fill', '#' + event.value.hex, { color: event.value });
+  }
+
+  public updateTextFont(event) {
+    this.selectedFont = event.value;
+    this.fabricCanvas.getObjects().forEach((object) => {
+      if (object.get('type') === 'text') {
+        object.setOptions({
+          fontFamily: this.selectedFont.family
+        });
+      }
+    });
+    this.fabricCanvas.renderAll();
   }
 
   private updateTextPropery(identifier, property, value, payload = {}) {
