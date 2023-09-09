@@ -101,7 +101,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             multiline: false,
             left: 0,
             top: 0,
-            radius: 0
+            radius: 0,
+            locked: true
         }
     }
 

@@ -60,7 +60,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public fabricTextBoxes: any[] = [];
   public fabricMotive: any = null;
-  public controlOptions = {
+  public controlOptionsLocked = {
     selectable: false,
     editable: false,
     hasControls: false,
@@ -72,6 +72,20 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     lockScalingY: true,
     lockSkewingX: true,
     lockSkewingY: true
+  };
+
+  public controlOptionsEditable = {
+    selectable: true,
+    editable: true,
+    hasControls: true,
+    lockMovementX: false,
+    lockMovementY: false,
+    lockRotation: false,
+    lockScalingFlip: false,
+    lockScalingX: false,
+    lockScalingY: false,
+    lockSkewingX: false,
+    lockSkewingY: false
   };
 
   public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService, public renderImageService: RenderImageService) {
@@ -136,13 +150,16 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
             top: box.top,
             fontFamily: 'Montserrat',
             originX: "center",
-            originY: "center"
+            originY: "center",
+            payload: {
+              box: box
+            }
           }
 
           // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
           let fabricText = new fabric.Text(box.default, {
             ...textOptions,
-            ...this.controlOptions
+            ...this.getTextBoxControlOptions(box)
           });
 
           if (box.radius > 0) {
@@ -159,13 +176,13 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.fabricCanvas.getObjects().forEach((object) => {
             if (object.get('type') === 'text') {
-              object.setOptions(this.controlOptions);
+              object.setOptions(this.getTextBoxControlOptions(object.payload.box));
               this.fabricTextBoxes.push(object);
             }
 
             if (object.get('type') === 'image') {
               this.fabricMotive = object;
-              this.fabricMotive.setOptions(this.controlOptions);
+              this.fabricMotive.setOptions(this.controlOptionsLocked);
             }
           });
         });
@@ -197,7 +214,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.fabricMotive = fabricImage;
       this.fabricMotive.setOptions({
         ...imageOptions,
-        ...this.controlOptions
+        ...this.controlOptionsLocked
       });
       this.fabricCanvas.add(this.fabricMotive);
     });
@@ -338,11 +355,11 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public save(): void {
-    let fabricCanvas = this.fabricCanvas.toJSON(['identifier']);
+    let fabricCanvas = this.fabricCanvas.toJSON(['identifier', 'payload']);
     fabricCanvas.objects = [];
 
     this.fabricCanvas.getObjects().forEach((object) => {
-      fabricCanvas.objects.push(object.toJSON(['identifier']));
+      fabricCanvas.objects.push(object.toJSON(['identifier', 'payload']));
     });
 
     const date: Date = new Date();
@@ -400,6 +417,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     });
+  }
+
+  private getTextBoxControlOptions(box) {
+    return box.locked ? this.controlOptionsLocked : this.controlOptionsEditable;
   }
 
   public ngOnDestroy() {
