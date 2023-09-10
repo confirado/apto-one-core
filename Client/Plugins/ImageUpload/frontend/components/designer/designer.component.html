@@ -1,13 +1,62 @@
+<!-- Font Preloader (may look sketchy, but seems to be the most reliable way to preload fonts) -->
+<div *ngFor="let font of fonts">
+    <ng-container *ngIf="font.url">
+        <svg style="display: none" width="0" height="0">
+            <style>
+                @font-face {
+                    font-family: '{{font.family}}';
+                    src: url('{{font.url}}');
+                }
+            </style>
+        </svg>
+        <div style="display: none">
+            <span style='font-family: "{{font.family}}"'></span>
+        </div>
+    </ng-container>
+</div>
+
 <ng-container *ngIf="canvas && renderImage">
     <div class="designer">
         <div class="left">
+            <ng-container *ngIf="canvas.element.staticValues.image.active">
+                <div class="image-upload-container">
+                    <div class="input-field image-upload-header">
+                        <div class="name">Bildupload:</div>
+                    </div>
+                    <mat-form-field class="image-upload-input">
+                        <ngx-mat-file-input [placeholder]="'Datei auswählen'" [formControl]="imageUploadControl" [multiple]="false" [accept]="getAcceptedFileTypes()" [color]="'primary'">
+                            <mat-icon ngxMatFileInputIcon>folder</mat-icon>
+                        </ngx-mat-file-input>
+                    </mat-form-field>
+
+                    <div class="image-upload-errors">
+                        <div class="image-upload-error" *ngFor="let error of imageUploadErrors">
+                            <p *ngIf="error.type === 'pattern'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.pattern'"></span> {{ getAcceptedFileTypes() }}
+                            </p>
+                            <p *ngIf="error.type === 'maxSize'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.prefix'"></span> {{ canvas.element.staticValues.image.maxFileSize }}MB <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.suffix'"></span>
+                            </p>
+                            <p *ngIf="error.type === 'minDimensions'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.prefix'"></span> {{ canvas.element.staticValues.image.minWidth }} x {{ canvas.element.staticValues.image.minHeight }} <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.suffix'"></span>
+                            </p>
+                            <p *ngIf="error.type === 'default'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.default'"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button *ngIf="fabricSelectedObject && fabricSelectedObject.payload.type === 'image'" class="image-upload-delete" color="warn" mat-flat-button (click)="removeSelectedObject()">{{ contentSnippet$ | async | contentSnippet: 'upload.deleteImage' }}</button>
+                </div>
+            </ng-container>
+
             <ng-container *ngIf="canvas.element.staticValues.motive.active && canvas.element.staticValues.motive.files.length > 0">
                 <div class="input-field">
                     <div class="name">Motive:</div>
                 </div>
                 <div class="motive-container">
                     <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive.files">
-                        <img [src]="mediaUrl + file.path" (click)="addImage(mediaUrl + file.path)" />
+                        <img [src]="mediaUrl + file.path" (click)="addMotive(mediaUrl + file.path)" />
                         <div class="motive-item-name">{{ file.name.replace('.' + file.extension, '') }}</div>
                     </div>
                 </div>
@@ -36,15 +85,31 @@
                     <div class="input-field">
                         <div class="name">{{ getTextBoxProperty(box.identifier, 'name') }}</div>
                         <div class="container">
-                            <input maxlength="17" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)">
+                            <input *ngIf="box.payload.box.colorPicker" class="color-picker-input" [ngxMatColorPicker]="picker" [value]="getColorFromHex(getObjectValue('text', box.identifier, 'fill'))" (colorChange)="updateTextColor($event, box.identifier)"  >
+                            <input class="text-input" [maxLength]="box.payload.box.maxlength ? box.payload.box.maxlength : 20" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)">
+                            <span  class="color-picker-select">
+                                <ngx-mat-color-toggle *ngIf="box.payload.box.colorPicker" matSuffix [for]="picker" ></ngx-mat-color-toggle>
+                                <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
+                            </span>
                         </div>
                     </div>
                 </ng-container>
+                <div class="input-field" *ngIf="fonts.length > 0">
+                    <div class="name">Schriftart:</div>
+                    <div class="container">
+                        <mat-select class="text-input" [value]="selectedFont" (selectionChange)="updateTextFont($event)">
+                            <mat-option *ngFor="let font of fonts" [value]="font">
+                                {{ font.family }}
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
             </ng-container>
         </div>
     </div>
 
     <!--
+    @todo we dont need an Area switch but we need a perspective switch here
     <div class="designer-areas">
         <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" value="{{ getPrintAreaId(canvas.element.staticValues.area[currentArea]) }}">
             <mat-button-toggle (click)="setPrintArea(index)" selected="selected" value="{{ getPrintAreaId(area) }}" *ngFor="let area of canvas.element.staticValues.area; let index=index;">{{ area.name ? area.name : area.perspective }}</mat-button-toggle>

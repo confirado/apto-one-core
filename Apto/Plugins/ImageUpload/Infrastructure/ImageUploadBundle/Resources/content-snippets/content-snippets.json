@@ -46,6 +46,9 @@
         },
         "save": {
           "de_DE": "Übernehmen"
+        },
+        "deleteImage": {
+          "de_DE": "Bild löschen"
         }
       },
       "text": {
