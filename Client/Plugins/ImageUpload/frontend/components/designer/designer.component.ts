@@ -203,6 +203,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedFont = null;
     let promises = [(new FontFaceObserver('Montserrat')).load()];
 
+    if (!this.canvas.element.staticValues.text.fonts) {
+      return Promise.all(promises);
+    }
+
     for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
       const font = this.canvas.element.staticValues.text.fonts[i];
       if (font.isActive) {
