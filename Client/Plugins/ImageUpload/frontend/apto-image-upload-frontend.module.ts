@@ -9,6 +9,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AngularResizeEventModule } from 'angular-resize-event';
 import { MAT_COLOR_FORMATS, NgxMatColorPickerModule, NGX_MAT_COLOR_FORMATS } from '@angular-material-components/color-picker';
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { featureKey, reducers } from '@apto-image-upload-frontend/store/feature';
@@ -44,6 +45,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 		AngularResizeEventModule,
 		NgOptimizedImage,
     NgxMatColorPickerModule,
+    NgxMatFileInputModule,
     MatSelectModule
 	],
   providers: [

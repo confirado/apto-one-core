@@ -133,6 +133,25 @@
 
         @include ripple-controls(var(--input-height));
     }
+
+    &.image-upload-header {
+        margin-bottom: 0;
+    }
+}
+
+.image-upload-container {
+    margin-bottom: 20px;
+}
+
+.image-upload-input {
+    margin-right: 40px;
+}
+
+.image-upload-delete {
+    color: white;
+    height: var(--button-mobile-height) !important;
+    padding: 0 16px !important;
+    border-radius: var(--border-radius) !important;
 }
 
 .color-picker-input {

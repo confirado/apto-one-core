@@ -18,13 +18,27 @@
 <ng-container *ngIf="canvas && renderImage">
     <div class="designer">
         <div class="left">
+            <ng-container *ngIf="canvas.element.staticValues.image.active">
+                <div class="image-upload-container">
+                    <div class="input-field image-upload-header">
+                        <div class="name">Bildupload:</div>
+                    </div>
+                    <mat-form-field class="image-upload-input">
+                        <ngx-mat-file-input [placeholder]="'Datei auswählen'" [formControl]="imageUploadControl" [multiple]="false" [accept]="getAcceptedFileTypes()" [color]="'primary'">
+                            <mat-icon ngxMatFileInputIcon>folder</mat-icon>
+                        </ngx-mat-file-input>
+                    </mat-form-field>
+                    <button *ngIf="fabricSelectedObject && fabricSelectedObject.payload.type === 'image'" class="image-upload-delete" color="warn" mat-flat-button (click)="removeSelectedObject()">{{ contentSnippet$ | async | contentSnippet: 'upload.deleteImage' }}</button>
+                </div>
+            </ng-container>
+
             <ng-container *ngIf="canvas.element.staticValues.motive.active && canvas.element.staticValues.motive.files.length > 0">
                 <div class="input-field">
                     <div class="name">Motive:</div>
                 </div>
                 <div class="motive-container">
                     <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive.files">
-                        <img [src]="mediaUrl + file.path" (click)="addImage(mediaUrl + file.path)" />
+                        <img [src]="mediaUrl + file.path" (click)="addMotive(mediaUrl + file.path)" />
                         <div class="motive-item-name">{{ file.name.replace('.' + file.extension, '') }}</div>
                     </div>
                 </div>
@@ -77,6 +91,7 @@
     </div>
 
     <!--
+    @todo we dont need an Area switch but we need a perspective switch here
     <div class="designer-areas">
         <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" value="{{ getPrintAreaId(canvas.element.staticValues.area[currentArea]) }}">
             <mat-button-toggle (click)="setPrintArea(index)" selected="selected" value="{{ getPrintAreaId(area) }}" *ngFor="let area of canvas.element.staticValues.area; let index=index;">{{ area.name ? area.name : area.perspective }}</mat-button-toggle>
