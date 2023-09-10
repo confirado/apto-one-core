@@ -12,8 +12,8 @@
     margin-bottom: 40px;
 
     .left {
-        width: 150px;
-        min-width: 150px;
+        width: 200px;
+        min-width: 200px;
     }
 
     .middle {
@@ -89,7 +89,7 @@
 }
 
 .motive-item {
-    max-width: 67px;
+    max-width: 75px;
     cursor: pointer;
 
     img {
@@ -144,7 +144,7 @@
 }
 
 .image-upload-input {
-    margin-right: 40px;
+    display: block;
 }
 
 .image-upload-delete {
@@ -152,6 +152,16 @@
     height: var(--button-mobile-height) !important;
     padding: 0 16px !important;
     border-radius: var(--border-radius) !important;
+}
+
+.image-upload-error {
+    text-align: center;
+    border: 1px dashed red;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 0.875rem;
+    font-size: 14px;
 }
 
 .color-picker-input {

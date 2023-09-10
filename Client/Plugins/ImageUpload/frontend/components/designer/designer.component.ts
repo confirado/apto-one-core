@@ -46,6 +46,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   public mediaUrl: string = environment.api.media;
   public renderImage: any = null;
   public imageUploadControl: FormControl;
+  public imageUploadErrors: Array<any> = [];
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.imageUpload'));
   public readonly cancelMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.cancelMessage'));
@@ -141,10 +142,14 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // subscribe for image upload
     this.imageUploadControl.valueChanges.subscribe((file) => {
+      this.imageUploadErrors = [];
       if (!this.imageUploadControl.errors) {
         this.addImageFromFile(file);
+      } else {
+        this.imageUploadErrors.push({
+          type: 'maxSize'
+        });
       }
-      // @todo show error on max size error
     })
   }
 
@@ -407,7 +412,9 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     // Get the dimensions
     getHeightAndWidthFromDataUrl(fileAsDataURL).then((dimensions) => {
       if (false === this.assertValidDimensions(dimensions)) {
-        // @todo show error on dimension validation error
+        this.imageUploadErrors.push({
+          type: 'minDimensions'
+        })
         return;
       }
 

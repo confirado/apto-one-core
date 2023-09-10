@@ -28,6 +28,24 @@
                             <mat-icon ngxMatFileInputIcon>folder</mat-icon>
                         </ngx-mat-file-input>
                     </mat-form-field>
+
+                    <div class="image-upload-errors">
+                        <div class="image-upload-error" *ngFor="let error of imageUploadErrors">
+                            <p *ngIf="error.type === 'pattern'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.pattern'"></span> {{ getAcceptedFileTypes() }}
+                            </p>
+                            <p *ngIf="error.type === 'maxSize'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.prefix'"></span> {{ canvas.element.staticValues.image.maxFileSize }}MB <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.suffix'"></span>
+                            </p>
+                            <p *ngIf="error.type === 'minDimensions'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.prefix'"></span> {{ canvas.element.staticValues.image.minWidth }} x {{ canvas.element.staticValues.image.minHeight }} <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.suffix'"></span>
+                            </p>
+                            <p *ngIf="error.type === 'default'">
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.default'"></span>
+                            </p>
+                        </div>
+                    </div>
+
                     <button *ngIf="fabricSelectedObject && fabricSelectedObject.payload.type === 'image'" class="image-upload-delete" color="warn" mat-flat-button (click)="removeSelectedObject()">{{ contentSnippet$ | async | contentSnippet: 'upload.deleteImage' }}</button>
                 </div>
             </ng-container>
