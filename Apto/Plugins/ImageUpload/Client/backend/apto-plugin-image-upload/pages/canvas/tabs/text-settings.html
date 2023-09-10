@@ -34,6 +34,11 @@
             Farbauswahl
         </md-checkbox>
     </md-input-container>
+    <div flex="5"></div>
+    <md-input-container class="md-block" flex>
+        <label>Maximale Textlänge (0 = unendlich):</label>
+        <input type="number" min="0" step="1" ng-model="newTextBox.maxlength">
+    </md-input-container>
 </div>
 
 <div layout="row" layout-align="start" flex>
