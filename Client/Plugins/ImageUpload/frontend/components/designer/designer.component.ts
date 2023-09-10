@@ -282,8 +282,63 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  public getPrintAreaId(area) {
-    return area.perspective + area.layer + area.width + area.height + area.left + area.top;
+  onResizedBackground(event: ResizedEvent) {
+    if (event.isFirst) {
+      return;
+    }
+    this.updateCanvasStyle();
+    this.calculatePrintAreas();
+    this.setCanvasSize();
+  }
+
+  onResizedMiddle(event: ResizedEvent) {
+    if (event.isFirst) {
+      return;
+    }
+    this.updateCanvasStyle();
+    this.calculatePrintAreas();
+    this.setCanvasSize();
+  }
+
+  calculatePrintAreas() {
+    if (!this.canvas) {
+      return;
+    }
+    this.printAreas = [];
+    let factor = this.canvasWidth / this.renderImage.width;
+
+    this.canvas.element.staticValues.area.forEach((area) => {
+      this.printAreas.push({
+        width: area.width * factor,
+        height: area.height * factor,
+        left: area.left * factor,
+        top: area.top * factor
+      });
+    });
+  }
+
+  setCanvasSize() {
+    if (!this.fabricCanvas || !this.canvas || this.canvasWidth < 1 || this.canvasHeight < 1) {
+      return;
+    }
+    let factor = this.canvasWidth / this.renderImage.width;
+    this.fabricCanvas.setWidth(this.canvasWidth);
+    this.fabricCanvas.setHeight(this.canvasHeight);
+    this.fabricCanvas.setZoom(factor);
+  }
+
+  updateCanvasStyle() {
+    if (!this.htmlRenderImage) {
+      return;
+    }
+    this.canvasWidth = this.htmlRenderImage.nativeElement.clientWidth;
+    this.canvasHeight = this.htmlRenderImage.nativeElement.clientHeight;
+    this.middleWidth = this.htmlMiddle.nativeElement.clientWidth;
+    this.canvasLeft = (this.middleWidth - this.canvasWidth) / 2;
+
+    this.canvasStyle.width = this.canvasWidth + 'px';
+    this.canvasStyle.height = this.canvasHeight + 'px';
+    this.canvasStyle.left = this.canvasLeft + 'px';
   }
 
   public addImage(url, options, layer = null, center = false) {
@@ -372,65 +427,6 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addImage(this.mediaUrl + directory + fileId + '.' + extension, options, 'front', true);
       });
     });
-  }
-
-  onResizedBackground(event: ResizedEvent) {
-    if (event.isFirst) {
-      return;
-    }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
-  }
-
-  onResizedMiddle(event: ResizedEvent) {
-    if (event.isFirst) {
-      return;
-    }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
-  }
-
-  calculatePrintAreas() {
-    if (!this.canvas) {
-      return;
-    }
-    this.printAreas = [];
-    let factor = this.canvasWidth / this.renderImage.width;
-
-    this.canvas.element.staticValues.area.forEach((area) => {
-      this.printAreas.push({
-        width: area.width * factor,
-        height: area.height * factor,
-        left: area.left * factor,
-        top: area.top * factor
-      });
-    });
-  }
-
-  setCanvasSize() {
-    if (!this.fabricCanvas || !this.canvas || this.canvasWidth < 1 || this.canvasHeight < 1) {
-      return;
-    }
-    let factor = this.canvasWidth / this.renderImage.width;
-    this.fabricCanvas.setWidth(this.canvasWidth);
-    this.fabricCanvas.setHeight(this.canvasHeight);
-    this.fabricCanvas.setZoom(factor);
-  }
-
-  updateCanvasStyle() {
-    if (!this.htmlRenderImage) {
-      return;
-    }
-    this.canvasWidth = this.htmlRenderImage.nativeElement.clientWidth;
-    this.canvasHeight = this.htmlRenderImage.nativeElement.clientHeight;
-    this.middleWidth = this.htmlMiddle.nativeElement.clientWidth;
-    this.canvasLeft = (this.middleWidth - this.canvasWidth) / 2;
-
-    this.canvasStyle.width = this.canvasWidth + 'px';
-    this.canvasStyle.height = this.canvasHeight + 'px';
-    this.canvasStyle.left = this.canvasLeft + 'px';
   }
 
   public selectionUpdated(event) {
@@ -638,6 +634,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     });
+  }
+
+  public getPrintAreaId(area) {
+    return area.perspective + area.layer + area.width + area.height + area.left + area.top;
   }
 
   private getTextBoxControlOptions(box) {
