@@ -12,8 +12,8 @@
     margin-bottom: 40px;
 
     .left {
-        width: 150px;
-        min-width: 150px;
+        width: 200px;
+        min-width: 200px;
     }
 
     .middle {
@@ -89,7 +89,7 @@
 }
 
 .motive-item {
-    max-width: 67px;
+    max-width: 75px;
     cursor: pointer;
 
     img {
@@ -126,12 +126,58 @@
         grid-area: container;
         @include container();
 
-        input {
+        .text-input {
             @include input();
+            line-height: 40px;
         }
 
         @include ripple-controls(var(--input-height));
     }
+
+    &.image-upload-header {
+        margin-bottom: 0;
+    }
+}
+
+.image-upload-container {
+    margin-bottom: 20px;
+}
+
+.image-upload-input {
+    display: block;
+}
+
+.image-upload-delete {
+    color: white;
+    height: var(--button-mobile-height) !important;
+    padding: 0 16px !important;
+    border-radius: var(--border-radius) !important;
+}
+
+.image-upload-error {
+    text-align: center;
+    border: 1px dashed red;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 0.875rem;
+    font-size: 14px;
+}
+
+.color-picker-input {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    visibility: hidden;
+    opacity: 0;
+    display: block;
+    height: 0;
+    outline: 0;
+    border: none;
+}
+
+.color-picker-select {
+    background: var(--color-accent);
 }
 
 @media only screen and (max-width: $mobile-max-width) {

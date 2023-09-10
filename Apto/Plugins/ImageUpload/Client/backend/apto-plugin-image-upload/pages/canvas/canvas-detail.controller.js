@@ -40,11 +40,10 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             $scope.fetchCanvas(canvasId).then(() => {
                 if (!$scope.detail.textSettings.boxes) {
                     $scope.detail.textSettings.boxes = [];
-                } else {
-                    $scope.detail.textSettings = {
-                        active: $scope.detail.textSettings.active,
-                        boxes: $scope.detail.textSettings.boxes
-                    }
+                }
+
+                if (!$scope.detail.textSettings.fonts) {
+                    $scope.detail.textSettings.fonts = [];
                 }
             });
         }
@@ -101,7 +100,10 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             multiline: false,
             left: 0,
             top: 0,
-            radius: 0
+            radius: 0,
+            locked: true,
+            colorPicker: true,
+            maxlength: 20
         }
     }
 
