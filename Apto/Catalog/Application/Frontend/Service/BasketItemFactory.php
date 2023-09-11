@@ -598,26 +598,6 @@ class BasketItemFactory
 
     /**
      * @param Configuration $configuration
-     * @return array
-     * @throws InvalidUuidException
-     */
-    protected function getRenderedImages(Configuration $configuration): array
-    {
-        $perspectives = $configuration->getRenderImages();
-        $productId = $configuration->getProduct()->getId()->getId();
-        $schemeAndHttpHost = $this->requestSessionStore->getSchemeAndHttpHost();
-
-        $renderedImages = [];
-        foreach ($perspectives as $perspective => $renderImages) {
-            $flattenImages = $this->getFlattenRenderImages($renderImages, $productId, $perspective);
-            $renderedImages[] = $schemeAndHttpHost . $this->imageRenderer->getImageByImageList($flattenImages, $perspective, $configuration->getState(), true, true, $productId);
-        }
-
-        return $renderedImages;
-    }
-
-    /**
-     * @param Configuration $configuration
      * @param array $perspectives
      * @param bool $returnUrl
      * @return array

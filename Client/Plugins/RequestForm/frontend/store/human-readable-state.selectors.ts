@@ -49,7 +49,7 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
 
       // collect element definition values from configurations readable state
       let values = {};
-      if (configurationHumanReadableState.hasOwnProperty(element.id)) {
+      if (configurationHumanReadableState && configurationHumanReadableState.hasOwnProperty(element.id)) {
         Object.keys(configurationHumanReadableState[element.id]).forEach((value) => {
           values[value] = translate(configurationHumanReadableState[element.id][value], locale);
         });

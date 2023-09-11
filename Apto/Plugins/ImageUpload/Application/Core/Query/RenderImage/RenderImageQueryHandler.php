@@ -5,7 +5,6 @@ namespace Apto\Plugins\ImageUpload\Application\Core\Query\RenderImage;
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Application\Core\Service\RequestStore;
 use Apto\Base\Domain\Core\Model\FileSystem\CacheFileSystemConnector;
-use Apto\Catalog\Application\Core\Query\Product\Element\ImageRenderer;
 use Apto\Catalog\Application\Core\Query\Product\Element\ProductElementFinder;
 use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
 use Apto\Catalog\Application\Core\Service\RenderImage\RenderImageRegistry;
