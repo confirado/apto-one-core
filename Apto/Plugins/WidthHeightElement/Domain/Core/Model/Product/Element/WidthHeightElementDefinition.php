@@ -5,11 +5,12 @@ namespace Apto\Plugins\WidthHeightElement\Domain\Core\Model\Product\Element;
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionDefaultValues;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementSingleTextValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 
-class WidthHeightElementDefinition implements ElementDefinition
+class WidthHeightElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues
 {
     const NAME = 'Höhe Breite Element';
     const BACKEND_COMPONENT = '<apto-width-height-element definition-validation="setDefinitionValidation(definitionValidation)"></apto-width-height-element>';
@@ -219,6 +220,17 @@ class WidthHeightElementDefinition implements ElementDefinition
             'defaultWidth' => $this->defaultWidth,
             'defaultHeight' => $this->defaultHeight,
             'renderDialogInOnePageDesktop' => $this->renderDialogInOnePageDesktop
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultValues(): array
+    {
+        return [
+            'width' => (float) $this->defaultWidth,
+            'height' => (float) $this->defaultHeight
         ];
     }
 

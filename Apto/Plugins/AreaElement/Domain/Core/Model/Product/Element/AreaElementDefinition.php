@@ -5,10 +5,11 @@ namespace Apto\Plugins\AreaElement\Domain\Core\Model\Product\Element;
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionDefaultValues;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 
-class AreaElementDefinition implements ElementDefinition
+class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues
 {
     const NAME = 'Flächen Element';
     const BACKEND_COMPONENT = '<apto-area-element definition-validation="setDefinitionValidation(definitionValidation)"></apto-area-element>';
@@ -137,6 +138,20 @@ class AreaElementDefinition implements ElementDefinition
             'sumOfFieldValueActive' => $this->sumOfFieldValues === null ? false : true,
             'priceMultiplication' => $this->priceMultiplication
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultValues(): array
+    {
+        $defaultValues= [];
+
+        foreach ($this->fields as $index => $field) {
+            $defaultValues['field_' . $index] = (float) $field['default'];
+        }
+
+        return $defaultValues;
     }
 
     /**
