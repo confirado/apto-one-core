@@ -4,7 +4,6 @@ namespace Apto\Catalog\Application\Core\Query\Configuration;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
-use Apto\Catalog\Application\Core\Query\Product\Element\ImageRenderer;
 use Apto\Catalog\Application\Core\Query\Product\Element\ProductElementFinder;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 
@@ -58,12 +57,6 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
     private $productElementFinder;
 
     /**
-     * @var ImageRenderer
-     */
-    private $imageRenderer;
-
-    /**
-     * ConfigurationQueryHandler constructor.
      * @param AptoJsonSerializer $aptoJsonSerializer
      * @param BasketConfigurationFinder $basketConfigurationFinder
      * @param CustomerConfigurationFinder $customerConfigurationFinder
@@ -73,9 +66,8 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
      * @param ImmutableConfigurationFinder $immutableConfigurationFinder
      * @param CodeConfigurationFinder $codeConfigurationFinder
      * @param ProductElementFinder $productElementFinder
-     * @param ImageRenderer $imageRenderer
      */
-    public function __construct(
+    public function __construct (
         AptoJsonSerializer $aptoJsonSerializer,
         BasketConfigurationFinder $basketConfigurationFinder,
         CustomerConfigurationFinder $customerConfigurationFinder,
@@ -84,8 +76,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         GuestConfigurationFinder $guestConfigurationFinder,
         ImmutableConfigurationFinder $immutableConfigurationFinder,
         CodeConfigurationFinder $codeConfigurationFinder,
-        ProductElementFinder $productElementFinder,
-        ImageRenderer $imageRenderer
+        ProductElementFinder $productElementFinder
     ) {
         $this->aptoJsonSerializer = $aptoJsonSerializer;
         $this->basketConfigurationFinder = $basketConfigurationFinder;
@@ -96,7 +87,6 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         $this->immutableConfigurationFinder = $immutableConfigurationFinder;
         $this->codeConfigurationFinder = $codeConfigurationFinder;
         $this->productElementFinder = $productElementFinder;
-        $this->imageRenderer = $imageRenderer;
     }
 
     /**
@@ -250,8 +240,6 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
 
             $state = new State($configuration['state']);
             $imageList = $this->productElementFinder->findRenderImagesByState($state, $perspective);
-
-            $configuration['previewImage'] = $this->imageRenderer->getImageByImageList($imageList, $perspective, $state, true, true, $query->getProductId());
         }
 
         return $result;

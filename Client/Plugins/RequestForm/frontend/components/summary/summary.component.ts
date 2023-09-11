@@ -90,6 +90,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
           type: 'REQUEST_FORM',
           formData: this.requestForm?.value,
           humanReadableState: this.humanReadableState,
+          productImage: this.renderImage.src
         },
       }),
     );

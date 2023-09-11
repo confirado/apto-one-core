@@ -767,7 +767,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
      * @return void
      * @throws InvalidUuidException
      */
-    protected function pushBasketItem(
+    protected function pushBasketItem (
         BasketConfiguration $basketConfiguration,
         ?ConnectorConfig $connectorConfig,
         Product $product,

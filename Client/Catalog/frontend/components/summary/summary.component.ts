@@ -54,7 +54,8 @@ export class SummaryComponent implements OnDestroy {
 		this.store.dispatch(
 			addToBasket({
 				payload: {
-					type: 'ADD_TO_BASKET'
+					type: 'ADD_TO_BASKET',
+          productImage: this.renderImage.src
 				},
 			})
 		);

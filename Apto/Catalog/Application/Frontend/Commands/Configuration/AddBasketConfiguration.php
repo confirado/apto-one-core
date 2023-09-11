@@ -25,7 +25,6 @@ class AddBasketConfiguration extends ConfigurationConnectorCommand
     protected $additionalData;
 
     /**
-     * AddBasketConfiguration constructor.
      * @param string $productId
      * @param array $state
      * @param array $sessionCookies
@@ -34,8 +33,7 @@ class AddBasketConfiguration extends ConfigurationConnectorCommand
      * @param array $perspectives
      * @param array $additionalData
      */
-    public function __construct
-    (
+    public function __construct (
         string $productId,
         array $state,
         array $sessionCookies,
@@ -43,8 +41,7 @@ class AddBasketConfiguration extends ConfigurationConnectorCommand
         int $quantity = null,
         array $perspectives = ['persp1'],
         array $additionalData = []
-    )
-    {
+    ) {
         parent::__construct($productId, $state, $sessionCookies);
         $this->locale = $locale;
         $this->quantity = $quantity === null ? 1 : $quantity;

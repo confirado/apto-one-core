@@ -20,7 +20,6 @@ use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Base\Domain\Core\Model\Language\Language;
 use Apto\Base\Domain\Core\Model\Language\LanguageRepository;
 
-use Apto\Catalog\Application\Core\Query\Product\Element\ImageRenderer;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\StatePriceCalculator;
 use Apto\Catalog\Application\Core\Service\ShopConnector\BasketConnector;
 use Apto\Catalog\Application\Core\Service\ShopConnector\BasketItem;
@@ -60,11 +59,6 @@ class BasketItemFactory
     protected $basketConnector;
 
     /**
-     * @var ImageRenderer
-     */
-    protected $imageRenderer;
-
-    /**
      * @var StatePriceCalculator
      */
     protected $statePriceCalculator;
@@ -89,7 +83,6 @@ class BasketItemFactory
      * @param ShopRepository $shopRepository
      * @param LanguageRepository $languageRepository
      * @param CustomerGroupRepository $customerGroupRepository
-     * @param ImageRenderer $imageRenderer
      * @param StatePriceCalculator $statePriceCalculator
      * @param BasketConnector $basketConnector
      * @param MediaFileSystemConnector $mediaFileSystem
@@ -101,7 +94,6 @@ class BasketItemFactory
         ShopRepository $shopRepository,
         LanguageRepository $languageRepository,
         CustomerGroupRepository $customerGroupRepository,
-        ImageRenderer $imageRenderer,
         StatePriceCalculator $statePriceCalculator,
         BasketConnector $basketConnector,
         MediaFileSystemConnector $mediaFileSystem,
@@ -112,7 +104,6 @@ class BasketItemFactory
         $this->shopRepository = $shopRepository;
         $this->languageRepository = $languageRepository;
         $this->customerGroupRepository = $customerGroupRepository;
-        $this->imageRenderer = $imageRenderer;
         $this->statePriceCalculator = $statePriceCalculator;
         $this->basketConnector = $basketConnector;
         $this->mediaFileSystem = $mediaFileSystem;
@@ -132,7 +123,7 @@ class BasketItemFactory
      * @return BasketItem
      * @throws InvalidUuidException
      */
-    public function makeBasketItem(
+    public function makeBasketItem (
         BasketConfiguration $basketConfiguration,
         $connectorConfig,
         Product $product,
@@ -214,7 +205,9 @@ class BasketItemFactory
         // get Images
         $images = [];
         if ($generateImages) {
-            $images = $this->getRenderedImagesByPerspective($basketConfiguration, $perspectives, true);
+            if (array_key_exists('productImages', $additionalData)) {
+                $images = $additionalData['productImages'];
+            }
 
             // use product preview image as fallback
             if (count($images) < 1 && $useProductPreviewImageAsFallback && $product->getPreviewImage() !== null) {
@@ -594,36 +587,6 @@ class BasketItemFactory
             $currencyFactor
         );
         return $prices['sum'];
-    }
-
-    /**
-     * @param Configuration $configuration
-     * @param array $perspectives
-     * @param bool $returnUrl
-     * @return array
-     * @throws InvalidUuidException
-     */
-    protected function getRenderedImagesByPerspective(Configuration $configuration, array $perspectives, $returnUrl = true): array
-    {
-        $renderedImages = [];
-        $schemeAndHttpHost = '';
-
-        if (true === $returnUrl) {
-            $schemeAndHttpHost = $this->requestSessionStore->getSchemeAndHttpHost();
-        }
-
-        foreach ($perspectives as $perspective) {
-            $renderImages = $configuration->getRenderImagesByPerspective($perspective);
-            $productId = $configuration->getProduct()->getId()->getId();
-
-            $flattenImages = $this->getFlattenRenderImages($renderImages, $productId, $perspective);
-
-            $imageURI = $this->imageRenderer->getImageByImageList($flattenImages, $perspective, $configuration->getState(), true, $returnUrl, $productId);
-            if ('' !== $imageURI) {
-                $renderedImages[] = $schemeAndHttpHost . $imageURI;
-            }
-        }
-        return $renderedImages;
     }
 
     /**

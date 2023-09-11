@@ -361,8 +361,12 @@ export class ConfigurationEffects {
 				if (!configurationState.productId) {
 					return EMPTY;
 				}
-				let additionalData: any = {};
-				if (payload.type === 'REQUEST_FORM') {
+
+				let additionalData: any = {
+          productImages: payload.productImage ? [payload.productImage] : []
+        };
+
+        if (payload.type === 'REQUEST_FORM') {
           let customerGroup = configurationState.connector?.customerGroup;
           if (currentUser) {
             customerGroup = {
@@ -401,7 +405,7 @@ export class ConfigurationEffects {
 					quantity: configurationState.quantity,
 					perspectives: configurationState.perspectives,
 					sessionCookies: configurationState.connector?.sessionCookies,
-					additionalData,
+					additionalData
 				});
 			}),
       switchMap(result => [
