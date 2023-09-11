@@ -245,7 +245,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         originY: "center",
         payload: {
           box: box,
-          type: 'box'
+          type: 'text'
         }
       }
 
@@ -271,7 +271,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
-        if (payload.type === 'box') {
+        if (payload.type === 'text') {
           object.setOptions(this.getTextBoxControlOptions(payload.box));
           this.fabricTextBoxes.push(object);
         }

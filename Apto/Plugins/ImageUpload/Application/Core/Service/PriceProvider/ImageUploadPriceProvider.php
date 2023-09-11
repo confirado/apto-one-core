@@ -68,9 +68,12 @@ class ImageUploadPriceProvider implements BasePriceProvider
         $useHighest = $staticValues['price']['useSurchargeAsReplacement'];
 
         // use surcharge?
-        if (array_key_exists('fabricItemsOnCanvas', $elementState) && is_array($elementState['fabricItemsOnCanvas']) && array_key_exists('text', $elementState['fabricItemsOnCanvas'])) {
-            $useTextPrice = $this->isTextPresent($elementState);
-            $useImagePrice = $this->isImagePresent($elementState);
+        if (array_key_exists('payload', $elementState) && array_key_exists('json', $elementState['payload'])) {
+            $fabricCanvas = json_decode($elementState['payload']['json'], true);
+            if (array_key_exists('objects', $fabricCanvas)) {
+                $useTextPrice = $this->isTextPresent($fabricCanvas['objects']);
+                $useImagePrice = $this->isImagePresent($fabricCanvas['objects']);
+            }
         }
 
         $prices = $staticValues['price']['surchargePrices'];
@@ -150,19 +153,37 @@ class ImageUploadPriceProvider implements BasePriceProvider
     }
 
     /**
-     * @param array $elementState
+     * @param array $fabricObjects
      * @return bool
      */
-    function isTextPresent(array $elementState) {
-        return sizeof($elementState['fabricItemsOnCanvas']['text']) > 0;
+    function isTextPresent(array $fabricObjects): bool {
+        foreach ($fabricObjects as $fabricObject) {
+            if (
+                array_key_exists('payload', $fabricObject) &&
+                array_key_exists('type', $fabricObject['payload']) &&
+                $fabricObject['payload']['type'] === 'text'
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * @param array $elementState
+     * @param array $fabricObjects
      * @return bool
      */
-    function isImagePresent(array $elementState) {
-        return (sizeof($elementState['fabricItemsOnCanvas']['image']) > 0 || sizeof($elementState['fabricItemsOnCanvas']['clipArt']) > 0);
+    function isImagePresent(array $fabricObjects): bool {
+        foreach ($fabricObjects as $fabricObject) {
+            if (
+                array_key_exists('payload', $fabricObject) &&
+                array_key_exists('type', $fabricObject['payload']) &&
+                ($fabricObject['payload']['type'] === 'image' || $fabricObject['payload']['type'] === 'motive')
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
