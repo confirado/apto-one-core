@@ -320,14 +320,36 @@
         </tr>
         </thead>
         <tbody md-body>
-        <tr md-row ng-repeat="renderImage in renderImages">
-            <td md-cell style="width:10%;">{{ renderImage.renderImageOptions.renderImageOptions.name }}</td>
+        <tr md-row ng-repeat="renderImage in renderImages | orderBy: 'layer'">
+            <td md-cell style="width:10%;">
+                {{ renderImage.renderImageOptions.renderImageOptions.name }}
+            </td>
             <td md-cell style="width:20%;"><apto-media-icon style="padding: 6px 0; display: block;" file="{path: renderImage.mediaFile[0].path + '/' + renderImage.mediaFile[0].filename + '.' + renderImage.mediaFile[0].extension, extension: renderImage.mediaFile[0].extension}" size="128x128"></apto-media-icon></td>
             <td md-cell style="width:20%;">{{ renderImage.mediaFile[0].path }}/{{ renderImage.mediaFile[0].filename }}.{{ renderImage.mediaFile[0].extension }}</td>
             <td md-cell style="width:10%;">{{ renderImage.perspective }}</td>
             <td md-cell style="width:10%;">{{ renderImage.layer }}</td>
-            <td md-cell style="width:5%">{{ renderImage.offsetX }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitX == 0 ? '%' : 'px' }}</td>
-            <td md-cell style="width:5%">{{ renderImage.offsetY }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitY == 0 ? '%' : 'px' }}</td>
+            <td md-cell style="width:5%">
+                <span ng-if="!renderImage.renderImageOptions || !renderImage.renderImageOptions.offsetOptions">
+                    Statisch: <br />{{ renderImage.offsetX }}%
+                </span>
+                <span ng-if="renderImage.renderImageOptions.offsetOptions.type === 'Statisch'">
+                    Statisch: <br />{{ renderImage.renderImageOptions.offsetOptions.offsetX }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitX == 0 ? '%' : 'px' }}
+                </span>
+                <span ng-if="renderImage.renderImageOptions.offsetOptions.type === 'Berechnend'">
+                    Berechnend: <br />{{ renderImage.renderImageOptions.offsetOptions.formulaOffsetX }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitX == 0 ? '%' : 'px' }}
+                </span>
+            </td>
+            <td md-cell style="width:5%">
+                <span ng-if="!renderImage.renderImageOptions || !renderImage.renderImageOptions.offsetOptions">
+                    Statisch: <br />{{ renderImage.offsetY }}%
+                </span>
+                <span ng-if="renderImage.renderImageOptions.offsetOptions.type === 'Statisch'">
+                    Statisch: <br />{{ renderImage.renderImageOptions.offsetOptions.offsetY }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitY == 0 ? '%' : 'px' }}
+                </span>
+                <span ng-if="renderImage.renderImageOptions.offsetOptions.type === 'Berechnend'">
+                    Berechnend: <br />{{ renderImage.renderImageOptions.offsetOptions.formulaOffsetY }} {{ renderImage.renderImageOptions.offsetOptions.offsetUnitY == 0 ? '%' : 'px' }}
+                </span>
+            </td>
             <td md-cell style="width:20%;">
                 <md-button
                         title="Editieren"
