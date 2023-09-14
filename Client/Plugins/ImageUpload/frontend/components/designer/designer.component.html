@@ -56,8 +56,8 @@
                 </div>
                 <div class="motive-container">
                     <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive.files">
-                        <img [src]="mediaUrl + file.path" (click)="addMotive(mediaUrl + file.path)" />
-                        <div class="motive-item-name">{{ file.name.replace('.' + file.extension, '') }}</div>
+                        <img [src]="mediaUrl + file.path" (click)="addMotive(file)" />
+                        <div class="motive-item-name">{{ getNameFromFileName(file.name) }}</div>
                     </div>
                 </div>
             </ng-container>
