@@ -94,6 +94,21 @@
         @include discount;
         @include sum-amount;
         @include mwst-info;
+
+        .basket-discount-price {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .discount {
+                h4 {
+                    text-decoration: line-through;
+                    text-decoration-thickness: 2px;
+                    color: #a9a9a9;
+                    font-weight: 400;
+                }
+            }
+        }
     }
 
     .add-basket {
