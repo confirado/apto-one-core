@@ -7,11 +7,11 @@ import {
   selectBasicPseudoPrice,
   selectConfiguration,
   selectProgressState,
-  selectSectionPrice,
+  selectSectionPrice, selectSectionPseudoPrice,
   selectSumPrice,
   selectSumPseudoPrice
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import {Section} from '@apto-catalog-frontend/store/product/product.model';
+import {Element, Section} from '@apto-catalog-frontend/store/product/product.model';
 import {setStep} from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -55,6 +55,10 @@ export class SummaryConfigurationComponent implements OnInit {
 
   public getSectionPrice(section: Section): Observable<string | null | undefined> {
     return this.store.select(selectSectionPrice(section));
+  }
+
+  public getSectionPseudoPrice(section: Section): Observable<string | null | undefined> {
+    return this.store.select(selectSectionPseudoPrice(section));
   }
 
   public openPopUp(isStepByStep: boolean) {

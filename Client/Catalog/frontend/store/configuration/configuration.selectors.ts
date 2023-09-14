@@ -232,6 +232,14 @@ export const selectSectionPrice = (section: Section): any =>
 		return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.price.formatted;
 	});
 
+export const selectSectionPseudoPrice = (section: Section): any =>
+  createSelector(featureSelector, (state: CatalogFeatureState) => {
+    if (state.configuration.statePrice === null) {
+      return null;
+    }
+    return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.pseudoPrice.formatted;
+  });
+
 export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
 
 export const selectElementValues = (element: Element): any =>

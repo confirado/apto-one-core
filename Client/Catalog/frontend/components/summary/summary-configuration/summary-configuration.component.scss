@@ -134,6 +134,12 @@ p {
 .basic-discount-price {
     text-decoration: line-through;
     text-decoration-thickness: 2px;
+    color: #a9a9a9;
+    font-weight: 400;
+}
+
+.discount-name {
+    color: #a9a9a9;
 }
 
 @media only screen and (max-width: calc($mobile-max-width - 1px)) {
