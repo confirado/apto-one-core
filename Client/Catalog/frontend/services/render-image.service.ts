@@ -49,6 +49,31 @@ export class RenderImageService implements OnDestroy {
     );
   }
 
+  public resize(img, width) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const height = Math.floor(width / (img.width / img.height));
+
+    canvas.width = width;
+    canvas.height = height;
+
+    return new Promise(resolve => {
+      var image = new Image();
+      image.onload = function() {
+        // draw source image into the off-screen canvas:
+        ctx.drawImage(image, 0, 0, width, height);
+
+        // encode image to data-uri with base64 version of compressed image
+        resolve({
+          src: canvas.toDataURL(),
+          height: height,
+          width: width
+        })
+      };
+      image.src = img.src;
+    });
+  }
+
   /**
    * This is the main function tha draws the image first on hidden canvas then converts to data-url image
    *

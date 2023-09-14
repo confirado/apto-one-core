@@ -84,16 +84,19 @@ export class SummaryComponent implements OnInit, OnDestroy {
 
     this.requestState.sending = true;
     this.scroller.scrollToAnchor('summary-request-form');
-    this.store.dispatch(
-      addToBasket({
-        payload: {
-          type: 'REQUEST_FORM',
-          formData: this.requestForm?.value,
-          humanReadableState: this.humanReadableState,
-          productImage: this.renderImage.src
-        },
-      }),
-    );
+    // @todo make product image size configurable
+    this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+      this.store.dispatch(
+        addToBasket({
+          payload: {
+            type: 'REQUEST_FORM',
+            formData: this.requestForm?.value,
+            humanReadableState: this.humanReadableState,
+            productImage: image.src
+          },
+        }),
+      );
+    });
   }
 
   public onRequestFormChanged(requestForm: FormGroup): void {
