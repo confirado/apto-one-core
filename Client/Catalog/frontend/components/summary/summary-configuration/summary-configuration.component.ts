@@ -61,7 +61,7 @@ export class SummaryConfigurationComponent implements OnInit {
     return this.store.select(selectSectionPseudoPrice(section));
   }
 
-  public openPopUp(isStepByStep: boolean) {
+  public openPopUp(isStepByStep: boolean, callback: () => void) {
     let dialogMessage = '';
     let dialogTitle = '';
     let dialogButtonCancel = '';
@@ -70,6 +70,7 @@ export class SummaryConfigurationComponent implements OnInit {
     this.popUp$.subscribe((next) => {
       if (next === null || isStepByStep === false) {
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+        callback();
         return;
       }
       next.children.forEach((value) => {
@@ -86,9 +87,19 @@ export class SummaryConfigurationComponent implements OnInit {
           dialogButtonAccept = translate(value.content, this.locale);
         }
       })
-      this.dialogService.openWarningDialog(DialogSizesEnum.md, dialogTitle, dialogMessage, dialogButtonCancel, dialogButtonAccept).afterClosed().subscribe((next) => {
+      this.dialogService
+        .openWarningDialog(
+          DialogSizesEnum.md,
+          dialogTitle,
+          dialogMessage,
+          dialogButtonCancel,
+          dialogButtonAccept
+        )
+        .afterClosed()
+        .subscribe((next) => {
         if (next === true) {
           this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+          callback();
         }
       })
     })
@@ -97,15 +108,16 @@ export class SummaryConfigurationComponent implements OnInit {
   public setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
       if (isStepByStep) {
-        this.store.dispatch(
-          setStep({
-            payload: {
-              id: section.id,
-            },
-          })
-        );
+        this.openPopUp(isStepByStep, () => {
+          this.store.dispatch(
+            setStep({
+              payload: {
+                id: section.id,
+             },
+           })
+          );
+        });
       }
-      this.openPopUp(isStepByStep);
     }
   }
 }
