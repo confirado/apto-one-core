@@ -1843,12 +1843,28 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                 'elements' => $elementPercentageSurchargeQuery->getScalarResult()
             ],
             'discounts' => [
-                'products' => $productDiscountQuery->getScalarResult(),
-                'sections' => $sectionDiscountQuery->getScalarResult(),
-                'elements' => $elementDiscountQuery->getScalarResult()
+                'products' => $this->decodeJsonProperty($productDiscountQuery->getScalarResult(), 'name'),
+                'sections' => $this->decodeJsonProperty($sectionDiscountQuery->getScalarResult(), 'name'),
+                'elements' => $this->decodeJsonProperty($elementDiscountQuery->getScalarResult(), 'name')
             ],
             'definitions' => $elementDefinitionsQuery->getScalarResult()
         ];
+    }
+
+    /**
+     * @param array $list
+     * @param string $property
+     * @return array
+     */
+    private function decodeJsonProperty(array $list, string $property): array
+    {
+        foreach ($list as &$item) {
+            if (!array_key_exists($property, $item)) {
+                continue;
+            }
+            $item[$property] = DqlQueryBuilder::decodeJson($item[$property]);
+        }
+        return $list;
     }
 
     /**

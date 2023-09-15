@@ -149,6 +149,15 @@
     },
     "headline": {
       "de_DE": "Zusammenfassung Ihrer Konfiguration"
+    },
+    "basicPrice": {
+      "de_DE": "Grundpreis"
+    },
+    "notSelected": {
+      "de_DE": "Nicht gewählt"
+    },
+    "subline": {
+      "de_DE": "Klicken Sie auf die Sektion, wenn Sie Änderungen vornehmen möchten"
     }
   },
   "confirmSelectSectionDialog": {

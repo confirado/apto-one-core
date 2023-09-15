@@ -4,12 +4,13 @@
 
         <div class="step-by-step-summary">
 			<div class="select-basket">
-				<div *ngIf="discount && discount > 0" class="discount">
-					<h4>{{ sumPseudoPrice }}</h4>
-				</div>
-				<h3 class="sum-amount">{{ sumPrice }}</h3>
-				<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
-                    <span>
+                <div class="basket-discount-price">
+                    <div *ngIf="discount && discount > 0" class="discount">
+                        <h4>{{ sumPseudoPrice }}</h4>
+                    </div>
+                    <h3 class="sum-amount">{{ sumPrice }}</h3>
+                    <span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+                        <span>
                         <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
                             {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
                         </a>
@@ -18,6 +19,7 @@
                         <p *ngIf="!(sidebarSummary$ | async | contentSnippet: 'shippingCostsLink')">{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</p>
                     </span>
                 </span>
+                </div>
 			</div>
 			<div class="add-basket">
                 <apto-quantity-input-editable
