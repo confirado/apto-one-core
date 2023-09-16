@@ -153,3 +153,9 @@ export enum ElementZoomFunctionEnum {
   IMAGE_PREVIEW = 'image_preview',
   GALLERY = 'gallery'
 }
+
+export interface RuleRepairSettings {
+  maxTries: number;
+  operators: number[];
+  selectEmptySections: boolean;
+}
