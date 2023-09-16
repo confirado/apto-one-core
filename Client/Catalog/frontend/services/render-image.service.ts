@@ -24,7 +24,6 @@ export class RenderImageService implements OnDestroy {
 
   public readonly renderImages$ = this.store.select(selectCurrentRenderImages);
 
-  private resizeSubject = new Subject();
   public outputSrcSubject = new Subject();
 
   constructor(private store: Store) {
@@ -49,7 +48,7 @@ export class RenderImageService implements OnDestroy {
     );
   }
 
-  public resize(img, width) {
+  public resize(img: any, width: number) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const height = Math.floor(width / (img.width / img.height));
