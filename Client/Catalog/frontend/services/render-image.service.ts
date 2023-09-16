@@ -1,5 +1,5 @@
-import { HostListener, Injectable, OnDestroy } from '@angular/core';
-import { Subject, Subscription, debounceTime } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
@@ -35,15 +35,15 @@ export class RenderImageService implements OnDestroy {
     this.ngOnDestroy();
     this.subscriptions.push(
       // data for renderImage$ is sent from multiple directions, so to call all this stuff only once we put a debounce time here
-      this.renderImages$.pipe(
-        debounceTime(100)
-      ).subscribe((data) => {
+      this.renderImages$.subscribe((data) => {
         this.renderImages = data;
 
         if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
           this.canvas = document.createElement('canvas');
           this.ctx = this.canvas.getContext('2d');
           this.drawImages();
+        } else {
+          this.outputSrcSubject.next(null);
         }
       })
     );
