@@ -4,6 +4,16 @@
     <md-tab label="Beschriftung">
         <div class="apto-tab-content">
 
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex  style="flex: 0 0 33.33%;">
+                    <label>Ausgabe als:</label>
+                    <md-select required ng-model="$ctrl.values.renderingType">
+                        <md-option ng-value="rendering.id" ng-repeat="rendering in $ctrl.renderings">{{ rendering.label }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
+            </div>
+
             <!-- Default value -->
             <div layout="row" layout-align="start" flex>
                 <md-input-container flex>

@@ -66,6 +66,11 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
     protected $elementValueRefs;
 
     /**
+     * @var string
+     */
+    protected $renderingType;
+
+    /**
      * FloatInputElementDefinition constructor.
      * @param AptoTranslatedValue $prefix
      * @param AptoTranslatedValue $suffix
@@ -76,7 +81,7 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
      * @param string $conversionFactor
      * @param AptoTranslatedValue $livePricePrefix
      * @param AptoTranslatedValue $livePriceSuffix
-     * @param array $elementValueRefs
+     * @param string $renderingType
      */
     public function __construct(
         AptoTranslatedValue $prefix,
@@ -88,7 +93,8 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
         string $conversionFactor,
         AptoTranslatedValue $livePricePrefix,
         AptoTranslatedValue $livePriceSuffix,
-        array $elementValueRefs
+        array $elementValueRefs,
+        string $renderingType,
     ) {
         $this->prefix = $prefix;
         $this->suffix = $suffix;
@@ -100,6 +106,7 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
         $this->livePricePrefix = $livePricePrefix;
         $this->livePriceSuffix = $livePriceSuffix;
         $this->elementValueRefs = $elementValueRefs;
+        $this->renderingType = $renderingType;
     }
 
     /**
@@ -145,7 +152,8 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             'conversionFactor' => $this->conversionFactor,
             'livePricePrefix' => $this->livePricePrefix,
             'livePriceSuffix' => $this->livePriceSuffix,
-            'elementValueRefs' => $this->elementValueRefs
+            'elementValueRefs' => $this->elementValueRefs,
+            'renderingType' => $this->renderingType ? $this->renderingType : 'input',
         ];
     }
 
@@ -220,7 +228,8 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
                 'conversionFactor' => $this->conversionFactor,
                 'livePricePrefix' => $this->livePricePrefix->jsonSerialize(),
                 'livePriceSuffix' => $this->livePriceSuffix->jsonSerialize(),
-                'elementValueRefs' => $this->elementValueRefs
+                'elementValueRefs' => $this->elementValueRefs,
+                'renderingType' => $this->renderingType,
             ]
         ];
     }
@@ -284,6 +293,10 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             $json['json']['elementValueRefs'] = [];
         }
 
+        if (!isset($json['json']['renderingType'])) {
+            $json['json']['renderingType'] = 'input';
+        }
+
         return new self(
             $json['json']['prefix'],
             $json['json']['suffix'],
@@ -294,7 +307,8 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             $json['json']['conversionFactor'],
             $json['json']['livePricePrefix'],
             $json['json']['livePriceSuffix'],
-            $json['json']['elementValueRefs']
+            $json['json']['elementValueRefs'],
+            $json['json']['renderingType'],
         );
     }
 }

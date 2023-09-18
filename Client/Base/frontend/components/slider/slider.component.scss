@@ -1,0 +1,49 @@
+@import "globals";
+@import "form-inputs";
+
+.slider-field {
+    .container {
+        .label-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+
+            .flex-container {
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: center;
+
+                .label {
+                    @include prefix();
+                    padding: 0;
+                    white-space: nowrap;
+                    align-self: flex-end;
+
+                    &:not(:empty) {
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+
+        mat-slider {
+            @include input();
+        }
+
+        ::ng-deep .mat-slider {
+            .mat-slider-wrapper {
+                left: 0;
+                right: 0;
+
+                .mat-slider-track-fill {
+                    background-color: var(--color-primary);
+                }
+            }
+        }
+    }
+
+    .hint {
+        @include hint();
+        text-align: center;
+    }
+}

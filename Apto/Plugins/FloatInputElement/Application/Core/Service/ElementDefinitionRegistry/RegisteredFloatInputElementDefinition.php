@@ -98,6 +98,10 @@ class RegisteredFloatInputElementDefinition implements RegisteredElementDefiniti
             $definitionValues['elementValueRefs'] = [];
         }
 
+        if (!isset($definitionValues['renderingType'])) {
+            $definitionValues['renderingType'] = 'input';
+        }
+
         return new FloatInputElementDefinition(
             $definitionValues['prefix'],
             $definitionValues['suffix'],
@@ -108,7 +112,8 @@ class RegisteredFloatInputElementDefinition implements RegisteredElementDefiniti
             $definitionValues['conversionFactor'],
             $definitionValues['livePricePrefix'],
             $definitionValues['livePriceSuffix'],
-            $definitionValues['elementValueRefs']
+            $definitionValues['elementValueRefs'],
+            $definitionValues['renderingType'],
         );
     }
 }

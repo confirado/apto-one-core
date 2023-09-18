@@ -1,0 +1,23 @@
+<div class="slider-field">
+    <div class="container">
+        <div class="label-container" *ngIf="showLabel">
+            <div class="flex-container">
+                <div class="label">{{ visibleValue || value }}</div>
+            </div>
+        </div>
+
+        <mat-slider *ngIf="value"
+            class="example-margin"
+            [disabled]="disabled"
+            [min]="min"
+            [max]="max"
+            [step]="step"
+            [color]="color"
+            (input)="onSliderMove($event)"
+            (change)="onSliderChange($event)"
+            [(ngModel)]="value"
+            (ngModelChange)="onInputChange($event)"
+        ></mat-slider>
+    </div>
+    <div class="hint" *ngIf="hint">{{ hint }}</div>
+</div>

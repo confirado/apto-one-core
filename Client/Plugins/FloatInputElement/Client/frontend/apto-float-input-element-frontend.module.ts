@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSliderModule } from '@angular/material/slider';
 import { RouterModule } from '@angular/router';
 
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
@@ -26,6 +27,7 @@ import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-f
 	FormsModule,
 	MatDialogModule,
 	MatButtonModule,
+  MatSliderModule,
 	AptoCatalogFrontendModule,
   ],
 	providers: [],
