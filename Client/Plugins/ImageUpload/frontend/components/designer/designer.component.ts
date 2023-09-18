@@ -39,7 +39,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
   private locale: string;
-  private initialized: boolean = false;
+  private initStarted: boolean = false;
   private subscriptions: Subscription[] = [];
 
   public canvas: CanvasState | null = null;
@@ -158,15 +158,13 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.renderImageService.outputSrcSubject.subscribe((next) => {
         this.renderImage = next;
-        if (null !== next && this.initialized === false) {
+
+        if (null !== next && this.initStarted === false) {
+          this.initStarted = true;
           this.init();
         }
       })
     );
-
-    if (this.renderImage && this.initialized === false) {
-      this.init();
-    }
   }
 
   public init() {
@@ -188,10 +186,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (!this.canvas.element.state.payload) {
           this.initTextBoxes();
-          this.initialized = true;
         } else {
           this.initState(() => {
-            this.initialized = true;
           });
         }
       });
@@ -471,6 +467,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public updateText(event, identifier) {
     this.updateTextPropery(identifier, 'text', event.target.value);
+  }
+
+  public removeDefaultText(box) {
+    if (box.get('text') === box.payload.box.default) {
+      this.updateTextPropery(box.payload.box.identifier, 'text', '');
+    }
   }
 
   public updateTextColor(event, identifier) {
