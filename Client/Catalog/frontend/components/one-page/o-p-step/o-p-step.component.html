@@ -9,13 +9,16 @@
             </div>
         </mat-expansion-panel-header>
         <div class="one-page-elements">
-            <ng-container *ngFor="let element of elements">
-                <apto-slot-outlet
-                    [identifier]="element.element.definition.staticValues.aptoElementDefinitionId"
-                    [section]="section.section"
-                    [product]="product"
-                    [element]="element"
-                ></apto-slot-outlet>
+            <ng-container class="element" *ngFor="let element of sectionProductElements">
+                <ng-container *ngIf="getProgressElement(element.id) as pElement">
+                    <apto-slot-outlet
+                        *ngIf="!isElementDisabled(element.id)"
+                        [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
+                        [product]="product"
+                        [section]="section.section"
+                        [element]="pElement"
+                    ></apto-slot-outlet>
+                </ng-container>
             </ng-container>
         </div>
     </mat-expansion-panel>

@@ -13,7 +13,7 @@ import {
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { distinctUntilChanged, filter, map } from 'rxjs';
-import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
+import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
 
 @Component({
 	selector: 'apto-sbs-elements',
@@ -45,11 +45,7 @@ export class SbsElementsComponent implements OnInit{
     });
 		this.progressState$.subscribe((next: ProgressState) => {
 			this.progressState = next;
-		})
-  }
-
-  public debug() {
-    console.error('debug');
+		});
   }
 
   public isElementDisabled(elementId: string) {
