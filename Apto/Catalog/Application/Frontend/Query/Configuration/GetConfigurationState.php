@@ -9,12 +9,12 @@ class GetConfigurationState implements PublicQueryInterface
     /**
      * @var string
      */
-    private $productId;
+    private string $productId;
 
     /**
      * @var array
      */
-    private $state;
+    private array $state;
 
     /**
      * @var array e.g. [
@@ -42,18 +42,30 @@ class GetConfigurationState implements PublicQueryInterface
      *   ]
      * ]
      */
-    private $intention;
+    private ?array $intention;
+
+    /**
+     * @var array|null
+     */
+    private ?array $connector;
+
+    /**
+     * @var array|null
+     */
+    private ?array $user;
 
     /**
      * @param string $productId
      * @param array $state
      * @param array|null $intention
      */
-    public function __construct(string $productId, array $state, ?array $intention = null)
+    public function __construct(string $productId, array $state, ?array $intention = null, ?array $connector = null, ?array $user = null)
     {
         $this->productId = $productId;
         $this->state = $state;
         $this->intention = $intention ?: [];
+        $this->connector = $connector;
+        $this->user = $user;
     }
 
     /**
@@ -80,4 +92,19 @@ class GetConfigurationState implements PublicQueryInterface
         return $this->intention;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getConnector(): ?array
+    {
+        return $this->connector;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getUser(): ?array
+    {
+        return $this->user;
+    }
 }

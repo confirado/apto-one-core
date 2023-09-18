@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration } from './configuration.model';
+import { ComputedValues, Configuration } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -37,7 +37,10 @@ import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-
 
 interface GetConfigurationResult {
   state: Configuration,
-  renderImages: []
+  renderImages: [],
+  perspectives: [],
+  computedValues: ComputedValues,
+  statePrice: []
 }
 
 @Injectable()
@@ -154,6 +157,69 @@ export class ConfigurationEffects {
 		)
 	);
 
+  // public getConfigurationState$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(getConfigurationState),
+  //     withLatestFrom(
+  //       this.store$.select(selectRuleRepairSettings),
+  //     ),
+  //     switchMap(([action, ruleRepairSettings]) => {
+  //       let payload = {
+  //         ...action.payload,
+  //         updates: {
+  //           ...action.payload.updates
+  //         }
+  //       }
+  //
+  //       if (null !== ruleRepairSettings) {
+  //         payload.updates.repair = ruleRepairSettings;
+  //       }
+  //
+  //       return this.configurationRepository.getConfigurationState(payload, action.payload.connector, action.payload.currentUser).pipe(
+  //         filter((result): result is GetConfigurationResult => result !== null),
+  //         map((result) => ({
+  //           connector: action.payload.connector,
+  //           productId: action.payload.productId,
+  //           configuration: result.state,
+  //           renderImages: result.renderImages,
+  //           currentPerspective: action.payload.currentPerspective,
+  //           currentUser: action.payload.currentUser,
+  //         })),
+  //       );
+  //     }),
+  //     switchMap((result) =>
+  //       forkJoin([
+  //         this.configurationRepository.getComputedValues(result.productId, result.configuration.compressedState),
+  //         this.configurationRepository.getPerspectives(result.productId, result.configuration.compressedState),
+  //         this.configurationRepository.getStatePrice(result.productId, result.configuration.compressedState, result.connector, result.currentUser),
+  //       ]).pipe(
+  //         map((joinResult) => ({
+  //           productId: result.productId,
+  //           configuration: result.configuration,
+  //           renderImages: result.renderImages,
+  //           computedValues: joinResult[0],
+  //           perspectives: joinResult[1],
+  //           currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
+  //           statePrice: joinResult[2],
+  //         }))
+  //       )
+  //     ),
+  //     map((state) =>
+  //       getConfigurationStateSuccess({
+  //         payload: {
+  //           productId: state.productId,
+  //           configuration: state.configuration,
+  //           renderImages: state.renderImages,
+  //           computedValues: state.computedValues,
+  //           perspectives: state.perspectives,
+  //           currentPerspective: state.currentPerspective,
+  //           statePrice: state.statePrice,
+  //         },
+  //       })
+  //     )
+  //   )
+  // );
+
   public getConfigurationState$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getConfigurationState),
@@ -172,7 +238,7 @@ export class ConfigurationEffects {
           payload.updates.repair = ruleRepairSettings;
         }
 
-        return this.configurationRepository.getConfigurationState(payload).pipe(
+        return this.configurationRepository.getConfigurationStateNew(payload, action.payload.connector, action.payload.currentUser).pipe(
           filter((result): result is GetConfigurationResult => result !== null),
           map((result) => ({
             connector: action.payload.connector,
@@ -181,26 +247,12 @@ export class ConfigurationEffects {
             renderImages: result.renderImages,
             currentPerspective: action.payload.currentPerspective,
             currentUser: action.payload.currentUser,
+            computedValues: result.computedValues,
+            perspectives: result.perspectives,
+            statePrice: result.statePrice
           })),
         );
       }),
-      switchMap((result) =>
-        forkJoin([
-          this.configurationRepository.getComputedValues(result.productId, result.configuration.compressedState),
-          this.configurationRepository.getPerspectives(result.productId, result.configuration.compressedState),
-          this.configurationRepository.getStatePrice(result.productId, result.configuration.compressedState, result.connector, result.currentUser),
-        ]).pipe(
-          map((joinResult) => ({
-            productId: result.productId,
-            configuration: result.configuration,
-            renderImages: result.renderImages,
-            computedValues: joinResult[0],
-            perspectives: joinResult[1],
-            currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
-            statePrice: joinResult[2],
-          }))
-        )
-      ),
       map((state) =>
         getConfigurationStateSuccess({
           payload: {
@@ -273,36 +325,15 @@ export class ConfigurationEffects {
 		{ dispatch: false }
 	);
 
-	public onError$ = createEffect(
-		() =>
-			this.actions$.pipe(
-				ofType(onError),
-				withLatestFrom(this.store$.select(selectProduct), this.store$.select(selectLocale).pipe(map((l) => l || 'de-DE'))),
-				map(([{ message }, product, locale]) => {
-					const sectionName = product.sections.find((e) => e.id === message.errorPayload.section)?.name?.[locale];
-
-					const element: Element<any> | undefined = product.elements.find((e) => e.id === message.errorPayload.element);
-					const elementName = element?.name?.[locale];
-
-					this.matSnackBar.open(
-						`Der Wert ${message.errorPayload.value} ist für das Feld ${message.errorPayload.property} im Element ${elementName} der Sektion ${sectionName} nicht zulässig.`,
-						undefined,
-						{ duration: 3000 }
-					);
-				})
-			),
-		{ dispatch: false }
-	);
-
-	public getHumanReadableState$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(initConfigurationSuccess, getConfigurationStateSuccess),
-			switchMap((result) =>
-				this.catalogMessageBusService.findHumanReadableState(result.payload.productId, result.payload.configuration.compressedState)
-			),
-			map((payload) => humanReadableStateLoadSuccess({ payload }))
-		)
-	);
+	// public getHumanReadableState$ = createEffect(() =>
+	// 	this.actions$.pipe(
+	// 		ofType(initConfigurationSuccess, getConfigurationStateSuccess),
+	// 		switchMap((result) =>
+	// 			this.catalogMessageBusService.findHumanReadableState(result.payload.productId, result.payload.configuration.compressedState)
+	// 		),
+	// 		map((payload) => humanReadableStateLoadSuccess({ payload }))
+	// 	)
+	// );
 
 	public getRenderImages$ = createEffect(() =>
 		this.actions$.pipe(
@@ -318,50 +349,6 @@ export class ConfigurationEffects {
 					)
 			),
 			map((state) => getRenderImagesSuccess({ payload: state }))
-		)
-	);
-
-	public setPrevStep$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(setPrevStep),
-			map(() => setPrevStepSuccess())
-		)
-	);
-
-	public setStep$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(setStep),
-			map(() => setStepSuccess())
-		)
-	);
-
-	public resetSteps$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(setStepSuccess, setPrevStepSuccess),
-			withLatestFrom(this.store$.select(selectConfiguration), this.store$.select(selectProgressState)),
-			map(([action, configuration, progressState]) => {
-				const removeList: { sectionId: string; elementId: string; property: string; value: string }[] = [];
-				for (const section of configuration.state.sections) {
-					if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id)) {
-						configuration.state.elements
-							.filter((element) => element.sectionId === section.id && element.active)
-							.forEach((e) =>
-								removeList.push({
-									sectionId: section.id,
-									elementId: e.id,
-									property: '',
-									value: '',
-								})
-							);
-					}
-				}
-
-				return updateConfigurationState({
-					updates: {
-						remove: removeList,
-					},
-				});
-			})
 		)
 	);
 
@@ -429,6 +416,71 @@ export class ConfigurationEffects {
       ])
 		)
 	);
+
+  public onError$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(onError),
+        withLatestFrom(this.store$.select(selectProduct), this.store$.select(selectLocale).pipe(map((l) => l || 'de-DE'))),
+        map(([{ message }, product, locale]) => {
+          const sectionName = product.sections.find((e) => e.id === message.errorPayload.section)?.name?.[locale];
+
+          const element: Element<any> | undefined = product.elements.find((e) => e.id === message.errorPayload.element);
+          const elementName = element?.name?.[locale];
+
+          this.matSnackBar.open(
+            `Der Wert ${message.errorPayload.value} ist für das Feld ${message.errorPayload.property} im Element ${elementName} der Sektion ${sectionName} nicht zulässig.`,
+            undefined,
+            { duration: 3000 }
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  public setPrevStep$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setPrevStep),
+      map(() => setPrevStepSuccess())
+    )
+  );
+
+  public setStep$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setStep),
+      map(() => setStepSuccess())
+    )
+  );
+
+  public resetSteps$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setStepSuccess, setPrevStepSuccess),
+      withLatestFrom(this.store$.select(selectConfiguration), this.store$.select(selectProgressState)),
+      map(([action, configuration, progressState]) => {
+        const removeList: { sectionId: string; elementId: string; property: string; value: string }[] = [];
+        for (const section of configuration.state.sections) {
+          if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id)) {
+            configuration.state.elements
+              .filter((element) => element.sectionId === section.id && element.active)
+              .forEach((e) =>
+                removeList.push({
+                  sectionId: section.id,
+                  elementId: e.id,
+                  property: '',
+                  value: '',
+                })
+              );
+          }
+        }
+
+        return updateConfigurationState({
+          updates: {
+            remove: removeList,
+          },
+        });
+      })
+    )
+  );
 
 	public getCurrentPerspective(perspectives: string[], currentPerspective: string | null): string | null {
 		if (perspectives.length === 0) {

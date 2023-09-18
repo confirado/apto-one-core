@@ -45,6 +45,14 @@ export class ConfigurationRepository {
 			.pipe(map((response) => this.responseToConfigurationState(response)));
 	}
 
+  public getConfigurationStateNew(params: any, connector: any, user: any): Observable<{state: Configuration | null, renderImages: [], perspectives: [], computedValues: ComputedValues, statePrice: []}> {
+    const args = [params.productId, params.compressedState, params.updates];
+
+    return this.catalogMessageBusService
+      .getConfigurationStateNew(params.productId, params.compressedState, params.updates, connector, user)
+      .pipe(map((response) => this.responseToConfigurationState(response)));
+  }
+
 	public addToBasket(params: AddBasketConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addBasketConfiguration(
 			params.productId,
@@ -69,7 +77,7 @@ export class ConfigurationRepository {
 		);
 	}
 
-	private responseToConfigurationState(result: any): { state: Configuration | null, renderImages: [] } {
+	private responseToConfigurationState(result: any): {state: Configuration | null, renderImages: [], perspectives: [], computedValues: ComputedValues, statePrice: []} {
 		const state: Configuration = {
 			compressedState: result.compressedState || [],
 			sections: [],
@@ -117,6 +125,12 @@ export class ConfigurationRepository {
 			}
 		}
 
-		return { state: state, renderImages: result.renderImages };
+		return {
+      state: state,
+      renderImages: result.renderImages,
+      perspectives: result.perspectives,
+      computedValues: result.computedValues,
+      statePrice: result.statePrice
+    };
 	}
 }

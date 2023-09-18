@@ -52,6 +52,30 @@ class RenderImageFactory implements RenderImageFactoryInterface
         $this->aptoParameter = $aptoParameter;
     }
 
+    /**
+     * @param State $state
+     * @param string|null $productId
+     * @return array
+     */
+    public function getPerspectivesByState(State $state, string $productId = null): array
+    {
+        $statePerspectives = [];
+        $perspectives = $this->aptoParameter->get('perspectives');
+
+        if (is_array($perspectives) && array_key_exists('perspectives', $perspectives)) {
+            $perspectives = $perspectives['perspectives'];
+
+            foreach ($perspectives as $perspective) {
+                $imageList = $this->productElementFinder->findRenderImagesByState($state, $perspective);
+                if ($this->hasStatePerspectiveImage($imageList, $perspective, $state, $productId)) {
+                    $statePerspectives[] = $perspective;
+                }
+            }
+        }
+
+        return $statePerspectives;
+    }
+
     public function getRenderImagesByImageList(State $state, string $productId = null): array
     {
         $images = [];
@@ -336,5 +360,23 @@ class RenderImageFactory implements RenderImageFactoryInterface
                     implode(', ', RenderImage::VALID_OFFSET_UNITS)
                 ));
         }
+    }
+
+    /**
+     * @param array $imageList
+     * @param string $perspective
+     * @param State $state
+     * @param $productId
+     * @return bool
+     */
+    public function hasStatePerspectiveImage(array $imageList, string $perspective, State $state, $productId): bool
+    {
+        $imageList = $this->getProviderAndReducerImages($imageList, $perspective, $state, $productId);
+
+        if (empty($imageList)) {
+            return false;
+        }
+
+        return true;
     }
 }
