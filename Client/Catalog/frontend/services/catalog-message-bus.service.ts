@@ -11,7 +11,7 @@ import {
 } from '@apto-catalog-frontend/models/material-picker';
 import { Page } from '@apto-catalog-frontend/models/pagination';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
-import { onError } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ComputedValues, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
@@ -28,6 +28,8 @@ export class CatalogMessageBusService {
 			filter((response) => {
 				if (response.message.error) {
 					this.store.dispatch(onError({ message: response.message }));
+          // we close loading from here because in case of error it is not done in getconfiguration action
+          this.store.dispatch(resetLoadingFlagAction());
 				}
 				return !response.message.error;
 			}),
@@ -40,6 +42,8 @@ export class CatalogMessageBusService {
 			filter((response) => {
 				if (response.message.error) {
 					this.store.dispatch(onError({ message: response.message }));
+          // we close loading from here because in case of error it is not done in getconfiguration action
+          this.store.dispatch(resetLoadingFlagAction());
 				}
 				return !response.message.error;
 			}),

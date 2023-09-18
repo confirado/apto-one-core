@@ -4,7 +4,9 @@ import {
   getCurrentRenderImageSuccess,
   getRenderImagesSuccess,
   humanReadableStateLoadSuccess,
-  initConfigurationSuccess, setHideOnePage,
+  initConfigurationSuccess,
+  resetLoadingFlagAction,
+  setHideOnePage,
   setNextPerspective,
   setNextStep,
   setPrevPerspective,
@@ -59,7 +61,12 @@ const _configurationReducer = createReducer(
 		loading: true,
 	})),
     */
-
+  on(resetLoadingFlagAction, (state, action) => {
+    return {
+      ...state,
+      loading: false
+    };
+  }),
   on(updateConfigurationState, (state, action) => {
     return {
       ...state,
