@@ -5,6 +5,7 @@
      [class.input-type-input]="inputType === floatInputTypes.INPUT"
      [class.input-type-slider]="inputType === floatInputTypes.SLIDER"
      [class.input-type-input-slider]="inputType === floatInputTypes.INPUT_SLIDER"
+     [class.no-element-preview-image]="!element.element.previewImage && !product.useStepByStep"
 >
     <div class="header">
         <div class="title">

@@ -41,8 +41,6 @@
 
     &.input-type-slider,
     &.input-type-input-slider {
-        column-gap: 0;
-
         .element {
             .container {
                 @include element-slider-grid();
