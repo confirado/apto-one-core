@@ -371,13 +371,22 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public addMotive(file) {
+    let fileIsAlreadySelected: true | false = false;
     const url = this.mediaUrl + file.path;
+    const canvasObjects = this.fabricCanvas.getObjects();
 
-    this.fabricCanvas.getObjects().forEach((object) => {
-      if (object.payload.type === 'motive') {
-        this.fabricCanvas.remove(object);
+    for (let i = 0; i < canvasObjects.length; i++) {
+      if (canvasObjects[i].payload.type !== 'motive') {
+        continue;
       }
-    });
+
+      this.fabricCanvas.remove(canvasObjects[i]);
+      fileIsAlreadySelected = canvasObjects[i].payload.file.url === file.url;
+    }
+
+    if (true === fileIsAlreadySelected) {
+      return;
+    }
 
     const options = {
       ...this.controlOptionsLocked,
