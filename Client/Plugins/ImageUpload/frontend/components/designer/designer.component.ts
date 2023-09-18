@@ -113,7 +113,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.locale = environment.defaultLocale;
     this.imageUploadControl = new FormControl(this.file, [
       Validators.required,
-      MaxSizeValidator(1 * 1024 * 1024)
+      // 1024 * 1024 equals to 1MB, max value must be given in byte
+      MaxSizeValidator(1024 * 1024)
     ]);
   }
 
@@ -145,7 +146,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.imageUploadErrors = [];
       if (!this.imageUploadControl.errors) {
         this.addImageFromFile(file);
-      } else {
+        return;
+      }
+
+      if (this.imageUploadControl.errors.hasOwnProperty('maxSize')) {
         this.imageUploadErrors.push({
           type: 'maxSize'
         });
