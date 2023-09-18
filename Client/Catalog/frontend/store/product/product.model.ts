@@ -111,6 +111,7 @@ export interface StaticValues {
   multicoloredImageInput: string;
   background: any;
   area: any;
+  renderingType: string;
 }
 
 export interface RangeField {
@@ -152,4 +153,10 @@ export enum ElementZoomFunctionEnum {
   DEACTIVATED = 'deactivated',
   IMAGE_PREVIEW = 'image_preview',
   GALLERY = 'gallery'
+}
+
+export enum FloatInputTypes {
+  INPUT = 'input',
+  SLIDER = 'slider',
+  INPUT_SLIDER = 'input_slider'
 }

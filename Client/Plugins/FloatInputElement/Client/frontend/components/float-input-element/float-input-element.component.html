@@ -2,6 +2,9 @@
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
+     [class.input-type-input]="inputType === floatInputTypes.INPUT"
+     [class.input-type-slider]="inputType === floatInputTypes.SLIDER"
+     [class.input-type-input-slider]="inputType === floatInputTypes.INPUT_SLIDER"
 >
     <div class="header">
         <div class="title">
@@ -19,7 +22,7 @@
         <div class="container">
             <div class="prefix"></div>
 
-            <div class="input">
+            <div class="input" *ngIf="inputType === floatInputTypes.INPUT">
                 <apto-input-field
                     [formControl]="formElement"
                     [prefix]="element.element.definition.staticValues.prefixHeight | translate"
@@ -29,6 +32,40 @@
                     [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
                 >
                 </apto-input-field>
+            </div>
+
+            <div class="slider" *ngIf="inputType === floatInputTypes.SLIDER">
+                <apto-slider
+                    [formControl]="formElement"
+                    [step]="element.element.definition.properties.value?.[0]?.step"
+                    [min]="element.element.definition.properties.value?.[0]?.minimum"
+                    [max]="element.element.definition.properties.value?.[0]?.maximum"
+                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                >
+                </apto-slider>
+            </div>
+
+            <div class="slider" *ngIf="inputType === floatInputTypes.INPUT_SLIDER">
+                <apto-input-field
+                    [width]="'100px'"
+                    [formControl]="formElement"
+                    [prefix]="element.element.definition.staticValues.prefixHeight | translate"
+                    [suffix]="element.element.definition.staticValues.suffixHeight | translate"
+                    [type]="'float'"
+                    [step]="element.element.definition.properties.value?.[0]?.step"
+                >
+                </apto-input-field>
+
+                <apto-slider
+                    [formControl]="formElement"
+                    (sliderInputChanged)="onSliderInput($event)"
+                    [showLabel]="false"
+                    [step]="element.element.definition.properties.value?.[0]?.step"
+                    [min]="element.element.definition.properties.value?.[0]?.minimum"
+                    [max]="element.element.definition.properties.value?.[0]?.maximum"
+                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                >
+                </apto-slider>
             </div>
 
             <div class="hint"></div>
@@ -41,7 +78,7 @@
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
 
-    <div class="apply-button">
+    <div class="apply-button" *ngIf="inputType==='input'">
         <button mat-flat-button color="primary" (click)="saveInput()">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
         </button>

@@ -14,6 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSliderModule } from '@angular/material/slider';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -43,8 +44,8 @@ import { SelectFieldComponent } from '@apto-base-frontend/components/select-fiel
 import { TextInputFieldComponent } from '@apto-base-frontend/components/text-input-field/text-input-field.component';
 import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
-
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
+import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -62,6 +63,7 @@ RouterRegistry.registerRoutes(Routes);
 		SelectBoxFieldComponent,
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
+    SliderComponent,
 	],
 	exports: [
 		FrontendComponent,
@@ -75,6 +77,7 @@ RouterRegistry.registerRoutes(Routes);
 		SelectBoxFieldComponent,
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
+    SliderComponent,
 	],
   imports: [
     CommonModule,
@@ -96,6 +99,7 @@ RouterRegistry.registerRoutes(Routes);
     PortalModule,
     MatDialogModule,
     MatDividerModule,
+    MatSliderModule,
   ],
 	providers: [
     ContentSnippetRepository,
