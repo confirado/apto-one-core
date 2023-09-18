@@ -1,25 +1,27 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {selectContentSnippet} from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import {selectProduct} from '@apto-catalog-frontend/store/product/product.selectors';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import { DialogSizesEnum } from "@apto-frontend/src/configs-static/dialog-sizes-enum";
+import { environment } from '@apto-frontend/src/environments/environment';
+import { translate } from "@apto-base-core/store/translated-value/translated-value.model";
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { selectLocale } from "@apto-base-frontend/store/language/language.selectors";
+import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
+import { DialogService } from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
+import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
+import { Section } from '@apto-catalog-frontend/store/product/product.model';
+import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
   selectConfiguration,
   selectProgressState,
-  selectSectionPrice,
+  selectSectionPrice, selectSectionPseudoPrice,
   selectSumPrice,
   selectSumPseudoPrice
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import {Section} from '@apto-catalog-frontend/store/product/product.model';
-import {setStep} from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {DialogSizesEnum} from "@apto-frontend/src/configs-static/dialog-sizes-enum";
-import {DialogService} from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
-import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
-import { environment } from '@apto-frontend/src/environments/environment';
-import {selectLocale} from "@apto-base-frontend/store/language/language.selectors";
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -37,19 +39,30 @@ export class SummaryConfigurationComponent implements OnInit {
   public readonly basicPrice$ = this.store.select(selectBasicPrice);
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   public locale: string;
+
+  private popupSubscription: Subscription = null;
+  private csPopUp: {
+    title: string,
+    message: string,
+    button: {
+      cancel: string,
+      accept: string
+    }
+  } = null;
+
   @Input() public showPrices: boolean = true;
   constructor(private store: Store, private router: Router, private activatedRoute: ActivatedRoute, private dialogService: DialogService) {
     this.locale = environment.defaultLocale;
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // subscribe for locale store value
-    this.store.select(selectLocale).subscribe((locale) => {
-      if (locale === null) {
-        this.locale = environment.defaultLocale;
-      } else {
-        this.locale = locale;
-      }
+    this.store.select(selectLocale).subscribe((locale: string) => {
+      this.onLocalChange(locale);
+    });
+
+    this.popUp$.subscribe((next: ContentSnippet) => {
+      this.onCsPopUpChange(next);
     });
   }
 
@@ -57,42 +70,24 @@ export class SummaryConfigurationComponent implements OnInit {
     return this.store.select(selectSectionPrice(section));
   }
 
-  public openPopUp(isStepByStep: boolean) {
-    let dialogMessage = '';
-    let dialogTitle = '';
-    let dialogButtonCancel = '';
-    let dialogButtonAccept = '';
-
-    this.popUp$.subscribe((next) => {
-      if (next === null || isStepByStep === false) {
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        return;
-      }
-      next.children.forEach((value) => {
-        if (value.name === 'title') {
-          dialogTitle = translate(value.content, this.locale);
-        }
-        if (value.name === 'message') {
-          dialogMessage = translate(value.content, this.locale);
-        }
-        if (value.name === 'buttonCancel') {
-          dialogButtonCancel = translate(value.content, this.locale);
-        }
-        if (value.name === 'buttonAccept') {
-          dialogButtonAccept = translate(value.content, this.locale);
-        }
-      })
-      this.dialogService.openWarningDialog(DialogSizesEnum.md, dialogTitle, dialogMessage, dialogButtonCancel, dialogButtonAccept).afterClosed().subscribe((next) => {
-        if (next === true) {
-          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        }
-      })
-    })
+  public getSectionPseudoPrice(section: Section): Observable<string | null | undefined> {
+    return this.store.select(selectSectionPseudoPrice(section));
   }
 
   public setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
-      if (isStepByStep) {
+      if (false === isStepByStep) {
+        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+        return;
+      }
+
+      this.popupSubscription = this.openPopUp().subscribe((next) => {
+        this.popupSubscription.unsubscribe();
+
+        if (true !== next) {
+          return;
+        }
+
         this.store.dispatch(
           setStep({
             payload: {
@@ -100,8 +95,54 @@ export class SummaryConfigurationComponent implements OnInit {
             },
           })
         );
-      }
-      this.openPopUp(isStepByStep);
+        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+      })
     }
+  }
+
+  private openPopUp() {
+    return this.dialogService
+      .openWarningDialog(
+        DialogSizesEnum.md,
+        this.csPopUp.title,
+        this.csPopUp.message,
+        this.csPopUp.button.cancel,
+        this.csPopUp.button.accept
+      )
+      .afterClosed();
+  }
+
+  private onLocalChange(locale: string) {
+    if (locale === null) {
+      this.locale = environment.defaultLocale;
+    } else {
+      this.locale = locale;
+    }
+  }
+
+  private onCsPopUpChange(next: ContentSnippet) {
+    this.csPopUp = {
+      title: '',
+      message: '',
+      button: {
+        cancel: '',
+        accept: ''
+      }
+    }
+
+    next.children.forEach((value: ContentSnippet) => {
+      if (value.name === 'title') {
+        this.csPopUp.title = translate(value.content, this.locale);
+      }
+      if (value.name === 'message') {
+        this.csPopUp.message = translate(value.content, this.locale);
+      }
+      if (value.name === 'buttonCancel') {
+        this.csPopUp.button.cancel = translate(value.content, this.locale);
+      }
+      if (value.name === 'buttonAccept') {
+        this.csPopUp.button.accept = translate(value.content, this.locale);
+      }
+    })
   }
 }

@@ -8,7 +8,8 @@
 
 	<div class="product-list">
 		<div class="product" *ngFor="let basketItem of connector.basket.articles">
-			<div class="image"></div>
+			<div class="image" *ngIf="!basketItem.thumbnail"></div>
+            <div class="image" *ngIf="basketItem.thumbnail" [ngStyle]="{'background-image': 'url(' + basketItem.thumbnail + ')'}"></div>
 			<div class="content">
 				<div>
 					<h5>{{ basketItem.quantity }}x {{ basketItem.name }}</h5>

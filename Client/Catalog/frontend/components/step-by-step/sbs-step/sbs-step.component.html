@@ -1,17 +1,6 @@
 <ng-container *ngIf="section">
     <ng-container *ngIf="product?.useStepByStep">
         <div class="section" [ngClass]="status || ''">
-            <!--<div class="circle" *ngIf="status != 'COMPLETED' || !section.fulfilled">
-                <ng-container *ngIf="!section.fulfilled || !opened(section.section.id, sectionList)">
-                    {{ index }}
-                </ng-container>
-                <ng-container *ngIf="section.fulfilled && opened(section.section.id, sectionList)">
-                    <mat-icon>done</mat-icon>
-                </ng-container>
-            </div>
-            <div class="circle" *ngIf="status == 'COMPLETED' && section.fulfilled">
-                <mat-icon>done</mat-icon>
-            </div>-->
             <div class="circle" *ngIf="status != 'COMPLETED'">
                 {{ index }}
             </div>

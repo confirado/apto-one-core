@@ -211,8 +211,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             if (!renderImage.renderImageOptions) {
                 let mediaFile = renderImage.mediaFile[0];
                 $scope.renderImageOptions.file = (mediaFile.path ? mediaFile.path : '/') + '/' + mediaFile.filename + '.' + mediaFile.extension;
-                $scope.renderImageOptions.perspective = renderImage.perspective;
                 $scope.renderImageOptions.layer = renderImage.layer;
+                $scope.renderImageOptions.perspective = renderImage.perspective;
                 $scope.offsetOptions.offsetX = parseFloat(renderImage.offsetX);
                 $scope.offsetOptions.offsetUnitX = parseInt(renderImage.offsetUnitX);
                 $scope.offsetOptions.offsetY = parseFloat(renderImage.offsetY);
@@ -220,6 +220,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
                 return;
             }
 
+            $scope.renderImageOptions.name = renderImage.renderImageOptions.renderImageOptions.name;
             $scope.renderImageOptions.file = renderImage.renderImageOptions.renderImageOptions.file;
             $scope.renderImageOptions.perspective = renderImage.renderImageOptions.renderImageOptions.perspective;
             $scope.renderImageOptions.layer = renderImage.renderImageOptions.renderImageOptions.layer;
@@ -236,6 +237,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             $scope.offsetOptions.input.formulaOffsetY = renderImage.renderImageOptions.offsetOptions.formulaOffsetY;
             $scope.offsetOptions.elementValueRefs = renderImage.renderImageOptions.offsetOptions.elementValueRefs;
         }
+
         setAvailableAliases('renderImageOptions');
         setAvailableAliases('offsetOptions');
 

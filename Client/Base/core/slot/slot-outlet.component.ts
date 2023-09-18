@@ -1,11 +1,11 @@
-import { Component, Injector, Input, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { SlotRegistry } from './slot-registry';
 
 @Component({
 	selector: 'apto-slot-outlet',
 	template: '',
 })
-export class SlotOutletComponent {
+export class SlotOutletComponent implements OnInit {
 	@Input()
 	public identifier: string | undefined;
 
@@ -20,9 +20,8 @@ export class SlotOutletComponent {
 
 	public component: any | undefined;
 
-	public constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) {}
-
-	public ngOnChanges(changes: SimpleChanges): void {
+	public constructor(public viewContainerRef: ViewContainerRef) {}
+	public ngOnInit() {
 		if (!this.identifier) {
 			return;
 		}
@@ -38,5 +37,15 @@ export class SlotOutletComponent {
 			this.component.element = this.element;
 			this.component.product = this.product;
 		}
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+			if (!this.component) {
+				return;
+			}
+
+			this.component.section = this.section;
+			this.component.element = this.element;
+			this.component.product = this.product;
 	}
 }

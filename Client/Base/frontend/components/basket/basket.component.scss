@@ -83,7 +83,13 @@
             width: 100px;
             height: 70px;
             border-radius: var(--border-radius-card);
-            background-color: #e2e3e3;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+
+            &.empty {
+                background-color: #e2e3e3;
+            }
         }
 
         .content {

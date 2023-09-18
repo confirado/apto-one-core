@@ -374,7 +374,9 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  public addMotive(url) {
+  public addMotive(file) {
+    const url = this.mediaUrl + file.path;
+
     this.fabricCanvas.getObjects().forEach((object) => {
       if (object.payload.type === 'motive') {
         this.fabricCanvas.remove(object);
@@ -386,7 +388,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       left: this.canvas.element.staticValues.motive.left,
       top: this.canvas.element.staticValues.motive.top,
       payload: {
-        type: 'motive'
+        type: 'motive',
+        file: file,
+        name: this.getNameFromFileName(file.name),
+        url: url
       }
     };
 
@@ -661,6 +666,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       return '';
     }
     return ('' + extension.pop()).toLowerCase();
+  }
+
+  public getNameFromFileName(fileName) {
+    return fileName.replace('.' + this.getExtensionFromFileName(fileName), '')
   }
 
   private getImageScale(maxWidth, dimensions) {

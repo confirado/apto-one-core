@@ -6,26 +6,18 @@
                     <div class="summary bottom">
                         <div class="title">
                             <h5>{{ contentSnippet$ | async | contentSnippet: 'headline' }}: {{ product.name | translate }}</h5>
-                            <p>Klicken Sie auf die Sektion, wenn Sie Änderungen vornehmen möchten</p>
+                            <p>{{ contentSnippet$ | async | contentSnippet: 'subline' }}</p>
                         </div>
                         <div class="summary configuration" *ngIf="showPrices">
                             <div class="single-section default">
                                 <div class="finished-message section">
                                     <div class="circle list"><mat-icon>euro</mat-icon></div>
                                     <div>
-                                        <div class="section-name">Grundpreis</div>
-                                        <!--<div *ngIf="(configuration$ | async)?.statePrice?.discount?.discount">
-                                            <div class="element-name">
-                                                {{ configuration.statePrice?.discount?.name | translate }}
-                                            </div>
-                                        </div>-->
+                                        <div class="section-name">{{ contentSnippet$ | async | contentSnippet: 'basicPrice' }}</div>
                                     </div>
                                 </div>
                                 <div class="section-right">
-                                    <div class="basic-discount-price" *ngIf="(configuration$ | async)?.statePrice?.discount?.discount">
-                                        {{ basicPseudoPrice$ | async }}
-                                    </div>
-                                    {{ basicPrice }}
+                                    {{ basicPseudoPrice$ | async }}
                                 </div>
                             </div>
                         </div>
@@ -40,10 +32,19 @@
                                                 {{ element.element.name | translate }}
                                             </div>
                                         </div>
-                                        <div *ngIf="!section.active">Nicht gewählt</div>
+                                        <div *ngIf="!section.active">{{ contentSnippet$ | async | contentSnippet: 'notSelected' }}</div>
                                     </div>
                                 </div>
-                                <div class="section-right" *ngIf="showPrices">{{ getSectionPrice(section.section) | async }}</div>
+                                <ng-container *ngIf="getSectionPseudoPrice(section.section) | async as sectionPseudoPrice">
+                                    <ng-container *ngIf="getSectionPrice(section.section) | async as sectionPrice">
+                                        <div class="section-right" *ngIf="showPrices">
+                                            <div class="basic-discount-price" *ngIf="sectionPrice !== sectionPseudoPrice">
+                                                {{ sectionPseudoPrice }}
+                                            </div>
+                                            {{ sectionPrice }}
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
                             </div>
                         </div>
                         <div class="summary configuration" *ngIf="showPrices">
@@ -51,11 +52,12 @@
                                 <div class="finished-message section">
                                     <div class="circle list"><mat-icon>euro</mat-icon></div>
                                     <div>
-                                        <div class="section-name price">Summe</div>
+                                        <div class="discount-name">{{ configuration.statePrice.discount.name | translate }}</div>
+                                        <div class="section-name price">{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}</div>
                                     </div>
                                 </div>
                                 <div class="section-right total-price">
-                                    <div class="basic-discount-price" *ngIf="(configuration$ | async)?.statePrice?.discount?.discount">
+                                    <div class="basic-discount-price" *ngIf="configuration?.statePrice?.discount?.discount">
                                         {{ sumPseudoPrice$ | async }}
                                     </div>
                                     {{ sumPrice }}

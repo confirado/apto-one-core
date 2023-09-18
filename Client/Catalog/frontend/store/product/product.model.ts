@@ -160,3 +160,9 @@ export enum FloatInputTypes {
   SLIDER = 'slider',
   INPUT_SLIDER = 'input_slider'
 }
+
+export interface RuleRepairSettings {
+  maxTries: number;
+  operators: number[];
+  selectEmptySections: boolean;
+}

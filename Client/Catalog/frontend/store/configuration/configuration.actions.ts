@@ -120,6 +120,7 @@ export const addToBasket = createAction(
 			type: 'REQUEST_FORM' | 'ADD_TO_BASKET';
 			formData?: any;
       humanReadableState?: any;
+      productImage?: string;
 		};
 	}>()
 );
