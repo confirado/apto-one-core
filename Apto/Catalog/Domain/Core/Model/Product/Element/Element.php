@@ -840,6 +840,18 @@ class Element extends AptoEntity
     }
 
     /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    public function copyRenderImageOptions(Collection &$entityMapping)
+    {
+        /** @var RenderImage $renderImage */
+        foreach ($this->renderImages as $renderImage) {
+            $renderImage->copyRenderImageOptions($entityMapping);
+        }
+    }
+
+    /**
      * @return ZoomFunction
      */
     public function getZoomFunction(): ZoomFunction

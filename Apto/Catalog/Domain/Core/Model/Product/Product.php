@@ -3412,6 +3412,9 @@ class Product extends AptoAggregate
         // set copy aware element definitions
         $this->copyElementDefinitions($entityMapping);
 
+        // copy render image options
+        $this->copyRenderImageOptions($entityMapping);
+
         // set rules
         $product->rules = $this->copyRules($entityMapping);
 
@@ -3489,6 +3492,9 @@ class Product extends AptoAggregate
             )
         );
 
+        // copy render image options
+        $this->copyRenderImageOptions($entityMapping);
+
         // build mapping array for ProductCopied Event
         $entityMappingArray = [];
         foreach ($entityMapping as $key => $value) {
@@ -3533,6 +3539,9 @@ class Product extends AptoAggregate
 
         // copy element
         $newElementId = $section->copyElement($elementId, $entityMapping);
+
+        // copy render image options
+        $this->copyRenderImageOptions($entityMapping);
 
         // build mapping array for ProductCopied Event
         $entityMappingArray = [];
@@ -3642,6 +3651,21 @@ class Product extends AptoAggregate
             }
 
             $element->setDefinition($definition->copy($entityMapping));
+        }
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    private function copyRenderImageOptions(Collection $entityMapping)
+    {
+        foreach ($entityMapping as $element) {
+            if (!($element instanceof Element)) {
+                continue;
+            }
+
+            $element->copyRenderImageOptions($entityMapping);
         }
     }
 
