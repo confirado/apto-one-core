@@ -41,8 +41,6 @@ class FloatInputElementDefinitionController {
             prefix: '',
             suffix: '',
             defaultValue: '',
-            useDefaultValue: false,
-            showDefaultValue: false,
             value: [],
             conversionFactor: '1',
             livePricePrefix: '',
@@ -84,8 +82,6 @@ class FloatInputElementDefinitionController {
             this.values.prefix = this.detailDefinition.json.prefix;
             this.values.suffix = this.detailDefinition.json.suffix;
             this.values.defaultValue = this.detailDefinition.json.defaultValue;
-            this.values.useDefaultValue = this.detailDefinition.json.useDefaultValue;
-            this.values.showDefaultValue = this.detailDefinition.json.showDefaultValue;
             this.values.renderingType = this.detailDefinition.json.renderingType;
 
             if (this.detailDefinition.json.conversionFactor) {
@@ -119,9 +115,6 @@ class FloatInputElementDefinitionController {
         this.definitionValidation({
             definitionValidation: {
                 validate: () => {
-                    if (this.values.value.length < 1 && !this.values.useDefaultValue) {
-                        return false;
-                    }
                     return true;
                 }
             }
