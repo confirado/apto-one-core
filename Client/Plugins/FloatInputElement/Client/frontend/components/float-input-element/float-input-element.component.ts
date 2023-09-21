@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subject, takeUntil } from "rxjs";
+import { debounceTime, distinctUntilChanged, of, Subject, takeUntil, filter, tap, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
@@ -35,7 +35,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public inputType: string = FloatInputTypes.INPUT;
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
   private saveDelayTimeoutId: any = null;
-  private saveDelay = 750;
+  private saveDelay = 250;
   private destroy$ = new Subject<void>();
 
 	public constructor(private store: Store) {}
@@ -54,38 +54,58 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // In case of slider input we want that it saves it's value without clicking on save button
+    // @todo compare this version then keep or remove
+    // // In case of slider input we want that it saves it's value without clicking on save button
+    // this.formElementInput.valueChanges.pipe(
+    //   takeUntil(this.destroy$),
+    //   distinctUntilChanged(),
+    //   /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
+    //   filter((data) => this.formElementSlider.value !== data),
+    // )
+    //   .subscribe((data) => {
+    //     console.error('subscribe input');
+    //     this.formElementSlider.setValue(data);
+    //
+    //     if (null !== this.saveDelayTimeoutId) {
+    //       clearTimeout(this.saveDelayTimeoutId);
+    //       this.saveDelayTimeoutId = null;
+    //     }
+    //
+    //     // save input value if value is not changed within 'saveDelay' time
+    //     this.saveDelayTimeoutId = setTimeout(() => {
+    //       console.error('save input');
+    //       this.saveInput(this.formElementSlider.value);
+    //     }, this.saveDelay);
+    //   });
+
+
     this.formElementInput.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((data) => {
-      console.error('subscribe input');
-      // sync value with input form element only if the value is not equal, otherwise it could cause an endless loop
-      if (this.formElementSlider.value !== data) {
-        this.formElementSlider.setValue(data);
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
+      filter((data) => this.formElementSlider.value !== data),
+      tap((data) => {
+        console.error('subscribe input');
+        this.formElementSlider.setValue(data); // Update the slider immediately
+      }),
+      debounceTime(this.saveDelay),
+      map((data) => {
+        console.error('save input');
+        this.saveInput(data); // Save the input value with a delay
+        return of(data);
+      })
+    ).subscribe();
 
-        // clear timeout
-        if (null !== this.saveDelayTimeoutId) {
-          clearTimeout(this.saveDelayTimeoutId);
-          this.saveDelayTimeoutId = null;
-        }
-
-        // save input value if value is not changed within 'saveDelay' time
-        this.saveDelayTimeoutId = setTimeout(() => {
-          console.error('save input');
-          this.saveInput(this.formElementSlider.value);
-        }, this.saveDelay);
-      }
-    });
 
     // In case of slider input we want that it saves it's value without clicking on save button
     this.formElementSlider.valueChanges.pipe(
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
+      distinctUntilChanged(),
+      /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
+      filter((data) => this.formElementInput.value !== data)
     ).subscribe((data) => {
       console.error('subscribe slider');
-      // sync value with input form element only if the value is not equal, otherwise it could cause an endless loop
-      if (this.formElementInput.value !== data) {
-        this.formElementInput.setValue(data);
-      }
+      this.formElementInput.setValue(data as string);
     });
 	}
 
@@ -104,6 +124,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     this.formElementSlider.setValue(value);
   }
 
+  // @todo do we need this?
 	public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}
@@ -148,7 +169,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 		);
 	}
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
