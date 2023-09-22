@@ -281,3 +281,7 @@ export const selectElementState = (elementId: string) => createSelector(featureS
   }
   return null;
 });
+
+export const selectStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.elements;
+});
