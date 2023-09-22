@@ -6,8 +6,7 @@ import { Store } from '@ngrx/store';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { Product, FloatInputTypes } from '@apto-catalog-frontend/store/product/product.model';
-
+import { Product, FloatInputTypes, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 @Component({
 	selector: 'apto-float-input-element',
@@ -15,11 +14,14 @@ import { Product, FloatInputTypes } from '@apto-catalog-frontend/store/product/p
 	styleUrls: ['./float-input-element.component.scss'],
 })
 export class FloatInputElementComponent implements OnInit, OnDestroy {
-	@Input()
-	public element: ProgressElement | undefined | null;
-
   @Input()
   public product: Product | null | undefined;
+
+  @Input()
+  public section: Section | undefined;
+
+  @Input()
+  public element: ProgressElement | undefined | null;
 
   @Input()
   public isDialog = false;
@@ -34,8 +36,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public readonly floatInputTypes = FloatInputTypes;
   public inputType: string = FloatInputTypes.INPUT;
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
-  private saveDelayTimeoutId: any = null;
-  private saveDelay = 250;
+  private saveDelay = 500;
   private destroy$ = new Subject<void>();
 
 	public constructor(private store: Store) {}
@@ -54,48 +55,20 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // @todo compare this version then keep or remove
-    // // In case of slider input we want that it saves it's value without clicking on save button
-    // this.formElementInput.valueChanges.pipe(
-    //   takeUntil(this.destroy$),
-    //   distinctUntilChanged(),
-    //   /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
-    //   filter((data) => this.formElementSlider.value !== data),
-    // )
-    //   .subscribe((data) => {
-    //     console.error('subscribe input');
-    //     this.formElementSlider.setValue(data);
-    //
-    //     if (null !== this.saveDelayTimeoutId) {
-    //       clearTimeout(this.saveDelayTimeoutId);
-    //       this.saveDelayTimeoutId = null;
-    //     }
-    //
-    //     // save input value if value is not changed within 'saveDelay' time
-    //     this.saveDelayTimeoutId = setTimeout(() => {
-    //       console.error('save input');
-    //       this.saveInput(this.formElementSlider.value);
-    //     }, this.saveDelay);
-    //   });
-
-
     this.formElementInput.valueChanges.pipe(
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
       filter((data) => this.formElementSlider.value !== data),
       tap((data) => {
-        console.error('subscribe input');
         this.formElementSlider.setValue(data); // Update the slider immediately
       }),
       debounceTime(this.saveDelay),
       map((data) => {
-        console.error('save input');
         this.saveInput(data); // Save the input value with a delay
         return of(data);
       })
     ).subscribe();
-
 
     // In case of slider input we want that it saves it's value without clicking on save button
     this.formElementSlider.valueChanges.pipe(
@@ -104,14 +77,12 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
       filter((data) => this.formElementInput.value !== data)
     ).subscribe((data) => {
-      console.error('subscribe slider');
       this.formElementInput.setValue(data as string);
     });
 	}
 
   public onSliderMouseUp(event: MouseEvent): void {
     // we only want to save the value on mouse up event
-    console.error('save slider');
     this.saveInput(this.formElementSlider.value);
   }
 
@@ -124,7 +95,6 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     this.formElementSlider.setValue(value);
   }
 
-  // @todo do we need this?
 	public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}
