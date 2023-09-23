@@ -15,6 +15,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
@@ -46,6 +47,7 @@ import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/fron
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
+import { LoadingIndicatorComponent } from '@apto-catalog-frontend/components/common/loading-indicator/loading-indicator.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -64,7 +66,8 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
-	],
+    LoadingIndicatorComponent,
+  ],
 	exports: [
 		FrontendComponent,
 		HeaderComponent,
@@ -78,7 +81,8 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
-	],
+    LoadingIndicatorComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -100,6 +104,7 @@ RouterRegistry.registerRoutes(Routes);
     MatDialogModule,
     MatDividerModule,
     MatSliderModule,
+    MatProgressSpinnerModule,
   ],
 	providers: [
     ContentSnippetRepository,
