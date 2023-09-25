@@ -31,11 +31,11 @@
             <div class="input" *ngIf="inputType === floatInputTypes.INPUT">
                 <apto-input-field
                     [formControl]="formElementInput"
-                    [prefix]="element.element.definition.staticValues.prefixHeight | translate"
-                    [suffix]="element.element.definition.staticValues.suffixHeight | translate"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                     [type]="'float'"
-                    [step]="element.element.definition.properties.value?.[0]?.step"
-                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                    [step]="stepValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
                 >
                 </apto-input-field>
             </div>
@@ -44,10 +44,10 @@
                 <apto-slider
                     (mouseup)="onSliderMouseUp($event)"
                     [formControl]="formElementSlider"
-                    [step]="element.element.definition.properties.value?.[0]?.step"
-                    [min]="element.element.definition.properties.value?.[0]?.minimum"
-                    [max]="element.element.definition.properties.value?.[0]?.maximum"
-                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                    [step]="stepValue"
+                    [min]="minValue"
+                    [max]="maxValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
                 >
                 </apto-slider>
             </div>
@@ -56,10 +56,10 @@
                 <apto-input-field
                     [width]="'100px'"
                     [formControl]="formElementInput"
-                    [prefix]="element.element.definition.staticValues.prefixHeight | translate"
-                    [suffix]="element.element.definition.staticValues.suffixHeight | translate"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                     [type]="'float'"
-                    [step]="element.element.definition.properties.value?.[0]?.step"
+                    [step]="stepValue"
                 >
                 </apto-input-field>
 
@@ -68,10 +68,10 @@
                     [formControl]="formElementSlider"
                     (sliderInputChanged)="onSliderInput($event)"
                     [showLabel]="false"
-                    [step]="element.element.definition.properties.value?.[0]?.step"
-                    [min]="element.element.definition.properties.value?.[0]?.minimum"
-                    [max]="element.element.definition.properties.value?.[0]?.maximum"
-                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                    [step]="stepValue"
+                    [min]="minValue"
+                    [max]="maxValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
                 >
                 </apto-slider>
             </div>
