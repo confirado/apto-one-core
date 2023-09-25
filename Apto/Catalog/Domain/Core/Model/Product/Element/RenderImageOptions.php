@@ -224,6 +224,16 @@ class RenderImageOptions implements \JsonSerializable
         $renderImageOptions['elementValueRefs'] = $this->copyElementValueRefs($renderImageOptions['elementValueRefs'], $entityMapping);
         $offsetOptions['elementValueRefs'] = $this->copyElementValueRefs($offsetOptions['elementValueRefs'], $entityMapping);
 
+        // set default for offsetUnitX -> backwards compatibility
+        if (!array_key_exists('offsetUnitX', $offsetOptions)) {
+            $offsetOptions['offsetUnitX'] = RenderImage::OFFSET_UNIT_PERCENT;
+        }
+
+        // set default for offsetUnitY -> backwards compatibility
+        if (!array_key_exists('offsetUnitY', $offsetOptions)) {
+            $offsetOptions['offsetUnitY'] = RenderImage::OFFSET_UNIT_PERCENT;
+        }
+
         return new self(
             $renderImageOptions,
             $offsetOptions
