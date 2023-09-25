@@ -277,91 +277,20 @@ export class MaterialPickerElementComponent implements OnInit {
 				updateConfigurationState({
 					updates: {
 						set: [
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'aptoElementDefinitionId',
-								value: 'apto-element-material-picker',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'poolId',
-								value: element.element.definition.staticValues.poolId,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'productId',
-								value: this.product?.id,
-							},
-
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialId',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialName',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'priceGroup',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materials',
-								value: this.currentMaterials,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialIdSecondary',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialNameSecondary',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'priceGroupSecondary',
-								value: '',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialsSecondary',
-								value: this.secondaryFormElement.value,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorMixing',
-								value: materialColorMixing,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorArrangement',
-								value: materialColorOrder,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorQuantity',
-								value: inputCountString,
-							},
+              this.getStateUpdateObject(element, 'aptoElementDefinitionId', 'apto-element-material-picker'),
+              this.getStateUpdateObject(element, 'poolId', element.element.definition.staticValues.poolId),
+              this.getStateUpdateObject(element, 'productId', this.product?.id),
+              this.getStateUpdateObject(element, 'materialId', ''),
+              this.getStateUpdateObject(element, 'materialName', ''),
+              this.getStateUpdateObject(element, 'priceGroup', ''),
+              this.getStateUpdateObject(element, 'materials', this.currentMaterials),
+              this.getStateUpdateObject(element, 'materialIdSecondary', ''),
+              this.getStateUpdateObject(element, 'materialNameSecondary', ''),
+              this.getStateUpdateObject(element, 'priceGroupSecondary', ''),
+              this.getStateUpdateObject(element, 'materialsSecondary', this.secondaryFormElement.value),
+              this.getStateUpdateObject(element, 'materialColorMixing', materialColorMixing),
+              this.getStateUpdateObject(element, 'materialColorArrangement', materialColorOrder),
+              this.getStateUpdateObject(element, 'materialColorQuantity', inputCountString)
 						],
 					},
 				})
@@ -375,84 +304,19 @@ export class MaterialPickerElementComponent implements OnInit {
 				updateConfigurationState({
 					updates: {
 						set: [
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'aptoElementDefinitionId',
-								value: 'apto-element-material-picker',
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'poolId',
-								value: element.element.definition.staticValues.poolId,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'productId',
-								value: this.product?.id,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialId',
-								value: this.currentItem.id,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialName',
-								value: this.currentItem.name,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'priceGroup',
-								value: this.currentItem.priceGroup,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialIdSecondary',
-								value: secondItem.id,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialNameSecondary',
-								value: secondItem.name,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'priceGroupSecondary',
-								value: secondItem.priceGroup,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialsSecondary',
-								value: [],
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorMixing',
-								value: materialColorMixing,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorArrangement',
-								value: materialColorOrder,
-							},
-							{
-								sectionId: element.element.sectionId,
-								elementId: element.element.id,
-								property: 'materialColorQuantity',
-								value: inputCountString,
-							},
+              this.getStateUpdateObject(element, 'aptoElementDefinitionId', 'apto-element-material-picker'),
+              this.getStateUpdateObject(element, 'poolId', element.element.definition.staticValues.poolId),
+              this.getStateUpdateObject(element, 'productId', this.product?.id),
+              this.getStateUpdateObject(element, 'materialId', this.currentItem.id),
+              this.getStateUpdateObject(element, 'materialName', this.currentItem.name),
+              this.getStateUpdateObject(element, 'priceGroup', this.currentItem.priceGroup),
+              this.getStateUpdateObject(element, 'materialIdSecondary', secondItem.id),
+              this.getStateUpdateObject(element, 'materialNameSecondary', secondItem.name),
+              this.getStateUpdateObject(element, 'priceGroupSecondary', secondItem.priceGroup),
+              this.getStateUpdateObject(element, 'materialsSecondary', []),
+              this.getStateUpdateObject(element, 'materialColorMixing', materialColorMixing),
+              this.getStateUpdateObject(element, 'materialColorArrangement', materialColorOrder),
+              this.getStateUpdateObject(element, 'materialColorQuantity', inputCountString)
 						],
 					},
 				})
@@ -469,21 +333,19 @@ export class MaterialPickerElementComponent implements OnInit {
 			updateConfigurationState({
 				updates: {
 					remove: [
-						{
-							sectionId: element.element.sectionId,
-							elementId: element.element.id,
-							property: 'aptoElementDefinitionId',
-							value: 'apto-element-material-picker',
-						},
-						{
-							sectionId: element.element.sectionId,
-							elementId: element.element.id,
-							property: 'productId',
-							value: this.product?.id,
-						},
+            this.getStateUpdateObject(element)
 					],
 				},
 			})
 		);
 	}
+
+  private getStateUpdateObject(element: ProgressElement, property: string = null, value: any = null) {
+    return {
+      sectionId: element.element.sectionId,
+      elementId: element.element.id,
+      property: property,
+      value: value,
+    }
+  }
 }
