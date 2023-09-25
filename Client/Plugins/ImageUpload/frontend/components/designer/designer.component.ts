@@ -174,13 +174,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   public init() {
     this.initFonts().then(() => {
       setTimeout(() => {
-        this.updateCanvasStyle();
-        this.calculatePrintAreas();
-
         this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
           preserveObjectStacking: true,
           selection: false
         });
+
+        this.initCanvasSize();
 
         this.fabricCanvas.on({
           'selection:created': this.selectionUpdated.bind(this),
@@ -227,6 +226,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     return Promise.all(promises);
   }
 
+  initCanvasSize() {
+    this.updateCanvasStyle();
+    this.calculatePrintAreas();
+    this.setCanvasSize();
+  }
+
   initTextBoxes() {
     if (!this.canvas.element.staticValues.text.active) {
       return;
@@ -262,13 +267,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.fabricCanvas.add(fabricText);
       this.fabricTextBoxes.push(fabricText);
     });
-    this.setCanvasSize();
   }
 
   initState(callback) {
     this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
-      this.setCanvasSize();
-
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
         if (payload.type === 'text') {
@@ -295,18 +297,14 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (event.isFirst) {
       return;
     }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
+    this.initCanvasSize();
   }
 
   onResizedMiddle(event: ResizedEvent) {
     if (event.isFirst) {
       return;
     }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
+    this.initCanvasSize();
   }
 
   calculatePrintAreas() {
