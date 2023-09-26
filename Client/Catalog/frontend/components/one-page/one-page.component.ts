@@ -12,7 +12,7 @@ import {
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { LoadingIndicatorTypes } from '../common/loading-indicator/loading-indicator.component';
+import { LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
 
 @Component({
 	selector: 'apto-one-page',

@@ -9,7 +9,7 @@ import {DialogSizesEnum} from "@apto-frontend/src/configs-static/dialog-sizes-en
 import {environment} from "@apto-frontend/src/environments/environment";
 import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
 import { selectConfigurationLoading } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-catalog-frontend/components/common/loading-indicator/loading-indicator.component';
+import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
 
 @Component({
 	selector: 'apto-basket',
