@@ -120,11 +120,11 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   }
 
   public get prefix(): TranslatedValue {
-    return this.element.element.definition.staticValues.prefixHeight;
+    return this.element.element.definition.staticValues.prefix;
   }
 
   public get suffix(): TranslatedValue {
-    return this.element.element.definition.staticValues.suffixHeight;
+    return this.element.element.definition.staticValues.suffix;
   }
 
   /**

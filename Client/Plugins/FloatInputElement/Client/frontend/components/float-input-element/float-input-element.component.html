@@ -31,7 +31,7 @@
             <div class="input" *ngIf="inputType === floatInputTypes.INPUT">
                 <apto-input-field
                     [formControl]="formElementInput"
-                    [prefix]="prefix | translate"
+                    [name]="prefix | translate"
                     [suffix]="suffix | translate"
                     [type]="'float'"
                     [step]="stepValue"
@@ -48,6 +48,8 @@
                     [min]="minValue"
                     [max]="maxValue"
                     [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                 >
                 </apto-slider>
             </div>
@@ -72,6 +74,8 @@
                     [min]="minValue"
                     [max]="maxValue"
                     [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                 >
                 </apto-slider>
             </div>

@@ -22,6 +22,11 @@
                     &:not(:empty) {
                         padding-right: 0;
                     }
+
+                    span.value {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
                 }
             }
         }
