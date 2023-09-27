@@ -7,7 +7,9 @@
 	</div>
 
 	<div class="product-list">
-		<div class="product" *ngFor="let basketItem of connector.basket.articles">
+        <apto-loading-indicator *ngIf="configurationLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
+
+        <div class="product" *ngFor="let basketItem of connector.basket.articles">
 			<div class="image" *ngIf="!basketItem.thumbnail"></div>
             <div class="image" *ngIf="basketItem.thumbnail" [ngStyle]="{'background-image': 'url(' + basketItem.thumbnail + ')'}"></div>
 			<div class="content">

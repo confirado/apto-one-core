@@ -1,5 +1,7 @@
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
+  addToBasket, addToBasketSuccess,
+  createLoadingFlagAction,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
   getRenderImagesSuccess,
@@ -61,6 +63,24 @@ const _configurationReducer = createReducer(
 		loading: true,
 	})),
     */
+  on(addToBasket, (state, action) => {
+    return {
+      ...state,
+      loading: true,
+    };
+  }),
+  on(addToBasketSuccess, (state, action) => {
+    return {
+      ...state,
+      loading: false,
+    };
+  }),
+  on(createLoadingFlagAction, (state, action) => {
+    return {
+      ...state,
+      loading: true,
+    };
+  }),
   on(resetLoadingFlagAction, (state, action) => {
     return {
       ...state,

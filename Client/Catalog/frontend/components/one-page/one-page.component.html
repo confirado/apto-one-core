@@ -1,12 +1,7 @@
 <ng-container *ngIf="product$ | async as product">
 	<div class="one-page {{ product.identifier }}">
 		<div class="content" [ngClass]="{ hidden: hideOnePage$ | async }">
-            <div *ngIf="(configurationLoading$ | async)" class="loading-container">
-                <div class="loading-overlay"></div>
-                <div class="loading-spinner">
-                    <mat-spinner diameter="75" color='primary'></mat-spinner>
-                </div>
-            </div>
+            <apto-loading-indicator *ngIf="(configurationLoading$ | async)" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
 
 			<div class="render-img-menu">
 				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !renderImage}"
