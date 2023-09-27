@@ -104,10 +104,15 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     });
 	}
 
-  // @todo check material slider event to take the original events for sliding (if present some)
-  public onSliderMouseUp(event: MouseEvent): void {
-    // we only want to save the value on mouse up event
-    this.saveInput(this.formElementSlider.value);
+  /**
+   * Slider is considered as changed when user slides and lets the left mouse button
+   * during sliding, slide change event is not fired.
+   * So we save into store when user is finished with sliding and lets the mouse button
+   *
+   * @param event
+   */
+  public onSliderChanged(event: MouseEvent): void {
+      this.saveInput(this.formElementSlider.value);
   }
 
   public get hint(): TranslatedValue {

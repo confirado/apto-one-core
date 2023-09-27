@@ -42,7 +42,7 @@
 
             <div class="slider" *ngIf="inputType === floatInputTypes.SLIDER">
                 <apto-slider
-                    (mouseup)="onSliderMouseUp($event)"
+                    (sliderChanged)="onSliderChanged($event)"
                     [formControl]="formElementSlider"
                     [step]="stepValue"
                     [min]="minValue"
@@ -64,8 +64,8 @@
                 </apto-input-field>
 
                 <apto-slider
-                    (mouseup)="onSliderMouseUp($event)"
                     [formControl]="formElementSlider"
+                    (sliderChanged)="onSliderChanged($event)"
                     (sliderInputChanged)="onSliderInput($event)"
                     [showLabel]="false"
                     [step]="stepValue"
