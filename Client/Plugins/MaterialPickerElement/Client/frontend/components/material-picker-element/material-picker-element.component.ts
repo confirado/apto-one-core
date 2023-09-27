@@ -1,5 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject, combineLatest, filter, map, startWith, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { MaterialPickerFilterForm, MaterialPickerItem, PropertyGroup } from '@apto-catalog-frontend/models/material-picker';
@@ -7,10 +12,6 @@ import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalo
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { environment } from '@apto-frontend/src/environments/environment';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, filter, map, startWith, switchMap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -30,27 +31,19 @@ export class MaterialPickerElementComponent implements OnInit {
 	public product: Product | undefined;
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
-
 	public readonly contentSnippetButton$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
 
 	public element$ = new BehaviorSubject<ProgressElement<any> | undefined>(undefined);
 
-	public typedElement$ = this.element$.pipe(filter((element): element is ProgressElement<any> => element !== undefined));
-
-	public formElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
-
-	public secondaryFormElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
-
 	public currentMaterials: { id: string; name: string; priceGroup: string }[] = [];
-
 	public currentItem: { id: string; name: string; priceGroup: string } | undefined;
-
 	public materialCount: number = 0;
+  public propertyGroupList: PropertyGroup[] = [];
 
+  public formElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
+  public secondaryFormElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
 	public multiColor = new FormControl<boolean>(false);
-
 	public colorOrder = new FormControl<boolean>(false);
-
 	public inputCount = new FormControl<number>(0);
 
 	public filter = new FormGroup<MaterialPickerFilterForm>({
@@ -60,82 +53,9 @@ export class MaterialPickerElementComponent implements OnInit {
 		searchString: new FormControl<string>(''),
 	});
 
-  private onElementChange (element: ProgressElement<any>) {
-    this.element$.next(element);
-    if (element && !element.element.definition.staticValues.allowMultiple && element.state.active) {
-      this.currentItem = {
-        id: element.state.values.materialId,
-        name: element.state.values.materialName,
-        priceGroup: element.state.values.priceGroup,
-      };
-      this.formElement.setValue([this.currentItem]);
-
-      const currentSecondItem = {
-        id: element.state.values.materialIdSecondary,
-        name: element.state.values.materialNameSecondary,
-        priceGroup: element.state.values.priceGroupSecondary,
-      };
-      this.secondaryFormElement.setValue([currentSecondItem]);
-    } else if (element && element.state.active) {
-      if (element.state.values.materials) {
-        for (const item of element.state.values.materials) {
-          this.currentMaterials.push(item);
-        }
-      }
-
-      const currentSecondMaterials: { id: string; name: string; priceGroup: string }[] = [];
-
-      if (element && element.state.values.materialsSecondary) {
-        for (const item of element.state.values.materialsSecondary) {
-          currentSecondMaterials.push(item);
-        }
-      }
-      this.secondaryFormElement.setValue(currentSecondMaterials);
-      this.formElement.setValue(this.currentMaterials);
-    }
-  }
-
-	public elementState(type: string): boolean {
-		const element = this.element$.value;
-		if (!element) {
-			return false;
-		}
-		if (type === 'search-box') {
-			return element.element.definition.staticValues.searchboxActive;
-		}
-		if (type === 'multiple') {
-			return element.element.definition.staticValues.allowMultiple;
-		}
-		if (type === 'active') {
-			return element.state.active;
-		}
-		if (type === 'second-material') {
-			return element.element.definition.staticValues.secondaryMaterialActive;
-		}
-		return false;
-	}
-
-	public isSelected(id: string): boolean {
-		if (this.elementState('multiple')) {
-			return this.currentMaterials.some((i) => i.id === id);
-		}
-		if (!this.elementState('multiple')) {
-			if (this.currentItem) {
-				return this.currentItem.id === id;
-			}
-		}
-		return false;
-	}
-
-	public currentValues(): boolean {
-		if (this.formElement.value && this.secondaryFormElement.value) {
-			if (this.multiColor.value) {
-				return this.formElement.value.length !== 0 && this.secondaryFormElement.value.length !== 0;
-			}
-			return this.formElement.value.length !== 0;
-		}
-		return false;
-	}
+  public typedElement$ = this.element$.pipe(
+    filter((element): element is ProgressElement<any> => element !== undefined)
+  );
 
 	public usedValues$ = this.filter.valueChanges.pipe(
 		startWith(this.filter.value),
@@ -193,38 +113,113 @@ export class MaterialPickerElementComponent implements OnInit {
 		)
 	);
 
-	public propertyGroupList: PropertyGroup[] = [];
-
 	public constructor(
     private catalogMessageBusService: CatalogMessageBusService,
     private store: Store
   ) {}
 
+  public ngOnInit(): void {
+    this.propertyGroups$.subscribe((propertyGroups) => {
+      propertyGroups?.forEach((propertyGroup) =>
+        this.filter.controls.properties.addControl(propertyGroup.id, new FormControl<string[]>([]))
+      );
+      this.propertyGroupList = propertyGroups;
+    });
+
+    const element = this.element$.value;
+    if (!element) {
+      return;
+    }
+    if (element.state.values.materialColorMixing === 'multicolored') {
+      this.multiColor.setValue(true);
+    }
+    if (element.state.values.materialColorArrangement === 'input') {
+      this.colorOrder.setValue(true);
+    }
+    if (element.state.values.materialColorQuantity) {
+      this.inputCount.setValue(parseInt(element.state.values.materialColorQuantity, 10));
+    }
+  }
+
+  private onElementChange (element: ProgressElement<any>) {
+    this.element$.next(element);
+    if (element && !element.element.definition.staticValues.allowMultiple && element.state.active) {
+      this.currentItem = {
+        id: element.state.values.materialId,
+        name: element.state.values.materialName,
+        priceGroup: element.state.values.priceGroup,
+      };
+      this.formElement.setValue([this.currentItem]);
+
+      const currentSecondItem = {
+        id: element.state.values.materialIdSecondary,
+        name: element.state.values.materialNameSecondary,
+        priceGroup: element.state.values.priceGroupSecondary,
+      };
+      this.secondaryFormElement.setValue([currentSecondItem]);
+    } else if (element && element.state.active) {
+      if (element.state.values.materials) {
+        for (const item of element.state.values.materials) {
+          this.currentMaterials.push(item);
+        }
+      }
+
+      const currentSecondMaterials: { id: string; name: string; priceGroup: string }[] = [];
+
+      if (element && element.state.values.materialsSecondary) {
+        for (const item of element.state.values.materialsSecondary) {
+          currentSecondMaterials.push(item);
+        }
+      }
+      this.secondaryFormElement.setValue(currentSecondMaterials);
+      this.formElement.setValue(this.currentMaterials);
+    }
+  }
+
+  public elementState(type: string): boolean {
+    const element = this.element$.value;
+    if (!element) {
+      return false;
+    }
+    if (type === 'search-box') {
+      return element.element.definition.staticValues.searchboxActive;
+    }
+    if (type === 'multiple') {
+      return element.element.definition.staticValues.allowMultiple;
+    }
+    if (type === 'active') {
+      return element.state.active;
+    }
+    if (type === 'second-material') {
+      return element.element.definition.staticValues.secondaryMaterialActive;
+    }
+    return false;
+  }
+
+  public isSelected(id: string): boolean {
+    if (this.elementState('multiple')) {
+      return this.currentMaterials.some((i) => i.id === id);
+    }
+    if (!this.elementState('multiple')) {
+      if (this.currentItem) {
+        return this.currentItem.id === id;
+      }
+    }
+    return false;
+  }
+
+  public currentValues(): boolean {
+    if (this.formElement.value && this.secondaryFormElement.value) {
+      if (this.multiColor.value) {
+        return this.formElement.value.length !== 0 && this.secondaryFormElement.value.length !== 0;
+      }
+      return this.formElement.value.length !== 0;
+    }
+    return false;
+  }
+
 	public selectColor(hex: string | null): void {
 		this.filter.controls.colorRating.setValue(this.filter.controls.colorRating.value === hex ? null : hex);
-	}
-
-	public ngOnInit(): void {
-		this.propertyGroups$.subscribe((propertyGroups) => {
-			propertyGroups?.forEach((propertyGroup) =>
-				this.filter.controls.properties.addControl(propertyGroup.id, new FormControl<string[]>([]))
-			);
-			this.propertyGroupList = propertyGroups;
-		});
-
-		const element = this.element$.value;
-		if (!element) {
-			return;
-		}
-		if (element.state.values.materialColorMixing === 'multicolored') {
-			this.multiColor.setValue(true);
-		}
-		if (element.state.values.materialColorArrangement === 'input') {
-			this.colorOrder.setValue(true);
-		}
-		if (element.state.values.materialColorQuantity) {
-			this.inputCount.setValue(parseInt(element.state.values.materialColorQuantity, 10));
-		}
 	}
 
 	public selectInput(item: MaterialPickerItem, localeItems: { id: string; name: string; priceGroup: string }[]): void {
