@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {BasketService} from '@apto-base-frontend/services/basket.service';
 import {selectFullConnector} from '@apto-base-frontend/store/shop/shop.selectors';
 import {Store} from '@ngrx/store';
@@ -8,6 +8,8 @@ import {DialogService} from "@apto-catalog-frontend/components/common/dialogs/di
 import {DialogSizesEnum} from "@apto-frontend/src/configs-static/dialog-sizes-enum";
 import {environment} from "@apto-frontend/src/environments/environment";
 import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
+import { selectConfigurationLoading } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
 
 @Component({
 	selector: 'apto-basket',
@@ -17,6 +19,8 @@ import {translate} from "@apto-base-core/store/translated-value/translated-value
 export class BasketComponent {
   public readonly csAptoBasket$ = this.store.select(selectContentSnippet('aptoBasket'));
   public readonly csConfirmDeleteDialog$ = this.store.select(selectContentSnippet('aptoBasket.confirmDeleteDialog'));
+  protected readonly loadingIndicatorTypes = LoadingIndicatorTypes;
+  public readonly configurationLoading$ = this.store.select(selectConfigurationLoading);
   public locale: string;
 
 	public toggleSideBar(): void {

@@ -64,7 +64,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
-	],
+  ],
 	exports: [
 		FrontendComponent,
 		HeaderComponent,
@@ -78,7 +78,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
-	],
+  ],
   imports: [
     CommonModule,
     RouterModule,
