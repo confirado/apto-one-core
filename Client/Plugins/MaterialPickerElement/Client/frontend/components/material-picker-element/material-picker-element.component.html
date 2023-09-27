@@ -128,13 +128,13 @@
                 </div>
 
                 <div class="picture">
-                    <img *ngIf="!multiColor.value"
+                    <img *ngIf="!multiColor.value && element.element.definition.staticValues.monochromeImage"
                         [src]="mediaUrl + element.element.definition.staticValues.monochromeImage + '.jpg'" />
 
-                    <img *ngIf="multiColor.value && !colorOrder.value"
+                    <img *ngIf="multiColor.value && !colorOrder.value && element.element.definition.staticValues.multicoloredImageAlternately"
                         [src]="mediaUrl + element.element.definition.staticValues.multicoloredImageAlternately + '.jpg'" />
 
-                    <img *ngIf="multiColor.value && colorOrder.value"
+                    <img *ngIf="multiColor.value && colorOrder.value && element.element.definition.staticValues.multicoloredImageInput"
                         [src]="mediaUrl + element.element.definition.staticValues.multicoloredImageInput + '.jpg'" />
                 </div>
 

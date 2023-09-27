@@ -23,39 +23,8 @@ export class MaterialPickerElementComponent implements OnInit {
 
 	@Input()
 	public set element(element: ProgressElement<any>) {
-		this.element$.next(element);
-		if (element && !element.element.definition.staticValues.allowMultiple && element.state.active) {
-			this.currentItem = {
-				id: element.state.values.materialId,
-				name: element.state.values.materialName,
-				priceGroup: element.state.values.priceGroup,
-			};
-			this.formElement.setValue([this.currentItem]);
-
-			const currentSecondItem = {
-				id: element.state.values.materialIdSecondary,
-				name: element.state.values.materialNameSecondary,
-				priceGroup: element.state.values.priceGroupSecondary,
-			};
-			this.secondaryFormElement.setValue([currentSecondItem]);
-		} else if (element && element.state.active) {
-			if (element.state.values.materials) {
-				for (const item of element.state.values.materials) {
-					this.currentMaterials.push(item);
-				}
-			}
-
-			const currentSecondMaterials: { id: string; name: string; priceGroup: string }[] = [];
-
-			if (element && element.state.values.materialsSecondary) {
-				for (const item of element.state.values.materialsSecondary) {
-					currentSecondMaterials.push(item);
-				}
-			}
-			this.secondaryFormElement.setValue(currentSecondMaterials);
-			this.formElement.setValue(this.currentMaterials);
-		}
-	}
+    this.onElementChange(element)
+  };
 
 	@Input()
 	public product: Product | undefined;
@@ -90,6 +59,41 @@ export class MaterialPickerElementComponent implements OnInit {
 		properties: new FormGroup<any>({}),
 		searchString: new FormControl<string>(''),
 	});
+
+  private onElementChange (element: ProgressElement<any>) {
+    this.element$.next(element);
+    if (element && !element.element.definition.staticValues.allowMultiple && element.state.active) {
+      this.currentItem = {
+        id: element.state.values.materialId,
+        name: element.state.values.materialName,
+        priceGroup: element.state.values.priceGroup,
+      };
+      this.formElement.setValue([this.currentItem]);
+
+      const currentSecondItem = {
+        id: element.state.values.materialIdSecondary,
+        name: element.state.values.materialNameSecondary,
+        priceGroup: element.state.values.priceGroupSecondary,
+      };
+      this.secondaryFormElement.setValue([currentSecondItem]);
+    } else if (element && element.state.active) {
+      if (element.state.values.materials) {
+        for (const item of element.state.values.materials) {
+          this.currentMaterials.push(item);
+        }
+      }
+
+      const currentSecondMaterials: { id: string; name: string; priceGroup: string }[] = [];
+
+      if (element && element.state.values.materialsSecondary) {
+        for (const item of element.state.values.materialsSecondary) {
+          currentSecondMaterials.push(item);
+        }
+      }
+      this.secondaryFormElement.setValue(currentSecondMaterials);
+      this.formElement.setValue(this.currentMaterials);
+    }
+  }
 
 	public elementState(type: string): boolean {
 		const element = this.element$.value;
