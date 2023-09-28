@@ -39,6 +39,12 @@ export class SliderComponent implements ControlValueAccessor {
   public hint: string = '';
 
   @Input()
+  public prefix: string | undefined;
+
+  @Input()
+  public suffix: string | undefined;
+
+  @Input()
   public showLabel = true;
 
   @Output()

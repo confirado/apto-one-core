@@ -91,8 +91,6 @@
             @include element('tablet');
 
             .container {
-                @include element-input-grid('tablet', '100px');
-                grid-template-columns: 0 100px 1fr;
 
                 .input {}
                 .hint {}

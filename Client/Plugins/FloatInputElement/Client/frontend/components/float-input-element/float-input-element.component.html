@@ -31,7 +31,7 @@
             <div class="input" *ngIf="inputType === floatInputTypes.INPUT">
                 <apto-input-field
                     [formControl]="formElementInput"
-                    [prefix]="prefix | translate"
+                    [name]="prefix | translate"
                     [suffix]="suffix | translate"
                     [type]="'float'"
                     [step]="stepValue"
@@ -42,12 +42,14 @@
 
             <div class="slider" *ngIf="inputType === floatInputTypes.SLIDER">
                 <apto-slider
-                    (mouseup)="onSliderMouseUp($event)"
+                    (sliderChanged)="onSliderChanged($event)"
                     [formControl]="formElementSlider"
                     [step]="stepValue"
                     [min]="minValue"
                     [max]="maxValue"
                     [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                 >
                 </apto-slider>
             </div>
@@ -64,14 +66,16 @@
                 </apto-input-field>
 
                 <apto-slider
-                    (mouseup)="onSliderMouseUp($event)"
                     [formControl]="formElementSlider"
+                    (sliderChanged)="onSliderChanged($event)"
                     (sliderInputChanged)="onSliderInput($event)"
                     [showLabel]="false"
                     [step]="stepValue"
                     [min]="minValue"
                     [max]="maxValue"
                     [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
                 >
                 </apto-slider>
             </div>
