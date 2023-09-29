@@ -1,6 +1,6 @@
 <ng-container *ngIf="product?.useStepByStep">
 	<div class="divider-line element-content" *ngIf="renderImage">
-		<img class="image" [src]="renderImage.url" />
+		<img class="image" [src]="renderImage.src" />
 
 		<ng-container *ngIf="perspectives">
             <div *ngIf="perspectives.length > 1" class="arrows">

@@ -39,7 +39,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
   private locale: string;
-  private initialized: boolean = false;
+  private initStarted: boolean = false;
   private subscriptions: Subscription[] = [];
 
   public canvas: CanvasState | null = null;
@@ -113,7 +113,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.locale = environment.defaultLocale;
     this.imageUploadControl = new FormControl(this.file, [
       Validators.required,
-      MaxSizeValidator(1 * 1024 * 1024)
+      // 1024 * 1024 equals to 1MB, max value must be given in byte
+      MaxSizeValidator(1024 * 1024)
     ]);
   }
 
@@ -145,7 +146,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.imageUploadErrors = [];
       if (!this.imageUploadControl.errors) {
         this.addImageFromFile(file);
-      } else {
+        return;
+      }
+
+      if (this.imageUploadControl.errors.hasOwnProperty('maxSize')) {
         this.imageUploadErrors.push({
           type: 'maxSize'
         });
@@ -158,27 +162,24 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(
       this.renderImageService.outputSrcSubject.subscribe((next) => {
         this.renderImage = next;
-        if (null !== next && this.initialized === false) {
+
+        if (null !== next && this.initStarted === false) {
+          this.initStarted = true;
           this.init();
         }
       })
     );
-
-    if (this.renderImage && this.initialized === false) {
-      this.init();
-    }
   }
 
   public init() {
     this.initFonts().then(() => {
       setTimeout(() => {
-        this.updateCanvasStyle();
-        this.calculatePrintAreas();
-
         this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
           preserveObjectStacking: true,
           selection: false
         });
+
+        this.initCanvasSize();
 
         this.fabricCanvas.on({
           'selection:created': this.selectionUpdated.bind(this),
@@ -188,10 +189,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (!this.canvas.element.state.payload) {
           this.initTextBoxes();
-          this.initialized = true;
         } else {
           this.initState(() => {
-            this.initialized = true;
           });
         }
       });
@@ -225,6 +224,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return Promise.all(promises);
+  }
+
+  initCanvasSize() {
+    this.updateCanvasStyle();
+    this.calculatePrintAreas();
+    this.setCanvasSize();
   }
 
   initTextBoxes() {
@@ -262,13 +267,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       this.fabricCanvas.add(fabricText);
       this.fabricTextBoxes.push(fabricText);
     });
-    this.setCanvasSize();
   }
 
   initState(callback) {
     this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
-      this.setCanvasSize();
-
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
         if (payload.type === 'text') {
@@ -295,18 +297,14 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (event.isFirst) {
       return;
     }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
+    this.initCanvasSize();
   }
 
   onResizedMiddle(event: ResizedEvent) {
     if (event.isFirst) {
       return;
     }
-    this.updateCanvasStyle();
-    this.calculatePrintAreas();
-    this.setCanvasSize();
+    this.initCanvasSize();
   }
 
   calculatePrintAreas() {
@@ -375,13 +373,22 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public addMotive(file) {
+    let fileIsAlreadySelected: true | false = false;
     const url = this.mediaUrl + file.path;
+    const canvasObjects = this.fabricCanvas.getObjects();
 
-    this.fabricCanvas.getObjects().forEach((object) => {
-      if (object.payload.type === 'motive') {
-        this.fabricCanvas.remove(object);
+    for (let i = 0; i < canvasObjects.length; i++) {
+      if (canvasObjects[i].payload.type !== 'motive') {
+        continue;
       }
-    });
+
+      this.fabricCanvas.remove(canvasObjects[i]);
+      fileIsAlreadySelected = canvasObjects[i].payload.file.url === file.url;
+    }
+
+    if (true === fileIsAlreadySelected) {
+      return;
+    }
 
     const options = {
       ...this.controlOptionsLocked,
@@ -471,6 +478,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public updateText(event, identifier) {
     this.updateTextPropery(identifier, 'text', event.target.value);
+  }
+
+  public removeDefaultText(box) {
+    if (box.get('text') === box.payload.box.default) {
+      this.updateTextPropery(box.payload.box.identifier, 'text', '');
+    }
   }
 
   public updateTextColor(event, identifier) {

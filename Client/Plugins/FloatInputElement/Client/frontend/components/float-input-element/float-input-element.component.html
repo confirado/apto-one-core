@@ -2,7 +2,16 @@
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
+     [class.input-type-input]="inputType === floatInputTypes.INPUT"
+     [class.input-type-slider]="inputType === floatInputTypes.SLIDER"
+     [class.input-type-input-slider]="inputType === floatInputTypes.INPUT_SLIDER"
+     [class.no-element-preview-image]="!element.element.previewImage && !product.useStepByStep"
+     [class.selected]="element.state.active && product.useStepByStep"
 >
+    <div *ngIf="(section.allowMultiple || element.state.active) && product.useStepByStep" class="circle" [class.selected]="element.state.active">
+        <mat-icon>done</mat-icon>
+    </div>
+
     <div class="header">
         <div class="title">
             <h4>{{ element.element.name | translate }}</h4>
@@ -19,16 +28,56 @@
         <div class="container">
             <div class="prefix"></div>
 
-            <div class="input">
+            <div class="input" *ngIf="inputType === floatInputTypes.INPUT">
                 <apto-input-field
-                    [formControl]="formElement"
-                    [prefix]="element.element.definition.staticValues.prefixHeight | translate"
-                    [suffix]="element.element.definition.staticValues.suffixHeight | translate"
+                    [formControl]="formElementInput"
+                    [name]="prefix | translate"
+                    [suffix]="suffix | translate"
                     [type]="'float'"
-                    [step]="element.element.definition.properties.value?.[0]?.step"
-                    [hint]="element.element.definition.properties.value?.[0]?.minimum + ' ' + (element.element.definition.staticValues.suffix | translate) + ' - ' + element.element.definition.properties.value?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffix | translate)"
+                    [step]="stepValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
                 >
                 </apto-input-field>
+            </div>
+
+            <div class="slider" *ngIf="inputType === floatInputTypes.SLIDER">
+                <apto-slider
+                    (sliderChanged)="onSliderChanged($event)"
+                    [formControl]="formElementSlider"
+                    [step]="stepValue"
+                    [min]="minValue"
+                    [max]="maxValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
+                >
+                </apto-slider>
+            </div>
+
+            <div class="slider" *ngIf="inputType === floatInputTypes.INPUT_SLIDER">
+                <apto-input-field
+                    [width]="'100px'"
+                    [formControl]="formElementInput"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
+                    [type]="'float'"
+                    [step]="stepValue"
+                >
+                </apto-input-field>
+
+                <apto-slider
+                    [formControl]="formElementSlider"
+                    (sliderChanged)="onSliderChanged($event)"
+                    (sliderInputChanged)="onSliderInput($event)"
+                    [showLabel]="false"
+                    [step]="stepValue"
+                    [min]="minValue"
+                    [max]="maxValue"
+                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [prefix]="prefix | translate"
+                    [suffix]="suffix | translate"
+                >
+                </apto-slider>
             </div>
 
             <div class="hint"></div>
@@ -41,9 +90,12 @@
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
 
-    <div class="apply-button">
-        <button mat-flat-button color="primary" (click)="saveInput()">
+    <div class="apply-button" *ngIf="inputType === 'input'">
+        <button mat-flat-button color="primary" (click)="saveInput(formElementInput.value)">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+        </button>
+        <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">
+            {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
         </button>
     </div>
 </div>

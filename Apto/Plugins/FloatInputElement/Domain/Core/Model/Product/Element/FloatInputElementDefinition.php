@@ -6,7 +6,6 @@ use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionDefaultValues;
-use Apto\Catalog\Domain\Core\Model\Product\Element\ElementSingleTextValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 
 class FloatInputElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues
@@ -29,16 +28,6 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
      * @var string
      */
     protected $defaultValue;
-
-    /**
-     * @var bool
-     */
-    protected $useDefaultValue;
-
-    /**
-     * @var bool
-     */
-    protected $showDefaultValue;
 
     /**
      * @var ElementValueCollection
@@ -66,40 +55,41 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
     protected $elementValueRefs;
 
     /**
-     * FloatInputElementDefinition constructor.
+     * @var string
+     */
+    protected $renderingType;
+
+    /**
      * @param AptoTranslatedValue $prefix
      * @param AptoTranslatedValue $suffix
      * @param string $defaultValue
-     * @param bool $useDefaultValue
-     * @param bool $showDefaultValue
      * @param ElementValueCollection $elementValues
      * @param string $conversionFactor
      * @param AptoTranslatedValue $livePricePrefix
      * @param AptoTranslatedValue $livePriceSuffix
      * @param array $elementValueRefs
+     * @param string $renderingType
      */
     public function __construct(
         AptoTranslatedValue $prefix,
         AptoTranslatedValue $suffix,
         string $defaultValue,
-        bool $useDefaultValue,
-        bool $showDefaultValue,
         ElementValueCollection $elementValues,
         string $conversionFactor,
         AptoTranslatedValue $livePricePrefix,
         AptoTranslatedValue $livePriceSuffix,
-        array $elementValueRefs
+        array $elementValueRefs,
+        string $renderingType,
     ) {
         $this->prefix = $prefix;
         $this->suffix = $suffix;
         $this->defaultValue = $defaultValue;
-        $this->useDefaultValue = $useDefaultValue;
-        $this->showDefaultValue = $showDefaultValue;
         $this->elementValues = $elementValues;
         $this->conversionFactor = $conversionFactor;
         $this->livePricePrefix = $livePricePrefix;
         $this->livePriceSuffix = $livePriceSuffix;
         $this->elementValueRefs = $elementValueRefs;
+        $this->renderingType = $renderingType;
     }
 
     /**
@@ -107,17 +97,8 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
      */
     public function getSelectableValues(): array
     {
-        // add default value to collection of valid values, if defined and not already contained
-        if ($this->useDefaultValue && !$this->elementValues->contains($this->defaultValue)) {
-            $value = $this->elementValues->getCollection();
-            $value[] = new ElementSingleTextValue($this->defaultValue);
-            $value = new ElementValueCollection($value);
-        } else {
-            $value = $this->elementValues;
-        }
-
         return [
-            'value' => $value
+            'value' => $this->elementValues
         ];
     }
 
@@ -140,17 +121,19 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             'prefix' => $this->prefix,
             'suffix' => $this->suffix,
             'defaultValue' => $this->defaultValue,
-            'useDefaultValue' => $this->useDefaultValue,
-            'showDefaultValue' => $this->showDefaultValue,
             'conversionFactor' => $this->conversionFactor,
             'livePricePrefix' => $this->livePricePrefix,
             'livePriceSuffix' => $this->livePriceSuffix,
-            'elementValueRefs' => $this->elementValueRefs
+            'elementValueRefs' => $this->elementValueRefs,
+            'renderingType' => $this->renderingType ? $this->renderingType : 'input',
         ];
     }
 
     public function getDefaultValues(): array
     {
+        if ($this->defaultValue === '') {
+            return [];
+        }
         return [
             'value' => (float) $this->defaultValue
         ];
@@ -214,13 +197,12 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
                 'prefix' => $this->prefix->jsonSerialize(),
                 'suffix' => $this->suffix->jsonSerialize(),
                 'defaultValue' => $this->defaultValue,
-                'useDefaultValue' => $this->useDefaultValue,
-                'showDefaultValue' => $this->showDefaultValue,
                 'value' => $this->elementValues->jsonEncode(),
                 'conversionFactor' => $this->conversionFactor,
                 'livePricePrefix' => $this->livePricePrefix->jsonSerialize(),
                 'livePriceSuffix' => $this->livePriceSuffix->jsonSerialize(),
-                'elementValueRefs' => $this->elementValueRefs
+                'elementValueRefs' => $this->elementValueRefs,
+                'renderingType' => $this->renderingType,
             ]
         ];
     }
@@ -256,14 +238,6 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             $json['json']['defaultValue'] = '';
         }
 
-        if (!isset($json['json']['useDefaultValue'])) {
-            $json['json']['useDefaultValue'] = false;
-        }
-
-        if (!isset($json['json']['showDefaultValue'])) {
-            $json['json']['showDefaultValue'] = false;
-        }
-
         if (!isset($json['json']['conversionFactor'])) {
             $json['json']['conversionFactor'] = '1';
         }
@@ -284,17 +258,20 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
             $json['json']['elementValueRefs'] = [];
         }
 
+        if (!isset($json['json']['renderingType'])) {
+            $json['json']['renderingType'] = 'input';
+        }
+
         return new self(
             $json['json']['prefix'],
             $json['json']['suffix'],
             $json['json']['defaultValue'],
-            (bool)$json['json']['useDefaultValue'],
-            (bool)$json['json']['showDefaultValue'],
             ElementValueCollection::jsonDecode($json['json']['value']),
             $json['json']['conversionFactor'],
             $json['json']['livePricePrefix'],
             $json['json']['livePriceSuffix'],
-            $json['json']['elementValueRefs']
+            $json['json']['elementValueRefs'],
+            $json['json']['renderingType'],
         );
     }
 }

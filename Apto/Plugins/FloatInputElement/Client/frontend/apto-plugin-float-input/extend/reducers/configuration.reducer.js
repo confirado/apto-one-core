@@ -7,7 +7,7 @@ const Provider = function(AptoExtendProvider) {
             return state;
         }
 
-        if (!element.staticValues.useDefaultValue) {
+        if (!element.staticValues.defaultValue) {
             return state;
         }
 

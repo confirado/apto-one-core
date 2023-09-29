@@ -29,9 +29,10 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration, ElementState, SectionState } from './configuration.model';
+import { Configuration } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
+import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
 import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 
 interface GetConfigurationResult {
@@ -156,8 +157,22 @@ export class ConfigurationEffects {
   public getConfigurationState$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getConfigurationState),
-      switchMap((action) =>
-        this.configurationRepository.getConfigurationState(action.payload).pipe(
+      withLatestFrom(
+        this.store$.select(selectRuleRepairSettings),
+      ),
+      switchMap(([action, ruleRepairSettings]) => {
+        let payload = {
+          ...action.payload,
+          updates: {
+            ...action.payload.updates
+          }
+        }
+
+        if (null !== ruleRepairSettings) {
+          payload.updates.repair = ruleRepairSettings;
+        }
+
+        return this.configurationRepository.getConfigurationState(payload).pipe(
           filter((result): result is GetConfigurationResult => result !== null),
           map((result) => ({
             connector: action.payload.connector,
@@ -165,10 +180,10 @@ export class ConfigurationEffects {
             configuration: result.state,
             renderImages: result.renderImages,
             currentPerspective: action.payload.currentPerspective,
-            currentUser: action.payload.currentUser
-          }))
-        )
-      ),
+            currentUser: action.payload.currentUser,
+          })),
+        );
+      }),
       switchMap((result) =>
         forkJoin([
           this.configurationRepository.getComputedValues(result.productId, result.configuration.compressedState),

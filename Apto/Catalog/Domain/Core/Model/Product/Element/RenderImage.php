@@ -238,4 +238,13 @@ class RenderImage extends AptoEntity
         // return new renderImage
         return $renderImage;
     }
+
+    /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    public function copyRenderImageOptions(Collection &$entityMapping)
+    {
+        $this->renderImageOptions = $this->getRenderImageOptions()->copy($entityMapping);
+    }
 }

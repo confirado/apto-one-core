@@ -70,14 +70,6 @@ class RegisteredFloatInputElementDefinition implements RegisteredElementDefiniti
             $definitionValues['defaultValue'] = '';
         }
 
-        if (!isset($definitionValues['useDefaultValue'])) {
-            $definitionValues['useDefaultValue'] = false;
-        }
-
-        if (!isset($definitionValues['showDefaultValue'])) {
-            $definitionValues['showDefaultValue'] = false;
-        }
-
         if (!isset($definitionValues['conversionFactor'])) {
             $definitionValues['conversionFactor'] = '1';
         }
@@ -98,17 +90,20 @@ class RegisteredFloatInputElementDefinition implements RegisteredElementDefiniti
             $definitionValues['elementValueRefs'] = [];
         }
 
+        if (!isset($definitionValues['renderingType'])) {
+            $definitionValues['renderingType'] = 'input';
+        }
+
         return new FloatInputElementDefinition(
             $definitionValues['prefix'],
             $definitionValues['suffix'],
             $definitionValues['defaultValue'],
-            (bool)$definitionValues['useDefaultValue'],
-            (bool)$definitionValues['showDefaultValue'],
             new ElementValueCollection($values),
             $definitionValues['conversionFactor'],
             $definitionValues['livePricePrefix'],
             $definitionValues['livePriceSuffix'],
-            $definitionValues['elementValueRefs']
+            $definitionValues['elementValueRefs'],
+            $definitionValues['renderingType'],
         );
     }
 }

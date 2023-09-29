@@ -15,20 +15,24 @@ import { DefaultElementComponent } from './components/default-element/default-el
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 
 @NgModule({
-	declarations: [DefaultElementComponent, DefaultElementOnePageComponent, DefaultElementStepByStepComponent],
+	declarations: [
+    DefaultElementComponent,
+    DefaultElementOnePageComponent,
+    DefaultElementStepByStepComponent
+  ],
 	exports: [],
 	entryComponents: [],
   imports: [
-	RouterModule,
-	CommonModule,
-	HttpClientModule,
-	AptoBaseCoreModule,
-	AptoBaseFrontendModule,
-	ReactiveFormsModule,
-	FormsModule,
-	MatDialogModule,
-	MatIconModule,
-	AptoCatalogFrontendModule,
+    RouterModule,
+    CommonModule,
+    HttpClientModule,
+    AptoBaseCoreModule,
+    AptoBaseFrontendModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatDialogModule,
+    MatIconModule,
+    AptoCatalogFrontendModule,
   ],
 	providers: [],
 })

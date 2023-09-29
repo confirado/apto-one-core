@@ -11,14 +11,6 @@ class Controller {
             'value',
             state.configuration.present.configurationState[sectionId]['elements'][elementId]['state']['values']['value']
         );
-        if (staticValues.useDefaultValue) {
-            if (value === null) {
-                value = staticValues.defaultValue;
-            }
-            if (!staticValues.showDefaultValue && value === staticValues.defaultValue) {
-                value = null;
-            }
-        }
         return value;
     }
 
@@ -79,13 +71,6 @@ class Controller {
 
     setValues() {
         let value = this.input.value ? ('' + this.input.value).trim() : this.input.value;
-
-        // set default value, if option enabled
-        if (this.staticValues.useDefaultValue && (value === '' || value === null)) {
-            value = this.staticValues.defaultValue;
-        } else if (!this.staticValues.useDefaultValue || value !== this.staticValues.defaultValue) {
-            value = this.convertFloat(value);
-        }
 
         // handle valid value reference
         const errorMessage = {

@@ -9,6 +9,17 @@ class FloatInputElementDefinitionController {
             step: 1
         };
 
+        this.renderings = [{
+                id: 'input',
+                label: 'Eingabefeld',
+            }, {
+                id: 'slider',
+                label: 'Schieberegler',
+            }, {
+                id: 'input_slider',
+                label: 'Schieberegler + Eingabefeld',
+            }];
+
         this.availableElements = [];
         this.availableSelectableValues = [];
         this.availableComputableValues = [];
@@ -30,13 +41,12 @@ class FloatInputElementDefinitionController {
             prefix: '',
             suffix: '',
             defaultValue: '',
-            useDefaultValue: false,
-            showDefaultValue: false,
             value: [],
             conversionFactor: '1',
             livePricePrefix: '',
             livePriceSuffix: '',
-            elementValueRefs: []
+            elementValueRefs: [],
+            renderingType: 'input',
         };
 
         this.mapStateToThis = function(state) {
@@ -72,8 +82,7 @@ class FloatInputElementDefinitionController {
             this.values.prefix = this.detailDefinition.json.prefix;
             this.values.suffix = this.detailDefinition.json.suffix;
             this.values.defaultValue = this.detailDefinition.json.defaultValue;
-            this.values.useDefaultValue = this.detailDefinition.json.useDefaultValue;
-            this.values.showDefaultValue = this.detailDefinition.json.showDefaultValue;
+            this.values.renderingType = this.detailDefinition.json.renderingType;
 
             if (this.detailDefinition.json.conversionFactor) {
                 this.values.conversionFactor = this.detailDefinition.json.conversionFactor;
@@ -83,6 +92,10 @@ class FloatInputElementDefinitionController {
             }
             if (this.detailDefinition.json.livePriceSuffix) {
                 this.values.livePriceSuffix = this.detailDefinition.json.livePriceSuffix;
+            }
+
+            if (typeof this.values.renderingType === "undefined") {
+                this.values.renderingType = 'input';
             }
 
             if (this.detailDefinition.json.elementValueRefs) {
@@ -102,9 +115,6 @@ class FloatInputElementDefinitionController {
         this.definitionValidation({
             definitionValidation: {
                 validate: () => {
-                    if (this.values.value.length < 1 && !this.values.useDefaultValue) {
-                        return false;
-                    }
                     return true;
                 }
             }

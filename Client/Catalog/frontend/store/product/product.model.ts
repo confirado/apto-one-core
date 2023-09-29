@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+
 import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 
@@ -75,6 +77,25 @@ export interface defaultItem {
 	name: TranslatedValue;
 }
 
+export enum SelectableValueTypes {
+  SELECTABLE = 'Selectable',
+  COMPUTABLE = 'Computable',
+}
+
+export enum CompareValueTypes {
+  MINIMUM = 'Minimum',
+  MAXIMUM = 'Maximum',
+}
+
+export interface ElementValueRefs {
+  sectionId: string
+  elementId: string,
+  selectableValue: string,
+  selectableValueType: SelectableValueTypes,
+  compareValueType: CompareValueTypes,
+  compareValueFormula: string
+}
+
 export interface StaticValues {
 	aptoElementDefinitionId: string;
 	fields?: InfoField[];
@@ -111,6 +132,8 @@ export interface StaticValues {
   multicoloredImageInput: string;
   background: any;
   area: any;
+  renderingType: string;
+  elementValueRefs: ElementValueRefs[];
 }
 
 export interface RangeField {
@@ -152,4 +175,16 @@ export enum ElementZoomFunctionEnum {
   DEACTIVATED = 'deactivated',
   IMAGE_PREVIEW = 'image_preview',
   GALLERY = 'gallery'
+}
+
+export enum FloatInputTypes {
+  INPUT = 'input',
+  SLIDER = 'slider',
+  INPUT_SLIDER = 'input_slider'
+}
+
+export interface RuleRepairSettings {
+  maxTries: number;
+  operators: number[];
+  selectEmptySections: boolean;
 }

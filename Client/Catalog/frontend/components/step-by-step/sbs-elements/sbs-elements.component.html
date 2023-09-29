@@ -1,32 +1,36 @@
 <ng-container *ngIf="progressState$ | async as progressState">
 	<ng-container *ngIf="progressState.currentStep">
 		<div class="headline">
-            <apto-section-picture
-                *ngIf="progressState.currentStep.section.previewImage"
-                class="image"
-                [previewImage]="progressState.currentStep.section.previewImage"
-                [isZoomable]="progressState.currentStep.section.isZoomable"
-            ></apto-section-picture>
-            <h2 class="title">{{ progressState.currentStep.section.name | translate }}</h2>
+			<apto-section-picture
+				*ngIf="progressState.currentStep.section.previewImage"
+				class="image"
+				[previewImage]="progressState.currentStep.section.previewImage"
+				[isZoomable]="progressState.currentStep.section.isZoomable"
+			></apto-section-picture>
+			<h2 class="title">{{ progressState.currentStep.section.name | translate }}</h2>
 			<div class="description" [innerHTML]="progressState.currentStep.section.description | translate | safeHtml"></div>
-        </div>
+		</div>
 
 		<div class="element-list">
-			<div class="element" *ngFor="let element of progressState.currentStep.elements">
-                <apto-slot-outlet
-					[identifier]="element.element.definition.staticValues.aptoElementDefinitionId"
-					[section]="progressState.currentStep.section"
-					[product]="product$ | async"
-					[element]="element"
-				></apto-slot-outlet>
+			<div class="element" *ngFor="let element of currentProductElements$ | async">
+				<ng-container *ngIf="getProgressElement(element.id) as pElement">
+					<apto-slot-outlet
+						*ngIf="!isElementDisabled(element.id)"
+						[identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
+						[product]="product$ | async"
+						[section]="progressState.currentStep.section"
+						[element]="pElement"
+					></apto-slot-outlet>
+				</ng-container>
 			</div>
 		</div>
 
 		<div class="step-navigation-container">
 			<button [disabled]="progressState.currentStep.section.position === 0" (click)="prevStep()" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
-                <span>Zurück</span>
+				<span>Zurück</span>
 			</button>
+
 			<button
 				*ngIf="!lastSection(progressState)"
 				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
@@ -35,8 +39,9 @@
 				mat-flat-button
 			>
 				<mat-icon>done</mat-icon>
-                <span>Nächster Schritt</span>
+				<span>Nächster Schritt</span>
 			</button>
+
 			<button
 				*ngIf="lastSection(progressState)"
 				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
@@ -45,7 +50,7 @@
 				mat-flat-button
 			>
 				<mat-icon>done</mat-icon>
-                <span>Konfiguartion abschließen</span>
+				<span>Konfiguartion abschließen</span>
 			</button>
 		</div>
 	</ng-container>

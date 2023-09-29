@@ -49,24 +49,6 @@ h1 {
     visibility: hidden;
 }
 
-.loading-container {
-    display: flex;
-    position: absolute;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-}
-
-.loading-overlay {
-    position: absolute;
-    background: var(--color-accent-contrast);
-    opacity: 0.5;
-    width: 100%;
-    height: 100%;
-}
-
 .content {
 	display: grid;
     position: relative;
@@ -75,8 +57,11 @@ h1 {
     background-color: var(--color-background);
     margin-bottom: 40px;
     grid-template-rows: calc(100vh - 360px);
+    grid-template-areas:
+        "render-img section-list";
 
     .render-img-menu {
+        grid-area: render-img;
         z-index: 1;
         display: grid;
         grid-template-rows: 60px calc(100% - 180px) 60px;
@@ -88,6 +73,7 @@ h1 {
         }
     }
     .no-render-image {
+        grid-area: render-img;
         height: 200px;
         width: 250px;
         border-radius: var(--border-radius-card);
@@ -104,6 +90,7 @@ h1 {
         margin: 20px;
     }
     .section-list-menu {
+        grid-area: section-list;
         z-index: 1;
         display: flex;
         flex-direction: column;

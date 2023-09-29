@@ -257,3 +257,31 @@ export const selectElementValues = (element: Element): any =>
 	});
 
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);
+
+export const selectCurrentProductElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.product.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+});
+
+export const selectCurrentStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+});
+
+export const selectSectionProductElements = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.product.elements.filter((element) => element.sectionId === sectionId);
+});
+
+export const selectSectionStateElements = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.elements.filter((element) => element.sectionId === sectionId);
+});
+
+export const selectElementState = (elementId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const filtered = state.configuration.state.elements.filter((element) => element.id === elementId);
+  if (filtered.length > 0) {
+    return filtered[0];
+  }
+  return null;
+});
+
+export const selectStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.elements;
+});

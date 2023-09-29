@@ -33,7 +33,17 @@ export enum ConfigurationActionTypes {
 	AddGuestConfigurationSuccess = '[Configuration] Add guest configuration success',
   SetHideOnePage = '[OnePage] Hide One Page',
 	OnError = '[Configuration] Error',
+  createLoadingFlagAction = '[Configuration] Create Loading Flag',
+  resetLoadingFlagAction = '[Configuration] Reset Loading Flag',
 }
+
+export const createLoadingFlagAction = createAction(
+  ConfigurationActionTypes.createLoadingFlagAction
+);
+
+export const resetLoadingFlagAction = createAction(
+  ConfigurationActionTypes.resetLoadingFlagAction
+);
 
 export const initConfiguration = createAction(
 	ConfigurationActionTypes.InitConfiguration,

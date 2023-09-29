@@ -6,6 +6,15 @@
     @include element-grid();
     @include element-margins();
 
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+        border-radius: var(--border-radius-card);
+    }
+
+    .circle {
+        @include circle-checkbox(25px, 'inner');
+    }
+
     .header {
         grid-area: header;
         @include header();
@@ -14,7 +23,7 @@
 
     .picture {
         grid-area: picture;
-        @include picture();
+        @include picture('mobile', true);
     }
 
     .element {
@@ -35,6 +44,19 @@
             .suffix {
                 grid-area: suffix;
                 @include suffix();
+            }
+        }
+    }
+
+    &.input-type-slider,
+    &.input-type-input-slider {
+        .element {
+            .container {
+                @include element-slider-grid();
+
+                .slider {
+                    grid-area: slider;
+                }
             }
         }
     }
@@ -62,15 +84,13 @@
         }
 
         .picture {
-            @include picture('tablet');
+            @include picture('tablet', true);
         }
 
         .element {
             @include element('tablet');
 
             .container {
-                @include element-input-grid('tablet', '100px');
-                grid-template-columns: 0 100px 1fr;
 
                 .input {}
                 .hint {}

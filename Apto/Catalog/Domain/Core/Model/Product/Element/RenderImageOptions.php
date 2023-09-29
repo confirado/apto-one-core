@@ -2,6 +2,8 @@
 
 namespace Apto\Catalog\Domain\Core\Model\Product\Element;
 
+use Apto\Catalog\Domain\Core\Model\Product\Section\Section;
+use Doctrine\Common\Collections\Collection;
 use InvalidArgumentException;
 
 class RenderImageOptions implements \JsonSerializable
@@ -208,6 +210,61 @@ class RenderImageOptions implements \JsonSerializable
         ) {
             throw new InvalidArgumentException('Missing value in offsetOptions');
         }
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return RenderImageOptions
+     */
+    public function copy(Collection &$entityMapping): RenderImageOptions
+    {
+        $renderImageOptions = $this->renderImageOptions;
+        $offsetOptions = $this->offsetOptions;
+
+        $renderImageOptions['elementValueRefs'] = $this->copyElementValueRefs($renderImageOptions['elementValueRefs'], $entityMapping);
+        $offsetOptions['elementValueRefs'] = $this->copyElementValueRefs($offsetOptions['elementValueRefs'], $entityMapping);
+
+        // set default for offsetUnitX -> backwards compatibility
+        if (!array_key_exists('offsetUnitX', $offsetOptions)) {
+            $offsetOptions['offsetUnitX'] = RenderImage::OFFSET_UNIT_PERCENT;
+        }
+
+        // set default for offsetUnitY -> backwards compatibility
+        if (!array_key_exists('offsetUnitY', $offsetOptions)) {
+            $offsetOptions['offsetUnitY'] = RenderImage::OFFSET_UNIT_PERCENT;
+        }
+
+        return new self(
+            $renderImageOptions,
+            $offsetOptions
+        );
+    }
+
+    /**
+     * @param array $elementValueRefs
+     * @param Collection $entityMapping
+     * @return array
+     */
+    private function copyElementValueRefs(array $elementValueRefs, Collection &$entityMapping): array
+    {
+        foreach ($elementValueRefs as $key => $elementValueRef) {
+            /**
+             * @var Section $section
+             * @var Section $element
+             */
+            $section = $entityMapping->get($elementValueRef['sectionId']);
+            $element = $entityMapping->get($elementValueRef['elementId']);
+
+            if (null !== $section) {
+                $elementValueRefs[$key]['sectionId'] = $section->getId()->getId();
+            }
+
+            if (null !== $element) {
+                $elementValueRefs[$key]['elementId'] = $element->getId()->getId();
+            }
+        }
+
+        return $elementValueRefs;
     }
 
     /**
