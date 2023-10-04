@@ -129,6 +129,10 @@ p {
         color: var(--color-primary);
         font-size: larger;
     }
+
+    &.font-smaller {
+        font-size: medium;
+    }
 }
 
 .basic-discount-price {
