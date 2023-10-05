@@ -68,6 +68,9 @@
       },
       "select-continue": {
         "de_DE": "Auswählen & Weiter"
+      },
+      "continue": {
+        "de_DE": "Weiter"
       }
     }
   },

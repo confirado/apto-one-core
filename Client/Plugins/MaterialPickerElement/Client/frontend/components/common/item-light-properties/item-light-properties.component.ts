@@ -15,7 +15,7 @@ export class ItemLightPropertiesComponent implements OnInit {
   @Input() absorption: number|null;
 
   public readonly clientUrl = environment.api.client + '/';
-  public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoMaterialFilter'));
+  public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
 
   constructor(public store: Store) { }
 
