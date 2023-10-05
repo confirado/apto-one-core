@@ -5,6 +5,7 @@ import { createSelector } from '@ngrx/store';
 
 export const selectShop = createSelector(featureSelector, (state: BaseFeatureState) => state.shop.shop);
 export const selectFullConnector = createSelector(featureSelector, (state: BaseFeatureState) => state.shop.connector);
+export const selectShopLoading = createSelector(featureSelector, (state: BaseFeatureState) => state.shop.loading);
 
 export const selectConnector = createSelector(
 	featureSelector,

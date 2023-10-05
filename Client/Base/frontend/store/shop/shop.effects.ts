@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContentSnippetRepository } from '@apto-base-frontend/store/content-snippets/content-snippet.repository';
-import {deleteBasketItem, initShop, initShopSuccess} from '@apto-base-frontend/store/shop/shop.actions';
+import { deleteBasketItem, deleteBasketItemSuccess, initShop, initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
 import { shopInitialState } from '@apto-base-frontend/store/shop/shop.reducer';
 import { ShopRepository } from '@apto-base-frontend/store/shop/shop.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -65,12 +65,14 @@ export class ShopEffects {
           action.payload.basketItemId
         );
       }),
-      map((result) => {
+      switchMap(result => [
         //@todo: initshop has too many queries that are not needed. We need to create a new action "updateShop",
         //@todo: in which only the "getConnectorState" is queried.
-        return initShop();
-      })
+        deleteBasketItemSuccess(),
+        initShop(),
+      ]),
     )
   );
 }
+
 

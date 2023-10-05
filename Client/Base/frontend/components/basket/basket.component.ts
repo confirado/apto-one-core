@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import {BasketService} from '@apto-base-frontend/services/basket.service';
-import {selectFullConnector} from '@apto-base-frontend/store/shop/shop.selectors';
-import {Store} from '@ngrx/store';
-import {selectContentSnippet} from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import {deleteBasketItem} from "@apto-base-frontend/store/shop/shop.actions";
-import {DialogService} from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
-import {DialogSizesEnum} from "@apto-frontend/src/configs-static/dialog-sizes-enum";
-import {environment} from "@apto-frontend/src/environments/environment";
-import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
+import { Component } from '@angular/core';
+import { BasketService } from '@apto-base-frontend/services/basket.service';
+import { selectFullConnector, selectShopLoading } from '@apto-base-frontend/store/shop/shop.selectors';
+import { Store } from '@ngrx/store';
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { deleteBasketItem } from '@apto-base-frontend/store/shop/shop.actions';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { environment } from '@apto-frontend/src/environments/environment';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectConfigurationLoading } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
 
@@ -21,41 +21,23 @@ export class BasketComponent {
   public readonly csConfirmDeleteDialog$ = this.store.select(selectContentSnippet('aptoBasket.confirmDeleteDialog'));
   protected readonly loadingIndicatorTypes = LoadingIndicatorTypes;
   public readonly configurationLoading$ = this.store.select(selectConfigurationLoading);
+  public readonly connector$ = this.store.select(selectFullConnector);
+  public readonly selectShopLoading$ = this.store.select(selectShopLoading);
   public locale: string;
 
 	public toggleSideBar(): void {
 		this.basketService.sideBar?.toggle();
 	}
 
-	public totalPrice(
-		products: {
-			name: string;
-			price: number;
-			currency: string;
-			quantity: number;
-			image: string;
-		}[]
-	): string {
-		let totalPrice = 0;
-		let totalCurrency;
-		for (const product of products) {
-			const currentPrice = product.quantity * product.price;
-			totalPrice += currentPrice;
-			totalCurrency = product.currency;
-		}
-		if (!totalCurrency) {
-			return 'no currency found!';
-		}
-		return `${totalPrice.toString()} ${totalCurrency}`;
-	}
-
-	public connector$ = this.store.select(selectFullConnector);
-
-	public constructor(private store: Store, private basketService: BasketService, private dialogService: DialogService) {
+	public constructor(
+    private store: Store,
+    private basketService: BasketService,
+    private dialogService: DialogService
+  ) {
     this.locale = environment.defaultLocale;
   }
 
-  removeBasketItem(basketItemId: string, basketItemName: string): void {
+  protected removeBasketItem(basketItemId: string, basketItemName: string): void {
     let dialogMessage = '';
     let dialogTitle = '';
     let dialogButtonCancel = '';
@@ -103,5 +85,28 @@ export class BasketComponent {
           confirmDialogSubscription.unsubscribe();
         });
     });
+  }
+
+  // @todo is this needed, seems not to be used?
+  public totalPrice(
+    products: {
+      name: string;
+      price: number;
+      currency: string;
+      quantity: number;
+      image: string;
+    }[]
+  ): string {
+    let totalPrice = 0;
+    let totalCurrency;
+    for (const product of products) {
+      const currentPrice = product.quantity * product.price;
+      totalPrice += currentPrice;
+      totalCurrency = product.currency;
+    }
+    if (!totalCurrency) {
+      return 'no currency found!';
+    }
+    return `${totalPrice.toString()} ${totalCurrency}`;
   }
 }
