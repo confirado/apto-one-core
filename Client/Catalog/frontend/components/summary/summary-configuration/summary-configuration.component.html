@@ -56,7 +56,7 @@
                                         <div class="section-name price">{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}</div>
                                     </div>
                                 </div>
-                                <div class="section-right total-price">
+                                <div class="section-right" [ngClass]="{'total-price': true, 'font-smaller': configuration.statePrice.sum.price.amount > 9999}">
                                     <div class="basic-discount-price" *ngIf="configuration?.statePrice?.discount?.discount">
                                         {{ sumPseudoPrice$ | async }}
                                     </div>
