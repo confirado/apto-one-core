@@ -21,7 +21,6 @@ import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.m
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { featureKey, reducers } from "@apto-material-picker-element-frontend/store/feature";
 import { MaterialPickerElementComponent } from '@apto-material-picker-element-frontend/components/material-picker-element/material-picker-element.component';
-import { MaterialPickerSecondMaterialComponent } from '@apto-material-picker-element-frontend/components/material-picker-second-material/material-picker-second-material.component';
 import { MaterialPickerDetailsPopupComponent } from '@apto-material-picker-element-frontend/components/material-picker-details-popup/material-picker-details-popup.component';
 import { MaterialPickerHoverComponent } from '@apto-material-picker-element-frontend/components/material-picker-hover/material-picker-hover.component';
 import { ItemLightPropertiesComponent } from "@apto-material-picker-element-frontend/components/common/item-light-properties/item-light-properties.component";
@@ -30,7 +29,6 @@ import { MaterialPickerEffects } from "@apto-material-picker-element-frontend/st
 @NgModule({
   declarations: [
     MaterialPickerElementComponent,
-    MaterialPickerSecondMaterialComponent,
     MaterialPickerDetailsPopupComponent,
     MaterialPickerHoverComponent,
     ItemLightPropertiesComponent,
