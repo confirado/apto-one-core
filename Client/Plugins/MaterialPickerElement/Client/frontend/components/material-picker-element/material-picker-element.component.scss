@@ -151,12 +151,14 @@ mat-radio-group {
         }
     }
 
-    .search-box {
+    .search-price-container {
         @include box();
+    }
 
-        .element {
-            @include box-element();
-        }
+    .search-box {
+    }
+
+    .price-group {
     }
 
     .properties {
@@ -174,14 +176,6 @@ mat-radio-group {
             .input + .input{
                 margin-top: var(--element-gap);
             }
-        }
-    }
-
-    .price-group {
-        @include box();
-
-        .element {
-            @include box-element();
         }
     }
 
@@ -255,11 +249,29 @@ mat-radio-group {
             @include box('tablet');
         }
 
-        .search-box {
+        .search-price-container {
             @include box('tablet');
 
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            width: calc(67% - var(--element-gap)/2);
+
             .element {
-                @include box-element('tablet');
+                margin-top: var(--element-gap);
+            }
+        }
+
+        .price-group {
+            width: calc(33% - var(--element-gap)/2);
+
+            .element {
+                margin-top: var(--element-gap);
             }
         }
 
@@ -277,15 +289,6 @@ mat-radio-group {
                     width: calc(33% - var(--element-gap)/2);
                     margin-top: var(--element-gap);
                 }
-            }
-        }
-
-        .price-group {
-            @include box('tablet');
-
-            .element {
-                width: calc(33% - var(--element-gap)/2);
-                min-width: var(--input-mobile-width);
             }
         }
 
