@@ -5,10 +5,9 @@
     position: relative;
 
     &.is-zoomable {
-        margin-right: -24px;
+        // if we display zoom icon then we make image smaller to fit the space
         img {
-            width: var(--image-tablet-width);
-            margin: 0 14px 0 -15px;
+            width: calc(var(--image-tablet-width) - 22px);
         }
     }
 
@@ -19,7 +18,7 @@
     .zoom-icon {
         position: absolute;
         top: -2px;
-        right: 10px;
+        right: 0;
         cursor: pointer;
 
         mat-icon {
