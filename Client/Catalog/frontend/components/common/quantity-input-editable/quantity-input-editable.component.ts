@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { setQuantity } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { selectQuantity } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Store } from '@ngrx/store';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -83,13 +83,13 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
   }
 
   /**
-   * With want to preven user from adding wrong values in input field
+   * We want to prevent users from adding wrong values in the input field
    *
    * @param event
    */
   public onKeyDown(event: KeyboardEvent):void {
 
-    // If the user has typed a not allowed character(s), just skipp it silently
+    // If the user has typed some not allowed character, just skipp it silently
     if (!this.isAllowedCharacter(event.key)) {
       event.preventDefault();
       return;
@@ -99,12 +99,12 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
     const { selectionStart, selectionEnd } = this.inputRef.nativeElement;
 
     /*  At this point, we can have only either numeric characters or allowed characters like backspace, delete and so on.
-        If the user has pressed backspace, delete or arrow buttons we let them do their job.
+        If the user has pressed backspace, delete or arrow buttons, we let them do their job.
         We are interested in handling only numeric characters   */
     if (this.isNumericCharacter(event.key)) {
 
       /*  We need to check also one spacial case, when user has selected number(s) in input with mouse, and types a new number
-          in this case we want to delete the selected number(s) and put typed number instead like expected.
+          in this case, we want to delete the selected number(s) and put typed number instead like expected.
           In order to do that, we need to know what will be the input after user has typed the number. We can not know
           it because we are in onKeyDown method not in keyUp. So we need to "take a look into the future" and
           calculate the resulting number beforehand  */

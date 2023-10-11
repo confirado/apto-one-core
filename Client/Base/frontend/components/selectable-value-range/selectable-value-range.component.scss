@@ -1,0 +1,46 @@
+@import "globals";
+@import "form-inputs";
+@import "common";
+
+:host {
+    @include input-host();
+}
+
+.input-field {
+    @include input-grid();
+
+    .name {
+        grid-area: name;
+        @include name();
+    }
+
+    .prefix {
+        grid-area: prefix;
+        @include prefix();
+    }
+
+    .container {
+        grid-area: container;
+        @include container();
+
+        input {
+            @include input();
+            @include hide-number-input-arrows();
+            @include input-disabled();
+
+            border: solid 1px red;
+        }
+
+        @include ripple-controls(var(--input-height));
+    }
+
+    .suffix {
+        grid-area: suffix;
+        @include suffix();
+    }
+
+    .hint {
+        grid-area: hint;
+        @include hint();
+    }
+}
