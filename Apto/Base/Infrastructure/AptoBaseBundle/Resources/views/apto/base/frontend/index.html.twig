@@ -40,7 +40,9 @@
     {% endblock %}
 
     {% block faviconImage %}
-        <link rel="shortcut icon" type="image/x-icon" ng-href="{{ '{{ IndexCtrl.getFaviconSrc() }}' }}">
+        {% if aptoFavicon %}
+            <link rel="shortcut icon" type="image/x-icon" href="{{ aptoApi.media ~ aptoFavicon }}">
+        {% endif %}
     {% endblock %}
 
 </head>
