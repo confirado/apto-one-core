@@ -353,6 +353,11 @@
       "filter": {
         "de_DE": "Filtern"
       }
+    },
+    "productDetail": {
+      "title": {
+        "de_DE": "Produktdetails"
+      }
     }
   },
   "AptoSoftRuleDialog": {

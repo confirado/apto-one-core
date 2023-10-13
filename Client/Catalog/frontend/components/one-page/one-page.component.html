@@ -31,7 +31,7 @@
         </div>
         <apto-slot-outlet *ngIf="(hideOnePage$ | async)" identifier="one-page-designer"></apto-slot-outlet>
         <div class="description">
-            <h2>{{ (contentSnippet$ | async | contentSnippet: 'productDetail.title') || 'Produktdetails' }}</h2>
+            <h2 *ngIf="((contentSnippet$ | async | contentSnippet: 'productDetail.title'))">{{ (contentSnippet$ | async | contentSnippet: 'productDetail.title') }}</h2>
             <div [innerHTML]="product.description | translate | safeHtml"></div>
         </div>
     </div>
