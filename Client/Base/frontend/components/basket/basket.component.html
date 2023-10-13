@@ -1,5 +1,8 @@
 <div class="whole-basket" *ngIf="connector$ | async as connector">
-	<div class="title flex justify-between items-center">
+    <apto-loading-indicator *ngIf="configurationLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
+    <apto-loading-indicator *ngIf="selectShopLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
+
+    <div class="title flex justify-between items-center">
 		<h3>{{ csAptoBasket$ | async | contentSnippet: 'shoppingCartHeadline' }}</h3>
 		<button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon">
 			<mat-icon>close</mat-icon>
@@ -7,8 +10,6 @@
 	</div>
 
 	<div class="product-list">
-        <apto-loading-indicator *ngIf="configurationLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
-
         <div class="product" *ngFor="let basketItem of connector.basket.articles">
 			<div class="image" *ngIf="!basketItem.thumbnail"></div>
             <div class="image" *ngIf="basketItem.thumbnail" [ngStyle]="{'background-image': 'url(' + basketItem.thumbnail + ')'}"></div>
