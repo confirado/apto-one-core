@@ -1,26 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { environment } from '@apto-frontend/src/environments/environment';
-import { DialogSizesEnum } from "@apto-frontend/src/configs-static/dialog-sizes-enum";
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { translate, TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
-import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement, ProgressState, ProgressStep } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectElementValues } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
-import { DialogService } from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 
 @Component({
 	selector: 'apto-sbs-step',
 	templateUrl: './sbs-step.component.html',
 	styleUrls: ['./sbs-step.component.scss'],
 })
-export class SbsStepComponent implements OnInit {
+export class SbsStepComponent implements OnInit, OnDestroy {
 	@Input()
 	public section: ProgressStep | undefined;
 
@@ -52,6 +52,7 @@ export class SbsStepComponent implements OnInit {
   public locale: string;
   public panelOpenState: boolean = false;
   public isActive: boolean = false;
+  private destroy$ = new Subject<void>();
 
   private popupSubscription: Subscription = null;
   private csPopUp: {
@@ -73,7 +74,9 @@ export class SbsStepComponent implements OnInit {
       this.onLocalChange(locale);
     });
 
-    this.popUp$.subscribe((next: ContentSnippet) => {
+    this.popUp$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
     });
   }
@@ -85,6 +88,11 @@ export class SbsStepComponent implements OnInit {
         return;
       }
 
+      if (!this.csPopUp.title || !this.csPopUp.message) {
+        this.updateStore(section);
+        return;
+      }
+
       this.popupSubscription = this.openPopUp().subscribe((next: boolean) => {
         this.popupSubscription.unsubscribe();
 
@@ -92,16 +100,20 @@ export class SbsStepComponent implements OnInit {
           return;
         }
 
-        this.store.dispatch(
-          setStep({
-            payload: {
-              id: section.section.id,
-            },
-          })
-        );
+        this.updateStore(section);
       });
 		}
 	}
+
+  private updateStore(section: ProgressStep | undefined): void {
+    this.store.dispatch(
+      setStep({
+        payload: {
+          id: section.section.id,
+        },
+      })
+    );
+  }
 
   public getElementValues(element: Element): Observable<TranslatedValue[] | null | undefined> {
     return this.store.select(selectElementValues(element));
@@ -159,5 +171,10 @@ export class SbsStepComponent implements OnInit {
         this.csPopUp.button.accept = translate(value.content, this.locale);
       }
     })
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

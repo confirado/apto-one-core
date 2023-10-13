@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { DialogSizesEnum } from "@apto-frontend/src/configs-static/dialog-sizes-enum";
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { translate } from "@apto-base-core/store/translated-value/translated-value.model";
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectLocale } from "@apto-base-frontend/store/language/language.selectors";
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
-import { DialogService } from "@apto-catalog-frontend/components/common/dialogs/dialog-service";
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Section } from '@apto-catalog-frontend/store/product/product.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
@@ -20,7 +20,7 @@ import {
   selectProgressState,
   selectSectionPrice, selectSectionPseudoPrice,
   selectSumPrice,
-  selectSumPseudoPrice
+  selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Component({
@@ -28,7 +28,7 @@ import {
   templateUrl: './summary-configuration.component.html',
   styleUrls: ['./summary-configuration.component.scss']
 })
-export class SummaryConfigurationComponent implements OnInit {
+export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public product$ = this.store.select(selectProduct);
   public configuration$ = this.store.select(selectConfiguration);
@@ -38,6 +38,7 @@ export class SummaryConfigurationComponent implements OnInit {
   public readonly steps$ = this.store.select(selectProgressState);
   public readonly basicPrice$ = this.store.select(selectBasicPrice);
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
+  private destroy$ = new Subject<void>();
   public locale: string;
 
   private popupSubscription: Subscription = null;
@@ -61,7 +62,9 @@ export class SummaryConfigurationComponent implements OnInit {
       this.onLocalChange(locale);
     });
 
-    this.popUp$.subscribe((next: ContentSnippet) => {
+    this.popUp$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
     });
   }
@@ -81,6 +84,12 @@ export class SummaryConfigurationComponent implements OnInit {
         return;
       }
 
+      if (!this.csPopUp.title || !this.csPopUp.message) {
+        this.updateStore(section);
+        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+        return;
+      }
+
       this.popupSubscription = this.openPopUp().subscribe((next) => {
         this.popupSubscription.unsubscribe();
 
@@ -88,13 +97,8 @@ export class SummaryConfigurationComponent implements OnInit {
           return;
         }
 
-        this.store.dispatch(
-          setStep({
-            payload: {
-              id: section.id,
-            },
-          })
-        );
+        this.updateStore(section);
+
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
       })
     }
@@ -118,6 +122,16 @@ export class SummaryConfigurationComponent implements OnInit {
     } else {
       this.locale = locale;
     }
+  }
+
+  private updateStore(section: Section | undefined): void {
+    this.store.dispatch(
+      setStep({
+        payload: {
+          id: section.id,
+        },
+      })
+    );
   }
 
   private onCsPopUpChange(next: ContentSnippet) {
@@ -144,5 +158,10 @@ export class SummaryConfigurationComponent implements OnInit {
         this.csPopUp.button.accept = translate(value.content, this.locale);
       }
     })
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
