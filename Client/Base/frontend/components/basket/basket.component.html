@@ -41,8 +41,8 @@
         class="buttons"
     >
         <a
-            *ngIf="connector.url?.checkout || (csAptoBasket$ | async | contentSnippet: 'checkoutLink')"
-            [href]="connector.url?.checkout || (csAptoBasket$ | async | contentSnippet: 'checkoutLink')"
+            *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
+            [href]="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
             color="primary"
             mat-flat-button
             target='_blank'
@@ -51,8 +51,8 @@
         </a>
 
         <a
-            *ngIf="connector.url?.cart || (csAptoBasket$ | async | contentSnippet: 'cartLink')"
-            [href]="connector.url?.cart || (csAptoBasket$ | async | contentSnippet: 'cartLink')"
+            *ngIf="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
+            [href]="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
             color="accent"
             mat-flat-button
             target='_blank'
