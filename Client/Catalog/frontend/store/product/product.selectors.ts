@@ -6,6 +6,8 @@ export const selectProduct = createSelector(featureSelector, (state: CatalogFeat
 
 export const selectProductList = createSelector(featureSelector, (state: CatalogFeatureState) => state.product.productList);
 
+export const selectProductListLoading = createSelector(featureSelector, (state: CatalogFeatureState) => state.product.loading);
+
 export const selectRuleRepairSettings = createSelector(featureSelector, (state: CatalogFeatureState): RuleRepairSettings | null => {
   let repairSettings = null;
   if (!state.product.product) {

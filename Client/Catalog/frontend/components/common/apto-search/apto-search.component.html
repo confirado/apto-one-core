@@ -1,0 +1,12 @@
+<div class="search-field" [class.input-disabled]="disabled" [style.width]="width ? width : '100%'">
+    <label>{{ csProductList$ | async | contentSnippet: 'search' }}</label>
+
+    <input
+        type="text"
+        [formControl]="formElement"
+        [placeholder]="(csProductList$ | async | contentSnippet: 'searchPlaceholder')"
+        [class.input-disabled]="disabled"
+    >
+
+    <i class="fa fa-search search-icon"></i>
+</div>

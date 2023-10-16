@@ -12,16 +12,27 @@
 	}
 }
 
-.product-list {
-	background-color: var(--color-background);
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: 0 auto;
-	gap: 40px;
-	justify-content: center;
+.product-list-wrapper {
+    background-color: var(--color-background);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    gap: 40px;
+    justify-content: center;
     max-width: var(--layout-max-with);
     padding: 50px 40px;
+
+    .product-list {
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: center;
+        min-height: 200px;
+        min-width: 100%;
+    }
 }
 
 .product {
