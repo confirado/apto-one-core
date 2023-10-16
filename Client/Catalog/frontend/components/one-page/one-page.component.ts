@@ -13,6 +13,7 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 
 @Component({
 	selector: 'apto-one-page',
@@ -30,6 +31,7 @@ export class OnePageComponent implements OnInit, TemplateSlotInterface, OnDestro
 	public readonly perspectives$ = this.store.select(selectPerspectives);
   public readonly configurationLoading$ = this.store.select(selectConfigurationLoading);
   protected readonly loadingIndicatorTypes = LoadingIndicatorTypes;
+  public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoOnePage'));
 
   public renderImage = null;
 
