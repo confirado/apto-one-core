@@ -6,12 +6,17 @@ import { map, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class ProductEffects {
-	public constructor(private actions$: Actions, private productRepository: ProductRepository) {}
+	public constructor(
+    private actions$: Actions,
+    private productRepository: ProductRepository,
+  ) {}
 
 	public loadProductList$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(loadProductList),
-			switchMap(() => this.productRepository.findProductsByFilter()),
+      switchMap(
+        (action) => this.productRepository.findProductsByFilter(action)
+      ),
 			map((productList) => loadProductListSuccess({ payload: productList }))
 		)
 	);

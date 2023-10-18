@@ -66,6 +66,7 @@ import { SummaryFinishMessageComponent } from '@apto-catalog-frontend/components
 import { SectionPictureComponent } from '@apto-catalog-frontend/components/common/section-picture/section-picture.component';
 import { SelectableValueRangeComponent } from '@apto-base-frontend/components/selectable-value-range/selectable-value-range.component';
 import { SelectableValueTextComponent } from '@apto-base-frontend/components/selectable-value-text/selectable-value-text.component';
+import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/apto-search/apto-search.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -103,6 +104,7 @@ RouterRegistry.registerRoutes(Routes);
     TooltipDirective,
     SelectableValueRangeComponent,
     SelectableValueTextComponent,
+    AptoSearchComponent,
   ],
   exports: [
     QuantityInputEditableComponent,
@@ -114,6 +116,7 @@ RouterRegistry.registerRoutes(Routes);
 	  TooltipDirective,
     SelectableValueRangeComponent,
     SelectableValueTextComponent,
+    AptoSearchComponent,
   ],
 	imports: [
 		RouterModule,
