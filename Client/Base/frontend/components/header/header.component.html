@@ -11,7 +11,7 @@
                 [value]="locale$ | async"
                 class="selector"
             >
-                <mat-option *ngFor="let language of languages" [value]="language.locale">
+                <mat-option *ngFor="let language of languages" [value]="language.locale" [attr.data-locale]="language.locale">
                     {{ language.name | translate }}
                 </mat-option>
             </mat-select>
