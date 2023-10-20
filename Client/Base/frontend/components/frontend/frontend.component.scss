@@ -2,11 +2,18 @@
 	display: block;
 }
 
-mat-drawer-container {
+mat-drawer-container.mat-drawer-container {
 	background-color: #f7f8fa;
+    // need to unset overflow property here because otherwise sticky position of step-navigation-container would not work anymore
+    overflow: unset;
 }
 
 ::ng-deep {
+    mat-drawer-content.mat-drawer-content {
+        // need to unset overflow property here because otherwise sticky position of step-navigation-container would not work anymore
+        overflow: unset;
+    }
+
     .apto-frontend-users-login {
         .save-dialog {
             max-width: 600px;
