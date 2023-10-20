@@ -1,0 +1,30 @@
+<div class="input-field" [style.width]="width ? 'max-content' : '100%'" [class.input-disabled]="disabled">
+    <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
+    <div class="name" *ngIf="name">{{ name }}</div>
+
+    <div class="container" [style.width]="width">
+        <input
+            type="number"
+            (focus)="onInputFocus($event)"
+            [formControl]="formElement"
+            [min]="min"
+            [max]="max"
+            [step]="step"
+            [placeholder]="placeholder"
+            [class.input-disabled]="disabled"
+        />
+
+        <div class="ripple-controls">
+            <div class="control" mat-ripple (click)="increase()" [matRippleDisabled]="disabled" [class.input-disabled]="disabled">
+                <mat-icon>arrow_drop_up</mat-icon>
+            </div>
+
+            <div class="control" mat-ripple (click)="decrease()" [matRippleDisabled]="disabled" [class.input-disabled]="disabled">
+                <mat-icon>arrow_drop_down</mat-icon>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint" *ngIf="hint">{{ hint }}</div>
+    <div class="suffix" *ngIf="suffix">{{ suffix }}</div>
+</div>

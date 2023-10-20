@@ -51,6 +51,12 @@ export interface ConnectorBasket {
 	articles: ConnectorArticle[];
 }
 
+export interface ConnectorUrl {
+  cart: string;
+  checkout: string;
+  home: string;
+}
+
 export interface Connector {
 	sessionCookies: any;
 	user: ConnectorUser | null;
@@ -62,6 +68,7 @@ export interface Connector {
 	shopCurrency: Currency;
 	basket: ConnectorBasket;
   configured: boolean;
+  url?: ConnectorUrl;
 }
 
 export interface SelectConnector {

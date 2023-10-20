@@ -1,13 +1,15 @@
 @import "globals";
 @import "common";
 
+$zoom-icon-width: 22px;
+
 .element-picture {
     position: relative;
 
     &.is-zoomable {
         // if we display zoom icon then we make image smaller to fit the space
         img {
-            width: calc(var(--image-tablet-width) - 22px);
+            width: calc(var(--image-tablet-width) - $zoom-icon-width);
         }
     }
 
@@ -46,13 +48,11 @@
     .element-picture {
         &.is-zoomable {
             img {
-                width: var(--image-mobile-width);
-                margin: 1px;
+                width: calc(var(--image-mobile-width) - $zoom-icon-width);
             }
         }
 
         .zoom-icon {
-            right: -6px;
         }
     }
 }
