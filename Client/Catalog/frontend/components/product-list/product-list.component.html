@@ -13,7 +13,9 @@
                     <div class="product-description">
                         <h3>{{ product.name | translate }}</h3>
                         <div *ngIf="(product.description | translate) !== '' "
-                             [innerHTML]="product.description | translate | safeHtml">
+                             [innerHTML]="product.description | translate | safeHtml"
+                             class="description"
+                        >
                         </div>
                         <button mat-flat-button color="primary"
                                 [routerLink]="['/product', product.seoUrl ?? product.id]"

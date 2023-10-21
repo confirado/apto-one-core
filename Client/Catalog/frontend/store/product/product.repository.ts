@@ -45,6 +45,7 @@ export class ProductRepository {
 			position: response.position,
 			customProperties: response.customProperties,
       hidden: response.hidden,
+      active: response.active,
       minPurchase: response.minPurchase,
       maxPurchase: response.maxPurchase,
 		};
