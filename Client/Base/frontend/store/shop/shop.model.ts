@@ -1,6 +1,6 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { CustomProperty } from "@apto-base-core/store/custom-property/custom-property.model";
-import { LanguageISO } from '@apto-base-frontend/store/language/language.model';
+import { LanguageResponse} from '@apto-base-frontend/store/language/language.model';
 
 export interface Shop {
   id: string;
@@ -13,7 +13,7 @@ export interface Shop {
 }
 
 export interface ShopResponse extends Shop {
-  languages: LanguageISO[];
+  languages: LanguageResponse[];
   templateId?: string;
   surrogateId?: number;
 }

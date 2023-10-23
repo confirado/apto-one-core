@@ -6,7 +6,7 @@ export interface Language {
   name: TranslatedValue;
 }
 
-export interface LanguageISO {
+export interface LanguageResponse {
   id: string;
   created? : string;
   isocode: string;
