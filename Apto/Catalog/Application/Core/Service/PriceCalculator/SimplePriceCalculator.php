@@ -745,6 +745,7 @@ class SimplePriceCalculator implements PriceCalculator
                 ];
                 $this->priceTable['sections'][$sectionId]['elements'][$elementId]['own'] = [
                     'pseudoPrice' => $elementPseudoPrice,
+                    'pseudoDiff' => $elementPrice->subtract($elementPseudoPrice),
                     'price' => $elementPrice
                 ];
 
@@ -857,6 +858,7 @@ class SimplePriceCalculator implements PriceCalculator
                 ];
                 $this->priceTable['sections'][$sectionId]['elements'][$elementId]['own'] = [
                     'pseudoPrice' => $elementOwnPseudoPrice,
+                    'pseudoDiff' => $elementOwnPrice->subtract($elementOwnPseudoPrice),
                     'price' => $elementOwnPrice
                 ];
 
@@ -895,6 +897,7 @@ class SimplePriceCalculator implements PriceCalculator
             ];
             $this->priceTable['sections'][$sectionId]['own'] = [
                 'pseudoPrice' => $sectionOwnPseudoPrice,
+                'pseudoDiff' => $sectionOwnPrice->subtract($sectionOwnPseudoPrice),
                 'price' => $sectionOwnPrice
             ];
             $this->priceTable['sections'][$sectionId]['sum'] = [
