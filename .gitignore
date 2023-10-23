@@ -12,3 +12,11 @@
 /Apto/Base/Infrastructure/AptoBaseBundle/Logs/MessageBus/*.html
 /Apto/Base/Infrastructure/AptoBaseBundle/Logs/MessageBus/prod/
 /Apto/Base/Infrastructure/AptoBaseBundle/Logs/MessageBus/dev/
+
+# test files ignore
+/Tests/cypress/_downloads/*
+!/Tests/cypress/_downloads/.gitkeep
+/Tests/cypress/_screenshots/*
+!/Tests/cypress/_screenshots/.gitkeep
+/Tests/cypress/_videos/*
+!/Tests/cypress/_videos/.gitkeep
