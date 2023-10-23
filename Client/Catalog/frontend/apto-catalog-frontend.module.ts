@@ -64,6 +64,9 @@ import { TooltipDirective } from './components/common/tooltip.directive';
 import { SummaryConfigurationComponent } from '@apto-catalog-frontend/components/summary/summary-configuration/summary-configuration.component';
 import { SummaryFinishMessageComponent } from '@apto-catalog-frontend/components/summary/summary-finish-message/summary-finish-message.component';
 import { SectionPictureComponent } from '@apto-catalog-frontend/components/common/section-picture/section-picture.component';
+import { SelectableValueRangeComponent } from '@apto-base-frontend/components/selectable-value-range/selectable-value-range.component';
+import { SelectableValueTextComponent } from '@apto-base-frontend/components/selectable-value-text/selectable-value-text.component';
+import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/apto-search/apto-search.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -99,16 +102,21 @@ RouterRegistry.registerRoutes(Routes);
     CloseButtonComponent,
     ConfirmationDialogComponent,
     TooltipDirective,
+    SelectableValueRangeComponent,
+    SelectableValueTextComponent,
+    AptoSearchComponent,
   ],
   exports: [
     QuantityInputEditableComponent,
     SummaryConfigurationComponent,
     OPElementDialogComponent,
-	  QuantityInputEditableComponent,
 	  ElementPictureComponent,
     SectionPictureComponent,
 	  CloseButtonComponent,
 	  TooltipDirective,
+    SelectableValueRangeComponent,
+    SelectableValueTextComponent,
+    AptoSearchComponent,
   ],
 	imports: [
 		RouterModule,

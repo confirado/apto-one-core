@@ -13,10 +13,28 @@ export enum ViewportPresetsEnum {
 
 // eslint-disable-next-line no-shadow
 export enum ExistingLanguages {
-  ENGLISH = 'Englisch',
-  GERMAN = 'Deutsch',
-  FRENCH = 'Französisch',
+  ENGLISH = 'en_GB',
+  GERMAN = 'de_DE',
+  FRENCH = 'fr_FR',
 }
+
+export const ExistingLanguageTranslations = {
+  ENGLISH: {
+    de_DE: 'German',
+    en_GB: 'English',
+    fr_FR: 'French',
+  },
+  GERMAN: {
+    de_DE: 'Deutsch',
+    en_GB: 'Englisch',
+    fr_FR: 'Französisch',
+  },
+  FRENCH: {
+    de_DE: 'Allemand',
+    en_GB: 'Anglais',
+    fr_FR: 'Français',
+  },
+};
 
 // eslint-disable-next-line no-shadow
 export enum UserRoleEnum {

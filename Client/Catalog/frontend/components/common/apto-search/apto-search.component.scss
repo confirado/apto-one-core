@@ -1,0 +1,33 @@
+@import "form-inputs";
+
+:host {
+    @include input-host();
+    flex-direction: column;
+}
+
+.search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    label {
+        @include label();
+    }
+
+    input {
+        @include input();
+        @include container();
+        @include input-disabled();
+        padding-right: 30px;
+    }
+
+    .search-icon {
+        @include search-icon();
+        position: absolute;
+        right: 10px;
+    }
+}
+
+

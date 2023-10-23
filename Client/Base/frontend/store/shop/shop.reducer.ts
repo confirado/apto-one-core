@@ -1,4 +1,4 @@
-import { initShop, initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
+import { deleteBasketItem, initShop, initShopSuccess, deleteBasketItemSuccess } from '@apto-base-frontend/store/shop/shop.actions';
 import { Connector, Shop } from '@apto-base-frontend/store/shop/shop.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { Action, createReducer, on } from '@ngrx/store';
@@ -45,7 +45,19 @@ const _shopReducer = createReducer(
 			connector: action.payload.connector,
 			loading: false,
 		};
-	})
+	}),
+  on(deleteBasketItem, (state, action) => {
+    return {
+      ...state,
+      loading: true,
+    };
+  }),
+  on(deleteBasketItemSuccess, (state, action) => {
+    return {
+      ...state,
+      loading: false,
+    };
+  })
 );
 
 export function shopReducer(state: ShopState | undefined, action: Action) {

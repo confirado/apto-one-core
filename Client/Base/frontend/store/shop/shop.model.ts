@@ -1,5 +1,6 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { CustomProperty } from "@apto-base-core/store/custom-property/custom-property.model";
+import { LanguageISO } from '@apto-base-frontend/store/language/language.model';
 
 export interface Shop {
   id: string;
@@ -9,6 +10,12 @@ export interface Shop {
   domain: string;
   currency: string;
   customProperties: CustomProperty[]
+}
+
+export interface ShopResponse extends Shop {
+  languages: LanguageISO[];
+  templateId?: string;
+  surrogateId?: number;
 }
 
 export interface Currency {
@@ -51,6 +58,12 @@ export interface ConnectorBasket {
 	articles: ConnectorArticle[];
 }
 
+export interface ConnectorUrl {
+  cart: string;
+  checkout: string;
+  home: string;
+}
+
 export interface Connector {
 	sessionCookies: any;
 	user: ConnectorUser | null;
@@ -62,6 +75,7 @@ export interface Connector {
 	shopCurrency: Currency;
 	basket: ConnectorBasket;
   configured: boolean;
+  url?: ConnectorUrl;
 }
 
 export interface SelectConnector {

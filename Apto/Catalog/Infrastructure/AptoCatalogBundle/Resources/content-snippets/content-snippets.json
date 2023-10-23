@@ -201,14 +201,8 @@
     "checkout": {
       "de_DE": "Zur Kasse"
     },
-    "checkoutLink": {
-      "de_DE": "http://grobi.projektverssion.de/checkout/confirm"
-    },
     "cart": {
       "de_DE": "Zum Warenkorb"
-    },
-    "cartLink": {
-      "de_DE": "http://grobi.projektverssion.de/checkout/cart"
     },
     "back": {
       "de_DE": "Jetzt weiter konfigurieren"
@@ -352,6 +346,11 @@
     "sidebarElements": {
       "filter": {
         "de_DE": "Filtern"
+      }
+    },
+    "productDetail": {
+      "title": {
+        "de_DE": "Produktdetails"
       }
     }
   },

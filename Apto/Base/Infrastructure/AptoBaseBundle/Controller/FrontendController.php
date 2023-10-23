@@ -2,6 +2,9 @@
 
 namespace Apto\Base\Infrastructure\AptoBaseBundle\Controller;
 
+use Apto\Base\Application\Core\Query\ContentSnippet\FindContentSnippetTree;
+use Apto\Base\Domain\Core\Model\AptoLocale;
+use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Service\AptoParameterInterface;
 use Throwable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -87,9 +90,9 @@ class FrontendController extends AbstractController
             'templateLoaderData' => $templateLoaderData,
             'perspectives' => $this->getParameter('perspectives'),
             'shopTemplate' => 'shop-template-' . $templateId,
-            'aptoApi' => $this->templateLoader->getApiData('frontend', $templateId)
+            'aptoApi' => $this->templateLoader->getApiData('frontend', $templateId),
+            'aptoFavicon' => $this->getFavicon($locale)
         ];
-
         // render template
         return $this->render('@AptoBase/apto/base/frontend/index.html.twig', $templateVars);
     }
@@ -123,6 +126,50 @@ class FrontendController extends AbstractController
         $this->queryBus->handle($shopsQuery, $shop);
 
         return $shop;
+    }
+
+    /**
+     * @param string $locale
+     * @return string|null
+     * @throws Throwable
+     */
+    protected function getFavicon(string $locale): ?string
+    {
+        $contentSnippets = $this->getContentSnippets();
+        $aptoFavicon = $this->getContentSnippetByName('aptoFavicon', $contentSnippets);
+        $aptoFavicon = $this->getContentSnippetByName('iconMediaLink', $aptoFavicon['children'] ?? []);
+        if ($aptoFavicon !== null) {
+            $aptoFavicon = AptoTranslatedValue::fromArray($aptoFavicon['content'])->getTranslation(new AptoLocale($locale), new AptoLocale('de_DE'), true)->getValue();
+        }
+        return $aptoFavicon;
+    }
+
+    /**
+     * @return array|null
+     * @throws Throwable
+     */
+    protected function getContentSnippets(): ?array
+    {
+        $contentSnippets = null;
+        $query = new FindContentSnippetTree(true, true);
+        $this->queryBus->handle($query, $contentSnippets);
+
+        return $contentSnippets;
+    }
+
+    /**
+     * @param string $name
+     * @param array $contentSnippets
+     * @return array|null
+     */
+    protected function getContentSnippetByName(string $name, array $contentSnippets): ?array
+    {
+        foreach ($contentSnippets as $contentSnippet) {
+            if ($contentSnippet['name'] === $name) {
+                return $contentSnippet;
+            }
+        }
+        return null;
     }
 
     /**

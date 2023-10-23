@@ -5,7 +5,7 @@ import { environment } from '@apto-frontend/src/environments/environment';
 import { MessageBusService } from '@apto-base-core/services/message-bus.service';
 import { Language } from '@apto-base-frontend/store/language/language.model';
 import { Connector, Shop } from '@apto-base-frontend/store/shop/shop.model';
-import { CustomProperty } from "@apto-base-core/store/custom-property/custom-property.model";
+import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 
 @Injectable()
 export class ShopRepository {
@@ -44,7 +44,9 @@ export class ShopRepository {
           withCredentials: true,
         }
       )
-      .pipe(map((response: any) => ({...response.result, configured: true})));
+      .pipe(
+        map((response: { result: Connector }) => ({ ...response.result, configured: true } as Connector))
+      );
   }
 
 	public findShopContext(): Observable<{ shop: Shop; languages: Language[]; locale: string }> {

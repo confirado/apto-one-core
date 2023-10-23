@@ -10,8 +10,9 @@ export class ProductRepository {
 
 	public constructor(private messageBus: MessageBusService) {}
 
-	public findProductsByFilter(): Observable<Product[]> {
-		return this.messageBus.query('FindProductsByFilter', [{}]).pipe(map((response) => this.responseToProducts(response)));
+	public findProductsByFilter(action: any): Observable<Product[]> {
+    const args = action.payload || {};
+		return this.messageBus.query('FindProductsByFilter', [args]).pipe(map((response) => this.responseToProducts(response)));
 	}
 
 	public findConfigurableProduct(
@@ -44,6 +45,7 @@ export class ProductRepository {
 			position: response.position,
 			customProperties: response.customProperties,
       hidden: response.hidden,
+      active: response.active,
       minPurchase: response.minPurchase,
       maxPurchase: response.maxPurchase,
 		};

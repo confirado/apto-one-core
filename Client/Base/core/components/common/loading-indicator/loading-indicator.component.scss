@@ -2,11 +2,7 @@
     z-index: 2;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
 
     &.element {
         position: absolute;
@@ -25,7 +21,14 @@
     }
 
     .loading-spinner {
-
+        position: absolute;
+        // loading-container can be higher then the screen height, so if we put spinner in the middle it can be not visible
+        top: calc(min(50vh, 50%));
+        left: 50%;
+        transform: translateX(-50%);
+        max-height: 100%;
+        max-width: 100%;
+        overflow: auto;
     }
 }
 

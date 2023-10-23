@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { debounceTime, delay, map } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, map } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -58,9 +58,9 @@ export class InputFieldComponent implements ControlValueAccessor, OnChanges {
 	}
 
 	public registerOnChange(fn: any): void {
-		// TODO: Not good... can cause a loop
 		this.formElement.valueChanges
 			.pipe(
+        distinctUntilChanged(),
 				map((value) => {
 					if (this.type === 'integer') {
 						return parseInt(value, 10);
@@ -71,6 +71,7 @@ export class InputFieldComponent implements ControlValueAccessor, OnChanges {
 					return value;
 				}),
 				delay(0),
+        // this is maybe not needed if we use directive
 				debounceTime(100)
 			)
 			.subscribe(fn);

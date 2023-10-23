@@ -7,6 +7,6 @@ export enum ProductActionTypes {
 	LoadProductListSuccess = '[Product List] Load Product List success',
 }
 
-export const loadProductList = createAction(ProductActionTypes.LoadProductList);
+export const loadProductList = createAction(ProductActionTypes.LoadProductList, props<{ payload: { searchString: string }}>());
 
 export const loadProductListSuccess = createAction(ProductActionTypes.LoadProductListSuccess, props<{ payload: Product[] }>());

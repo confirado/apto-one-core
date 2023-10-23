@@ -4,9 +4,10 @@ import { Language } from "@apto-base-frontend/store/language/language.model";
 import { ContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippet.model";
 
 export enum ShopActionTypes {
-  InitShop        = '[Shops] Init Shop',
+  InitShop = '[Shops] Init Shop',
   InitShopSuccess = '[Shops] Init Shop success',
-  DeleteBasketItem = '[Shops] Delete Basket Item'
+  DeleteBasketItem = '[Shops] Delete Basket Item',
+  DeleteBasketItemSuccess = '[Shops] Delete Basket Item Success',
 }
 
 export const initShop = createAction(
@@ -21,4 +22,8 @@ export const initShopSuccess = createAction(
 export const deleteBasketItem = createAction(
   ShopActionTypes.DeleteBasketItem,
   props<{ payload: { basketItemId: string } }>()
+);
+
+export const deleteBasketItemSuccess = createAction(
+  ShopActionTypes.DeleteBasketItemSuccess
 );

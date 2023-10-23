@@ -1,22 +1,31 @@
-<div class="product-list">
-    <ng-container *ngFor="let product of productList$ | async">
-        <div *ngIf="!product.hidden" [routerLink]="['/product', product.seoUrl]">
-            <div class="product">
-                <div class="image" [ngClass]="{'no-image': !product.previewImage}">
-                    <img *ngIf="product.previewImage" [src]="product.previewImage"/>
-                </div>
-                <div class="product-description">
-                    <h3>
-                        {{ product.name | translate }}
-                    </h3>
-                    <div *ngIf="(product.description | translate) !== '' "
-                         [innerHTML]="product.description | translate | safeHtml">
+<div class="product-list-wrapper">
+    <apto-search [formControl]="formElement"></apto-search>
+
+    <div class="product-list">
+        <apto-loading-indicator *ngIf="selectProductListLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
+
+        <ng-container *ngFor="let product of productList$ | async">
+            <div *ngIf="!product.hidden" class="product-wrapper" [attr.data-id]="product.id">
+                <div class="product" [routerLink]="['/product', product.seoUrl]">
+                    <div class="image" [ngClass]="{'no-image': !product.previewImage}">
+                        <img *ngIf="product.previewImage" [src]="product.previewImage"/>
                     </div>
-                    <button mat-flat-button color="primary" [routerLink]="['/product', product.seoUrl ?? product.id]">
-                        {{ contentSnippets$ | async | contentSnippet: 'button' }}
-                    </button>
+                    <div class="product-description">
+                        <h3>{{ product.name | translate }}</h3>
+                        <div *ngIf="(product.description | translate) !== '' "
+                             [innerHTML]="product.description | translate | safeHtml"
+                             class="description"
+                        >
+                        </div>
+                        <button mat-flat-button color="primary"
+                                [routerLink]="['/product', product.seoUrl ?? product.id]"
+                                [attr.data-link]="'/product/' + (product.seoUrl ?? product.id)"
+                        >
+                            {{ contentSnippets$ | async | contentSnippet: 'button' }}
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </ng-container>
+        </ng-container>
+    </div>
 </div>

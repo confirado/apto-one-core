@@ -1,6 +1,6 @@
 <ng-container *ngIf="progressState$ | async as progressState">
 	<ng-container *ngIf="progressState.currentStep">
-		<div class="headline">
+		<div class="headline" [class.no-image]="!progressState.currentStep.section.previewImage">
 			<apto-section-picture
 				*ngIf="progressState.currentStep.section.previewImage"
 				class="image"
