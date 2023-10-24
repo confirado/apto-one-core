@@ -17,6 +17,7 @@ use Apto\Catalog\Domain\Core\Model\Product\Element\RenderImageOptions;
 use Apto\Catalog\Domain\Core\Model\Product\Identifier;
 use Apto\Catalog\Domain\Core\Model\Product\IdentifierUniqueException;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
+use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Apto\Base\Domain\Core\Model\AptoCustomProperties;
@@ -93,6 +94,11 @@ class Section extends AptoEntity
     protected $group;
 
     /**
+     * @var Repeatable
+     */
+    protected $repeatable;
+
+    /**
      * Section constructor.
      * @param AptoUuid $id
      * @param Product $product
@@ -107,6 +113,7 @@ class Section extends AptoEntity
         $this->aptoDiscounts = new ArrayCollection();
         $this->product = $product;
         $this->position = 0;
+        $this->repeatable = new Repeatable(Repeatable::TYPES[0]);
         $this
             ->setIdentifier($identifier)
             ->setIsActive(false)
@@ -701,6 +708,25 @@ class Section extends AptoEntity
     }
 
     /**
+     * @return Repeatable
+     */
+    public function getRepeatable(): Repeatable
+    {
+        return $this->repeatable;
+    }
+
+    /**
+     * @param Repeatable $repeatable
+     *
+     * @return $this
+     */
+    public function setRepeatable(Repeatable $repeatable): Section
+    {
+        $this->repeatable = $repeatable;
+        return $this;
+    }
+
+    /**
      * @param AptoUuid $id
      * @param Collection $entityMapping
      * @param Identifier|null $identifier
@@ -746,7 +772,8 @@ class Section extends AptoEntity
             ->setAllowMultiple($this->getAllowMultiple())
             ->setPosition($this->getPosition())
             ->setGroup($this->group)
-            ->setIsZoomable($this->getIsZoomable());
+            ->setIsZoomable($this->getIsZoomable())
+            ->setRepeatable($this->getRepeatable());
 
         if (null !== $this->previewImage) {
             $section->setPreviewImage($this->previewImage);

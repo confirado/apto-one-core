@@ -50,6 +50,7 @@ use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsHiddenUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsMandatoryUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionPositionUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsZoomableUpdated;
+use Apto\Catalog\Domain\Core\Model\Product\Section\SectionRepeatableUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Money\Currency;
@@ -1278,6 +1279,34 @@ class Product extends AptoAggregate
         $section->setAllowMultiple($allowMultiple);
         $this->publish(
             new SectionAllowMultipleUpdated($section->getId(), $allowMultiple)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid   $sectionId
+     * @param Repeatable $repeatable
+     *
+     * @return $this
+     */
+    public function setSectionRepeatable(AptoUuid $sectionId, Repeatable $repeatable): Product
+    {
+        // if section does not exists anymore we have nothing to do
+        $section = $this->getSection($sectionId);
+        if (null === $section) {
+            return $this;
+        }
+
+        // if value is the same skip
+        if ($section->getRepeatable()->equals($repeatable)) {
+            return $this;
+        }
+
+        // update section type flag
+        $section->setRepeatable($repeatable);
+        $this->publish(
+            new SectionRepeatableUpdated($section->getId(), $repeatable->jsonSerialize())
         );
 
         return $this;

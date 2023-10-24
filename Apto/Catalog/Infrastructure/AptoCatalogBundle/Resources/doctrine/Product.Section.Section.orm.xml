@@ -46,6 +46,7 @@
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
         <embedded class="Apto\Catalog\Domain\Core\Model\Product\Identifier" name="identifier"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Repeatable" name="repeatable"/>
 
         <one-to-many field="elements" target-entity="Apto\Catalog\Domain\Core\Model\Product\Element\Element" mapped-by="section" index-by="id.id" orphan-removal="true">
             <cascade>

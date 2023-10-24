@@ -99,7 +99,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isHidden',
                     'isMandatory',
                     'isZoomable',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ],
                 // product element
                 'pe' => [
@@ -273,7 +275,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isHidden',
                     'isZoomable',
                     'isMandatory',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ],
                 // element
                 'e' => [
@@ -695,7 +699,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isActive',
                     'isHidden',
                     'isMandatory',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ]
             ])
             ->setJoins([

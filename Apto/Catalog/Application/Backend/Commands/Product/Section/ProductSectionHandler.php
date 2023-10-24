@@ -5,6 +5,7 @@ namespace Apto\Catalog\Application\Backend\Commands\Product\Section;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
+use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
 use Exception;
 use Money\Currency;
 use Money\Money;
@@ -139,6 +140,10 @@ class ProductSectionHandler extends ProductChildHandler
             ->setSectionAllowMultiple(
                 $sectionId,
                 $command->getAllowMultiple()
+            )
+            ->setSectionRepeatable(
+                $sectionId,
+                Repeatable::fromArray($command->getRepeatable())
             )
             ->setSectionPosition(
                 $sectionId,
