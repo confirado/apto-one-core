@@ -18,10 +18,11 @@ import {
   selectBasicPseudoPrice,
   selectConfiguration,
   selectProgressState,
-  selectSectionPrice, selectSectionPseudoPrice,
+  selectSectionPrice, selectSectionPriceTable, selectSectionPseudoPrice,
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -40,6 +41,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   private destroy$ = new Subject<void>();
   public locale: string;
+  public expandedSectionPrices: String[] = [];
 
   private popupSubscription: Subscription = null;
   private csPopUp: {
@@ -67,6 +69,10 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
     });
+  }
+
+  public getSectionPriceTable(section: Section): Observable<SectionPriceTableItem[]> {
+    return this.store.select(selectSectionPriceTable(section));
   }
 
   public getSectionPrice(section: Section): Observable<string | null | undefined> {
@@ -101,6 +107,22 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
       })
+    }
+  }
+
+  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    if (sectionPriceTable.length < 1) {
+      return;
+    }
+
+    const index = this.expandedSectionPrices.indexOf(sectionId);
+    if (index !== -1) {
+      this.expandedSectionPrices.splice(index, 1);
+    } else {
+      this.expandedSectionPrices.push(sectionId);
     }
   }
 

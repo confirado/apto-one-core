@@ -4,7 +4,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData,
+  RenderImageData, SectionPriceTableItem,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -239,6 +239,79 @@ export const selectSectionPseudoPrice = (section: Section): any =>
     }
     return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.pseudoPrice.formatted;
   });
+
+export const selectSectionPriceTable = (section: Section): any => createSelector(featureSelector, (state: CatalogFeatureState): SectionPriceTableItem[] => {
+  let priceTable: SectionPriceTableItem[] = [];
+
+  // if that section has no surcharges we can return an empty array here
+  if (!state.configuration.statePrice.sections.hasOwnProperty(section.id)) {
+    return priceTable;
+  }
+
+  // add all element surcharges of that section to the priceTable array
+  const sectionPrices = state.configuration.statePrice.sections[section.id];
+  Object.keys(sectionPrices.elements).forEach((elementId) => {
+    const elementPrice = sectionPrices.elements[elementId];
+    const pElement = state.product.elements.find(e => e.id === elementId);
+
+    // we do not want to add elements without a surcharge
+    if (elementPrice.own.price.amount <= 0) {
+      return;
+    }
+
+    // add element own price
+    priceTable.push({
+      name: pElement.name,
+      value: elementPrice.own.pseudoPrice.formatted,
+      position: pElement.position,
+      isDiscount: false,
+      isSection: false,
+      isElement: true
+    });
+
+    // add element discount
+    if (elementPrice.own.pseudoDiff.amount !== 0) {
+      priceTable.push({
+        name: elementPrice.discount.name,
+        value: elementPrice.own.pseudoDiff.formatted,
+        // element position is always an integer, we add 0.5 here to make sure after sorting, the element price and its discount is displayed one below the other
+        position: pElement.position + 0.5,
+        isDiscount: true,
+        isSection: false,
+        isElement: true
+      });
+    }
+  });
+
+  // resort elements by its position
+  priceTable.sort((a,b) => a.position - b.position);
+
+  // add section discount
+  if (sectionPrices.own.pseudoDiff.amount !== 0) {
+    priceTable.unshift({
+      name: sectionPrices.discount.name,
+      value: sectionPrices.own.pseudoDiff.formatted,
+      position: -1,
+      isDiscount: true,
+      isSection: true,
+      isElement: false
+    });
+  }
+
+  // add section own price
+  if (sectionPrices.own.pseudoPrice.amount !== 0) {
+    priceTable.unshift({
+      name: section.name,
+      value: sectionPrices.own.pseudoPrice.formatted,
+      position: -2,
+      isDiscount: false,
+      isSection: true,
+      isElement: false
+    });
+  }
+
+  return priceTable;
+});
 
 export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
 

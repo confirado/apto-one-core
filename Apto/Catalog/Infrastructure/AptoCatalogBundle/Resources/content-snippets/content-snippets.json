@@ -161,6 +161,20 @@
     },
     "subline": {
       "de_DE": "Klicken Sie auf die Sektion, wenn Sie Änderungen vornehmen möchten"
+    },
+    "sectionPrices": {
+      "basePrice": {
+        "de_DE": "Grundpreis: "
+      },
+      "sumPrice": {
+        "de_DE": "Summe: "
+      },
+      "sectionDiscount": {
+        "de_DE": "Sektionsrabatt: "
+      },
+      "elementDiscount": {
+        "de_DE": "Elementrabatt: "
+      }
     }
   },
   "confirmSelectSectionDialog": {

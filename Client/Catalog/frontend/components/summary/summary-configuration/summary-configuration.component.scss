@@ -135,6 +135,16 @@ p {
     }
 }
 
+.section-price {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    mat-icon {
+        color: #B3B3B3;
+    }
+}
+
 .basic-discount-price {
     text-decoration: line-through;
     text-decoration-thickness: 2px;

@@ -22,30 +22,37 @@
                             </div>
                         </div>
                         <div class="summary configuration" *ngFor="let section of steps.steps; index as i">
-                            <div class="single-section" (click)="setStep(section.section, product.seoUrl, product.useStepByStep)">
-                                <div class="finished-message section">
-                                    <div class="circle list">{{ i + 1 }}</div>
-                                    <div>
-                                        <div class="section-name">{{ section.section.name | translate }}</div>
-                                        <div *ngFor="let element of section.elements">
-                                            <div class="element-name" *ngIf="element.state.active">
-                                                {{ element.element.name | translate }}
+                            <ng-container *ngIf="getSectionPriceTable(section.section) | async as sectionPriceTable">
+                                <div class="single-section" (click)="setStep(section.section, product.seoUrl, product.useStepByStep)">
+                                    <div class="finished-message section">
+                                        <div class="circle list">{{ i + 1 }}</div>
+                                        <div>
+                                            <div class="section-name">{{ section.section.name | translate }}</div>
+                                            <div *ngFor="let element of section.elements">
+                                                <div class="element-name" *ngIf="element.state.active">
+                                                    {{ element.element.name | translate }}
+                                                </div>
                                             </div>
+                                            <div *ngIf="!section.active">{{ contentSnippet$ | async | contentSnippet: 'notSelected' }}</div>
                                         </div>
-                                        <div *ngIf="!section.active">{{ contentSnippet$ | async | contentSnippet: 'notSelected' }}</div>
                                     </div>
-                                </div>
-                                <ng-container *ngIf="getSectionPseudoPrice(section.section) | async as sectionPseudoPrice">
-                                    <ng-container *ngIf="getSectionPrice(section.section) | async as sectionPrice">
-                                        <div class="section-right" *ngIf="showPrices">
-                                            <div class="basic-discount-price" *ngIf="sectionPrice !== sectionPseudoPrice">
-                                                {{ sectionPseudoPrice }}
+                                    <ng-container *ngIf="(getSectionPseudoPrice(section.section) | async) as sectionPseudoPrice">
+                                        <ng-container *ngIf="getSectionPrice(section.section) | async as sectionPrice">
+                                            <div class="section-right" *ngIf="showPrices" (click)="togglePriceTable($event, section.section.id, sectionPriceTable)">
+                                                <div class="basic-discount-price" *ngIf="sectionPrice !== sectionPseudoPrice">
+                                                    {{ sectionPseudoPrice }}
+                                                </div>
+                                                <span class="section-price">
+                                                    <mat-icon *ngIf="expandedSectionPrices.indexOf(section.section.id) !== -1 && sectionPriceTable.length > 0">expand_less</mat-icon>
+                                                    <mat-icon *ngIf="expandedSectionPrices.indexOf(section.section.id) === -1 && sectionPriceTable.length > 0">expand_more</mat-icon>
+                                                    {{ sectionPrice }}
+                                                </span>
                                             </div>
-                                            {{ sectionPrice }}
-                                        </div>
+                                        </ng-container>
                                     </ng-container>
-                                </ng-container>
-                            </div>
+                                </div>
+                                <apto-summary-section-price *ngIf="showPrices && sectionPriceTable.length > 0" [section]="section.section" [expanded]="expandedSectionPrices.indexOf(section.section.id) !== -1"></apto-summary-section-price>
+                            </ng-container>
                         </div>
                         <div class="summary configuration" *ngIf="showPrices">
                             <div class="single-section default price">
