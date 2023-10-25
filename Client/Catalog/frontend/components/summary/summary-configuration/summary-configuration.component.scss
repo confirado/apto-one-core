@@ -136,10 +136,34 @@ p {
     font-weight: 600;
     font-size: large;
     color: var(--color-primary);
+    margin-bottom: 8px;
+    line-height: 27px;
 
     &.price {
         font-size: larger;
         font-weight: 700;
+    }
+
+    &.base-price {
+        margin-bottom: 0;
+    }
+}
+
+.element-summary {
+    line-height: 19px;
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    apto-element-picture {
+        max-width: 82px;
+        margin-bottom: 5px;
     }
 }
 
@@ -184,7 +208,9 @@ p {
 }
 
 .discount-name {
-    color: #a9a9a9;
+    color: var(--color-text);
+    font-size: 15px;
+    line-height: 19px;
 }
 
 @media only screen and (max-width: calc($mobile-max-width - 1px)) {
