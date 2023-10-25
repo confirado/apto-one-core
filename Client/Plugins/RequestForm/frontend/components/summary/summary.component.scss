@@ -55,6 +55,12 @@
             padding-bottom: 0;
         }
 
+        .basket {
+            &.buttons {
+                gap: 30px;
+            }
+        }
+
         &.configuration {
             padding: 10px;
         }

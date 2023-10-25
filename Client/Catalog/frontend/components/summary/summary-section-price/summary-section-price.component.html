@@ -4,17 +4,17 @@
             <ng-container *ngFor="let priceTableItem of priceTable">
                 <div
                     class="price-table-row"
-                    [class.section-row]="priceTableItem.isSection && !priceTableItem.isDiscount"
+                    [class.section-row]="!priceTableItem.elementId && !priceTableItem.isDiscount"
                     [class.discount-row]="priceTableItem.isDiscount"
                 >
                     <div>
-                        <span *ngIf="priceTableItem.isSection && !priceTableItem.isDiscount && contentSnippets | contentSnippet: 'basePrice'">
+                        <span *ngIf="!priceTableItem.elementId && !priceTableItem.isDiscount && contentSnippets | contentSnippet: 'basePrice'">
                             {{ contentSnippets | contentSnippet: 'basePrice' }}
                         </span>
-                        <span *ngIf="priceTableItem.isSection && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'sectionDiscount'">
+                        <span *ngIf="!priceTableItem.elementId && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'sectionDiscount'">
                             {{ contentSnippets | contentSnippet: 'sectionDiscount' }}
                         </span>
-                        <span *ngIf="priceTableItem.isElement && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'elementDiscount'">
+                        <span *ngIf="priceTableItem.elementId && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'elementDiscount'">
                             {{ contentSnippets | contentSnippet: 'elementDiscount' }}
                         </span>
                         {{ priceTableItem.name | translate }}

@@ -28,10 +28,20 @@
                                     <div class="finished-message section">
                                         <div class="circle list">{{ i + 1 }}</div>
                                         <div>
-                                            <div class="section-name">{{ section.section.name | translate }}</div>
+                                            <div class="section-name">
+                                                {{ section.section.name | translate }}
+                                                <apto-discount-tag
+                                                    *ngIf="getPriceTableSectionDiscount(sectionPriceTable) as sectionPriceTableItem"
+                                                    [label]="sectionPriceTableItem.name"
+                                                ></apto-discount-tag>
+                                            </div>
                                             <div *ngFor="let element of section.elements">
                                                 <div class="element-name" *ngIf="element.state.active">
                                                     {{ element.element.name | translate }}
+                                                    <apto-discount-tag
+                                                        *ngIf="getPriceTableElementDiscount(sectionPriceTable, element.element.id) as sectionPriceTableItem"
+                                                        [label]="sectionPriceTableItem.name"
+                                                    ></apto-discount-tag>
                                                 </div>
                                             </div>
                                             <div *ngIf="!section.active">{{ contentSnippet$ | async | contentSnippet: 'notSelected' }}</div>
@@ -61,7 +71,13 @@
                             <div class="single-section default price">
                                 <div class="finished-message section">
                                     <div>
-                                        <div class="section-name price">{{ contentSnippet$ | async | contentSnippet: 'totalPrice' }} ({{ configuration.statePrice.discount.name | translate }})</div>
+                                        <div class="section-name price">
+                                            {{ contentSnippet$ | async | contentSnippet: 'totalPrice' }}
+                                            <apto-discount-tag
+                                                *ngIf="configuration?.statePrice?.discount?.discount"
+                                                [label]="configuration.statePrice.discount.name"
+                                            ></apto-discount-tag>
+                                        </div>
                                         <div class="discount-name">{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}</div>
                                     </div>
                                 </div>

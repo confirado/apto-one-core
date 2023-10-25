@@ -68,6 +68,7 @@ import { SectionPictureComponent } from '@apto-catalog-frontend/components/commo
 import { SelectableValueRangeComponent } from '@apto-base-frontend/components/selectable-value-range/selectable-value-range.component';
 import { SelectableValueTextComponent } from '@apto-base-frontend/components/selectable-value-text/selectable-value-text.component';
 import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/apto-search/apto-search.component';
+import { DiscountTagComponent } from "@apto-catalog-frontend/components/common/discount-tag/discount-tag.component";
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -88,6 +89,7 @@ RouterRegistry.registerRoutes(Routes);
 		SidebarSummaryButtonComponent,
 		QuantityInputComponent,
     QuantityInputEditableComponent,
+    DiscountTagComponent,
 		OPStepsComponent,
 		OPStepComponent,
 		OPButtonComponent,
@@ -110,6 +112,7 @@ RouterRegistry.registerRoutes(Routes);
   ],
   exports: [
     QuantityInputEditableComponent,
+    DiscountTagComponent,
     SummaryConfigurationComponent,
     SummarySectionPriceComponent,
     OPElementDialogComponent,

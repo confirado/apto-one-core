@@ -261,24 +261,22 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
 
     // add element own price
     priceTable.push({
+      elementId: pElement.id,
       name: pElement.name,
       value: elementPrice.own.pseudoPrice.formatted,
       position: pElement.position,
-      isDiscount: false,
-      isSection: false,
-      isElement: true
+      isDiscount: false
     });
 
     // add element discount
     if (elementPrice.own.pseudoDiff.amount !== 0) {
       priceTable.push({
+        elementId: pElement.id,
         name: elementPrice.discount.name,
         value: elementPrice.own.pseudoDiff.formatted,
         // element position is always an integer, we add 0.5 here to make sure after sorting, the element price and its discount is displayed one below the other
         position: pElement.position + 0.5,
-        isDiscount: true,
-        isSection: false,
-        isElement: true
+        isDiscount: true
       });
     }
   });
@@ -289,24 +287,22 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
   // add section discount
   if (sectionPrices.own.pseudoDiff.amount !== 0) {
     priceTable.unshift({
+      elementId: null,
       name: sectionPrices.discount.name,
       value: sectionPrices.own.pseudoDiff.formatted,
       position: -1,
-      isDiscount: true,
-      isSection: true,
-      isElement: false
+      isDiscount: true
     });
   }
 
   // add section own price
   if (sectionPrices.own.pseudoPrice.amount !== 0) {
     priceTable.unshift({
+      elementId: null,
       name: section.name,
       value: sectionPrices.own.pseudoPrice.formatted,
       position: -2,
-      isDiscount: false,
-      isSection: true,
-      isElement: false
+      isDiscount: false
     });
   }
 

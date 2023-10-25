@@ -83,6 +83,14 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     return this.store.select(selectSectionPseudoPrice(section));
   }
 
+  public getPriceTableSectionDiscount(sectionPriceTable: SectionPriceTableItem[]): SectionPriceTableItem | undefined {
+    return sectionPriceTable.find(i => !i.elementId && i.isDiscount);
+  }
+
+  public getPriceTableElementDiscount(sectionPriceTable: SectionPriceTableItem[], elementId: string): SectionPriceTableItem | undefined {
+    return sectionPriceTable.find(i => i.elementId === elementId && i.isDiscount);
+  }
+
   public setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
       if (false === isStepByStep) {

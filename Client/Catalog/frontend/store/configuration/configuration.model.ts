@@ -164,10 +164,9 @@ export interface StatePrice {
 }
 
 export interface SectionPriceTableItem {
+  elementId: string;
   name: TranslatedValue;
   value: string;
   position: number;
   isDiscount: boolean;
-  isSection: boolean;
-  isElement: boolean;
 }
