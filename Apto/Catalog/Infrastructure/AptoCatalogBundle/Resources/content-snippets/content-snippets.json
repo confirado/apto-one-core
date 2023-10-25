@@ -136,12 +136,15 @@
     }
   },
   "aptoSummary": {
+    "totalPrice": {
+      "de_DE": "Stückpreis"
+    },
     "tax": {
       "withoutTax": {
-        "de_DE": "Stückpreis zzgl. MwSt."
+        "de_DE": "zzgl. MwSt., zzgl. Versand"
       },
       "withTax": {
-        "de_DE": "Stückpreis inkl. MwSt."
+        "de_DE": "inkl. MwSt., zzgl. Versand"
       }
     },
     "back": {
