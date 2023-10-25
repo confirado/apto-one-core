@@ -68,6 +68,16 @@ p {
     }
 }
 
+.summary-configuration-divider {
+    width: 100%;
+    padding: 15px 10px;
+
+    div {
+        height: 2px;
+        border-top: 2px solid var(--color-border);
+    }
+}
+
 .title {
     text-align: center;
     padding: 0 20px 40px 20px;
