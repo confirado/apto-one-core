@@ -16,7 +16,7 @@ import { setStep } from '@apto-catalog-frontend/store/configuration/configuratio
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
-  selectConfiguration,
+  selectConfiguration, selectHumanReadableState,
   selectProgressState,
   selectSectionPrice, selectSectionPriceTable, selectSectionPseudoPrice,
   selectSumPrice,
@@ -41,6 +41,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   private destroy$ = new Subject<void>();
   public locale: string;
+  public humanReadableState: any = {};
   public expandedSectionPrices: String[] = [];
 
   private popupSubscription: Subscription = null;
@@ -60,7 +61,9 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     // subscribe for locale store value
-    this.store.select(selectLocale).subscribe((locale: string) => {
+    this.store.select(selectLocale).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((locale: string) => {
       this.onLocalChange(locale);
     });
 
@@ -69,6 +72,35 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
     });
+
+    this.store.select(selectHumanReadableState).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((next) => {
+      if (next) {
+        this.humanReadableState = next;
+      } else {
+        this.humanReadableState = {};
+      }
+    });
+  }
+
+  public getElementHumanReadableState(elementId: string) {
+    if (!this.humanReadableState.hasOwnProperty(elementId)) {
+      return null;
+    }
+
+    let isFirst = true;
+    let state = '';
+    Object.keys(this.humanReadableState[elementId]).forEach((property) => {
+      if (isFirst) {
+        isFirst = false;
+        state = translate(this.humanReadableState[elementId][property], this.locale);
+      } else {
+        state += ', ' + translate(this.humanReadableState[elementId][property], this.locale);
+      }
+    });
+
+    return state;
   }
 
   public getSectionPriceTable(section: Section): Observable<SectionPriceTableItem[]> {

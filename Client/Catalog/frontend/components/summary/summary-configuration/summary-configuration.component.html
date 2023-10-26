@@ -42,7 +42,7 @@
                                                         [previewImage]="element.element.previewImage"
                                                     ></apto-element-picture>
                                                     <div class="element-name">
-                                                        {{ element.element.name | translate }}
+                                                        {{ element.element.name | translate }} <span *ngIf="getElementHumanReadableState(element.element.id) as elementHumanReadableState">({{ elementHumanReadableState }})</span>
                                                         <apto-discount-tag
                                                             *ngIf="getPriceTableElementDiscount(sectionPriceTable, element.element.id) as sectionPriceTableItem"
                                                             [label]="sectionPriceTableItem.name"

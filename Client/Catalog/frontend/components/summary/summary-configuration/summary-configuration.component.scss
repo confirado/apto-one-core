@@ -173,6 +173,8 @@ p {
     display: flex;
     flex-direction: column;
     width: 125px;
+    min-width: 125px;
+    max-width: 125px;
     justify-content: center;
     font-weight: 500;
     color: var(--color-text);
