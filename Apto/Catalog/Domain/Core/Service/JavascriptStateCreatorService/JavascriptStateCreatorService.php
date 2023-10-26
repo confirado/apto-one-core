@@ -84,7 +84,8 @@ class JavascriptStateCreatorService
                 'identifier' => $section['identifier'],
                 'isHidden' => $section['isHidden'],
                 'isMandatory' => $section['isMandatory'],
-                'repeatable' => $section['repeatable'],
+                'repeatableType' => $section['repeatableType'],
+                'repeatableCalculatedValueName' => $section['repeatableCalculatedValueName'],
                 'name' => AptoTranslatedValue::fromArray($section['name'] ?: []),
                 'state' => [
                     'active' => $state->isSectionActive($sectionId),
