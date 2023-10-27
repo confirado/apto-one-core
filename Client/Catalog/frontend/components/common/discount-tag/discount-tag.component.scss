@@ -2,7 +2,7 @@
     display: inline-flex;
     align-items: center;
     position: relative;
-    vertical-align: text-top;
+    vertical-align: middle;
 
     svg {
         height: 22px;
@@ -16,6 +16,7 @@
 
     .text {
         height: 22px;
+        line-height: 22px;
         font-family: Montserrat, Arial, sans-serif;
         font-size: 11px;
         font-weight: 500;
@@ -30,14 +31,14 @@
         display: flex;
         align-items: center;
 
-        ::before {
+        &::before {
             content: "";
             display: inline-block;
             width: 4px;
             height: 4px;
             border: 1px solid var(--color-primary);
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 4px;
             vertical-align: middle;
         }
     }

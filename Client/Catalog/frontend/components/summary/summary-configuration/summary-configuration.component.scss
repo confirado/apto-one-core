@@ -18,6 +18,7 @@ p {
     margin-right: 1rem;
 
     &.list {
+        box-shadow: var(--box-shadow);
         border: 1px solid var(--color-border-input);
         background-color: var(--color-background-card);
         color: #6d6d6d;
@@ -105,11 +106,13 @@ p {
 
 .single-section {
     display: flex;
+    justify-content: flex-end;
     border-radius: var(--border-radius-card);
     box-shadow: var(--box-shadow);
-    justify-content: flex-end;
+    background-color: var(--color-background-card);
     width: 700px;
     cursor: pointer;
+    z-index: 1;
 
     &.default {
         cursor: default;
@@ -129,20 +132,15 @@ p {
 }
 
 .single-section:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: #f4f4f4;
 }
 
 .section-name {
     font-weight: 600;
-    font-size: large;
+    font-size: 20px;
     color: var(--color-primary);
     margin-bottom: 8px;
     line-height: 27px;
-
-    &.price {
-        font-size: larger;
-        font-weight: 700;
-    }
 
     &.base-price {
         margin-bottom: 0;
@@ -183,11 +181,11 @@ p {
     &.total-price {
         font-weight: 600;
         color: var(--color-primary);
-        font-size: larger;
+        font-size: 20px;
     }
 
     &.font-smaller {
-        font-size: medium;
+        font-size: 16px;
     }
 }
 
