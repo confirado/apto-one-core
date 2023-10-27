@@ -7,6 +7,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { FieldsWhenUserIsLoggedInEnum, Gender } from '@apto-request-form-frontend/store/request-form.model';
+import {selectProduct} from "@apto-catalog-frontend/store/product/product.selectors";
 
 @Component({
 	selector: 'apto-request-form',
@@ -24,6 +25,7 @@ export class RequestFormComponent {
   public readonly csGenders$ = this.store.select(selectContentSnippet('plugins.requestForm.aptoSummary.values.gender'));
   public readonly csFieldsWhenUserIsLoggedIn$ = this.store.select(selectContentSnippet('plugins.requestForm.aptoSummary.fieldsWhenUserIsLoggedIn'));
   public readonly currentUser$ = this.store.select(selectCurrentUser);
+  public product$ = this.store.select(selectProduct);
   public readonly locale$ = this.store.select(selectLocale);
 
   public diverse: Gender = {
