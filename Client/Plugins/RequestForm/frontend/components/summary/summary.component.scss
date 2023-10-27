@@ -67,6 +67,7 @@
 
         &.bottom {
             align-items: stretch;
+            padding-top: 0;
         }
 
         button {
@@ -88,7 +89,6 @@
 	}
 
 	&.bottom {
-		margin-top: 20px;
 		gap: 30px;
 	}
 }

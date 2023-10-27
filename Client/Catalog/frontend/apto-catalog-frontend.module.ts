@@ -115,6 +115,7 @@ RouterRegistry.registerRoutes(Routes);
     DiscountTagComponent,
     SummaryConfigurationComponent,
     SummarySectionPriceComponent,
+    SummaryFinishMessageComponent,
     OPElementDialogComponent,
 	  ElementPictureComponent,
     SectionPictureComponent,

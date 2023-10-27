@@ -1,104 +1,114 @@
-<div class="page">
-	<form [formGroup]="requestForm">
-		<div class="title">
-			<h5>
-                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
-            </h5>
-			<div class="break-text">
-				<p>
-                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
-                </p>
-			</div>
-		</div>
+<ng-container *ngIf="product$ | async as product">
+    <div class="page">
+        <form [formGroup]="requestForm">
+            <div class="title">
+                <h5>
+                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
+                </h5>
+                <div class="break-text">
+                    <p>
+                        {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
+                    </p>
+                </div>
+            </div>
 
-		<div class="request-form">
-			<apto-select-field
-                *ngIf="isFieldVisible()"
-				formControlName="gender"
-				[name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.gender') + ' *'"
-				[items]="[diverse, herr, frau]"
-				[enableClear]="false"
-                [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
-			></apto-select-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-				formControlName="name"
-				[fullWidth]="true"
-				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
-				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="email"
-                [fullWidth]="true"
-				[name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
-				[placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="phone"
-				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="company"
-				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="street"
-				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="zipCode"
-				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
-				[type]="'text'"
-			></apto-input-field>
-			<apto-input-field
-                *ngIf="isFieldVisible()"
-                formControlName="city"
-				[fullWidth]="true"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
-				[type]="'text'"
-			></apto-input-field>
-		</div>
-		<div class="large-textfield">
-			<apto-text-input-field
-				formControlName="message"
-				[name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.message'"
-				[placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
-                [rows]="6"
-			></apto-text-input-field>
-		</div>
-        <div class="title break-text">
-            <p>
-                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
-            </p>
-        </div>
-		<div class="agreement">
-			<mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
-                <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
-            </mat-checkbox>
-		</div>
-		<div class="request-button">
-			<button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">
-                {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
-            </button>
-		</div>
-	</form>
-</div>
+            <div class="request-form">
+                <apto-select-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="gender"
+                    [name]= "(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.gender') + ' *'"
+                    [items]="[diverse, herr, frau]"
+                    [enableClear]="false"
+                    [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
+                ></apto-select-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="name"
+                    [fullWidth]="true"
+                    [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
+                    [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="email"
+                    [fullWidth]="true"
+                    [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
+                    [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="phone"
+                    [fullWidth]="true"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="company"
+                    [fullWidth]="true"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="street"
+                    [fullWidth]="true"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="zipCode"
+                    [fullWidth]="true"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
+                    [type]="'text'"
+                ></apto-input-field>
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="city"
+                    [fullWidth]="true"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
+                    [type]="'text'"
+                ></apto-input-field>
+            </div>
+            <div class="large-textfield">
+                <apto-text-input-field
+                    formControlName="message"
+                    [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.message'"
+                    [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
+                    [rows]="6"
+                ></apto-text-input-field>
+            </div>
+            <div class="title break-text">
+                <p>
+                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
+                </p>
+            </div>
+            <div class="agreement">
+                <mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
+                    <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
+                </mat-checkbox>
+            </div>
+            <div class="request-button">
+                <apto-quantity-input-editable
+                    [minValue]="product.minPurchase"
+                    [maxValue]="product.maxPurchase"
+                    [size]="'big'"
+                    [width]="'100px'"
+                    [name]="'quantityInput2'"
+                    formControlName="quantityInput"
+                ></apto-quantity-input-editable>
+                <button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">
+                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</ng-container>
