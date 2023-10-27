@@ -32,6 +32,11 @@ class UpdateProductSection extends ProductChildCommand
     private $allowMultiple;
 
     /**
+     * @var array
+     */
+    private $repeatable;
+
+    /**
      * @var null|string
      */
     private $previewImage;
@@ -65,6 +70,7 @@ class UpdateProductSection extends ProductChildCommand
      * @param array $sectionDescription
      * @param $previewImage
      * @param bool $allowMultiple
+     * @param array $repeatable
      * @param string|null $groupId
      * @param bool $isHidden
      * @param int $position
@@ -78,6 +84,7 @@ class UpdateProductSection extends ProductChildCommand
         array $sectionDescription,
         $previewImage,
         bool $allowMultiple,
+        array $repeatable,
         string $groupId = null,
         bool $isHidden = false,
         int $position = 0,
@@ -89,6 +96,7 @@ class UpdateProductSection extends ProductChildCommand
         $this->sectionName = $sectionName;
         $this->sectionDescription = $sectionDescription;
         $this->allowMultiple = $allowMultiple;
+        $this->repeatable = $repeatable;
         $this->groupId = $groupId;
         $this->isHidden = $isHidden;
         $this->position = $position;
@@ -134,6 +142,14 @@ class UpdateProductSection extends ProductChildCommand
     public function getAllowMultiple(): bool
     {
         return $this->allowMultiple;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRepeatable(): array
+    {
+        return $this->repeatable;
     }
 
     /**
