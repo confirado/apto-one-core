@@ -15,7 +15,7 @@ import {
   selectSectionPriceTable
 } from "@apto-catalog-frontend/store/configuration/configuration.selectors";
 import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
-import {selectContentSnippet} from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 
 @Component({
   selector: 'apto-summary-section-price',
@@ -50,9 +50,9 @@ export class SummarySectionPriceComponent implements OnInit, OnChanges {
         case 'expanded': {
           this.classExpanded = changes[propName].currentValue;
           if (true === this.expanded) {
-            this.showElement(this.viewRef.element);
+            this.showElement();
           } else {
-            this.hideElement(this.viewRef.element);
+            this.hideElement();
           }
           break;
         }
@@ -60,45 +60,48 @@ export class SummarySectionPriceComponent implements OnInit, OnChanges {
     }
   }
 
-  private showElement(element: ElementRef) {
+  private showElement() {
     // get the height of the element's inner content, regardless of its actual size
-    const sectionHeight = element.nativeElement.scrollHeight;
+    const sectionHeight = this.viewRef.element.nativeElement.scrollHeight;
 
     // have the element transition to the height of its inner content
-    element.nativeElement.style.height = sectionHeight + 'px';
-
-    const onTransitionEnd = () => {
-      // remove this event listener so it only gets triggered once
-      element.nativeElement.removeEventListener('transitionend', onTransitionEnd);
-
-      // remove "height" from the element's inline styles, so it can return to its initial value
-      element.nativeElement.style.height = null;
-    };
+    this.viewRef.element.nativeElement.style.height = sectionHeight + 'px';
 
     // when the next css transition finishes (which should be the one we just triggered)
-    element.nativeElement.addEventListener('transitionend', onTransitionEnd);
+    this.viewRef.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd);
   }
 
-  private hideElement(element: ElementRef) {
+  private hideElement() {
+    // remove this event listener because it should only emitted on show transition but not on hide transition
+    this.viewRef.element.nativeElement.removeEventListener('transitionend', this.onTransitionEnd);
+
     // get the height of the element's inner content, regardless of its actual size
-    const sectionHeight = element.nativeElement.scrollHeight;
+    const sectionHeight = this.viewRef.element.nativeElement.scrollHeight;
 
     // temporarily disable all css transitions
-    const elementTransition = element.nativeElement.style.transition;
-    element.nativeElement.style.transition = '';
+    const elementTransition = this.viewRef.element.nativeElement.style.transition;
+    this.viewRef.element.nativeElement.style.transition = '';
 
     // on the next frame (as soon as the previous style change has taken effect),
     // explicitly set the element's height to its current pixel height, so we
     // aren't transitioning out of 'auto'
-    requestAnimationFrame(function() {
-      element.nativeElement.style.height = sectionHeight + 'px';
-      element.nativeElement.style.transition = elementTransition;
+    requestAnimationFrame(() => {
+      this.viewRef.element.nativeElement.style.height = sectionHeight + 'px';
+      this.viewRef.element.nativeElement.style.transition = elementTransition;
 
       // on the next frame (as soon as the previous style change has taken effect),
       // have the element transition to height: 0
-      requestAnimationFrame(function() {
-        element.nativeElement.style.height = '0px';
+      requestAnimationFrame(() => {
+        this.viewRef.element.nativeElement.style.height = '0px';
       });
     });
+  }
+
+  private onTransitionEnd = () => {
+    // remove this event listener so it only gets triggered once
+    this.viewRef.element.nativeElement.removeEventListener('transitionend', this.onTransitionEnd);
+
+    // remove "height" from the element's inline styles, so it can return to its initial value
+    this.viewRef.element.nativeElement.style.height = null;
   }
 }

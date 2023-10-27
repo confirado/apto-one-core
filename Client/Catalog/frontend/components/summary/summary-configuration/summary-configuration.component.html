@@ -24,8 +24,8 @@
                         </div>
                         <div class="summary configuration" *ngFor="let section of steps.steps; index as i">
                             <ng-container *ngIf="getSectionPriceTable(section.section) | async as sectionPriceTable">
-                                <div class="single-section" (click)="setStep(section.section, product.seoUrl, product.useStepByStep)">
-                                    <div class="finished-message section">
+                                <div class="single-section" (click)="togglePriceTable($event, section.section.id, sectionPriceTable)">
+                                    <div class="finished-message section" (click)="onSectionClick($event, section.section, product.seoUrl, product.useStepByStep)">
                                         <div class="circle list">{{ i + 1 }}</div>
                                         <div>
                                             <div class="section-name">
@@ -56,20 +56,20 @@
                                     <ng-container *ngIf="(getSectionPseudoPrice(section.section) | async) as sectionPseudoPrice">
                                         <ng-container *ngIf="getSectionPrice(section.section) | async as sectionPrice">
                                             <div class="summary-section-divider"></div>
-                                            <div class="section-right" *ngIf="showPrices" (click)="togglePriceTable($event, section.section.id, sectionPriceTable)">
+                                            <div class="section-right" *ngIf="showPrices">
                                                 <div class="basic-discount-price" *ngIf="sectionPrice !== sectionPseudoPrice">
                                                     {{ sectionPseudoPrice }}
                                                 </div>
                                                 <span class="section-price">
-                                                    <mat-icon *ngIf="expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 0">expand_less</mat-icon>
-                                                    <mat-icon *ngIf="!expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 0">expand_more</mat-icon>
+                                                    <mat-icon *ngIf="expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 1">expand_less</mat-icon>
+                                                    <mat-icon *ngIf="!expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 1">expand_more</mat-icon>
                                                     {{ sectionPrice }}
                                                 </span>
                                             </div>
                                         </ng-container>
                                     </ng-container>
                                 </div>
-                                <apto-summary-section-price *ngIf="showPrices && sectionPriceTable.length > 0" [section]="section.section" [expanded]="expandedSectionPrices.includes(section.section.id)"></apto-summary-section-price>
+                                <apto-summary-section-price *ngIf="showPrices && sectionPriceTable.length > 1" [section]="section.section" [expanded]="expandedSectionPrices.includes(section.section.id)"></apto-summary-section-price>
                             </ng-container>
                         </div>
                         <div class="summary-configuration-divider"><div></div></div>

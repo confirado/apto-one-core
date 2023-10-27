@@ -123,7 +123,29 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     return sectionPriceTable.find(i => i.elementId === elementId && i.isDiscount);
   }
 
-  public setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
+  public onSectionClick($event, section: Section | undefined, seoUrl: string, isStepByStep: boolean) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.setStep(section, seoUrl, isStepByStep);
+  }
+
+  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    if (sectionPriceTable.length <= 1) {
+      return;
+    }
+
+    const index = this.expandedSectionPrices.indexOf(sectionId);
+    if (index !== -1) {
+      this.expandedSectionPrices.splice(index, 1);
+    } else {
+      this.expandedSectionPrices.push(sectionId);
+    }
+  }
+
+  private setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
       if (false === isStepByStep) {
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
@@ -147,22 +169,6 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
       })
-    }
-  }
-
-  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    if (sectionPriceTable.length < 1) {
-      return;
-    }
-
-    const index = this.expandedSectionPrices.indexOf(sectionId);
-    if (index !== -1) {
-      this.expandedSectionPrices.splice(index, 1);
-    } else {
-      this.expandedSectionPrices.push(sectionId);
     }
   }
 
