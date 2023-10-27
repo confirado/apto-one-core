@@ -16,12 +16,13 @@ import { setStep } from '@apto-catalog-frontend/store/configuration/configuratio
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
-  selectConfiguration,
+  selectConfiguration, selectHumanReadableState,
   selectProgressState,
-  selectSectionPrice, selectSectionPseudoPrice,
+  selectSectionPrice, selectSectionPriceTable, selectSectionPseudoPrice,
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -40,6 +41,8 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
   private destroy$ = new Subject<void>();
   public locale: string;
+  public humanReadableState: any = {};
+  public expandedSectionPrices: String[] = [];
 
   private popupSubscription: Subscription = null;
   private csPopUp: {
@@ -58,7 +61,9 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     // subscribe for locale store value
-    this.store.select(selectLocale).subscribe((locale: string) => {
+    this.store.select(selectLocale).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((locale: string) => {
       this.onLocalChange(locale);
     });
 
@@ -67,6 +72,39 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
     });
+
+    this.store.select(selectHumanReadableState).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((next) => {
+      if (next) {
+        this.humanReadableState = next;
+      } else {
+        this.humanReadableState = {};
+      }
+    });
+  }
+
+  public getElementHumanReadableState(elementId: string) {
+    if (!this.humanReadableState.hasOwnProperty(elementId)) {
+      return null;
+    }
+
+    let isFirst = true;
+    let state = '';
+    Object.keys(this.humanReadableState[elementId]).forEach((property) => {
+      if (isFirst) {
+        isFirst = false;
+        state = translate(this.humanReadableState[elementId][property], this.locale);
+      } else {
+        state += ', ' + translate(this.humanReadableState[elementId][property], this.locale);
+      }
+    });
+
+    return state;
+  }
+
+  public getSectionPriceTable(section: Section): Observable<SectionPriceTableItem[]> {
+    return this.store.select(selectSectionPriceTable(section));
   }
 
   public getSectionPrice(section: Section): Observable<string | null | undefined> {
@@ -77,7 +115,37 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     return this.store.select(selectSectionPseudoPrice(section));
   }
 
-  public setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
+  public getPriceTableSectionDiscount(sectionPriceTable: SectionPriceTableItem[]): SectionPriceTableItem | undefined {
+    return sectionPriceTable.find(i => !i.elementId && i.isDiscount);
+  }
+
+  public getPriceTableElementDiscount(sectionPriceTable: SectionPriceTableItem[], elementId: string): SectionPriceTableItem | undefined {
+    return sectionPriceTable.find(i => i.elementId === elementId && i.isDiscount);
+  }
+
+  public onSectionClick($event, section: Section | undefined, seoUrl: string, isStepByStep: boolean) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.setStep(section, seoUrl, isStepByStep);
+  }
+
+  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    if (sectionPriceTable.length <= 1) {
+      return;
+    }
+
+    const index = this.expandedSectionPrices.indexOf(sectionId);
+    if (index !== -1) {
+      this.expandedSectionPrices.splice(index, 1);
+    } else {
+      this.expandedSectionPrices.push(sectionId);
+    }
+  }
+
+  private setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
       if (false === isStepByStep) {
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
@@ -142,6 +210,10 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
         cancel: '',
         accept: ''
       }
+    }
+
+    if (null === next) {
+      return;
     }
 
     next.children.forEach((value: ContentSnippet) => {

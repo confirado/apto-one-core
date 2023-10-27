@@ -29,9 +29,11 @@
                 <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
                 <div class="summary bottom">
                     <div class="basket bottom">
-                        <button color="accent" [routerLink]="['/product', product.seoUrl]" mat-flat-button>
-                            <mat-icon>undo</mat-icon>{{ contentSnippet$ | async | contentSnippet: 'back' }}
-                        </button>
+                        <div class="back-button-container">
+                            <button color="accent" [routerLink]="['/product', product.seoUrl]" mat-flat-button>
+                                <mat-icon>undo</mat-icon>{{ contentSnippet$ | async | contentSnippet: 'back' }}
+                            </button>
+                        </div>
                         <apto-quantity-input-editable
                             [minValue]="product.minPurchase"
                             [maxValue]="product.maxPurchase"

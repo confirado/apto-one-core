@@ -9,16 +9,17 @@
                         <h4>{{ sumPseudoPrice }}</h4>
                     </div>
                     <h3 class="sum-amount">{{ sumPrice }}</h3>
-                    <span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+                    <span class="mwst-info">
+                        {{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
                         <span>
-                        <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
-                            {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
-                        </a>
+                            <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
+                                {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
+                            </a>
+                        </span>
+                        <span>
+                            <p *ngIf="!(sidebarSummary$ | async | contentSnippet: 'shippingCostsLink')">{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</p>
+                        </span>
                     </span>
-                    <span>
-                        <p *ngIf="!(sidebarSummary$ | async | contentSnippet: 'shippingCostsLink')">{{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}</p>
-                    </span>
-                </span>
                 </div>
 			</div>
 			<div class="add-basket">

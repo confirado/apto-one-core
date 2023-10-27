@@ -136,12 +136,15 @@
     }
   },
   "aptoSummary": {
+    "totalPrice": {
+      "de_DE": "Stückpreis"
+    },
     "tax": {
       "withoutTax": {
-        "de_DE": "Stückpreis zzgl. MwSt."
+        "de_DE": "zzgl. MwSt., zzgl. Versand"
       },
       "withTax": {
-        "de_DE": "Stückpreis inkl. MwSt."
+        "de_DE": "inkl. MwSt., zzgl. Versand"
       }
     },
     "back": {
@@ -161,6 +164,20 @@
     },
     "subline": {
       "de_DE": "Klicken Sie auf die Sektion, wenn Sie Änderungen vornehmen möchten"
+    },
+    "sectionPrices": {
+      "basePrice": {
+        "de_DE": "Grundpreis: "
+      },
+      "sumPrice": {
+        "de_DE": "Summe: "
+      },
+      "sectionDiscount": {
+        "de_DE": "Sektionsrabatt: "
+      },
+      "elementDiscount": {
+        "de_DE": "Elementrabatt: "
+      }
     }
   },
   "confirmSelectSectionDialog": {
