@@ -265,10 +265,13 @@ class PricePerUnitElementPriceProvider implements ElementPriceProvider, Addition
     {
         $stateArray = $state->getState();
 
+        $sectionUuId = new AptoUuid($sectionId);
+        $elementUuId = new AptoUuid($elementId);
+
         if (
-            !array_key_exists($sectionId, $stateArray) ||
-            !array_key_exists($elementId, $stateArray[$sectionId]) ||
-            !is_array($stateArray[$sectionId][$elementId])
+            !$state->isSectionSet($sectionUuId) ||
+            !$state->isElementSet($elementUuId) ||
+            !$state->isElementValuesSet($elementUuId)
         ) {
             return null;
         }
@@ -276,7 +279,7 @@ class PricePerUnitElementPriceProvider implements ElementPriceProvider, Addition
         $product = $this->productElementFinder->findById($elementId);
         /** @var ElementDefinition $elementDefinition */
         $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize(json_encode($product['definition']));
-        $computableValues = $elementDefinition->getComputableValues($stateArray[$sectionId][$elementId]);
+        $computableValues = $elementDefinition->getComputableValues($state->getValues($sectionUuId, $elementUuId));
 
         if (!array_key_exists($selectableValue, $computableValues)) {
             return null;

@@ -253,53 +253,55 @@ class BasketItemFactory
     {
         $properties = [];
 
-        foreach ($configuration->getState()->getStateWithoutParameters() as $sectionId => $elements) {
+        foreach ($configuration->getState()->getStateWithoutParameters() as $sectionItem) {
+            $sectionId = $sectionItem['sectionId'];
+            $elementId = $sectionItem['elementId'];
+            $values = $sectionItem['values'];
+
             $sectionUuId = new AptoUuid($sectionId);
             $sectionName = $configuration->getProduct()->getSectionName($sectionUuId);
 
             $sectionTranslatedName = $sectionName->getTranslation($locale, null, true);
             $sectionTranslatedNameValue = $sectionTranslatedName->getValue();
 
-            foreach ($elements as $elementId => $values) {
-                $elementUuId = new AptoUuid($elementId);
-                $elementName = $configuration->getProduct()->getElementName($sectionUuId, $elementUuId);
-                $elementTranslatedName = $elementName->getTranslation($locale, null, true);
-                $elementDefinition = $configuration->getProduct()->getElementDefinition(
-                    new AptoUuid($sectionId),
-                    new AptoUuid($elementId)
-                );
-                $elementTranslatedNameValue = $elementTranslatedName->getValue();
+            $elementUuId = new AptoUuid($elementId);
+            $elementName = $configuration->getProduct()->getElementName($sectionUuId, $elementUuId);
+            $elementTranslatedName = $elementName->getTranslation($locale, null, true);
+            $elementDefinition = $configuration->getProduct()->getElementDefinition(
+                new AptoUuid($sectionId),
+                new AptoUuid($elementId)
+            );
+            $elementTranslatedNameValue = $elementTranslatedName->getValue();
 
-                if (is_array($values)) {
-                    $humanReadableValues = $elementDefinition->getHumanReadableValues($values);
+            if (!empty($values)) {
+                $humanReadableValues = $elementDefinition->getHumanReadableValues($values);
 
-                    // @todo we need a better approach here, every value needs a description like height => 5 -> Höhe: 5m/cm etc.
-                    // @todo we also cant save customer input in shop properties which are used for filtering
-                    if (count($humanReadableValues) > 0) {
+                // @todo we need a better approach here, every value needs a description like height => 5 -> Höhe: 5m/cm etc.
+                // @todo we also cant save customer input in shop properties which are used for filtering
+                if (count($humanReadableValues) > 0) {
 
-                        // @todo find a better way to let element definition decide how to generate property values
-                        if (method_exists($elementDefinition, 'overrideShopPropertyValues')) {
-                            $properties = $elementDefinition->overrideShopPropertyValues($properties, $sectionName, $elementName, $humanReadableValues, $locale);
-                        } else {
-                            foreach ($humanReadableValues as $key => $humanReadableValue) {
+                    // @todo find a better way to let element definition decide how to generate property values
+                    if (method_exists($elementDefinition, 'overrideShopPropertyValues')) {
+                        $properties = $elementDefinition->overrideShopPropertyValues($properties, $sectionName, $elementName, $humanReadableValues, $locale);
+                    } else {
+                        foreach ($humanReadableValues as $key => $humanReadableValue) {
 
-                                // @todo find a better way to let element definition decide how to generate property value
-                                if (method_exists($elementDefinition, 'overrideShopPropertyValue')) {
-                                    $properties[$sectionTranslatedNameValue][] = $elementDefinition->overrideShopPropertyValue($key, $sectionName, $elementName, $humanReadableValue, $locale);
-                                } else {
+                            // @todo find a better way to let element definition decide how to generate property value
+                            if (method_exists($elementDefinition, 'overrideShopPropertyValue')) {
+                                $properties[$sectionTranslatedNameValue][] = $elementDefinition->overrideShopPropertyValue($key, $sectionName, $elementName, $humanReadableValue, $locale);
+                            } else {
 
-                                    /** @var AptoTranslatedValue $humanReadableValue */
-                                    $properties[$sectionTranslatedNameValue][] = $elementTranslatedNameValue . ' - ' . $humanReadableValue->getTranslation($locale, null, true)->getValue();
-                                }
+                                /** @var AptoTranslatedValue $humanReadableValue */
+                                $properties[$sectionTranslatedNameValue][] = $elementTranslatedNameValue . ' - ' . $humanReadableValue->getTranslation($locale, null, true)->getValue();
                             }
                         }
-                    } else {
-                        // bugfix: element should be displayed, even if it's empty
-                        $properties[$sectionTranslatedNameValue][] = $elementTranslatedNameValue;
                     }
                 } else {
+                    // bugfix: element should be displayed, even if it's empty
                     $properties[$sectionTranslatedNameValue][] = $elementTranslatedNameValue;
                 }
+            } else {
+                $properties[$sectionTranslatedNameValue][] = $elementTranslatedNameValue;
             }
         }
 
@@ -354,7 +356,7 @@ class BasketItemFactory
                     'properties' => []
                 ];
 
-                if (is_array($elementState)) {
+                if (!empty($elementState)) {
                     $humanReadableValues = $elementDefinition->getHumanReadableValues($elementState);
 
                     /** @var AptoTranslatedValue $humanReadableValue */
@@ -644,7 +646,7 @@ class BasketItemFactory
     protected function getCustomPropertiesOfSelectedElements(BasketConfiguration $basketConfiguration): array
     {
         $customPropertiesArray = [];
-        $elementIds = array_keys($basketConfiguration->getState()->getElementList());
+        $elementIds = $basketConfiguration->getState()->getElementIds();
         $elements = $this->productRepository->findElementCustomPropertiesAsArray($elementIds);
         foreach ($elements['data'] as $element) {
             foreach ($element['customProperties'] as $customProperty) {
