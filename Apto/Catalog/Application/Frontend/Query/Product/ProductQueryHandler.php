@@ -253,6 +253,8 @@ class ProductQueryHandler implements QueryHandlerInterface
     protected function cleanUpElements(array &$product, array $allowedElements)
     {
         $mutableSectionIds = [];
+
+        // @todo product sections are in old version of state
         foreach ($product['sections'] as $sKey => $section) {
             foreach ($section['elements'] as $key => $element) {
                 // if section is present in product but not in allowedElemetens means sections must be mutable
@@ -261,6 +263,8 @@ class ProductQueryHandler implements QueryHandlerInterface
                         unset($product['sections'][$sKey]['elements'][$key]);
                         continue;
                     }
+
+                    // @todo check here $allowedElements is in new format
                     if (is_array($allowedElements[$section['id']][$element['id']])) {
                         $allowedElementValues = $allowedElements[$section['id']][$element['id']];
                         $product['sections'][$sKey]['elements'][$key] = $this->makeElementImmutable(
@@ -316,6 +320,7 @@ class ProductQueryHandler implements QueryHandlerInterface
     protected function getAlterableSectionKeys(array $allowedElements)
     {
         $keys = [];
+        // @todo check here $allowedElements is in new format
         foreach ($allowedElements as $key => $section) {
             foreach ($section as $element) {
                 if (is_array($element)) {

@@ -34,23 +34,23 @@ class MaterialRenderImageProvider implements RenderImageProvider
         foreach ($state->getElementList() as $element) {
             if (
                 // is not a special element
-                !is_array($element) ||
+                empty($element['values']) ||
 
                 // is not the material-picker special element
-                !array_key_exists('productId', $element) ||
-                !array_key_exists('poolId', $element) ||
-                !array_key_exists('aptoElementDefinitionId', $element) ||
-                $element['aptoElementDefinitionId'] !== 'apto-element-material-picker'
+                !array_key_exists('productId', $element['values']) ||
+                !array_key_exists('poolId', $element['values']) ||
+                !array_key_exists('aptoElementDefinitionId', $element['values']) ||
+                $element['values']['aptoElementDefinitionId'] !== 'apto-element-material-picker'
             ) {
                 continue;
             }
 
-            $poolId = $element['poolId'];
-            $materials = $this->getMaterialsByElement($element);
+            $poolId = $element['values']['poolId'];
+            $materials = $this->getMaterialsByElement($element['values']);
             $renderImages = $this->poolFinder->findRenderImagesByMaterials($poolId, $materials, $perspective);
 
             foreach ($renderImages as &$renderImage) {
-                $renderImage['productId'] = $element['productId'];
+                $renderImage['productId'] = $element['values']['productId'];
             }
 
             $imageList = array_merge($imageList, $renderImages);

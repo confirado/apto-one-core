@@ -670,7 +670,8 @@ class SimplePriceCalculator implements PriceCalculator
      */
     protected function calculateBasePrice(array $statePrices)
     {
-        $sections = $this->state->getStateWithoutParameters();
+        // @todo this is using old structure
+        $sections = $this->state->getStateNestedWithoutParameters();
 
         $prices = $statePrices['prices'];
         $priceMatrices = $statePrices['priceMatrices'];
@@ -770,7 +771,8 @@ class SimplePriceCalculator implements PriceCalculator
      */
     protected function calculateElementPrices(array $statePrices)
     {
-        $sections = $this->state->getStateWithoutParameters();
+        // @todo this is using old structure
+        $sections = $this->state->getStateNestedWithoutParameters();
         $productId = $this->productId->getId();
 
         $prices = $statePrices['prices'];

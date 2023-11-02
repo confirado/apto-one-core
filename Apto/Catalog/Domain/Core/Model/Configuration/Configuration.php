@@ -146,12 +146,10 @@ class Configuration extends AptoAggregate implements ConfigurationInterface
     public function getRenderImages(): array
     {
         $renderImages = [];
-        foreach ($this->state->getStateWithoutParameters() as $sectionId => $elements) {
-            $sectionUuid = new AptoUuid($sectionId);
-            foreach ($elements as $elementId => $values) {
-                $elementUuid = new AptoUuid($elementId);
-                $renderImages = array_merge_recursive($renderImages, $this->getProduct()->getElementRenderImages($sectionUuid, $elementUuid));
-            }
+        foreach ($this->state->getStateWithoutParameters() as $sectionItem) {
+            $sectionUuid = new AptoUuid($sectionItem['sectionId']);
+            $elementUuid = new AptoUuid($sectionItem['elementId']);
+            $renderImages = array_merge_recursive($renderImages, $this->getProduct()->getElementRenderImages($sectionUuid, $elementUuid));
         }
 
         foreach ($renderImages as &$perspective) {
@@ -169,12 +167,10 @@ class Configuration extends AptoAggregate implements ConfigurationInterface
     public function getRenderImagesByPerspective(string $perspective): array
     {
         $renderImages = [];
-        foreach ($this->state->getStateWithoutParameters() as $sectionId => $elements) {
-            $sectionUuid = new AptoUuid($sectionId);
-            foreach ($elements as $elementId => $values) {
-                $elementUuid = new AptoUuid($elementId);
-                $renderImages = array_merge_recursive($renderImages, $this->getProduct()->getElementRenderImagesByPerspective($sectionUuid, $elementUuid, $perspective));
-            }
+        foreach ($this->state->getStateWithoutParameters() as $sectionItem) {
+            $sectionUuid = new AptoUuid($sectionItem['sectionId']);
+            $elementUuid = new AptoUuid($sectionItem['elementId']);
+            $renderImages = array_merge_recursive($renderImages, $this->getProduct()->getElementRenderImagesByPerspective($sectionUuid, $elementUuid, $perspective));
         }
 
         usort($renderImages, array(self::class, 'sortRenderImagesByLayer'));
@@ -237,17 +233,18 @@ class Configuration extends AptoAggregate implements ConfigurationInterface
     private function getSectionPrices(Currency $currency, AptoUuid $customerGroupId)
     {
         $result = [];
-        foreach ($this->state->getStateWithoutParameters() as $sectionId => $elements) {
-            $sectionIdValue = new AptoUuid($sectionId);
-                $sectionPrice = $this->getProduct()->getSectionPrice(
-                    $sectionIdValue,
-                    $currency,
-                    $customerGroupId
-                );
+        foreach ($this->state->getStateWithoutParameters() as $sectionItem) {
+            $sectionIdValue = new AptoUuid($sectionItem['sectionId']);
 
-                if (null !== $sectionPrice) {
-                    $result[$sectionId] = $sectionPrice;
-                }
+            $sectionPrice = $this->getProduct()->getSectionPrice(
+                $sectionIdValue,
+                $currency,
+                $customerGroupId
+            );
+
+            if (null !== $sectionPrice) {
+                $result[$sectionItem['sectionId']] = $sectionPrice;
+            }
         }
         return $result;
     }
@@ -261,21 +258,19 @@ class Configuration extends AptoAggregate implements ConfigurationInterface
     private function getElementPrices(Currency $currency, AptoUuid $customerGroupId)
     {
         $result = [];
-        foreach ($this->state->getStateWithoutParameters() as $sectionId => $elements) {
-            $sectionIdValue = new AptoUuid($sectionId);
-            foreach ($elements as $elementId => $values) {
-                $elementIdValue = new AptoUuid($elementId);
+        foreach ($this->state->getStateWithoutParameters() as $sectionItem) {
+            $sectionIdValue = new AptoUuid($sectionItem['sectionId']);
+            $elementIdValue = new AptoUuid($sectionItem['elementId']);
 
-                $elementPrice = $this->getProduct()->getElementPrice(
-                    $sectionIdValue,
-                    $elementIdValue,
-                    $currency,
-                    $customerGroupId
-                );
+            $elementPrice = $this->getProduct()->getElementPrice(
+                $sectionIdValue,
+                $elementIdValue,
+                $currency,
+                $customerGroupId
+            );
 
-                if (null !== $elementPrice) {
-                    $result[$elementId] = $elementPrice;
-                }
+            if (null !== $elementPrice) {
+                $result[$sectionItem['elementId']] = $elementPrice;
             }
         }
         return $result;

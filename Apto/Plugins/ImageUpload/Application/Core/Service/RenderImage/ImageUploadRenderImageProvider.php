@@ -14,21 +14,21 @@ class ImageUploadRenderImageProvider implements RenderImageProvider
         foreach ($state->getElementList() as $element) {
             if (
                 // is not a special element
-                !is_array($element) ||
+                empty($element['values']) ||
 
                 // is not the image-upload special element
-                !array_key_exists('aptoElementDefinitionId', $element) ||
-                !array_key_exists('payload', $element) ||
-                $element['aptoElementDefinitionId'] !== 'apto-element-image-upload' ||
+                !array_key_exists('aptoElementDefinitionId', $element['values']) ||
+                !array_key_exists('payload', $element['values']) ||
+                $element['values']['aptoElementDefinitionId'] !== 'apto-element-image-upload' ||
 
                 // has no render image in state
-                !array_key_exists('renderImages', $element['payload']) ||
-                !is_array($element['payload']['renderImages'])
+                !array_key_exists('renderImages', $element['values']['payload']) ||
+                !is_array($element['values']['payload']['renderImages'])
             ) {
                 continue;
             }
 
-            $renderImages = $element['payload']['renderImages'];
+            $renderImages = $element['values']['payload']['renderImages'];
             foreach ($renderImages as $renderImage) {
                 if (
                     // render image not matches requested perspective

@@ -16,13 +16,16 @@ class ValueValidationService
      */
     public function assertValidValues(ConfigurableProduct $product, State $state)
     {
-        foreach ($state->getStateWithoutParameters() as $sectionId => $section) {
+        foreach ($state->getStateWithoutParameters() as $section) {
 
+            $sectionId = $section['sectionId'];
             $sectionUuid = new AptoUuid($sectionId);
             self::assertHasSection($product, $sectionUuid);
 
+            $elementsInSection = $state->getSectionElements($sectionUuid);
+
             // check, if multiple elements are allowed in current section
-            if (!$product->isSectionMultiple($sectionUuid) && count($section) > 1) {
+            if (!$product->isSectionMultiple($sectionUuid) && count($elementsInSection) > 1) {
                 throw new InvalidStateException(
                     sprintf(
                         'The given section \'%s(%s)\' does not allow multiple elements in product \'%s(%s)\'.',
@@ -36,17 +39,15 @@ class ValueValidationService
                 );
             }
 
-            foreach ($section as $elementId => $element) {
+            $elementId = $section['elementId'];
+            $elementUuid = new AptoUuid($elementId);
+            self::assertHasElement($product, $sectionUuid, $elementUuid);
 
-                $elementUuid = new AptoUuid($elementId);
-                self::assertHasElement($product, $sectionUuid, $elementUuid);
-
-                // skip elements without properties
-                if ($element !== true) {
-                    foreach ($element as $property => $value) {
-                        self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
-                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value);
-                    }
+            // skip elements without properties
+            if (!empty($section['values'])) {
+                foreach ($section['values'] as $property => $value) {
+                    self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
+                    self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value);
                 }
             }
         }
