@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { setNextStep, setPrevStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
-	ElementState,
-	ProgressElement,
-	ProgressState,
+  ElementState,
+  ProgressElement,
+  ProgressState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
   selectConfiguration, selectCurrentProductElements, selectCurrentStateElements,
@@ -30,16 +30,9 @@ export class SbsElementsComponent implements OnInit{
   private currentStateElements: ElementState[] = null;
 	private progressState: ProgressState = null;
 
-	public constructor(private store: Store) {
-		this.progressState$
-			.pipe(
-				filter((s) => s.currentStep?.section.id !== undefined),
-				map((s) => s.currentStep?.section.id),
-				distinctUntilChanged()
-			);
-	}
+	public constructor(private store: Store) { }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.currentStateElements$.subscribe((next: ElementState[]) => {
       this.currentStateElements = next;
     });

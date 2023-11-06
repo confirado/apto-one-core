@@ -30,21 +30,22 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 }
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
-	const currentSection = state.product.sections.find((section) => section.id === state.configuration.currentStep);
-	const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
+  const currentSection = state.product.sections.find((section) => section.id === state.configuration.currentStep.id && section.repetition === state.configuration.currentStep.repetition);
+	const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
 
 	let currentStep: ProgressStep | undefined;
 	const afterSteps: ProgressStep[] = [];
 	const beforeSteps: ProgressStep[] = [];
 
-	for (const s of sections) {
-		const pSection = state.product.sections.find((ppSection) => ppSection.id === s.id);
+	for (const cSection of cSections) {
+		const pSection = state.product.sections.find((ppSection) => ppSection.id === cSection.id);
 		if (!pSection) {
 			continue;
 		}
 
-		const elements = state.configuration.state.elements.filter((e) => !e.disabled && e.sectionId === s.id).map((e) => e.id);
+		const elements = state.configuration.state.elements.filter((e) => !e.disabled && e.sectionId === cSection.id).map((e) => e.id);
 
+    // let in product elements only those are available in state configuration
 		const pElements = state.product.elements.filter((e) => elements.includes(e.id));
 
 		const progressElements = pElements.map((pElement) => ({
@@ -54,18 +55,23 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 
 		const description = getDescription(pSection, state, locale);
 
-		const section: Section = { ...pSection };
+		const section: Section = {
+      ...pSection,
+      repetition: cSection.repetition,
+    };
 
+    // if one of the elements is active, then the whole section is active
 		const active: boolean = progressElements.some((e) => e.state.active);
 
 		const fulfilledElements: boolean[] = [];
 
 		let fulfilled: boolean = false;
 
-		if (!s.mandatory) {
+		if (!cSection.mandatory) {
 			fulfilled = true;
 		}
 
+    // now check if the section is fulfilled
 		for (const entry of progressElements) {
 			if (!entry.element.isMandatory || (entry.element.isMandatory && entry.state.active)) {
 				fulfilledElements.push(true);
@@ -75,11 +81,11 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			}
 		}
 
-		if (s.mandatory && fulfilledElements.every((e) => e) && active) {
+		if (cSection.mandatory && fulfilledElements.every((e) => e) && active) {
 			fulfilled = true;
 		}
 
-		if (section.id === state.configuration.currentStep) {
+		if (section.id === state.configuration.currentStep.id && section.repetition === state.configuration.currentStep.repetition) {
 			currentStep = {
 				status: 'CURRENT',
 				fulfilled,
@@ -108,6 +114,8 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			});
 		}
 	}
+
+  // percentage value of current progress: Example: 33%
 	const progress: number = Math.round(
 		((afterSteps.filter((s) => s.fulfilled).length + beforeSteps.filter((s) => s.fulfilled).length + (currentStep?.fulfilled ? 1 : 0)) /
 			(beforeSteps.length + afterSteps.length + (currentStep?.fulfilled ? 1 : 0))) *
@@ -259,11 +267,11 @@ export const selectElementValues = (element: Element): any =>
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);
 
 export const selectCurrentProductElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.product.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+  return state.product.elements.filter((element) => element.sectionId === state.configuration.currentStep.id);
 });
 
 export const selectCurrentStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.configuration.state.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+  return state.configuration.state.elements.filter((element) => element.sectionId === state.configuration.currentStep.id);
 });
 
 export const selectSectionProductElements = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {

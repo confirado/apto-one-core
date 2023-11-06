@@ -128,7 +128,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       setStep({
         payload: {
-          id: section.id,
+          id: section.id, repetition: section.repetition,
         },
       })
     );

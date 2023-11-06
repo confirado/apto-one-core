@@ -16,7 +16,7 @@ import {
   setQuantity,
   setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, Configuration, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ComputedValues, Configuration, CurrentSection, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
 export interface ConfigurationState {
@@ -25,7 +25,7 @@ export interface ConfigurationState {
 	renderImages: RenderImage[];
 	perspectives: string[];
 	currentPerspective: string | null;
-	currentStep: string | null;
+	currentStep: CurrentSection | null;
 	statePrice: StatePrice | null;
 	loading: boolean;
 	productId: string | null;
@@ -206,13 +206,13 @@ const _configurationReducer = createReducer(
 	}),
 	on(setPrevStep, (state) => {
 		const sections = state.state.sections.filter((section) => !section.disabled);
-		const currentIndex = sections.findIndex((section) => section.id === state.currentStep);
+    const currentIndex = sections.findIndex((section) => section.id === state.currentStep.id && section.repetition === state.currentStep.repetition);
 
 		// if no current index was found but at least one section is available set current step to first section
 		if (currentIndex === -1 && sections.length > 0) {
 			return {
 				...state,
-				currentStep: sections[0].id,
+				currentStep: { id: sections[0].id, repetition: sections[0].repetition },
 			};
 		}
 
@@ -220,7 +220,7 @@ const _configurationReducer = createReducer(
 		if (currentIndex > 0 && sections.length > currentIndex - 1) {
 			return {
 				...state,
-				currentStep: sections[currentIndex - 1].id,
+				currentStep: { id: sections[currentIndex - 1].id, repetition: sections[currentIndex - 1].repetition },
 			};
 		}
 
@@ -230,13 +230,13 @@ const _configurationReducer = createReducer(
 	}),
 	on(setNextStep, (state) => {
 		const sections = state.state.sections.filter((section) => !section.disabled);
-		const currentIndex = sections.findIndex((section) => section.id === state.currentStep);
+		const currentIndex = sections.findIndex((section) => section.id === state.currentStep.id && section.repetition === state.currentStep.repetition);
 
 		// if no current index was found but at least one section is available set current step to first section
 		if (currentIndex === -1 && sections.length > 0) {
 			return {
 				...state,
-				currentStep: sections[0].id,
+				currentStep: { id: sections[0].id, repetition: sections[0].repetition },
 			};
 		}
 
@@ -244,7 +244,7 @@ const _configurationReducer = createReducer(
 		if (currentIndex + 1 < sections.length) {
 			return {
 				...state,
-				currentStep: sections[currentIndex + 1].id,
+				currentStep: { id: sections[currentIndex + 1].id, repetition: sections[currentIndex + 1].repetition },
 			};
 		}
 
@@ -254,7 +254,7 @@ const _configurationReducer = createReducer(
 	}),
 	on(setStep, (state, action) => ({
 		...state,
-		currentStep: action.payload.id,
+		currentStep: action.payload,
 	})),
   on(setHideOnePage, (state, action) => ({
     ...state,
