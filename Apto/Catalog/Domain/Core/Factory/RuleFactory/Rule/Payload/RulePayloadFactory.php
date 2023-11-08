@@ -34,9 +34,6 @@ class RulePayloadFactory
     {
         return new RulePayload(
             $this->computedProductValueCalculator->calculateComputedValuesByProduct($product->getProduct(), $state, $indexedById)
-
-            // todo maybe use this?
-            // $this->computedProductValueCalculator->calculateComputedValues($product->getId(), $state, $indexedById)
         );
     }
 
