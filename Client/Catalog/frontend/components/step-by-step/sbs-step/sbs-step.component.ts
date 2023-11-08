@@ -109,7 +109,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       setStep({
         payload: {
-          id: section.section.id,
+          id: section.section.id, repetition: section.section.repetition,
         },
       })
     );

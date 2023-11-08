@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration } from './configuration.model';
+import { Configuration, CurrentSection } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -110,7 +110,8 @@ export class ConfigurationEffects {
 			),
 			map((result) => {
 				const sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
-				const currentStep: string | null = sections.length > 0 ? sections[0].id : null;
+        const currentStep: CurrentSection | null = sections.length > 0 ? { id: sections[0].id, repetition: sections[0].repetition } : null;
+
 				return initConfigurationSuccess({
 					payload: {
 						connector: result.connector,

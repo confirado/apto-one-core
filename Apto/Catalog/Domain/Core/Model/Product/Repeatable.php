@@ -62,9 +62,9 @@ class Repeatable implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getCalculatedValueName(): string
+    public function getCalculatedValueName(): ?string
     {
         return $this->calculatedValueName;
     }
