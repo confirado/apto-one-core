@@ -228,6 +228,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             $element = AptoUuid::fromId($item['elementId']);
             $property = $item['property'] ?? null;
             $value = $item['value'] ?? null;
+            $sectionRepetition = $item['sectionRepetition'] ?? 0;
 
             $this->valueValidationService->assertHasSection($product, $section);
 
@@ -253,7 +254,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
                 $section,
                 $element,
                 $property,
-                $value
+                $value,
+                $sectionRepetition
             );
         }
     }
@@ -269,6 +271,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
         foreach ($items as $item) {
             $section = AptoUuid::fromId($item['sectionId']);
             $element = AptoUuid::fromId($item['elementId'] ?? null);
+            $sectionRepetition = $item['sectionRepetition'] ?? 0;
 
             $this->valueValidationService->assertHasSection($product, $section);
             if ($element) {
@@ -277,25 +280,30 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
 
             $state->getState()->removeValue(
                 $section,
-                $element
+                $element,
+                $sectionRepetition
             );
         }
     }
 
     /**
      * @param ConfigurableProduct $product
-     * @param EnrichedState $state
-     * @param array $items
+     * @param EnrichedState       $state
+     * @param array               $items
+     * @param int                 $repetition
+     *
+     * @return void
      * @throws InvalidUuidException
      */
-    private function applyComplete(ConfigurableProduct $product, EnrichedState $state, array $items)
+    private function applyComplete(ConfigurableProduct $product, EnrichedState $state, array $items, int $repetition = 0)
     {
         foreach ($items as $item) {
             $section = AptoUuid::fromId($item['sectionId']);
             $this->valueValidationService->assertHasSection($product, $section);
             $state->setSectionComplete(
                 $section,
-                boolval($item['complete'] ?? true)
+                boolval($item['complete'] ?? true),
+                $repetition
             );
         }
     }

@@ -390,6 +390,7 @@ export class MaterialPickerElementComponent implements OnInit {
     return {
       sectionId: this.element.element.sectionId,
       elementId: this.element.element.id,
+      sectionRepetition: this.element.state.sectionRepetition,
       property: property,
       value: value,
     }

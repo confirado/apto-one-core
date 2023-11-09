@@ -31,31 +31,33 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
   const currentSection = state.product.sections.find((section) => section.id === state.configuration.currentStep.id && section.repetition === state.configuration.currentStep.repetition);
-	const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
+  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
 
 	let currentStep: ProgressStep | undefined;
 	const afterSteps: ProgressStep[] = [];
 	const beforeSteps: ProgressStep[] = [];
 
-	for (const cSection of cSections) {
-		const pSection = state.product.sections.find((ppSection) => ppSection.id === cSection.id);
-		if (!pSection) {
-			continue;
-		}
+    for (const cSection of cSections) {
+      const pSection = state.product.sections.find((ppSection) => ppSection.id === cSection.id);
+      if (!pSection) {
+          continue;
+      }
 
-		const elements = state.configuration.state.elements.filter((e) => !e.disabled && e.sectionId === cSection.id).map((e) => e.id);
+      const elements = state.configuration.state.elements
+        .filter((e) => !e.disabled && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
+        .map((e) => e.id);
 
-    // let in product elements only those are available in state configuration
-		const pElements = state.product.elements.filter((e) => elements.includes(e.id));
+      // let in product elements only those are available in state configuration
+	  const pElements = state.product.elements.filter((e) => elements.includes(e.id));
 
-		const progressElements = pElements.map((pElement) => ({
-			state: state.configuration.state.elements.find((e) => e.id === pElement?.id)!,
-			element: pElement,
-		}));
+    const progressElements = pElements.map((pElement) => ({
+        state: state.configuration.state.elements.find((e) => e.id === pElement?.id && e.sectionRepetition === cSection.repetition)!,
+        element: pElement,
+    }));
 
-		const description = getDescription(pSection, state, locale);
+	const description = getDescription(pSection, state, locale);
 
-		const section: Section = {
+	const section: Section = {
       ...pSection,
       repetition: cSection.repetition,
     };

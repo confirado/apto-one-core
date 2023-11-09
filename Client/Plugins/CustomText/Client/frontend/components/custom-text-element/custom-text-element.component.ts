@@ -46,13 +46,15 @@ export class CustomTextElementComponent implements OnInit {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: 'aptoElementDefinitionId',
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: 'aptoElementDefinitionId',
 							value: 'apto-element-custom-text',
 						},
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: 'text',
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: 'text',
 							value: this.formElement.value,
 						},
 					],
@@ -72,7 +74,8 @@ export class CustomTextElementComponent implements OnInit {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: 'aptoElementDefinitionId',
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: 'aptoElementDefinitionId',
 							value: 'apto-element-custom-text',
 						},
 					],

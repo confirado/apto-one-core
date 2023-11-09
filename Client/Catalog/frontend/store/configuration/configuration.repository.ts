@@ -98,10 +98,7 @@ export class ConfigurationRepository {
         id: element.id,
         identifier: element.identifier,
         sectionId: element.sectionId,
-
-        // todo
-        // sectionRepetition: element.sectionRepetition,
-
+        sectionRepetition: element.sectionRepetition,
         sectionIdentifier: element.identifier,
         active: element.state.active,
         disabled: element.state.disabled,
