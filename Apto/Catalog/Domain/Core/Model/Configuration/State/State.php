@@ -471,6 +471,17 @@ class State implements AptoJsonSerializable, \JsonSerializable
         return false;
     }
 
+    public function isItemSet(AptoUuid $sectionId, AptoUuid $elementId, int $repetition = 0): bool {
+        foreach ($this->state as $state) {
+            if ($state['sectionId'] === $sectionId->getId() &&
+                $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function isElementValuesSet(AptoUuid $elementId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
@@ -502,6 +513,26 @@ class State implements AptoJsonSerializable, \JsonSerializable
             }
         }
         return $elementIds;
+    }
+
+    /**
+     * Get all section items (repetitions) that match to the given section id and element id
+     *
+     * @param AptoUuid $sectionId
+     * @param AptoUuid $elementId
+     *
+     * @return array
+     */
+    public function getElementRepetitions(AptoUuid $sectionId, AptoUuid $elementId): array
+    {
+        $repetitions = [];
+        foreach ($this->state as $stateItem) {
+            if ($stateItem['sectionId'] === $sectionId->getId() && $stateItem['elementId'] === $elementId->getId()
+            ) {
+                $repetitions[] = $stateItem;
+            }
+        }
+        return $repetitions;
     }
 
     private function unsetStateItems(array $keys): void {

@@ -11,6 +11,7 @@ import { selectConfiguration, selectRenderImage, selectSumPrice } from '@apto-ca
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
+import { HumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
   selector: 'apto-summary',
@@ -25,7 +26,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   public product$ = this.store.select(selectProduct);
   public configuration$ = this.store.select(selectConfiguration);
   public readonly sumPrice$ = this.store.select(selectSumPrice);
-  private humanReadableState: any;
+  private humanReadableState: HumanReadableState;
   public showPrices: boolean = true;
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
@@ -85,18 +86,31 @@ export class SummaryComponent implements OnInit, OnDestroy {
     this.requestState.sending = true;
     this.scroller.scrollToAnchor('summary-request-form');
     // @todo make product image size configurable
-    this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+    if (this.renderImage) {
+      this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+        this.store.dispatch(
+          addToBasket({
+            payload: {
+              type: 'REQUEST_FORM',
+              formData: this.requestForm?.value,
+              humanReadableState: this.humanReadableState,
+              productImage: image.src,
+            },
+          }),
+        );
+      });
+    } else {
       this.store.dispatch(
         addToBasket({
           payload: {
             type: 'REQUEST_FORM',
             formData: this.requestForm?.value,
             humanReadableState: this.humanReadableState,
-            productImage: image.src
+            productImage: null,
           },
         }),
       );
-    });
+    }
   }
 
   public onRequestFormChanged(requestForm: FormGroup): void {

@@ -149,7 +149,7 @@ class JavascriptStateCreatorService
                             ),
                             null
                         ),
-                        $state->getValues($sectionId, $elementId) ?: []
+                        $state->getValues($sectionId, $elementId, $i) ?: []
                     ) ?: null;
 
                     $elements[] = [

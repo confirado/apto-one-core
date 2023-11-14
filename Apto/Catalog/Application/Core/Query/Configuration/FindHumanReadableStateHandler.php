@@ -69,8 +69,12 @@ class FindHumanReadableStateHandler implements QueryHandlerInterface
             $humanReadableValues = $this->getHumanReadableValues($product, $sectionItem['elementId'], $sectionItem['values']);
 
             if (null !== $humanReadableValues) {
-                // @todo what todo here it was saved under element id?
-                $readableState[$sectionItem['elementId']] = $humanReadableValues;
+                $readableState[] = [
+                    'elementId'  => $sectionItem['elementId'],
+                    'sectionId'  => $sectionItem['sectionId'],
+                    'repetition' => $sectionItem['repetition'],
+                    'values'     => $humanReadableValues,
+                ];
             }
         }
 

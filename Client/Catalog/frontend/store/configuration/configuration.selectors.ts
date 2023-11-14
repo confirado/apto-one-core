@@ -258,12 +258,9 @@ export const selectElementValues = (element: Element): any =>
       return [];
     }
 
-    const x = Object.entries<any>(state.configuration.humanReadableState).find((e) => e[0] === element.id);
-    if (x) {
-      return Object.values(x[1]);
-    }
+    const x = state.configuration.humanReadableState.find((e) => e.elementId === element.id && e.repetition === element.sectionRepetition);
 
-    return [];
+    return x ? [].concat(...Object.values(x.values)) : [];
 	});
 
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);

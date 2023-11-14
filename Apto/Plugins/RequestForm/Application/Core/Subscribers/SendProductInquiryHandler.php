@@ -286,28 +286,29 @@ class SendProductInquiryHandler implements EventHandlerInterface
     }
 
     /**
-     * @param array $productSection
-     * @param array $state
+     * @param array  $productSection
+     * @param State  $compressedState
      * @param string $locale
+     *
+     * @return void
+     * @throws InvalidUuidException
      */
-    private function initPartnerInfo(array $productSection, array $state, string $locale)
+    private function initPartnerInfo(array $productSection, State $compressedState, string $locale): void
     {
-        foreach ($productSection as $section) {
-            $sectionId = $section['id'];
-            if ($this->idInArray($sectionId, $state)) {
-                foreach ($section['elements'] as $element) {
-                    $elementId = $element['id'];
-                    if ($this->idInArray($elementId, $state[$section['id']])) {
-                        foreach ($element['customProperties'] as $customProperty) {
-                            if($customProperty['key'] === 'partnerMail') {
-                                $this->partnerMail = $customProperty['value'][$locale];
-                            }
-                            if($customProperty['key'] === 'partnerName') {
-                                $this->partnerName = $customProperty['value'][$locale];
-                            }
-                            if($customProperty['key'] === 'partnerID') {
-                                $this->partnerID = $customProperty['value'];
-                            }
+        foreach ($productSection as $pSection) {
+            $pSectionId = $pSection['id'];
+            foreach ($pSection['elements'] as $pElement) {
+                $pElementId = $pElement['id'];
+                if ($compressedState->isItemSet(new AptoUuid($pSectionId), new AptoUuid($pElementId))) {
+                    foreach ($pElement['customProperties'] as $customProperty) {
+                        if($customProperty['key'] === 'partnerMail') {
+                            $this->partnerMail = $customProperty['value'][$locale];
+                        }
+                        if($customProperty['key'] === 'partnerName') {
+                            $this->partnerName = $customProperty['value'][$locale];
+                        }
+                        if($customProperty['key'] === 'partnerID') {
+                            $this->partnerID = $customProperty['value'];
                         }
                     }
                 }
@@ -337,6 +338,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             foreach ($section['elements'] as $element) {
                 $elementId = new AptoUuid($element['id']);
 
+                // we don't need to consider repetitions here as attachments are all the same in all repetitions
                 if (!$state->isElementActive($sectionId, $elementId)) {
                     continue;
                 }
@@ -442,7 +444,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $this->initElementAttachments($product, new State($productInquiry->getCompressedState()), $locale);
 
         // init Partner info
-        $this->initPartnerInfo($product['sections'], $productInquiry->getCompressedState(), $locale->getName());
+        $this->initPartnerInfo($product['sections'],  new State($productInquiry->getCompressedState()), $locale->getName());
 
         // generate pdf
         $pdf = '';
@@ -810,9 +812,9 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $sumPrices = $prices['sum'];
 
         $elementProperties = $this->getElementProperties($productInquiry->getState());
-        $relevantElements = $this->getPDFVars($product['sections'], $productInquiry->getCompressedState(), $sectionPrices, $locale->getName(), false);
-        $prioElements = $this->getPDFVars($product['sections'], $productInquiry->getCompressedState(), $sectionPrices, $locale->getName(), true);
-        $productTitle = $this->getProductTitle($product['sections'], $productInquiry->getCompressedState(), $locale->getName());
+        $relevantElements = $this->getPDFVars($product['sections'], new State($productInquiry->getCompressedState()), $sectionPrices, $locale->getName(), false);
+        $prioElements = $this->getPDFVars($product['sections'], new State($productInquiry->getCompressedState()), $sectionPrices, $locale->getName(), true);
+        $productTitle = $this->getProductTitle($product['sections'], new State($productInquiry->getCompressedState()), $locale->getName());
 
         // Check for different PDFs for Partners
         if(array_key_exists('seperatePartnerPDF', $this->config) && $this->config['seperatePartnerPDF']){
@@ -916,31 +918,56 @@ class SendProductInquiryHandler implements EventHandlerInterface
     }
 
     /**
+     * Old $humanReadableState:
+     * array:2 [
+     *   "general" => array:1 [
+     *      0 => array:3 [
+     *         "id" => "1c0662f1-73c0-4ab8-94a1-39c3bf86b430"
+     *         "name" => "anzahl layer"
+     *         "values" => []
+     *      ]
+     *   ]
+     *   "layer" => array:2 [
+     *     0 => array:3 [
+     *       "id" => "22bf38a0-0ca3-4af9-b8f9-56c01a643cb7"
+     *       "name" => "winkel"
+     *       "values" => []
+     *     ]
+     *     1 => array:3 [
+     *       "id" => "3d455314-0e29-4cf6-b67c-ed942de6d226"
+     *       "name" => "winkel 2"
+     *       "values" => []
+     *     ]
+     *   ]
+     * ]
+     *
+     * old return values:
+     * array:3 [
+     *   "1c0662f1-73c0-4ab8-94a1-39c3bf86b430" => []
+     *   "22bf38a0-0ca3-4af9-b8f9-56c01a643cb7" => []
+     *   "3d455314-0e29-4cf6-b67c-ed942de6d226" => []
+     * ]
+     *
      * @param array $humanReadableState
+     *
      * @return array
      */
     private function getElementProperties(array $humanReadableState): array
     {
-        $elementProperties = [];
-
-        foreach ($humanReadableState as $section) {
-            foreach ($section as $element) {
-                $elementProperties[$element['id']] = $element['values'];
-            }
-        }
-
-        return $elementProperties;
+        return $humanReadableState;
     }
 
     /**
-     * @param array $productSection
-     * @param array $state
-     * @param array $prices
+     * @param array  $productSection
+     * @param State  $compressedState
+     * @param array  $prices
      * @param string $locale
-     * @param bool $prioData
+     * @param bool   $prioData
+     *
      * @return array|null
+     * @throws InvalidUuidException
      */
-    private function getPDFVars(array $productSection, array $state, array $prices, string $locale, bool $prioData): ?array
+    private function getPDFVars(array $productSection, State $compressedState, array $prices, string $locale, bool $prioData): ?array
     {
         $relevantData = [];
         $priorities = [];
@@ -948,23 +975,22 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $hasPrioOnly = false;
 
         foreach ($productSection as $section) {
-            $sectionId = $section['id'];
+            $sectionId = new AptoUuid($section['id']);
 
-            if ($this->idInArray($sectionId, $state)) {
+            if ($compressedState->isSectionSet($sectionId)) {
                 foreach ($section['elements'] as $element) {
                     $append = true;
                     $isPrio = false;
-                    $elementId = $element['id'];
+                    $elementId = new AptoUuid($element['id']);
 
-                    if ($this->idInArray($elementId, $state[$section['id']])) {
+                    if ($compressedState->isItemSet($sectionId, $elementId)) {
                         $tempArray = [];
-
-                        $tempArray['elementId'] = $elementId;
+                        $tempArray['elementId'] = $elementId->getId();
                         $tempArray['name'] = $element['name'];
                         $tempArray['description'] = $element['description'];
                         $tempArray['sectionName'] = $section['name'];
 
-                        if (intval($prices[$sectionId]['elements'][$elementId]['own']['price']['amount']) === 0) {
+                        if (intval($prices[$sectionId->getId()]['elements'][$elementId->getId()]['own']['price']['amount']) === 0) {
                             $price = null;
 
                             foreach ($element['customProperties'] as $customProperty) {
@@ -992,7 +1018,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
                             }
                             $tempArray['price'] = $price;
                         } else {
-                            $tempArray['price'] = $prices[$sectionId]['elements'][$elementId]['own']['price']['formatted'];
+                            $tempArray['price'] = $prices[$sectionId->getId()]['elements'][$elementId->getId()]['own']['price']['formatted'];
                         }
                         if ($append) {
                             array_push($relevantData, $tempArray);
@@ -1019,37 +1045,37 @@ class SendProductInquiryHandler implements EventHandlerInterface
     }
 
     /**
-     * @param array $productSection
-     * @param array $state
+     * @param array  $productSection
+     * @param State  $compressedState
      * @param string $locale
+     *
      * @return mixed|null
+     * @throws InvalidUuidException
      */
-    private function getProductTitle(array $productSection, array $state, string $locale)
+    private function getProductTitle(array $productSection, State $compressedState, string $locale)
     {
         $productTitle = null;
         foreach ($productSection as $section) {
-            $sectionId = $section['id'];
-
-            if ($this->idInArray($sectionId, $state)) {
+            $sectionId = new AptoUuid($section['id']);
+            if ($compressedState->isSectionSet($sectionId)) {
                 foreach ($section['elements'] as $element) {
-                    $elementId = $element['id'];
-
-                    if ($this->idInArray($elementId, $state[$section['id']])) {
-
+                    $elementId = new AptoUuid($element['id']);
+                    if ($compressedState->isItemSet($sectionId, $elementId)) {
                         foreach ($element['customProperties'] as $customProperty) {
                             if($customProperty['key'] === 'pdfProductTitle') {
-                                $productTitle = $state[$section['id']][$element['id']]['text'];
+                                $productTitle = $compressedState->getValue($sectionId, $elementId, 'value');
                             }
                         }
                     }
                 }
             }
+
             // Must not be an Selected Element
             foreach ($section['elements'] as $element) {
                 $elementId = $element['id'];
                 foreach ($element['customProperties'] as $customProperty) {
                     if($customProperty['key'] === 'customProductTitle') {
-                        $productTitle = $customProperty['value'][$locale];
+                        $productTitle = $customProperty['value'][$locale] ?? $customProperty['value'];
                     }
                 }
             }

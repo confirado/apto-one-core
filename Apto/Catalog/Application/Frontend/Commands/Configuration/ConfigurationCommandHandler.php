@@ -523,6 +523,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         $this->ruleValidationService->validateState($configurableProduct, $state);
 
         // todo shall we save payload into GuestConfiguration?
+        // todo if we save it then we need to update the corresponding twig template to match new humanredable state
         // create new guest configuration
         $guestConfiguration = new GuestConfiguration(
             $id,

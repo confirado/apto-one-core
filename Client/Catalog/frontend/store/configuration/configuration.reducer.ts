@@ -16,7 +16,7 @@ import {
   setQuantity,
   setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, Configuration, CurrentSection, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ComputedValues, Configuration, CurrentSection, HumanReadableState, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
 export interface ConfigurationState {
@@ -30,7 +30,7 @@ export interface ConfigurationState {
 	loading: boolean;
 	productId: string | null;
 	connector: SelectConnector | null;
-	humanReadableState: any | null;
+	humanReadableState: HumanReadableState[] | null;
 	quantity: number;
   hideOnePage: boolean;
 }
