@@ -85,33 +85,16 @@ class JavascriptStateCreatorService
             $sectionId = new AptoUuid($section['id']);
             $elementIds = $product->getElementIds($sectionId);
 
+            $sectionCount = 1;
             if ($section['repeatableType'] === Repeatable::TYPES[1]) {
                 $sectionCount = $calculatedValueName->getComputedValues()[$section['repeatableCalculatedValueName']];
                 $sectionCount = $sectionCount == 0 ? 1 : $sectionCount;
+            }
 
-                for($i = 0; $i < $sectionCount; $i++) {
-                    $sections[] = [
-                        'id' => $sectionId->getId(),
-                        'repetition' => $i,
-                        'allowMultiple' => $section['allowMultiple'],
-                        //'defaultElements' => [], // @TODO shall we implement defaultElements, just use isDefault flag from elements instead?!
-                        'identifier' => $section['identifier'],
-                        'isHidden' => $section['isHidden'],
-                        'isMandatory' => $section['isMandatory'],
-                        'repeatableType' => $section['repeatableType'],
-                        'repeatableCalculatedValueName' => $section['repeatableCalculatedValueName'],
-                        'name' => AptoTranslatedValue::fromArray($section['name'] ?: []),
-                        'state' => [
-                            'active' => $state->isSectionActive($sectionId),
-                            'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory']),
-                            'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds)
-                        ]
-                    ];
-                }
-            } else {
+            for($i = 0; $i < $sectionCount; $i++) {
                 $sections[] = [
                     'id' => $sectionId->getId(),
-                    'repetition' => 0,
+                    'repetition' => $i,
                     'allowMultiple' => $section['allowMultiple'],
                     //'defaultElements' => [], // @TODO shall we implement defaultElements, just use isDefault flag from elements instead?!
                     'identifier' => $section['identifier'],
@@ -121,8 +104,8 @@ class JavascriptStateCreatorService
                     'repeatableCalculatedValueName' => $section['repeatableCalculatedValueName'],
                     'name' => AptoTranslatedValue::fromArray($section['name'] ?: []),
                     'state' => [
-                        'active' => $state->isSectionActive($sectionId),
-                        'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory']),
+                        'active' => $state->isSectionActive($sectionId, $i),
+                        'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory'], $i),
                         'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds)
                     ]
                 ];
@@ -143,47 +126,58 @@ class JavascriptStateCreatorService
     {
         $state = $enrichedState->getState();
         $elements = [];
+        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
 
         foreach ($product->getSections() as $section) {
             $sectionId = new AptoUuid($section['id']);
 
-            foreach ($section['elements'] as $element) {
-                $elementId = new AptoUuid($element['id']);
+            $sectionCount = 1;
+            if ($section['repeatableType'] === Repeatable::TYPES[1]) {
+                $sectionCount = $calculatedValueName->getComputedValues()[$section['repeatableCalculatedValueName']];
+                $sectionCount = $sectionCount == 0 ? 1 : $sectionCount;
+            }
 
-                // empty properties must be initialized with null, elements without electable values must use null instead of an empty array
-                $selectedValues = array_merge(
-                    array_fill_keys(
-                        array_keys(
-                            $element['definition']['properties'] ?? []
+            for($i = 0; $i < $sectionCount; $i++) {
+                foreach ($section['elements'] as $element) {
+                    $elementId = new AptoUuid($element['id']);
+
+                    // empty properties must be initialized with null, elements without electable values must use null instead of an empty array
+                    $selectedValues = array_merge(
+                        array_fill_keys(
+                            array_keys(
+                                $element['definition']['properties'] ?? []
+                            ),
+                            null
                         ),
-                        null
-                    ),
-                    $state->getValues($sectionId, $elementId) ?: []
-                ) ?: null;
+                        $state->getValues($sectionId, $elementId) ?: []
+                    ) ?: null;
 
-                $elements[] = [
-                    'id' => $elementId->getId(),
-                    'sectionId' => $sectionId->getId(),
-                    'errorMessage' => AptoTranslatedValue::fromArray($element['errorMessage'] ?: []),
-                    'identifier' => $element['identifier'],
-                    'isDefault' => $element['isDefault'],
-                    'isMandatory' => $element['isMandatory'],
-                    'name' => AptoTranslatedValue::fromArray($element['name'] ?: []),
-                    'previewImage' => $element['previewImage'],
-                    'properties' => $element['definition']['properties'] ?? null, // @TODO needed anymore?
-                    'state' => [
-                        'active' => $state->isElementActive($sectionId, $elementId),
-                        'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId),
-                        'values' => $selectedValues
-                    ],
-                    'staticValues' => $element['definition']['staticValues'] ?? []
-                ];
+                    $elements[] = [
+                        'id' => $elementId->getId(),
+                        'sectionId' => $sectionId->getId(),
+                        'sectionRepetition' => $i,
+                        'errorMessage' => AptoTranslatedValue::fromArray($element['errorMessage'] ?: []),
+                        'identifier' => $element['identifier'],
+                        'isDefault' => $element['isDefault'],
+                        'isMandatory' => $element['isMandatory'],
+                        'name' => AptoTranslatedValue::fromArray($element['name'] ?: []),
+                        'previewImage' => $element['previewImage'],
+                        'properties' => $element['definition']['properties'] ?? null, // @TODO needed anymore?
+                        'state' => [
+                            'active' => $state->isElementActive($sectionId, $elementId, $i),
+                            'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId),
+                            'values' => $selectedValues
+                        ],
+                        'staticValues' => $element['definition']['staticValues'] ?? []
+                    ];
+                }
             }
         }
 
         return $elements;
     }
 
+    // todo delete this after finishing with new state
     /**
      * @param ConfigurableProduct $product
      * @param EnrichedState $enrichedState

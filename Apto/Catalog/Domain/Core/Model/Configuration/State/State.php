@@ -91,12 +91,14 @@ class State implements AptoJsonSerializable, \JsonSerializable
 
     /**
      * @param AptoUuid $sectionId
+     * @param int      $repetition
+     *
      * @return bool
      */
-    public function isSectionActive(AptoUuid $sectionId): bool
+    public function isSectionActive(AptoUuid $sectionId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            if ($state['sectionId'] === $sectionId->getId()) {
+            if ($state['sectionId'] === $sectionId->getId() && $state['repetition'] === $repetition) {
                 return true;
             }
         }
@@ -106,13 +108,17 @@ class State implements AptoJsonSerializable, \JsonSerializable
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
+     * @param int      $repetition
+     *
      * @return bool
      */
-    public function isElementActive(AptoUuid $sectionId, AptoUuid $elementId): bool
+    public function isElementActive(AptoUuid $sectionId, AptoUuid $elementId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            // todo check index as well
-            if ($state['sectionId'] === $sectionId->getId() && $state['elementId'] === $elementId->getId()) {
+            if ($state['sectionId'] === $sectionId->getId() &&
+                $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition
+            ) {
                 return true;
             }
         }
@@ -142,14 +148,16 @@ class State implements AptoJsonSerializable, \JsonSerializable
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @return array
+     * @param int      $repetition
+     *
+     * @return array|null
      */
-    public function getValues(AptoUuid $sectionId, AptoUuid $elementId): ?array
+    public function getValues(AptoUuid $sectionId, AptoUuid $elementId, int $repetition = 0): ?array
     {
         foreach ($this->state as $state) {
-            // todo check index as well
             if ($state['sectionId'] === $sectionId->getId() &&
                 $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition &&
                 !empty($state['values'])) {
                 return $state['values'];
             }
@@ -160,15 +168,17 @@ class State implements AptoJsonSerializable, \JsonSerializable
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $property
+     * @param string   $property
+     * @param int      $repetition
+     *
      * @return mixed|null
      */
-    public function getValue(AptoUuid $sectionId, AptoUuid $elementId, string $property)
+    public function getValue(AptoUuid $sectionId, AptoUuid $elementId, string $property, int $repetition = 0)
     {
         foreach ($this->state as $state) {
-            // todo check index as well
             if ($state['sectionId'] === $sectionId->getId() &&
                 $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition &&
                 !empty($state['values']) &&
                 array_key_exists($property, $state['values'])
             ) {
@@ -230,12 +240,12 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @return State
      */
-    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, $value = null): State
+    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, $value = null, int $repetition = 0): State
     {
         // if an element isn't found in the state
-        if (!$this->isElementActive($sectionId, $elementId)) {
+        if (!$this->isElementActive($sectionId, $elementId, $repetition)) {
             $this->state[] = [
-                'repetition' => 0,
+                'repetition' => $repetition,
                 'sectionId' => $sectionId->getId(),
                 'elementId' => $elementId->getId(),
                 'values' => $property !== null ? [$property => $value] : []
@@ -244,9 +254,10 @@ class State implements AptoJsonSerializable, \JsonSerializable
         else {
             // then let's find the element and set its value
             foreach ($this->state as $key => &$state) {
-                // todo we should consider here repetition as well because we can have multiple items in state that have the same
-                // section id and the same element id
-                if ($state['sectionId'] === $sectionId->getId() && $state['elementId'] === $elementId->getId()) {
+                if ($state['sectionId'] === $sectionId->getId() &&
+                    $state['elementId'] === $elementId->getId() &&
+                    $state['repetition'] === $repetition
+                ) {
                     if ($property !== null) {
                         $state['values'][$property] = $value;
                     }
@@ -259,18 +270,21 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * @param AptoUuid $sectionId
+     * @param AptoUuid      $sectionId
      * @param AptoUuid|null $elementId
-     * @return State
-     * @notice unset does not throw errors for non existing vars
+     * @param int           $repetition
+     *
+     * @return $this
      */
-    public function removeValue(AptoUuid $sectionId, AptoUuid $elementId = null): State
+    public function removeValue(AptoUuid $sectionId, AptoUuid $elementId = null, int $repetition = 0): State
     {
         if ($elementId) {
             $keysToRemove = [];
             foreach ($this->state as $key => $state) {
-                // todo check index as well
-                if ($state['sectionId'] === $sectionId->getId() && $state['elementId'] === $elementId->getId()) {
+                if ($state['sectionId'] === $sectionId->getId() &&
+                    $state['elementId'] === $elementId->getId() &&
+                    $state['repetition'] === $repetition
+                ) {
                     $keysToRemove[] = $key;
                 }
             }
@@ -279,8 +293,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
         else {
             $keysToRemove = [];
             foreach ($this->state as $key => $state) {
-                // todo check index as well
-                if ($state['sectionId'] === $sectionId->getId()) {
+                if ($state['sectionId'] === $sectionId->getId() && $state['repetition'] === $repetition) {
                     $keysToRemove[] = $key;
                 }
             }
@@ -292,34 +305,36 @@ class State implements AptoJsonSerializable, \JsonSerializable
 
     /**
      * @param AptoUuid $sectionId
-     * @return State
-     * @internal param string $property
+     * @param int      $repetition
+     *
+     * @return $this
      */
-    public function removeSection(AptoUuid $sectionId): State
+    public function removeSection(AptoUuid $sectionId, int $repetition = 0): State
     {
-        return $this->removeValue($sectionId);
+        return $this->removeValue($sectionId, null, $repetition);
     }
 
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @return State
-     * @internal param string $property
+     * @param int      $repetition
+     *
+     * @return $this
      */
-    public function removeElement(AptoUuid $sectionId, AptoUuid $elementId): State
+    public function removeElement(AptoUuid $sectionId, AptoUuid $elementId, int $repetition = 0): State
     {
-        return $this->removeValue($sectionId, $elementId);
+        return $this->removeValue($sectionId, $elementId, $repetition);
     }
 
     /**
      * @param AptoUuid $sectionId
-     * @return State
-     * @deprecated use removeValue instead
-     * @internal param string $property
+     * @param int      $repetition
+     *
+     * @return $this
      */
-    public function removeValues(AptoUuid $sectionId): State
+    public function removeValues(AptoUuid $sectionId, int $repetition = 0): State
     {
-        return $this->removeValue($sectionId);
+        return $this->removeValue($sectionId, null, $repetition);
     }
 
     /**
@@ -367,21 +382,23 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * returns value from state for the given element
-     *
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
+     * @param int      $repetition
+     *
      * @return array|null
      */
-    public function getElementState(AptoUuid $sectionId, AptoUuid $elementId): ?array
+    public function getElementState(AptoUuid $sectionId, AptoUuid $elementId, int $repetition = 0): ?array
     {
-        if (!$this->isElementActive($sectionId, $elementId)) {
+        if (!$this->isElementActive($sectionId, $elementId, $repetition)) {
             return null;
         }
 
         foreach ($this->state as $state) {
-            // todo check index as well
-            if ($state['sectionId'] === $sectionId->getId() && $state['elementId'] === $elementId->getId()) {
+            if ($state['sectionId'] === $sectionId->getId() &&
+                $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition
+            ) {
                 return $state['values'];
             }
         }
@@ -434,42 +451,42 @@ class State implements AptoJsonSerializable, \JsonSerializable
         return $this->state;
     }
 
-    public function isSectionSet(AptoUuid $sectionId): bool
+    public function isSectionSet(AptoUuid $sectionId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            if ($state['sectionId'] === $sectionId->getId()) {
+            if ($state['sectionId'] === $sectionId->getId() && $state['repetition'] === $repetition) {
                 return true;
             }
         }
         return false;
     }
 
-    public function isElementSet(AptoUuid $elementId): bool
+    public function isElementSet(AptoUuid $elementId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            if ($state['elementId'] === $elementId->getId()) {
+            if ($state['elementId'] === $elementId->getId() && $state['repetition'] === $repetition) {
                 return true;
             }
         }
         return false;
     }
 
-    public function isElementValuesSet(AptoUuid $elementId): bool
+    public function isElementValuesSet(AptoUuid $elementId, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            if ($state['elementId'] === $elementId->getId()) {
+            if ($state['elementId'] === $elementId->getId() && $state['repetition'] === $repetition) {
                 return !empty($state['elementId']['values']);
             }
         }
         return false;
     }
 
-    public function getSectionElements(AptoUuid $sectionId): array
+    public function getSectionElements(AptoUuid $sectionId, int $repetition = 0): array
     {
         $elementList = [];
         foreach ($this->state as $state) {
             if (!array_key_exists($state['sectionId'], self::PARAMETERS)) {
-                if ($state['sectionId'] === $sectionId->getId()) {
+                if ($state['sectionId'] === $sectionId->getId() && $state['repetition'] === $repetition) {
                     $elementList[] = $state;
                 }
             }

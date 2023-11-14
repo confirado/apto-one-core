@@ -103,7 +103,8 @@ export class AreaElementComponent implements OnInit {
 					set: Object.entries(this.formElement.value).map(([property, value]) => ({
 						sectionId: this.element!.element.sectionId,
 						elementId: this.element!.element.id,
-						property,
+            sectionRepetition: this.element!.state.sectionRepetition,
+            property,
 						value,
 					})),
 				},
@@ -121,7 +122,8 @@ export class AreaElementComponent implements OnInit {
 					remove: Object.entries(this.formElement.value).map(([property, value]) => ({
 						sectionId: this.element!.element.sectionId,
 						elementId: this.element!.element.id,
-						property,
+            sectionRepetition: this.element!.state.sectionRepetition,
+            property,
 						value,
 					})),
 				},

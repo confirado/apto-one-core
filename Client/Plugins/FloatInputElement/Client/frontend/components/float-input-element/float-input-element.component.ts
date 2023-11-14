@@ -263,6 +263,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
+              sectionRepetition: this.element!.state.sectionRepetition,
 							property: 'value',
 							value: value,
 						},
@@ -283,7 +284,8 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: null,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: null,
 							value: null,
 						},
 					],

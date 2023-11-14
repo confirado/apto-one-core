@@ -42,6 +42,7 @@ export class ImageUploadComponent implements OnInit {
           element: {
             elementId: this.element?.element.id,
             sectionId: this.element?.element.sectionId,
+            sectionRepetition: this.element?.state.sectionRepetition,
             staticValues: this.element?.element.definition.staticValues,
             state: this.element?.state.values,
           },

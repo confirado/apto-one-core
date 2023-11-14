@@ -40,7 +40,8 @@ export class DefaultElementComponent {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: null,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: null,
 							value: null,
 						},
 					],
@@ -60,7 +61,8 @@ export class DefaultElementComponent {
 						{
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property: null,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property: null,
 							value: null,
 						},
 					],

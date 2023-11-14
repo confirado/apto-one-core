@@ -35,6 +35,7 @@ export interface ElementState {
 	mandatory: boolean;
 	values: any;
   attachments: any;
+  sectionRepetition?: number;
 }
 
 export interface Configuration {
@@ -152,13 +153,15 @@ export interface GetConfigurationStateArguments {
 		set?: {
 			sectionId: string;
 			elementId: string;
+      sectionRepetition?: number
 			property?: any;
 			value: any;
 		}[];
 		remove?: {
 			sectionId: string;
 			elementId: string;
-			property?: any;
+      sectionRepetition?: number
+      property?: any;
 			value: any;
 		}[];
 	};

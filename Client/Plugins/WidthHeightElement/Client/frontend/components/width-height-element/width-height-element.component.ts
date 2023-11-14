@@ -119,7 +119,8 @@ export class WidthHeightElementComponent implements OnInit {
 						.map(([property, value]) => ({
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property,
 							value,
 						})),
 				},
@@ -143,7 +144,8 @@ export class WidthHeightElementComponent implements OnInit {
 						.map(([property, value]) => ({
 							sectionId: this.element!.element.sectionId,
 							elementId: this.element!.element.id,
-							property,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property,
 							value,
 						})),
 				},

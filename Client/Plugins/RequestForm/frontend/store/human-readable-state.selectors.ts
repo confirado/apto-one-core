@@ -5,15 +5,21 @@ import { translate } from '@apto-base-core/store/translated-value/translated-val
 import { selectHumanReadableState as selectConfigurationHumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 export const selectHumanReadableState = createSelector(featureSelector, selectLocale, selectConfigurationHumanReadableState, (state: CatalogFeatureState, locale: string | null, configurationHumanReadableState) => {
+
+  console.error('selectHumanReadableState')
+
   let humanReadableState: any = {};
   if (!locale) {
     return humanReadableState;
   }
 
   const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled && section.active);
+
   sections.forEach((section) => {
     // search for selected elements in section or continue with next section
-    const elements = state.configuration.state.elements.filter((element) => !element.disabled && element.active && element.sectionId === section.id);
+    const elements = state.configuration.state.elements
+      .filter((element) => !element.disabled && element.active && element.sectionId === section.id && element.sectionRepetition === section.repetition);
+
     if (elements.length < 1) {
       return;
     }
@@ -23,6 +29,7 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
     if (pSections.length < 1) {
       return;
     }
+
     const pSection = pSections[0];
 
     // set section name

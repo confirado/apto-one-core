@@ -174,6 +174,7 @@ export interface Element<DefinitionProperties = unknown> {
 	customProperties: CustomProperty[];
   attachments: any;
   zoomFunction: ElementZoomFunctionEnum;
+  sectionRepetition?: number;
 }
 
 export enum ElementZoomFunctionEnum {
