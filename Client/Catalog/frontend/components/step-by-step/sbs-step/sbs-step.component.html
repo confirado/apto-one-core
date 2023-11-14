@@ -13,7 +13,7 @@
                 <div *ngFor="let element of section.elements">
                     <div class="elements" *ngIf="element.state.active">
                         <span class="element-title"> {{ element.element.name | translate }} </span>
-                        <div class="element-value" *ngFor="let value of getElementValues(element.element) | async">{{ value | translate }} </div>
+                        <div class="element-value" *ngFor="let value of getElementValues(element.element, section) | async">{{ value | translate }} </div>
                     </div>
                 </div>
             </div>

@@ -115,8 +115,10 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     );
   }
 
-  public getElementValues(element: Element): Observable<TranslatedValue[] | null | undefined> {
-    return this.store.select(selectElementValues(element));
+  public getElementValues(element: Element, section: ProgressStep): Observable<TranslatedValue[] | null | undefined> {
+    const elementWithRepetition = { ...element, ...{ sectionRepetition: section.section.repetition } };
+
+    return this.store.select(selectElementValues(elementWithRepetition));
   }
 
 	public togglePanel(): void {

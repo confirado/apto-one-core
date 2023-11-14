@@ -88,11 +88,15 @@
                     <td class="order-item-name">
                         <b> {{ prioConfiguration[key].sectionName[locale]|default('') }}</b> <br>
                         {{ prioConfiguration[key].name[locale]|default('') }}
-                        {% if elementProperties[prioConfiguration[key].elementId]|length > 0 %}
-                            {% for property in elementProperties[prioConfiguration[key].elementId] %}
-                                <br>{{ property }}
+                        {% for sections in elementProperties %}
+                            {% for section in sections %}
+                                {% if section.elementId == prioConfiguration[key].elementId %}
+                                    {% for property in section.values %}
+                                        <br>{{ property }}
+                                    {% endfor %}
+                                {% endif %}
                             {% endfor %}
-                        {% endif %}
+                        {% endfor %}
                     </td>
                     <td class="order-item-description">
                         {{ prioConfiguration[key].description[locale]|default('') | raw }}
@@ -134,11 +138,15 @@
                 <td class="order-item-name">
                     <b> {{ configuration[key].sectionName[locale]|default('') }}</b> <br>
                     {{ configuration[key].name[locale]|default('') }}
-                    {% if elementProperties[configuration[key].elementId]|length > 0 %}
-                        {% for property in elementProperties[configuration[key].elementId] %}
-                            <br>{{ property }}
+                    {% for sections in elementProperties %}
+                        {% for section in sections %}
+                            {% if section.elementId == configuration[key].elementId %}
+                                {% for property in section.values %}
+                                    <br>{{ property }}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
-                    {% endif %}
+                    {% endfor %}
                 </td>
                 <td class="order-item-description">
                     {{ configuration[key].description[locale]|default('') | raw }}

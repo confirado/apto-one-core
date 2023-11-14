@@ -2,7 +2,7 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import {
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments,
+  GetConfigurationStateArguments, HumanReadableState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -129,7 +129,7 @@ export const addToBasket = createAction(
 		payload: {
 			type: 'REQUEST_FORM' | 'ADD_TO_BASKET';
 			formData?: any;
-      humanReadableState?: any;
+      humanReadableState?: HumanReadableState;
       productImage?: string;
 		};
 	}>()

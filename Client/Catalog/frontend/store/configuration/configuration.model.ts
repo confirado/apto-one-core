@@ -7,6 +7,13 @@ export enum SectionTypes {
   WIEDERHOLBAR = 'Wiederholbar'
 }
 
+export interface HumanReadableState {
+  elementId: string;
+  repetition: number;
+  sectionId: string;
+  values: Array<{ [key: string]: TranslatedValue }>;
+}
+
 export interface CurrentSection {
   id: string;
   repetition?: number;

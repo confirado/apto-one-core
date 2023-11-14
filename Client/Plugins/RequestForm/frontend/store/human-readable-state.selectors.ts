@@ -6,31 +6,27 @@ import { selectHumanReadableState as selectConfigurationHumanReadableState } fro
 
 export const selectHumanReadableState = createSelector(featureSelector, selectLocale, selectConfigurationHumanReadableState, (state: CatalogFeatureState, locale: string | null, configurationHumanReadableState) => {
 
-  console.error('selectHumanReadableState')
-
-  let humanReadableState: any = {};
+  const humanReadableState: any = {};
   if (!locale) {
     return humanReadableState;
   }
 
-  const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled && section.active);
+  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled && section.active);
 
-  sections.forEach((section) => {
+  for (const cSection of cSections) {
+    // search for section details in product or continue with next section if no details where found
+    const pSection = state.product.sections.find((ppSection) => ppSection.id === cSection.id);
+    if (!pSection) {
+      continue;
+    }
+
     // search for selected elements in section or continue with next section
     const elements = state.configuration.state.elements
-      .filter((element) => !element.disabled && element.active && element.sectionId === section.id && element.sectionRepetition === section.repetition);
+      .filter((e) => !e.disabled && e.active && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition);
 
     if (elements.length < 1) {
-      return;
+      continue;
     }
-
-    // search for section details in product or continue with next section if no details where found
-    let pSections = state.product.sections.filter(pSection => pSection.id === section.id);
-    if (pSections.length < 1) {
-      return;
-    }
-
-    const pSection = pSections[0];
 
     // set section name
     let sectionName = translate(pSection.name, locale);
@@ -38,15 +34,12 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
       sectionName = pSection.identifier;
     }
 
-    // init section elements
-    humanReadableState[sectionName] = [];
     elements.forEach((element) => {
-      const pElements = state.product.elements.filter(pElement => pElement.id === element.id);
+      const pElement = state.product.elements.find((ppElement) => ppElement.id === element.id);
       // search for element details in product or continue with next element if no details where found
-      if (pElements.length < 1) {
+      if (!pElement) {
         return;
       }
-      const pElement = pElements[0];
 
       // set element name
       let elementName = translate(pElement.name, locale);
@@ -54,22 +47,28 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
         elementName = element.identifier;
       }
 
-      // collect element definition values from configurations readable state
-      let values = {};
-      if (configurationHumanReadableState && configurationHumanReadableState.hasOwnProperty(element.id)) {
-        Object.keys(configurationHumanReadableState[element.id]).forEach((value) => {
-          values[value] = translate(configurationHumanReadableState[element.id][value], locale);
-        });
+      if (!humanReadableState.hasOwnProperty(sectionName + element.sectionRepetition)) {
+        humanReadableState[sectionName + element.sectionRepetition] = [];
       }
 
-      // add element to human-readable state
-      humanReadableState[sectionName].push({
-        id: element.id,
-        name: elementName,
-        values: values
-      });
+      for (const s of configurationHumanReadableState) {
+        if (s.elementId === element.id && s.repetition === element.sectionRepetition) {
+          const values = Object.keys(s.values)
+            .reduce((result, key) => {
+              result[key] = translate(s.values[key], locale);
+              return result;
+            }, {});
+
+          humanReadableState[sectionName + element.sectionRepetition].push({
+            ...s,
+            elementName,
+            sectionName,
+            values,
+          });
+        }
+      }
     });
-  });
+  }
 
   return humanReadableState;
 });
