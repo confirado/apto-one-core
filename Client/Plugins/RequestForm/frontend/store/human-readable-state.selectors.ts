@@ -15,9 +15,6 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
 
   const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled && section.active);
 
-  console.log('')
-  console.log('***********************************')
-
   sections.forEach((section) => {
     // search for selected elements in section or continue with next section
     const elements = state.configuration.state.elements
@@ -32,9 +29,6 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
     if (pSections.length < 1) {
       return;
     }
-
-    console.log('pSections')
-    console.log(pSections)
 
     const pSection = pSections[0];
 
@@ -76,9 +70,6 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
       });
     });
   });
-
-  console.log('***********************************')
-  console.log('')
 
   return humanReadableState;
 });
