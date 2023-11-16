@@ -126,9 +126,16 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 	return progressState;
 });
 
-export const selectProgress = createSelector(selectProgressState, (state: ProgressState) =>
-	Math.round((state.steps.filter((s) => s.fulfilled).length / state.steps.length) * 100)
-);
+export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
+  let completedSteps = state.beforeSteps.length;
+  let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
+
+  if (currentActiveElements > 0) {
+    completedSteps++;
+  }
+
+  return Math.round((completedSteps / state.steps.length) * 100);
+});
 
 export const selectCompressedState = createSelector(
 	featureSelector,
