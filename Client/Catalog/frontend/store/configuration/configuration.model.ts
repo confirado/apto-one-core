@@ -120,6 +120,10 @@ export interface Own {
 	price: Price;
 }
 
+export interface OwnSection extends Own {
+  pseudoDiff: Price;
+}
+
 export interface Sum {
 	pseudoPrice: Price;
 	price: Price;
@@ -128,7 +132,7 @@ export interface Sum {
 }
 export interface StatePriceSection {
 	discount: Discount;
-	own: Own;
+	own: OwnSection;
 	sum: Sum;
 	elements: unknown;
 }
@@ -184,4 +188,12 @@ export interface StatePrice {
 	currency: string;
 	sections: Record<string, StatePriceSection>;
 	productSurcharges: unknown[];
+}
+
+export interface SectionPriceTableItem {
+  elementId: string;
+  name: TranslatedValue;
+  value: string;
+  position: number;
+  isDiscount: boolean;
 }
