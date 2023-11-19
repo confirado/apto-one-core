@@ -663,15 +663,31 @@ class SimplePriceCalculator implements PriceCalculator
         $this->priceTable['base']['surcharge'] = $surcharge;
     }
 
+    private function getSectionListGroupedBy(string $fieldName): array
+    {
+        $sectionList = [];
+        foreach ($this->state->getStateWithoutParameters() as $state) {
+            if (!isset($sectionList[$state['sectionId'].$state[$fieldName]] )) {
+                $sectionList[$state['sectionId'].$state[$fieldName]] = [];
+            }
+
+            if (!$this->state->isParameter($state['sectionId'])) {
+                $sectionList[$state['sectionId'].$state[$fieldName]][] = $state;
+            }
+        }
+        return array_values($sectionList);
+    }
+
     /**
      * @param array $statePrices
+     *
+     * @return void
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
      */
-    protected function calculateBasePrice(array $statePrices)
+    protected function calculateBasePrice(array $statePrices): void
     {
-        // @todo this is using old structure
-        $sections = $this->state->getStateNestedWithoutParameters();
+        $sections = $this->getSectionListGroupedBy('repetition');
 
         $prices = $statePrices['prices'];
         $priceMatrices = $statePrices['priceMatrices'];
@@ -681,22 +697,28 @@ class SimplePriceCalculator implements PriceCalculator
 
         // for all sections
         $productSum = new Money(0, $this->currency);
-        foreach ($sections as $sectionId => $elements) {
-            $sectionUuid = new AptoUuid($sectionId);
 
-            // create section subarray, if not existing
-            if (!isset($this->priceTable['sections'][$sectionId])) {
-                $this->priceTable['sections'][$sectionId] = [
-                    'elements' => [],
-                    'own' => [],
-                    'sum' => []
-                ];
-            }
+        foreach ($sections as $key => $section) {
+            // yes we can take sectionId of the item with 0 index, as all items in the group have the same section id
+            $sectionId = $section[0]['sectionId'];
+            $sectionUuid = new AptoUuid($sectionId);
 
             // for all elements
             $sectionSum = new Money(0, $this->currency);
-            foreach ($elements as $elementId => $properties) {
+
+            foreach ($section as $element) {
+                $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
+                $repetition = $element['repetition'];
+
+                // create section subarray, if not existing
+                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                    $this->priceTable['sections'][$sectionId][$repetition] = [
+                        'elements' => [],
+                        'own' => [],
+                        'sum' => []
+                    ];
+                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -739,12 +761,13 @@ class SimplePriceCalculator implements PriceCalculator
                 $elementPrice = $elementPseudoPrice->multiply(1 - $elementDiscount / 100);
 
                 // set element result
-                $this->priceTable['sections'][$sectionId]['elements'][$elementId]['discount'] = [
+                $this->priceTable['sections'][$sectionId][$repetition]['elements'][$elementId]['discount'] = [
                     'discount' => $elementDiscount,
                     'name' => $elementDiscountName,
                     'description' => $elementDiscountDescription
                 ];
-                $this->priceTable['sections'][$sectionId]['elements'][$elementId]['own'] = [
+
+                $this->priceTable['sections'][$sectionId][$repetition]['elements'][$elementId]['own'] = [
                     'pseudoPrice' => $elementPseudoPrice,
                     'price' => $elementPrice
                 ];
@@ -754,7 +777,7 @@ class SimplePriceCalculator implements PriceCalculator
             }
 
             // set result
-            $this->priceTable['sections'][$sectionId]['sum']['price'] = $sectionSum;
+            $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] = $sectionSum;
 
             // sum up product
             $productSum = $productSum->add($sectionSum);
@@ -766,15 +789,16 @@ class SimplePriceCalculator implements PriceCalculator
 
     /**
      * @param array $statePrices
+     *
+     * @return void
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
      */
-    protected function calculateElementPrices(array $statePrices)
+    protected function calculateElementPrices(array $statePrices): void
     {
-        // @todo this is using old structure
-        $sections = $this->state->getStateNestedWithoutParameters();
-        $productId = $this->productId->getId();
+        $sections = $this->getSectionListGroupedBy('repetition');
 
+        $productId = $this->productId->getId();
         $prices = $statePrices['prices'];
         $priceMatrices = $statePrices['priceMatrices'];
         $priceFormulas = $statePrices['priceFormulas'];
@@ -783,22 +807,32 @@ class SimplePriceCalculator implements PriceCalculator
 
         // for all sections
         $productSum = new Money(0, $this->currency);
-        foreach ($sections as $sectionId => $elements) {
+
+        foreach ($sections as $section) {
+
+            $sectionId = $section[0]['sectionId'];
             $sectionUuid = new AptoUuid($sectionId);
 
-            // create section subarray, if not existing
-            if (!isset($this->priceTable['sections'][$sectionId])) {
-                $this->priceTable['sections'][$sectionId] = [
-                    'elements' => [],
-                    'own' => [],
-                    'sum' => []
-                ];
-            }
+            $isBasePriceAdded = false;
 
-            // for all elements
-            $sectionSum = $this->priceTable['sections'][$sectionId]['sum']['price'] ?? new Money(0, $this->currency);
-            foreach ($elements as $elementId => $properties) {
+            foreach ($section as $element) {
+                $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
+                $repetition = $element['repetition'];
+
+                // create section subarray, if not existing
+                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                    $this->priceTable['sections'][$sectionId][$repetition] = [
+                        'elements' => [],
+                        'own' => [],
+                        'sum' => []
+                    ];
+                }
+
+                if (!$isBasePriceAdded) {
+                    $sectionSum = $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] ?? new Money(0, $this->currency);
+                    $isBasePriceAdded = true;
+                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -820,7 +854,7 @@ class SimplePriceCalculator implements PriceCalculator
                         $this->priceTable['base']['price']
                     );
                 }
-                $this->priceTable['sections'][$sectionId]['elements'][$elementId]['additionalInformation'] = $additionInformation;
+                $this->priceTable['sections'][$sectionId][$repetition]['elements'][$elementId]['additionalInformation'] = $additionInformation;
 
                 // skip non matching providers
                 if (!$elementPriceProvider instanceof ElementPriceProvider) {
@@ -852,12 +886,13 @@ class SimplePriceCalculator implements PriceCalculator
                 $elementOwnPrice = $elementOwnPseudoPrice->multiply(1 - $elementDiscount / 100);
 
                 // set element result
-                $this->priceTable['sections'][$sectionId]['elements'][$elementId]['discount'] = [
+                $this->priceTable['sections'][$sectionId][$repetition]['elements'][$elementId]['discount'] = [
                     'discount' => $elementDiscount,
                     'name' => $elementDiscountName,
                     'description' => $elementDiscountDescription
                 ];
-                $this->priceTable['sections'][$sectionId]['elements'][$elementId]['own'] = [
+
+                $this->priceTable['sections'][$sectionId][$repetition]['elements'][$elementId]['own'] = [
                     'pseudoPrice' => $elementOwnPseudoPrice,
                     'price' => $elementOwnPrice
                 ];
@@ -890,16 +925,18 @@ class SimplePriceCalculator implements PriceCalculator
             $sectionSumPrice = $sectionOwnPrice->add($sectionSum);
 
             // set section result
-            $this->priceTable['sections'][$sectionId]['discount'] = [
+            $this->priceTable['sections'][$sectionId][$repetition]['discount'] = [
                 'discount' => $sectionDiscount,
                 'name' => $sectionDiscountName,
                 'description' => $sectionDiscountDescription
             ];
-            $this->priceTable['sections'][$sectionId]['own'] = [
+
+            $this->priceTable['sections'][$sectionId][$repetition]['own'] = [
                 'pseudoPrice' => $sectionOwnPseudoPrice,
                 'price' => $sectionOwnPrice
             ];
-            $this->priceTable['sections'][$sectionId]['sum'] = [
+
+            $this->priceTable['sections'][$sectionId][$repetition]['sum'] = [
                 'pseudoPrice' => $sectionSumPseudoPrice,
                 'price' => $sectionSumPrice
             ];

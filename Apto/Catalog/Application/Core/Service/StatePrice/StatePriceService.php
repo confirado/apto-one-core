@@ -268,15 +268,17 @@ class StatePriceService
 
         // format section prices
         foreach ($prices['sections'] as $sectionId => $section) {
-            $formattedSection = $this->formatPrice($section, $moneyFormatter, $intlMoneyFormatter);
-            $formattedSection['elements'] = [];
+            foreach ($section as $repetition => $sectionItem) {
+                $formattedSection = $this->formatPrice($sectionItem, $moneyFormatter, $intlMoneyFormatter);
+                $formattedSection['elements'] = [];
 
-            foreach ($section['elements'] as $elementId => $element) {
-                $formattedElement = $this->formatPrice($element, $moneyFormatter, $intlMoneyFormatter);
-                $formattedSection['elements'][$elementId] = $formattedElement;
+                foreach ($sectionItem['elements'] as $elementId => $element) {
+                    $formattedElement = $this->formatPrice($element, $moneyFormatter, $intlMoneyFormatter);
+                    $formattedSection['elements'][$elementId] = $formattedElement;
+                }
+
+                $formattedPrices['sections'][$sectionId][$repetition] = $formattedSection;
             }
-
-            $formattedPrices['sections'][$sectionId] = $formattedSection;
         }
 
         return $formattedPrices;

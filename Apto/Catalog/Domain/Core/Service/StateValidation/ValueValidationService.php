@@ -9,23 +9,38 @@ use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 
 class ValueValidationService
 {
+    private function getSectionListGroupedBy(State $state, string $fieldName): array
+    {
+        $sectionList = [];
+        foreach ($state->getStateWithoutParameters() as $stateItem) {
+            if (!isset($sectionList[$stateItem['sectionId'].$stateItem[$fieldName]] )) {
+                $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]] = [];
+            }
+
+            if (!$state->isParameter($stateItem['sectionId'])) {
+                $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]][] = $stateItem;
+            }
+        }
+        return array_values($sectionList);
+    }
+
     /**
      * @param ConfigurableProduct $product
-     * @param State $state
+     * @param State               $state
+     *
+     * @return void
      * @throws InvalidUuidException
      */
-    public function assertValidValues(ConfigurableProduct $product, State $state)
+    public function assertValidValues(ConfigurableProduct $product, State $state): void
     {
-        foreach ($state->getStateWithoutParameters() as $section) {
-
-            $sectionId = $section['sectionId'];
+        foreach ($this->getSectionListGroupedBy($state, 'repetition') as $section) {
+            $sectionId = $section[0]['sectionId'];
             $sectionUuid = new AptoUuid($sectionId);
+
             self::assertHasSection($product, $sectionUuid);
 
-            $elementsInSection = $state->getSectionElements($sectionUuid);
-
-            // check, if multiple elements are allowed in current section
-            if (!$product->isSectionMultiple($sectionUuid) && count($elementsInSection) > 1) {
+            // if multiple elements are NOT allowed in the section, but we have multiple in current section
+            if (!$product->isSectionMultiple($sectionUuid) && count($section) > 1) {
                 throw new InvalidStateException(
                     sprintf(
                         'The given section \'%s(%s)\' does not allow multiple elements in product \'%s(%s)\'.',
@@ -39,15 +54,17 @@ class ValueValidationService
                 );
             }
 
-            $elementId = $section['elementId'];
-            $elementUuid = new AptoUuid($elementId);
-            self::assertHasElement($product, $sectionUuid, $elementUuid);
+            foreach ($section as $element) {
+                $elementId = $element['elementId'];
+                $elementUuid = new AptoUuid($elementId);
+                self::assertHasElement($product, $sectionUuid, $elementUuid);
 
-            // skip elements without properties
-            if (!empty($section['values'])) {
-                foreach ($section['values'] as $property => $value) {
-                    self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
-                    self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value);
+                // skip elements without properties
+                if (!empty($element['values'])) {
+                    foreach ($element['values'] as $property => $value) {
+                        self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
+                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value);
+                    }
                 }
             }
         }
@@ -59,7 +76,7 @@ class ValueValidationService
      * @param AptoUuid $sectionId
      * @throws InvalidUuidException
      */
-    public function assertHasSection(ConfigurableProduct $product, AptoUuid $sectionId)
+    public function assertHasSection(ConfigurableProduct $product, AptoUuid $sectionId): void
     {
         if (!$product->hasSection($sectionId)) {
             throw new InvalidStateException(
@@ -83,7 +100,7 @@ class ValueValidationService
      * @param AptoUuid $elementId
      * @throws InvalidUuidException
      */
-    public function assertHasElement(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId)
+    public function assertHasElement(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId): void
     {
         if (!$product->hasElement($sectionId, $elementId)) {
             throw new InvalidStateException(
@@ -111,7 +128,7 @@ class ValueValidationService
      * @param string $property
      * @throws InvalidUuidException
      */
-    public function assertHasProperty(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property)
+    public function assertHasProperty(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property): void
     {
         if (!$product->hasProperty($sectionId, $elementId, $property)) {
             throw new InvalidStateException(
@@ -141,7 +158,7 @@ class ValueValidationService
      * @param $value
      * @throws InvalidUuidException
      */
-    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value)
+    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value): void
     {
         if (!$product->hasValue($sectionId, $elementId, $property, $value)) {
             throw new InvalidStateException(
