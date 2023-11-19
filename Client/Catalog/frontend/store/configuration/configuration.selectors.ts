@@ -239,7 +239,7 @@ export const selectSectionPrice = (section: Section): any =>
 		if (state.configuration.statePrice === null) {
 			return null;
 		}
-		return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.price.formatted;
+		return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1][section.repetition].sum.price.formatted;
 	});
 
 export const selectSectionPseudoPrice = (section: Section): any =>
@@ -247,7 +247,7 @@ export const selectSectionPseudoPrice = (section: Section): any =>
     if (state.configuration.statePrice === null) {
       return null;
     }
-    return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.pseudoPrice.formatted;
+    return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1][section.repetition].sum.pseudoPrice.formatted;
   });
 
 export const selectSectionPriceTable = (section: Section): any => createSelector(featureSelector, (state: CatalogFeatureState): SectionPriceTableItem[] => {
