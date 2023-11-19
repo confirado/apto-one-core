@@ -1,0 +1,56 @@
+:host {
+    width: 100%;
+    background: #F7F8FA;
+    border-radius: 0 0 var(--border-radius-card) var(--border-radius-card);
+    font-size: 13px;
+    color: #6D6D6D;
+    margin-top: -5px;
+    z-index: 0;
+
+    transition: height 0.3s ease-out, padding 0.3s ease-out;
+    overflow: hidden;
+}
+
+.price-table-container {
+    padding: 25px 20px 20px 20px;
+}
+
+.price-table-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 0;
+
+    &.section-row {
+        font-weight: 500;
+    }
+
+    &.discount-row {
+        color: #20538C;
+    }
+
+    &.summary-row {
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+.row-filler {
+    flex-grow: 1;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, transparent, transparent 4px, #707070 1px, #707070 5px);
+}
+
+.row-price {
+    width: 75px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.price-table-divider {
+    height: 1px;
+    width: 100%;
+    border-top: 1px solid #D6D6D6;
+    margin: 10px 0;
+}

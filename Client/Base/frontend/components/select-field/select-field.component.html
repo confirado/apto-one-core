@@ -12,7 +12,7 @@
              #outletContent="cdkOverlayOrigin"
         >
             <div class="selected-value-wrapper" [class.value-disabled]="!disabled">
-                <div *ngIf="!item" class="selected-value"> {{ default }} </div>
+                <div *ngIf="!item" class="selected-value default"> {{ default }} </div>
                 <div *ngIf="item" class="selected-value">{{ item.name | translate }}</div>
             </div>
 

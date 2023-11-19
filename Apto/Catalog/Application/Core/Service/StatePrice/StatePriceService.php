@@ -297,7 +297,7 @@ class StatePriceService
         ];
 
         $types = ['own', 'sum'];
-        $typePrices = ['pseudoPrice', 'price', 'netPrice', 'grossPrice'];
+        $typePrices = ['pseudoPrice', 'pseudoDiff', 'price', 'netPrice', 'grossPrice'];
 
         // loop types
         foreach ($types as $type) {

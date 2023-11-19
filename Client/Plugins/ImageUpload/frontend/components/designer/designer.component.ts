@@ -187,10 +187,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
           'selection:cleared': this.selectionCleared.bind(this),
         });
 
-        if (!this.canvas.element.state.payload) {
+        if (this.canvas.element.state.payload === null) {
           this.initTextBoxes();
+          this.fabricCanvas.requestRenderAll();
         } else {
           this.initState(() => {
+            this.fabricCanvas.requestRenderAll();
           });
         }
       });
@@ -273,6 +275,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
+
         if (payload.type === 'text') {
           object.setOptions(this.getTextBoxControlOptions(payload.box));
           this.fabricTextBoxes.push(object);

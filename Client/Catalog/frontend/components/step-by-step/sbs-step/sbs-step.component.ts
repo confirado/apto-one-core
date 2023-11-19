@@ -159,6 +159,10 @@ export class SbsStepComponent implements OnInit, OnDestroy {
       }
     }
 
+    if (null === next) {
+      return;
+    }
+
     next.children.forEach((value: ContentSnippet) => {
       if (value.name === 'title') {
         this.csPopUp.title = translate(value.content, this.locale);

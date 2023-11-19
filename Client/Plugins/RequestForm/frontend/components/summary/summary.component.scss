@@ -2,29 +2,22 @@
 @import "form-inputs";
 
 :host {
-    background-color: #f7f8fa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 50px 0px 80px 0px;
+	background-color: #f7f8fa;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 50px 0px 80px 0px;
 
-    span {
-        font-size: x-small;
-        font-weight: 500;
-    }
+	span {
+		font-size: x-small;
+		font-weight: 500;
+	}
 
-    img {
-        height: auto;
-        width: 500px;
-        padding: 0;
-        padding-top: 40px;
-    }
-
-    h4 {
+	h4 {
         font-weight: 600;
         font-size: 31px;
         color: var(--color-text);
-    }
+	}
 }
 
 .quantity-form {
@@ -32,28 +25,40 @@
 }
 
 .whole-summary {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--color-background-card);
-    border-radius: var(--border-radius-card);
-    box-shadow: var(--box-shadow);
-    max-width: 980px;
-    margin-top: 50px;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-background-card);
+	border-radius: var(--border-radius-card);
+	box-shadow: var(--box-shadow);
+	max-width: 980px;
+	margin-top: 50px;
 
     .summary {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 40px 130px;
+        padding: 40px 140px;
 
         &.top {
             border-bottom: 1px solid #dcdcdc;
-            padding-top: 0;
-            padding-bottom: 0;
+
+            img {
+                height: auto;
+                width: 250px;
+                padding: 0 0 40px 0;
+            }
         }
 
         &.basket {
             gap: 20px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .basket {
+            &.buttons {
+                gap: 30px;
+            }
         }
 
         &.configuration {
@@ -62,6 +67,7 @@
 
         &.bottom {
             align-items: stretch;
+            padding-top: 0;
         }
 
         button {
@@ -73,19 +79,22 @@
 }
 
 .basket {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 10px;
 
-    &.price {
-        align-items: center;
-    }
+	&.price {
+		align-items: center;
+	}
 
-    &.bottom {
-        gap: 15px;
-        justify-content: space-between;
-    }
+	&.bottom {
+		gap: 30px;
+	}
+}
+
+.back-button-container {
+    flex-grow: 1;
 }
 
 apto-request-message-state {
@@ -101,11 +110,11 @@ apto-request-message-state {
         }
     }
 
-    .basket {
-        flex-direction: column;
-    }
+	.basket {
+		flex-direction: column;
+	}
 
-    .whole-summary {
-        margin: 10px;
-    }
+	.whole-summary {
+		margin: 10px;
+	}
 }

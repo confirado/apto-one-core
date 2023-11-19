@@ -12,7 +12,7 @@ export class FooterComponent {
 	public readonly links$ = this.store.select(selectContentSnippet('aptoFooterNav.menu'));
 	public readonly contentSnippetPayment$ = this.store.select(selectContentSnippet('aptoFooterPaymentProvider'));
   public readonly contentSnippetFooterInfo$ = this.store.select(selectContentSnippet('aptoFooterInfo'));
-	public readonly mediaUrl = environment.api.media + '/';
+	public readonly mediaUrl = environment.api.media;
   public readonly currentYear: number = new Date().getFullYear();
 
 	public constructor(private store: Store) {}

@@ -13,7 +13,11 @@
 
 .title {
     text-align: center;
-    padding: 20px;
+    padding: 0 20px 40px 20px;
+
+    &.break-text {
+        padding: 20px;
+    }
 
     h5 {
         font-size: x-large;
@@ -61,7 +65,8 @@ form {
 .request-button {
 	display: flex;
 	justify-content: center;
-	margin: 30px 0px 30px 0px;
+	margin: 30px 0 0 0;
+    gap: 30px;
 }
 
 @media only screen and (max-width: calc($mobile-max-width - 1px)) {
@@ -89,6 +94,6 @@ form {
 	}
 
 	:host {
-		margin: 0px;
+		margin: 0;
 	}
 }
