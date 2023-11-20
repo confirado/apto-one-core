@@ -990,41 +990,46 @@ class SendProductInquiryHandler implements EventHandlerInterface
                         $tempArray['description'] = $element['description'];
                         $tempArray['sectionName'] = $section['name'];
 
-                        if (intval($prices[$sectionId->getId()]['elements'][$elementId->getId()]['own']['price']['amount']) === 0) {
-                            $price = null;
+                        foreach ($prices[$sectionId->getId()] as $repetition => $item) {
+                            if ($item['elements'][$elementId->getId()]['own']['price']['amount'] === 0.0) {
+                                $price = null;
 
-                            foreach ($element['customProperties'] as $customProperty) {
-                                if ($customProperty['key'] === 'pdfPrice') {
-                                    $price = $customProperty['value'][$locale];
-                                }
-                                if ($customProperty['key'] === 'hideInPDF' || $customProperty['key'] === 'prioritySeperate') {
-                                    $append = false;
-                                }
-                                if ($customProperty['key'] === 'sendPDFToCustomer') {
-                                    $this->sendPDFToCustomer = false;
-                                }
-                                if($customProperty['key'] === 'priorityOnly' || $customProperty['key'] === 'prioritySeperate'){
-                                    $hasPriorities = true;
-                                    $isPrio = true;
-                                }
-                                if($customProperty['key'] === 'priorityOnly'){
-                                    $hasPrioOnly = true;
-                                    $this->priorityOnly = true;
-                                }
-                                if($customProperty['key'] === 'prioritySeperate'){
-                                    $this->prioritySeperate = true;
+                                foreach ($element['customProperties'] as $customProperty) {
+                                    if ($customProperty['key'] === 'pdfPrice') {
+                                        $price = $customProperty['value'][$locale];
+                                    }
+                                    if ($customProperty['key'] === 'hideInPDF' || $customProperty['key'] === 'prioritySeperate') {
+                                        $append = false;
+                                    }
+                                    if ($customProperty['key'] === 'sendPDFToCustomer') {
+                                        $this->sendPDFToCustomer = false;
+                                    }
+                                    if($customProperty['key'] === 'priorityOnly' || $customProperty['key'] === 'prioritySeperate'){
+                                        $hasPriorities = true;
+                                        $isPrio = true;
+                                    }
+                                    if($customProperty['key'] === 'priorityOnly'){
+                                        $hasPrioOnly = true;
+                                        $this->priorityOnly = true;
+                                    }
+                                    if($customProperty['key'] === 'prioritySeperate'){
+                                        $this->prioritySeperate = true;
+                                    }
                                 }
 
+                                $tempArray['price'] = $price;
+
+                            } else {
+                                $tempArray['price'] = $item['elements'][$elementId->getId()]['own']['price']['formatted'];
                             }
-                            $tempArray['price'] = $price;
-                        } else {
-                            $tempArray['price'] = $prices[$sectionId->getId()]['elements'][$elementId->getId()]['own']['price']['formatted'];
-                        }
-                        if ($append) {
-                            array_push($relevantData, $tempArray);
-                        }
-                        if($isPrio){
-                            array_push($priorities, $tempArray);
+
+                            if ($append) {
+                                array_push($relevantData, $tempArray);
+                            }
+
+                            if($isPrio){
+                                array_push($priorities, $tempArray);
+                            }
                         }
                     }
                 }
