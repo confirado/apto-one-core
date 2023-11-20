@@ -45,6 +45,11 @@ class State implements AptoJsonSerializable, \JsonSerializable
         $this->state = $state;
     }
 
+    public function isParameter(string $stateItem): bool
+    {
+        return array_key_exists($stateItem, self::PARAMETERS);
+    }
+
     /**
      * @param string $parameteru
      * @return mixed
@@ -54,7 +59,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
         // @todo maybe save 'parametes' in a separate class property
 
         // assert valid parameter
-        if (!array_key_exists($parameter, self::PARAMETERS)) {
+        if (!$this->isParameter($parameter)) {
             throw new \InvalidArgumentException(sprintf(
                 '"%s" is not a valid parameter.',
                 $parameter
@@ -106,6 +111,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
+     * In many cases, we can skip repetition argument as all repetitions are activated or deactivated together
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
      * @param int      $repetition
@@ -193,11 +199,11 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @return array
      */
-    public function getSectionList()
+    public function getSectionList(): array
     {
         $sectionList = [];
         foreach ($this->state as $state) {
-            if (!array_key_exists($state['sectionId'], self::PARAMETERS)) {
+            if (!$this->isParameter($state['sectionId'])) {
                 $sectionList[$state['sectionId']] = true;
             }
         }
@@ -205,7 +211,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * Expected old return:
+     * Old return:
      *
      * Array(
      *  [ee81ab8f-24 33-490a-99a1-80d7399db85d] => 1
@@ -219,11 +225,11 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @return array
      */
-    public function getElementList()
+    public function getElementList(): array
     {
         $elementList = [];
         foreach ($this->state as $state) {
-            if (!array_key_exists($state['sectionId'], self::PARAMETERS)) {
+            if (!$this->isParameter($state['sectionId'])) {
                 // we can have multiple elements with the same element id if a section type is "wiederholbar", therefor
                 // we take the whole state item into element list
                 $elementList[] = $state;
@@ -233,10 +239,11 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
+     * @param AptoUuid    $sectionId
+     * @param AptoUuid    $elementId
      * @param string|null $property is null on default element, or when element has no properties at all (has no selectable values in element definition)
-     * @param mixed|null $value
+     * @param mixed|null  $value
+     * @param int         $repetition
      *
      * @return State
      */
@@ -362,26 +369,6 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * Returns state in old format
-     *
-     * @deprecated
-     * @return array
-     */
-    public function getStateNestedWithoutParameters(): array
-    {
-        $nestedState = [];
-        $state = $this->getStateWithoutParameters();
-
-        foreach ($state as $stateItem) {
-            if (!array_key_exists($stateItem['sectionId'], $nestedState)) {
-                $nestedState[$stateItem['sectionId']] = [];
-            }
-            $nestedState[$stateItem['sectionId']][$stateItem['elementId']] = $stateItem['values'];
-        }
-        return $nestedState;
-    }
-
-    /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
      * @param int      $repetition
@@ -492,23 +479,10 @@ class State implements AptoJsonSerializable, \JsonSerializable
         return false;
     }
 
-    public function getSectionElements(AptoUuid $sectionId, int $repetition = 0): array
-    {
-        $elementList = [];
-        foreach ($this->state as $state) {
-            if (!array_key_exists($state['sectionId'], self::PARAMETERS)) {
-                if ($state['sectionId'] === $sectionId->getId() && $state['repetition'] === $repetition) {
-                    $elementList[] = $state;
-                }
-            }
-        }
-        return $elementList;
-    }
-
     public function getElementIds(): array {
         $elementIds = [];
         foreach ($this->state as $state) {
-            if (!array_key_exists($state['sectionId'], self::PARAMETERS)) {
+            if (!$this->isParameter($state['sectionId'])) {
                 $elementIds[] = $state['elementId'];
             }
         }

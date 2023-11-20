@@ -186,7 +186,7 @@ export interface StatePrice {
 	own: Own;
 	sum: Sum;
 	currency: string;
-	sections: Record<string, StatePriceSection>;
+	sections: Record<string, StatePriceSection[]>;
 	productSurcharges: unknown[];
 }
 
