@@ -1,0 +1,40 @@
+<ng-container *ngIf="contentSnippets$ | async as contentSnippets">
+    <div class="price-table-container">
+        <div class="price-table">
+            <ng-container *ngFor="let priceTableItem of priceTable">
+                <div
+                    class="price-table-row"
+                    [class.section-row]="!priceTableItem.elementId && !priceTableItem.isDiscount"
+                    [class.discount-row]="priceTableItem.isDiscount"
+                >
+                    <div>
+                        <span *ngIf="!priceTableItem.elementId && !priceTableItem.isDiscount && contentSnippets | contentSnippet: 'basePrice'">
+                            {{ contentSnippets | contentSnippet: 'basePrice' }}
+                        </span>
+                        <span *ngIf="!priceTableItem.elementId && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'sectionDiscount'">
+                            {{ contentSnippets | contentSnippet: 'sectionDiscount' }}
+                        </span>
+                        <span *ngIf="priceTableItem.elementId && priceTableItem.isDiscount && contentSnippets | contentSnippet: 'elementDiscount'">
+                            {{ contentSnippets | contentSnippet: 'elementDiscount' }}
+                        </span>
+                        {{ priceTableItem.name | translate }}
+                    </div>
+                    <div class="row-filler"></div>
+                    <div class="row-price">{{ priceTableItem.value }}</div>
+                </div>
+
+            </ng-container>
+        </div>
+
+        <div class="price-table-divider"></div>
+
+        <div class="price-table-row summary-row">
+            <div>
+                <span *ngIf="contentSnippets | contentSnippet: 'sumPrice'">{{ contentSnippets | contentSnippet: 'sumPrice' }}</span>
+                {{ section.name | translate }}
+            </div>
+            <div class="row-filler"></div>
+            <div class="row-price">{{ sectionPrice }}</div>
+        </div>
+    </div>
+</ng-container>

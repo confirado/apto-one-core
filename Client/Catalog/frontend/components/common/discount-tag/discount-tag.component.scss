@@ -1,0 +1,45 @@
+:host {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    vertical-align: middle;
+
+    svg {
+        height: 22px;
+        flex-shrink: 0;
+
+        path {
+            stroke: var(--color-primary);
+            stroke-width: 1px;
+        }
+    }
+
+    .text {
+        height: 22px;
+        line-height: 22px;
+        font-family: Montserrat, Arial, sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        box-sizing: border-box;
+        padding-right: 10px;
+        padding-left: 0;
+        border: 1px solid var(--color-primary);
+        border-left: none;
+        border-radius: 0 6px 6px 0;
+        margin-left: 0px;
+        color: var(--color-primary);
+        display: flex;
+        align-items: center;
+
+        &::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border: 1px solid var(--color-primary);
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+    }
+}
