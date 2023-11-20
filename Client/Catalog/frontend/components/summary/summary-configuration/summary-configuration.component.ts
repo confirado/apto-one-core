@@ -84,19 +84,22 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getElementHumanReadableState(elementId: string) {
-    if (!this.humanReadableState.hasOwnProperty(elementId)) {
+  public getElementHumanReadableState(elementId: string, sectionRepetition: number) {
+    const elementState = this.humanReadableState.find((e) => {
+      return e.elementId === elementId && e.repetition === sectionRepetition
+    });
+    if (!elementState) {
       return null;
     }
 
     let isFirst = true;
     let state = '';
-    Object.keys(this.humanReadableState[elementId]).forEach((property) => {
+    Object.keys(elementState.values).forEach((property) => {
       if (isFirst) {
         isFirst = false;
-        state = translate(this.humanReadableState[elementId][property], this.locale);
+        state = translate(elementState.values[property], this.locale);
       } else {
-        state += ', ' + translate(this.humanReadableState[elementId][property], this.locale);
+        state += ', ' + translate(elementState.values[property], this.locale);
       }
     });
 

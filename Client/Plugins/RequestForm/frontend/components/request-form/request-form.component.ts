@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
@@ -63,7 +63,8 @@ export class RequestFormComponent {
     zipCode: [''],
     city: [''],
     message: [''],
-    declarationOfConsent: [false, Validators.requiredTrue]
+    declarationOfConsent: [false, Validators.requiredTrue],
+    quantityInput: new FormControl<number>(1)
   });
 
   public fieldsWhenUserIsLoggedIn: FieldsWhenUserIsLoggedInEnum = FieldsWhenUserIsLoggedInEnum.ALL;

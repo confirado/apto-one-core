@@ -30,7 +30,6 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 }
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
-  const currentSection = state.product.sections.find((section) => section.id === state.configuration.currentStep.id && section.repetition === state.configuration.currentStep.repetition);
   const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
 
 	let currentStep: ProgressStep | undefined;
@@ -87,7 +86,14 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			fulfilled = true;
 		}
 
-		if (section.id === state.configuration.currentStep.id && section.repetition === state.configuration.currentStep.repetition) {
+    let currentStepId = null;
+    let currentRepetition = 0;
+    if (state.configuration.currentStep) {
+      currentStepId = state.configuration.currentStep.id;
+      currentRepetition = state.configuration.currentStep.repetition;
+    }
+
+		if (section.id === currentStepId && section.repetition === currentRepetition) {
 			currentStep = {
 				status: 'CURRENT',
 				fulfilled,
@@ -335,11 +341,21 @@ export const selectElementValues = (element: Element): any =>
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);
 
 export const selectCurrentProductElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.product.elements.filter((element) => element.sectionId === state.configuration.currentStep.id);
+  let currentStepId = null;
+  if (state.configuration.currentStep) {
+    currentStepId = state.configuration.currentStep.id;
+  }
+
+  return state.product.elements.filter((element) => element.sectionId === currentStepId);
 });
 
 export const selectCurrentStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.configuration.state.elements.filter((element) => element.sectionId === state.configuration.currentStep.id);
+  let currentStepId = null;
+  if (state.configuration.currentStep) {
+    currentStepId = state.configuration.currentStep.id;
+  }
+
+  return state.configuration.state.elements.filter((element) => element.sectionId === currentStepId);
 });
 
 export const selectSectionProductElements = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
