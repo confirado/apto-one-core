@@ -129,8 +129,12 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
   let completedSteps = state.beforeSteps.length;
   let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
+  let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
+  let currentMandatoryActiveElements = state.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
 
-  if (currentActiveElements > 0) {
+  // if current step seems complete we add 1 step to completed steps
+  // current step is complete if minimum 1 element is selected and all mandatory elements are selected
+  if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
     completedSteps++;
   }
 
