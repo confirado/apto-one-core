@@ -30,7 +30,7 @@ export interface ConfigurationState {
 	loading: boolean;
 	productId: string | null;
 	connector: SelectConnector | null;
-	humanReadableState: HumanReadableState[] | null;
+	humanReadableState: HumanReadableState[];
 	quantity: number;
   hideOnePage: boolean;
 }
@@ -50,7 +50,7 @@ export const configurationInitialState: ConfigurationState = {
 	productId: null,
 	loading: false,
 	connector: null,
-	humanReadableState: null,
+	humanReadableState: [],
 	quantity: 1,
   hideOnePage: false
 };
