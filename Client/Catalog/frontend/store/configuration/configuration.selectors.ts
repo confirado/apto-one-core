@@ -254,12 +254,15 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
   let priceTable: SectionPriceTableItem[] = [];
 
   // if that section has no surcharges we can return an empty array here
-  if (!state.configuration.statePrice.sections.hasOwnProperty(section.id)) {
+  if (
+	  !state.configuration.statePrice.sections.hasOwnProperty(section.id) ||
+	  state.configuration.statePrice.sections[section.id].length < section.repetition
+  ) {
     return priceTable;
   }
 
   // add all element surcharges of that section to the priceTable array
-  const sectionPrices = state.configuration.statePrice.sections[section.id];
+  const sectionPrices = state.configuration.statePrice.sections[section.id][section.repetition];
   Object.keys(sectionPrices.elements).forEach((elementId) => {
     const elementPrice = sectionPrices.elements[elementId];
     const pElement = state.product.elements.find(e => e.id === elementId);
