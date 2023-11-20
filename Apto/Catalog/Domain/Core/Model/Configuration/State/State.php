@@ -134,15 +134,17 @@ class State implements AptoJsonSerializable, \JsonSerializable
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $property
+     * @param string   $property
+     * @param int      $repetition
+     *
      * @return bool
      */
-    public function isPropertyActive(AptoUuid $sectionId, AptoUuid $elementId, string $property): bool
+    public function isPropertyActive(AptoUuid $sectionId, AptoUuid $elementId, string $property, int $repetition = 0): bool
     {
         foreach ($this->state as $state) {
-            // todo check index as well
             if ($state['sectionId'] === $sectionId->getId() &&
                 $state['elementId'] === $elementId->getId() &&
+                $state['repetition'] === $repetition &&
                 !empty($state['values']) &&
                 array_key_exists($property, $state['values'])) {
                 return true;

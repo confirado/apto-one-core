@@ -41,6 +41,8 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
+     * we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
+     *
      * @param AptoUuid $sectionId
      * @param array $elementIds
      * @return bool
@@ -57,8 +59,11 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
+     *  we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
+     *
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
+     *
      * @return bool
      */
     public function isElementDisabled(AptoUuid $sectionId, AptoUuid $elementId): bool
