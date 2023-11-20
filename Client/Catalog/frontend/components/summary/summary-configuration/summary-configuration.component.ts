@@ -129,7 +129,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     this.setStep(section, seoUrl, isStepByStep);
   }
 
-  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
+  public togglePriceTable($event, section: Section, sectionPriceTable: SectionPriceTableItem[]) {
     $event.preventDefault();
     $event.stopPropagation();
 
@@ -137,12 +137,16 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const index = this.expandedSectionPrices.indexOf(sectionId);
+    const index = this.expandedSectionPrices.indexOf(this.getSectionExpandIdentifier(section));
     if (index !== -1) {
       this.expandedSectionPrices.splice(index, 1);
     } else {
-      this.expandedSectionPrices.push(sectionId);
+      this.expandedSectionPrices.push(this.getSectionExpandIdentifier(section));
     }
+  }
+
+  public getSectionExpandIdentifier(section: Section) {
+    return section.id + '_' + section.repetition;
   }
 
   private setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
