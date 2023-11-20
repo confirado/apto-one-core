@@ -126,9 +126,20 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 	return progressState;
 });
 
-export const selectProgress = createSelector(selectProgressState, (state: ProgressState) =>
-	Math.round((state.steps.filter((s) => s.fulfilled).length / state.steps.length) * 100)
-);
+export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
+  let completedSteps = state.beforeSteps.length;
+  let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
+  let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
+  let currentMandatoryActiveElements = state.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
+
+  // if current step seems complete we add 1 step to completed steps
+  // current step is complete if minimum 1 element is selected and all mandatory elements are selected
+  if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
+    completedSteps++;
+  }
+
+  return Math.round((completedSteps / state.steps.length) * 100);
+});
 
 export const selectCompressedState = createSelector(
 	featureSelector,
