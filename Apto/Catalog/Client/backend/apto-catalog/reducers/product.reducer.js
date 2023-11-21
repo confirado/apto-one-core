@@ -109,7 +109,8 @@ const ProductReducer = function(AptoReducersProvider) {
             categories: [],
             sections: [],
             useStepByStep: false,
-            filterProperties: []
+            filterProperties: [],
+            keepSectionOrder: true,
         },
         batchMessage: '',
         availableCategories: [],

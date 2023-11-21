@@ -98,6 +98,13 @@ class Product extends AptoAggregate
     protected $useStepByStep;
 
     /**
+     * Reset configurator steps when going backwards in configurator or not
+     *
+     * @var string
+     */
+    protected $keepSectionOrder;
+
+    /**
      * @var string|null
      */
     protected $articleNumber;
@@ -406,6 +413,34 @@ class Product extends AptoAggregate
         );
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function getKeepSectionOrder(): bool
+    {
+        return $this->keepSectionOrder;
+    }
+
+    /**
+     * @param bool $keepSectionOrder
+     * @return Product
+     */
+    public function setKeepSectionOrder(bool $keepSectionOrder): Product
+    {
+        if ($this->keepSectionOrder === $keepSectionOrder) {
+            return $this;
+        }
+        $this->keepSectionOrder = $keepSectionOrder;
+        $this->publish(
+            new ProductKeepSectionOrderUpdated(
+                $this->getId(),
+                $this->getKeepSectionOrder()
+            )
+        );
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -3424,6 +3459,7 @@ class Product extends AptoAggregate
             ->setActive($this->getActive())
             ->setHidden($this->getHidden())
             ->setUseStepByStep($this->getUseStepByStep())
+            ->setKeepSectionOrder($this->getKeepSectionOrder())
             ->setArticleNumber($articleNumber)
             ->setMetaTitle($this->getMetaTitle())
             ->setMetaDescription($this->getMetaDescription())

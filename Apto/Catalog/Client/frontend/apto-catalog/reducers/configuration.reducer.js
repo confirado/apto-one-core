@@ -25,6 +25,7 @@ const ConfigurationReducer = function(AptoReducersProvider, AptoExtendProvider, 
         productId: '',
         productSeoUrl: null,
         useStepByStep: false,
+        keepSectionOrder: true,
         toggleState: false
     };
 

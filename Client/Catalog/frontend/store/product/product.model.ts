@@ -11,6 +11,7 @@ export interface Product {
 	description: TranslatedValue;
 	previewImage: string | null;
 	useStepByStep: boolean;
+  keepSectionOrder: boolean;
 	position: number;
 	customProperties: CustomProperty[];
   hidden: boolean;

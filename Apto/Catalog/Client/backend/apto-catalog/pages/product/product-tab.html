@@ -35,6 +35,16 @@
                     </md-option>
                 </md-select>
             </md-input-container>
+
+            <div flex="5"></div>
+            <md-input-container flex>
+                <label>Reihenfolge der Sektionen einhalten</label>
+                <md-select ng-model="productDetail.keepSectionOrder">
+                    <md-option ng-repeat="sectionOrderOption in configuratorKeepSectionOrder" ng-value="sectionOrderOption.value">
+                        {{ sectionOrderOption.name }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
         </div>
     </div>
 </div>
