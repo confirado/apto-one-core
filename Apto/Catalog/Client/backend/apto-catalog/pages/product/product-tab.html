@@ -2,6 +2,27 @@
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
             <md-input-container flex>
+                <md-checkbox ng-model="productDetail.active" aria-label="Aktiv">
+                    Aktiv
+                </md-checkbox>
+            </md-input-container>
+            <div flex="5"></div>
+
+            <md-input-container flex>
+                <md-checkbox ng-model="productDetail.hidden" aria-label="Versteckt">
+                    Versteckt
+                </md-checkbox>
+            </md-input-container>
+        </div>
+    </div>
+    <div layout="column" flex="5"></div>
+    <div layout="column" flex></div>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <div layout="column" flex>
+        <div layout="row" layout-align="start" flex>
+            <md-input-container flex>
                 <label>Kennung:</label>
                 <input ng-model="productDetail.identifier">
             </md-input-container>
@@ -15,18 +36,6 @@
     <div layout="column" flex="5"></div>
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container flex>
-                <md-checkbox ng-model="productDetail.active" aria-label="Aktiv">
-                    Aktiv
-                </md-checkbox>
-            </md-input-container>
-            <div flex="5"></div>
-            <md-input-container flex>
-                <md-checkbox ng-model="productDetail.hidden" aria-label="Versteckt">
-                    Versteckt
-                </md-checkbox>
-            </md-input-container>
-            <div flex="5"></div>
             <md-input-container flex>
                 <label>Konfiguratormodus</label>
                 <md-select ng-model="productDetail.useStepByStep">
@@ -48,6 +57,7 @@
         </div>
     </div>
 </div>
+
 <div layout="row" layout-align="start" flex>
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
