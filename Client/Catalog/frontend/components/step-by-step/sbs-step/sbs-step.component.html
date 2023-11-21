@@ -8,7 +8,7 @@
                 <mat-icon>done</mat-icon>
             </div>
             <div *ngIf="last" class="white-overlay"></div>
-            <div (click)="setStep(section, product.seoUrl, product.useStepByStep)" class="step" [class.select]="status === 'COMPLETED' || status === 'CURRENT'">
+            <div (click)="setStep(section, product.seoUrl, product.useStepByStep)" class="step" [class.select]="isSectionSelectable()">
                 <div class="title"> {{ section.section.name | translate }}</div>
                 <div *ngFor="let element of section.elements">
                     <div class="elements" *ngIf="element.state.active">

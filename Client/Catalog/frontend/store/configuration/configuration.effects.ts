@@ -338,23 +338,30 @@ export class ConfigurationEffects {
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(setStepSuccess, setPrevStepSuccess),
-			withLatestFrom(this.store$.select(selectConfiguration), this.store$.select(selectProgressState)),
-			map(([action, configuration, progressState]) => {
+			withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectProgressState),
+        this.store$.select(selectProduct),
+      ),
+			map(([action, configuration, progressState, product]) => {
 				const removeList: { sectionId: string; elementId: string; property: string; value: string }[] = [];
-				for (const section of configuration.state.sections) {
-					if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id)) {
-						configuration.state.elements
-							.filter((element) => element.sectionId === section.id && element.active)
-							.forEach((e) =>
-								removeList.push({
-									sectionId: section.id,
-									elementId: e.id,
-									property: '',
-									value: '',
-								})
-							);
-					}
-				}
+
+        if (product.product.keepSectionOrder) {
+          for (const section of configuration.state.sections) {
+            if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id)) {
+              configuration.state.elements
+                .filter((element) => element.sectionId === section.id && element.active)
+                .forEach((e) =>
+                  removeList.push({
+                    sectionId: section.id,
+                    elementId: e.id,
+                    property: '',
+                    value: '',
+                  })
+                );
+            }
+          }
+        }
 
 				return updateConfigurationState({
 					updates: {

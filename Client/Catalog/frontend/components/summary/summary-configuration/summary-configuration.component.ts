@@ -11,7 +11,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
-import { Section } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   selectBasicPrice,
@@ -22,7 +22,7 @@ import {
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
+import { ProgressStep, SectionPriceTableItem } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -32,6 +32,7 @@ import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuratio
 export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public product$ = this.store.select(selectProduct);
+  protected product: Product;
   public configuration$ = this.store.select(selectConfiguration);
   public readonly basicPseudoPrice$ = this.store.select(selectBasicPseudoPrice);
   public readonly sumPseudoPrice$ = this.store.select(selectSumPseudoPrice);
@@ -44,7 +45,6 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public humanReadableState: any = {};
   public expandedSectionPrices: String[] = [];
 
-  private popupSubscription: Subscription = null;
   private csPopUp: {
     title: string,
     message: string,
@@ -71,6 +71,12 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe((next: ContentSnippet) => {
       this.onCsPopUpChange(next);
+    });
+
+    this.product$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((product: Product) => {
+      this.product = product;
     });
 
     this.store.select(selectHumanReadableState).pipe(
@@ -147,28 +153,30 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
   private setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
-      if (false === isStepByStep) {
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        return;
-      }
-
-      if (!this.csPopUp.title || !this.csPopUp.message) {
-        this.updateStore(section);
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        return;
-      }
-
-      this.popupSubscription = this.openPopUp().subscribe((next) => {
-        this.popupSubscription.unsubscribe();
-
-        if (true !== next) {
+      if (this.product.keepSectionOrder) {
+        if (isStepByStep === false) {
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
           return;
         }
 
-        this.updateStore(section);
+        if (!this.csPopUp.title || !this.csPopUp.message) {
+          this.updateStore(section);
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+          return;
+        }
 
+        this.openPopUp()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((next: boolean) => {
+            if (next === true) {
+              this.updateStore(section);
+              this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+            }
+          });
+      } else {
+        this.updateStore(section);
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-      })
+      }
     }
   }
 
