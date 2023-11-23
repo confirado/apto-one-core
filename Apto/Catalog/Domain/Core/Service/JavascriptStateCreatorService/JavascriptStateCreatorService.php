@@ -50,8 +50,8 @@ class JavascriptStateCreatorService
         $appEnv = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'prod';
         $result = [
             'configurationState' => [
-                'sections' => $this->createSectionsNew($product, $state),
-                'elements' => $this->createElementsNew($product, $state)
+                'sections' => $this->createSections($product, $state),
+                'elements' => $this->createElements($product, $state)
             ],
             'compressedState' => $state->getState()->jsonSerialize(),
             'failedRules' => $this->createFailedRules($product, $state, $ruleValidationResult),
@@ -75,7 +75,7 @@ class JavascriptStateCreatorService
      * @throws CircularReferenceException
      * @throws InvalidUuidException
      */
-    protected function createSectionsNew(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    protected function createSections(ConfigurableProduct $product, EnrichedState $enrichedState): array
     {
         $state = $enrichedState->getState();
         $sections = [];
@@ -122,7 +122,7 @@ class JavascriptStateCreatorService
      * @return array
      * @throws InvalidUuidException
      */
-    protected function createElementsNew(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    protected function createElements(ConfigurableProduct $product, EnrichedState $enrichedState): array
     {
         $state = $enrichedState->getState();
         $elements = [];
@@ -172,89 +172,6 @@ class JavascriptStateCreatorService
                     ];
                 }
             }
-        }
-
-        return $elements;
-    }
-
-    // todo delete this after finishing with new state
-    /**
-     * @param ConfigurableProduct $product
-     * @param EnrichedState $enrichedState
-     * @return array
-     * @throws InvalidUuidException
-     */
-    protected function createSections(ConfigurableProduct $product, EnrichedState $enrichedState): array
-    {
-        $state = $enrichedState->getState();
-        $sections = [];
-
-        foreach ($product->getSections() as $section) {
-            $sectionId = new AptoUuid($section['id']);
-            $elementIds = $product->getElementIds($sectionId);
-
-            $sections[$sectionId->getId()] = [
-                'allowMultiple' => $section['allowMultiple'],
-                //'defaultElements' => [], // @TODO shall we implement defaultElements, just use isDefault flag from elements instead?!
-                'elements' => $this->createElements($product, $enrichedState, $sectionId),
-                'identifier' => $section['identifier'],
-                'isHidden' => $section['isHidden'],
-                'isMandatory' => $section['isMandatory'],
-                'repeatableType' => $section['repeatableType'],
-                'repeatableCalculatedValueName' => $section['repeatableCalculatedValueName'],
-                'name' => AptoTranslatedValue::fromArray($section['name'] ?: []),
-                'state' => [
-                    'active' => $state->isSectionActive($sectionId),
-                    'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory']),
-                    'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds)
-                ]
-            ];
-        }
-
-        return $sections;
-    }
-
-    /**
-     * @param ConfigurableProduct $product
-     * @param EnrichedState $enrichedState
-     * @param AptoUuid $sectionId
-     * @return array
-     * @throws InvalidUuidException
-     */
-    protected function createElements(ConfigurableProduct $product, EnrichedState $enrichedState, AptoUuid $sectionId): array
-    {
-        $state = $enrichedState->getState();
-        $elements = [];
-
-        foreach ($product->getSection($sectionId)['elements'] as $element) {
-            $elementId = new AptoUuid($element['id']);
-
-            // empty properties must be initialized with null, elements without electable values must use null instead of an empty array
-            $selectedValues = array_merge(
-                array_fill_keys(
-                    array_keys(
-                        $element['definition']['properties'] ?? []
-                    ),
-                    null
-                ),
-                $state->getValues($sectionId, $elementId) ?: []
-            ) ?: null;
-
-            $elements[$elementId->getId()] = [
-                'errorMessage' => AptoTranslatedValue::fromArray($element['errorMessage'] ?: []),
-                'identifier' => $element['identifier'],
-                'isDefault' => $element['isDefault'],
-                'isMandatory' => $element['isMandatory'],
-                'name' => AptoTranslatedValue::fromArray($element['name'] ?: []),
-                'previewImage' => $element['previewImage'],
-                'properties' => $element['definition']['properties'] ?? null, // @TODO needed anymore?
-                'state' => [
-                    'active' => $state->isElementActive($sectionId, $elementId),
-                    'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId),
-                    'values' => $selectedValues
-                ],
-                'staticValues' => $element['definition']['staticValues'] ?? []
-            ];
         }
 
         return $elements;
