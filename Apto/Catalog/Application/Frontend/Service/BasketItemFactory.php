@@ -30,6 +30,7 @@ use Apto\Catalog\Domain\Core\Model\Configuration\Configuration;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
 use Apto\Catalog\Domain\Core\Model\Shop\ShopRepository;
 use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
+use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
 
 class BasketItemFactory
 {
@@ -180,27 +181,27 @@ class BasketItemFactory
             $currency = new Currency($displayCurrency['currency']);
             $fallbackCurrency = new Currency($connectorConfig->getCurrency()); // @todo set fallback currency
             $currencyFactor = $displayCurrency['factor'];
-
-            if (isset($additionalDataTranslations['root']['properties'])) {
-                $propertyTranslations = $additionalDataTranslations['root']['properties'];
-            } else {
-                $propertyTranslations = $this->getTranslatedProperties($basketConfiguration);
-            }
-
-            if (isset($additionalDataTranslations['root']['sortedProperties'])) {
-                $sortedPropertyTranslations = $additionalDataTranslations['root']['sortedProperties'];
-            } else {
-                $sortedPropertyTranslations = $this->getTranslatedSortedProperties($basketConfiguration);
-            }
-
-            $additionalData['translations']['root'] = array_merge($additionalData['translations']['root'], [
-                'properties' => $propertyTranslations
-            ]);
-
-            $additionalData['translations']['root'] = array_merge($additionalData['translations']['root'], [
-                'sortedProperties' => $sortedPropertyTranslations
-            ]);
         }
+
+        if (isset($additionalDataTranslations['root']['properties'])) {
+            $propertyTranslations = $additionalDataTranslations['root']['properties'];
+        } else {
+            $propertyTranslations = $this->getTranslatedProperties($basketConfiguration);
+        }
+
+        if (isset($additionalDataTranslations['root']['sortedProperties'])) {
+            $sortedPropertyTranslations = $additionalDataTranslations['root']['sortedProperties'];
+        } else {
+            $sortedPropertyTranslations = $this->getTranslatedSortedProperties($basketConfiguration);
+        }
+
+        $additionalData['translations']['root'] = array_merge($additionalData['translations']['root'], [
+            'properties' => $propertyTranslations
+        ]);
+
+        $additionalData['translations']['root'] = array_merge($additionalData['translations']['root'], [
+            'sortedProperties' => $sortedPropertyTranslations
+        ]);
 
         // get Images
         $images = [];
@@ -317,6 +318,7 @@ class BasketItemFactory
      * @param Configuration $configuration
      * @param AptoLocale $locale
      * @return array
+     * @throws InvalidUuidException
      */
     protected function getSortedProperties(Configuration $configuration, AptoLocale $locale): array
     {
@@ -325,26 +327,34 @@ class BasketItemFactory
         $state = $configuration->getState();
         $sectionCount = 0;
 
-        /** @var AptoUuid $sectionId */
-        foreach ($product->getSectionIds() as $sectionId) {
-            if (!$state->isSectionActive($sectionId)) {
+        foreach ($state->getSectionList() as $section) {
+            $sectionId = new AptoUuid($section['sectionId']);
+            $repetition = $section['repetition'];
+            if (!$state->isSectionActive($sectionId, $repetition)) {
                 continue;
+            }
+
+            $sectionName = $product->getSectionName($sectionId)->getTranslation($locale, null, true)->getValue();
+            $repeatable = $product->getSectionRepeatable($sectionId);
+            if ($repeatable && $repeatable->getType() === Repeatable::TYPES[1]) {
+                $sectionName .= ' ' . ($section['repetition'] + 1);
             }
 
             $sortedProperties[$sectionCount] = [
                 'sectionId' => $sectionId->getId(),
-                'name' => $product->getSectionName($sectionId)->getTranslation($locale, null, true)->getValue(),
+                'name' => $sectionName,
                 'position' => $product->getSectionPosition($sectionId),
+                'repetition' => $section['repetition'],
                 'elements' => []
             ];
 
             /** @var AptoUuid $elementId */
             foreach ($product->getElementIds($sectionId) as $elementId) {
-                if (!$state->isElementActive($sectionId, $elementId)) {
+                if (!$state->isElementActive($sectionId, $elementId, $repetition)) {
                     continue;
                 }
 
-                $elementState = $state->getElementState($sectionId, $elementId);
+                $elementState = $state->getElementState($sectionId, $elementId, $repetition);
                 $elementDefinition = $product->getElementDefinition($sectionId, $elementId);
                 $elementName = $product->getElementName($sectionId, $elementId)->getTranslation($locale, null, true)->getValue();
                 $elementPosition = $product->getElementPosition($sectionId, $elementId);

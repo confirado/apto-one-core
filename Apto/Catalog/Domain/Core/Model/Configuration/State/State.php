@@ -51,7 +51,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * @param string $parameteru
+     * @param string $parameter
      * @return mixed
      */
     public function getParameter(string $parameter)
@@ -201,12 +201,33 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @return array
      */
-    public function getSectionList(): array
+    public function getSectionIds(): array
     {
         $sectionList = [];
         foreach ($this->state as $state) {
             if (!$this->isParameter($state['sectionId'])) {
                 $sectionList[$state['sectionId']] = true;
+            }
+        }
+        return $sectionList;
+    }
+
+    /**
+     * Returns sections with its repetition
+     * @return array
+     */
+    public function getSectionList(): array
+    {
+        $sectionList = [];
+        $lookup = [];
+
+        foreach ($this->state as $state) {
+            if (!$this->isParameter($state['sectionId']) && !array_key_exists($state['sectionId'] . $state['repetition'], $lookup)) {
+                $sectionList[] = [
+                    'sectionId' => $state['sectionId'],
+                    'repetition' => $state['repetition']
+                ];
+                $lookup[$state['sectionId'] . $state['repetition']] = true;
             }
         }
         return $sectionList;

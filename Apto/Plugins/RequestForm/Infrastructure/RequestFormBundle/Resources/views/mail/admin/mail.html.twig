@@ -93,9 +93,13 @@
 <p>
     <strong>Bestellnummer:</strong> {{ randomNumber }}
 </p>
+
+{% if showPrices %}
 <p>
     <strong>Gesamtbetrag: </strong> {{ quantity > 1 ? quantity ~ ' * ' : '' }}{{ prices.sum.price.formatted }}
 </p>
+{% endif %}
+
 <p>
     <strong>Link zur Konfiguration:</strong>
     <a href="{{ url('apto_base_infrastructure_aptobase_frontend_index') }}#/configuration/basket/{{ configurationId }}">

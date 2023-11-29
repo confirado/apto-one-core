@@ -29,9 +29,13 @@
 <p>
     <strong>{{ contentSnippets.customer.orderNumber[locale]|default('') }}</strong> {{ randomNumber }}
 </p>
+
+{% if showPrices %}
 <p>
     <strong>{{ contentSnippets.customer.priceText[locale]|default('') }}</strong> {{ quantity > 1 ? quantity ~ ' * ' : '' }}{{ prices.sum.price.formatted }}
 </p>
+{% endif %}
+
 <p>
     {{ contentSnippets.customer.configurationLinkPrefix[locale]|default('') }}
     <a href="{{ url('apto_base_infrastructure_aptobase_frontend_index') }}#/configuration/basket/{{ configurationId }}">

@@ -202,7 +202,7 @@ class ConfigurationPartsList
      */
     private function getUsages(AptoUuid $productId, State $state, array $computedValues = [])
     {
-        $sections = $state->getSectionList();
+        $sections = $state->getSectionIds();
         $elements = $state->getElementList();
         $elementIds = $state->getElementIds();
 

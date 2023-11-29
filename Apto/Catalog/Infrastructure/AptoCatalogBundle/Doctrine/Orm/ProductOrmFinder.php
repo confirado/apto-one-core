@@ -1548,7 +1548,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      */
     public function findPricesByState(string $id, State $state, string $currencyCode, string $fallbackCurrencyCode, string $customerGroupId, string $fallbackCustomerGroupId = null, string $shopId = null)
     {
-        $sectionIds = array_keys($state->getSectionList());
+        $sectionIds = array_keys($state->getSectionIds());
         $elementIds = $state->getElementIds();
         $customerGroupIds = null !== $fallbackCustomerGroupId ? [$customerGroupId, $fallbackCustomerGroupId] : [$customerGroupId];
         $currencyCodes = [$currencyCode, $fallbackCurrencyCode];

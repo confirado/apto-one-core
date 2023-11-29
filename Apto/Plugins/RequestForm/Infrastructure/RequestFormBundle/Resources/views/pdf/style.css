@@ -13,6 +13,10 @@
         margin: 0;
     }
 
+    .default-font-size {
+        font-size: 13px;
+    }
+
     .remove-padding {
         padding: 0;
     }
@@ -99,60 +103,14 @@
         font-style: italic;
     }
 
-    .introduction {
-        font-size: 14px;
-    }
-
     .order-table {
-        padding-top: 40px;
+        width: 100%;
+        padding-top: 0px;
         padding-bottom: 40px;
-    }
-
-    .table-prio {
-        padding-bottom: 250px;
-    }
-
-    .order-item-name {
-        border-top: 1px solid #000;
-        width: 170px;
-        padding-left: 5px;
-    }
-
-    .order-item-description {
-        border-top: 1px solid #000;
-        border-right: 1px solid #000;
-        border-left: 1px solid #000;
-        padding: 5px;
-    }
-
-    .order-item-price {
-        border-top: 1px solid #000;
-        width: 130px;
-        padding-top: 10px;
-        padding-right: 10px;
-        text-align: right;
     }
 
     .order-table thead {
         border-bottom: 1px solid #000;
-    }
-
-    .title-performance {
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
-        padding-left: 5px;
-        padding-bottom: 5px;
-    }
-
-    .title-price{
-        padding-left: 5px;
-        padding-bottom: 5px;
-    }
-
-    .order-item-price{
-        text-align: right;
-        padding-right: 10px;
-        padding-left: 10px;
     }
 
     .order-item {
@@ -161,6 +119,33 @@
     .order-item td {
         vertical-align: top;
         text-align: left;
+    }
+
+    .order-item.order-item-header td {
+        border-top: 1px solid #000;
+        font-weight: bold;
+    }
+
+    .order-item td.order-item-section {
+        border-bottom: 1px solid #000;
+        border-left: 1px solid #000;
+        width: 170px;
+        padding: 5px;
+    }
+
+    .order-item td.order-item-element {
+        border-bottom: 1px solid #000;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        padding: 5px;
+    }
+
+    .order-item td.order-item-price {
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        width: 130px;
+        padding: 5px;
+        text-align: right;
     }
 
     .order-number {
@@ -183,17 +168,9 @@
         border: 1px dotted;
     }
 
-    .info-text {
-        font-size: 13px;
-    }
-
     .payment-title {
-        font-size: 12px;
+        font-size: 13px;
         padding-top: 45px;
-    }
-
-    .payment-text {
-        font-size: 12px;
     }
 
     /* Footer */

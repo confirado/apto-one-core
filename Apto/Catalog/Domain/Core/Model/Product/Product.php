@@ -1457,6 +1457,21 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid $sectionId
+     * @return Repeatable|null
+     */
+    public function getSectionRepeatable(AptoUuid $sectionId): ?Repeatable
+    {
+        // if section does not exists anymore we have nothing to do
+        $section = $this->getSection($sectionId);
+        if (null === $section) {
+            return null;
+        }
+
+        return $section->getRepeatable();
+    }
+
+    /**
      * @param Identifier $identifier
      * @return AptoUuid|null
      */

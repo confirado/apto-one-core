@@ -4,7 +4,6 @@ namespace Apto\Plugins\RequestForm\Application\Core\Subscribers;
 
 use Exception;
 use Money\Currency;
-use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
 use Mpdf\MpdfException;
 
@@ -36,6 +35,7 @@ use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\RandomNumber;
 use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\AllRandomNumbersHasUsedException;
 use Apto\Plugins\FileUpload\Domain\Core\Model\Service\Converter\MimeTypeExtensionConverter;
 use Apto\Plugins\PartsList\Application\Core\Service\Converter\CsvStringConverter;
+use Apto\Plugins\RequestForm\Application\Core\Service\Pdf\PdfFactory;
 
 class SendProductInquiryHandler implements EventHandlerInterface
 {
@@ -113,31 +113,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @var mixed|string
      */
     private $randomNumberPrefix;
-
-    /**
-     * @var bool
-     */
-    private bool $prioritySeperate;
-
-    /**
-     * @var bool
-     */
-    private bool $priorityOnly;
-
-    /**
-     * @var string
-     */
-    private string $partnerMail;
-
-    /**
-     * @var string
-     */
-    private string $partnerName;
-
-    /**
-     * @var string
-     */
-    private string $partnerID;
 
     /**
      * @var BasketItem|null
@@ -225,13 +200,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         if (array_key_exists('randomNumberPrefix', $this->config)) {
             $this->randomNumberPrefix = $this->config['randomNumberPrefix'];
         }
-        $this->prioritySeperate = false;
-        $this->priorityOnly = false;
-
-        // Default Partner Id
-        $this->partnerMail = "";
-        $this->partnerName = "";
-        $this->partnerID = "confirado";
 
         $this->basketItem = null;
         $this->prices = [];
@@ -274,6 +242,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $config = $aptoParameter->get('apto_plugin_request_form');
         $domainConfig = [];
 
+        if (!array_key_exists('showPrices', $config)) {
+            $config['showPrices'] = true;
+        }
+
         if (array_key_exists('domain_config', $config) && array_key_exists($host, $config['domain_config'])) {
             $domainConfig = $config['domain_config'][$host];
         }
@@ -283,37 +255,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         }
 
         $this->config = array_replace_recursive($config, $domainConfig);
-    }
-
-    /**
-     * @param array  $productSection
-     * @param State  $compressedState
-     * @param string $locale
-     *
-     * @return void
-     * @throws InvalidUuidException
-     */
-    private function initPartnerInfo(array $productSection, State $compressedState, string $locale): void
-    {
-        foreach ($productSection as $pSection) {
-            $pSectionId = $pSection['id'];
-            foreach ($pSection['elements'] as $pElement) {
-                $pElementId = $pElement['id'];
-                if ($compressedState->isItemSet(new AptoUuid($pSectionId), new AptoUuid($pElementId))) {
-                    foreach ($pElement['customProperties'] as $customProperty) {
-                        if($customProperty['key'] === 'partnerMail') {
-                            $this->partnerMail = $customProperty['value'][$locale];
-                        }
-                        if($customProperty['key'] === 'partnerName') {
-                            $this->partnerName = $customProperty['value'][$locale];
-                        }
-                        if($customProperty['key'] === 'partnerID') {
-                            $this->partnerID = $customProperty['value'];
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -443,9 +384,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         // init element attachments
         $this->initElementAttachments($product, new State($productInquiry->getCompressedState()), $locale);
 
-        // init Partner info
-        $this->initPartnerInfo($product['sections'],  new State($productInquiry->getCompressedState()), $locale->getName());
-
         // generate pdf
         $pdf = '';
         $adminPdf = '';
@@ -456,7 +394,13 @@ class SendProductInquiryHandler implements EventHandlerInterface
             array_key_exists('generateAdminPDF', $this->config) && $this->config['generateAdminPDF'] ||
             array_key_exists('generateUserPDF', $this->config) && $this->config['generateUserPDF']
         ) {
-            $pdf = $this->generatePDF($product, $formData, $customer, $productInquiry);
+            try {
+                $pdf = $this->generatePDF($product, $formData, $customer, $productInquiry);
+            } catch (\Exception $e) {
+                echo $e->getFile();
+                echo $e->getLine();
+                echo $e->getMessage();
+            }
         }
 
         // set admin pdf
@@ -510,25 +454,13 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $hasBcc = array_key_exists('bcc', $this->config['customer_mail']);
 
         // set sender mail
-        if ($this->partnerMail !== "" && $this->partnerName !== "") {
-            $mailFrom = [
-                'email' => $this->partnerMail,
-                'name' => $this->partnerName
-            ];
-        } else {
-            $mailFrom = [
-                'email' => $this->config['customer_mail']['mail_from'],
-                'name' => $this->config['customer_mail']['mail_from']
-            ];
-        }
+        $mailFrom = [
+            'email' => $this->config['customer_mail']['mail_from'],
+            'name' => $this->config['customer_mail']['mail_from']
+        ];
 
         // get Template File
-        if (array_key_exists('seperatePartnerMail', $this->config) && $this->config['seperatePartnerMail']){
-            // specific Customer Mail for different Partners
-            $templatePath = '@RequestForm/mail/customer/mail-'.$this->partnerID.'.html.twig';
-        } else {
-            $templatePath = '@RequestForm/mail/customer/mail.html.twig';
-        }
+        $templatePath = '@RequestForm/mail/customer/mail.html.twig';
 
         // create customer mail
         $mailCustomer = $this->generateMail(
@@ -580,18 +512,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $hasBcc = array_key_exists('bcc', $this->config['admin_mail']);
 
         // set recipient mail
-        if ($this->partnerMail !== "" && $this->partnerName !== "") {
-            $mailTo = [
-                'email' => $this->partnerMail,
-                'name' => $this->partnerName
-            ];
-        }
-        else {
-            $mailTo = [
-                'email' => $this->config['admin_mail']['mail_to'],
-                'name' => $this->config['admin_mail']['name_to']
-            ];
-        }
+        $mailTo = [
+            'email' => $this->config['admin_mail']['mail_to'],
+            'name' => $this->config['admin_mail']['name_to']
+        ];
 
         // set sender mail
         $mailFrom = $mailTo;
@@ -727,7 +651,8 @@ class SendProductInquiryHandler implements EventHandlerInterface
                 'compressedState' => $compressedState,
                 'randomNumber' => $this->randomNumber,
                 'configurationId' => $this->basketItem->getConfigurationId(),
-                'prices' => $this->prices
+                'prices' => $this->prices,
+                'showPrices' => $this->config['showPrices']
             ],
             'attachments' => []
         ];
@@ -797,11 +722,11 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param array $formData
      * @param array $customer
      * @param ProductInquiry $productInquiry
-     * @return false|string|void
+     * @return string
      * @throws InvalidUuidException
      * @throws MpdfException
      */
-    private function generatePDF(array $product, array $formData, array $customer, ProductInquiry $productInquiry)
+    private function generatePDF(array $product, array $formData, array $customer, ProductInquiry $productInquiry): string
     {
         // set locale
         $locale = new AptoLocale($productInquiry->getLocale());
@@ -811,50 +736,34 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $sectionPrices = $prices['sections'];
         $sumPrices = $prices['sum'];
 
-        $elementProperties = $this->getElementProperties($productInquiry->getState());
-        $relevantElements = $this->getPDFVars($product['sections'], new State($productInquiry->getCompressedState()), $sectionPrices, $locale->getName(), false);
-        $prioElements = $this->getPDFVars($product['sections'], new State($productInquiry->getCompressedState()), $sectionPrices, $locale->getName(), true);
-        $productTitle = $this->getProductTitle($product['sections'], new State($productInquiry->getCompressedState()), $locale->getName());
-
-        // Check for different PDFs for Partners
-        if(array_key_exists('seperatePartnerPDF', $this->config) && $this->config['seperatePartnerPDF']){
-            $pdfContentSnippets = $this->contentSnippets['plugins']['requestForm']['pdf'][$this->partnerID];
-        } else {
-            $pdfContentSnippets = $this->contentSnippets['plugins']['requestForm']['pdf'];
-        }
+        // set content snippets
+        $pdfContentSnippets = $this->contentSnippets['plugins']['requestForm']['pdf'];
         $pdfContentSnippets['tax'] = $this->contentSnippets['aptoSummary']['tax'];
 
+        // set media url
         $mediaUrl = $this->requestSessionStore->getSchemeAndHttpHost() . $this->mediaRelativePath;
+
+        // set template vars
         $templateVars = [
             'locale' => $locale->getName(),
             'formData' => $formData,
             'customer' => $customer,
-            'configuration' => $relevantElements,
-            'prioConfiguration' => $prioElements,
-            'elementProperties' => $elementProperties,
-            'seperatePrioConfiguration' => $this->prioritySeperate,
-            'onlyPrioConfiguration' => $this->priorityOnly,
-            'products' => $productTitle,
+            'product' => $product,
+            'sortedProperties' => $this->getTranslatedSortedProperties($locale),
+            'sectionPrices' => $sectionPrices,
             'mediaUrl' => $mediaUrl,
             'contentSnippets' => $pdfContentSnippets,
             'randomNumber' => $this->randomNumber,
             'sumPrices' => $sumPrices,
-            'customerGroup' => $this->getCustomerGroup($productInquiry)
+            'customerGroup' => $this->getCustomerGroup($productInquiry),
+            'showPrices' => $this->config['showPrices']
         ];
 
         // create pdf and set options
-        $mpdf = new Mpdf([
-            'default_font' => 'Verdana',
-            'margin_top' => 40,
-            'margin_bottom' => 30,
-        ]);
-        $mpdf->shrink_tables_to_fit = 1;
+        $mpdf = PdfFactory::create();
 
         // render stylesheet html
         $stylesheet = $this->templateRenderer->render('@RequestForm/pdf/style.css');
-
-        // get the current page break margin.
-        $mpdf->SetAutoPageBreak(true, 30);
 
         // set pdf stylesheet
         $mpdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
@@ -880,7 +789,48 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->saveHtml($header, $footer, $body);
         }
 
+        // use this for saving into media folder
+        // return $mpdf->Output( $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.pdf', 'F');
+
         return $mpdf->Output('', 'S');
+    }
+
+    /**
+     * @param AptoLocale $locale
+     * @return array
+     */
+    private function getTranslatedSortedProperties(AptoLocale $locale): array
+    {
+        $additionalData = $this->basketItem->getAdditionalData();
+
+        // return empty array if sorted properties not in data
+        if (
+            !array_key_exists('translations', $additionalData) ||
+            !array_key_exists('root', $additionalData['translations']) ||
+            !array_key_exists('sortedProperties', $additionalData['translations']['root'])
+        ) {
+            return [];
+        }
+
+        // return for current local
+        $sortedProperties = $additionalData['translations']['root']['sortedProperties'];
+        if (array_key_exists($locale->getName(), $sortedProperties)) {
+            return $sortedProperties[$locale->getName()];
+        }
+
+        // search for fallback de_DE
+        $locals = array_keys($sortedProperties);
+        if (in_array('de_DE', $locals)) {
+            return $sortedProperties['de_DE'];
+        }
+
+        // search for first translation
+        if (count($locals) > 0) {
+            return $sortedProperties[$locals[0]];
+        }
+
+        // return empty array if no translation is available
+        return [];
     }
 
     /**
@@ -954,7 +904,15 @@ class SendProductInquiryHandler implements EventHandlerInterface
      */
     private function getElementProperties(array $humanReadableState): array
     {
-        return $humanReadableState;
+        $elementProperties = [];
+
+        foreach ($humanReadableState as $section) {
+            foreach ($section as $element) {
+                $elementProperties[$element['id']] = $element['values'];
+            }
+        }
+
+        return $elementProperties;
     }
 
     /**
