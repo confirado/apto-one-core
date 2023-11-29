@@ -29,7 +29,7 @@
                                         <div class="circle list">{{ i + 1 }}</div>
                                         <div>
                                             <div class="section-name">
-                                                {{ section.section.name | translate }}
+                                                {{ section.section.name | translate }} {{ section.section.repeatableType === SectionTypes.WIEDERHOLBAR ? (section.section.repetition + 1) : '' }}
                                                 <apto-discount-tag
                                                     *ngIf="getPriceTableSectionDiscount(sectionPriceTable) as sectionPriceTableItem"
                                                     [label]="sectionPriceTableItem.name"

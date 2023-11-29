@@ -112,6 +112,8 @@ export class ProductRepository {
 				customProperties: section.customProperties,
         previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
         isZoomable: section.isZoomable,
+        repeatableType: section.repeatableType,
+        repeatableCalculatedValueName: section.repeatableCalculatedValueName
 			});
 
 			section.elements.forEach((element: any) => {

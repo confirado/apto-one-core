@@ -10,7 +10,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement, ProgressState, ProgressStep } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement, ProgressState, ProgressStep, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectElementValues } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
@@ -52,6 +52,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
   public locale: string;
   public panelOpenState: boolean = false;
   public isActive: boolean = false;
+  protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
 
   private popupSubscription: Subscription = null;

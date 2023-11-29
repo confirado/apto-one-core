@@ -22,7 +22,7 @@ import {
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
+import { SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -39,6 +39,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly steps$ = this.store.select(selectProgressState);
   public readonly basicPrice$ = this.store.select(selectBasicPrice);
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
+  protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
   public locale: string;
   public humanReadableState: any = {};

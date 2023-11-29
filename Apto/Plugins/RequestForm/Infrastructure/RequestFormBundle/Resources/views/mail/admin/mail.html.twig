@@ -136,10 +136,10 @@
     <tbody>
     {% for key in state|keys %}
         <tr>
-            <td><strong>{{ state[key][0]['sectionName'] }}</strong></td>
+            <td><strong>{{ key }}</strong></td>
             <td>
                 {% for element in state[key] %}
-                    <strong>{{ element.elementName }}</strong>
+                    {{ element.name }}
 
                     {% if element.values|length > 0 %}
                         <br /><br />Eigenschaften:
