@@ -339,25 +339,31 @@ export class ConfigurationEffects {
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(setStepSuccess, setPrevStepSuccess),
-			withLatestFrom(this.store$.select(selectConfiguration), this.store$.select(selectProgressState)),
-			map(([action, configuration, progressState]) => {
-				const removeList: { sectionId: string; elementId: string; sectionRepetition?: number; property: string; value: string }[] = [];
+			withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectProgressState),
+        this.store$.select(selectProduct),
+      ),
+			map(([action, configuration, progressState, product]) => {
+        const removeList: { sectionId: string; elementId: string; sectionRepetition?: number; property: string; value: string }[] = [];
 
-				for (const section of configuration.state.sections) {
-					if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id && s.section.repetition === section.repetition)) {
-						configuration.state.elements
-							.filter((element) => element.sectionId === section.id && element.sectionRepetition === section.repetition && element.active)
-							.forEach((e) =>
-								removeList.push({
-									sectionId: section.id,
-									elementId: e.id,
-                  sectionRepetition: e.sectionRepetition,
-									property: '',
-									value: '',
-								})
-							);
-					}
-				}
+        if (product.product.keepSectionOrder) {
+          for (const section of configuration.state.sections) {
+            if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id && s.section.repetition === section.repetition)) {
+              configuration.state.elements
+                .filter((element) => element.sectionId === section.id && element.sectionRepetition === section.repetition && element.active)
+                .forEach((e) =>
+                  removeList.push({
+                    sectionId: section.id,
+                    elementId: e.id,
+                    sectionRepetition: e.sectionRepetition,
+                    property: '',
+                    value: '',
+                  })
+                );
+            }
+          }
+        }
 
 				return updateConfigurationState({
 					updates: {

@@ -220,6 +220,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
                 productDetail.position = 0;
             }
 
+            if(typeof productDetail.keepSectionOrder === "undefined") {
+                productDetail.keepSectionOrder = true;
+            }
+
             if (typeof productDetail.filterProperties === "undefined") {
                 productDetail.filterProperties = [];
             }
@@ -248,6 +252,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
             commandArguments.push(productDetail.maxPurchase);
             commandArguments.push(productDetail.previewImage);
             commandArguments.push(productDetail.position);
+            commandArguments.push(productDetail.keepSectionOrder);
 
             if(typeof productDetail.id !== "undefined") {
                 commandArguments.unshift(productDetail.id);

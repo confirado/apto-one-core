@@ -416,6 +416,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         {name: 'StepByStep', value: true}
     ];
 
+    // when going back in configurator previous steps can be reset or not
+    $scope.configuratorKeepSectionOrder = [
+        { name: 'Ja', value: true },
+        { name: 'Nein', value: false },
+    ];
+
     $scope.onToggleShop = onToggleShop;
     $scope.onToggleCategory = onToggleCategory;
     $scope.addSection = addSection;

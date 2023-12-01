@@ -42,6 +42,7 @@ export class ProductRepository {
 			description: response.description,
 			previewImage: previewImage ? this.mediaUrl + previewImage : null,
 			useStepByStep: response.useStepByStep,
+      keepSectionOrder: response.keepSectionOrder,
 			position: response.position,
 			customProperties: response.customProperties,
       hidden: response.hidden,

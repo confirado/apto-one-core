@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { environment } from '@apto-frontend/src/environments/environment';
@@ -55,7 +55,6 @@ export class SbsStepComponent implements OnInit, OnDestroy {
   protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
 
-  private popupSubscription: Subscription = null;
   private csPopUp: {
     title: string,
     message: string,
@@ -82,29 +81,32 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     });
   }
 
-	public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {
-		// eslint-disable-next-line no-restricted-globals
-		if (section && !this.state?.afterSteps.includes(section)) {
-      if (false === isStepByStep) {
-        return;
-      }
-
-      if (!this.csPopUp.title || !this.csPopUp.message) {
-        this.updateStore(section);
-        return;
-      }
-
-      this.popupSubscription = this.openPopUp().subscribe((next: boolean) => {
-        this.popupSubscription.unsubscribe();
-
-        if (true !== next) {
+  public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {
+    if (this.product.keepSectionOrder) {
+      if (section && !this.state?.afterSteps.includes(section)) {
+        if (isStepByStep === false) {
           return;
         }
 
+        if (!this.csPopUp.title || !this.csPopUp.message) {
+          this.updateStore(section);
+          return;
+        }
+
+        this.openPopUp()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((next: boolean) => {
+            if (next === true) {
+              this.updateStore(section);
+            }
+          });
+      }
+    } else { // we want to move between configuration section without restrictions
+      if (section && isStepByStep) {
         this.updateStore(section);
-      });
-		}
-	}
+      }
+    }
+  }
 
   private updateStore(section: ProgressStep | undefined): void {
     this.store.dispatch(
@@ -114,6 +116,16 @@ export class SbsStepComponent implements OnInit, OnDestroy {
         },
       })
     );
+  }
+
+  /**
+   * If we don't want to keep section order then step by step is functioning like one page, where you can freely switch between sections
+   */
+  protected isSectionSelectable(): boolean {
+    if (this.product.keepSectionOrder) {
+      return this.status === 'COMPLETED' || this.status === 'CURRENT';
+    }
+    return true;
   }
 
   public getElementValues(element: Element, section: ProgressStep): Observable<TranslatedValue[] | null | undefined> {

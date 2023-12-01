@@ -112,7 +112,13 @@ abstract class AbstractAddProduct implements CommandInterface
     private $position;
 
     /**
+     * @var bool
+     */
+    private bool $keepSectionOrder;
+
+    /**
      * AddProduct constructor.
+     *
      * @param string|null $identifier
      * @param array $name
      * @param array $description
@@ -134,6 +140,7 @@ abstract class AbstractAddProduct implements CommandInterface
      * @param int $maxPurchase
      * @param null $previewImage
      * @param int $position
+     * @param bool $keepSectionOrder
      */
     public function __construct(
         ?string $identifier,
@@ -156,7 +163,8 @@ abstract class AbstractAddProduct implements CommandInterface
         int $minPurchase = 0,
         int $maxPurchase = 0,
         $previewImage = null,
-        int $position = 0
+        int $position = 0,
+        bool $keepSectionOrder = true,
     ) {
         $this->identifier = $identifier;
         $this->name = $name;
@@ -179,6 +187,7 @@ abstract class AbstractAddProduct implements CommandInterface
         $this->maxPurchase = $maxPurchase;
         $this->previewImage = $previewImage;
         $this->position = $position;
+        $this->keepSectionOrder = $keepSectionOrder;
     }
 
     /**
@@ -347,5 +356,13 @@ abstract class AbstractAddProduct implements CommandInterface
     public function getPosition(): int
     {
         return $this->position;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getKeepSectionOrder(): bool
+    {
+        return $this->keepSectionOrder;
     }
 }

@@ -181,6 +181,7 @@ class ProductCommandHandler extends ProductChildHandler
         }
 
         $product->setPosition($command->getPosition());
+        $product->setKeepSectionOrder($command->getKeepSectionOrder());
         $this->productRepository->add($product);
 
         $product->publishEvents();
@@ -246,6 +247,7 @@ class ProductCommandHandler extends ProductChildHandler
             }
 
             $product ->setPosition($command->getPosition());
+            $product ->setKeepSectionOrder($command->getKeepSectionOrder());
 
             $filterProperties = new ArrayCollection();
             foreach ($command->getFilterPropertyIds() as $property) {
