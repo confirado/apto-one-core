@@ -4,9 +4,9 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, of, Subject, takeUntil, filter, tap, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectStateElements } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectProgressState, selectStateElements } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ElementState, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ElementState, ProgressElement, ProgressState } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, FloatInputTypes, CompareValueTypes, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 import { number, Parser, parser } from 'mathjs';
@@ -46,6 +46,10 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
   private readonly destroy$ = new Subject<void>();
   private readonly stateElements$ = this.store.select(selectStateElements);
+  private readonly progressState$ = this.store.select(selectProgressState);
+  private progressState: ProgressState = null;
+  private formSavedFromSelectButton: boolean = false;
+
   private stateElements: ElementState[];
   private saveDelay = 500;
   private mathjsParser: Parser;
@@ -54,14 +58,20 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
     this.mathjsParser = parser();
-
     this.inputType = this.element?.element.definition.staticValues.renderingType;
-    this.formElementInput.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
-    this.formElementSlider.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
 
     if (this.element?.element.definition.properties.value && this.element.element.definition.properties.value[0]) {
       this.stepValue = this.element.element.definition.properties.value?.[0]?.step;
     }
+
+    this.setFormInputs();
+
+    this.progressState$.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged()
+    ).subscribe((next: ProgressState) => {
+      this.progressState = next;
+    });
 
     this.stateElements$
       .pipe(
@@ -71,7 +81,14 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
         this.stateElements = stateElements;
         this.minValue = this.calculateMinMaxValues().minValue;
         this.maxValue = this.calculateMinMaxValues().maxValue;
-      });
+        this.element = this.getProgressElement(this.element?.element.id);
+
+        if (!this.formSavedFromSelectButton) {
+          this.setFormInputs();
+        }
+
+        this.formSavedFromSelectButton = false;
+    });
 
     // we dont need form element subscriptions in that case, because save is triggered by save button
     if (this.inputType === FloatInputTypes.INPUT) {
@@ -103,6 +120,19 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       this.formElementInput.setValue(data as string);
     });
 	}
+
+  public getProgressElement(elementId: string): ProgressElement | null {
+    const element = this.progressState.currentStep.elements.filter((e) => e.element.id === elementId);
+    if (element.length > 0) {
+      return element[0];
+    }
+    return null;
+  }
+
+  private setFormInputs(): void {
+    this.formElementInput.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
+    this.formElementSlider.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
+  }
 
   /**
    * Slider is considered as changed when user slides and lets the left mouse button
@@ -256,6 +286,8 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.formSavedFromSelectButton = true;
+
 		this.store.dispatch(
 			updateConfigurationState({
 				updates: {
@@ -277,7 +309,10 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 		if (!this.element) {
 			return;
 		}
-		this.store.dispatch(
+
+    this.formSavedFromSelectButton = true;
+
+    this.store.dispatch(
 			updateConfigurationState({
 				updates: {
 					remove: [

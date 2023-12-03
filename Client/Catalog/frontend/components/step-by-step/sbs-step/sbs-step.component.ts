@@ -101,7 +101,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
             }
           });
       }
-    } else { // we want to move between configuration section without restrictions
+    } else { // we want to move between configuration sections without restrictions
       if (section && isStepByStep) {
         this.updateStore(section);
       }

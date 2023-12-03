@@ -1,15 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement, ProgressState } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { startWith } from 'rxjs';
+import { distinctUntilChanged, startWith, Subject, takeUntil } from 'rxjs';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { selectProgressState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @UntilDestroy()
 @Component({
@@ -17,7 +18,7 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 	templateUrl: './selectbox-element.component.html',
 	styleUrls: ['./selectbox-element.component.scss'],
 })
-export class SelectboxElementComponent implements OnInit {
+export class SelectboxElementComponent implements OnInit, OnDestroy {
 	@Input()
 	public element: ProgressElement | undefined | null;
 
@@ -30,6 +31,11 @@ export class SelectboxElementComponent implements OnInit {
 	public formElement = new FormControl<string[] | string>([]);
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
+
+  private readonly destroy$ = new Subject<void>();
+  private readonly progressState$ = this.store.select(selectProgressState);
+  private progressState: ProgressState = null;
+  private formSavedFromSelectButton: boolean = false;
 
 	public constructor(private store: Store, private catalogMessageBusService: CatalogMessageBusService) {}
 
@@ -45,24 +51,7 @@ export class SelectboxElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
-
-		if (this.element.element.definition.staticValues.enableMultiSelect) {
-			if (this.element?.state.values.selectedItem || this.element.element.definition.staticValues.defaultItem?.id) {
-				this.formElement.setValue(
-					this.element?.state.values.selectedItem || [this.element.element.definition.staticValues.defaultItem?.id]
-				);
-			} else {
-				this.formElement.setValue([]);
-			}
-		} else if (!this.element.element.definition.staticValues.enableMultiSelect) {
-			if (this.element?.state.values.selectedItem) {
-				this.formElement.setValue(this.element?.state.values.selectedItem);
-			} else if (this.element.element.definition.staticValues.defaultItem?.id) {
-				this.formElement.setValue([this.element.element.definition.staticValues.defaultItem?.id]);
-			} else {
-				this.formElement.setValue([]);
-			}
-		}
+    this.setFormInputs();
 
 		this.catalogMessageBusService
 			.findSelectBoxItems(this.element.element.id)
@@ -110,7 +99,55 @@ export class SelectboxElementComponent implements OnInit {
 					}
 				});
 			});
+
+    this.progressState$.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged()
+    ).subscribe((next: ProgressState) => {
+      this.progressState = next;
+      this.element = this.getProgressElement(this.element?.element.id);
+
+      if (!this.formSavedFromSelectButton) {
+        this.setFormInputs();
+      }
+
+      this.formSavedFromSelectButton = false;
+    });
 	}
+
+  /*  If we switch between sections by clicking on the section in the right menu or next/previous buttons, then we need to update
+      the form input values with the values from the state, otherwise when switching between sections the values in the form
+      will stay the same and will not update.
+      But if we patch form value without this if check, then on saving the form with "Auswählen" button we will see flickering:
+      new value -> old value -> new value.
+      So we need to patchValue with value from state, but only if we switch between sections.  */
+  private setFormInputs(): void {
+    if (this.element?.element.definition.staticValues.enableMultiSelect) {
+      if (this.element?.state.values.selectedItem || this.element?.element.definition.staticValues.defaultItem?.id) {
+        this.formElement.setValue(
+          this.element?.state.values.selectedItem || [this.element?.element.definition.staticValues.defaultItem?.id]
+        );
+      } else {
+        this.formElement.setValue([]);
+      }
+    } else if (!this.element?.element.definition.staticValues.enableMultiSelect) {
+      if (this.element?.state.values.selectedItem) {
+        this.formElement.setValue(this.element?.state.values.selectedItem);
+      } else if (this.element?.element.definition.staticValues.defaultItem?.id) {
+        this.formElement.setValue([this.element?.element.definition.staticValues.defaultItem?.id]);
+      } else {
+        this.formElement.setValue([]);
+      }
+    }
+  }
+
+  public getProgressElement(elementId: string): ProgressElement | null {
+    const element = this.progressState.currentStep.elements.filter((e) => e.element.id === elementId);
+    if (element.length > 0) {
+      return element[0];
+    }
+    return null;
+  }
 
 	public setBoxName(id: string | undefined): TranslatedValue | undefined {
 		if (this.items.some((item) => item.id === id)) {
@@ -131,8 +168,11 @@ export class SelectboxElementComponent implements OnInit {
 				multi: item.multi.value.toString(),
 			});
 		}
-		if (this.formElement && this.formElement.value && this.formElement.value.length > 0) {
-			this.store.dispatch(
+
+    this.formSavedFromSelectButton = true;
+
+    if (this.formElement && this.formElement.value && this.formElement.value.length > 0) {
+      this.store.dispatch(
 				updateConfigurationState({
 					updates: {
 						set: [
@@ -179,4 +219,9 @@ export class SelectboxElementComponent implements OnInit {
 			);
 		}
 	}
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
