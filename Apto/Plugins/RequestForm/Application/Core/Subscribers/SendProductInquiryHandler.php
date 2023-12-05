@@ -100,6 +100,11 @@ class SendProductInquiryHandler implements EventHandlerInterface
     private string $mediaRelativePath;
 
     /**
+     * @var string
+     */
+    private string $mediaDirectory;
+
+    /**
      * @var bool
      */
     private bool $sendPDFToCustomer;
@@ -189,6 +194,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
 
         // params
         $this->mediaRelativePath = $aptoParameter->get('media_relative_path');
+        $this->mediaDirectory = $aptoParameter->get('media_directory');
         $this->shop = $shopFinder->findContextByDomain($this->requestSessionStore->getHttpHost());
         $this->initConfig($requestSessionStore, $aptoParameter);
         $this->assertValidConfig();

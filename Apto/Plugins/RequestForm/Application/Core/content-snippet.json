@@ -145,73 +145,32 @@
       },
       "pdf": {
         "body": {
-          "salutationW": {
-            "de_DE": "Sehr geehrte Frau"
-          },
-          "signatureText": {
-            "de_DE": "Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt."
-          },
-          "signature": [],
-          "salutationM": {
-            "de_DE": "Sehr geehrter Herr"
-          },
-          "salutationD": {
-            "de_DE": "Sehr geehrte Damen und Herren"
-          },
-          "paymentTitle": [],
-          "paymentPlan": [],
-          "payment3": [],
-          "payment2": {
-            "de_DE": "- Individuelle Anpassungen werden schrittweise durchgeführt"
-          },
-          "payment1": {
-            "de_DE": "- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten."
-          },
           "ourOffer": {
             "de_DE": "Unser Vorabangebot"
           },
-          "price": {
-            "de_DE": "Preis"
+          "afterOrderListTable": {
+            "de_DE": "<p>Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter www.confirado.de/agb/ einzusehen sind.</p><p>Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot.</p><p>Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen.</p><p><br /></p><p>- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten.</p><p>- Individuelle Anpassungen werden schrittweise durchgeführt</p>"
           },
-          "productTitle": [],
-          "quotationInfo": {
-            "de_DE": "Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot."
+          "beforeOrderListTable": {
+            "de_DE": "<p>Sehr geehrter Herr Ronny,</p><p>die Umsetzung möchten wir Ihnen wie folgt anbieten.</p><p><br /></p><p>Ihre konfigurierbaren Produkte:</p><p>\n</p>"
           },
-          "coverLetter2": {
-            "de_DE": "Ihre konfigurierbaren Produkte:"
-          },
-          "performance": {
-            "de_DE": "Konfiguration"
-          },
-          "coverLetter1": {
-            "de_DE": "die Umsetzung  möchten wir Ihnen wie folgt anbieten."
-          },
-          "briefingInfo": {
-            "de_DE": "Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen."
-          },
-          "betweenOffers": {
-            "de_DE": "Optional zu unserer Lösung bieten wir Ihnen im folgenden an. Diese muss unabhängig der Produktanzahl nur einmalig erworben werden."
-          },
-          "termsAndConditions1": {
-            "de_DE": "Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter"
-          },
-          "termsAndConditionsLink": {
-            "de_DE": "https://www.confirado.de/agb/"
-          },
-          "termsAndConditionsLinkText": {
-            "de_DE": "www.confirado.de/agb/"
-          },
-          "yoursSincerely": {
-            "de_DE": "Mit freundlichen Grüßen"
-          },
-          "termsAndConditions2": {
-            "de_DE": "einzusehen sind."
+          "signature": {
+            "de_DE": "<p>Mit freundlichen Grüßen</p><p>Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt.</p>"
           }
         },
-        "header": {
-          "phone": [],
-          "mail": [],
-          "logo": []
+        "common": {
+          "addressName": {
+            "de_DE": "Adresse"
+          },
+          "internetName": {
+            "de_DE": "Internet"
+          },
+          "mailName": {
+            "de_DE": "E-mail"
+          },
+          "telephoneName": {
+            "de_DE": "Telefon"
+          }
         },
         "company": {
           "phone": {
@@ -239,34 +198,24 @@
             "de_DE": "Salzpforte"
           }
         },
+        "header": {
+          "logo": ["/logo.png"]
+        },
         "footer": {
-          "titleAddress": {
-            "de_DE": "Adresse:"
-          },
-          "titleInternet": {
-            "de_DE": "Internet:"
-          },
           "city": {
             "de_DE": "Bad Neustadt an der Saale"
-          },
-          "titleMail": {
-            "de_DE": "E-Mail:"
-          },
-          "titlePhone": {
-            "de_DE": "Tel.:"
           }
         },
-        "refuse": {
-          "de_DE": "Auswahl übernehmen"
-        },
-        "title": {
-          "de_DE": "Achtung!"
-        },
-        "accept": {
-          "de_DE": "Auswahl verwerfen"
-        },
-        "fileNamePrefix": {
-          "de_DE": "Angebot-Nr._"
+        "table": {
+          "elementColumnName": {
+            "de_DE": "Konfiguration"
+          },
+          "priceColumnName": {
+            "de_DE": "Preis"
+          },
+          "sectionColumnName": {
+            "de_DE": "Sektion"
+          }
         }
       }
     }
