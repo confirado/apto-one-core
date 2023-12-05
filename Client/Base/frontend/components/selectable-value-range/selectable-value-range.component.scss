@@ -27,8 +27,6 @@
             @include input();
             @include hide-number-input-arrows();
             @include input-disabled();
-
-            border: solid 1px red;
         }
 
         @include ripple-controls(var(--input-height));
