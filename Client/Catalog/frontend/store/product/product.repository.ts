@@ -140,6 +140,7 @@ export class ProductRepository {
 					customProperties: element.customProperties,
           attachments: element.attachments,
           zoomFunction: element.zoomFunction,
+          sectionRepetition: 0
 				});
 			});
 		});
