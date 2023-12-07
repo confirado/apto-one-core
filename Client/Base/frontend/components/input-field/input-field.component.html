@@ -1,16 +1,31 @@
-<div class="input-field" [style.width]="width ? 'max-content' : '100%'">
+<div class="input-field" [style.width]="width ? 'max-content' : '100%'" [class.input-disabled]="disabled">
     <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
     <div class="name" *ngIf="name" [class.integer]="type === 'integer'">{{ name }}</div>
 
     <div class="container" [style.width]="width">
-        <input *ngIf="type === 'integer' || type === 'float'" onfocus="this.value == 0 ? this.value='': this.value" [formControl]="formElement" [placeholder]="placeholder" />
-        <input *ngIf="type !== 'integer' && type !== 'float'" [formControl]="formElement" [placeholder]="placeholder" [type]="type === 'password' ? 'password' : 'text'" />
+        <input *ngIf="isNumeric()"
+           type="number"
+           (focus)="onInputFocus($event)"
+           [formControl]="formElement"
+           [placeholder]="placeholder"
+           [min]="min"
+           [max]="max"
+           [step]="step"
+           [class.input-disabled]="disabled"
+        />
 
-        <div class="ripple-controls" *ngIf="type === 'integer' || type === 'float'">
-            <div class="control" mat-ripple (click)="increase()">
+        <input *ngIf="!isNumeric()"
+           [formControl]="formElement"
+           [placeholder]="placeholder"
+           [type]="type === 'password' ? 'password' : 'text'"
+           [class.input-disabled]="disabled"
+        />
+
+        <div class="ripple-controls" *ngIf="isNumeric()">
+            <div class="control" mat-ripple (click)="increase()" [matRippleDisabled]="disabled" [class.input-disabled]="disabled">
                 <mat-icon>arrow_drop_up</mat-icon>
             </div>
-            <div class="control" mat-ripple (click)="decrease()">
+            <div class="control" mat-ripple (click)="decrease()" [matRippleDisabled]="disabled" [class.input-disabled]="disabled">
                 <mat-icon>arrow_drop_down</mat-icon>
             </div>
         </div>
