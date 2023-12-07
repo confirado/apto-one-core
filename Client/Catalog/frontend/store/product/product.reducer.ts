@@ -49,21 +49,22 @@ const _productReducer = createReducer(
 		productList: action.payload,
 		loading: false,
 	})),
-  // this is a workaround because, in apto-sbs-elements component, we iterate over product sections to prevent to much state changes and rerenderings
-  // a better solution would be to make a separate state for the elements we have to iterate in apto-sbs-elements component
+  /*  This is a workaround because, in apto-sbs-elements component, we iterate over product sections to prevent to much state changes and rerenderings
+      a better solution would be to make a separate state for the elements we have to iterate in apto-sbs-elements component
+      We need to know when we move between sections and react on it. Each time we change the section, we need
+      to trigger a state change in product elements.  */
   on(setNextStep, setPrevStep, setStep, (state, action) => {
-    console.error(action)
-    let elements: Element[] = [];
-    state.elements.forEach(e => {
+    const elements: Element[] = [];
+    state.elements.forEach((e) => {
       elements.push({
         ...e,
         sectionRepetition: action.type === ConfigurationActionTypes.SetStep ? action.payload.repetition : 0
       });
-    })
+    });
     return {
       ...state,
-      elements: elements
-    }
+      elements,
+    };
   })
 );
 
