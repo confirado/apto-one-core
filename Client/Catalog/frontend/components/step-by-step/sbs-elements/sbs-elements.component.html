@@ -26,7 +26,8 @@
 		</div>
 
 		<div class="step-navigation-container">
-			<button [disabled]="progressState.currentStep.section.position === 0" (click)="prevStep()" color="accent" mat-flat-button>
+            <!--Obviously we want to hide the back button on the first step-->
+			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep()" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
 				<span>Zurück</span>
 			</button>

@@ -37,9 +37,12 @@
                     <apto-input-field
                         *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'input'"
                         [formControlName]="field.key"
+                        [type]="'numeric'"
                         [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
                         [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
                         [step]="element.element.definition.properties['field_' + i][0].step"
+                        [min]="element.element.definition.properties['field_'+i][0].minimum"
+                        [max]="element.element.definition.properties['field_'+i][0].maximum"
                     ></apto-input-field>
 
                     <apto-select-field

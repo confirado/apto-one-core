@@ -1,5 +1,6 @@
 @import "globals";
 @import "form-inputs";
+@import "common";
 
 :host {
     @include input-host();
@@ -24,6 +25,8 @@
 
         input {
             @include input();
+            @include hide-number-input-arrows();
+            @include input-disabled();
         }
 
         @include ripple-controls(var(--input-height));
