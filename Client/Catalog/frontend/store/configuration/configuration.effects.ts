@@ -29,7 +29,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration } from './configuration.model';
+import { Configuration, CurrentSection } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -110,7 +110,8 @@ export class ConfigurationEffects {
 			),
 			map((result) => {
 				const sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
-				const currentStep: string | null = sections.length > 0 ? sections[0].id : null;
+        const currentStep: CurrentSection | null = sections.length > 0 ? { id: sections[0].id, repetition: sections[0].repetition } : null;
+
 				return initConfigurationSuccess({
 					payload: {
 						connector: result.connector,
@@ -338,23 +339,31 @@ export class ConfigurationEffects {
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(setStepSuccess, setPrevStepSuccess),
-			withLatestFrom(this.store$.select(selectConfiguration), this.store$.select(selectProgressState)),
-			map(([action, configuration, progressState]) => {
-				const removeList: { sectionId: string; elementId: string; property: string; value: string }[] = [];
-				for (const section of configuration.state.sections) {
-					if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id)) {
-						configuration.state.elements
-							.filter((element) => element.sectionId === section.id && element.active)
-							.forEach((e) =>
-								removeList.push({
-									sectionId: section.id,
-									elementId: e.id,
-									property: '',
-									value: '',
-								})
-							);
-					}
-				}
+			withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectProgressState),
+        this.store$.select(selectProduct),
+      ),
+			map(([action, configuration, progressState, product]) => {
+        const removeList: { sectionId: string; elementId: string; sectionRepetition?: number; property: string; value: string }[] = [];
+
+        if (product.product.keepSectionOrder) {
+          for (const section of configuration.state.sections) {
+            if (section.active && progressState.afterSteps.some((s) => s.section.id === section.id && s.section.repetition === section.repetition)) {
+              configuration.state.elements
+                .filter((element) => element.sectionId === section.id && element.sectionRepetition === section.repetition && element.active)
+                .forEach((e) =>
+                  removeList.push({
+                    sectionId: section.id,
+                    elementId: e.id,
+                    sectionRepetition: e.sectionRepetition,
+                    property: '',
+                    value: '',
+                  })
+                );
+            }
+          }
+        }
 
 				return updateConfigurationState({
 					updates: {

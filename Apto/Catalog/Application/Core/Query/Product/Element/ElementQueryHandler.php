@@ -135,7 +135,7 @@ class ElementQueryHandler implements QueryHandlerInterface
         $element = $this->productElementFinder->findById($elementId->getId());
         $elementState = $state->getElementState($sectionId, $elementId);
 
-        if (null === $element || null === $elementState || !is_array($elementState)) {
+        if (null === $element || null === $elementState || empty($elementState)) {
             return [];
         }
 

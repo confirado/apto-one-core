@@ -1,4 +1,3 @@
-<ng-container *ngIf="product$ | async as product">
     <ng-container *ngIf="configuration$ | async as configuration">
         <ng-container *ngIf="basicPrice$ | async as basicPrice">
             <ng-container *ngIf="sumPrice$ | async as sumPrice">
@@ -24,12 +23,12 @@
                         </div>
                         <div class="summary configuration" *ngFor="let section of steps.steps; index as i">
                             <ng-container *ngIf="getSectionPriceTable(section.section) | async as sectionPriceTable">
-                                <div class="single-section" (click)="togglePriceTable($event, section.section.id, sectionPriceTable)">
+                                <div class="single-section" (click)="togglePriceTable($event, section.section, sectionPriceTable)">
                                     <div class="finished-message section" (click)="onSectionClick($event, section.section, product.seoUrl, product.useStepByStep)">
                                         <div class="circle list">{{ i + 1 }}</div>
                                         <div>
                                             <div class="section-name">
-                                                {{ section.section.name | translate }}
+                                                {{ section.section.name | translate }} {{ section.section.repeatableType === SectionTypes.WIEDERHOLBAR ? (section.section.repetition + 1) : '' }}
                                                 <apto-discount-tag
                                                     *ngIf="getPriceTableSectionDiscount(sectionPriceTable) as sectionPriceTableItem"
                                                     [label]="sectionPriceTableItem.name"
@@ -42,7 +41,7 @@
                                                         [previewImage]="element.element.previewImage"
                                                     ></apto-element-picture>
                                                     <div class="element-name">
-                                                        {{ element.element.name | translate }} <span *ngIf="getElementHumanReadableState(element.element.id) as elementHumanReadableState">({{ elementHumanReadableState }})</span>
+                                                        {{ element.element.name | translate }} <span *ngIf="getElementHumanReadableState(element.element.id, element.state.sectionRepetition) as elementHumanReadableState">({{ elementHumanReadableState }})</span>
                                                         <apto-discount-tag
                                                             *ngIf="getPriceTableElementDiscount(sectionPriceTable, element.element.id) as sectionPriceTableItem"
                                                             [label]="sectionPriceTableItem.name"
@@ -61,15 +60,15 @@
                                                     {{ sectionPseudoPrice }}
                                                 </div>
                                                 <span class="section-price">
-                                                    <mat-icon *ngIf="expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 1">expand_less</mat-icon>
-                                                    <mat-icon *ngIf="!expandedSectionPrices.includes(section.section.id) && sectionPriceTable.length > 1">expand_more</mat-icon>
+                                                    <mat-icon *ngIf="expandedSectionPrices.includes(getSectionExpandIdentifier(section.section)) && sectionPriceTable.length > 1">expand_less</mat-icon>
+                                                    <mat-icon *ngIf="!expandedSectionPrices.includes(getSectionExpandIdentifier(section.section)) && sectionPriceTable.length > 1">expand_more</mat-icon>
                                                     {{ sectionPrice }}
                                                 </span>
                                             </div>
                                         </ng-container>
                                     </ng-container>
                                 </div>
-                                <apto-summary-section-price *ngIf="showPrices && sectionPriceTable.length > 1" [section]="section.section" [expanded]="expandedSectionPrices.includes(section.section.id)"></apto-summary-section-price>
+                                <apto-summary-section-price *ngIf="showPrices && sectionPriceTable.length > 1" [section]="section.section" [expanded]="expandedSectionPrices.includes(getSectionExpandIdentifier(section.section))"></apto-summary-section-price>
                             </ng-container>
                         </div>
                         <div class="summary-configuration-divider"><div></div></div>
@@ -101,4 +100,3 @@
             </ng-container>
         </ng-container>
     </ng-container>
-</ng-container>

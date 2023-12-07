@@ -153,19 +153,22 @@ trait FormulaParser
     private function getComputableValue(State $state, string $sectionId, string $elementId, string $selectableValue): ?string
     {
         $stateArray = $state->getStateWithoutParameters();
+        $sectionUuId = new AptoUuid($sectionId);
+        $elementUuId = new AptoUuid($elementId);
 
         if (
-            !array_key_exists($sectionId, $stateArray) ||
-            !array_key_exists($elementId, $stateArray[$sectionId]) ||
-            !is_array($stateArray[$sectionId][$elementId])
+            !$state->isSectionSet($sectionUuId) ||
+            !$state->isElementSet($elementUuId) ||
+            !$state->isElementValuesSet($elementUuId)
         ) {
             return null;
         }
 
         $element = $this->productElementFinder->findById($elementId);
+
         /** @var ElementDefinition $elementDefinition */
         $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize(json_encode($element['definition'], JSON_UNESCAPED_UNICODE));
-        $computableValues = $elementDefinition->getComputableValues($stateArray[$sectionId][$elementId]);
+        $computableValues = $elementDefinition->getComputableValues($state->getValues($sectionUuId, $elementUuId));
 
         if (!array_key_exists($selectableValue, $computableValues)) {
             return null;

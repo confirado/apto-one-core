@@ -3,6 +3,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectHumanReadableState as selectConfigurationHumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 export const selectHumanReadableState = createSelector(featureSelector, selectLocale, selectConfigurationHumanReadableState, (state: CatalogFeatureState, locale: string | null, configurationHumanReadableState) => {
   let humanReadableState: any = {};
@@ -13,22 +14,25 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
   const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled && section.active);
   sections.forEach((section) => {
     // search for selected elements in section or continue with next section
-    const elements = state.configuration.state.elements.filter((element) => !element.disabled && element.active && element.sectionId === section.id);
+    const elements = state.configuration.state.elements.filter((element) => !element.disabled && element.active && element.sectionId === section.id && element.sectionRepetition === section.repetition);
     if (elements.length < 1) {
       return;
     }
 
     // search for section details in product or continue with next section if no details where found
-    let pSections = state.product.sections.filter(pSection => pSection.id === section.id);
-    if (pSections.length < 1) {
+    let pSection = state.product.sections.find(pSection => pSection.id === section.id);
+    if (!pSection) {
       return;
     }
-    const pSection = pSections[0];
 
     // set section name
     let sectionName = translate(pSection.name, locale);
     if (!sectionName) {
       sectionName = pSection.identifier;
+    }
+
+    if (section.repeatableType === SectionTypes.WIEDERHOLBAR) {
+      sectionName += ' ' + (section.repetition + 1);
     }
 
     // init section elements
@@ -49,9 +53,10 @@ export const selectHumanReadableState = createSelector(featureSelector, selectLo
 
       // collect element definition values from configurations readable state
       let values = {};
-      if (configurationHumanReadableState && configurationHumanReadableState.hasOwnProperty(element.id)) {
-        Object.keys(configurationHumanReadableState[element.id]).forEach((value) => {
-          values[value] = translate(configurationHumanReadableState[element.id][value], locale);
+      let hrsElement = configurationHumanReadableState.find(e => e.sectionId === section.id && e.elementId === element.id && e.repetition === element.sectionRepetition);
+      if (hrsElement) {
+        Object.keys(hrsElement.values).forEach((value) => {
+          values[value] = translate(hrsElement.values[value], locale);
         });
       }
 

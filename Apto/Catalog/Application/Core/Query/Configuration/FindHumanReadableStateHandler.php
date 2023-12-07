@@ -60,14 +60,21 @@ class FindHumanReadableStateHandler implements QueryHandlerInterface
         // init readable state
         $readableState = [];
 
-        foreach ($state->getElementList() as $elementId => $elementValues) {
+        foreach ($state->getElementList() as $sectionItem) {
+
             // skip non array values, like false/true for DefaultElement
-            if (!is_array($elementValues)) {
+            if (empty($sectionItem['values'])) {
                 continue;
             }
-            $humanReadableValues = $this->getHumanReadableValues($product, $elementId, $elementValues);
+            $humanReadableValues = $this->getHumanReadableValues($product, $sectionItem['elementId'], $sectionItem['values']);
+
             if (null !== $humanReadableValues) {
-                $readableState[$elementId] = $humanReadableValues;
+                $readableState[] = [
+                    'elementId'  => $sectionItem['elementId'],
+                    'sectionId'  => $sectionItem['sectionId'],
+                    'repetition' => $sectionItem['repetition'],
+                    'values'     => $humanReadableValues,
+                ];
             }
         }
 

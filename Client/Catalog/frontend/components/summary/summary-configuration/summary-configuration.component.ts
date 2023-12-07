@@ -11,7 +11,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
-import { Section } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   selectBasicPrice,
@@ -22,7 +22,7 @@ import {
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
+import { ProgressStep, SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -32,6 +32,7 @@ import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuratio
 export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public product$ = this.store.select(selectProduct);
+  protected product: Product;
   public configuration$ = this.store.select(selectConfiguration);
   public readonly basicPseudoPrice$ = this.store.select(selectBasicPseudoPrice);
   public readonly sumPseudoPrice$ = this.store.select(selectSumPseudoPrice);
@@ -39,12 +40,12 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   public readonly steps$ = this.store.select(selectProgressState);
   public readonly basicPrice$ = this.store.select(selectBasicPrice);
   public readonly popUp$ = this.store.select(selectContentSnippet('confirmSelectSectionDialog'));
+  protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
   public locale: string;
   public humanReadableState: any = {};
   public expandedSectionPrices: String[] = [];
 
-  private popupSubscription: Subscription = null;
   private csPopUp: {
     title: string,
     message: string,
@@ -73,6 +74,12 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
       this.onCsPopUpChange(next);
     });
 
+    this.product$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((product: Product) => {
+      this.product = product;
+    });
+
     this.store.select(selectHumanReadableState).pipe(
       takeUntil(this.destroy$)
     ).subscribe((next) => {
@@ -84,19 +91,22 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     });
   }
 
-  public getElementHumanReadableState(elementId: string) {
-    if (!this.humanReadableState.hasOwnProperty(elementId)) {
+  public getElementHumanReadableState(elementId: string, sectionRepetition: number) {
+    const elementState = this.humanReadableState.find((e) => {
+      return e.elementId === elementId && e.repetition === sectionRepetition
+    });
+    if (!elementState) {
       return null;
     }
 
     let isFirst = true;
     let state = '';
-    Object.keys(this.humanReadableState[elementId]).forEach((property) => {
+    Object.keys(elementState.values).forEach((property) => {
       if (isFirst) {
         isFirst = false;
-        state = translate(this.humanReadableState[elementId][property], this.locale);
+        state = translate(elementState.values[property], this.locale);
       } else {
-        state += ', ' + translate(this.humanReadableState[elementId][property], this.locale);
+        state += ', ' + translate(elementState.values[property], this.locale);
       }
     });
 
@@ -129,7 +139,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     this.setStep(section, seoUrl, isStepByStep);
   }
 
-  public togglePriceTable($event, sectionId: string, sectionPriceTable: SectionPriceTableItem[]) {
+  public togglePriceTable($event, section: Section, sectionPriceTable: SectionPriceTableItem[]) {
     $event.preventDefault();
     $event.stopPropagation();
 
@@ -137,38 +147,44 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const index = this.expandedSectionPrices.indexOf(sectionId);
+    const index = this.expandedSectionPrices.indexOf(this.getSectionExpandIdentifier(section));
     if (index !== -1) {
       this.expandedSectionPrices.splice(index, 1);
     } else {
-      this.expandedSectionPrices.push(sectionId);
+      this.expandedSectionPrices.push(this.getSectionExpandIdentifier(section));
     }
+  }
+
+  public getSectionExpandIdentifier(section: Section) {
+    return section.id + '_' + section.repetition;
   }
 
   private setStep(section: Section | undefined, seoUrl: string, isStepByStep: boolean): void {
     if (section) {
-      if (false === isStepByStep) {
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        return;
-      }
-
-      if (!this.csPopUp.title || !this.csPopUp.message) {
-        this.updateStore(section);
-        this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-        return;
-      }
-
-      this.popupSubscription = this.openPopUp().subscribe((next) => {
-        this.popupSubscription.unsubscribe();
-
-        if (true !== next) {
+      if (this.product.keepSectionOrder) {
+        if (isStepByStep === false) {
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
           return;
         }
 
-        this.updateStore(section);
+        if (!this.csPopUp.title || !this.csPopUp.message) {
+          this.updateStore(section);
+          this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+          return;
+        }
 
+        this.openPopUp()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((next: boolean) => {
+            if (next === true) {
+              this.updateStore(section);
+              this.router.navigate(['..'], { relativeTo: this.activatedRoute });
+            }
+          });
+      } else {
+        this.updateStore(section);
         this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-      })
+      }
     }
   }
 
@@ -196,7 +212,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     this.store.dispatch(
       setStep({
         payload: {
-          id: section.id,
+          id: section.id, repetition: section.repetition,
         },
       })
     );

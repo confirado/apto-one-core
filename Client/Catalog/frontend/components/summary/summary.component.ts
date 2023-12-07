@@ -52,16 +52,28 @@ export class SummaryComponent implements OnDestroy {
 
 	public addBasket(): void {
     // @todo make product image size configurable
-    this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+    if (this.renderImage) {
+      this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+        this.store.dispatch(
+          addToBasket({
+            payload: {
+              type: 'ADD_TO_BASKET',
+              productImage: image.src,
+            },
+          })
+        );
+      });
+    } else {
       this.store.dispatch(
         addToBasket({
           payload: {
             type: 'ADD_TO_BASKET',
-            productImage: image.src
+            productImage: null,
           },
         })
       );
-    });
+    }
+
 		this.basketService.sideBar?.toggle();
 	}
 

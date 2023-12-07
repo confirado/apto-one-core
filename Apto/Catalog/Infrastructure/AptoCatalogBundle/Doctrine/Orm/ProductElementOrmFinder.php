@@ -373,12 +373,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
     {
         $parameters = [
             'perspective' => $perspective,
-            'elementIds' => []
+            'elementIds' => $state->getElementIds()
         ];
-
-        foreach ($state->getElementList() as $elementId => $elementState) {
-            $parameters['elementIds'][] = $elementId;
-        }
 
         $dql = 'SELECT
                   p.id.id as productId,
@@ -424,12 +420,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
     public function findElementDefinitionsByState(State $state)
     {
         $parameters = [
-            'elementIds' => []
+            'elementIds' => $state->getElementIds()
         ];
-
-        foreach ($state->getElementList() as $elementId => $elementState) {
-            $parameters['elementIds'][] = $elementId;
-        }
 
         $dql = 'SELECT
                   s.id.id as sectionId,

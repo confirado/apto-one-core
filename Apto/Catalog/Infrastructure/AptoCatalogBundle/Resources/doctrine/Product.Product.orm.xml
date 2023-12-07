@@ -30,6 +30,12 @@
                 <option name="default">0</option>
             </options>
         </field>
+        <field name="keepSectionOrder" type="boolean" column="keep_section_order">
+            <options>
+                <option name="default">true</option>
+            </options>
+        </field>
+
         <field name="stock" type="integer" column="stock"/>
         <field name="minPurchase" type="integer" column="min_purchase">
             <options>

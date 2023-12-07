@@ -1,8 +1,8 @@
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 import {
-	ComputedValues,
-	Configuration,
-	GetConfigurationStateArguments,
+  ComputedValues,
+  Configuration, CurrentSection,
+  GetConfigurationStateArguments, HumanReadableState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -63,7 +63,7 @@ export const initConfigurationSuccess = createAction(
 			groups: Group[];
 			sections: Section[];
 			elements: Element[];
-			currentStep: string | null;
+			currentStep: CurrentSection | null;
 			productId: string;
 			configuration: Configuration;
 			computedValues: ComputedValues;
@@ -113,7 +113,7 @@ export const humanReadableStateLoadSuccess = createAction(
 
 export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep);
 
-export const setStep = createAction(ConfigurationActionTypes.SetStep, props<{ payload: { id: string | null } }>());
+export const setStep = createAction(ConfigurationActionTypes.SetStep, props<{ payload: CurrentSection | null }>());
 
 export const setStepSuccess = createAction(ConfigurationActionTypes.SetStepSuccess);
 
@@ -129,7 +129,7 @@ export const addToBasket = createAction(
 		payload: {
 			type: 'REQUEST_FORM' | 'ADD_TO_BASKET';
 			formData?: any;
-      humanReadableState?: any;
+      humanReadableState?: HumanReadableState;
       productImage?: string;
 		};
 	}>()

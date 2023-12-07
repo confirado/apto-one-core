@@ -29,6 +29,8 @@ class ProductSectionOrmFinder extends AptoOrmFinder implements ProductSectionFin
                     'isMandatory',
                     'isZoomable',
                     'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                     'position',
                     'name',
                     'description'

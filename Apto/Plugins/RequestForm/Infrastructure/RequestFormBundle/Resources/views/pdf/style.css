@@ -1,8 +1,13 @@
 @media print {
 
-    /* General Settings */
+    /**********************************************************************/
+    /* General Settings
+    /**********************************************************************/
+
     * {
         font-family: "Verdana", sans-serif;
+        font-size: 13px;
+        text-align: left;
     }
 
     a {
@@ -11,209 +16,15 @@
 
     p {
         margin: 0;
-    }
-
-    .remove-padding {
-        padding: 0;
-    }
-
-    /* Header */
-    header {
-        padding-bottom: 20px;
-        padding-top: 8px;
-        margin: 74px 10px 0 70px;
-        margin-left: 30px;
-        margin-right: 45px;
-        margin-top: 20px;
-    }
-
-    .header-table {
-        width: 100%;
-        border-bottom: 1px dotted #808080;
-    }
-
-    .logo {
-        max-width: 196px;
-        max-height: 48px;
-        margin-bottom: 36px;
-        margin-left: -3px;
-    }
-
-    .company-name {
-        font-weight: bold;
-    }
-
-    .company-address {
         font-size: 13px;
-        padding-bottom: 15px;
     }
 
-    .company-contact {
+    small {
         font-size: 10px;
     }
 
-    .header-link {
-        color: #000;
-        text-decoration: none;
-    }
-
-    /* Body */
-    .container {
-        width: 100%;
-        padding-left: 35px;
-        padding-right: 45px;
-
-    }
-
-    .consignor-container {
-        margin-bottom: 10px;
-    }
-
-    .consignor {
-        font-size: 9px;
-        text-decoration: underline;
-    }
-
-    customer-address {
-        padding-bottom: 50px;
-    }
-
-    .title-table {
-        width: 100%;
-        padding-top: 55px;
-        padding-bottom: 60px;
-    }
-
-    .title-table th {
-        padding: 0;
-    }
-
-    .title-table h3 {
-        margin-left: -5px;
-    }
-
-    .head-line {
-        margin-left: -5px;
-        text-indent: -5px;
+    .default-font-size {
         font-size: 13px;
-        font-style: italic;
-    }
-
-    .introduction {
-        font-size: 14px;
-    }
-
-    .order-table {
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-
-    .table-prio {
-        padding-bottom: 250px;
-    }
-
-    .order-item-name {
-        border-top: 1px solid #000;
-        width: 170px;
-        padding-left: 5px;
-    }
-
-    .order-item-description {
-        border-top: 1px solid #000;
-        border-right: 1px solid #000;
-        border-left: 1px solid #000;
-        padding: 5px;
-    }
-
-    .order-item-price {
-        border-top: 1px solid #000;
-        width: 130px;
-        padding-top: 10px;
-        padding-right: 10px;
-        text-align: right;
-    }
-
-    .order-table thead {
-        border-bottom: 1px solid #000;
-    }
-
-    .title-performance {
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
-        padding-left: 5px;
-        padding-bottom: 5px;
-    }
-
-    .title-price{
-        padding-left: 5px;
-        padding-bottom: 5px;
-    }
-
-    .order-item-price{
-        text-align: right;
-        padding-right: 10px;
-        padding-left: 10px;
-    }
-
-    .order-item {
-    }
-
-    .order-item td {
-        vertical-align: top;
-        text-align: left;
-    }
-
-    .order-number {
-        border-right: 1px dotted;
-        width: 130px;
-        font-size: 13px;
-        text-align: left;
-        font-style: italic;
-        padding-left: 10px;
-    }
-
-    .order-date {
-        width: 110px;
-        font-size: 13px;
-        text-align: right;
-        padding-right: 10px;
-    }
-
-    .title-info {
-        border: 1px dotted;
-    }
-
-    .info-text {
-        font-size: 13px;
-    }
-
-    .payment-title {
-        font-size: 12px;
-        padding-top: 45px;
-    }
-
-    .payment-text {
-        font-size: 12px;
-    }
-
-    /* Footer */
-    footer {
-        margin: 0 32px 40px;
-    }
-
-    .footer-table {
-        width: 100%;
-        border: none;
-        border-top: 1px dotted #808080;
-        padding: 9px 10px 25px;
-        color: #808080;
-        font-style: italic;
-        font-size: 9px;
-        line-height: 8px;
-    }
-
-    .footer-link {
-        color: #0563c1;
     }
 
     .table-no-spacing {
@@ -221,34 +32,213 @@
         border-spacing: 0;
     }
 
-    .splitter {
-        border-right: 1px solid #808080;
-        padding: 0 13px 0 0;
+    .table-border-collapse {
+        border-collapse: collapse;
     }
 
-    .left-block {
-        width: 50%;
-        float: left;
-        text-align: left;
+    .padding-bottom-small {
+        padding-bottom: 15px;
     }
 
-    .right-block {
-        width: 50%;
-        float: left;
+    .margin-bottom-small {
+        padding-bottom: 15px;
+    }
+
+    .margin-bottom-big {
+        padding-bottom: 50px;
+    }
+
+    .align-right {
         text-align: right;
     }
 
-    .right {
+    .align-left {
+        text-align: left;
+    }
+
+
+    /**********************************************************************/
+    /* Header
+    /**********************************************************************/
+
+    header {
+        min-height: 100px;
+        border-bottom: 10px solid #F5F6F8;
+        padding-bottom: 10px;
+    }
+
+    .header-link {
+        color: #000;
+        text-decoration: none;
+    }
+
+    .header-table {
+        width: 100%;
+    }
+
+    .header-table-logo {
+        max-width: 320px;
+        max-height: 100px;
+    }
+
+    .header-table-company-name {
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .header-table-company-address {
+        font-size: 13px;
+    }
+
+    .header-table-company-contact {
+        font-size: 10px;
+    }
+
+
+    /**********************************************************************/
+    /* Body
+    /**********************************************************************/
+    .container {
+        width: 100%;
+    }
+
+
+    /* consignor **********************************/
+    .consignor {
+        font-size: 9px;
+    }
+
+
+    /* title **********************************/
+    .title-container {
+        width: 100%;
+    }
+
+    .title-container div {
+        width: 210px;
         float: right;
     }
 
-    .hide-text {
-        color: #fff;
-        text-indent: -9999px;
+    .title-table {
+        width: 100%;
     }
 
-    .text-left {
+    .title-table th,
+    .title-table td {
+        font-size: 12px;
+        padding: 3px 0;
+    }
+
+    .title-table th {
+        font-weight: bold;
+    }
+
+    .title-table th.title-table-order-number,
+    .title-table td.title-table-order-number {
         text-align: left;
-        padding-left: 5px;
+    }
+
+    .title-table th.title-table-order-date,
+    .title-table td.title-table-order-date {
+        text-align: right;
+    }
+
+    .title-headline {
+        width: 100%;
+    }
+
+    .title-headline h2 {
+        width: 100%;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    /* order table **********************************/
+    .order-list-table {
+        width: 100%;
+        padding-top: 0;
+    }
+
+    caption {
+        padding: 16px 5px;
+        font-weight: bold;
+        background-color: #F7F8FA;
+        border-top: 1px solid #dddddd;
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+    }
+
+    .order-list-table tr th {
+        padding: 10px 5px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: bold;
+        border-top: solid 1px #dddddd;
+        border-bottom: solid 1px #dddddd;
+        border-right: solid 1px #dddddd;
+    }
+
+    /* first column from left */
+    .order-list-table tr th:nth-child(1) {
+        border-left: solid 1px #dddddd;
+    }
+
+    .order-list-table tr td {
+        vertical-align: top;
+        padding: 8px;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: solid 1px #dddddd;
+        border-right: solid 1px #dddddd;
+    }
+
+    /* first column from left */
+    .order-list-table tr td:nth-child(1) {
+        border-left: solid 1px #dddddd;
+    }
+
+    .order-list-table td.order-list-table-td-price {
+        text-align: right;
+    }
+
+    /* last column left we want to be empty and without borders */
+    .order-list-table tfoot tr td.order-list-table-td-section,
+    .order-list-table tfoot tr td.order-list-table-td-element,
+    .order-list-table tfoot tr td.order-list-table-td-price {
+        border: none;
+        padding: 18px 8px;
+    }
+
+
+    /**********************************************************************/
+    /* Footer
+    /**********************************************************************/
+    footer {
+        width: 100%;
+        padding-top: 10px;
+        border-top: 1px dotted #808080;
+    }
+
+    .footer-table {
+        width: 100%;
+        border: none;
+        color: #808080;
+        font-size: 9px;
+    }
+
+    .footer-table td {
+        vertical-align: top;
+    }
+
+    .footer-table .footer-table-column-name {
+        font-weight: bold;
+        padding-right: 8px;
+    }
+
+    .footer-link {
+        color: #7897b9;
     }
 }

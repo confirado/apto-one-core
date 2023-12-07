@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { setNextStep, setPrevStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
-	ElementState,
-	ProgressElement,
-	ProgressState,
+  ElementState,
+  ProgressElement,
+  ProgressState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
   selectConfiguration, selectCurrentProductElements, selectCurrentStateElements,

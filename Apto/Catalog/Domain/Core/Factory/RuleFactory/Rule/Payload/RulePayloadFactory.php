@@ -23,15 +23,17 @@ class RulePayloadFactory
 
     /**
      * @param ConfigurableProduct $product
-     * @param State $state
+     * @param State               $state
+     * @param bool                $indexedById
+     *
      * @return RulePayload
      * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
      * @throws \Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException
      */
-    public function getPayload(ConfigurableProduct $product, State $state)
+    public function getPayload(ConfigurableProduct $product, State $state, bool $indexedById = true)
     {
         return new RulePayload(
-            $this->computedProductValueCalculator->calculateComputedValuesByProduct($product->getProduct(), $state, true)
+            $this->computedProductValueCalculator->calculateComputedValuesByProduct($product->getProduct(), $state, $indexedById)
         );
     }
 

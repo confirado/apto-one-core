@@ -30,42 +30,49 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 }
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
-	const currentSection = state.product.sections.find((section) => section.id === state.configuration.currentStep);
-	const sections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
+  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
 
 	let currentStep: ProgressStep | undefined;
 	const afterSteps: ProgressStep[] = [];
 	const beforeSteps: ProgressStep[] = [];
 
-	for (const s of sections) {
-		const pSection = state.product.sections.find((ppSection) => ppSection.id === s.id);
-		if (!pSection) {
-			continue;
-		}
+    for (const cSection of cSections) {
+      const pSection = state.product.sections.find((ppSection) => ppSection.id === cSection.id);
+      if (!pSection) {
+          continue;
+      }
 
-		const elements = state.configuration.state.elements.filter((e) => !e.disabled && e.sectionId === s.id).map((e) => e.id);
+      const elements = state.configuration.state.elements
+        .filter((e) => !e.disabled && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
+        .map((e) => e.id);
 
-		const pElements = state.product.elements.filter((e) => elements.includes(e.id));
+      // let in product elements only those are available in state configuration
+	  const pElements = state.product.elements.filter((e) => elements.includes(e.id));
 
-		const progressElements = pElements.map((pElement) => ({
-			state: state.configuration.state.elements.find((e) => e.id === pElement?.id)!,
-			element: pElement,
-		}));
+    const progressElements = pElements.map((pElement) => ({
+        state: state.configuration.state.elements.find((e) => e.id === pElement?.id && e.sectionRepetition === cSection.repetition)!,
+        element: pElement,
+    }));
 
-		const description = getDescription(pSection, state, locale);
+	const description = getDescription(pSection, state, locale);
 
-		const section: Section = { ...pSection };
+	const section: Section = {
+      ...pSection,
+      repetition: cSection.repetition,
+    };
 
+    // if one of the elements is active, then the whole section is active
 		const active: boolean = progressElements.some((e) => e.state.active);
 
 		const fulfilledElements: boolean[] = [];
 
 		let fulfilled: boolean = false;
 
-		if (!s.mandatory) {
+		if (!cSection.mandatory) {
 			fulfilled = true;
 		}
 
+    // now check if the section is fulfilled
 		for (const entry of progressElements) {
 			if (!entry.element.isMandatory || (entry.element.isMandatory && entry.state.active)) {
 				fulfilledElements.push(true);
@@ -75,11 +82,18 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			}
 		}
 
-		if (s.mandatory && fulfilledElements.every((e) => e) && active) {
+		if (cSection.mandatory && fulfilledElements.every((e) => e) && active) {
 			fulfilled = true;
 		}
 
-		if (section.id === state.configuration.currentStep) {
+    let currentStepId = null;
+    let currentRepetition = 0;
+    if (state.configuration.currentStep) {
+      currentStepId = state.configuration.currentStep.id;
+      currentRepetition = state.configuration.currentStep.repetition;
+    }
+
+		if (section.id === currentStepId && section.repetition === currentRepetition) {
 			currentStep = {
 				status: 'CURRENT',
 				fulfilled,
@@ -108,6 +122,8 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			});
 		}
 	}
+
+  // percentage value of current progress: Example: 33%
 	const progress: number = Math.round(
 		((afterSteps.filter((s) => s.fulfilled).length + beforeSteps.filter((s) => s.fulfilled).length + (currentStep?.fulfilled ? 1 : 0)) /
 			(beforeSteps.length + afterSteps.length + (currentStep?.fulfilled ? 1 : 0))) *
@@ -240,7 +256,7 @@ export const selectSectionPrice = (section: Section): any =>
 		if (state.configuration.statePrice === null) {
 			return null;
 		}
-		return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.price.formatted;
+		return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1][section.repetition].sum.price.formatted;
 	});
 
 export const selectSectionPseudoPrice = (section: Section): any =>
@@ -248,19 +264,22 @@ export const selectSectionPseudoPrice = (section: Section): any =>
     if (state.configuration.statePrice === null) {
       return null;
     }
-    return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1].sum.pseudoPrice.formatted;
+    return Object.entries(state.configuration.statePrice.sections).find(([key]) => key === section.id)?.[1][section.repetition].sum.pseudoPrice.formatted;
   });
 
 export const selectSectionPriceTable = (section: Section): any => createSelector(featureSelector, (state: CatalogFeatureState): SectionPriceTableItem[] => {
   let priceTable: SectionPriceTableItem[] = [];
 
   // if that section has no surcharges we can return an empty array here
-  if (!state.configuration.statePrice.sections.hasOwnProperty(section.id)) {
+  if (
+	  !state.configuration.statePrice.sections.hasOwnProperty(section.id) ||
+	  state.configuration.statePrice.sections[section.id].length < section.repetition
+  ) {
     return priceTable;
   }
 
   // add all element surcharges of that section to the priceTable array
-  const sectionPrices = state.configuration.statePrice.sections[section.id];
+  const sectionPrices = state.configuration.statePrice.sections[section.id][section.repetition];
   Object.keys(sectionPrices.elements).forEach((elementId) => {
     const elementPrice = sectionPrices.elements[elementId];
     const pElement = state.product.elements.find(e => e.id === elementId);
@@ -328,22 +347,29 @@ export const selectElementValues = (element: Element): any =>
       return [];
     }
 
-    const x = Object.entries<any>(state.configuration.humanReadableState).find((e) => e[0] === element.id);
-    if (x) {
-      return Object.values(x[1]);
-    }
+    const x = state.configuration.humanReadableState.find((e) => e.elementId === element.id && e.repetition === element.sectionRepetition);
 
-    return [];
+    return x ? [].concat(...Object.values(x.values)) : [];
 	});
 
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);
 
 export const selectCurrentProductElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.product.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+  let currentStepId = null;
+  if (state.configuration.currentStep) {
+    currentStepId = state.configuration.currentStep.id;
+  }
+
+  return state.product.elements.filter((element) => element.sectionId === currentStepId);
 });
 
 export const selectCurrentStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  return state.configuration.state.elements.filter((element) => element.sectionId === state.configuration.currentStep);
+  let currentStepId = null;
+  if (state.configuration.currentStep) {
+    currentStepId = state.configuration.currentStep.id;
+  }
+
+  return state.configuration.state.elements.filter((element) => element.sectionId === currentStepId);
 });
 
 export const selectSectionProductElements = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {

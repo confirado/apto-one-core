@@ -50,6 +50,7 @@ use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsHiddenUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsMandatoryUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionPositionUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsZoomableUpdated;
+use Apto\Catalog\Domain\Core\Model\Product\Section\SectionRepeatableUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Money\Currency;
@@ -96,6 +97,13 @@ class Product extends AptoAggregate
      * @var bool
      */
     protected $useStepByStep;
+
+    /**
+     * Reset configurator steps when going backwards in configurator or not
+     *
+     * @var string
+     */
+    protected $keepSectionOrder;
 
     /**
      * @var string|null
@@ -406,6 +414,34 @@ class Product extends AptoAggregate
         );
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function getKeepSectionOrder(): bool
+    {
+        return $this->keepSectionOrder;
+    }
+
+    /**
+     * @param bool $keepSectionOrder
+     * @return Product
+     */
+    public function setKeepSectionOrder(bool $keepSectionOrder): Product
+    {
+        if ($this->keepSectionOrder === $keepSectionOrder) {
+            return $this;
+        }
+        $this->keepSectionOrder = $keepSectionOrder;
+        $this->publish(
+            new ProductKeepSectionOrderUpdated(
+                $this->getId(),
+                $this->getKeepSectionOrder()
+            )
+        );
+        return $this;
+    }
+
 
     /**
      * @return string
@@ -1284,6 +1320,34 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid   $sectionId
+     * @param Repeatable $repeatable
+     *
+     * @return $this
+     */
+    public function setSectionRepeatable(AptoUuid $sectionId, Repeatable $repeatable): Product
+    {
+        // if section does not exists anymore we have nothing to do
+        $section = $this->getSection($sectionId);
+        if (null === $section) {
+            return $this;
+        }
+
+        // if value is the same skip
+        if ($section->getRepeatable()->equals($repeatable)) {
+            return $this;
+        }
+
+        // update section type flag
+        $section->setRepeatable($repeatable);
+        $this->publish(
+            new SectionRepeatableUpdated($section->getId(), $repeatable->jsonSerialize())
+        );
+
+        return $this;
+    }
+
+    /**
      * @param AptoUuid $sectionId
      * @param Group $group
      * @return Product
@@ -1425,6 +1489,21 @@ class Product extends AptoAggregate
         }
 
         return $section->getPosition();
+    }
+
+    /**
+     * @param AptoUuid $sectionId
+     * @return Repeatable|null
+     */
+    public function getSectionRepeatable(AptoUuid $sectionId): ?Repeatable
+    {
+        // if section does not exists anymore we have nothing to do
+        $section = $this->getSection($sectionId);
+        if (null === $section) {
+            return null;
+        }
+
+        return $section->getRepeatable();
     }
 
     /**
@@ -3424,6 +3503,7 @@ class Product extends AptoAggregate
             ->setActive($this->getActive())
             ->setHidden($this->getHidden())
             ->setUseStepByStep($this->getUseStepByStep())
+            ->setKeepSectionOrder($this->getKeepSectionOrder())
             ->setArticleNumber($articleNumber)
             ->setMetaTitle($this->getMetaTitle())
             ->setMetaDescription($this->getMetaDescription())

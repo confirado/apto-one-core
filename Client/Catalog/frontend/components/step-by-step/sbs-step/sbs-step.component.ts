@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { environment } from '@apto-frontend/src/environments/environment';
@@ -10,7 +10,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement, ProgressState, ProgressStep } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement, ProgressState, ProgressStep, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectElementValues } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
@@ -52,9 +52,9 @@ export class SbsStepComponent implements OnInit, OnDestroy {
   public locale: string;
   public panelOpenState: boolean = false;
   public isActive: boolean = false;
+  protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
 
-  private popupSubscription: Subscription = null;
   private csPopUp: {
     title: string,
     message: string,
@@ -81,42 +81,57 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     });
   }
 
-	public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {
-		// eslint-disable-next-line no-restricted-globals
-		if (section && !this.state?.afterSteps.includes(section)) {
-      if (false === isStepByStep) {
-        return;
-      }
-
-      if (!this.csPopUp.title || !this.csPopUp.message) {
-        this.updateStore(section);
-        return;
-      }
-
-      this.popupSubscription = this.openPopUp().subscribe((next: boolean) => {
-        this.popupSubscription.unsubscribe();
-
-        if (true !== next) {
+  public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {
+    if (this.product.keepSectionOrder) {
+      if (section && !this.state?.afterSteps.includes(section)) {
+        if (isStepByStep === false) {
           return;
         }
 
+        if (!this.csPopUp.title || !this.csPopUp.message) {
+          this.updateStore(section);
+          return;
+        }
+
+        this.openPopUp()
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((next: boolean) => {
+            if (next === true) {
+              this.updateStore(section);
+            }
+          });
+      }
+    } else { // we want to move between configuration section without restrictions
+      if (section && isStepByStep) {
         this.updateStore(section);
-      });
-		}
-	}
+      }
+    }
+  }
 
   private updateStore(section: ProgressStep | undefined): void {
     this.store.dispatch(
       setStep({
         payload: {
-          id: section.section.id,
+          id: section.section.id, repetition: section.section.repetition,
         },
       })
     );
   }
 
-  public getElementValues(element: Element): Observable<TranslatedValue[] | null | undefined> {
-    return this.store.select(selectElementValues(element));
+  /**
+   * If we don't want to keep section order then step by step is functioning like one page, where you can freely switch between sections
+   */
+  protected isSectionSelectable(): boolean {
+    if (this.product.keepSectionOrder) {
+      return this.status === 'COMPLETED' || this.status === 'CURRENT';
+    }
+    return true;
+  }
+
+  public getElementValues(element: Element, section: ProgressStep): Observable<TranslatedValue[] | null | undefined> {
+    const elementWithRepetition = { ...element, ...{ sectionRepetition: section.section.repetition } };
+
+    return this.store.select(selectElementValues(elementWithRepetition));
   }
 
 	public togglePanel(): void {

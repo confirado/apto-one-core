@@ -41,6 +41,8 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
+     * we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
+     *
      * @param AptoUuid $sectionId
      * @param array $elementIds
      * @return bool
@@ -57,8 +59,11 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
+     *  we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
+     *
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
+     *
      * @return bool
      */
     public function isElementDisabled(AptoUuid $sectionId, AptoUuid $elementId): bool
@@ -98,33 +103,35 @@ class EnrichedState implements \JsonSerializable
 
     /**
      * @param AptoUuid $sectionId
-     * @param AptoUuid[] $elementIds
-     * @param bool $allowMultiple
-     * @param bool $isMandatory
+     * @param array    $elementIds
+     * @param bool     $allowMultiple
+     * @param bool     $isMandatory
+     * @param int      $repetition
+     *
      * @return bool
      */
-    public function isSectionComplete(AptoUuid $sectionId, array $elementIds, bool $allowMultiple, bool $isMandatory): bool
+    public function isSectionComplete(AptoUuid $sectionId, array $elementIds, bool $allowMultiple, bool $isMandatory, int $repetition = 0): bool
     {
         $section = $sectionId->getId();
 
         // not selected mandatory sections can not be complete
-        if ($isMandatory && !$this->state->isSectionActive($sectionId)) {
+        if ($isMandatory && !$this->state->isSectionActive($sectionId, $repetition)) {
             return false;
         }
 
         // multi-select sections can be completed manually
-        if ($this->complete[$section] ?? false) {
+        if ($this->complete[$section][$repetition] ?? false) {
             return true;
         }
 
         // single select sections are complete, if at least one element is active
         if (!$allowMultiple) {
-            return $this->state->isSectionActive($sectionId);
+            return $this->state->isSectionActive($sectionId, $repetition);
         }
 
         // multi-select sections are automatically completed if all contained elements are active
         foreach ($elementIds as $elementId) {
-            if (!$this->state->isElementActive($sectionId, $elementId)) {
+            if (!$this->state->isElementActive($sectionId, $elementId, $repetition)) {
                 return false;
             }
         }
@@ -134,17 +141,19 @@ class EnrichedState implements \JsonSerializable
 
     /**
      * @param AptoUuid $sectionId
-     * @param bool $complete
+     * @param bool     $complete
+     * @param int      $repetition
+     *
      * @return $this
      */
-    public function setSectionComplete(AptoUuid $sectionId, bool $complete = true): self
+    public function setSectionComplete(AptoUuid $sectionId, bool $complete = true, int $repetition = 0): self
     {
         $section = $sectionId->getId();
 
         if ($complete) {
-            $this->complete[$section] = true;
+            $this->complete[$section][$repetition] = true;
         } else {
-            unset ($this->complete[$section]);
+            unset ($this->complete[$section][$repetition]);
         }
 
         return $this;

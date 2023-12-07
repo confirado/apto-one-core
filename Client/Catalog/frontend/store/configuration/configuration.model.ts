@@ -1,6 +1,24 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { Element, Section } from '@apto-catalog-frontend/store/product/product.model';
 
+// eslint-disable-next-line no-shadow
+export enum SectionTypes {
+  STATISCH = 'Statisch',
+  WIEDERHOLBAR = 'Wiederholbar'
+}
+
+export interface HumanReadableState {
+  elementId: string;
+  repetition: number;
+  sectionId: string;
+  values: Array<{ [key: string]: TranslatedValue }>;
+}
+
+export interface CurrentSection {
+  id: string;
+  repetition?: number;
+}
+
 export interface SectionState {
 	id: string;
 	identifier: string;
@@ -9,6 +27,9 @@ export interface SectionState {
 	multiple: boolean;
 	mandatory: boolean;
 	hidden: boolean;
+  repetition?: number;
+  repeatableCalculatedValueName: null | string;
+  repeatableType: SectionTypes;
 }
 
 export interface ElementState {
@@ -21,7 +42,9 @@ export interface ElementState {
 	mandatory: boolean;
 	values: any;
   attachments: any;
+  sectionRepetition?: number;
 }
+
 export interface Configuration {
 	compressedState: any;
 	sections: SectionState[];
@@ -63,6 +86,7 @@ export interface ProgressElement<ElementDefinitionProperties = any> {
 	state: ElementState;
 	element: Element<ElementDefinitionProperties>;
 }
+
 export interface ProgressStep {
 	status: string;
 	fulfilled: boolean;
@@ -71,6 +95,7 @@ export interface ProgressStep {
 	active: boolean;
 	elements: ProgressElement[];
 }
+
 export interface ProgressState {
 	productId: string | undefined;
 	currentStep: ProgressStep | undefined;
@@ -139,13 +164,15 @@ export interface GetConfigurationStateArguments {
 		set?: {
 			sectionId: string;
 			elementId: string;
+      sectionRepetition?: number
 			property?: any;
 			value: any;
 		}[];
 		remove?: {
 			sectionId: string;
 			elementId: string;
-			property?: any;
+      sectionRepetition?: number
+      property?: any;
 			value: any;
 		}[];
 	};
@@ -159,7 +186,7 @@ export interface StatePrice {
 	own: Own;
 	sum: Sum;
 	currency: string;
-	sections: Record<string, StatePriceSection>;
+	sections: Record<string, StatePriceSection[]>;
 	productSurcharges: unknown[];
 }
 

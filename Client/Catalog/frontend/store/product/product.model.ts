@@ -2,6 +2,7 @@
 
 import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 export interface Product {
 	id: string;
@@ -11,6 +12,7 @@ export interface Product {
 	description: TranslatedValue;
 	previewImage: string | null;
 	useStepByStep: boolean;
+  keepSectionOrder: boolean;
 	position: number;
 	customProperties: CustomProperty[];
   hidden: boolean;
@@ -40,6 +42,9 @@ export interface Section {
 	customProperties: CustomProperty[];
   previewImage: string | null;
   isZoomable: boolean;
+  repetition?: number;
+  repeatableCalculatedValueName?: null | string;
+  repeatableType?: SectionTypes;
 }
 
 export interface Conditions {
@@ -170,6 +175,7 @@ export interface Element<DefinitionProperties = unknown> {
 	customProperties: CustomProperty[];
   attachments: any;
   zoomFunction: ElementZoomFunctionEnum;
+  sectionRepetition?: number;
 }
 
 export enum ElementZoomFunctionEnum {

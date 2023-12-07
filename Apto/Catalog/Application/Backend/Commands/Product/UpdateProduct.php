@@ -45,6 +45,7 @@ class UpdateProduct extends AbstractAddProduct
      * @param int $position
      * @param array $filterPropertyIds
      * @param array $domainProperties
+     * @param bool $keepSectionOrder
      */
     public function __construct(
         string $id,
@@ -69,8 +70,9 @@ class UpdateProduct extends AbstractAddProduct
         int $maxPurchase = 0,
         $previewImage = null,
         int $position = 0,
+        bool $keepSectionOrder = true,
         array $filterPropertyIds = [],
-        array $domainProperties = []
+        array $domainProperties = [],
     )
     {
         parent::__construct(
@@ -94,7 +96,8 @@ class UpdateProduct extends AbstractAddProduct
             $minPurchase,
             $maxPurchase,
             $previewImage,
-            $position
+            $position,
+            $keepSectionOrder,
         );
         $this->id = $id;
         $this->filterPropertyIds = $filterPropertyIds;

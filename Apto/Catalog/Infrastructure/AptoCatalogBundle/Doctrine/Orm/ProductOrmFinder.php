@@ -25,6 +25,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
         'active',
         'hidden',
         'useStepByStep',
+        'keepSectionOrder',
         'articleNumber',
         'metaTitle',
         'metaDescription',
@@ -45,6 +46,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
         'active' => [DqlQueryBuilder::class, 'decodeBool'],
         'hidden' => [DqlQueryBuilder::class, 'decodeBool'],
         'useStepByStep' => [DqlQueryBuilder::class, 'decodeBool'],
+        'keepSectionOrder' => [DqlQueryBuilder::class, 'decodeBool'],
         'metaTitle' => [DqlQueryBuilder::class, 'decodeJson'],
         'metaDescription' => [DqlQueryBuilder::class, 'decodeJson'],
         'stock' => [DqlQueryBuilder::class, 'decodeInteger'],
@@ -99,7 +101,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isHidden',
                     'isMandatory',
                     'isZoomable',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ],
                 // product element
                 'pe' => [
@@ -273,7 +277,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isHidden',
                     'isZoomable',
                     'isMandatory',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ],
                 // element
                 'e' => [
@@ -695,7 +701,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'isActive',
                     'isHidden',
                     'isMandatory',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ]
             ])
             ->setJoins([
@@ -1542,8 +1550,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      */
     public function findPricesByState(string $id, State $state, string $currencyCode, string $fallbackCurrencyCode, string $customerGroupId, string $fallbackCustomerGroupId = null, string $shopId = null)
     {
-        $sectionIds = array_keys($state->getSectionList());
-        $elementIds = array_keys($state->getElementList());
+        $sectionIds = array_keys($state->getSectionIds());
+        $elementIds = $state->getElementIds();
         $customerGroupIds = null !== $fallbackCustomerGroupId ? [$customerGroupId, $fallbackCustomerGroupId] : [$customerGroupId];
         $currencyCodes = [$currencyCode, $fallbackCurrencyCode];
 

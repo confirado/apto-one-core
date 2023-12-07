@@ -28,7 +28,9 @@ class ProductDqlService extends AbstractDqlService
                     'isActive',
                     'isHidden',
                     'isMandatory',
-                    'allowMultiple'
+                    'allowMultiple',
+                    ['repeatable.type', 'repeatableType'],
+                    ['repeatable.calculatedValueName', 'repeatableCalculatedValueName'],
                 ],
                 'pe' => [
                     ['id.id', 'id'],

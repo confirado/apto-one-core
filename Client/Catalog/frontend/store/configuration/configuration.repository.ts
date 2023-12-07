@@ -75,47 +75,38 @@ export class ConfigurationRepository {
 			sections: [],
 			elements: []
 		};
+
 		const responseState = result.configurationState;
 
-		for (const sectionId in responseState) {
-			if (!Object.prototype.hasOwnProperty.call(responseState, sectionId)) {
-				// eslint-disable-next-line no-continue
-				continue;
-			}
-			const section = responseState[sectionId];
+    for (const section of responseState.sections) {
+      state.sections.push({
+        id: section.id,
+        identifier: section.identifier,
+        active: section.state.active,
+        disabled: section.state.disabled,
+        multiple: section.allowMultiple,
+        mandatory: section.isMandatory,
+        hidden: section.isHidden,
+        repetition: section.repetition,
+        repeatableCalculatedValueName: section.repeatableCalculatedValueName,
+        repeatableType: section.repeatableType,
+      });
+    }
 
-			// create section state
-			state.sections.push({
-				id: sectionId,
-				identifier: section.identifier,
-				active: section.state.active,
-				disabled: section.state.disabled,
-				multiple: section.allowMultiple,
-				mandatory: section.isMandatory,
-				hidden: section.isHidden,
-			});
-
-			for (const elementId in section.elements) {
-				if (!Object.prototype.hasOwnProperty.call(section.elements, elementId)) {
-					// eslint-disable-next-line no-continue
-					continue;
-				}
-				const element = section.elements[elementId];
-
-				// create element state
-				state.elements.push({
-					id: elementId,
-					identifier: element.identifier,
-					sectionId,
-					sectionIdentifier: section.identifier,
-					active: element.state.active,
-					disabled: element.state.disabled,
-					mandatory: element.isMandatory,
-					values: element.state.values,
-          attachments: element.attachments,
-				});
-			}
-		}
+    for (const element of responseState.elements) {
+      state.elements.push({
+        id: element.id,
+        identifier: element.identifier,
+        sectionId: element.sectionId,
+        sectionRepetition: element.sectionRepetition,
+        sectionIdentifier: element.identifier,
+        active: element.state.active,
+        disabled: element.state.disabled,
+        mandatory: element.isMandatory,
+        values: element.state.values,
+        attachments: element.attachments,
+      });
+    }
 
 		return { state: state, renderImages: result.renderImages };
 	}

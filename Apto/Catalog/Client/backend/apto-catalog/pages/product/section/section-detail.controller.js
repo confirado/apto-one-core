@@ -45,7 +45,9 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         return {
             availableCustomerGroups: state.product.availableCustomerGroups,
             detail: state.section.detail,
+            section: state.section,
             productDetail: state.product.productDetail,
+            computedValues: state.product.computedValues,
             elements: state.section.elements,
             prices: state.section.prices,
             discounts: state.section.discounts,
@@ -278,6 +280,10 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
     }
 
     init();
+
+    $scope.repeatable = {
+        types: ['Statisch', 'Wiederholbar'],
+    };
 
     $scope.newPrice = {
         amount: '',

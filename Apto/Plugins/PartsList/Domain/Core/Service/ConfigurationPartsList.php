@@ -202,19 +202,22 @@ class ConfigurationPartsList
      */
     private function getUsages(AptoUuid $productId, State $state, array $computedValues = [])
     {
-        $sections = $state->getSectionList();
+        $sections = $state->getSectionIds();
         $elements = $state->getElementList();
+        $elementIds = $state->getElementIds();
+
         $elementSections = $this->getElementSections($state, $elements);
 
         $parts = $this->partRepository->findByUsages(
             [$productId->getId()],
             array_keys($sections),
-            array_keys($elements)
+            $elementIds
         );
+
         $additionalParts = [];
         foreach ($elements as $element) {
-            if (is_array($element) && key_exists('partsList', $element)) {
-                foreach ($element['partsList'] as $partNumber => $quantity) {
+            if (!empty($element['values']) && key_exists('partsList', $element['values'])) {
+                foreach ($element['values']['partsList'] as $partNumber => $quantity) {
                     if ($quantity)  {
                         $additionalParts[$partNumber] = $quantity;
                     }
@@ -296,19 +299,24 @@ class ConfigurationPartsList
     }
 
     /**
+     * Return array in form:
+     * array [
+     *  elementId => sectionId
+     * ]
+     *
      * @param State $state
      * @param array $elements
+     *
      * @return array
      */
-    private function getElementSections (State $state, array $elements): array
+    private function getElementSections(State $state, array $elements): array
     {
         $elementSections = [];
-
-        foreach ($elements as $elementId => $elementValue) {
-            foreach ($state->getStateWithoutParameters() as $sectionId => $section) {
-                if (array_key_exists($elementId, $section)) {
-                    $elementSections[$elementId] = $sectionId;
-                    continue;
+        foreach ($elements as $element) {
+            foreach ($state->getStateWithoutParameters() as $section) {
+                // @todo handle the case when we have multiple elements with the same elementId
+                if (array_key_exists($element['elementId'], $section)) {
+                    $elementSections[$element['elementId']] = $section['sectionId'];
                 }
             }
         }

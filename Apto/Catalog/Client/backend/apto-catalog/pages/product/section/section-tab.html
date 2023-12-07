@@ -1,18 +1,27 @@
-<div layout="row" layout-align="start" flex>
-    <md-input-container flex>
-        <label>Kennung:</label>
-        <input ng-model="detail.identifier">
-    </md-input-container>
-    <div flex="5"></div>
-    <md-input-container class="md-block" flex="20">
-        <label>Position (Sortierung):</label>
-        <input type="number" min="0" step="1" ng-model="detail.position">
-    </md-input-container>
-    <div flex="5"></div>
-    <apto-translated-value label="'Name'" type="'input'" translated-value="detail.name" flex></apto-translated-value>
+<div layout="row" layout-align="start" flex="100">
+    <div layout="column" flex="40">
+        <div layout="row" layout-align="start" flex>
+            <md-input-container flex>
+                <label>Kennung:</label>
+                <input ng-model="detail.identifier">
+            </md-input-container>
+        </div>
+    </div>
+    <div layout="column" flex="5"></div>
+    <div layout="column" flex=55>
+        <div layout="row" layout-align="start" flex>
+            <md-input-container class="md-block" flex>
+                <label>Position (Sortierung):</label>
+                <input type="number" min="0" step="1" ng-model="detail.position">
+            </md-input-container>
+            <div flex="5"></div>
+            <apto-translated-value label="'Name'" type="'input'" translated-value="detail.name" flex></apto-translated-value>
+        </div>
+    </div>
 </div>
-<div layout="row" layout-align="start" flex>
-    <div layout="column" flex>
+
+<div layout="row" layout-align="start" flex="100">
+    <div layout="column" flex="40">
         <div layout="row" layout-align="start" flex>
             <md-input-container flex>
                 <md-checkbox ng-model="detail.allowMultiple" ng-change="setAllowMultiple(detail.allowMultiple)" aria-label="Mehrfachauswahl" ng-disabled="moreThanOneDefaultElement()">
@@ -21,15 +30,17 @@
                 </md-checkbox>
             </md-input-container>
             <div flex="5"></div>
+
             <md-input-container flex>
                 <md-checkbox ng-model="detail.isHidden" aria-label="Verstecken">
                     Verstecken
                 </md-checkbox>
             </md-input-container>
+            <div flex="5"></div>
         </div>
     </div>
-    <div flex="5"></div>
-    <div layout="column" flex>
+    <div layout="column" flex="5"></div>
+    <div layout="column" flex=55>
         <div layout="row" layout-align="start" flex>
             <md-input-container flex>
                 <label>Gruppe:</label>
@@ -51,9 +62,26 @@
                     </md-optgroup>
                 </md-select>
             </md-input-container>
+            <div flex="5"></div>
+
+            <md-input-container class="md-block" flex>
+                <label>Sektionstype:</label>
+                <md-select required ng-model="detail.repeatableType">
+                    <md-option ng-value="type" ng-repeat="type in repeatable.types">{{ type }}</md-option>
+                </md-select>
+            </md-input-container>
+            <div flex="5" ng-if="detail.repeatableType === 'Wiederholbar'"></div>
+
+            <md-input-container class="md-block" flex ng-if="detail.repeatableType === 'Wiederholbar'">
+                <label>Sektionen Anzahl:</label>
+                <md-select required ng-model="detail.repeatableCalculatedValueName">
+                    <md-option ng-value="computedValue.name" ng-repeat="computedValue in computedValues">{{ computedValue.name }}</md-option>
+                </md-select>
+            </md-input-container>
         </div>
     </div>
 </div>
+
 <div layout="row" layout-align="start" flex>
     <apto-translated-value label="'Beschreibung'" type="'trumbowyg'" translated-value="detail.description" flex="100"></apto-translated-value>
 </div>
