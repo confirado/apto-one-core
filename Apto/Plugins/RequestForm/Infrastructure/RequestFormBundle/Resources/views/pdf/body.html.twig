@@ -40,6 +40,15 @@
 
     <div class="before-order-list-table-container margin-bottom-small">
         <p>
+            {% if customer.gender == 'm' %}
+                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }},
+            {% elseif customer.gender == 'f' %}
+                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }},
+            {% else %}
+                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }},
+            {% endif %}
+        </p>
+        <p>
             {% if contentSnippets.body.beforeOrderListTable[locale] %}
                 {{ contentSnippets.body.beforeOrderListTable[locale] | default('') | raw }}
             {% endif %}

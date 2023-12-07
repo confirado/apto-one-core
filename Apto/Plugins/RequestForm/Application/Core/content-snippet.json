@@ -145,6 +145,15 @@
       },
       "pdf": {
         "body": {
+          "salutationW": {
+            "de_DE": "Sehr geehrte Frau"
+          },
+          "salutationM": {
+            "de_DE": "Sehr geehrter Herr"
+          },
+          "salutationD": {
+            "de_DE": "Sehr geehrte Damen und Herren"
+          },
           "ourOffer": {
             "de_DE": "Unser Vorabangebot"
           },
@@ -152,7 +161,7 @@
             "de_DE": "<p>Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter www.confirado.de/agb/ einzusehen sind.</p><p>Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot.</p><p>Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen.</p><p><br /></p><p>- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten.</p><p>- Individuelle Anpassungen werden schrittweise durchgeführt</p>"
           },
           "beforeOrderListTable": {
-            "de_DE": "<p>Sehr geehrter Herr Ronny,</p><p>die Umsetzung möchten wir Ihnen wie folgt anbieten.</p><p><br /></p><p>Ihre konfigurierbaren Produkte:</p><p>\n</p>"
+            "de_DE": "<p>die Umsetzung möchten wir Ihnen wie folgt anbieten.</p><p><br /></p><p>Ihre konfigurierbaren Produkte:</p><p>\n</p>"
           },
           "signature": {
             "de_DE": "<p>Mit freundlichen Grüßen</p><p>Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt.</p>"
