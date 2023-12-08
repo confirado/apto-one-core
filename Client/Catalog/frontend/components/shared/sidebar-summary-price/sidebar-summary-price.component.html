@@ -3,7 +3,7 @@
         <form [formGroup]="quantityInputGroup">
 
         <div class="step-by-step-summary">
-			<div class="select-basket">
+			<div class="select-basket" *ngIf="showPrices">
                 <div class="basket-discount-price">
                     <div *ngIf="discount && discount > 0" class="discount">
                         <h4>{{ sumPseudoPrice }}</h4>
@@ -49,8 +49,8 @@
 	<ng-container *ngIf="!product.useStepByStep">
         <form [formGroup]="quantityInputGroup">
 		<div class="one-page-summary">
-			<div class="select-basket">
-				<div class="line-content">
+			<div class="select-basket" *ngIf="showPrices">
+				<div class="line-content" >
                     <div *ngIf="discount && discount > 0" class="discount">
 						<h4 class="discount-amount">{{ sumPseudoPrice }}</h4>
 					</div>

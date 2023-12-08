@@ -54,7 +54,7 @@
                                     </div>
                                     <ng-container *ngIf="(getSectionPseudoPrice(section.section) | async) as sectionPseudoPrice">
                                         <ng-container *ngIf="getSectionPrice(section.section) | async as sectionPrice">
-                                            <div class="summary-section-divider"></div>
+                                            <div class="summary-section-divider" *ngIf="showPrices"></div>
                                             <div class="section-right" *ngIf="showPrices">
                                                 <div class="basic-discount-price" *ngIf="sectionPrice !== sectionPseudoPrice">
                                                     {{ sectionPseudoPrice }}

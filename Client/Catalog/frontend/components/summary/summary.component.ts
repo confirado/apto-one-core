@@ -9,7 +9,7 @@ import { selectProduct } from '@apto-catalog-frontend/store/product/product.sele
 import { Store } from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-
+import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
 	selector: 'apto-summary',
@@ -23,7 +23,6 @@ export class SummaryComponent implements OnDestroy {
 	public product$ = this.store.select(selectProduct);
 	public configuration$ = this.store.select(selectConfiguration);
 	public readonly sumPrice$ = this.store.select(selectSumPrice);
-  public showPrices: boolean = true;
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
   });
@@ -49,6 +48,10 @@ export class SummaryComponent implements OnDestroy {
       })
     );
 	}
+
+  public get showPrices(): boolean {
+    return environment.showPrices;
+  }
 
 	public addBasket(): void {
     // @todo make product image size configurable

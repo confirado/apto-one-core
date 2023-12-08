@@ -4,7 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,8 +18,8 @@ import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.m
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { SummaryComponent } from './components/summary/summary.component';
 import { RequestFormComponent } from './components/request-form/request-form.component';
-import { RequestMessageStateComponent } from "@apto-request-form-frontend/components/request-message-state/request-message-state.component";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
 	declarations: [
@@ -38,18 +39,21 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatIconModule,
 		MatButtonModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
 	],
 	providers: [],
 })
 export class AptoRequestFormFrontendModule {
 	public constructor(private store: Store) {
     this.store.select(selectShop).subscribe((result) => {
-      if (null === result) {
+      if (result === null) {
         return;
       }
 
-      let rfCustomProperty = result.customProperties.filter(customProperty => customProperty.key === 'requestForm' && customProperty.value === 'disabled');
+      // requestForm is set from -> web/backend#!/shop/ -> Katalog -> Domains -> BENUTZERDEFINIERTE EIGENSCHAFTEN
+      const rfCustomProperty = result.customProperties
+        .filter((customProperty) => customProperty.key === 'requestForm' && customProperty.value === 'disabled');
+
       if (rfCustomProperty.length < 1) {
         SlotRegistry.components.set('summary', SummaryComponent);
       }
