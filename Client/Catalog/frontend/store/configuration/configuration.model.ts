@@ -26,6 +26,7 @@ export interface Configuration {
 	compressedState: any;
 	sections: SectionState[];
 	elements: ElementState[];
+  failedRules: any;
 }
 
 export interface ComputedValues {

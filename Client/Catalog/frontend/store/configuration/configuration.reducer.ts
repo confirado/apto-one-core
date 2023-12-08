@@ -40,6 +40,7 @@ export const configurationInitialState: ConfigurationState = {
 		compressedState: [],
 		sections: [],
 		elements: [],
+    failedRules: [],
 	},
 	computedValues: {},
 	renderImages: [],
@@ -52,7 +53,7 @@ export const configurationInitialState: ConfigurationState = {
 	connector: null,
 	humanReadableState: null,
 	quantity: 1,
-  hideOnePage: false
+  hideOnePage: false,
 };
 
 const _configurationReducer = createReducer(

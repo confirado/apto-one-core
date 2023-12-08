@@ -73,7 +73,8 @@ export class ConfigurationRepository {
 		const state: Configuration = {
 			compressedState: result.compressedState || [],
 			sections: [],
-			elements: []
+			elements: [],
+      failedRules: result.failedRules || [],
 		};
 		const responseState = result.configurationState;
 
