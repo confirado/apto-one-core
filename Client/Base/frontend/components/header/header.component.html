@@ -26,6 +26,12 @@
             <img *ngIf="contentSnippets$ | async | contentSnippet: 'logoImgMobile'" class="visible-mobile" [src]="mediaUrl + (contentSnippets$ | async | contentSnippet: 'logoImgMobile')" />
         </a>
     </div>
+
+    <div class="basket-wrapper">
+        <div class="basket2" (click)="toggleSideBar()"><span class="fa fa-shopping-cart"></span> Warenkorb</div>
+<!--        <div class="basket-articles">0 Artikel</div>-->
+    </div>
+
     <ng-container *ngIf="languages$ | async as languages">
         <div class="language-mobile">
             <div *ngIf="languages.length === 1"></div>
