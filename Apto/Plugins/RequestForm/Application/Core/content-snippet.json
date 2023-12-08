@@ -58,10 +58,16 @@
             "de_DE": "Anmerkung, Wünsche, Notizen"
           },
           "name": {
-            "de_DE": "Name"
+            "de_DE": "Vorname"
           },
           "namePlaceholder": {
-            "de_DE": "Ihr Name"
+            "de_DE": "Ihr Vorname"
+          },
+          "surname": {
+            "de_DE": "Nachname"
+          },
+          "surnamePlaceholder": {
+            "de_DE": "Ihr Nachname"
           },
           "phone": {
             "de_DE": "Telefon"

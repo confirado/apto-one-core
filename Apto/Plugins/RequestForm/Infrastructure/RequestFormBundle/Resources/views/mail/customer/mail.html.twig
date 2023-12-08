@@ -9,14 +9,14 @@
     {% if customer.name %}
         {% if customer.gender %}
             {% if customer.gender == 'm' %}
-                {{ contentSnippets.customer.dearMister[locale]|default('') }}  {{ customer.name }},
+                {{ contentSnippets.customer.dearMister[locale]|default('') }} {{ customer.name }} {{ customer.surname }},
             {% elseif customer.gender == 'f' %}
-                {{ contentSnippets.customer.dearMisses[locale]|default('') }}  {{ customer.name }},
+                {{ contentSnippets.customer.dearMisses[locale]|default('') }} {{ customer.name }} {{ customer.surname }},
             {% else %}
-                {{ contentSnippets.customer.dear[locale]|default('') }}  {{ customer.name }},
+                {{ contentSnippets.customer.dear[locale]|default('') }} {{ customer.name }} {{ customer.surname }},
             {% endif %}
         {% else %}
-            Sehr geehrte/r {{ customer.name }},
+            Sehr geehrte/r {{ customer.name }} {{ customer.surname }},
         {% endif %}
     {% else %}
         Guten Tag,

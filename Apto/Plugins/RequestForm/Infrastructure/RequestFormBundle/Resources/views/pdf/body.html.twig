@@ -9,7 +9,7 @@
     <div class="customer-address-container margin-bottom-small">
         <p>
             {{ customer.company }}<br>
-            {{ customer.name }}<br>
+            {{ customer.name }} {{ customer.surname }}<br>
             {{ customer.street }} <br>
             {{ customer.zipCode }} {{ customer.city }}
         </p>
@@ -41,11 +41,11 @@
     <div class="before-order-list-table-container margin-bottom-small">
         <p>
             {% if customer.gender == 'm' %}
-                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }},
+                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
             {% elseif customer.gender == 'f' %}
-                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }},
+                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
             {% else %}
-                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }},
+                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
             {% endif %}
         </p>
         <p>
