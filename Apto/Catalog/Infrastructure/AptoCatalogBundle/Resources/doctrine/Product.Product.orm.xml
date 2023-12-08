@@ -32,7 +32,7 @@
         </field>
         <field name="keepSectionOrder" type="boolean" column="keep_section_order">
             <options>
-                <option name="default">true</option>
+                <option name="default">1</option>
             </options>
         </field>
 
