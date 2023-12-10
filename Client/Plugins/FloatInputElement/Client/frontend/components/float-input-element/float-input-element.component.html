@@ -8,7 +8,7 @@
      [class.no-element-preview-image]="!element.element.previewImage && !product.useStepByStep"
      [class.selected]="element.state.active && product.useStepByStep"
 >
-    <div *ngIf="(section.allowMultiple || element.state.active) && product.useStepByStep" class="circle" [class.selected]="element.state.active">
+    <div [hidden]="!element.state.active || !product.useStepByStep" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
 
