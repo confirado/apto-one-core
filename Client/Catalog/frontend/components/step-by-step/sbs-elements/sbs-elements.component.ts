@@ -6,6 +6,7 @@ import {
   ProgressState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
+  configurationIsValid,
   selectConfiguration, selectCurrentProductElements, selectCurrentStateElements,
   selectProgress,
   selectProgressState,
@@ -26,6 +27,7 @@ export class SbsElementsComponent implements OnInit{
 	public readonly configuration$ = this.store.select(selectConfiguration);
   public readonly currentProductElements$ = this.store.select(selectCurrentProductElements);
   public readonly currentStateElements$ = this.store.select(selectCurrentStateElements);
+  public readonly configurationIsValid$ = this.store.select(configurationIsValid);
   private currentStateElements: ElementState[] = null;
 	private progressState: ProgressState = null;
   protected stepPositions: number[] = [];

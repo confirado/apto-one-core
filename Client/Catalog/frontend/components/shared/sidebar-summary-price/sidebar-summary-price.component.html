@@ -32,7 +32,7 @@
                     [width]="'100px'"
                 ></apto-quantity-input-editable>
 
-                <button class="sbs-button add-to-basket" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+                <button class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
 					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
 				</button>
 			</div>
@@ -76,7 +76,7 @@
                     [size]="'middle'"
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
-                <button class="one-page-button add-to-basket" [disabled]="progress !== 100" color="primary" routerLink="summary" mat-flat-button>
+                <button class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
 					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
 				</button>
 			</div>

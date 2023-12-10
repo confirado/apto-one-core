@@ -88,6 +88,15 @@ mat-toolbar {
     }
 }
 
+.basket-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-self: flex-end;
+    font-size: 16px;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
 @media (max-width: $mobile-max-width) {
 	.visible-mobile {
 		display: block;
@@ -103,5 +112,9 @@ mat-toolbar {
         .language-desktop {
             display: none;
         }
+    }
+
+    .basket-wrapper {
+        justify-self: flex-start;
     }
 }

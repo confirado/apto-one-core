@@ -45,7 +45,7 @@
 
 			<button
 				*ngIf="lastSection(progressState)"
-				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
+				[disabled]="!(configurationIsValid$ | async)"
 				color="primary"
 				routerLink="summary"
 				mat-flat-button
