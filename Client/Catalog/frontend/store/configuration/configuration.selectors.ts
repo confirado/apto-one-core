@@ -391,3 +391,55 @@ export const selectElementState = (elementId: string) => createSelector(featureS
 export const selectStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
   return state.configuration.state.elements;
 });
+
+export const configurationIsValid = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  if (state.configuration.state.failedRules.length > 0 ) {
+    let onlySoftRules = true;
+    for (let i = 0; i < state.configuration.state.failedRules.length; i++) {
+      if (!state.configuration.state.failedRules[i].softRule) {
+        onlySoftRules = false;
+      }
+    }
+    if (!onlySoftRules) {
+      return false;
+    }
+  }
+
+  for (let i = 0; i < state.configuration.state.sections.length; i++) {
+    const section = state.configuration.state.sections[i];
+    const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+    if (!sectionIsValid(section, elements)) {
+      return false;
+    }
+  }
+  return true;
+})
+
+function sectionIsValid(section, elements) {
+  // check disabled section
+  if (section.disabled === true) {
+    return true;
+  }
+
+  // check allow multiple section
+  if (section.multiple === true) {
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      if (
+        element.disabled === false &&
+        element.active === false &&
+        element.mandatory === true
+      ) {
+        return false;
+      }
+    }
+  }
+
+  // check section mandatory field
+  if (section.mandatory === true && section.active === false) {
+    return false;
+  }
+
+  // section is valid
+  return true;
+}

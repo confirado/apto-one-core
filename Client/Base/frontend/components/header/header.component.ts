@@ -14,6 +14,7 @@ import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/
 import {
   FrontendUsersLoginComponent
 } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
+import { BasketService } from '@apto-base-frontend/services/basket.service';
 
 @Component({
 	selector: 'apto-header',
@@ -30,7 +31,7 @@ export class HeaderComponent {
   public isLoggedIn: boolean;
   public loginActive: boolean;
 
-	constructor(private store: Store, private dialogService: DialogService) {
+	constructor(private store: Store, private dialogService: DialogService, private basketService: BasketService) {
     this.store.select(selectLocale).subscribe((locale) => {
       if (locale !== null) {
         this.locale = locale;
@@ -88,5 +89,9 @@ export class HeaderComponent {
 
   logout() {
     this.store.dispatch(logout());
+  }
+
+  public toggleSideBar(): void {
+    this.basketService.sideBar?.toggle();
   }
 }
