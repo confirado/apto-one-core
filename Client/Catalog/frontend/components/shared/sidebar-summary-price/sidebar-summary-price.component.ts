@@ -3,6 +3,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import {select, Store} from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
+import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
 	selector: 'apto-sidebar-summary-price',
@@ -27,5 +28,10 @@ export class SidebarSummaryPriceComponent {
 
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+
 	public constructor(private store: Store) {}
+
+  protected get showPrices(): boolean {
+    return environment.showPrices;
+  }
 }

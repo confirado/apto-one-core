@@ -56,7 +56,13 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   } = null;
 
   @Input() public showPrices: boolean = true;
-  constructor(private store: Store, private router: Router, private activatedRoute: ActivatedRoute, private dialogService: DialogService) {
+
+  public constructor(
+    private store: Store,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private dialogService: DialogService
+  ) {
     this.locale = environment.defaultLocale;
   }
 

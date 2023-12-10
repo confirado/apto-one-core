@@ -12,6 +12,7 @@ import { selectProduct } from '@apto-catalog-frontend/store/product/product.sele
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { HumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
   selector: 'apto-summary',
@@ -27,7 +28,6 @@ export class SummaryComponent implements OnInit, OnDestroy {
   public configuration$ = this.store.select(selectConfiguration);
   public readonly sumPrice$ = this.store.select(selectSumPrice);
   private humanReadableState: HumanReadableState;
-  public showPrices: boolean = true;
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
   });
@@ -76,6 +76,10 @@ export class SummaryComponent implements OnInit, OnDestroy {
       this.requestState.sending = false;
       this.requestState.success = true;
     });
+  }
+
+  public get showPrices(): boolean {
+    return environment.showPrices;
   }
 
   public onSendRequestForm(): void {
