@@ -49,6 +49,10 @@
 
         .element-list {
             gap: 40px;
+
+            .element:empty {
+                margin-bottom: -40px;
+            }
         }
 	}
 }
