@@ -4,6 +4,7 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import {select, Store} from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { configurationIsValid } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
 	selector: 'apto-sidebar-summary-price',
@@ -30,4 +31,8 @@ export class SidebarSummaryPriceComponent {
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
 	public constructor(private store: Store) {}
+
+  protected get showPrices(): boolean {
+    return environment.showPrices;
+  }
 }

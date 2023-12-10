@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
@@ -7,7 +7,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { FieldsWhenUserIsLoggedInEnum, Gender } from '@apto-request-form-frontend/store/request-form.model';
-import {selectProduct} from "@apto-catalog-frontend/store/product/product.selectors";
+import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 
 @Component({
 	selector: 'apto-request-form',
@@ -56,6 +56,7 @@ export class RequestFormComponent {
     customerNumber: [''],
     gender: ['', Validators.required],
     name: ['', Validators.required],
+    surname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: [''],
     company: [''],

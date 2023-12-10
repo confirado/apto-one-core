@@ -2,13 +2,9 @@
     <div class="page">
         <form [formGroup]="requestForm">
             <div class="title">
-                <h5>
-                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}
-                </h5>
+                <h5>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}</h5>
                 <div class="break-text">
-                    <p>
-                        {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}
-                    </p>
+                    <p>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}</p>
                 </div>
             </div>
 
@@ -21,14 +17,7 @@
                     [enableClear]="false"
                     [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
                 ></apto-select-field>
-                <apto-input-field
-                    *ngIf="isFieldVisible()"
-                    formControlName="name"
-                    [fullWidth]="true"
-                    [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
-                    [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
-                    [type]="'text'"
-                ></apto-input-field>
+
                 <apto-input-field
                     *ngIf="isFieldVisible()"
                     formControlName="email"
@@ -37,6 +26,25 @@
                     [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
                     [type]="'text'"
                 ></apto-input-field>
+
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="name"
+                    [fullWidth]="true"
+                    [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
+                    [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
+                    [type]="'text'"
+                ></apto-input-field>
+
+                <apto-input-field
+                    *ngIf="isFieldVisible()"
+                    formControlName="surname"
+                    [fullWidth]="true"
+                    [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.surname') + ' *'"
+                    [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.surnamePlaceholder') + ' *'"
+                    [type]="'text'"
+                ></apto-input-field>
+
                 <apto-input-field
                     *ngIf="isFieldVisible()"
                     formControlName="phone"
@@ -87,9 +95,7 @@
                 ></apto-text-input-field>
             </div>
             <div class="title break-text">
-                <p>
-                    {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}
-                </p>
+                <p>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}</p>
             </div>
             <div class="agreement">
                 <mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">

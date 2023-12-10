@@ -755,6 +755,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             'formData' => $formData,
             'customer' => $customer,
             'product' => $product,
+            'configurationId' => $this->basketItem->getConfigurationId(),
             'sortedProperties' => $this->getTranslatedSortedProperties($locale),
             'sectionPrices' => $sectionPrices,
             'mediaUrl' => $mediaUrl,
