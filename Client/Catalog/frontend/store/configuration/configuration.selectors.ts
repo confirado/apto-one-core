@@ -18,6 +18,8 @@ export const selectConfigurationLoading = createSelector(featureSelector, (state
 
 export const selectProduct = createSelector(featureSelector, (state: CatalogFeatureState) => state.product);
 
+export const selectComputedValues = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.computedValues);
+
 function getDescription(section: Section, state: CatalogFeatureState, locale: string | null): string {
 	const elements = state.configuration.state.elements.filter((e) => e.active && e.sectionId === section?.id).map((e) => e.id);
 
