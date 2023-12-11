@@ -11,23 +11,25 @@ import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { CustomTextElementComponent } from './components/custom-text-element/custom-text-element.component';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
 	declarations: [CustomTextElementComponent],
 	exports: [],
 	entryComponents: [],
-  imports: [
-	RouterModule,
-	CommonModule,
-	HttpClientModule,
-	AptoBaseCoreModule,
-	AptoBaseFrontendModule,
-	ReactiveFormsModule,
-	FormsModule,
-	MatDialogModule,
-	MatButtonModule,
-	AptoCatalogFrontendModule,
-  ],
+	imports: [
+		RouterModule,
+		CommonModule,
+		HttpClientModule,
+		AptoBaseCoreModule,
+		AptoBaseFrontendModule,
+		ReactiveFormsModule,
+		FormsModule,
+		MatDialogModule,
+		MatButtonModule,
+		AptoCatalogFrontendModule,
+		MatIconModule,
+	],
 	providers: [],
 })
 export class AptoCustomTextFrontendModule {

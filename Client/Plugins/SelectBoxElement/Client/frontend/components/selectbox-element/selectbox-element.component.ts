@@ -179,4 +179,26 @@ export class SelectboxElementComponent implements OnInit {
 			);
 		}
 	}
+
+  protected onInputCleared(): void {
+    if (!this.element) {
+      return;
+    }
+
+    this.store.dispatch(
+      updateConfigurationState({
+        updates: {
+          remove: [
+            {
+              sectionId: this.element.element.sectionId,
+              elementId: this.element.element.id,
+              sectionRepetition: this.element.state.sectionRepetition,
+              property: null,
+              value: null,
+            },
+          ],
+        },
+      })
+    );
+  }
 }
