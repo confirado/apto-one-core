@@ -3,6 +3,7 @@
 namespace Apto\Catalog\Application\Frontend\Query\Configuration;
 
 use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
+use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
 use Psr\Cache;
 use Symfony\Component\Cache\Exception\CacheException;
 
@@ -81,6 +82,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
 
     /**
      * @param GetConfigurationState $query
+     *
      * @return array
      * @throws AptoJsonSerializerException
      * @throws CacheException
@@ -98,6 +100,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
         $enrichedState = new EnrichedState(
             new State($query->getState())
         );
+
         $maxTries = $query->getIntention()['repair']['maxTries'] ?? 0;
         $operatorsToFulfill = $query->getIntention()['repair']['operators'] ?? null;
         $selectEmptySections = $query->getIntention()['repair']['selectEmptySections'] ?? null;
@@ -108,6 +111,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
                 // assert valid sections, elements, properties and values (if set)
                 $this->valueValidationService->assertValidValues($product, $enrichedState->getState());
 
+                // if this is an initialization (we don't hit the Auswälen button to save/set the state),
+                // we just load the page and check that default values are valid
                 $this->applyInit($product, $enrichedState);
             } catch (InvalidStateException $e) {
                 throw InitConfigurationStateException::fromInvalidConfigurationStateException($e);
@@ -134,6 +139,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             $maxTries,
             $operatorsToFulfill
         );
+
         if ($selectEmptySections) {
             $validationResult = $this->ruleRepairService->repairStateAndSelectEmptySections(
                 $product,
@@ -156,10 +162,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
                 $validationResult->getFailed()
             );
             throw new FailedRulesException(
-                sprintf(
-                    'The state does not fulfill %s rules.',
-                    count($failedRules)
-                ),
+                sprintf('The state does not fulfill %s rules.', count($failedRules)),
                 $failedRules
             );
         }
@@ -175,39 +178,57 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * if this is an initialization (we don't hit the Auswälen button to save/set the state),
+     * we just load the page and check that default values are valid
+     *
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
+     *
      * @return void
      * @throws InvalidUuidException
      */
     private function applyInit(ConfigurableProduct $product, EnrichedState $state)
     {
+        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state->getState(), false);
         $defaultElements = [];
+
         foreach ($product->getSections() as $section) {
             $sectionId = AptoUuid::fromId($section['id']);
 
+            $sectionCount = 1;
+            if ($section['repeatableType'] === Repeatable::TYPES[1]) {
+                $sectionCount = $calculatedValueName->getComputedValues()[$section['repeatableCalculatedValueName']];
+                $sectionCount = $sectionCount == 0 ? 1 : $sectionCount;
+            }
+
             foreach ($section['elements'] as $element) {
+                // as this should run on initialization and not on setting new values into the state,
+                // therefore we check the default values as there are no any other values yet set
                 if (!$element['isDefault']) {
                     continue;
                 }
 
                 $elementId = AptoUuid::fromId($element['id']);
-
                 $elementDefinition = $product->getElementDefinition($sectionId, $elementId);
-                if ($elementDefinition instanceof ElementDefinitionDefaultValues) {
-                    foreach ($elementDefinition->getDefaultValues() as $property => $value) {
+
+                for($repetition = 0; $repetition < $sectionCount; $repetition++) {
+                    if ($elementDefinition instanceof ElementDefinitionDefaultValues) {
+                        foreach ($elementDefinition->getDefaultValues() as $property => $value) {
+                            $defaultElements[] = [
+                                'sectionId' => $sectionId->getId(),
+                                'elementId' => $elementId->getId(),
+                                'sectionRepetition' => $repetition,
+                                'property' => $property,
+                                'value' => $value
+                            ];
+                        }
+                    } else {
                         $defaultElements[] = [
                             'sectionId' => $sectionId->getId(),
                             'elementId' => $elementId->getId(),
-                            'property' => $property,
-                            'value' => $value
+                            'sectionRepetition' => $repetition,
                         ];
                     }
-                } else {
-                    $defaultElements[] = [
-                        'sectionId' => $sectionId->getId(),
-                        'elementId' => $elementId->getId()
-                    ];
                 }
             }
         }
