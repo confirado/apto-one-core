@@ -43,10 +43,13 @@ class RuleValidationService
 
         $ignoredRuleIds = $state->getParameter('ignoredRules');
 
+        // @todo should be done in one operation because of heavy computing time for computed values
         $rulePayload = $this->rulePayloadFactory->getPayload($product, $state);
+        $rulePayloadByName = $this->rulePayloadFactory->getPayload($product, $state, false);
+        $ruleRepetitionService = new RuleRepetitionService($product, $rulePayloadByName);
 
         // validate rules and sort them accordingly to their results
-        foreach ($product->getRules() as $rule) {
+        foreach ($ruleRepetitionService->getRules() as $rule) {
             if ($rule->isConditionFulfilled($state, $rulePayload)) {
                 $affected[] = $rule;
                 if ($rule->isImplicationFulfilled($state, $rulePayload)) {

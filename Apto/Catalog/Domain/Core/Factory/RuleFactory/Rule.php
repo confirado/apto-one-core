@@ -48,6 +48,11 @@ class Rule
     protected $implication;
 
     /**
+     * @var int
+     */
+    protected $repetition;
+
+    /**
      * @param AptoUuid $id
      * @param bool $active
      * @param bool $soft
@@ -55,9 +60,18 @@ class Rule
      * @param AptoTranslatedValue $errorMessage
      * @param Condition $condition
      * @param Implication $implication
+     * @param int $repetition
      */
-    public function __construct(AptoUuid $id, bool $active, bool $soft, string $name, AptoTranslatedValue $errorMessage, Condition $condition, Implication $implication)
-    {
+    public function __construct(
+        AptoUuid $id,
+        bool $active,
+        bool $soft,
+        string $name,
+        AptoTranslatedValue $errorMessage,
+        Condition $condition,
+        Implication $implication,
+        int $repetition = 0
+    ) {
         $this->id = $id;
         $this->active = $active;
         $this->soft = $soft;
@@ -65,6 +79,7 @@ class Rule
         $this->errorMessage = $errorMessage;
         $this->condition = $condition;
         $this->implication = $implication;
+        $this->repetition = $repetition;
     }
 
     /**
@@ -121,6 +136,14 @@ class Rule
     public function getImplication(): Implication
     {
         return $this->implication;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRepetition(): int
+    {
+        return $this->repetition;
     }
 
     /**
