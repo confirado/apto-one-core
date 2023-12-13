@@ -6,11 +6,29 @@ export type Payload = {
   query: string
 }
 
+export enum HttpRequestTypes {
+  POST = 'post',
+  GET = 'get',
+}
+
 export interface IRequestData {
   alias: string,
   endpoint?: string,
   payload?: Payload,
-  expectedResponse?: MessageBusResponse<any>
+  method?: HttpRequestTypes,
+  // expectedResponse?: MessageBusResponse<any>
 }
+
+export enum UserTypes {
+  SUPERADMIN = 'superadmin',
+}
+
+export type UserFixture = {
+  [key in UserTypes]: {
+    username: string;
+    password: string;
+    email: string;
+  };
+};
 
 export type CustomInterceptionResponse<Result> = CyHttpMessages.IncomingResponse & MessageBusResponse<Result>;

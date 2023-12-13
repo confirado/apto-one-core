@@ -10,7 +10,7 @@ describe('Product list', () => {
   const baseUrl = Cypress.env('baseUrl');
 
   beforeEach(() => {
-    const requests = ProductList.initialRequestList;
+    const requests = ProductList.initialQueryList;
 
     requests.forEach((request) => RequestHandler.interceptQuery(request.alias));
 
@@ -18,6 +18,8 @@ describe('Product list', () => {
   });
 
   it('Checks product list frontend', () => {
+
+    ProductList.isCorrectPage();
 
     // if all requests are made
     cy.wait(ProductList.initialAliasList).then(($response: Interception[]) => {

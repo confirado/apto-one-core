@@ -1,25 +1,14 @@
 import { UserRoleEnum, ViewportPresets, ViewportPresetsEnum } from './globals';
+import { IRequestData } from './Models';
 
 export class Common {
 
-  public static login(role?: UserRoleEnum): void {
-    // @todo implement this
+  public static visitFrontend(url: string): void {
+    cy.visit(Cypress.env('baseUrl') + url);
   }
 
-  public static logout(role?: UserRoleEnum): void {
-    // @todo implement this
-  }
-
-  public static isUserLoggedIn(): void {
-    // @todo implement this
-  }
-
-  public static get isUserLoggedInRequest(): IRequestData {
-    return {
-      alias: 'isUserLoggedInRequest',
-      payload: { query: 'isUserLoggedInRequest' },
-      endpoint: 'current-user',
-    };
+  public static visitBackend(url: string): void {
+    cy.visit(`${Cypress.env('baseUrl')}backend/${url}`);
   }
 
   /**

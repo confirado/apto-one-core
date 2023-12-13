@@ -1,26 +1,54 @@
-import { CustomInterceptionResponse } from './Models';
+import { CustomInterceptionResponse, IRequestData } from './Models';
 import { CyHttpMessages, Interception } from 'cypress/types/net-stubbing';
 import { Queries } from './queries';
 import { Commands } from './commands';
+import { Requests } from './requests';
 
 // eslint-disable-next-line no-shadow
 export enum RequestTypes {
   QUERY = 'query',
   COMMAND = 'command',
+  REQUEST = 'request',
 }
 
 export class RequestHandler {
 
   public static interceptQuery(aliasName: string): void {
-    cy.intercept('POST', `**/${Queries.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
+    cy.intercept(Queries.method, `**/${Queries.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
       RequestHandler.setAlias(req, aliasName, RequestTypes.QUERY);
     });
   }
 
   public static interceptCommand(aliasName: string): void {
-    cy.intercept('POST', `**/${Commands.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
+    cy.intercept(Commands.method, `**/${Commands.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
       RequestHandler.setAlias(req, aliasName, RequestTypes.COMMAND);
     });
+  }
+
+  public static interceptRequest(request: IRequestData): void {
+    cy.intercept(request.method, request.endpoint).as(request.alias);
+  }
+
+  public static toAliasName(alias: string): string {
+    return `@${alias}`;
+  }
+
+  public static registerInterceptions(list: IRequestData[]): void {
+
+    // console.error('list')
+    // console.log(list)
+
+    // Login.initialQueryList.forEach((request) => RequestHandler.interceptQuery(request.alias));
+    // Login.initialCommandList.forEach((request) => RequestHandler.interceptCommand(request.alias));
+    // Login.initialCustomRequestList.forEach((request) => RequestHandler.interceptRequest(request));
+  }
+
+  public static getAliasListFromQueryCommandList(queryCommandList: IRequestData[]): string[] {
+    return queryCommandList.map((data) => RequestHandler.toAliasName(data.alias));
+  }
+
+  public static getWaitList(): string[] {
+    return [];
   }
 
   /**

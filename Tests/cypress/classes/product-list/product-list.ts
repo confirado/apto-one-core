@@ -10,7 +10,11 @@ export class ProductList {
     cy.visit(Cypress.env('baseUrl'));
   }
 
-  public static get initialRequestList(): IRequestData[] {
+  public static isCorrectPage(): void {
+    cy.get('apto-product-list').should('exist');
+  }
+
+  public static get initialQueryList(): IRequestData[] {
     return [
       Queries.FindShopContext,
       Queries.FindContentSnippetTree,
@@ -19,6 +23,6 @@ export class ProductList {
   }
 
   public static get initialAliasList(): string[] {
-    return ProductList.initialRequestList.map((data) => `@${data.alias}`);
+    return ProductList.initialQueryList.map((data) => `@${data.alias}`);
   }
 }
