@@ -81,7 +81,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
       this.onCsPopUpChange(next);
     });
 
-    this.store.select(selectSectionIsValid(this.section.section.id)).pipe(
+    this.store.select(selectSectionIsValid(this.section.section.id, this.section.section.repetition)).pipe(
       takeUntil(this.destroy$)
     ).subscribe(next => this.sectionIsValid = next);
   }

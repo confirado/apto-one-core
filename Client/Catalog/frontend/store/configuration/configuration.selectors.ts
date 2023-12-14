@@ -420,13 +420,13 @@ export const configurationIsValid = createSelector(featureSelector, (state: Cata
   return true;
 });
 
-export const selectSectionIsValid = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
-  const section = state.configuration.state.sections.find(s => s.id === sectionId);
+export const selectSectionIsValid = (sectionId: string, repetition: number) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const section = state.configuration.state.sections.find(s => s.id === sectionId && s.repetition === repetition);
   if (!section) {
     return false;
   }
 
-  const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+  const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id && element.sectionRepetition === repetition);
   return sectionIsValid(section, elements);
 });
 
