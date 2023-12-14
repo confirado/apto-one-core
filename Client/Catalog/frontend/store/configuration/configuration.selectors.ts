@@ -143,6 +143,11 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 });
 
 export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
+  // if current step is undefined we hav no step let to configure so we can return 100
+  if (!state.currentStep) {
+    return 100;
+  }
+
   let completedSteps = state.beforeSteps.length;
   let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
   let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
@@ -413,7 +418,17 @@ export const configurationIsValid = createSelector(featureSelector, (state: Cata
     }
   }
   return true;
-})
+});
+
+export const selectSectionIsValid = (sectionId: string) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const section = state.configuration.state.sections.find(s => s.id === sectionId);
+  if (!section) {
+    return false;
+  }
+
+  const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+  return sectionIsValid(section, elements);
+});
 
 function sectionIsValid(section, elements) {
   // check disabled section

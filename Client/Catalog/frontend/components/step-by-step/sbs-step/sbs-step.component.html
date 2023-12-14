@@ -1,10 +1,14 @@
 <ng-container *ngIf="section">
     <ng-container *ngIf="product?.useStepByStep">
-        <div class="section" [ngClass]="status || ''">
-            <div class="circle" *ngIf="status != 'COMPLETED'">
+        <div class="section"
+             [ngClass]="status || ''"
+             [class.keep-section-order]="product.keepSectionOrder"
+             [class.dont-keep-section-order]="!product.keepSectionOrder"
+        >
+            <div class="circle" *ngIf="!this.sectionIsValid">
                 {{ index }}
             </div>
-            <div class="circle" *ngIf="status == 'COMPLETED'">
+            <div class="circle completed" *ngIf="this.sectionIsValid">
                 <mat-icon>done</mat-icon>
             </div>
             <div *ngIf="last" class="white-overlay"></div>
