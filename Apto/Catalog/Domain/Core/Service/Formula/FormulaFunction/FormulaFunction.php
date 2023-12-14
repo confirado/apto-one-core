@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction;
 
-use Apto\Catalog\Domain\Core\Service\Formula\Exception\FunctionParserException;
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 
 interface FormulaFunction
 {
@@ -22,9 +22,9 @@ interface FormulaFunction
      * Replace function call with value
      * @param array $params
      * @param array $variables
+     * @param array $aliases
+     * @param State|null $state
      * @return string
-     * @throws FunctionParserException
      */
-    public function parse(array $params, array $variables = []): string;
-
+    public function parse(array $params, array $variables = [], array $aliases = [], ?State $state = null): string;
 }

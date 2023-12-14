@@ -3,6 +3,7 @@
 namespace Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction;
 
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FunctionParserException;
 
 class Matrix extends AbstractFormulaFunction
@@ -24,7 +25,7 @@ class Matrix extends AbstractFormulaFunction
     /**
      * @inheritDoc
      */
-    public function parse(array $params, array $variables = []): string
+    public function parse(array $params, array $variables = [], array $aliases = [], ?State $state = null): string
     {
         // assert valid param count
         if (count($params) != 3) {

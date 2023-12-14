@@ -270,9 +270,20 @@ class ComputedProductValue extends AptoEntity
         ]));
         $variables = $this->getAliasValues($state, $this->product);
 
+        $aliases = [];
+        /** @var Alias $alias */
+        foreach ($this->getAliases() as $alias) {
+            $aliases[$alias->getName()] = [
+                'sectionId' => $alias->getSectionId(),
+                'elementId' => $alias->getElementId(),
+                'property' => $alias->getProperty(),
+                'isCustomProperty' => $alias->isCustomProperty()
+            ];
+        }
+
         try {
             return math_eval(
-                FunctionParser::parse($filledFormula, $variables, $mediaFileSystem),
+                FunctionParser::parse($filledFormula, $variables, $mediaFileSystem, $aliases, $state),
                 $variables
             );
         } catch (\Exception $exception) {
