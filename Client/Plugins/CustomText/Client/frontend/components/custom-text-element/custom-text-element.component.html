@@ -2,7 +2,12 @@
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
+     [class.selected]="element.state.active"
 >
+    <div *ngIf="product.useStepByStep" class="circle" [class.selected]="element.state.active">
+        <mat-icon>done</mat-icon>
+    </div>
+
     <div class="header">
         <div class="title">
             <h4>{{ element.element.name | translate }}</h4>

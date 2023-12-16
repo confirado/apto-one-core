@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
@@ -58,6 +58,9 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 		this.updateValue();
 	}
 
+  @Output()
+  public inputCleared = new EventEmitter();
+
 	public isOverlayOpen = false;
 
   public overlayWidth: number;
@@ -112,5 +115,6 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 			this.onChange?.(null);
 		}
 		this.isOverlayOpen = false;
-	}
+    this.inputCleared.emit();
+  }
 }
