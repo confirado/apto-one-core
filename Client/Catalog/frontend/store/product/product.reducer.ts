@@ -56,16 +56,10 @@ const _productReducer = createReducer(
   on(setNextStep, setPrevStep, setStep, (state, action) => {
     const elements: Element[] = [];
 
-    const configurationStepTypes = [
-      ConfigurationActionTypes.SetStep,
-      ConfigurationActionTypes.SetPrevStep,
-      ConfigurationActionTypes.SetNextStep,
-    ];
-
     state.elements.forEach((e) => {
       elements.push({
         ...e,
-        sectionRepetition: configurationStepTypes.includes(action.type) ? action.payload.repetition : 0,
+        sectionRepetition: action.payload?.repetition || 0,
       });
     });
     return {
