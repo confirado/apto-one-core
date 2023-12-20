@@ -8,6 +8,7 @@
                             <p class="subtitle">{{ contentSnippet$ | async | contentSnippet: 'headline' }}</p>
                             <p>{{ contentSnippet$ | async | contentSnippet: 'subline' }}</p>
                         </div>
+                        <apto-slot-outlet identifier="before-summary-configuration"></apto-slot-outlet>
                         <div class="summary configuration" *ngIf="showPrices">
                             <div class="single-section default">
                                 <div class="finished-message section">
