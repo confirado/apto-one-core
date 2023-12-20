@@ -9,7 +9,7 @@ import { ProgressElement } from '@apto-catalog-frontend/store/configuration/conf
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { startWith } from 'rxjs';
-import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 @UntilDestroy()
 @Component({
@@ -20,6 +20,9 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 export class SelectboxElementComponent implements OnInit {
 	@Input()
 	public element: ProgressElement | undefined | null;
+
+  @Input()
+  public section: Section | null | undefined;
 
   @Input()
   public product: Product | null | undefined;

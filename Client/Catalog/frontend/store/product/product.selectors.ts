@@ -15,7 +15,7 @@ export const selectRuleRepairSettings = createSelector(featureSelector, (state: 
   }
 
   state.product.product.customProperties.every((cp) => {
-    if (cp.key === 'ruleRepairSettings' && false === cp.translatable) {
+    if (cp.key === 'ruleRepairSettings' && false === cp.translatable && typeof cp.value === 'string') {
       repairSettings = JSON.parse(cp.value);
       return false;
     }

@@ -4,6 +4,8 @@
      [class.open-in-dialog]="isDialog"
      [class.selected]="element.state.active"
 >
+    <apto-slot-outlet class="slot-start-element-container" identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
     <div *ngIf="product.useStepByStep" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
@@ -54,4 +56,6 @@
         <button mat-flat-button color="primary" (click)="saveInput()">{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}</button>
         <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">{{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}</button>
     </div>
+
+    <apto-slot-outlet class="slot-end-element-container" identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>
