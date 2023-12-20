@@ -7,7 +7,7 @@ import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalo
 import {
   addGuestConfiguration,
   addGuestConfigurationSuccess,
-  addToBasket, addToBasketSuccess,
+  addToBasket, addToBasketSuccess, fetchPartsList, fetchPartsListSuccess,
   getConfigurationState,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
@@ -438,6 +438,24 @@ export class ConfigurationEffects {
       ])
 		)
 	);
+
+  public fetchPartsList$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fetchPartsList),
+      withLatestFrom(this.store$.select(selectConfiguration)),
+      switchMap(([action, state]) =>
+        this.configurationRepository.fetchPartsList({
+          productId: state.productId as string,
+          compressedState: state.state.compressedState,
+          currency: state.connector.displayCurrency.currency,
+          customerGroupExternalId: state.connector.customerGroup.id
+        })
+      ),
+      map((result) => {
+        return fetchPartsListSuccess({payload: result});
+      })
+    )
+  );
 
 	public getCurrentPerspective(perspectives: string[], currentPerspective: string | null): string | null {
 		if (perspectives.length === 0) {

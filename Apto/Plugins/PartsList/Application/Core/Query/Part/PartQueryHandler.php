@@ -2,6 +2,10 @@
 
 namespace Apto\Plugins\PartsList\Application\Core\Query\Part;
 
+use Apto\Base\Application\Core\Query\CustomerGroup\CustomerGroupFinder;
+use Apto\Base\Application\Core\Service\RequestStore;
+use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
+use Apto\Plugins\PartsList\Application\Core\Service\Converter\CsvStringConverter;
 use Money\Currency;
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Domain\Core\Model\AptoUuid;
@@ -28,15 +32,47 @@ class PartQueryHandler implements QueryHandlerInterface
     private CsvFileConverter $csvFileConverter;
 
     /**
+     * @var CsvStringConverter
+     */
+    private CsvStringConverter $csvStringConverter;
+
+    /**
+     * @var CustomerGroupFinder
+     */
+    private CustomerGroupFinder $customerGroupFinder;
+
+    /**
+     * @var ShopFinder
+     */
+    protected ShopFinder $shopFinder;
+
+    /**
+     * @var RequestStore
+     */
+    protected RequestStore $requestStore;
+
+    /**
      * @param PartFinder $partFinder
      * @param CsvFileConverter $csvFileConverter
+     * @param CsvStringConverter $csvStringConverter
+     * @param CustomerGroupFinder $customerGroupFinder
+     * @param ShopFinder $shopFinder
+     * @param RequestStore $requestStore
      */
     public function __construct(
         PartFinder $partFinder,
-        CsvFileConverter $csvFileConverter
+        CsvFileConverter $csvFileConverter,
+        CsvStringConverter $csvStringConverter,
+        CustomerGroupFinder $customerGroupFinder,
+        ShopFinder $shopFinder,
+        RequestStore $requestStore
     ) {
         $this->partFinder = $partFinder;
         $this->csvFileConverter = $csvFileConverter;
+        $this->csvStringConverter = $csvStringConverter;
+        $this->customerGroupFinder = $customerGroupFinder;
+        $this->shopFinder = $shopFinder;
+        $this->requestStore = $requestStore;
     }
 
     /**
@@ -192,6 +228,30 @@ class PartQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindPartsList $query
+     * @return array
+     * @throws CircularReferenceException
+     * @throws InvalidUuidException
+     * @throws NoProductIdGivenException
+     * @throws NoStateGivenException
+     */
+    public function handleFindPartsList(FindPartsList $query): array
+    {
+        $shop = $this->shopFinder->findByDomain($this->requestStore->getHttpHost());
+        if ($shop === null) {
+            return [];
+        }
+
+        return $this->csvStringConverter->getCsvListAsArray(
+            new AptoUuid($query->getProductId()),
+            new State($query->getState()),
+            new Currency($query->getCurrency()),
+            $shop['id'],
+            $query->getCustomerGroupExternalId()
+        );
+    }
+
+    /**
      * @return iterable
      */
     public static function getHandledMessages(): iterable
@@ -276,6 +336,12 @@ class PartQueryHandler implements QueryHandlerInterface
 
         yield FindPartsListCsv::class => [
             'method' => 'handleFindPartsListCsv',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindPartsList::class => [
+            'method' => 'handleFindPartsList',
             'aptoMessagePrefix' => 'AptoPartsList',
             'bus' => 'query_bus'
         ];

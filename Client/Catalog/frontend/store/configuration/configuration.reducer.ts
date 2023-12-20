@@ -1,7 +1,7 @@
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
   addToBasket, addToBasketSuccess,
-  createLoadingFlagAction,
+  createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
   getRenderImagesSuccess,
@@ -16,7 +16,15 @@ import {
   setQuantity,
   setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, Configuration, CurrentSection, HumanReadableState, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  ComputedValues,
+  Configuration,
+  CurrentSection,
+  HumanReadableState,
+  PartsListPart,
+  RenderImage,
+  StatePrice,
+} from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
 export interface ConfigurationState {
@@ -33,6 +41,7 @@ export interface ConfigurationState {
 	humanReadableState: HumanReadableState[];
 	quantity: number;
   hideOnePage: boolean;
+  partsList: PartsListPart[];
 }
 
 export const configurationInitialState: ConfigurationState = {
@@ -54,6 +63,7 @@ export const configurationInitialState: ConfigurationState = {
 	humanReadableState: [],
 	quantity: 1,
   hideOnePage: false,
+  partsList: [],
 };
 
 const _configurationReducer = createReducer(
@@ -260,6 +270,10 @@ const _configurationReducer = createReducer(
   on(setHideOnePage, (state, action) => ({
     ...state,
     hideOnePage: action.payload
+  })),
+  on(fetchPartsListSuccess, (state, action) => ({
+    ...state,
+    partsList: action.payload
   })),
 );
 

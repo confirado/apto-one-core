@@ -158,6 +158,23 @@ export interface AddGuestConfigurationArguments {
 	payload: any;
 }
 
+export interface FetchPartsListArguments {
+  productId: string;
+  compressedState: any;
+  currency: string;
+  customerGroupExternalId: string;
+}
+
+export interface PartsListPart {
+  baseQuantity: number
+  itemPrice: string
+  itemPriceTotal: string
+  partName: string
+  partNumber: string
+  quantity: string
+  unit: string
+}
+
 export interface GetConfigurationStateArguments {
 	productId: string;
 	compressedState: any;

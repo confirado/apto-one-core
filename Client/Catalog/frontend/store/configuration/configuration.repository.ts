@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-	AddBasketConfigurationArguments,
-	AddGuestConfigurationArguments,
-	ComputedValues,
-	Configuration,
-	RenderImage,
+  AddBasketConfigurationArguments,
+  AddGuestConfigurationArguments,
+  ComputedValues,
+  Configuration, FetchPartsListArguments, PartsListPart,
+  RenderImage,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -68,6 +68,15 @@ export class ConfigurationRepository {
 			params.payload
 		);
 	}
+
+  public fetchPartsList(params: FetchPartsListArguments): Observable<PartsListPart[]> {
+    return this.catalogMessageBusService.fetchPartsList(
+      params.productId,
+      params.compressedState,
+      params.currency,
+      params.customerGroupExternalId,
+    );
+  }
 
 	private responseToConfigurationState(result: any): { state: Configuration | null, renderImages: [] } {
 		const state: Configuration = {
