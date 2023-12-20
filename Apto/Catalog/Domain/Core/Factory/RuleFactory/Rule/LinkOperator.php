@@ -52,6 +52,9 @@ class LinkOperator
 
     /**
      * Link all given criteria
+     *
+     * Iterates through all criteria and checks if fulfilled
+     *
      * @param State $state
      * @param RulePayload $rulePayload
      * @param Criterion[] $criteria

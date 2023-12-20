@@ -84,6 +84,7 @@
                                             ></apto-discount-tag>
                                         </div>
                                         <div class="discount-name">{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}</div>
+                                        <apto-slot-outlet identifier="after-summary-tax"></apto-slot-outlet>
                                     </div>
                                 </div>
                                 <div class="summary-section-divider"></div>

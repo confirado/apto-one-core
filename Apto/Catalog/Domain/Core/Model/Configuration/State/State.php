@@ -95,6 +95,9 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
+     * Section is active when we have at one selected element from that section, in that case a record is added into
+     * the state array. That's why we check to find that record
+     *
      * @param AptoUuid $sectionId
      * @param int      $repetition
      *
@@ -111,7 +114,6 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
-     * In many cases, we can skip repetition argument as all repetitions are activated or deactivated together
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
      * @param int      $repetition
@@ -270,7 +272,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @return State
      */
-    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, $value = null, int $repetition = 0): State
+    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, mixed $value = null, int $repetition = 0): State
     {
         // if an element isn't found in the state
         if (!$this->isElementActive($sectionId, $elementId, $repetition)) {

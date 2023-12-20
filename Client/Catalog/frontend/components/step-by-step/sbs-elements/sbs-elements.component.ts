@@ -57,34 +57,41 @@ export class SbsElementsComponent implements OnInit{
     return Math.min(...this.stepPositions) || 0;
   }
 
-  public isElementDisabled(elementId: string): boolean {
+  public isElementDisabled(elementId: string, sectionRepetition: number): boolean {
     const state = this.currentStateElements.filter(e => e.id === elementId);
-    if (state.length > 0) {
-      return state[0].disabled;
-    }
-    return false;
+    return state.length > 0 ? state[sectionRepetition].disabled : false;
   }
 
   public getProgressElement(elementId: string): ProgressElement | null {
     const element = this.progressState.currentStep.elements.filter(e => e.element.id === elementId);
-		if (element.length > 0) {
-			return element[0];
-		}
-		return null;
+    return element.length > 0 ? element[0] : null;
   }
 
 	public lastSection(state: ProgressState): boolean {
 		return state.afterSteps.length === 0;
 	}
 
-	public prevStep(): void {
-		this.store.dispatch(setPrevStep());
+	public prevStep(state: ProgressState): void {
+    const step = state.beforeSteps.length ? state.beforeSteps[0] : state.currentStep;
+
+		this.store.dispatch(setPrevStep({
+      payload: {
+        id: step.section.id, repetition: step.section.repetition,
+      },
+    }));
 	}
 
-	public nextStep(): void {
-		this.store.dispatch(setNextStep());
+	public nextStep(state: ProgressState): void {
+    const step = state.afterSteps.length ? state.afterSteps[0] : state.currentStep;
+
+    this.store.dispatch(setNextStep({
+      payload: {
+        id: step.section.id, repetition: step.section.repetition,
+      },
+    }));
 	}
 
+  // todo do we need this?
   getZoomFunction(isZoomable: boolean): any {
      if (true === isZoomable) {
        return ElementZoomFunctionEnum.IMAGE_PREVIEW;

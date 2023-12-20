@@ -15,7 +15,7 @@
             <ng-container *ngFor="let element of currentProductElements$ | async">
                 <div class="element" *ngIf="getProgressElement(element.id) as pElement">
                     <apto-slot-outlet
-                        *ngIf="!isElementDisabled(element.id)"
+                        *ngIf="!isElementDisabled(element.id, element.sectionRepetition)"
                         [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
                         [product]="product$ | async"
                         [section]="progressState.currentStep.section"
@@ -27,7 +27,7 @@
 
         <div class="step-navigation-container">
             <!--Obviously we want to hide the back button on the first step-->
-			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep()" color="accent" mat-flat-button>
+			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep(progressState)" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
 				<span>Zurück</span>
 			</button>
@@ -35,7 +35,7 @@
 			<button
 				*ngIf="!lastSection(progressState)"
 				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
-				(click)="nextStep()"
+				(click)="nextStep(progressState)"
 				color="primary"
 				mat-flat-button
 			>
