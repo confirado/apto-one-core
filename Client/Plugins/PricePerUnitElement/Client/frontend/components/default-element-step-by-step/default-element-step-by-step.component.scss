@@ -29,6 +29,7 @@
     .description {
         grid-area: description;
         @include description();
+        margin-top: var(--element-gap);
     }
 
     .apply-button {

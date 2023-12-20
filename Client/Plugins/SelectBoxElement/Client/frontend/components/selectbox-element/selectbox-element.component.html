@@ -4,6 +4,8 @@
      [class.open-in-dialog]="isDialog"
      [class.selected]="element.state.active"
 >
+    <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
     <div *ngIf="product.useStepByStep" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
@@ -81,4 +83,6 @@
             {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
         </button>
     </div>
+
+    <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>
