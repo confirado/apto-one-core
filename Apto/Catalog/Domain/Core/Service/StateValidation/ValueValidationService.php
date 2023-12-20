@@ -25,6 +25,8 @@ class ValueValidationService
     }
 
     /**
+     * Checks element value validity (values property in state)
+     *
      * @param ConfigurableProduct $product
      * @param State               $state
      *

@@ -7,27 +7,44 @@ use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
 class RuleValidationResult
 {
     /**
+     * Condition met
+     * Implication not done
+     *
      * @var Rule[]
      */
     protected $affected;
 
     /**
+     * Condition not met
+     * Implication not done
+     *
      * @var Rule[]
      */
     protected $inactive;
 
     /**
+     * Condition met
+     * Implication done
+     *
      * @var Rule[]
      */
     protected $fulfilled;
 
     /**
+     * Condition not met
+     * Implication not done
+     * Rule was not ignored as well
+     *
      * @var Rule[]
      */
     protected $failed;
 
     /**
-     * @var Rule[]
+     * Condition not met
+     * Implication not done
+     * Rule was among ignored rules
+     *
+     *  @var Rule[]
      */
     protected $ignored;
 

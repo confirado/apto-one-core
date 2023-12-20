@@ -15,7 +15,7 @@
             <ng-container *ngFor="let element of currentProductElements$ | async">
                 <div class="element" *ngIf="getProgressElement(element.id) as pElement">
                     <apto-slot-outlet
-                        *ngIf="!isElementDisabled(element.id)"
+                        *ngIf="!isElementDisabled(element.id, element.sectionRepetition)"
                         [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
                         [product]="product$ | async"
                         [section]="progressState.currentStep.section"

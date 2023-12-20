@@ -41,6 +41,7 @@ class RuleValidationService
         $failed = [];
         $ignored = [];
 
+        // ignoredRules is one of the parameters allowed in state together with quantity, see State class
         $ignoredRuleIds = $state->getParameter('ignoredRules');
 
         // @todo should be done in one operation because of heavy computing time for computed values
@@ -52,6 +53,7 @@ class RuleValidationService
         foreach ($ruleRepetitionService->getRules() as $rule) {
             if ($rule->isConditionFulfilled($state, $rulePayload)) {
                 $affected[] = $rule;
+
                 if ($rule->isImplicationFulfilled($state, $rulePayload)) {
                     $fulfilled[] = $rule;
                 } else {
@@ -100,6 +102,7 @@ class RuleValidationService
                 $testState = clone $state->getState();
 
                 // if element is not active, select it
+                // todo consider repetition if used
                 if (!$state->getState()->isElementActive($sectionId, $elementId)) {
                     $testState->setValue($sectionId, $elementId);
                 }
@@ -110,6 +113,7 @@ class RuleValidationService
                 // only check previously affected rules
                 foreach ($validationResult->getAffected() as $rule) {
                     if (!$rule->isSoft() && !$rule->isImplicationFulfilled($testState, $testRulePayload) && !$validationResult->containsFailed($rule)) {
+                        // todo consider repetition if used
                         $updatedState->setElementDisabled(
                             $sectionId,
                             $elementId
@@ -131,22 +135,25 @@ class RuleValidationService
      */
     public function updateDisabled(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult): EnrichedState
     {
+        // we iterate over affected rules (effected means condition met but not implicated) only because in these
+        // rules conditions are met, and we want to check here if implications are also ok
         foreach ($validationResult->getAffected() as $rule) {
             if ($rule->isSoft()) {
                 continue;
             }
 
             foreach ($rule->getImplication()->getCriteria() as $criterion) {
+                // we check and react only for not active implications as in this we need to disable the element, but when active then it is displayed in any case
                 if (!($criterion instanceof DefaultCriterion) || $criterion->getOperator()->getOperator() !== CompareOperator::NOT_ACTIVE) {
                     continue;
                 }
 
                 if ($criterion->getElementId()) {
-                    $state->setElementDisabled($criterion->getSectionId(), $criterion->getElementId());
-                } else {
+                    $state->setElementDisabled($criterion->getSectionId(), $criterion->getElementId(), true, $criterion->getRepetition());
+                } else { // this is the case when rule is applied to section only (see backend)
                     $elementIds = $product->getElementIds($criterion->getSectionId());
                     foreach ($elementIds as $elementId) {
-                        $state->setElementDisabled($criterion->getSectionId(), $elementId);
+                        $state->setElementDisabled($criterion->getSectionId(), $elementId, true, $criterion->getRepetition());
                     }
                 }
             }

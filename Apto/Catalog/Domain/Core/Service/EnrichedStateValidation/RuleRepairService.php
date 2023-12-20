@@ -4,9 +4,12 @@ namespace Apto\Catalog\Domain\Core\Service\EnrichedStateValidation;
 
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\EnrichedState\EnrichedState;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayloadFactory;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
+use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 
 class RuleRepairService
 {
@@ -16,11 +19,17 @@ class RuleRepairService
     private $ruleValidationService;
 
     /**
+     * @var RulePayloadFactory
+     */
+    private RulePayloadFactory $rulePayloadFactory;
+
+    /**
      * Constructor
      */
-    public function __construct(RuleValidationService $ruleValidationService)
+    public function __construct(RuleValidationService $ruleValidationService, RulePayloadFactory $rulePayloadFactory)
     {
         $this->ruleValidationService = $ruleValidationService;
+        $this->rulePayloadFactory = $rulePayloadFactory;
     }
 
     /**
@@ -30,15 +39,18 @@ class RuleRepairService
      * @param array|null $operatorsToFulfill
      * @return RuleValidationResult
      * @throws InvalidUuidException
-     * @throws \Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException
+     * @throws CircularReferenceException
      */
     public function repairState(ConfigurableProduct $product, State $state, int $maxTries = 10, ?array $operatorsToFulfill = null): RuleValidationResult
     {
         while(true) {
             // get failed rules
             $validationResult = $this->ruleValidationService->validateState($product, $state);
-            if (count($validationResult->getFailed()) === 0 || $maxTries <= 0)
+
+            // if even one rule is not valid, or we have exited $maxTries count then stop and return
+            if (count($validationResult->getFailed()) === 0 || $maxTries <= 0) {
                 break;
+            }
 
             // fulfill first failed rule
             $state = $validationResult->getFailed()[0]->fulfill($product, $state, $operatorsToFulfill);
@@ -74,86 +86,99 @@ class RuleRepairService
     }
 
     /**
-     * @param ConfigurableProduct $product
-     * @param EnrichedState $enrichedState
+     * @param ConfigurableProduct  $product
+     * @param EnrichedState        $enrichedState
      * @param RuleValidationResult $validationResult
+     *
+     * @return void
      * @throws InvalidUuidException
+     * @throws CircularReferenceException
+     * @throws RepeatableValidationException
      */
-    public function selectEmptySections(ConfigurableProduct $product, EnrichedState $enrichedState, RuleValidationResult $validationResult)
+    public function selectEmptySections(ConfigurableProduct $product, EnrichedState $enrichedState, RuleValidationResult $validationResult): void
     {
         $enrichedState = $this->ruleValidationService->updateDisabled($product, $enrichedState, $validationResult);
+        $rulePayload = $this->rulePayloadFactory->getPayload($product, $enrichedState->getState(), false);
 
         foreach ($product->getSections() as $section) {
             $sectionId = new AptoUuid($section['id']);
             $elementIds = $product->getElementIds($sectionId);
 
-            // skip specific sections
-            if (
-                $section['isHidden'] ||
-                !$section['isMandatory'] ||
-                $section['allowMultiple'] ||
-                $enrichedState->isSectionDisabled($sectionId, $elementIds) ||
-                $enrichedState->getState()->isSectionActive($sectionId)
-            ) {
-                continue;
+            $sectionCount = 1;
+            if ($product->isSectionRepeatable($sectionId)) {
+                $sectionCount = $product->getSectionRepetitionCount($sectionId, $rulePayload);
             }
 
-            foreach ($section['elements'] as $element) {
-                $elementId = new AptoUuid($element['id']);
-                $staticValues = $element['definition']['staticValues'];
-                $elementDefinitionId = $staticValues['aptoElementDefinitionId'] ?? null;
-
-                if ($enrichedState->isElementDisabled($sectionId, $elementId)) {
+            for($repetition = 0; $repetition < $sectionCount; $repetition++) {
+                // skip specific sections
+                if (
+                    $section['isHidden'] ||
+                    !$section['isMandatory'] ||
+                    $section['allowMultiple'] ||
+                    $enrichedState->isSectionDisabled($sectionId, $elementIds, $repetition) ||
+                    $enrichedState->getState()->isSectionActive($sectionId, $repetition)
+                ) {
                     continue;
                 }
 
-                switch ($elementDefinitionId) {
+                foreach ($section['elements'] as $element) {
+                    $elementId = new AptoUuid($element['id']);
+                    $staticValues = $element['definition']['staticValues'];
+                    $elementDefinitionId = $staticValues['aptoElementDefinitionId'] ?? null;
 
-                    // DEFAULT_ELEMENT
-                    case 'apto-element-default-element': {
-                        $enrichedState->getState()->setValue($sectionId, $elementId);
-                        break;
+                    if ($enrichedState->isElementDisabled($sectionId, $elementId, $repetition)) {
+                        continue;
                     }
 
-                    // PRICE_PER_UNIT_ELEMENT
-                    case 'apto-element-price-per-unit' : {
-                        if (!($staticValues['textBoxEnabled'] ?? false)) {
-                            $enrichedState->getState()->setValue(
-                                $sectionId,
-                                $elementId,
-                                'active',
-                                true
-                            );
+                    switch ($elementDefinitionId) {
+
+                        // DEFAULT_ELEMENT
+                        case 'apto-element-default-element': {
+                            $enrichedState->getState()->setValue($sectionId, $elementId, null, null, $repetition);
+                            break;
                         }
-                        break;
-                    }
 
-                    // SELECT_BOX_ELEMENT
-                    case 'apto-element-select-box': {
-                        if ($staticValues['defaultItem'] ?? null) {
-                            $enrichedState->getState()->setValue(
-                                $sectionId, $elementId, 'aptoElementDefinitionId', 'apto-element-select-box'
-                            );
-                            $enrichedState->getState()->setValue(
-                                $sectionId, $elementId, 'boxes', [$staticValues['defaultItem']]
-                            );
-                            $enrichedState->getState()->setValue(
-                                $sectionId, $elementId, 'selectedItem', $staticValues['defaultItem']['id']
-                            );
-                            $enrichedState->getState()->setValue(
-                                $sectionId, $elementId, 'id', $staticValues['defaultItem']['id']
-                            );
-                            $enrichedState->getState()->setValue(
-                                $sectionId, $elementId, 'name', $staticValues['defaultItem']['name']
-                            );
+                        // PRICE_PER_UNIT_ELEMENT
+                        case 'apto-element-price-per-unit' : {
+                            if (!($staticValues['textBoxEnabled'] ?? false)) {
+                                $enrichedState->getState()->setValue(
+                                    $sectionId,
+                                    $elementId,
+                                    'active',
+                                    true,
+                                    $repetition,
+                                );
+                            }
+                            break;
                         }
+
+                        // SELECT_BOX_ELEMENT
+                        case 'apto-element-select-box': {
+                            if ($staticValues['defaultItem'] ?? null) {
+                                $enrichedState->getState()->setValue(
+                                    $sectionId, $elementId, 'aptoElementDefinitionId', 'apto-element-select-box', $repetition
+                                );
+                                $enrichedState->getState()->setValue(
+                                    $sectionId, $elementId, 'boxes', [$staticValues['defaultItem']], $repetition
+                                );
+                                $enrichedState->getState()->setValue(
+                                    $sectionId, $elementId, 'selectedItem', $staticValues['defaultItem']['id'], $repetition
+                                );
+                                $enrichedState->getState()->setValue(
+                                    $sectionId, $elementId, 'id', $staticValues['defaultItem']['id'], $repetition
+                                );
+                                $enrichedState->getState()->setValue(
+                                    $sectionId, $elementId, 'name', $staticValues['defaultItem']['name'], $repetition
+                                );
+                            }
+                            break;
+                        }
+                    }
+
+                    // if the current element was selected we break because we only want automatic select one element in every section
+                    if ($enrichedState->getState()->isElementActive($sectionId, $elementId, $repetition)) {
                         break;
                     }
-                }
-
-                // if the current element was selected we break because we only want automatic select one element in every section
-                if ($enrichedState->getState()->isElementActive($sectionId, $elementId)) {
-                    break;
                 }
             }
         }

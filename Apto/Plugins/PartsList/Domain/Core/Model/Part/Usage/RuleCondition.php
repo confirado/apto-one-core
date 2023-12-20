@@ -208,6 +208,7 @@ class RuleCondition extends AptoEntity
             return false;
         }
 
+        // todo consider repetition here. check isFulfilled from Defaultcriterion class
         if (null !== $this->property) {
             $value = $state->getValue($sectionId, $elementId, $this->property);
         } else if (null !== $this->elementId) {

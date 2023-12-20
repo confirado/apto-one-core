@@ -13,11 +13,35 @@ class EnrichedState implements \JsonSerializable
     protected $state;
 
     /**
+     * "disabled" => [
+     *    "(sectionId) b11e0bdb-be88-4411-a82d-5961228acfae" => [
+     *       "(repetition) 0" => [
+     *          "(elementId) ac314161-4b65-4ced-9475-10dee56d01ea" => true,
+     *          "(elementId) ac314161-4b65-4ced-9475-10dee56d01ll" => false,
+     *       ],
+     *       "repetition 1" ...
+     *       "repetition 2" ...
+     *    ],
+     *    "sectionId" => [
+     *      "repetition 0" => [
+     *          elementId,
+     *          ...
+     *      ],
+     *      "repetition 1" => [
+     *          elementId,
+     *          ...
+     *      ],
+     *      ...
+     *    ]
+     * ]
+     *
      * @var array
      */
     protected $disabled;
 
     /**
+     * The structure is similar to "disabled"
+     *
      * @var array
      */
     protected $complete;
@@ -41,16 +65,19 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
-     * we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
+     * Repetition sections now can be enabled or disabled separate from each other
      *
      * @param AptoUuid $sectionId
-     * @param array $elementIds
+     * @param array    $elementIds
+     * @param int      $repetition
+     *
      * @return bool
      */
-    public function isSectionDisabled(AptoUuid $sectionId, array $elementIds): bool
+    public function isSectionDisabled(AptoUuid $sectionId, array $elementIds, int $repetition = 0): bool
     {
         foreach ($elementIds as $elementId) {
-            if (!$this->isElementDisabled($sectionId, $elementId)) {
+            // The section cannot be considered as disabled if it contains even one enabled element
+            if (!$this->isElementDisabled($sectionId, $elementId, $repetition)) {
                 return false;
             }
         }
@@ -59,42 +86,60 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
-     *  we do not consider here repetition as repetition sections cannot be enabled or disabled separate from each other
-     *
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
+     * @param AptoUuid $sectionUuId
+     * @param AptoUuid $elementUuId
+     * @param int      $repetition
      *
      * @return bool
      */
-    public function isElementDisabled(AptoUuid $sectionId, AptoUuid $elementId): bool
+    public function isElementDisabled(AptoUuid $sectionUuId, AptoUuid $elementUuId, int $repetition = 0): bool
     {
-        $section = $sectionId->getId();
-        $element = $elementId->getId();
+        $sectionId = $sectionUuId->getId();
+        $elementId = $elementUuId->getId();
 
-        return $this->disabled[$section][$element] ?? false;
+        return $this->disabled[$sectionId][$repetition][$elementId] ?? false;
     }
 
     /**
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
-     * @param bool $disabled
+     * @param AptoUuid $sectionUuId
+     * @param AptoUuid $elementUuId
+     * @param int      $repetition
+     * @param bool     $disabled
+     *
      * @return $this
      */
-    public function setElementDisabled(AptoUuid $sectionId, AptoUuid $elementId, bool $disabled = true): self
+    public function setElementDisabled(AptoUuid $sectionUuId, AptoUuid $elementUuId, bool $disabled = true, int $repetition = 0): self
     {
-        $section = $sectionId->getId();
-        $element = $elementId->getId();
+        $sectionId = $sectionUuId->getId();
+        $elementId = $elementUuId->getId();
 
         if ($disabled) {
             // create branch if needed
-            if (!array_key_exists($section, $this->disabled)) {
-                $this->disabled[$section] = [];
+            if (!array_key_exists($sectionId, $this->disabled)) {
+                $this->disabled[$sectionId] = [];
             }
-            $this->disabled[$section][$element] = true;
+
+            if (!isset($this->disabled[$sectionId][$repetition])) {
+                $this->disabled[$sectionId][$repetition] = [];
+            }
+
+            $this->disabled[$sectionId][$repetition][$elementId] = true;
         } else {
-            unset($this->disabled[$section][$element]);
-            if (!$this->disabled[$section]) {
-                unset($this->disabled[$section]);
+            unset($this->disabled[$sectionId][$repetition][$elementId]);
+
+            // if no elements in that repetition anymore
+            if (isset($this->disabled[$sectionId][$repetition]) && count($this->disabled[$sectionId][$repetition]) < 1) {
+                unset($this->disabled[$sectionId][$repetition]);
+
+                // if no other repetitions in that section then make the whole section not disabled
+                if (isset($this->disabled[$sectionId]) && count($this->disabled[$sectionId]) < 1) {
+                    unset($this->disabled[$sectionId]);
+                }
+            }
+
+            // if no other repetitions in that section then make the whole section not disabled
+            if (isset($this->disabled[$sectionId]) && count($this->disabled[$sectionId]) < 1) {
+                unset($this->disabled[$sectionId]);
             }
         }
 
@@ -140,20 +185,20 @@ class EnrichedState implements \JsonSerializable
     }
 
     /**
-     * @param AptoUuid $sectionId
+     * @param AptoUuid $sectionUuId
      * @param bool     $complete
      * @param int      $repetition
      *
      * @return $this
      */
-    public function setSectionComplete(AptoUuid $sectionId, bool $complete = true, int $repetition = 0): self
+    public function setSectionComplete(AptoUuid $sectionUuId, bool $complete = true, int $repetition = 0): self
     {
-        $section = $sectionId->getId();
+        $sectionId = $sectionUuId->getId();
 
         if ($complete) {
-            $this->complete[$section][$repetition] = true;
+            $this->complete[$sectionId][$repetition] = true;
         } else {
-            unset ($this->complete[$section][$repetition]);
+            unset ($this->complete[$sectionId][$repetition]);
         }
 
         return $this;
@@ -170,5 +215,4 @@ class EnrichedState implements \JsonSerializable
             'complete' => $this->complete
         ];
     }
-
 }
