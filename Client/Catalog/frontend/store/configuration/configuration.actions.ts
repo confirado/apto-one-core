@@ -102,7 +102,7 @@ export const getCurrentRenderImageSuccess = createAction(ConfigurationActionType
 
 export const getRenderImagesSuccess = createAction(ConfigurationActionTypes.GetRenderImagesSuccess, props<{ payload: any }>());
 
-export const setPrevStep = createAction(ConfigurationActionTypes.SetPrevStep);
+export const setPrevStep = createAction(ConfigurationActionTypes.SetPrevStep, props<{ payload: CurrentSection | null }>());
 
 export const setPrevStepSuccess = createAction(ConfigurationActionTypes.SetPrevStepSuccess);
 
@@ -111,7 +111,7 @@ export const humanReadableStateLoadSuccess = createAction(
 	props<{ payload: any }>()
 );
 
-export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep);
+export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep, props<{ payload: CurrentSection | null }>());
 
 export const setStep = createAction(ConfigurationActionTypes.SetStep, props<{ payload: CurrentSection | null }>());
 
