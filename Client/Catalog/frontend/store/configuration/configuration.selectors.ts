@@ -1,6 +1,7 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
+  PartsListPart,
   ProgressState,
   ProgressStep,
   RenderImage,
@@ -460,3 +461,7 @@ function sectionIsValid(section, elements) {
   // section is valid
   return true;
 }
+
+export const selectPartsList = createSelector(featureSelector, (state: CatalogFeatureState): PartsListPart[] => {
+  return state.configuration.partsList;
+});
