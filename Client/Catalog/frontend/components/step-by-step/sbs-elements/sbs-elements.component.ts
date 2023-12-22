@@ -3,7 +3,7 @@ import { setNextStep, setPrevStep } from '@apto-catalog-frontend/store/configura
 import {
   ElementState,
   ProgressElement,
-  ProgressState,
+  ProgressState, SectionTypes,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
   configurationIsValid,
@@ -31,6 +31,7 @@ export class SbsElementsComponent implements OnInit{
   private currentStateElements: ElementState[] = null;
 	private progressState: ProgressState = null;
   protected stepPositions: number[] = [];
+  protected readonly SectionTypes = SectionTypes;
 
 	public constructor(private store: Store) {}
 
@@ -90,6 +91,10 @@ export class SbsElementsComponent implements OnInit{
       },
     }));
 	}
+
+  protected get sectionIndex(): string {
+    return this.progressState.currentStep.section.repeatableType === SectionTypes.WIEDERHOLBAR ? `${this.progressState.currentStep.section.repetition + 1}` : '';
+  }
 
   // todo do we need this?
   getZoomFunction(isZoomable: boolean): any {

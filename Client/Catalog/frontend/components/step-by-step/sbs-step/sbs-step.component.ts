@@ -133,6 +133,10 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  protected get sectionIndex(): string {
+    return this.section.section.repeatableType === SectionTypes.WIEDERHOLBAR ? `${this.section.section.repetition + 1}` : '';
+  }
+
   public getElementValues(element: Element, section: ProgressStep): Observable<TranslatedValue[] | null | undefined> {
     const elementWithRepetition = { ...element, ...{ sectionRepetition: section.section.repetition } };
 

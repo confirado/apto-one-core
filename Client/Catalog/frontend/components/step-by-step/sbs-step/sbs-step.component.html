@@ -13,7 +13,7 @@
             </div>
             <div *ngIf="last" class="white-overlay"></div>
             <div (click)="setStep(section, product.seoUrl, product.useStepByStep)" class="step" [class.select]="isSectionSelectable()">
-                <div class="title"> {{ section.section.name | translate }} {{ section.section.repeatableType === SectionTypes.WIEDERHOLBAR ? (section.section.repetition + 1) : '' }}</div>
+                <div class="title"> {{ section.section.name | translate }} {{ sectionIndex }}</div>
                 <div *ngFor="let element of section.elements">
                     <div class="elements" *ngIf="element.state.active">
                         <span class="element-title"> {{ element.element.name | translate }} </span>

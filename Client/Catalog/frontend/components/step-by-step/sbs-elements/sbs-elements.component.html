@@ -7,7 +7,7 @@
 				[previewImage]="progressState.currentStep.section.previewImage"
 				[isZoomable]="progressState.currentStep.section.isZoomable"
 			></apto-section-picture>
-			<h2 class="title">{{ progressState.currentStep.section.name | translate }}</h2>
+			<h2 class="title">{{ progressState.currentStep.section.name | translate }} {{ sectionIndex }}</h2>
 			<div class="description" [innerHTML]="progressState.currentStep.section.description | translate | safeHtml"></div>
 		</div>
 
