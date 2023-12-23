@@ -10,7 +10,9 @@ export interface AbstractPage {
 export interface IPage {
   visit(): void;
   isCorrectPage(): void;
+  hasCorrectPageContent(): void;
   initialQueryList: IRequestData[];
   initialCommandList: IRequestData[];
   initialCustomRequestList: IRequestData[];
+  initialRequests: IRequestData[];
 }
