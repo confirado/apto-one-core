@@ -1,9 +1,14 @@
-import { HttpRequestTypes, IRequestData } from './Models';
+import { HttpRequestTypes, IRequestData, RequestTypes } from './Models';
+import { AddPropertiesToReturnValueForClass } from './decorators';
 
 /*
   Here we write custom requests that are neither query or command
 */
+
+@AddPropertiesToReturnValueForClass(['type'])
 export class Requests {
+
+  public static type = RequestTypes.REQUEST;
 
   /**
    * Called on login page right after successfull login

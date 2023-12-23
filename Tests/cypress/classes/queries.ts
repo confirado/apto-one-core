@@ -1,15 +1,11 @@
-import { HttpRequestTypes, IRequestData } from './Models';
-import { RequestTypes } from './requestHandler';
-import { AddPropertiesToReturnValue, AddPropertiesToReturnValueForClass } from './decorators';
+import { HttpRequestTypes, IRequestData, RequestTypes } from './Models';
+import { AddPropertiesToReturnValueForClass } from './decorators';
 
 @AddPropertiesToReturnValueForClass(['endpoint', 'method', 'type'])
 export class Queries {
-
   public static endpoint = 'message-bus/query';
   public static method = HttpRequestTypes.POST;
   public static type = RequestTypes.QUERY;
-
-
 
   public static get FindShopContext(): IRequestData {
     return {

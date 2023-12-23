@@ -11,11 +11,18 @@ export enum HttpRequestTypes {
   GET = 'get',
 }
 
+export enum RequestTypes {
+  QUERY = 'query',
+  COMMAND = 'command',
+  REQUEST = 'request',
+}
+
 export interface IRequestData {
   alias: string,
-  endpoint?: string,
   payload?: Payload,
+  endpoint?: string,
   method?: HttpRequestTypes,
+  type?: RequestTypes,
   // expectedResponse?: MessageBusResponse<any>
 }
 
