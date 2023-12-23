@@ -1,54 +1,101 @@
-import { CustomInterceptionResponse, IRequestData } from './Models';
 import { CyHttpMessages, Interception } from 'cypress/types/net-stubbing';
-import { Queries } from './queries';
-import { Commands } from './commands';
-import { Requests } from './requests';
-
-// eslint-disable-next-line no-shadow
-export enum RequestTypes {
-  QUERY = 'query',
-  COMMAND = 'command',
-  REQUEST = 'request',
-}
+import { IRequestData, RequestTypes } from './Models';
 
 export class RequestHandler {
 
-  public static interceptQuery(aliasName: string): void {
-    cy.intercept(Queries.method, `**/${Queries.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
-      RequestHandler.setAlias(req, aliasName, RequestTypes.QUERY);
-    });
-  }
+  /**
+   * Creates cypress intercept for requests
+   *
+   * @link https://docs.cypress.io/api/commands/intercept
+   *
+   * @param request
+   */
+  public static intercept(request: IRequestData): void {
+    if (request.type === RequestTypes.QUERY || request.type === RequestTypes.COMMAND) {
+      request.endpoint = `**/${request.endpoint}*`;
+    }
 
-  public static interceptCommand(aliasName: string): void {
-    cy.intercept(Commands.method, `**/${Commands.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
-      RequestHandler.setAlias(req, aliasName, RequestTypes.COMMAND);
-    });
-  }
-
-  public static interceptRequest(request: IRequestData): void {
     cy.intercept(request.method, request.endpoint).as(request.alias);
   }
 
+  /**
+   * Creates cypress intercept for "apto" queries
+   *
+   * @link https://docs.cypress.io/api/commands/intercept
+   *
+   * @param request
+   */
+  public static interceptQuery(request: IRequestData): void {
+    cy.intercept(request.method, `**/${request.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
+      RequestHandler.setAlias(req, request.alias, RequestTypes.QUERY);
+    });
+  }
+
+  /**
+   * Creates cypress intercept for requests
+   *
+   * @link https://docs.cypress.io/api/commands/intercept
+   *
+   * @param request
+   */
+  public static interceptCommand(request: IRequestData): void {
+    cy.intercept(request.method, `**/${request.endpoint}*`, (req: CyHttpMessages.IncomingRequest) => {
+      RequestHandler.setAlias(req, request.alias, RequestTypes.COMMAND);
+    });
+  }
+
+  /**
+   * Request are not a common type like command or query and can be anything
+   *
+   * @param request
+   */
+  public static interceptRequest(request: IRequestData): void {
+    RequestHandler.intercept(request);
+  }
+
+  /**
+   * Registers interceptors for the given request list
+   *
+   * @link https://docs.cypress.io/api/commands/intercept
+   *
+   * @param requests
+   */
+  public static registerInterceptions(requests: IRequestData[]): void {
+    requests.forEach((request) => {
+      switch (request.type) {
+        case RequestTypes.QUERY:
+          RequestHandler.interceptQuery(request);
+          break;
+        case RequestTypes.COMMAND:
+          RequestHandler.interceptCommand(request);
+          break;
+        case RequestTypes.REQUEST:
+          RequestHandler.interceptRequest(request);
+          break;
+      }
+    });
+  }
+
+  /**
+   * Brings string to cypress alias name format
+   *
+   * @param alias
+   */
   public static toAliasName(alias: string): string {
     return `@${alias}`;
   }
 
-  public static registerInterceptions(list: IRequestData[]): void {
-
-    // console.error('list')
-    // console.log(list)
-
-    // Login.initialQueryList.forEach((request) => RequestHandler.interceptQuery(request.alias));
-    // Login.initialCommandList.forEach((request) => RequestHandler.interceptCommand(request.alias));
-    // Login.initialCustomRequestList.forEach((request) => RequestHandler.interceptRequest(request));
-  }
-
-  public static getAliasListFromQueryCommandList(queryCommandList: IRequestData[]): string[] {
-    return queryCommandList.map((data) => RequestHandler.toAliasName(data.alias));
-  }
-
-  public static getWaitList(): string[] {
-    return [];
+  /**
+   * Creates alias array
+   *
+   * this is need for cypress "wait" method as argument in interceptions
+   *
+   * Example: ['@FindCurrentUser', '@FindLanguages', '@messagesIsGranted']
+   *
+   * @param requests
+   */
+  public static getAliasesFromRequests(requests: IRequestData[]): string[] {
+    return requests.map((data) => RequestHandler.toAliasName(data.alias));
   }
 
   /**
@@ -57,7 +104,7 @@ export class RequestHandler {
    * @link https://docs.cypress.io/guides/end-to-end-testing/working-with-graphql#Alias-multiple-queries-or-mutations
    *
    * @param req
-   * @param operationName
+   * @param operationName for example 'FindCurrentUser'
    * @param action
    * @private
    */
@@ -68,9 +115,22 @@ export class RequestHandler {
   }
 
   /**
-   * Checks that the command or the query it one we are looking for
+   * Before giving an alias name for the request, we use this method to onne more time check if we assign the alias to
+   * the correct request. We wait until the request is done, then we add our alis to that request.
+   * req argument here comes from cypress and includes all the data from request. If everything is correct, then our
+   * alias must be in request's body. For example, for queries request's body looks like this:
+   *
+   * body:
+   *   arguments: []
+   *   query: "FindLanguages"
+   *
+   * therefore, we first check if the request type is correct, and then we check if it has the correct alias name
    *
    * example check: body.query = FindContentSnippetTree
+   *
+   * So why we do that? We could directly give an alias:
+   *    cy.intercept(request.method, request.endpoint).as(request.alias);
+   * The reason is that it allows us to some extra stuff between sending and receiving the request when we call a callback like that
    *
    * @param req
    * @param operationName example FindContentSnippetTree
@@ -82,7 +142,7 @@ export class RequestHandler {
     return (Object.prototype.hasOwnProperty.call(body, action) && body[action] === operationName);
   }
 
-  public static hasResponseError(interception: Interception<CustomInterceptionResponse<any>>): boolean {
+  public static hasResponseError(interception: Interception): boolean {
     const { response } = interception;
     return response.body.message.error;
   }
