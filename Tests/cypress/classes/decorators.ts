@@ -1,132 +1,75 @@
-// decorators.ts
-export function AddPropertiesToReturnValue(target: any, key: string, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value || descriptor.get;
+/**
+ * When applied to a class method it returns some extra methods from the class joined with the origin methods data
+ *
+ * Example: @AddPropertiesToReturnValue(['endpoint', 'method', 'type'])
+ *
+ * @param properties
+ * @constructor
+ */
+export function AddPropertiesToReturnValue(properties: string[]) {
+  return function (target: any, key: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value || descriptor.get;
 
-  if (!originalMethod) {
-    throw new Error('Unsupported method type. Please ensure that the method is a function or getter.');
-  }
-
-  if (descriptor.value) {
-    descriptor.value = function (...args: any[]) {
-      // Call the original method
-      const originalResult = originalMethod.apply(this, args);
-
-      // Add extra properties to the result
-      return {
-        ...originalResult,
-        endpoint: target.endpoint,
-        method: target.method,
-        type: target.type,
-      };
-    };
-  } else if (descriptor.get) {
-    descriptor.get = function () {
-      // Call the original getter
-      const originalResult = originalMethod.call(this);
-
-      // Add extra properties to the result
-      return {
-        ...originalResult,
-        endpoint: target.endpoint,
-        method: target.method,
-        type: target.type,
-      };
-    };
-  }
-
-  Object.defineProperty(target, key, descriptor);
-}
-
-
-
-
-// decorators.ts
-export function AddPropertiesToReturnValueForClass1(target: any) {
-  const methodDecorator = (originalMethod: Function | undefined) => {
     if (!originalMethod) {
       throw new Error('Unsupported method type. Please ensure that the method is a function or getter.');
     }
 
-    return function (...args: any[]) {
-      // Call the original method
-      const originalResult = originalMethod.apply(this, args);
+    if (descriptor.value) {
+      descriptor.value = function (...args: any[]) {
+        const originalResult = originalMethod.apply(this, args);
 
-      // Add extra properties to the result
-      return {
-        ...originalResult,
-        endpoint: target.endpoint,
-        method: target.method,
-        type: target.type,
+        const extraProperties = properties.reduce((acc, propName) => {
+          acc[propName] = target[propName];
+          return acc;
+        }, {});
+
+        return {
+          ...originalResult,
+          ...extraProperties,
+        };
       };
-    };
-  };
+    } else if (descriptor.get) {
+      descriptor.get = function () {
+        const originalResult = originalMethod.call(this);
 
-  // Get all method and property names of the class
-  const keys = Object.getOwnPropertyNames(target)
-    .concat(Object.getOwnPropertyNames(target.prototype));
+        const extraProperties = properties.reduce((acc, propName) => {
+          acc[propName] = target[propName];
+          return acc;
+        }, {});
 
-  console.error('target')
-  console.dir(target, {depth: null})
-
-  // console.error('keys')
-  // console.log(keys)
-
-  console.error('Object.getOwnPropertyNames(target)')
-  console.log(Object.getOwnPropertyNames(target))
-
-  console.error('Object.getOwnPropertyNames(target.prototype)')
-  console.log(Object.getOwnPropertyNames(target.prototype))
-
-  console.error('Object.getOwnPropertyNames(target.prototype)')
-  console.log(Object.getOwnPropertyDescriptors(target))
-
-  console.log(target.endpoint)
-  console.log(target.method)
-  console.log(target.type)
-
-
-  // Apply the decorator to each method
-  keys.forEach(key => {
-    const originalMethod = Object.getOwnPropertyDescriptor(target.prototype, key)?.value;
-    const originalGetter = Object.getOwnPropertyDescriptor(target.prototype, key)?.get;
-
-    // console.error('originalMethod')
-    // console.log(originalMethod)
-    //
-    // console.error('originalGetter')
-    // console.log(originalGetter)
-
-
-    if (originalMethod) {
-      target.prototype[key] = methodDecorator(originalMethod);
-    } else if (originalGetter) {
-      Object.defineProperty(target.prototype, key, {
-        get: methodDecorator(originalGetter),
-      });
+        return {
+          ...originalResult,
+          ...extraProperties,
+        };
+      };
     }
-  });
+
+    Object.defineProperty(target, key, descriptor);
+  };
 }
 
-// decorators.ts
+/**
+ * When calling static getters of the class, this decorator adds some additional properties from class that we give as argument
+ *
+ * example of usage: @AddPropertiesToReturnValueForClass(['endpoint', 'method', 'type'])
+ *
+ * this helps us to save our time and not write in each method some static data
+ *
+ * this is working currently only for static getter methods of the class. if you want to read also non-static getters,
+ * then read the data from "target.prototype": target.prototype[key] = methodDecorator(dataProperty);
+ *
+ * @param propertiesToInclude
+ * @constructor
+ */
 export function AddPropertiesToReturnValueForClass(propertiesToInclude: string[]) {
-  const classInternalProperties = ['length', 'name', 'prototype'];
-
-  console.log('arguments')
-  console.dir(arguments)
-
   return function (target: any, ...args: any[]) {
     const methodDecorator = (originalMethod: Function | undefined) => {
-      if (!originalMethod) {
-        throw new Error('Unsupported method type. Please ensure that the method is a function or getter.');
-      }
-
       return function (...methodArgs: any[]) {
-        // Call the original method
         const originalResult = originalMethod.apply(this, methodArgs);
 
         // Add specified properties to the result
         const additionalProperties: Record<string, any> = {};
-        propertiesToInclude.forEach(prop => {
+        propertiesToInclude.forEach((prop) => {
           additionalProperties[prop] = target[prop];
         });
 
@@ -137,49 +80,21 @@ export function AddPropertiesToReturnValueForClass(propertiesToInclude: string[]
       };
     };
 
+    Object.getOwnPropertyNames(target).forEach((key) => {
+      const dataProperty = Object.getOwnPropertyDescriptor(target, key)?.value;
+      const accessorProperty = Object.getOwnPropertyDescriptor(target, key)?.get;
 
-    // Apply the decorator to each method
-    Object.getOwnPropertyNames(target).forEach(key => {
-      console.error('-------------------------------------------')
-      console.log(key)
-      console.log(Object.getOwnPropertyDescriptor(target, key))
-
-      const valueProperty = Object.getOwnPropertyDescriptor(target, key)?.value;
-      const getProperty = Object.getOwnPropertyDescriptor(target, key)?.get;
-
-      if (classInternalProperties.includes(key)) {
-        // return;
+      // todo this is not good tested as not needed yet!
+      if (dataProperty) {
+        target.prototype[key] = methodDecorator(dataProperty);
       }
 
-
-      if (valueProperty) {
-        console.error('descriptor value')
-        console.dir(Object.getOwnPropertyDescriptor(target, key))
-      }
-
-      if (getProperty && typeof getProperty === 'function') {
-        console.error('descriptor get')
-        console.dir(Object.getOwnPropertyDescriptor(target, key))
-      }
-
-
-
-      // console.log('valueProperty')
-      // console.log(valueProperty)
-      //
-      // console.log('getterProperty')
-      // console.log(getterProperty)
-
-      if (valueProperty) {
-        target.prototype[key] = methodDecorator(valueProperty);
-      } else if (getProperty) {
-        Object.defineProperty(target.prototype, key, {
-          get: methodDecorator(getProperty),
+      // if we have a getter property, we define a new getter method with that name (we overwrite the existing)
+      if (accessorProperty) {
+        Object.defineProperty(target, key, {
+          get: methodDecorator(accessorProperty),
         });
       }
     });
   };
 }
-
-
-
