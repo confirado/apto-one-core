@@ -1,5 +1,5 @@
 import { Interception } from 'cypress/types/net-stubbing';
-import { IProductListResponse, ProductList } from '../../classes/product-list/product-list';
+import { IProductListResponse, ProductList } from '../../classes/pages/product-list/product-list';
 import { RequestHandler } from '../../classes/requestHandler';
 import { Common } from '../../classes/common';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
@@ -10,10 +10,7 @@ describe('Product list', () => {
   const baseUrl = Cypress.env('baseUrl');
 
   beforeEach(() => {
-    const requests = ProductList.initialQueryList;
-
-    requests.forEach((request) => RequestHandler.interceptQuery(request.alias));
-
+    RequestHandler.registerInterceptions(ProductList.initialRequests);
     ProductList.visit();
   });
 
@@ -22,7 +19,7 @@ describe('Product list', () => {
     ProductList.isCorrectPage();
 
     // if all requests are made
-    cy.wait(ProductList.initialAliasList).then(($response: Interception[]) => {
+    cy.wait(RequestHandler.getAliasesFromRequests(ProductList.initialRequests)).then(($response: Interception[]) => {
 
       // check also that incoming product data is in sync with displayed products
       $response.forEach(($query) => {
@@ -33,7 +30,7 @@ describe('Product list', () => {
 
           const result = $query.response.body.result as IProductListResponse;
 
-          // we should see in product list "numberOfRecords" amount of products
+          // In browser, we should see in product list "numberOfRecords" amount of products
           cy.get('.product-wrapper').should('have.length', result.numberOfRecords);
 
           result.data.forEach((product: Product) => {
@@ -53,7 +50,6 @@ describe('Product list', () => {
 
               // product title
               cy.wrap(productElement).find('.product-description').find('h3').should('not.be.empty');
-
 
               // product description
               if (Language.isTranslatedValueSet(product.description)) {
