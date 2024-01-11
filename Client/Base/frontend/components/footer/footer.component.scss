@@ -68,14 +68,10 @@ mat-toolbar {
 		justify-content: center;
 	}
 
-	.entries {
-		display: flex;
-		flex-direction: row;
-		gap: 40px;
-		justify-content: space-evenly;
-		flex-wrap: wrap;
-		padding: 10px;
-	}
+    .entries {
+        padding: 10px;
+    }
+
 	img {
 		width: auto;
 	}
