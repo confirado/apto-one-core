@@ -6,11 +6,12 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
   styleUrls: ['./login-close-button.component.scss']
 })
 export class LoginCloseButtonComponent implements OnInit {
-
-  @Input() inner = false;
-  @Output() clicked = new EventEmitter();
+  @Input()
+  public inner = false;
+  @Output()
+  public clicked = new EventEmitter();
 
   constructor() { }
 
-  ngOnInit(): void {}
+  public ngOnInit(): void {}
 }
