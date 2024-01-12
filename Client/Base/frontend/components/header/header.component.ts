@@ -5,9 +5,9 @@ import { selectLanguages, selectLocale } from '@apto-base-frontend/store/languag
 import { environment } from '@apto-frontend/src/environments/environment';
 import { Store } from '@ngrx/store';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
-import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
+import { selectArticleQuantity, selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
-import { login, logout } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
+import { logout } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
@@ -26,10 +26,13 @@ export class HeaderComponent {
 	locale$ = this.store.select(selectLocale);
 	languages$ = this.store.select(selectLanguages);
 	readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoLogo'));
-	mediaUrl = environment.api.media + '/';
+  readonly csLogin$ = this.store.select(selectContentSnippet('plugins.frontendUsers'));
+  readonly csLinksToShop$ = this.store.select(selectContentSnippet('aptoLinksToShop'));
+  mediaUrl = environment.api.media + '/';
   public connector: SelectConnector | null;
   public isLoggedIn: boolean;
   public loginActive: boolean;
+  public totalQuantity: number;
 
 	constructor(private store: Store, private dialogService: DialogService, private basketService: BasketService) {
     this.store.select(selectLocale).subscribe((locale) => {
@@ -40,6 +43,10 @@ export class HeaderComponent {
 
     this.store.select(selectConnector).subscribe((next) => {
       this.connector = next;
+    });
+
+    this.store.select(selectArticleQuantity).subscribe((result) => {
+      this.totalQuantity = result;
     });
 
     this.store.select(selectIsLoggedIn).subscribe((next) => {

@@ -20,3 +20,14 @@ export const selectConnector = createSelector(
     configured: state.shop.connector.configured
 	})
 );
+
+export const selectArticleQuantity = createSelector(featureSelector, (state: BaseFeatureState ) => {
+  let totalQuantity = 0;
+  let articles = state.shop.connector.basket.articles;
+
+  for (let i = 0; i < articles.length; i++) {
+    totalQuantity += articles[i].quantity;
+  }
+
+  return totalQuantity;
+});
