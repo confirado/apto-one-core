@@ -3,6 +3,7 @@
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
+     [class.with-circle]="section.allowMultiple || element.state.active"
 >
     <div *ngIf="section.allowMultiple || element.state.active" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
