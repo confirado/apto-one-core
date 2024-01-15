@@ -12,7 +12,7 @@ import {
 import { Page } from '@apto-catalog-frontend/models/pagination';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, PartsListPart, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { CompressedState, ComputedValues, PartsListPart, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -51,15 +51,15 @@ export class CatalogMessageBusService {
 		);
 	}
 
-	public findRenderImageByState(compressedState: any, perspective: string, productId: string): Observable<RenderImage[] | undefined> {
+	public findRenderImageByState(compressedState: CompressedState, perspective: string, productId: string): Observable<RenderImage[] | undefined> {
 		return this.query<RenderImage[] | undefined>('FindRenderImageByState', [compressedState, perspective, productId]);
 	}
 
-	public findRenderImagesByState(compressedState: any, perspectives: string[], productId: string): Observable<RenderImage[] | undefined> {
+	public findRenderImagesByState(compressedState: CompressedState, perspectives: string[], productId: string): Observable<RenderImage[] | undefined> {
 		return this.query<RenderImage[] | undefined>('FindRenderImagesByState', [compressedState, perspectives, productId]);
 	}
 
-	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+	public findPriceByState(productId: string, compressedState: CompressedState, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
     let customerGroupId = connector.customerGroup.id;
     if (currentUser !== null && connector.configured === false) {
       customerGroupId = currentUser.customerGroup.externalId
@@ -77,11 +77,11 @@ export class CatalogMessageBusService {
 		]);
 	}
 
-	public getPerspectives(compressedState: any, productId: string): Observable<string[]> {
+	public getPerspectives(compressedState: CompressedState, productId: string): Observable<string[]> {
 		return this.query('FindPerspectivesByState', [compressedState, productId]);
 	}
 
-	public findProductComputedValuesCalculated(productId: string, compressedState: any): Observable<ComputedValues> {
+	public findProductComputedValuesCalculated(productId: string, compressedState: CompressedState): Observable<ComputedValues> {
 		return this.query<ComputedValues>('FindProductComputedValuesCalculated', [productId, compressedState]);
 	}
 
@@ -89,11 +89,11 @@ export class CatalogMessageBusService {
 		return this.query<Page<SelectItem>>('FindSelectBoxItems', [elementId]);
 	}
 
-	public getConfigurationState(productId: string, compressedState: any, updates: any): Observable<unknown> {
+	public getConfigurationState(productId: string, compressedState: CompressedState, updates: any): Observable<unknown> {
 		return this.query('GetConfigurationState', [productId, compressedState, updates]);
 	}
 
-	public findHumanReadableState(productId: string, compressedState: any): Observable<any> {
+	public findHumanReadableState(productId: string, compressedState: CompressedState): Observable<any> {
 		return this.query('FindHumanReadableState', [productId, compressedState]);
 	}
 
@@ -119,7 +119,7 @@ export class CatalogMessageBusService {
 
 	public addBasketConfiguration(
 		productId: string,
-		compressedState: any,
+		compressedState: CompressedState,
 		sessionCookies: any,
 		locale: string | undefined,
 		quantity: number,
@@ -139,7 +139,7 @@ export class CatalogMessageBusService {
 
 	public addGuestConfiguration(
 		productId: string,
-		compressedState: any,
+		compressedState: CompressedState,
 		email: string,
 		name: string,
 		sendMail: boolean,
@@ -151,7 +151,7 @@ export class CatalogMessageBusService {
 
   public fetchPartsList(
     productId: string,
-    compressedState: any,
+    compressedState: CompressedState,
     currency: string,
     customerGroupExternalId: string
   ): Observable<PartsListPart[]> {

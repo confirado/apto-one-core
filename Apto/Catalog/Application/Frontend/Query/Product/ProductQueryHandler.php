@@ -159,7 +159,7 @@ class ProductQueryHandler implements QueryHandlerInterface
         // set configuration properties
         /** @var State $state */
         $state = $this->aptoJsonSerializer->jsonUnSerialize($configuration['state']);
-        $configuration['state'] =  $state->jsonSerialize();
+        $configuration['state'] =  $state->jsonSerialize()['state'];
         $configuration['productId'] = $configuration['product'][0]['id'];
         unset($configuration['product']);
         $configuration['type'] = $query->getType();

@@ -7,12 +7,49 @@ export enum SectionTypes {
   WIEDERHOLBAR = 'Wiederholbar'
 }
 
+// this should be in sync with State.php's ITEM_TYPES
+export enum StateItemTypes {
+  QUANTITY = 'quantity',
+  IGNORED_RULES = 'ignored_rules',
+  REPETITIONS = 'repetitions',
+}
+
+export const StateItemTypeDefaults = {
+  [StateItemTypes.QUANTITY]: 1,
+  [StateItemTypes.IGNORED_RULES]: [],
+  [StateItemTypes.REPETITIONS]: 1,
+}
+
 export interface HumanReadableState {
   elementId: string;
   repetition: number;
   sectionId: string;
   values: Array<{ [key: string]: TranslatedValue }>;
 }
+
+export interface ConfigurationState {
+  sectionId: string;
+  elementId: string;
+  sectionRepetition: number;
+  property?: any;
+  value: any;
+}
+
+export interface CompressedState {
+  parameters: { [key in StateItemTypes]?: any } | {},
+  state: HumanReadableState | any[],
+}
+
+export interface QuantityState {
+  quantity: number;
+}
+
+export interface RepetitionsState {
+  repetitions: number;
+  sectionId?: string;
+}
+
+export type AnyState = HumanReadableState | ConfigurationState | QuantityState | RepetitionsState;
 
 export interface CurrentSection {
   id: string;
@@ -46,7 +83,7 @@ export interface ElementState {
 }
 
 export interface Configuration {
-	compressedState: any;
+	compressedState: CompressedState;
 	sections: SectionState[];
 	elements: ElementState[];
   failedRules: any;
@@ -96,6 +133,7 @@ export interface ProgressStep {
 	active: boolean;
 	elements: ProgressElement[];
 }
+
 
 export interface ProgressState {
 	productId: string | undefined;
@@ -179,23 +217,11 @@ export interface GetConfigurationStateArguments {
 	productId: string;
 	compressedState: any;
 	updates: {
-		set?: {
-			sectionId: string;
-			elementId: string;
-      sectionRepetition?: number
-			property?: any;
-			value: any;
-		}[];
-		remove?: {
-			sectionId: string;
-			elementId: string;
-      sectionRepetition?: number
-      property?: any;
-			value: any;
-		}[];
+		set?: AnyState[];
+		remove?: AnyState[];
 	};
 	locale: string;
-	quantity: number;
+	quantity: number; // do we need here?
 	perspectives: string[];
 	additionalData: any;
 }

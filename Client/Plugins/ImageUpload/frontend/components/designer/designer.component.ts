@@ -567,6 +567,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
             updates: {
               remove: [
                 {
+                  sectionRepetition: 0,
                   sectionId: this.canvas.element.sectionId,
                   elementId: this.canvas.element.elementId,
                   property: null,
@@ -644,11 +645,13 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
             updateConfigurationState({
               updates: {
                 set: [{
+                  sectionRepetition: 0,
                   sectionId: this.canvas.element.sectionId,
                   elementId: this.canvas.element.elementId,
                   property: 'aptoElementDefinitionId',
                   value: 'apto-element-image-upload',
                 }, {
+                  sectionRepetition: 0,
                   sectionId: this.canvas.element.sectionId,
                   elementId: this.canvas.element.elementId,
                   property: 'payload',

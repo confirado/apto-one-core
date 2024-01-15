@@ -442,6 +442,7 @@ class SimplePriceCalculator implements PriceCalculator
         $values = array_merge($this->computedValues, [
             '_anzahl_' => $this->state->getParameter(State::QUANTITY)
         ]);
+
         try {
             $row = FormulaParser::parse($priceMatrix['priceMatrixRow'], $values, $this->mediaFileSystem);
             $column = FormulaParser::parse($priceMatrix['priceMatrixColumn'], $values, $this->mediaFileSystem);
@@ -581,6 +582,7 @@ class SimplePriceCalculator implements PriceCalculator
                 '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
                 '_anzahl_' => $this->state->getParameter(State::QUANTITY)
             ]);
+
             try {
                 $result = FormulaParser::parse(
                     $prices[0]['extendedPriceCalculationFormula'],

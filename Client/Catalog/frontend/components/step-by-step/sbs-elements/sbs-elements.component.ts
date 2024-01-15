@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { setNextStep, setPrevStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { addStep, removeStep, setNextStep, setPrevStep, updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   ElementState,
   ProgressElement,
-  ProgressState, SectionTypes,
+  ProgressState, SectionTypes, StateItemTypes,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
   configurationIsValid,
   selectConfiguration, selectCurrentProductElements, selectCurrentStateElements,
   selectProgress,
-  selectProgressState,
+  selectProgressState, selectRepetitions,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { ConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.reducer';
 
 @Component({
 	selector: 'apto-sbs-elements',
@@ -24,20 +26,44 @@ export class SbsElementsComponent implements OnInit{
 	public readonly progressState$ = this.store.select(selectProgressState);
 	public readonly progress$ = this.store.select(selectProgress);
 	public readonly product$ = this.store.select(selectProduct);
+	public readonly repetitions$ = this.store.select(selectRepetitions);
 	public readonly configuration$ = this.store.select(selectConfiguration);
   public readonly currentProductElements$ = this.store.select(selectCurrentProductElements);
   public readonly currentStateElements$ = this.store.select(selectCurrentStateElements);
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
+  public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer'));
+
   private currentStateElements: ElementState[] = null;
 	private progressState: ProgressState = null;
   protected stepPositions: number[] = [];
   protected readonly SectionTypes = SectionTypes;
+  protected configurationState: ConfigurationState;
+  protected stepAction = '';
 
 	public constructor(private store: Store) {}
 
   public ngOnInit(): void {
     this.currentStateElements$.subscribe((next: ElementState[]) => {
       this.currentStateElements = next;
+    });
+
+    this.configuration$.subscribe((next: ConfigurationState) => {
+       this.configurationState = next;
+    });
+
+    this.repetitions$.subscribe((repetitions: ConfigurationState) => {
+      if (this.progressState) {
+        if (this.stepAction === 'addStep') {
+          this.store.dispatch(
+            addStep({
+              payload: {
+                id: this.progressState.steps[this.progressState.steps.length - 1].section.id,
+                repetition: this.progressState.steps[this.progressState.steps.length - 1].section.repetition + 1,
+              },
+            })
+          );
+        }
+      }
     });
 
 		this.progressState$.subscribe((next: ProgressState) => {
@@ -77,7 +103,8 @@ export class SbsElementsComponent implements OnInit{
 
 		this.store.dispatch(setPrevStep({
       payload: {
-        id: step.section.id, repetition: step.section.repetition,
+        id: step.section.id,
+        repetition: step.section.repetition,
       },
     }));
 	}
@@ -91,6 +118,57 @@ export class SbsElementsComponent implements OnInit{
       },
     }));
 	}
+
+  protected get sectionCountInCurrentRepetition() {
+    return this.configurationState.state.sections
+      .filter(section => section.id === this.progressState.currentStep.section.id).length;
+  }
+
+	public removeStep(): void {
+    let currentSections = this.configurationState.state.sections.filter(section => section.id === this.progressState.currentStep.section.id);
+
+    // go back 2 positions but remove one position
+    this.store.dispatch(
+      removeStep({
+        payload: {
+          id: this.progressState.currentStep.section.id,
+          repetition: currentSections.length - 2, // repetition is zero index
+        },
+      })
+    );
+
+    this.store.dispatch(
+      updateConfigurationState({
+        updates: {
+          set: [
+            {
+              [StateItemTypes.REPETITIONS]: currentSections.length - 1 > 1 ? currentSections.length - 1 : 1,
+              sectionId: this.progressState.currentStep.section.id,
+            },
+          ],
+        },
+      })
+    );
+  };
+
+	public addStep(): void {
+    let currentSections = this.configurationState.state.sections.filter(section => section.id === this.progressState.currentStep.section.id);
+
+    this.stepAction = 'addStep';
+
+    this.store.dispatch(
+      updateConfigurationState({
+        updates: {
+          set: [
+            {
+              [StateItemTypes.REPETITIONS]: currentSections.length + 1,
+              sectionId: this.progressState.currentStep.section.id,
+            },
+          ],
+        },
+      })
+    );
+  }
 
   protected get sectionIndex(): string {
     return this.progressState.currentStep.section.repeatableType === SectionTypes.WIEDERHOLBAR ? `${this.progressState.currentStep.section.repetition + 1}` : '';

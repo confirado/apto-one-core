@@ -5,7 +5,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem,
+  RenderImageData, SectionPriceTableItem, StateItemTypeDefaults, StateItemTypes,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -347,7 +347,17 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
   return priceTable;
 });
 
-export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
+export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.compressedState.parameters[StateItemTypes.QUANTITY] ?? StateItemTypeDefaults[StateItemTypes.QUANTITY];
+});
+
+export const selectRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.compressedState.parameters[StateItemTypes.REPETITIONS] ?? StateItemTypeDefaults[StateItemTypes.REPETITIONS];
+});
+
+export const selectIgnoredRules = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.compressedState.parameters[StateItemTypes.IGNORED_RULES] ?? StateItemTypeDefaults[StateItemTypes.IGNORED_RULES];
+});
 
 export const selectElementValues = (element: Element): any =>
 	createSelector(featureSelector, (state: CatalogFeatureState): TranslatedValue[] => {

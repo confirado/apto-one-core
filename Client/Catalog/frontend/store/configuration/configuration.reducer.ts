@@ -1,12 +1,13 @@
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
+  addStep,
   addToBasket, addToBasketSuccess,
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
   getRenderImagesSuccess,
   humanReadableStateLoadSuccess,
-  initConfigurationSuccess,
+  initConfigurationSuccess, removeStep,
   resetLoadingFlagAction,
   setHideOnePage,
   setNextPerspective,
@@ -39,14 +40,17 @@ export interface ConfigurationState {
 	productId: string | null;
 	connector: SelectConnector | null;
 	humanReadableState: HumanReadableState[];
-	quantity: number;
+	quantity: number; // todo goes this into state?
   hideOnePage: boolean;
   partsList: PartsListPart[];
 }
 
 export const configurationInitialState: ConfigurationState = {
 	state: {
-		compressedState: [],
+		compressedState: {
+      parameters: {},
+      state: []
+    },
 		sections: [],
 		elements: [],
     failedRules: [],
@@ -113,7 +117,7 @@ const _configurationReducer = createReducer(
      */
     return {
       ...state,
-      quantity: action.payload.product.minPurchase === 0 ? 1 : action.payload.product.minPurchase,
+      // quantity: action.payload.product.minPurchase === 0 ? StateItemTypeDefaults.quantity : action.payload.product.minPurchase, // todo here?
       state: action.payload.configuration,
       renderImages: action.payload.renderImages,
       computedValues: action.payload.computedValues,
@@ -267,6 +271,24 @@ const _configurationReducer = createReducer(
 		...state,
 		currentStep: action.payload,
 	})),
+  on(addStep, (state, action) => {
+    const sections = state.state.sections.filter((section) => !section.disabled);
+    const currentIndex = sections.filter((section) => section.id === state.currentStep.id).length;
+
+    return {
+      ...state,
+      currentStep: {
+        id: sections[currentIndex].id,
+        repetition: sections[currentIndex].repetition,
+      },
+    };
+  }),
+  on(removeStep, (state, action) => {
+    return {
+      ...state,
+      currentStep: action.payload,
+    };
+  }),
   on(setHideOnePage, (state, action) => ({
     ...state,
     hideOnePage: action.payload

@@ -19,6 +19,10 @@ export enum ConfigurationActionTypes {
 	SetNextStep = '[Configuration] Set next step',
 	SetStep = '[Configuration] Set step',
 	SetStepSuccess = '[Configuration] Set step success',
+	AddStep = '[Configuration] Add Step',
+	AddStepSuccess = '[Configuration] Add Step Success',
+  RemoveStep = '[Configuration] Remove Step',
+  RemoveStepSuccess = '[Configuration] Remove Step Success',
 	GetRenderImagesSuccess = '[RenderImage] Get RenderImages success',
 	GetCurrentRenderImageSuccess = '[RenderImage] Get current RenderImage success',
   SetRenderImages = '[RenderImage] Set Render Images',
@@ -116,8 +120,12 @@ export const humanReadableStateLoadSuccess = createAction(
 export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep, props<{ payload: CurrentSection | null }>());
 
 export const setStep = createAction(ConfigurationActionTypes.SetStep, props<{ payload: CurrentSection | null }>());
-
 export const setStepSuccess = createAction(ConfigurationActionTypes.SetStepSuccess);
+
+export const addStep = createAction(ConfigurationActionTypes.AddStep, props<{ payload: CurrentSection | null }>());
+export const addStepSuccess = createAction(ConfigurationActionTypes.AddStepSuccess);
+export const removeStep = createAction(ConfigurationActionTypes.RemoveStep, props<{ payload: CurrentSection | null }>());
+export const removeStepSuccess = createAction(ConfigurationActionTypes.RemoveStepSuccess);
 
 export const setPrevPerspective = createAction(ConfigurationActionTypes.SetPrevPerspective);
 
