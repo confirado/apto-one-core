@@ -5,23 +5,13 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  addGuestConfiguration,
-  addGuestConfigurationSuccess,
-  addToBasket, addToBasketSuccess, fetchPartsList, fetchPartsListSuccess,
-  getConfigurationState,
-  getConfigurationStateSuccess,
-  getCurrentRenderImageSuccess,
-  getRenderImagesSuccess,
-  humanReadableStateLoadSuccess,
-  initConfiguration,
-  initConfigurationSuccess,
-  onError,
-  setPrevStep,
-  setPrevStepSuccess,
-  setStep,
-  setStepSuccess,
-  updateConfigurationState,
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+  addGuestConfiguration, addGuestConfigurationSuccess, addStep, addStepSuccess, addToBasket, addToBasketSuccess, ConfigurationActionTypes,
+  fetchPartsList, fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess,
+  getCurrentRenderImageSuccess, getRenderImagesSuccess, humanReadableStateLoadSuccess, initConfiguration,
+  initConfigurationSuccess, onError, removeStep, removeStepSuccess, setPrevStep, setPrevStepSuccess,
+  setStep, setStepSuccess, updateConfigurationState,
+}
+  from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
 import { ProductRepository } from '@apto-catalog-frontend/store/product/product.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -29,7 +19,7 @@ import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration, CurrentSection } from './configuration.model';
+import { AnyState, Configuration, CurrentSection } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -336,6 +326,9 @@ export class ConfigurationEffects {
 		)
 	);
 
+  /**
+   * triggered when we go back in configuration
+   */
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(setStepSuccess, setPrevStepSuccess),
@@ -345,7 +338,7 @@ export class ConfigurationEffects {
         this.store$.select(selectProduct),
       ),
 			map(([action, configuration, progressState, product]) => {
-        const removeList: { sectionId: string; elementId: string; sectionRepetition?: number; property: string; value: string }[] = [];
+        const removeList: AnyState[] = [];
 
         if (product.product.keepSectionOrder) {
           for (const section of configuration.state.sections) {
@@ -374,7 +367,59 @@ export class ConfigurationEffects {
 		)
 	);
 
-	public addToBasket$ = createEffect(() =>
+  public addStep$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addStep),
+      map(() => addStepSuccess())
+    )
+  );
+
+  public removeStep$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(removeStep),
+      map(() => removeStepSuccess())
+    )
+  );
+
+  public addOrRemoveStep$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addStepSuccess, removeStepSuccess),
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectProgressState),
+      ),
+      map(([action, configuration, progressState]) => {
+        const removeList: AnyState[] = [];
+
+        if (action.type === ConfigurationActionTypes.AddStepSuccess) { }
+
+        if (action.type === ConfigurationActionTypes.RemoveStepSuccess) {
+          const currentSection = progressState.currentStep.section;
+
+          configuration.state.elements
+            .filter((element) => element.sectionId === currentSection.id && element.sectionRepetition > currentSection.repetition)
+            .forEach((e) =>
+              removeList.push({
+                sectionId: currentSection.id,
+                elementId: e.id,
+                sectionRepetition: currentSection.repetition,
+                property: '',
+                value: '',
+              })
+            );
+        }
+
+        return updateConfigurationState({
+          updates: {
+            remove: removeList,
+          },
+        });
+      })
+    )
+  );
+
+
+  public addToBasket$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(addToBasket),
 			withLatestFrom(

@@ -119,6 +119,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
         }
 
+
+        // if validation is passed in above block then
         // apply set/remove/complete actions (add or remove elements from enriched state's disabled array)
         try {
             if ($query->getIntention()['init'] ?? false) {
@@ -178,8 +180,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * if this is an initialization (we don't hit the Auswälen button to save/set the state),
-     *  we just load the page and check that default values are val
+     * Collects the list of elements and their values, that are marked as 'default' from the backend and gives
+     * the list to applySet() method
      *
      * @param ConfigurableProduct $product
      * @param EnrichedState       $state
@@ -203,8 +205,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
 
             foreach ($section['elements'] as $element) {
-                // as this should run on initialization and not on setting new values into the state,
-                // therefore we check the default values as there are no any other values yet set
+                // as the applyInit method should run on initialization (and not on setting new values into the state),
+                // we need to check the default values as there are no any other values yet set
                 if (!$element['isDefault']) {
                     continue;
                 }
@@ -238,48 +240,58 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * Takes the list of element configs argument, check them and if they are valid updates/sets the state
+     *
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
      * @param array $items
+     *
      * @throws InvalidUuidException
      */
     private function applySet(ConfigurableProduct $product, EnrichedState $state, array $items)
     {
         foreach ($items as $item) {
-            $section = AptoUuid::fromId($item['sectionId']);
-            $element = AptoUuid::fromId($item['elementId']);
+            if(!$state->getState()->isParameterConfig(array_keys($item))) {
+                $section = AptoUuid::fromId($item['sectionId']);
+                $element = AptoUuid::fromId($item['elementId']);
 
-            $property = $item['property'] ?? null;
-            $value = $item['value'] ?? null;
-            $sectionRepetition = $item['sectionRepetition'] ?? 0;
+                $property = $item['property'] ?? null;
+                $value = $item['value'] ?? null;
+                $sectionRepetition = $item['sectionRepetition'] ?? 0;
 
-            $this->valueValidationService->assertHasSection($product, $section);
+                $this->valueValidationService->assertHasSection($product, $section);
 
-            if ($element) {
-                $this->valueValidationService->assertHasElement($product, $section, $element);
+                if ($element) {
+                    $this->valueValidationService->assertHasElement($product, $section, $element);
+                }
+
+                if ($property) {
+                    $this->valueValidationService->assertHasProperty($product, $section, $element, $property);
+                }
+
+                if (null !== $property) {
+                    $this->valueValidationService->assertHasValue($product, $section, $element, $property, $value);
+                }
+
+                // if the section we check here is not multiple selection section, and our element is not active,
+                // then we have an error, because the section with singe value should have at least one active element.
+                if ($product->isSectionMultiple($section) === false && $state->getState()->isElementActive($section, $element, $sectionRepetition) === false) {
+                    $state->getState()->removeSection($section, $sectionRepetition);
+                }
+
+                $state->getState()->setValue(
+                    $section,
+                    $element,
+                    $property,
+                    $value,
+                    $sectionRepetition
+                );
+            } else {
+                $state->getState()->setParameter(
+                    array_keys($item)[0],
+                    array_values($item)[0],
+                );
             }
-
-            if ($property) {
-                $this->valueValidationService->assertHasProperty($product, $section, $element, $property);
-            }
-
-            if (null !== $property) {
-                $this->valueValidationService->assertHasValue($product, $section, $element, $property, $value);
-            }
-
-            // because we want to toggle elements on none multiple sections we remove the element section first in that case
-            // the second condition is to prevent removing the section if an element needs to set multiple properties
-            if ($product->isSectionMultiple($section) === false && $state->getState()->isElementActive($section, $element, $sectionRepetition) === false) {
-                $state->getState()->removeSection($section, $sectionRepetition);
-            }
-
-            $state->getState()->setValue(
-                $section,
-                $element,
-                $property,
-                $value,
-                $sectionRepetition
-            );
         }
     }
 
@@ -294,20 +306,26 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     private function applyRemove(ConfigurableProduct $product, EnrichedState $state, array $items)
     {
         foreach ($items as $item) {
-            $section = AptoUuid::fromId($item['sectionId']);
-            $element = AptoUuid::fromId($item['elementId'] ?? null);
-            $sectionRepetition = $item['sectionRepetition'] ?? 0;
+            if(!$state->getState()->isParameterConfig(array_keys($item))) {
+                $section = AptoUuid::fromId($item['sectionId']);
+                $element = AptoUuid::fromId($item['elementId'] ?? null);
+                $sectionRepetition = $item['sectionRepetition'] ?? 0;
 
-            $this->valueValidationService->assertHasSection($product, $section);
-            if ($element) {
-                $this->valueValidationService->assertHasElement($product, $section, $element);
+                $this->valueValidationService->assertHasSection($product, $section);
+                if ($element) {
+                    $this->valueValidationService->assertHasElement($product, $section, $element);
+                }
+
+                $state->getState()->removeValue(
+                    $section,
+                    $element,
+                    $sectionRepetition
+                );
+            } else {
+                $state->getState()->removeParameter(
+                    array_keys($item)[0],
+                );
             }
-
-            $state->getState()->removeValue(
-                $section,
-                $element,
-                $sectionRepetition
-            );
         }
     }
 
@@ -322,15 +340,17 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     private function applyComplete(ConfigurableProduct $product, EnrichedState $state, array $items)
     {
         foreach ($items as $item) {
-            $section = AptoUuid::fromId($item['sectionId']);
-            $this->valueValidationService->assertHasSection($product, $section);
-            $sectionRepetition = $item['sectionRepetition'] ?? 0;
+            if(!$state->getState()->isParameterConfig(array_keys($item))) {
+                $section = AptoUuid::fromId($item['sectionId']);
+                $this->valueValidationService->assertHasSection($product, $section);
+                $sectionRepetition = $item['sectionRepetition'] ?? 0;
 
-            $state->setSectionComplete(
-                $section,
-                boolval($item['complete'] ?? true),
-                $sectionRepetition
-            );
+                $state->setSectionComplete(
+                    $section,
+                    boolval($item['complete'] ?? true),
+                    $sectionRepetition
+                );
+            }
         }
     }
 

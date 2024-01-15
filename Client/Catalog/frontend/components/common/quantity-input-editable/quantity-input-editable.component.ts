@@ -1,10 +1,11 @@
 import { Component, ElementRef, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { setQuantity } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { selectQuantity } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Store } from '@ngrx/store';
 import { debounceTime, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StateItemTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
 	selector: 'apto-quantity-input-editable',
@@ -75,10 +76,19 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
     this.userInput$
       .pipe(
         debounceTime(300),
-        // distinctUntilChanged()
       )
       .subscribe((value) => {
-        this.store.dispatch(setQuantity({ quantity: value }));
+        this.store.dispatch(
+          updateConfigurationState({
+            updates: {
+              set: [
+                {
+                  [StateItemTypes.QUANTITY]: value,
+                },
+              ],
+            },
+          })
+        );
       });
   }
 
@@ -150,7 +160,17 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
    */
   public setQuantity(quantity: number): void {
     if (this.isQuantityInRange(quantity) && this.isQuantityValid(quantity)) {
-      this.store.dispatch(setQuantity({ quantity: quantity }));
+      this.store.dispatch(
+        updateConfigurationState({
+          updates: {
+            set: [
+              {
+                [StateItemTypes.QUANTITY]: quantity,
+              },
+            ],
+          },
+        })
+      );
     }
 
     if (!this.isQuantityInRange(quantity) && typeof quantity === 'number') {

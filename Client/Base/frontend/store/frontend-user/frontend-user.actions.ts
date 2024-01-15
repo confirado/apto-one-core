@@ -4,7 +4,7 @@ import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-u
 export enum FrontendUserActionTypes {
   Login              = '[FrontendUser] Login',
   LoginSuccess       = '[FrontendUser] Login Success',
-  LoginError       = '[FrontendUser] Login Error',
+  LoginError         = '[FrontendUser] Login Error',
   Logout             = '[FrontendUser] Logout',
   LogoutSuccess      = '[FrontendUser] Logout Success',
   LoginStatus        = '[FrontendUser] Login Status',

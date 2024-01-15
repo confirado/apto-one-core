@@ -26,6 +26,25 @@
         </div>
 
         <div class="step-navigation-container">
+            <button *ngIf="progressState.currentStep.section.repeatableType===SectionTypes.WIEDERHOLBAR"
+                    (click)="addStep()"
+                    color="accent"
+                    mat-flat-button
+            >
+                <mat-icon>add</mat-icon>
+                <span>{{ contentSnippets$ | async | contentSnippet: 'addStep' }}</span>
+            </button>
+
+            <button *ngIf="progressState.currentStep.section.repeatableType===SectionTypes.WIEDERHOLBAR"
+                    [disabled]="sectionCountInCurrentRepetition <= 1"
+                    (click)="removeStep()"
+                    color="accent"
+                    mat-flat-button
+            >
+                <mat-icon>remove</mat-icon>
+                <span>{{ contentSnippets$ | async | contentSnippet: 'removeStep' }}</span>
+            </button>
+
             <!--Obviously we want to hide the back button on the first step-->
 			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep(progressState)" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>

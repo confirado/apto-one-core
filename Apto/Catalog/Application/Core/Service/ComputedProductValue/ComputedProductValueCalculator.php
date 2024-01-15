@@ -35,6 +35,8 @@ class ComputedProductValueCalculator
     }
 
     /**
+     * Checks in backend 'Berechnete Werte'
+     *
      * @param Product $product
      * @param State $state
      * @param bool $indexedById
@@ -50,6 +52,7 @@ class ComputedProductValueCalculator
 
         /* @var ComputedProductValue $value */
         $orderedValues = $this->orderCalculatedValues($product->getComputedProductValues()->getValues());
+
         foreach ($orderedValues as $value) {
             $calculated = $value->getValue($state, $values, $this->mediaFileSystem);
             if ($indexedById) {

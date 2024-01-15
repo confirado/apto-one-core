@@ -7,91 +7,180 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 
 class State implements AptoJsonSerializable, \JsonSerializable
 {
-
     /**
      * parameters
      */
     const QUANTITY = 'quantity';
     const IGNORED_RULES = 'ignoredRules';
+    const REPETITIONS = 'repetitions';
 
     /**
-     * list of all parameters with their default values
+     * list of all possible parameters with their default values
      */
     const PARAMETERS = [
         self::QUANTITY => 1,
-        self::IGNORED_RULES => []
+        self::IGNORED_RULES => [],
+        self::REPETITIONS => 1,
     ];
 
     /**
+     * Configuration state for element configs
+     *
      * @var array
      */
-    protected $state;
+    protected array $state;
+
 
     /**
-     * State constructor.
-     * @param array $state
+     * Holds the parameters that are saved in state and have some value but not directly related to element configs
+     *
+     * @var array
+     */
+    protected array $parameters;
+
+
+    /**
+     * @param array $state An array with keys 'state' and 'properties', each containing an array.
      */
     public function __construct(array $state = [])
     {
-        // remove empty branches
-        $keysToRemove = [];
-        foreach ($state as $key => $st) {
-            if (empty($st['values'])) {
-                $keysToRemove[] = $key;
-            }
-        }
-        $this->unsetStateItems($keysToRemove);
+        $this->state = [];
 
-        $this->state = $state;
+        if(isset($state['state'])) {
+            // remove empty branches from state...
+            $keysToRemove = [];
+            foreach ($state['state'] as $key => $st) {
+                if (empty($st['values'])) {
+                    $keysToRemove[] = $key;
+                }
+            }
+            $this->unsetStateItems($keysToRemove);
+
+            // ...and then add new values
+            $this->state = $state['state'];
+        }
+
+        $this->parameters = $state['parameters'] ?? [];
     }
 
+    /**
+     * Parameters are special cases that exit in state, but are not directly linked to product, product section
+     * and/or product elements. Therefor we need to handle them separately
+     *
+     * for example quantity of selected items is parameter
+     *
+     * @param string $stateItem
+     *
+     * @return bool
+     */
     public function isParameter(string $stateItem): bool
     {
         return array_key_exists($stateItem, self::PARAMETERS);
     }
 
     /**
-     * @param string $parameter
+     * Checks that the given configuration item is a parameter config
+     *
+     * parameters have at least one array key that is a parameter
+     *
+     * @param array $items
+     *
+     * @return bool
+     */
+    public function isParameterConfig(array $items): bool
+    {
+        foreach ($items as $property) {
+            if ($this->isParameter($property)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $parameterName
+     *
+     * @return bool
+     */
+    public function isParameterSet(string $parameterName): bool
+    {
+        return array_key_exists($parameterName, $this->parameters);
+    }
+
+    /**
+     * Get parameter value
+     *
+     * if parameter value is set returns it's value, otherwise returns the default value
+     *
+     * @param string $name
+     * @param bool   $returnDefault
+     *
      * @return mixed
      */
-    public function getParameter(string $parameter)
+    public function getParameter(string $name, bool $returnDefault = true): mixed
     {
-        // @todo maybe save 'parametes' in a separate class property
-
-        // assert valid parameter
-        if (!$this->isParameter($parameter)) {
-            throw new \InvalidArgumentException(sprintf(
-                '"%s" is not a valid parameter.',
-                $parameter
-            ));
+        if (!$this->isParameter($name)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid parameter.', $name));
         }
 
-        // return state value
-        if (array_key_exists($parameter, $this->state)) {
-            return $this->state[$parameter];
+        if (array_key_exists($name, $this->parameters)) {
+            return $this->parameters[$name];
         }
 
-        // return default value
-        return self::PARAMETERS[$parameter];
+        return $returnDefault ? self::PARAMETERS[$name] : null;
+    }
+
+    /**
+     * Sets the parameter value
+     *
+     * Caution: you can not set parameters dynamically, first you need to add it to 'PARAMETERS' constant,
+     * then create a separate constant for it and only then you can set it
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return void
+     */
+    public function setParameter(string $name, mixed $value): void
+    {
+        if (!$this->isParameter($name)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid parameter.', $name));
+        }
+
+        $this->parameters[$name] = $value;
+    }
+
+    public function removeParameter(string $name): void
+    {
+        if (!$this->isParameter($name)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a valid parameter.', $name));
+        }
+
+        unset($this->parameters[$name]);
+    }
+
+    /**
+     * Returns all parameters that have set value (exist in state)
+     *
+     * @return array
+     */
+    public function getParameterList(): array
+    {
+        return $this->parameters;
     }
 
     /**
      * Apply all missing parameters with their default values to given state
-     * @param array $state
+     *
      * @return array
      */
-    protected function applyMissingParameters(array $state): array
+    protected function applyMissingParameters(): array
     {
-        // @todo maybe save 'parametes' in a separate class property
-
-        foreach (self::PARAMETERS as $parameter => $defaultValue) {
-            // set default value for parameter, if it does not exist
-            if (!array_key_exists($parameter, $state)) {
-                $state[$parameter] = $defaultValue;
-            }
-        }
-
-        return $state;
+        return [
+            'state'      => $this->state,
+            'parameters' => $this->parameters
+        ];
     }
 
     /**
@@ -195,6 +284,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
                 return $state['values'][$property];
             }
         }
+
         return null;
     }
 
@@ -264,6 +354,9 @@ class State implements AptoJsonSerializable, \JsonSerializable
     }
 
     /**
+     * This should be used for setting state for configuration elements and not for parameter
+     * for parameters we have different methods
+     *
      * @param AptoUuid    $sectionId
      * @param AptoUuid    $elementId
      * @param string|null $property is null on default element, or when element has no properties at all (has no selectable values in element definition)
@@ -274,7 +367,11 @@ class State implements AptoJsonSerializable, \JsonSerializable
      */
     public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, mixed $value = null, int $repetition = 0): State
     {
-        // if an element isn't found in the state
+        if ($this->isParameter($sectionId)) {
+            throw new \InvalidArgumentException(sprintf('Parameters must be set from setParameter() method'));
+        }
+
+        // if an element isn't found in the state create a new entry for it
         if (!$this->isElementActive($sectionId, $elementId, $repetition)) {
             $this->state[] = [
                 'repetition' => $repetition,
@@ -284,7 +381,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
             ];
         }
         else {
-            // then let's find the element and set its value
+            // if element is found update hte value
             foreach ($this->state as $key => &$state) {
                 if ($state['sectionId'] === $sectionId->getId() &&
                     $state['elementId'] === $elementId->getId() &&
@@ -375,22 +472,17 @@ class State implements AptoJsonSerializable, \JsonSerializable
      */
     public function getState(): array
     {
-        return $this->applyMissingParameters($this->state);
+        return $this->applyMissingParameters();
     }
 
     /**
      * Return raw state without parameters
+     *
      * @return array
      */
     public function getStateWithoutParameters(): array
     {
-        $state = $this->state;
-
-        foreach (self::PARAMETERS as $parameter => $defaultValue) {
-            unset($state[$parameter]);
-        }
-
-        return $state;
+        return $this->state;
     }
 
     /**
@@ -460,7 +552,10 @@ class State implements AptoJsonSerializable, \JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return $this->state;
+        return [
+            'state'      => $this->state,
+            'parameters' => $this->parameters
+        ];
     }
 
     public function isSectionSet(AptoUuid $sectionId, int $repetition = 0): bool
