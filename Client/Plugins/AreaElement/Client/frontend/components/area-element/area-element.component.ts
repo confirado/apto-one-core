@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
 	selector: 'apto-area-element',
@@ -30,7 +31,10 @@ export class AreaElementComponent implements OnInit {
 
   public sumOfFieldValues = 0;
 
-	public constructor(private store: Store) {}
+	public constructor(
+    private store: Store,
+    private dialogRef: MatDialogRef<AreaElementComponent>
+  ) {}
 
 	public getSelectValues(min: number, max: number, step: number): SelectItem[] {
 		const items: SelectItem[] = [];
@@ -58,11 +62,20 @@ export class AreaElementComponent implements OnInit {
 			i += 1
 		) {
 			let itemsField: SelectItem[] = [];
+      let validators = [];
+
+      if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'input') {
+          validators = [
+            Validators.min(this.element.element.definition.properties[`field_${i}`][0].minimum),
+            Validators.max(this.element.element.definition.properties[`field_${i}`][0].maximum),
+          ];
+      }
 
 			this.formElement.addControl(
 				`field_${i}`,
 				new UntypedFormControl(
-					this.element.state.values[`field_${i}`] || this.element.element.definition.staticValues.fields?.[i]?.default || 0
+					this.element.state.values[`field_${i}`] || this.element.element.definition.staticValues.fields?.[i]?.default || 0,
+          validators
 				)
 			);
 
@@ -97,6 +110,13 @@ export class AreaElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.markAllControlsAsDirty();
+
+    if (!this.formElement.valid) {
+      return;
+    }
+
 		this.store.dispatch(
 			updateConfigurationState({
 				updates: {
@@ -110,6 +130,8 @@ export class AreaElementComponent implements OnInit {
 				},
 			})
 		);
+
+    this.dialogRef.close();
 	}
 
 	public removeInput(): void {
@@ -130,4 +152,10 @@ export class AreaElementComponent implements OnInit {
 			})
 		);
 	}
+
+  private markAllControlsAsDirty(): void {
+    Object.keys(this.formElement.controls).forEach((key) => {
+      this.formElement.get(key).markAsDirty();
+    });
+  }
 }

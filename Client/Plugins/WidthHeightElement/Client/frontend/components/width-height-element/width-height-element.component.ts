@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { HeightWidthProperties, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
 	selector: 'apto-width-height-element',
@@ -58,7 +59,8 @@ export class WidthHeightElementComponent implements OnInit {
 	}
 
 	public constructor(
-    private store: Store
+    private store: Store,
+    private dialogRef: MatDialogRef<WidthHeightElementComponent>
   ) { }
 
 	public ngOnInit(): void {
@@ -81,6 +83,8 @@ export class WidthHeightElementComponent implements OnInit {
 		if (this.element.element.definition.properties.width && this.element.element.definition.properties.width[0]) {
 			this.stepWidth = this.element.element.definition.properties.width?.[0]?.step;
 		}
+
+    this.addRequirementsForInput();
 
 		if (this.element.element.definition.staticValues.renderingHeight === 'select') {
 			if (this.element.element.definition.properties.height?.[0]?.maximum) {
@@ -107,6 +111,13 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.markAllControlsAsDirty();
+
+    if (!this.formElement.valid) {
+      return;
+    }
+
 		this.store.dispatch(
 			updateConfigurationState({
 				updates: {
@@ -126,6 +137,8 @@ export class WidthHeightElementComponent implements OnInit {
 				},
 			})
 		);
+
+    this.dialogRef.close();
 	}
 
 	public removeInput(): void {
@@ -152,4 +165,26 @@ export class WidthHeightElementComponent implements OnInit {
 			})
 		);
 	}
+
+  private addRequirementsForInput(): void {
+    if (this.element.element.definition.staticValues.renderingHeight === 'input') {
+      this.formElement.controls['height'].setValidators([
+        Validators.min(this.element.element.definition.properties.height?.[0]?.minimum),
+        Validators.max(this.element.element.definition.properties.height?.[0]?.maximum),
+      ]);
+    }
+
+    if (this.element.element.definition.staticValues.renderingWidth === 'input') {
+      this.formElement.controls['width'].setValidators([
+        Validators.min(this.element.element.definition.properties.width?.[0]?.minimum),
+        Validators.max(this.element.element.definition.properties.width?.[0]?.maximum),
+      ]);
+    }
+  }
+
+  private markAllControlsAsDirty(): void {
+    Object.keys(this.formElement.controls).forEach((key) => {
+      this.formElement.get(key).markAsDirty();
+    });
+  }
 }

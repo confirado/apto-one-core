@@ -84,7 +84,6 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                 mat-flat-button
                 color="primary"
-                [mat-dialog-close]="true"
                 (click)="saveInput()"
             >
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
