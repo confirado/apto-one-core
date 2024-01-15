@@ -169,6 +169,7 @@ export class WidthHeightElementComponent implements OnInit {
   private addRequirementsForInput(): void {
     if (this.element.element.definition.staticValues.renderingHeight === 'input') {
       this.formElement.controls['height'].setValidators([
+        Validators.required,
         Validators.min(this.element.element.definition.properties.height?.[0]?.minimum),
         Validators.max(this.element.element.definition.properties.height?.[0]?.maximum),
       ]);
@@ -176,6 +177,7 @@ export class WidthHeightElementComponent implements OnInit {
 
     if (this.element.element.definition.staticValues.renderingWidth === 'input') {
       this.formElement.controls['width'].setValidators([
+        Validators.required,
         Validators.min(this.element.element.definition.properties.width?.[0]?.minimum),
         Validators.max(this.element.element.definition.properties.width?.[0]?.maximum),
       ]);
