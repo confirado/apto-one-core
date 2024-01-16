@@ -305,10 +305,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductSection(productId, sectionName) {
+    function addProductSection(productId, section) {
         return {
             type: getType('ADD_PRODUCT_SECTION'),
-            payload: MessageBusFactory.command('AddProductSection', [productId, null, sectionName])
+            payload: MessageBusFactory.command('AddProductSection', [productId, null, section.value, false, section.addDefaultElement])
         }
     }
 
