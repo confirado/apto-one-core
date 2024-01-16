@@ -1,5 +1,5 @@
 <form *ngIf="items$ | async as items" [formGroup]="filter">
-    <div class="material-picker-element" *ngIf="element">
+    <div class="material-picker-element" *ngIf="element" [class.selected]="element.state.active">
         <ng-container *ngIf="step === 2">
             <ng-container *ngIf="elementState('second-material')">
                 <div class="color-mix">
@@ -63,6 +63,10 @@
 
         <ng-container *ngIf="step === 1 || step === 2 && multiColor.value === true">
             <div class="color-filter">
+                <div class="circle" [class.selected]="element.state.active">
+                    <mat-icon>done</mat-icon>
+                </div>
+
                 <div class="header">
                     <div class="title">
                         <h4>{{ contentSnippet$ | async | contentSnippet: 'colorSelection' }}</h4>

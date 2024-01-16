@@ -9,8 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
-import { CustomTextElementComponent } from './components/custom-text-element/custom-text-element.component';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
+import { MatIconModule } from '@angular/material/icon';
+import { CustomTextElementComponent } from './components/custom-text-element/custom-text-element.component';
 
 @NgModule({
 	declarations: [CustomTextElementComponent],
@@ -27,6 +28,7 @@ import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-f
 	MatDialogModule,
 	MatButtonModule,
 	AptoCatalogFrontendModule,
+  MatIconModule,
   ],
 	providers: [],
 })
