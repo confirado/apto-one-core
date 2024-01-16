@@ -4,11 +4,16 @@
 
             <!-- Language switch -->
             <md-menu ng-if="$ctrl.languageFactory.languages.length > 1" md-position-mode="target-left target">
-                <md-button aria-label="Open language selector" class="md-icon-button" ng-click="$mdMenu.open($event)">
+                <md-button aria-label="Open language selector"
+                           class="md-icon-button"
+                           ng-click="$mdMenu.open($event)"
+                           data-cy="header_open-language-button"
+                >
                     <md-icon md-menu-origin md-font-set="fa">&#xf0ac</md-icon>
                 </md-button>
+
                 <md-menu-content width="4">
-                    <md-menu-item ng-repeat="language in $ctrl.languageFactory.languages">
+                    <md-menu-item ng-repeat="language in $ctrl.languageFactory.languages" data-cy="open-language-button_language">
                         <md-button ng-click="$ctrl.setActiveLanguage(language)">
                             <div layout="row" flex>
                                 <p flex>{{ $ctrl.languageFactory.translate(language.name) }}</p>
@@ -20,7 +25,7 @@
             </md-menu>
 
             <!-- Title -->
-            <h3>
+            <h3 data-cy="header_product-title">
                 <span>
                     {{ $ctrl.config.title }}
                     <span style="font-size: 16px;">({{ $ctrl.languageFactory.translate($ctrl.languageFactory.activeLanguage.name) }})</span>
@@ -29,45 +34,93 @@
             <span flex></span>
 
             <!-- Aktionen -->
-            <md-input-container class="apto-toolbar-search" ng-if="$ctrl.config.search.show" md-theme="apto-dark" md-no-float>
+            <md-input-container class="apto-toolbar-search"
+                                ng-if="$ctrl.config.search.show"
+                                md-theme="apto-dark"
+                                md-no-float
+                                data-cy="header_apto-toolbar-search"
+            >
                 <input type="text" ng-model="$ctrl.config.search.searchString" placeholder="Suchen" ng-keyup="$ctrl.onSearchStringKeyUp($event)">
             </md-input-container>
-            <md-button ng-if="$ctrl.config.search.show" class="md-icon-button" title="Suchen" ng-click="$ctrl.actions.search.fnc($ctrl.config.search.searchString);">
+
+            <md-button ng-if="$ctrl.config.search.show"
+                       class="md-icon-button"
+                       title="Suchen"
+                       ng-click="$ctrl.actions.search.fnc($ctrl.config.search.searchString);"
+                       data-cy="header_apto-toolbar-search_button"
+            >
                 <md-icon md-font-set="fa">&#xf002</md-icon>
             </md-button>
-            <md-button ng-if="$ctrl.config.add.show && $ctrl.aclIsGranted.allGranted($ctrl.config.add.aclMessagesRequired)" apto-show-granted-info="{{ $ctrl.config.add.aclMessagesRequired }}" class="md-icon-button" title="Hinzufügen" ng-click="$ctrl.actions.add.fnc($event)">
+
+            <md-button ng-if="$ctrl.config.add.show && $ctrl.aclIsGranted.allGranted($ctrl.config.add.aclMessagesRequired)"
+                       class="md-icon-button"
+                       title="Hinzufügen"
+                       ng-click="$ctrl.actions.add.fnc($event)"
+                       apto-show-granted-info="{{ $ctrl.config.add.aclMessagesRequired }}"
+                       data-cy="header_add-product-button"
+            >
                 <md-icon md-font-set="fa">&#xf055</md-icon>
             </md-button>
-            <md-button ng-if="$ctrl.config.listStyle.show" class="md-icon-button" title="Liste als Tabelle anzeigen" ng-click="$ctrl.actions.listStyle.fnc('components/data-list/data-table-list.html')">
+
+            <md-button ng-if="$ctrl.config.listStyle.show"
+                       class="md-icon-button"
+                       title="Liste als Tabelle anzeigen"
+                       ng-click="$ctrl.actions.listStyle.fnc('components/data-list/data-table-list.html')"
+                       data-cy="header_show-products-as-table"
+            >
                 <md-icon md-font-set="fa">&#xf03a</md-icon>
             </md-button>
-            <md-button ng-if="$ctrl.config.listStyle.show" class="md-icon-button" title="Liste als Kacheln anzeigen" ng-click="$ctrl.actions.listStyle.fnc('components/data-list/card-list.html')">
+
+            <md-button ng-if="$ctrl.config.listStyle.show"
+                       class="md-icon-button"
+                       title="Liste als Kacheln anzeigen"
+                       ng-click="$ctrl.actions.listStyle.fnc('components/data-list/card-list.html')"
+                       data-cy="header_show-products-as-tiles"
+            >
                 <md-icon md-font-set="fa">&#xf00a</md-icon>
             </md-button>
-            <md-button ng-if="$ctrl.config.listSettings.show" class="md-icon-button" title="Filter">
+
+            <md-button ng-if="$ctrl.config.listSettings.show" class="md-icon-button" title="Filter" data-cy="header_show-list-settings">
                 <md-icon md-font-set="fa">&#xf0b0</md-icon>
             </md-button>
-            <md-button ng-if="$ctrl.config.selectAll.show" class="md-icon-button" title="Filter">
+
+            <md-button ng-if="$ctrl.config.selectAll.show" class="md-icon-button" title="Filter" data-cy="header_show-list-select-all">
                 <md-icon md-font-set="fa">&#xf046</md-icon>
             </md-button>
-            <div ng-if="$ctrl.config.pagination.show">
-                Seite <input style="width: 70px; text-align: center;" ng-change="$ctrl.actions.pageChanged.fnc($ctrl.config.pagination.pageNumber)" ng-model="$ctrl.config.pagination.pageNumber" type="number" step="1" min="1" > von {{ $ctrl.config.pagination.numberOfPages }}
+
+            <div ng-if="$ctrl.config.pagination.show" data-cy="header_show-pagination">
+                Seite <input style="width: 70px; text-align: center;"
+                             ng-change="$ctrl.actions.pageChanged.fnc($ctrl.config.pagination.pageNumber)"
+                             ng-model="$ctrl.config.pagination.pageNumber"
+                             type="number" step="1" min="1" > von {{ $ctrl.config.pagination.numberOfPages }}
             </div>
-            <md-button ng-if="$ctrl.config.toggleSideBarRight.show" class="md-icon-button" title="Message Log" ng-click="$ctrl.actions.toggleSideBarRight.fnc()">
+
+            <md-button ng-if="$ctrl.config.toggleSideBarRight.show"
+                       class="md-icon-button"
+                       title="Message Log"
+                       ng-click="$ctrl.actions.toggleSideBarRight.fnc()"
+                       data-cy="header_show-right-sidebar"
+            >
                 <md-icon md-font-set="fa">&#xf0c9</md-icon>
             </md-button>
-            <md-button class="md-icon-button" title="Hilfe" ng-click="$ctrl.openHelp()">
+
+            <md-button class="md-icon-button" title="Hilfe" ng-click="$ctrl.openHelp()" data-cy="header_show-help-button">
                 <md-icon md-font-set="fa">&#xf059</md-icon>
             </md-button>
 
             <!-- Delete cache menu -->
-            <md-menu title="Cache löschen" md-position-mode="target-left target" ng-if="$ctrl.aclIsGranted.allGranted({commands: ['ClearAptoCache'], queries: []})" apto-show-granted-info="{{ {commands: ['ClearAptoCache'], queries: []} }}">
+            <md-menu title="Cache löschen"
+                     md-position-mode="target-left target"
+                     ng-if="$ctrl.aclIsGranted.allGranted({commands: ['ClearAptoCache'], queries: []})"
+                     apto-show-granted-info="{{ {commands: ['ClearAptoCache'], queries: []} }}"
+                     data-cy="header_empty-cache-button"
+            >
                 <md-button aria-label="Open language selector" class="md-icon-button" ng-click="$mdMenu.open($event)">
                     <md-icon md-menu-origin md-font-set="fa">&#xf0e7</md-icon>
                 </md-button>
                 <md-menu-content width="4">
 
-                    <md-menu-item>
+                    <md-menu-item data-cy="empty-cache_delete-all">
                         <md-button ng-click="$ctrl.clearCache()">
                             <div layout="row" flex>
                                 <p flex>Alle löschen</p>
@@ -76,7 +129,7 @@
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item>
+                    <md-menu-item data-cy="empty-cache_delete-thumbnails">
                         <md-button ng-click="$ctrl.clearCache(['image-thumb'])">
                             <div layout="row" flex>
                                 <p flex>Thumbnails löschen</p>
@@ -85,7 +138,7 @@
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item>
+                    <md-menu-item data-cy="empty-cache_delete-pictures">
                         <md-button ng-click="$ctrl.clearCache(['image-rendered'])">
                             <div layout="row" flex>
                                 <p flex>Gerenderte Bilder löschen</p>
@@ -94,7 +147,7 @@
                         </md-button>
                     </md-menu-item>
 
-                    <md-menu-item>
+                    <md-menu-item data-cy="empty-cache_delete-db-cache">
                         <md-button ng-click="$ctrl.clearCache(['apcu'])">
                             <div layout="row" flex>
                                 <p flex>Datenbank/APCu Cache leeren</p>
