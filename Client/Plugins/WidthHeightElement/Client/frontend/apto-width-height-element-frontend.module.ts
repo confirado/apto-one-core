@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
@@ -44,7 +44,11 @@ import { PortalModule } from '@angular/cdk/portal';
     {
       provide: OverlayContainer,
       useClass: FullscreenOverlayContainer
-    }
+    },
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
   ],
 })
 export class AptoWidthHeightElementFrontendModule {

@@ -2,11 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import {
+  getConfigurationStateSuccess,
+  updateConfigurationState,
+} from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Actions, ofType } from '@ngrx/effects';
+import { untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
 	selector: 'apto-area-element',
@@ -36,7 +41,8 @@ export class AreaElementComponent implements OnInit {
 
 	public constructor(
     private store: Store,
-    private dialogRef: MatDialogRef<AreaElementComponent>
+    private dialogRef: MatDialogRef<AreaElementComponent>,
+    private readonly actions$: Actions
   ) {}
 
 	public getSelectValues(min: number, max: number, step: number): SelectItem[] {
@@ -120,6 +126,7 @@ export class AreaElementComponent implements OnInit {
       return;
     }
 
+    this.closeModalOnSuccess();
 		this.store.dispatch(
 			updateConfigurationState({
 				updates: {
@@ -133,8 +140,6 @@ export class AreaElementComponent implements OnInit {
 				},
 			})
 		);
-
-    this.dialogRef.close();
 	}
 
 	public removeInput(): void {
@@ -160,5 +165,16 @@ export class AreaElementComponent implements OnInit {
     Object.keys(this.formElement.controls).forEach((key) => {
       this.formElement.get(key).markAsDirty();
     });
+  }
+
+  private closeModalOnSuccess(): void {
+    if (this.dialogRef?.id) {
+      this.actions$.pipe(
+        ofType(getConfigurationStateSuccess),
+        untilDestroyed(this)
+      ).subscribe((result) => {
+        this.dialogRef.close();
+      });
+    }
   }
 }
