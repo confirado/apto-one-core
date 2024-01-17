@@ -841,7 +841,7 @@ class Product extends AptoAggregate
      * @throws IdentifierUniqueException
      * @throws InvalidUuidException
      */
-    public function addSection(Identifier $identifier, AptoTranslatedValue $sectionName = null, bool $active = false, int $position = 0): Product
+    public function addSection(Identifier $identifier, AptoTranslatedValue $sectionName = null, bool $active = false, int $position = 0, bool $addDefaultElement = false): Product
     {
         if ($this->sectionIdentifierExists($identifier)) {
             throw new IdentifierUniqueException('Section Identifier must be unique within a collection!');
@@ -860,6 +860,17 @@ class Product extends AptoAggregate
         $this->setSectionIsActive($sectionId, $active);
         $this->setSectionPosition($sectionId, $position);
 
+        if ($addDefaultElement === true) {
+            $this->addElement(
+                $sectionId,
+                $identifier,
+                null,
+                $sectionName,
+                true,
+                false,
+                10
+            );
+        }
         return $this;
     }
 

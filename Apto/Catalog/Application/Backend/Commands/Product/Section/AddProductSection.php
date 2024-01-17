@@ -7,33 +7,39 @@ use Apto\Catalog\Application\Backend\Commands\Product\ProductChildCommand;
 class AddProductSection extends ProductChildCommand
 {
     /**
-     * @var ?string
+     * @var string|null
      */
-    private $sectionIdentifier;
+    private ?string $sectionIdentifier;
 
     /**
      * @var array|null
      */
-    private $sectionName;
+    private ?array$sectionName;
 
     /**
      * @var bool
      */
-    private $active;
+    private bool $active;
 
     /**
-     * AddProductSection constructor.
+     * @var bool
+     */
+    private bool $addDefaultElement;
+
+    /**
      * @param string $productId
      * @param string|null $sectionIdentifier
      * @param array|null $sectionName
-     * @param false $active
+     * @param bool $active
+     * @param bool $addDefaultElement
      */
-    public function __construct(string $productId, ?string $sectionIdentifier, array $sectionName = null, $active = false)
+    public function __construct(string $productId, ?string $sectionIdentifier, array $sectionName = null, bool $active = false, bool $addDefaultElement = false)
     {
         parent::__construct($productId);
         $this->sectionIdentifier = $sectionIdentifier;
         $this->sectionName = $sectionName;
         $this->active = $active;
+        $this->addDefaultElement = $addDefaultElement;
     }
 
     /**
@@ -47,7 +53,7 @@ class AddProductSection extends ProductChildCommand
     /**
      * @return array|null
      */
-    public function getSectionName()
+    public function getSectionName(): ?array
     {
         return $this->sectionName;
     }
@@ -58,5 +64,13 @@ class AddProductSection extends ProductChildCommand
     public function getActive(): bool
     {
         return $this->active;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getAddDefaultElement(): bool
+    {
+        return $this->addDefaultElement;
     }
 }
