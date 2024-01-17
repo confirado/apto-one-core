@@ -87,7 +87,8 @@ class ProductSectionHandler extends ProductChildHandler
             $identifier,
             $sectionName,
             $command->getActive(),
-            $position
+            $position,
+            $command->getAddDefaultElement(),
         );
         $this->productRepository->update($product);
     }

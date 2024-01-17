@@ -13,6 +13,7 @@
 
     .circle {
         @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
     }
 
     .header {

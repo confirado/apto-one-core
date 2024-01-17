@@ -4,7 +4,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -16,6 +16,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class AreaElementComponent implements OnInit {
 	@Input()
 	public element: ProgressElement<AreaElementDefinitionProperties> | undefined | null;
+
+  @Input()
+  public section: Section | undefined;
 
 	@Input()
 	public product: Product | null | undefined;

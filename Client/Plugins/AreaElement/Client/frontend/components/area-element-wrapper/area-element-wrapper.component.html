@@ -3,6 +3,7 @@
 		*ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product.useStepByStep"
 		[product]="product"
 		[element]="element"
+        [section]="section"
 	></apto-area-element>
 	<div
 		*ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
