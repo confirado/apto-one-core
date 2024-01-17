@@ -22,7 +22,7 @@
 
     .circle {
         @include circle-checkbox(25px, 'inner');
-        border: 2px solid var(--color-border-selected) !important;
+        border: 2px solid var(--color-border-selected);
     }
 
     .header {
@@ -159,10 +159,6 @@
     &.selected {
         border: 3px solid var(--color-border-dimensions);
         border-radius: var(--border-radius-card);
-    }
-
-    .circle {
-        @include circle-checkbox(25px, 'inner');
     }
 }
 
