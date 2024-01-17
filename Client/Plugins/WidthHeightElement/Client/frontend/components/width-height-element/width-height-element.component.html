@@ -6,8 +6,7 @@
          [attr.type]="'custom'"
          [class.selected]="element.state.active"
     >
-
-        <div *ngIf="element.state.active" class="circle" [class.selected]="element.state.active">
+        <div *ngIf="section?.allowMultiple && product.useStepByStep" class="circle" [class.selected]="element.state.active">
             <mat-icon>done</mat-icon>
         </div>
         <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"

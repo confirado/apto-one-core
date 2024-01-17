@@ -4,7 +4,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { HeightWidthProperties, Product } from '@apto-catalog-frontend/store/product/product.model';
+import { HeightWidthProperties, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -18,6 +18,9 @@ export class WidthHeightElementComponent implements OnInit {
 
 	@Input()
 	public product: Product | null | undefined;
+
+  @Input()
+  public section: Section | undefined;
 
 	@Input()
 	public isDialog = false;

@@ -63,7 +63,7 @@
 
         <ng-container *ngIf="step === 1 || step === 2 && multiColor.value === true">
             <div class="color-filter">
-                <div class="circle" [class.selected]="element.state.active">
+                <div class="circle" *ngIf="section?.allowMultiple && product.useStepByStep" [class.selected]="element.state.active">
                     <mat-icon>done</mat-icon>
                 </div>
 

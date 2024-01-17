@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { HeightWidthProperties, Product } from '@apto-catalog-frontend/store/product/product.model';
+import { HeightWidthProperties, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { WidthHeightElementComponent } from '../width-height-element/width-height-element.component';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
@@ -17,6 +17,9 @@ export class WidthHeightElementWrapperComponent {
 
   @Input()
   public product: Product | null | undefined;
+
+  @Input()
+  public section: Section | undefined;
 
   dialogSizesEnum = DialogSizesEnum;
 
