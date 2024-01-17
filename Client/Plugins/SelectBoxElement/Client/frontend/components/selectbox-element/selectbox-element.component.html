@@ -73,10 +73,4 @@
          *ngIf="(element.element.description | translate) !== ''"
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
-
-    <div class="apply-button">
-        <button mat-flat-button color="primary" (click)="saveInput()">
-            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
-        </button>
-    </div>
 </div>
