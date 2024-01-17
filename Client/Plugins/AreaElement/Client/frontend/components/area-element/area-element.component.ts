@@ -75,6 +75,7 @@ export class AreaElementComponent implements OnInit {
 
       if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'input') {
           validators = [
+            Validators.required,
             Validators.min(this.element.element.definition.properties[`field_${i}`][0].minimum),
             Validators.max(this.element.element.definition.properties[`field_${i}`][0].maximum),
           ];
@@ -160,6 +161,10 @@ export class AreaElementComponent implements OnInit {
 			})
 		);
 	}
+
+  public closeModal(): void {
+    this.dialogRef.close();
+  }
 
   private markAllControlsAsDirty(): void {
     Object.keys(this.formElement.controls).forEach((key) => {
