@@ -11,7 +11,7 @@
             <mat-icon>done</mat-icon>
         </div>
         <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
-                           [mat-dialog-close]="true"
+                           (clicked)="closeModal()"
                            [inner]="true"
         ></apto-close-button>
 
@@ -84,7 +84,6 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                 mat-flat-button
                 color="primary"
-                [mat-dialog-close]="true"
                 (click)="saveInput()"
             >
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}

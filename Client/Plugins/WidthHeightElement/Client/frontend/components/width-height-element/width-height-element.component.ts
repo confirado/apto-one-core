@@ -1,12 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import {
+  getConfigurationStateSuccess,
+  updateConfigurationState,
+} from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { HeightWidthProperties, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Actions, ofType } from '@ngrx/effects';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-width-height-element',
 	templateUrl: './width-height-element.component.html',
@@ -61,7 +68,9 @@ export class WidthHeightElementComponent implements OnInit {
 	}
 
 	public constructor(
-    private store: Store
+    private store: Store,
+    private dialogRef: MatDialogRef<WidthHeightElementComponent>,
+    private readonly actions$: Actions
   ) { }
 
 	public ngOnInit(): void {
@@ -84,6 +93,8 @@ export class WidthHeightElementComponent implements OnInit {
 		if (this.element.element.definition.properties.width && this.element.element.definition.properties.width[0]) {
 			this.stepWidth = this.element.element.definition.properties.width?.[0]?.step;
 		}
+
+    this.addRequirementsForInput();
 
 		if (this.element.element.definition.staticValues.renderingHeight === 'select') {
 			if (this.element.element.definition.properties.height?.[0]?.maximum) {
@@ -110,6 +121,14 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.markAllControlsAsDirty();
+
+    if (!this.formElement.valid) {
+      return;
+    }
+
+    this.closeModalOnSuccess();
 		this.store.dispatch(
 			updateConfigurationState({
 				updates: {
@@ -155,4 +174,39 @@ export class WidthHeightElementComponent implements OnInit {
 			})
 		);
 	}
+
+  private addRequirementsForInput(): void {
+    if (this.element.element.definition.staticValues.renderingHeight === 'input') {
+      this.formElement.controls['height'].setValidators([
+        Validators.required,
+        Validators.min(this.element.element.definition.properties.height?.[0]?.minimum),
+        Validators.max(this.element.element.definition.properties.height?.[0]?.maximum),
+      ]);
+    }
+
+    if (this.element.element.definition.staticValues.renderingWidth === 'input') {
+      this.formElement.controls['width'].setValidators([
+        Validators.required,
+        Validators.min(this.element.element.definition.properties.width?.[0]?.minimum),
+        Validators.max(this.element.element.definition.properties.width?.[0]?.maximum),
+      ]);
+    }
+  }
+
+  private markAllControlsAsDirty(): void {
+    Object.keys(this.formElement.controls).forEach((key) => {
+      this.formElement.get(key).markAsDirty();
+    });
+  }
+
+  private closeModalOnSuccess(): void {
+    if (this.dialogRef?.id) {
+      this.actions$.pipe(
+        ofType(getConfigurationStateSuccess),
+        untilDestroyed(this)
+      ).subscribe((result) => {
+        this.dialogRef.close();
+      });
+    }
+  }
 }

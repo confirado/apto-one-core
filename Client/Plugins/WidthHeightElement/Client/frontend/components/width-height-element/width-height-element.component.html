@@ -48,6 +48,8 @@
                         [type]="'integer'"
                         [name]="element.element.definition.staticValues.prefixHeight | translate"
                         [step]="stepHeight"
+                        [min]="element.element.definition.properties.height?.[0]?.minimum"
+                        [max]="element.element.definition.properties.height?.[0]?.maximum"
                     >
                     </apto-input-field>
 
@@ -71,7 +73,7 @@
                     </apto-select-field>
                 </div>
 <!--                <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>-->
-                <div class="hint">{{this.element.element.definition.properties.height?.[0]?.minimum + ' - ' + this.element.element.definition.properties.height?.[0]?.maximum + ' ' + (this.element.element.definition.staticValues.suffixHeight | translate)}}</div>
+                <div class="hint">{{element.element.definition.properties.height?.[0]?.minimum + ' - ' + element.element.definition.properties.height?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixHeight | translate)}}</div>
             </div>
         </div>
 
@@ -91,6 +93,8 @@
                         [type]="'integer'"
                         [name]="element.element.definition.staticValues.prefixWidth | translate"
                         [step]="stepWidth"
+                        [min]="element.element.definition.properties.width?.[0]?.minimum"
+                        [max]="element.element.definition.properties.width?.[0]?.maximum"
                     >
                     </apto-input-field>
 
@@ -114,7 +118,7 @@
                     </apto-select-field>
                 </div>
 <!--                <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>-->
-                <div class="hint">{{this.element.element.definition.properties.width?.[0]?.minimum  + ' - ' + this.element.element.definition.properties.width?.[0]?.maximum + ' ' + (this.element.element.definition.staticValues.suffixWidth | translate)}}</div>
+                <div class="hint">{{element.element.definition.properties.width?.[0]?.minimum  + ' - ' + element.element.definition.properties.width?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate)}}</div>
             </div>
         </div>
 
@@ -128,7 +132,6 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product?.useStepByStep"
                 mat-flat-button
                 color="primary"
-                [mat-dialog-close]="true"
                 (click)="saveInput()"
                 >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
             </button>
