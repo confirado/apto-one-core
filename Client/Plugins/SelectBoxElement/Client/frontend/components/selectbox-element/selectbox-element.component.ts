@@ -111,6 +111,8 @@ export class SelectboxElementComponent implements OnInit {
 					if (this.formElement.value === null) {
 						this.currentFormArray = [];
 					}
+
+          this.saveInput();
 				});
 			});
 	}
