@@ -4,7 +4,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
-import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 @Component({
 	selector: 'apto-custom-text-element',
@@ -17,6 +17,9 @@ export class CustomTextElementComponent implements OnInit {
 
   @Input()
   public product: Product | null | undefined;
+
+  @Input()
+  public section: Section | undefined;
 
   @Input()
   public isDialog = false;
