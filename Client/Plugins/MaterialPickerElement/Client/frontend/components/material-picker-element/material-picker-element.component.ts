@@ -15,7 +15,7 @@ import {
 } from '@apto-catalog-frontend/models/material-picker';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { ItemsUpdatePayload } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.model";
 import {
   selectColors,
@@ -36,6 +36,9 @@ import {
 export class MaterialPickerElementComponent implements OnInit {
   @Input()
   public element: ProgressElement<any>;
+
+  @Input()
+  public section: Section | undefined;
 
 	@Input()
 	public product: Product | undefined;

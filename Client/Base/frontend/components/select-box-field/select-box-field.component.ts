@@ -75,10 +75,7 @@ export class SelectBoxFieldComponent<T extends { id: string; name: TranslatedVal
   }
 
 	public valueGiven(): boolean {
-		if (this.value.length !== 0) {
-			return true;
-		}
-		return false;
+		return this.value.length !== 0;
 	}
 
 	public writeValue(value: string[] | null): void {
@@ -111,16 +108,16 @@ export class SelectBoxFieldComponent<T extends { id: string; name: TranslatedVal
 
 	public selectItem(item: string): void {
     this.overlayWidth = this.calculateOverlayWidth();
+    this.value = [...this.value];
 
     if (this.value.includes(item)) {
 			this.value.splice(this.value.indexOf(item), 1);
-			this.updateValue();
-			this.onChange?.(this.value);
 		} else {
-			this.value.push(item);
-			this.updateValue();
-			this.onChange?.(this.value);
+      this.value.push(item);
 		}
+
+    this.updateValue();
+    this.onChange?.(this.value);
 	}
 
 	public clear(): void {

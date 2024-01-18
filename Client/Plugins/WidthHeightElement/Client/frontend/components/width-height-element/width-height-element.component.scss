@@ -5,6 +5,8 @@
 
 .width-height-element {
     @include element-grid();
+    @include border-color();
+
     grid-template-areas:
             "header"
             "picture"
@@ -14,8 +16,14 @@
             "width-input"
             "description"
             "buttons";
+
     @include element-margins();
     @include element-content-margins();
+
+    .circle {
+        @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
+    }
 
     .header {
         grid-area: header;
@@ -64,13 +72,15 @@
     }
 
     .element {
-        @include element();
         grid-template-rows: auto;
         grid-template-areas:
                 "picture"
                 "element"
                 "element";
         margin-top: var(--element-gap);
+        @include element();
+        border-radius: var(--border-radius-card);
+        border: 3px solid transparent;
 
         .container {
             @include element-input-grid();
@@ -146,8 +156,9 @@
         @include buttons();
     }
 
-    .circle {
-        @include circle-checkbox(25px, 'inner');
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+        border-radius: var(--border-radius-card);
     }
 }
 

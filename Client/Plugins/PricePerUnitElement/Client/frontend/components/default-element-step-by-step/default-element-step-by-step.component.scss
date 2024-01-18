@@ -8,11 +8,28 @@
 
     cursor: pointer;
     position: relative;
+    border-radius: var(--border-radius-card);
+    border: 3px solid transparent;
+
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+    }
+
+    .circle {
+        @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
+    }
 
     .header {
         grid-area: header;
         @include header();
         @include title();
+    }
+
+    &.with-circle {
+        .header {
+            padding-right: 25px;
+        }
     }
 
     .picture {
@@ -35,10 +52,6 @@
     .apply-button {
         grid-area: buttons;
         @include buttons();
-    }
-
-    .circle {
-        @include circle-checkbox(25px, 'inner');
     }
 }
 

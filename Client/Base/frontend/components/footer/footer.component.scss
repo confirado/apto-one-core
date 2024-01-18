@@ -61,7 +61,6 @@ mat-toolbar {
 	mat-toolbar {
 		width: 100%;
 		display: grid;
-		grid-template-rows: 100px;
 		grid-template-columns: 1fr;
 		height: fit-content;
 		background-color: var(--color-background-footer);
@@ -69,14 +68,10 @@ mat-toolbar {
 		justify-content: center;
 	}
 
-	.entries {
-		display: flex;
-		flex-direction: row;
-		gap: 40px;
-		justify-content: space-evenly;
-		flex-wrap: wrap;
-		padding: 10px;
-	}
+    .entries {
+        padding: 10px;
+    }
+
 	img {
 		width: auto;
 	}

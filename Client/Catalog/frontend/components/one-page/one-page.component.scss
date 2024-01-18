@@ -7,19 +7,19 @@
 .title {
 	background-color: var(--color-background-card);
 	border-radius: var(--border-radius-card);
-	overflow: hidden;
+	overflow: auto;
 	margin-bottom: 15px;
-    flex: 0 0 64px;
+    flex: 0 0 auto;
+    min-height: 64px;
 }
 
 .headline {
 	padding: 15px 30px;
 	border-bottom: 3px solid var(--color-optic-lines);
-    max-height: 100%;
 }
 
 h1 {
-	margin: 0px !important;
+	margin: 0 !important;
 	color: var(--color-primary);
     font-size: 25px;
     font-weight: 700;

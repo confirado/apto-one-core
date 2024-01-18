@@ -6,7 +6,7 @@
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
-    <div *ngIf="product.useStepByStep" class="circle" [class.selected]="element.state.active">
+    <div *ngIf="section?.allowMultiple && product.useStepByStep" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
 
@@ -32,7 +32,6 @@
                         [default]="element.element.definition.staticValues.defaultItem?.id"
                         [items]="items"
                         [formControl]="formElement"
-                        (inputCleared)="onInputCleared()"
                     >
                     </apto-select-box-field>
                     <apto-select-field
@@ -41,7 +40,6 @@
                         [items]="items"
                         [default]="setBoxName(formElement.value?.[0]) | translate"
                         [formControl]="formElement"
-                        (inputCleared)="onInputCleared()"
                     >
                     </apto-select-field>
                 </div>
@@ -77,12 +75,6 @@
          *ngIf="(element.element.description | translate) !== ''"
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
-
-    <div class="apply-button">
-        <button mat-flat-button color="primary" (click)="saveInput()">
-            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
-        </button>
-    </div>
 
     <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>

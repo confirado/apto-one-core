@@ -1,6 +1,6 @@
 <mat-toolbar>
-    <div class="login-button" *ngIf="showLoginButton()" (click)="login()">Login</div>
-    <div class="login-button" *ngIf="showLogoutButton()" (click)="logout()">Logout</div>
+    <div class="login-button" *ngIf="showLoginButton()" (click)="login()"> {{ csLogin$ | async | contentSnippet: 'login' }} </div>
+    <div class="login-button" *ngIf="showLogoutButton()" (click)="logout()"> {{ csLogin$ | async | contentSnippet: 'logout' }} </div>
 
     <ng-container *ngIf="languages$ | async as languages">
         <div class="language-desktop">
@@ -27,9 +27,11 @@
         </a>
     </div>
 
-    <div class="basket-wrapper">
-        <div class="basket2" (click)="toggleSideBar()"><span class="fa fa-shopping-cart"></span> Warenkorb</div>
-<!--        <div class="basket-articles">0 Artikel</div>-->
+    <div *ngIf="connector.configured" class="basket-wrapper">
+        <div class="basket2" (click)="toggleSideBar()">
+            <span class="fa fa-shopping-cart"></span>
+            {{ csLinksToShop$ | async | contentSnippet: 'basket' }} ({{ totalQuantity }})
+        </div>
     </div>
 
     <ng-container *ngIf="languages$ | async as languages">

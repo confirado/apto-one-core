@@ -28,6 +28,9 @@ export class SelectboxElementComponent implements OnInit {
   public product: Product | null | undefined;
 
   @Input()
+  public section: Section | undefined;
+
+  @Input()
   public isDialog = false;
 
 	public formElement = new FormControl<string[] | string>([]);
@@ -111,6 +114,8 @@ export class SelectboxElementComponent implements OnInit {
 					if (this.formElement.value === null) {
 						this.currentFormArray = [];
 					}
+
+          this.saveInput();
 				});
 			});
 	}

@@ -6,6 +6,16 @@
     @include element-grid();
     @include element-margins();
 
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+        border-radius: var(--border-radius-card);
+    }
+
+    .circle {
+        @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
+    }
+
     .header {
         grid-area: header;
         @include header();
@@ -60,10 +70,6 @@
     .apply-button {
         grid-area: buttons;
         @include buttons();
-    }
-
-    .circle {
-        @include circle-checkbox(25px, 'inner');
     }
 }
 
