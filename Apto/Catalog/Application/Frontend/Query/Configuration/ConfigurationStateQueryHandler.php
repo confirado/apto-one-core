@@ -119,6 +119,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
         }
 
+
+        // if validation is passed in above block then
         // apply set/remove/complete actions (add or remove elements from enriched state's disabled array)
         try {
             if ($query->getIntention()['init'] ?? false) {
@@ -178,8 +180,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * if this is an initialization (we don't hit the Auswälen button to save/set the state),
-     *  we just load the page and check that default values are val
+     * Collects the list of elements and their values, that are marked as 'default' from the backend and gives
+     * the list to applySet() method
      *
      * @param ConfigurableProduct $product
      * @param EnrichedState       $state
@@ -203,8 +205,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
 
             foreach ($section['elements'] as $element) {
-                // as this should run on initialization and not on setting new values into the state,
-                // therefore we check the default values as there are no any other values yet set
+                // as the applyInit method should run on initialization (and not on setting new values into the state),
+                // we need to check the default values as there are no any other values yet set
                 if (!$element['isDefault']) {
                     continue;
                 }
@@ -238,9 +240,12 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * Takes the list of element configs argument, check them and if they are valid updates/sets the state
+     *
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
      * @param array $items
+     *
      * @throws InvalidUuidException
      */
     private function applySet(ConfigurableProduct $product, EnrichedState $state, array $items)

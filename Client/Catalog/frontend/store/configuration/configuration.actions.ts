@@ -14,6 +14,9 @@ export enum ConfigurationActionTypes {
 	UpdateConfigurationState = '[Configuration] Update State',
 	GetConfigurationState = '[Configuration] Get State',
 	GetConfigurationStateSuccess = '[Configuration] Get State success',
+
+  UpdateParameterState = '[Configuration] Update Parameter State',
+
 	SetPrevStep = '[Configuration] Set prev step',
 	SetPrevStepSuccess = '[Configuration] Set prev step success',
 	SetNextStep = '[Configuration] Set next step',
@@ -99,6 +102,9 @@ export const getConfigurationStateSuccess = createAction(
 		};
 	}>()
 );
+
+// export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState,
+//   props<{ updates: GetParameterStateArguments['updates'] }>());
 
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
 

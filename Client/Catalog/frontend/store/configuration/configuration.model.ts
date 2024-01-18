@@ -7,11 +7,31 @@ export enum SectionTypes {
   WIEDERHOLBAR = 'Wiederholbar'
 }
 
+// this should be in sync with State.php's ITEM_TYPES
+export enum StateItemTypes {
+  QUANTITY = 'quantity',
+  IGNORED_RULES = 'ignored_rules',
+  REPETITIONS = 'repetitions',
+}
+
 export interface HumanReadableState {
   elementId: string;
   repetition: number;
   sectionId: string;
   values: Array<{ [key: string]: TranslatedValue }>;
+}
+
+export interface ConfigurationState {
+  sectionId: string;
+  elementId: string;
+  sectionRepetition: number;
+  property?: any;
+  value: any;
+}
+
+export interface ParameterState {
+  name: string;
+  value: any
 }
 
 export interface CurrentSection {
@@ -179,20 +199,8 @@ export interface GetConfigurationStateArguments {
 	productId: string;
 	compressedState: any;
 	updates: {
-		set?: {
-			sectionId: string;
-			elementId: string;
-      sectionRepetition?: number
-			property?: any;
-			value: any;
-		}[];
-		remove?: {
-			sectionId: string;
-			elementId: string;
-      sectionRepetition?: number
-      property?: any;
-			value: any;
-		}[];
+		set?: ConfigurationState[];
+		remove?: ConfigurationState[];
 	};
 	locale: string;
 	quantity: number;

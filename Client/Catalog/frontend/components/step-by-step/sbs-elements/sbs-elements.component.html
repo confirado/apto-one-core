@@ -26,6 +26,8 @@
         </div>
 
         <div class="step-navigation-container">
+            <apto-slot-outlet identifier="sbs-elements-step-navigation-container-top"></apto-slot-outlet>
+
             <!--Obviously we want to hide the back button on the first step-->
 			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep(progressState)" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
@@ -53,6 +55,8 @@
 				<mat-icon>done</mat-icon>
 				<span>Konfiguartion abschließen</span>
 			</button>
+
+            <apto-slot-outlet identifier="sbs-elements-step-navigation-container-bottom"></apto-slot-outlet>
 		</div>
 	</ng-container>
 </ng-container>

@@ -177,6 +177,8 @@ class ComputedProductValue extends AptoEntity
     }
 
     /**
+     * see backend calculated values for aliases
+     *
      * @return Collection
      */
     public function getAliases(): Collection
@@ -266,7 +268,8 @@ class ComputedProductValue extends AptoEntity
         }
 
         $filledFormula = $this->fillNestedValues(array_merge($calculatedValues, [
-            '_anzahl_' => $state->getParameter(State::QUANTITY)
+            '_repetitions_' => $state->getParameter(State::REPETITIONS),
+            '_anzahl_' => $state->getParameter(State::QUANTITY),
         ]));
         $variables = $this->getAliasValues($state, $this->product);
 

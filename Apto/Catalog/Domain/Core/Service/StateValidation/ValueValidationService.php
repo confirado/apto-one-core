@@ -17,9 +17,7 @@ class ValueValidationService
                 $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]] = [];
             }
 
-            if (!$state->isParameter($stateItem['sectionId'])) {
-                $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]][] = $stateItem;
-            }
+            $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]][] = $stateItem;
         }
         return array_values($sectionList);
     }
