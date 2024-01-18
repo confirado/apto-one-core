@@ -10,7 +10,7 @@
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
-    <div *ngIf="product.useStepByStep" class="circle" [class.selected]="element.state.active">
+    <div *ngIf="(section.allowMultiple || element.state.active) && product.useStepByStep" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
 

@@ -65,10 +65,6 @@
         grid-area: buttons;
         @include buttons();
     }
-
-    .circle {
-        @include circle-checkbox(25px, 'inner');
-    }
 }
 
 
