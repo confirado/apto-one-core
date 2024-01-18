@@ -8,4 +8,5 @@ export interface DialogDataInterface {
   cancelButtonText?: string,
   confirmButtonText?: string,
   type?: DialogTypesEnum
+  hideIcon?: boolean
 }
