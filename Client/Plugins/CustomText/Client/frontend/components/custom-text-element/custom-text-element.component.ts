@@ -22,9 +22,6 @@ export class CustomTextElementComponent implements OnInit {
   public product: Product | null | undefined;
 
   @Input()
-  public section: Section | undefined;
-
-  @Input()
   public isDialog = false;
 
 	public formElement = new FormControl<string | undefined>(undefined);

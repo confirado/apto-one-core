@@ -29,9 +29,6 @@ export class WidthHeightElementComponent implements OnInit {
 	@Input()
 	public product: Product | null | undefined;
 
-  @Input()
-  public section: Section | undefined;
-
 	@Input()
 	public isDialog = false;
 

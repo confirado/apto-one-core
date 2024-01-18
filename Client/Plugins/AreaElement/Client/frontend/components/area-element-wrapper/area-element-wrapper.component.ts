@@ -21,9 +21,6 @@ export class AreaElementWrapperComponent {
   @Input()
   public product: Product | null | undefined;
 
-  @Input()
-  public section: Section | undefined;
-
   dialogSizesEnum = DialogSizesEnum;
 
   public constructor(
