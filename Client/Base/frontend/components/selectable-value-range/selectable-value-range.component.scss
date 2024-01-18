@@ -42,3 +42,11 @@
         @include hint();
     }
 }
+
+@media only screen and (min-width: $mobile-max-width) {
+    .input-field {
+        .name {
+            @include name('tablet');
+        }
+    }
+}

@@ -32,7 +32,9 @@
 
 @media only screen and (min-width: $mobile-max-width) {
     .text-input-field {
-        .name {}
+        .name {
+            @include name('tablet');
+        }
 
         .container {
             textarea {
