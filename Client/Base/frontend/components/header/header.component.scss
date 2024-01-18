@@ -106,6 +106,7 @@ mat-toolbar {
 	}
 
     mat-toolbar {
+        grid-template-rows: 60px;
         .language-mobile {
             display: flex;
         }

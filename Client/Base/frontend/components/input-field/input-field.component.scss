@@ -11,7 +11,7 @@
 
     .name {
         grid-area: name;
-        @include name();
+        @include name('mobile');
     }
 
     .prefix {
@@ -40,5 +40,13 @@
     .hint {
         grid-area: hint;
         @include hint();
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .input-field {
+        .name {
+            @include name('tablet');
+        }
     }
 }
