@@ -42,7 +42,7 @@ class RuleValidationService
         $ignored = [];
 
         // ignoredRules is one of the parameters allowed in state together with quantity, see State class
-        $ignoredRuleIds = $state->getParameter('ignoredRules');
+        $ignoredRuleIds = $state->getParameter(State::IGNORED_RULES);
 
         // @todo should be done in one operation because of heavy computing time for computed values
         $rulePayload = $this->rulePayloadFactory->getPayload($product, $state);

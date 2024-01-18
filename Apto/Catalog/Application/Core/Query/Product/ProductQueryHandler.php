@@ -317,6 +317,8 @@ class ProductQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * Get product's calculated values (Berechnete werte)
+     *
      * @param FindProductComputedValuesCalculated $query
      * @return array
      * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
@@ -324,7 +326,9 @@ class ProductQueryHandler implements QueryHandlerInterface
      */
     public function handleFindProductComputedValuesCalculated(FindProductComputedValuesCalculated $query)
     {
-        return $this->computedProductValueCalculator->calculateComputedValues($query->getId(), new State($query->getState()));
+        $state = new State($query->getState());
+
+        return $this->computedProductValueCalculator->calculateComputedValues($query->getId(), $state);
     }
 
     /**

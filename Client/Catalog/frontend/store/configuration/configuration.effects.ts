@@ -5,31 +5,21 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  addGuestConfiguration,
-  addGuestConfigurationSuccess,
-  addToBasket, addToBasketSuccess, fetchPartsList, fetchPartsListSuccess,
-  getConfigurationState,
-  getConfigurationStateSuccess,
-  getCurrentRenderImageSuccess,
-  getRenderImagesSuccess,
-  humanReadableStateLoadSuccess,
-  initConfiguration,
-  initConfigurationSuccess,
-  onError,
-  setPrevStep,
-  setPrevStepSuccess,
-  setStep,
-  setStepSuccess,
-  updateConfigurationState,
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+  addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, ConfigurationActionTypes,
+  fetchPartsList, fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess,
+  getCurrentRenderImageSuccess, getRenderImagesSuccess, humanReadableStateLoadSuccess, initConfiguration,
+  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess,
+  setStep, setStepSuccess, updateConfigurationState,
+}
+  from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
 import { ProductRepository } from '@apto-catalog-frontend/store/product/product.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EMPTY, forkJoin } from 'rxjs';
+import { EMPTY, forkJoin, tap } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Element } from '../product/product.model';
-import { Configuration, CurrentSection } from './configuration.model';
+import { Configuration, ConfigurationState, CurrentSection } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -154,6 +144,29 @@ export class ConfigurationEffects {
 			)
 		)
 	);
+
+	// public updateParameter$ = createEffect(() =>
+	// 	this.actions$.pipe(
+	// 		ofType(updateParameterState),
+	// 		withLatestFrom(
+  //       this.store$.select(selectParameters),
+  //     ),
+  //     tap(console.log),
+	// 		map(([action, store]) => {
+  //         return getParameterState({
+  //           payload: {
+  //             // quantity: store.productId,
+  //             // compressedState: store.state.compressedState,
+  //             // connector: store.connector,
+  //             // updates: action.updates,
+  //             // currentPerspective: store.currentPerspective,
+  //             // currentUser: currentUser
+  //           },
+  //         });
+  //       }
+	// 		)
+	// 	)
+	// );
 
   public getConfigurationState$ = createEffect(() =>
     this.actions$.pipe(
@@ -336,6 +349,9 @@ export class ConfigurationEffects {
 		)
 	);
 
+  /**
+   * triggered when we go back in configuration
+   */
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
 			ofType(setStepSuccess, setPrevStepSuccess),
@@ -345,7 +361,7 @@ export class ConfigurationEffects {
         this.store$.select(selectProduct),
       ),
 			map(([action, configuration, progressState, product]) => {
-        const removeList: { sectionId: string; elementId: string; sectionRepetition?: number; property: string; value: string }[] = [];
+        const removeList: ConfigurationState[] = [];
 
         if (product.product.keepSectionOrder) {
           for (const section of configuration.state.sections) {
