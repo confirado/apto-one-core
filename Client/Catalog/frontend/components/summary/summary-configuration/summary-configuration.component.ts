@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
@@ -12,7 +12,7 @@ import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/conte
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
-import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { fetchPartsList, setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
@@ -22,7 +22,7 @@ import {
   selectSumPrice,
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { ProgressStep, SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -67,6 +67,9 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+
+    this.store.dispatch(fetchPartsList());
+
     // subscribe for locale store value
     this.store.select(selectLocale).pipe(
       takeUntil(this.destroy$)

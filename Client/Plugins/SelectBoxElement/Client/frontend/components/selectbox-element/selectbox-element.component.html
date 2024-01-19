@@ -4,7 +4,9 @@
      [class.open-in-dialog]="isDialog"
      [class.selected]="element.state.active"
 >
-    <div *ngIf="section?.allowMultiple && product.useStepByStep" class="circle" [class.selected]="element.state.active">
+    <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
+    <div *ngIf="(section?.allowMultiple && product.useStepByStep) || element.state.active" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
 
@@ -73,4 +75,6 @@
          *ngIf="(element.element.description | translate) !== ''"
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
+
+    <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>

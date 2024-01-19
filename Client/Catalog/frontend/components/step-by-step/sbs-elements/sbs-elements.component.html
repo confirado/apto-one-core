@@ -7,27 +7,29 @@
 				[previewImage]="progressState.currentStep.section.previewImage"
 				[isZoomable]="progressState.currentStep.section.isZoomable"
 			></apto-section-picture>
-			<h2 class="title">{{ progressState.currentStep.section.name | translate }}</h2>
+			<h2 class="title">{{ progressState.currentStep.section.name | translate }} {{ sectionIndex }}</h2>
 			<div class="description" [innerHTML]="progressState.currentStep.section.description | translate | safeHtml"></div>
 		</div>
 
-		<div class="element-list">
-			<div class="element" *ngFor="let element of currentProductElements$ | async">
-				<ng-container *ngIf="getProgressElement(element.id) as pElement">
-					<apto-slot-outlet
-						*ngIf="!isElementDisabled(element.id)"
-						[identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
-						[product]="product$ | async"
-						[section]="progressState.currentStep.section"
-						[element]="pElement"
-					></apto-slot-outlet>
-				</ng-container>
-			</div>
-		</div>
+        <div class="element-list">
+            <ng-container *ngFor="let element of currentProductElements$ | async">
+                <div class="element" *ngIf="getProgressElement(element.id) as pElement">
+                    <apto-slot-outlet
+                        *ngIf="!isElementDisabled(element.id, element.sectionRepetition)"
+                        [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
+                        [product]="product$ | async"
+                        [section]="progressState.currentStep.section"
+                        [element]="pElement"
+                    ></apto-slot-outlet>
+                </div>
+            </ng-container>
+        </div>
 
-		<div class="step-navigation-container">
+        <div class="step-navigation-container">
+            <apto-slot-outlet identifier="sbs-elements-step-navigation-container-top"></apto-slot-outlet>
+
             <!--Obviously we want to hide the back button on the first step-->
-			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep()" color="accent" mat-flat-button>
+			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep(progressState)" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
 				<span>Zurück</span>
 			</button>
@@ -35,7 +37,7 @@
 			<button
 				*ngIf="!lastSection(progressState)"
 				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
-				(click)="nextStep()"
+				(click)="nextStep(progressState)"
 				color="primary"
 				mat-flat-button
 			>
@@ -53,6 +55,8 @@
 				<mat-icon>done</mat-icon>
 				<span>Konfiguartion abschließen</span>
 			</button>
+
+            <apto-slot-outlet identifier="sbs-elements-step-navigation-container-bottom"></apto-slot-outlet>
 		</div>
 	</ng-container>
 </ng-container>

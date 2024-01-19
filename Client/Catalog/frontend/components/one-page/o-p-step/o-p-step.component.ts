@@ -57,20 +57,14 @@ export class OPStepComponent implements OnInit {
     })
   }
 
-  public isElementDisabled(elementId: string) {
+  public isElementDisabled(elementId: string, sectionRepetition: number): boolean {
     const state = this.sectionStateElements.filter(e => e.id === elementId);
-    if (state.length > 0) {
-      return state[0].disabled;
-    }
-    return false;
+    return state.length > 0 ? state[sectionRepetition].disabled : false;
   }
 
   public getProgressElement(elementId: string): ProgressElement | null {
     const element = this.elements.filter(e => e.element.id === elementId);
-    if (element.length > 0) {
-      return element[0];
-    }
-    return null;
+    return element.length > 0 ? element[0] : null;
   }
 
 	public togglePanel(): void {

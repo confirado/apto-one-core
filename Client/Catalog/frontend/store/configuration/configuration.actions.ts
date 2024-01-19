@@ -2,7 +2,7 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import {
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments, HumanReadableState,
+  GetConfigurationStateArguments, HumanReadableState, PartsListPart,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -14,6 +14,9 @@ export enum ConfigurationActionTypes {
 	UpdateConfigurationState = '[Configuration] Update State',
 	GetConfigurationState = '[Configuration] Get State',
 	GetConfigurationStateSuccess = '[Configuration] Get State success',
+
+  UpdateParameterState = '[Configuration] Update Parameter State',
+
 	SetPrevStep = '[Configuration] Set prev step',
 	SetPrevStepSuccess = '[Configuration] Set prev step success',
 	SetNextStep = '[Configuration] Set next step',
@@ -35,6 +38,8 @@ export enum ConfigurationActionTypes {
 	OnError = '[Configuration] Error',
   createLoadingFlagAction = '[Configuration] Create Loading Flag',
   resetLoadingFlagAction = '[Configuration] Reset Loading Flag',
+  FetchPartsList = '[Configuration] Fetch Parts List',
+  FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
 }
 
 export const createLoadingFlagAction = createAction(
@@ -98,11 +103,14 @@ export const getConfigurationStateSuccess = createAction(
 	}>()
 );
 
+// export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState,
+//   props<{ updates: GetParameterStateArguments['updates'] }>());
+
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
 
 export const getRenderImagesSuccess = createAction(ConfigurationActionTypes.GetRenderImagesSuccess, props<{ payload: any }>());
 
-export const setPrevStep = createAction(ConfigurationActionTypes.SetPrevStep);
+export const setPrevStep = createAction(ConfigurationActionTypes.SetPrevStep, props<{ payload: CurrentSection | null }>());
 
 export const setPrevStepSuccess = createAction(ConfigurationActionTypes.SetPrevStepSuccess);
 
@@ -111,7 +119,7 @@ export const humanReadableStateLoadSuccess = createAction(
 	props<{ payload: any }>()
 );
 
-export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep);
+export const setNextStep = createAction(ConfigurationActionTypes.SetNextStep, props<{ payload: CurrentSection | null }>());
 
 export const setStep = createAction(ConfigurationActionTypes.SetStep, props<{ payload: CurrentSection | null }>());
 
@@ -165,3 +173,6 @@ export const addGuestConfigurationSuccess = createAction(ConfigurationActionType
 export const setHideOnePage = createAction(ConfigurationActionTypes.SetHideOnePage, props<{ payload: boolean }>());
 
 export const onError = createAction(ConfigurationActionTypes.OnError, props<{ message: MessageBusResponseMessage }>());
+
+export const fetchPartsList = createAction(ConfigurationActionTypes.FetchPartsList);
+export const fetchPartsListSuccess = createAction(ConfigurationActionTypes.FetchPartsListSuccess, props<{ payload: PartsListPart[] }>());

@@ -177,6 +177,8 @@ class ComputedProductValue extends AptoEntity
     }
 
     /**
+     * see backend calculated values for aliases
+     *
      * @return Collection
      */
     public function getAliases(): Collection
@@ -266,13 +268,25 @@ class ComputedProductValue extends AptoEntity
         }
 
         $filledFormula = $this->fillNestedValues(array_merge($calculatedValues, [
-            '_anzahl_' => $state->getParameter(State::QUANTITY)
+            '_repetitions_' => $state->getParameter(State::REPETITIONS),
+            '_anzahl_' => $state->getParameter(State::QUANTITY),
         ]));
         $variables = $this->getAliasValues($state, $this->product);
 
+        $aliases = [];
+        /** @var Alias $alias */
+        foreach ($this->getAliases() as $alias) {
+            $aliases[$alias->getName()] = [
+                'sectionId' => $alias->getSectionId(),
+                'elementId' => $alias->getElementId(),
+                'property' => $alias->getProperty(),
+                'isCustomProperty' => $alias->isCustomProperty()
+            ];
+        }
+
         try {
             return math_eval(
-                FunctionParser::parse($filledFormula, $variables, $mediaFileSystem),
+                FunctionParser::parse($filledFormula, $variables, $mediaFileSystem, $aliases, $state),
                 $variables
             );
         } catch (\Exception $exception) {

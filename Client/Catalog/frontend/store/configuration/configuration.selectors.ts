@@ -1,6 +1,7 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
+  PartsListPart,
   ProgressState,
   ProgressStep,
   RenderImage,
@@ -18,7 +19,7 @@ export const selectConfigurationLoading = createSelector(featureSelector, (state
 
 export const selectProduct = createSelector(featureSelector, (state: CatalogFeatureState) => state.product);
 
-export const selectComputedValues = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.computedValues);
+export const selectComputedValueList = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.computedValues);
 
 function getDescription(section: Section, state: CatalogFeatureState, locale: string | null): string {
 	const elements = state.configuration.state.elements.filter((e) => e.active && e.sectionId === section?.id).map((e) => e.id);
@@ -145,6 +146,11 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 });
 
 export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
+  // if current step is undefined we hav no step let to configure so we can return 100
+  if (!state.currentStep) {
+    return 100;
+  }
+
   let completedSteps = state.beforeSteps.length;
   let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
   let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
@@ -415,7 +421,17 @@ export const configurationIsValid = createSelector(featureSelector, (state: Cata
     }
   }
   return true;
-})
+});
+
+export const selectSectionIsValid = (sectionId: string, repetition: number) => createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const section = state.configuration.state.sections.find(s => s.id === sectionId && s.repetition === repetition);
+  if (!section) {
+    return false;
+  }
+
+  const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id && element.sectionRepetition === repetition);
+  return sectionIsValid(section, elements);
+});
 
 function sectionIsValid(section, elements) {
   // check disabled section
@@ -445,3 +461,7 @@ function sectionIsValid(section, elements) {
   // section is valid
   return true;
 }
+
+export const selectPartsList = createSelector(featureSelector, (state: CatalogFeatureState): PartsListPart[] => {
+  return state.configuration.partsList;
+});

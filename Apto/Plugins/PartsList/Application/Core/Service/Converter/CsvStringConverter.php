@@ -120,6 +120,40 @@ class CsvStringConverter
     }
 
     /**
+     * @param AptoUuid $productId
+     * @param State $state
+     * @param Currency $currency
+     * @param string $shopId
+     * @param string $customerGroupExternalId
+     * @return array
+     * @throws CircularReferenceException
+     * @throws InvalidUuidException
+     * @throws NoProductIdGivenException
+     * @throws NoStateGivenException
+     */
+    public function getCsvListAsArray(
+        AptoUuid $productId,
+        State $state,
+        Currency $currency,
+        string $shopId,
+        string $customerGroupExternalId
+    ): array {
+        $customerGroupId = $this->getCustomerGroupIdByExternalId($shopId, $customerGroupExternalId);
+        $fallBackCustomerGroupId = $this->getFallbackCustomerGroupId($customerGroupId);
+        $computedValues = $this->computedProductValueCalculator->calculateComputedValues($productId->getId(), $state, true);
+
+        return $this->configurationPartsList->getBasicList(
+            $productId,
+            $state,
+            $currency,
+            $customerGroupId,
+            $fallBackCustomerGroupId,
+            $this->locale,
+            $computedValues
+        );
+    }
+
+    /**
      * @param AptoUuid $customerGroupId
      * @return AptoUuid
      * @throws InvalidUuidException

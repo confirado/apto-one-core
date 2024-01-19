@@ -46,6 +46,14 @@ class Repeatable implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isRepeatable(): bool
+    {
+        return $this->type === self::TYPES[1];
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array

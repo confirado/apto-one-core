@@ -3,34 +3,38 @@
 namespace Apto\Catalog\Domain\Core\Service\Formula;
 
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FunctionParserException;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction\FormulaFunction;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction\Matrix;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction\Max;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction\Min;
+use Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction\Repetition;
 
 class FunctionParser
 {
-
     /**
      * Parse a formula by replacing all custom function calls
      * @param string $formula
      * @param array $variables
      * @param MediaFileSystemConnector|null $fileSystemConnector
+     * @param array $aliases
+     * @param State|null $state
      * @return string
      * @throws FunctionParserException
      */
-    public static function parse(string $formula, array $variables, ?MediaFileSystemConnector $fileSystemConnector = null): string
+    public static function parse(string $formula, array $variables, ?MediaFileSystemConnector $fileSystemConnector = null, array $aliases = [], ?State $state = null): string
     {
         $formulaFunctions = [
             new Min(),
             new Max(),
-            new Matrix($fileSystemConnector)
+            new Matrix($fileSystemConnector),
+            new Repetition()
         ];
 
         /** @var FormulaFunction $formulaFunction */
         foreach ($formulaFunctions as $formulaFunction) {
-            $formula = self::parseFunction($formula, $variables, $formulaFunction);
+            $formula = self::parseFunction($formula, $variables, $formulaFunction, $aliases, $state);
         }
 
         return $formula;
@@ -41,13 +45,15 @@ class FunctionParser
      * @param string $formula
      * @param array $variables
      * @param FormulaFunction $formulaFunction
+     * @param array $aliases
+     * @param State|null $state
      * @return string
      * @throws FunctionParserException
      */
-    protected static function parseFunction(string $formula, array $variables, FormulaFunction $formulaFunction): string
+    protected static function parseFunction(string $formula, array $variables, FormulaFunction $formulaFunction, array $aliases = [], ?State $state = null): string
     {
         // define callback function
-        $callback = function (array $matches) use ($variables, $formulaFunction): string {
+        $callback = function (array $matches) use ($variables, $formulaFunction, $aliases, $state): string {
             $params = trim($matches[1]);
 
             // split params and trim spaces from all params
@@ -57,7 +63,7 @@ class FunctionParser
             );
 
             // call formula specific parse function with params
-            return $formulaFunction->parse($params, $variables);
+            return $formulaFunction->parse($params, $variables, $aliases, $state);
         };
 
         // get escaped function name
@@ -70,5 +76,4 @@ class FunctionParser
             $formula
         );
     }
-
 }

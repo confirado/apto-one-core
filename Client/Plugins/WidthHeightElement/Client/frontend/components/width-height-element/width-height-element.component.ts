@@ -23,11 +23,11 @@ export class WidthHeightElementComponent implements OnInit {
 	@Input()
 	public element: ProgressElement<HeightWidthProperties> | undefined | null;
 
+  @Input()
+  public section: Section | null | undefined;
+
 	@Input()
 	public product: Product | null | undefined;
-
-  @Input()
-  public section: Section | undefined;
 
 	@Input()
 	public isDialog = false;
