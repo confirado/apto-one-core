@@ -5,6 +5,8 @@
      [class.open-in-dialog]="isDialog"
      [class.with-circle]="section.allowMultiple || element.state.active"
 >
+    <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
     <div *ngIf="section.allowMultiple || element.state.active" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
@@ -30,4 +32,6 @@
         <a (click)="$event.stopPropagation()" class="element-attachment-download" *ngFor="let attachment of element.element.attachments" [href]="mediaUrl + attachment.fileUrl" [download]="attachment.mediaFile.filename | translate">{{ attachment.name | translate }}</a>
     </div>
     <div class="apply-button"></div>
+
+    <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>

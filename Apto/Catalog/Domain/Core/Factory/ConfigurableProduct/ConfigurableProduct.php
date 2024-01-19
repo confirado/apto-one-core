@@ -6,11 +6,13 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
-use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\OrderedComputedProductValues;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
+use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
+use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 
 class ConfigurableProduct implements \JsonSerializable
 {
@@ -181,6 +183,70 @@ class ConfigurableProduct implements \JsonSerializable
 
     /**
      * @param AptoUuid $sectionId
+     *
+     * @return Repeatable|null
+     * @throws RepeatableValidationException
+     */
+    public function getSectionRepeatableType(AptoUuid $sectionId): ?Repeatable
+    {
+        $section = $this->getSection($sectionId);
+
+        if (is_null($section)) {
+            return null;
+        }
+
+        if (!array_key_exists('repeatableType', $section)) {
+            return new Repeatable(Repeatable::TYPES[0]);
+        }
+
+        return new Repeatable($section['repeatableType'], $section['repeatableCalculatedValueName']);
+    }
+
+    /**
+     * @param AptoUuid $sectionId
+     *
+     * @return bool|null
+     * @throws RepeatableValidationException
+     */
+    public function isSectionRepeatable(AptoUuid $sectionId): ?bool
+    {
+        $repeatable = $this->getSectionRepeatableType($sectionId);
+
+        if(is_null($repeatable)) {
+            return null;
+        }
+
+        return $repeatable->isRepeatable();
+    }
+
+    /**
+     * @param AptoUuid    $sectionId
+     * @param RulePayload $rulePayloadByName
+     *
+     * @return int|null
+     * @throws RepeatableValidationException
+     */
+    public function getSectionRepetitionCount(AptoUuid $sectionId, RulePayload $rulePayloadByName): ?int
+    {
+        $section = $this->getSection($sectionId);
+        $computedValues = $rulePayloadByName->getComputedValues();
+        $repetitionCount = 1; // at least one item we should have repeated
+
+        $repeatable = $this->getSectionRepeatableType($sectionId);
+
+        if(is_null($repeatable)) {
+            return 1;
+        }
+
+        if (array_key_exists('repeatableCalculatedValueName', $section)) {
+            $repetitionCount = (int)$computedValues[$repeatable->getCalculatedValueName()];
+        }
+
+        return $repetitionCount === 0 ? 1 : $repetitionCount;
+    }
+
+    /**
+     * @param AptoUuid $sectionId
      * @return bool
      */
     public function isSectionMultiple(AptoUuid $sectionId): bool
@@ -246,6 +312,8 @@ class ConfigurableProduct implements \JsonSerializable
     }
 
     /**
+     * Returns element definition set from backend
+     *
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
      * @return ElementDefinition|null

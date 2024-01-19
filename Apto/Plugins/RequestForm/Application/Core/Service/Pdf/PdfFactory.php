@@ -5,6 +5,12 @@ namespace Apto\Plugins\RequestForm\Application\Core\Service\Pdf;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 
+/*  for saving into media folder do
+        $mpdf->Output( $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.pdf', 'F');
+    for getting as text do
+        $mpdf->Output('', 'S');
+*/
+
 class PdfFactory
 {
     /**

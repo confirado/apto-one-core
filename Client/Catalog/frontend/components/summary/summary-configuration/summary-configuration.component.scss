@@ -1,5 +1,6 @@
 @import "globals";
 @import "form-inputs";
+@import "elements";
 
 p {
     font-weight: 600;
@@ -107,12 +108,10 @@ p {
 .single-section {
     display: flex;
     justify-content: flex-end;
-    border-radius: var(--border-radius-card);
-    box-shadow: var(--box-shadow);
-    background-color: var(--color-background-card);
     width: 700px;
-    cursor: pointer;
     z-index: 1;
+    cursor: pointer;
+    @include apto-card(true);
 
     &.default {
         cursor: default;
@@ -129,10 +128,6 @@ p {
     &.price {
         background-color: rgb(32 83 140 / 10%);
     }
-}
-
-.single-section:hover {
-    background-color: #f4f4f4;
 }
 
 .section-name {

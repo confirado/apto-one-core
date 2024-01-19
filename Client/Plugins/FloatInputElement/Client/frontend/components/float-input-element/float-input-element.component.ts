@@ -23,7 +23,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public product: Product | null | undefined;
 
   @Input()
-  public section: Section | undefined;
+  public section: Section | null | undefined;
 
   @Input()
   public element: ProgressElement | undefined | null;

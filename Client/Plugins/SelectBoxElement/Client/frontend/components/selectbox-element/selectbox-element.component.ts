@@ -22,10 +22,10 @@ export class SelectboxElementComponent implements OnInit {
 	public element: ProgressElement | undefined | null;
 
   @Input()
-  public product: Product | null | undefined;
+  public section: Section | null | undefined;
 
   @Input()
-  public section: Section | undefined;
+  public product: Product | null | undefined;
 
   @Input()
   public isDialog = false;

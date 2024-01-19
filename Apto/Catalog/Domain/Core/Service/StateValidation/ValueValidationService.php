@@ -17,14 +17,14 @@ class ValueValidationService
                 $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]] = [];
             }
 
-            if (!$state->isParameter($stateItem['sectionId'])) {
-                $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]][] = $stateItem;
-            }
+            $sectionList[$stateItem['sectionId'].$stateItem[$fieldName]][] = $stateItem;
         }
         return array_values($sectionList);
     }
 
     /**
+     * Checks element value validity (values property in state)
+     *
      * @param ConfigurableProduct $product
      * @param State               $state
      *

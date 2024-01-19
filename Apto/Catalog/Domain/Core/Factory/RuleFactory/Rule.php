@@ -9,6 +9,7 @@ use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Implication;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
+use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 
 class Rule
 {
@@ -48,6 +49,11 @@ class Rule
     protected $implication;
 
     /**
+     * @var int
+     */
+    protected $repetition;
+
+    /**
      * @param AptoUuid $id
      * @param bool $active
      * @param bool $soft
@@ -55,9 +61,18 @@ class Rule
      * @param AptoTranslatedValue $errorMessage
      * @param Condition $condition
      * @param Implication $implication
+     * @param int $repetition
      */
-    public function __construct(AptoUuid $id, bool $active, bool $soft, string $name, AptoTranslatedValue $errorMessage, Condition $condition, Implication $implication)
-    {
+    public function __construct(
+        AptoUuid $id,
+        bool $active,
+        bool $soft,
+        string $name,
+        AptoTranslatedValue $errorMessage,
+        Condition $condition,
+        Implication $implication,
+        int $repetition = 0
+    ) {
         $this->id = $id;
         $this->active = $active;
         $this->soft = $soft;
@@ -65,6 +80,7 @@ class Rule
         $this->errorMessage = $errorMessage;
         $this->condition = $condition;
         $this->implication = $implication;
+        $this->repetition = $repetition;
     }
 
     /**
@@ -124,6 +140,14 @@ class Rule
     }
 
     /**
+     * @return int
+     */
+    public function getRepetition(): int
+    {
+        return $this->repetition;
+    }
+
+    /**
      * Check, if condition is fulfilled
      * @param State $state
      * @param RulePayload $rulePayload
@@ -169,6 +193,67 @@ class Rule
     }
 
     /**
+     * Return all unique sections ids form a single rule
+     *
+     * @return AptoUuid[]
+     */
+    public function getRuleSectionIds(): array
+    {
+        $sectionIds = [];
+
+        foreach ($this->getCondition()->getCriteria() as $criterion) {
+            // If the condition type is not a "Standard" type then skipp because it cannot have applied sections
+            if (!($criterion instanceof Rule\DefaultCriterion)) {
+                continue;
+            }
+
+            $sectionUuId = $criterion->getSectionId();
+            $sectionIds[$sectionUuId->getId()] = $sectionUuId;
+        }
+
+        foreach ($this->getImplication()->getCriteria() as $criterion) {
+            // If the implication type is not a "Standard" type then skipp because it cannot have applied sections
+            if (!($criterion instanceof Rule\DefaultCriterion)) {
+                continue;
+            }
+
+            $sectionUuId = $criterion->getSectionId();
+            $sectionIds[$sectionUuId->getId()] = $sectionUuId;
+        }
+
+        return $sectionIds;
+    }
+
+    /**
+     * Return only sections ids form a single rule that are coming from a repeatable section
+     *
+     * A rule can have many conditions and implications where each on can be made for different sections
+     * within the same rule.
+     *
+     * @return AptoUuid[]
+     * @throws RepeatableValidationException
+     */
+    public function getRuleRepeatableSectionIds(Rule $rule, ConfigurableProduct $product): array
+    {
+        $sectionUuIds = $this->getRuleSectionIds($rule);
+
+        // this means rule has no section at all
+        if (count($sectionUuIds) < 1) {
+            return [];
+        }
+
+        // now let's see which section ids are coming from repeatable sections
+        $repeatableSectionUuIds = [];
+        foreach ($sectionUuIds as $sectionUuId) {
+            if ($product->isSectionRepeatable($sectionUuId)) {
+                $repeatableSectionUuIds[$sectionUuId->getId()] = $sectionUuId;
+            }
+        }
+
+        return $repeatableSectionUuIds;
+    }
+
+    /**
      * Return a human-readable string representation
      * @param ConfigurableProduct $product
      * @param State $state
@@ -190,10 +275,11 @@ class Rule
         }
 
         return sprintf(
-            "Rule \"%s\" (%s)\nUuid: %s\nCondition (%s):\n%s\nImplication (%s):\n%s",
+            "Rule \"%s\" (%s)\n Uuid: %s\n Repetition (%s) Condition (%s):\n%s\nImplication (%s):\n%s",
             $this->name,
             implode(', ', $flags),
             $this->id->getId(),
+            $this->getRepetition(),
             $this->condition->isFulfilled($state, $rulePayload) ? 'fulfilled' : 'failed',
             $this->condition->explain($product, $state, $rulePayload),
             $this->implication->isFulfilled($state, $rulePayload) ? 'fulfilled' : 'failed',

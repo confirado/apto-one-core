@@ -16,10 +16,10 @@ export class AreaElementWrapperComponent {
   public element: ProgressElement<AreaElementDefinitionProperties> | undefined | null;
 
   @Input()
-  public product: Product | null | undefined;
+  public section: Section | null | undefined;
 
   @Input()
-  public section: Section | undefined;
+  public product: Product | null | undefined;
 
   dialogSizesEnum = DialogSizesEnum;
 

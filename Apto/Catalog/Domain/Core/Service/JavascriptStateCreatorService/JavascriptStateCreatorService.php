@@ -10,7 +10,7 @@ use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReference
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\EnrichedState\EnrichedState;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayloadFactory;
-use Apto\Catalog\Domain\Core\Model\Product\Repeatable;
+use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 use Apto\Catalog\Domain\Core\Service\EnrichedStateValidation\RuleValidationResult;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
 
@@ -74,6 +74,7 @@ class JavascriptStateCreatorService
      * @return array
      * @throws CircularReferenceException
      * @throws InvalidUuidException
+     * @throws RepeatableValidationException
      */
     protected function createSections(ConfigurableProduct $product, EnrichedState $enrichedState): array
     {
@@ -86,15 +87,14 @@ class JavascriptStateCreatorService
             $elementIds = $product->getElementIds($sectionId);
 
             $sectionCount = 1;
-            if ($section['repeatableType'] === Repeatable::TYPES[1]) {
-                $sectionCount = $calculatedValueName->getComputedValues()[$section['repeatableCalculatedValueName']];
-                $sectionCount = $sectionCount == 0 ? 1 : $sectionCount;
+            if ($product->isSectionRepeatable($sectionId)) {
+                $sectionCount = $product->getSectionRepetitionCount($sectionId, $calculatedValueName);
             }
 
-            for($i = 0; $i < $sectionCount; $i++) {
+            for($repetition = 0; $repetition < $sectionCount; $repetition++) {
                 $sections[] = [
                     'id' => $sectionId->getId(),
-                    'repetition' => $i,
+                    'repetition' => $repetition,
                     'allowMultiple' => $section['allowMultiple'],
                     //'defaultElements' => [], // @TODO shall we implement defaultElements, just use isDefault flag from elements instead?!
                     'identifier' => $section['identifier'],
@@ -104,9 +104,9 @@ class JavascriptStateCreatorService
                     'repeatableCalculatedValueName' => $section['repeatableCalculatedValueName'],
                     'name' => AptoTranslatedValue::fromArray($section['name'] ?: []),
                     'state' => [
-                        'active' => $state->isSectionActive($sectionId, $i),
-                        'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory'], $i),
-                        'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds)
+                        'active' => $state->isSectionActive($sectionId, $repetition),
+                        'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory'], $repetition),
+                        'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds, $repetition)
                     ]
                 ];
             }
@@ -120,7 +120,9 @@ class JavascriptStateCreatorService
      * @param EnrichedState       $enrichedState
      *
      * @return array
+     * @throws CircularReferenceException
      * @throws InvalidUuidException
+     * @throws RepeatableValidationException
      */
     protected function createElements(ConfigurableProduct $product, EnrichedState $enrichedState): array
     {
@@ -132,12 +134,11 @@ class JavascriptStateCreatorService
             $sectionId = new AptoUuid($section['id']);
 
             $sectionCount = 1;
-            if ($section['repeatableType'] === Repeatable::TYPES[1]) {
-                $sectionCount = $calculatedValueName->getComputedValues()[$section['repeatableCalculatedValueName']];
-                $sectionCount = $sectionCount == 0 ? 1 : $sectionCount;
+            if ($product->isSectionRepeatable($sectionId)) {
+                $sectionCount = $product->getSectionRepetitionCount($sectionId, $calculatedValueName);
             }
 
-            for($i = 0; $i < $sectionCount; $i++) {
+            for($repetition = 0; $repetition < $sectionCount; $repetition++) {
                 foreach ($section['elements'] as $element) {
                     $elementId = new AptoUuid($element['id']);
 
@@ -149,13 +150,13 @@ class JavascriptStateCreatorService
                             ),
                             null
                         ),
-                        $state->getValues($sectionId, $elementId, $i) ?: []
+                        $state->getValues($sectionId, $elementId, $repetition) ?: []
                     ) ?: null;
 
                     $elements[] = [
                         'id' => $elementId->getId(),
                         'sectionId' => $sectionId->getId(),
-                        'sectionRepetition' => $i,
+                        'sectionRepetition' => $repetition,
                         'errorMessage' => AptoTranslatedValue::fromArray($element['errorMessage'] ?: []),
                         'identifier' => $element['identifier'],
                         'isDefault' => $element['isDefault'],
@@ -164,8 +165,8 @@ class JavascriptStateCreatorService
                         'previewImage' => $element['previewImage'],
                         'properties' => $element['definition']['properties'] ?? null, // @TODO needed anymore?
                         'state' => [
-                            'active' => $state->isElementActive($sectionId, $elementId, $i),
-                            'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId),
+                            'active' => $state->isElementActive($sectionId, $elementId, $repetition),
+                            'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId, $repetition),
                             'values' => $selectedValues
                         ],
                         'staticValues' => $element['definition']['staticValues'] ?? []

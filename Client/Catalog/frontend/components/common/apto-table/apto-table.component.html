@@ -1,0 +1,29 @@
+<div class="apto-table">
+    <table class="order-table table-no-spacing">
+        <caption *ngIf="caption">{{ caption }}</caption>
+
+        <thead>
+            <tr>
+                <ng-container *ngFor="let col of columns">
+                    <th [style]="col.styles">{{ col.name }}</th>
+                </ng-container>
+            </tr>
+        </thead>
+
+        <tbody>
+            <ng-container *ngFor="let row of rows; let i = index;">
+                <tr>
+                    <ng-container *ngFor="let col of columns">
+                        <td [style]="col.styles | joinStyles" [innerText]="col.index ? i : row[col.prop]"></td>
+                    </ng-container>
+                </tr>
+            </ng-container>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
