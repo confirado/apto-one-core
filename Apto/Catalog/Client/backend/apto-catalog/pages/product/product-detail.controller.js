@@ -130,9 +130,10 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function addSection() {
-        $scope.addProductSection(productId, $scope.newSection.value).then(() => {
+        $scope.addProductSection(productId, $scope.newSection).then(() => {
             $scope.newSection = {
-                value: []
+                value: [],
+                addDefaultElement: false,
             };
             $scope.fetchSections(productId);
         });
@@ -391,7 +392,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.domainPorpsMultiplierHint = [];
 
     $scope.newSection = {
-        value: []
+        value: [],
+        addDefaultElement: false,
     };
     $scope.newRuleName = {
         value: ''

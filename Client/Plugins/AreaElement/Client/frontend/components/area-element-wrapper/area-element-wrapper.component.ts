@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { Product } from '@apto-catalog-frontend/store/product/product.model';
+import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { AreaElementComponent } from '../area-element/area-element.component';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
@@ -14,6 +14,9 @@ import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-
 export class AreaElementWrapperComponent {
   @Input()
   public element: ProgressElement<AreaElementDefinitionProperties> | undefined | null;
+
+  @Input()
+  public section: Section | null | undefined;
 
   @Input()
   public product: Product | null | undefined;

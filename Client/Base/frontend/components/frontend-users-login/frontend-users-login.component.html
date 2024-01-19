@@ -1,14 +1,13 @@
 <div class="save-dialog" [attr.type]="'custom'">
     <apto-login-close-button [mat-dialog-close]="true" [inner]="true"></apto-login-close-button>
 
-    <h1 mat-dialog-title *ngIf="!isLoggedIn">{{ contentSnippets$ | async | contentSnippet: 'login' }}</h1>
-    <h1 mat-dialog-title *ngIf="isLoggedIn">{{ contentSnippets$ | async | contentSnippet: 'logout' }}</h1>
+    <h1 mat-dialog-title>{{ contentSnippets$ | async | contentSnippet: 'login' }}</h1>
 
     <mat-divider></mat-divider>
 
-    <form *ngIf="!isLoggedIn" [formGroup]="formGroup" (ngSubmit)="login()">
+    <form [formGroup]="formGroup" (ngSubmit)="login()">
         <mat-dialog-content>
-            <div class="error-message" *ngIf="loginError">{{ contentSnippets$ | async | contentSnippet: 'LoginNotSuccessFull' }}</div>
+            <div class="error-message" *ngIf="loginError$ | async">{{ contentSnippets$ | async | contentSnippet: 'LoginNotSuccessFull' }}</div>
             <apto-input-field [fullWidth]="true" [name]="contentSnippets$ | async | contentSnippet: 'EMailUsername'" [type]="'text'" formControlName="username"></apto-input-field>
             <apto-input-field [fullWidth]="true" [name]="contentSnippets$ | async | contentSnippet: 'Password'" [type]="'password'" formControlName="password"></apto-input-field>
         </mat-dialog-content>
@@ -17,16 +16,4 @@
             <button mat-flat-button color="primary" type="submit">{{ contentSnippets$ | async | contentSnippet: 'dialogLogin' }}</button>
         </mat-dialog-actions>
     </form>
-
-    <div *ngIf="isLoggedIn">
-        <mat-dialog-content>
-            <p>
-                {{ contentSnippets$ | async | contentSnippet: 'dialogUserInfo1' }} {{ currentUserName }} {{ contentSnippets$ | async | contentSnippet: 'dialogUserInfo2' }}
-            </p>
-        </mat-dialog-content>
-
-        <mat-dialog-actions>
-            <button mat-flat-button color="primary" (click)="logout()">{{ contentSnippets$ | async | contentSnippet: 'dialogLogout' }}</button>
-        </mat-dialog-actions>
-    </div>
 </div>

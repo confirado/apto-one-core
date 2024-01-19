@@ -2,7 +2,14 @@
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
+     [class.selected]="element.state.active"
 >
+    <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
+    <div *ngIf="section?.allowMultiple && product.useStepByStep" class="circle" [class.selected]="element.state.active">
+        <mat-icon>done</mat-icon>
+    </div>
+
     <div class="header">
         <div class="title">
             <h4>{{ element.element.name | translate }}</h4>
@@ -69,9 +76,5 @@
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
 
-    <div class="apply-button">
-        <button mat-flat-button color="primary" (click)="saveInput()">
-            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
-        </button>
-    </div>
+    <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>

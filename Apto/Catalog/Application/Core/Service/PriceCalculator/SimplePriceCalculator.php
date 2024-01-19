@@ -671,9 +671,7 @@ class SimplePriceCalculator implements PriceCalculator
                 $sectionList[$state['sectionId'].$state[$fieldName]] = [];
             }
 
-            if (!$this->state->isParameter($state['sectionId'])) {
-                $sectionList[$state['sectionId'].$state[$fieldName]][] = $state;
-            }
+            $sectionList[$state['sectionId'].$state[$fieldName]][] = $state;
         }
         return array_values($sectionList);
     }

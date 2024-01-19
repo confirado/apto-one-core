@@ -6,6 +6,15 @@
     @include element-grid();
     @include element-margins();
 
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+    }
+
+    .circle {
+        @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
+    }
+
     .header {
         grid-area: header;
         @include header();

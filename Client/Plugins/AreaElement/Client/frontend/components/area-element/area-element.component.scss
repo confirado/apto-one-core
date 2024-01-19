@@ -6,7 +6,6 @@
 .area-element {
     @include element-grid();
     @include element-margins();
-    @include border-color();
 
     .header {
         grid-area: header;
@@ -21,8 +20,6 @@
 
     .element {
         @include element();
-        border-radius: var(--border-radius-card);
-        border: 3px solid transparent;
 
         .container {
             @include element-input-grid();
@@ -62,13 +59,9 @@
         @include buttons();
     }
 
-    &.selected {
-        border: 3px solid var(--color-border-dimensions);
-        border-radius: var(--border-radius-card);
-    }
-
     .circle {
         @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
     }
 }
 

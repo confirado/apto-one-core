@@ -55,10 +55,11 @@ const _productReducer = createReducer(
       to trigger a state change in product elements.  */
   on(setNextStep, setPrevStep, setStep, (state, action) => {
     const elements: Element[] = [];
+
     state.elements.forEach((e) => {
       elements.push({
         ...e,
-        sectionRepetition: action.type === ConfigurationActionTypes.SetStep ? action.payload.repetition : 0
+        sectionRepetition: action.payload?.repetition || 0,
       });
     });
     return {

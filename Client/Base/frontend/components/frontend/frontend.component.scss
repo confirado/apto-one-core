@@ -25,4 +25,8 @@ mat-drawer-container.mat-drawer-container {
             }
         }
     }
+
+    apto-slot-outlet {
+        display: none;
+    }
 }

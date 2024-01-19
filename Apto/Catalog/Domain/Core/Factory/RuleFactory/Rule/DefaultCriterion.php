@@ -32,6 +32,10 @@ class DefaultCriterion extends Criterion
      */
     protected $property;
 
+    /**
+     * @var int
+     */
+    protected $repetition;
 
     /**
      * @param bool $active
@@ -40,6 +44,7 @@ class DefaultCriterion extends Criterion
      * @param AptoUuid $sectionId
      * @param AptoUuid|null $elementId
      * @param string|null $property
+     * @param int $repetition
      */
     public function __construct(
         bool $active,
@@ -47,7 +52,8 @@ class DefaultCriterion extends Criterion
         ?string $value,
         AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?string $property
+        ?string $property,
+        int $repetition = 0,
     ) {
         // sanitize input values
         if ('' === trim($property)) {
@@ -77,6 +83,7 @@ class DefaultCriterion extends Criterion
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
         $this->property = $property;
+        $this->repetition = $repetition;
 
         parent::__construct($active, $operator, $value);
     }
@@ -98,6 +105,14 @@ class DefaultCriterion extends Criterion
     }
 
     /**
+     * @return int
+     */
+    public function getRepetition(): int
+    {
+        return $this->repetition;
+    }
+
+    /**
      * @return string|null
      */
     public function getProperty(): ?string
@@ -112,12 +127,13 @@ class DefaultCriterion extends Criterion
      */
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
-        if (null !== $this->property) {
-            $value = $state->getValue($this->sectionId, $this->elementId, $this->property);
-        } else if (null !== $this->elementId) {
-            $value = $state->isElementActive($this->sectionId, $this->elementId) ? true : null;
+        // if this is an element with value (not default element or similar)
+        if ($this->property !== null) {
+            $value = $state->getValue($this->sectionId, $this->elementId, $this->property, $this->repetition);
+        } else if ($this->elementId !== null) {
+            $value = $state->isElementActive($this->sectionId, $this->elementId, $this->repetition) ? true : null;
         } else {
-            $value = $state->isSectionActive($this->sectionId) ? true : null;
+            $value = $state->isSectionActive($this->sectionId, $this->repetition) ? true : null;
         }
 
         return $this->operator->compare($value, $this->value);
@@ -136,7 +152,7 @@ class DefaultCriterion extends Criterion
             return $state;
         }
 
-        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->property, $this->value);
+        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->property, $this->value, $this->repetition);
     }
 
     /**

@@ -337,6 +337,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         }
 
         $this->basketItem = $event->getBasketItem();
+
         $productInquiry = new ProductInquiry(
             $event->getBasketItem(),
             $event->getQuantity()
@@ -749,6 +750,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
         // set media url
         $mediaUrl = $this->requestSessionStore->getSchemeAndHttpHost() . $this->mediaRelativePath;
 
+        $customerGroup = $this->getCustomerGroup($productInquiry);
+        $partsList = isset($productInquiry->getAdditionalData()['apto-plugin-parts-list']) ?
+            $productInquiry->getAdditionalData()['apto-plugin-parts-list'][$customerGroup['id']] : [];
+
         // set template vars
         $templateVars = [
             'locale' => $locale->getName(),
@@ -762,8 +767,9 @@ class SendProductInquiryHandler implements EventHandlerInterface
             'contentSnippets' => $pdfContentSnippets,
             'randomNumber' => $this->randomNumber,
             'sumPrices' => $sumPrices,
-            'customerGroup' => $this->getCustomerGroup($productInquiry),
-            'showPrices' => $this->config['showPrices']
+            'customerGroup' => $customerGroup,
+            'showPrices' => $this->config['showPrices'],
+            'partsList' => $partsList,
         ];
 
         // create pdf and set options
@@ -795,9 +801,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         if(array_key_exists('saveOfferHtml', $this->config) && $this->config['saveOfferHtml']){
             $this->saveHtml($header, $footer, $body);
         }
-
-        // use this for saving into media folder
-        // return $mpdf->Output( $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.pdf', 'F');
 
         return $mpdf->Output('', 'S');
     }

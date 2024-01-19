@@ -39,7 +39,8 @@ class RuleFactory
             new Implication(
                 new LinkOperator($rawRule['implicationsOperator']),
                 $implicationCriteria
-            )
+            ),
+            $rawRule['repetition'] ?? 0
         );
     }
 
@@ -89,13 +90,12 @@ class RuleFactory
                     $rawCriterion['value'] ?? null,
                     new AptoUuid($rawCriterion['sectionId']),
                     $rawCriterion['elementId'] ? new AptoUuid($rawCriterion['elementId']) : null,
-                    $rawCriterion['property'] ?? null
+                    $rawCriterion['property'] ?? null,
+                    $rawCriterion['repetition'] ?? 0,
                 );
             }
-
         }
 
         return $criterion;
     }
-
 }

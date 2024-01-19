@@ -2,6 +2,7 @@
 
 namespace Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction;
 
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FunctionParserException;
 
 class Max extends AbstractFormulaFunction
@@ -10,7 +11,7 @@ class Max extends AbstractFormulaFunction
     /**
      * @inheritDoc
      */
-    public function parse(array $params, array $variables = []): string
+    public function parse(array $params, array $variables = [], array $aliases = [], ?State $state = null): string
     {
         // assert valid param count
         if (count($params) < 1) {
@@ -25,5 +26,4 @@ class Max extends AbstractFormulaFunction
             self::replaceParams($params, $variables)
         );
     }
-
 }

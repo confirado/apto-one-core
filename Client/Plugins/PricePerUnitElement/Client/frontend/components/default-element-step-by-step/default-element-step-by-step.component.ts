@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
-import {environment} from "@apto-frontend/src/environments/environment";
+import { environment } from "@apto-frontend/src/environments/environment";
 
 @Component({
 	selector: 'apto-default-element-step-by-step',
@@ -11,8 +11,9 @@ import {environment} from "@apto-frontend/src/environments/environment";
 export class DefaultElementStepByStepComponent {
 	@Input()
 	public element: ProgressElement | undefined;
-	@Input()
-	public section: Section | undefined;
+
+  @Input()
+  public section: Section | null | undefined;
 
   @Input()
   public product: Product | null | undefined;

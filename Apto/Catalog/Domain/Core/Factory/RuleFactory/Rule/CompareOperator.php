@@ -125,30 +125,32 @@ class CompareOperator
 
     /**
      * @param ConfigurableProduct $product
-     * @param State $state
-     * @param AptoUuid $sectionId
-     * @param AptoUuid|null $elementId
-     * @param string|null $property
-     * @param string|null $value
+     * @param State               $state
+     * @param AptoUuid            $sectionId
+     * @param AptoUuid|null       $elementId
+     * @param string|null         $property
+     * @param string|null         $value
+     * @param int                 $repetition
+     *
      * @return State
      */
-    public function fulfill(ConfigurableProduct $product, State $state, AptoUuid $sectionId, ?AptoUuid $elementId, ?string $property, ?string $value): State
+    public function fulfill(ConfigurableProduct $product, State $state, AptoUuid $sectionId, ?AptoUuid $elementId, ?string $property, ?string $value, int $repetition = 0): State
     {
         switch($this->operator) {
 
             // NOT ACTIVE
             case self::NOT_ACTIVE: {
                 if (null === $elementId) {
-                    $state->removeSection($sectionId);
+                    $state->removeSection($sectionId, $repetition);
                 } else {
-                    $state->removeElement($sectionId, $elementId);
+                    $state->removeElement($sectionId, $elementId, $repetition);
                 }
                 break;
             }
 
             // ACTIVE
             case self::ACTIVE: {
-                $state->setValue($sectionId, $elementId);
+                $state->setValue($sectionId, $elementId, $repetition);
                 break;
             }
 
@@ -200,7 +202,7 @@ class CompareOperator
                         $guess = null;
                 }
                 if (null !== $guess) {
-                    $state->setValue($sectionId, $elementId, $property, $guess);
+                    $state->setValue($sectionId, $elementId, $property, $guess, $repetition);
                 }
                 break;
             }

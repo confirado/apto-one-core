@@ -17,12 +17,19 @@
 
     .circle {
         @include circle-checkbox(25px, 'inner');
+        border: 2px solid var(--color-border-selected);
     }
 
     .header {
         grid-area: header;
         @include header();
         @include title();
+    }
+
+    &.with-circle {
+        .header {
+            padding-right: 25px;
+        }
     }
 
     .picture {
@@ -39,6 +46,7 @@
     .description {
         grid-area: description;
         @include description();
+        margin-top: var(--element-gap);
     }
 
     .apply-button {

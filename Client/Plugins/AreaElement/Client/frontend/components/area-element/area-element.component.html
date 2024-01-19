@@ -6,12 +6,13 @@
          [attr.type]="'custom'"
          [class.selected]="element.state.active"
     >
+        <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
-        <div *ngIf="element.state.active" class="circle" [class.selected]="element.state.active">
+        <div *ngIf="(section?.allowMultiple && product.useStepByStep) || element.state.active" class="circle" [class.selected]="element.state.active">
             <mat-icon>done</mat-icon>
         </div>
         <apto-close-button *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
-                           [mat-dialog-close]="true"
+                           (clicked)="closeModal()"
                            [inner]="true"
         ></apto-close-button>
 
@@ -84,7 +85,6 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                 mat-flat-button
                 color="primary"
-                [mat-dialog-close]="true"
                 (click)="saveInput()"
             >
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
@@ -114,5 +114,7 @@
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
             </button>
         </div>
+
+        <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
     </div>
 </form>

@@ -27,7 +27,7 @@ export class InputFieldComponent implements ControlValueAccessor {
   @Input() public hint: string = '';
 
 	@Input() public step: number = 1;
-  @Input() public min: number | undefined = 0;
+  @Input() public min: number | undefined;
   @Input() public max: number | undefined;
 
 	@Input() public fullWidth: boolean = false;
@@ -93,23 +93,39 @@ export class InputFieldComponent implements ControlValueAccessor {
       return;
     }
 
+    let newValue = 0;
+
     if (this.isInteger()) {
-      this.formElement.setValue(this.parseInputNumber() + this.step);
+      newValue = this.parseInputNumber() + this.step;
     } else {
-      this.formElement.setValue(parseFloat((this.parseInputNumber() + this.step).toFixed(this.countDigitsAfterZero(this.step))));
+      newValue = parseFloat((this.parseInputNumber() + this.step).toFixed(this.countDigitsAfterZero(this.step)));
     }
-	}
+
+    if (this.max !== undefined && newValue > this.max) {
+      return;
+    }
+
+    this.formElement.setValue(newValue);
+  }
 
 	public decrease(): void {
     if (this.disabled || !this.isNumeric()) {
       return;
     }
 
+    let newValue = 0;
+
     if (this.isInteger()) {
-      this.formElement.setValue(this.parseInputNumber() - this.step);
+      newValue = this.parseInputNumber() - this.step;
     } else {
-      this.formElement.setValue(parseFloat((this.parseInputNumber() - this.step).toFixed(this.countDigitsAfterZero(this.step))));
+      newValue = parseFloat((this.parseInputNumber() - this.step).toFixed(this.countDigitsAfterZero(this.step)));
     }
+
+    if (this.min !== undefined && newValue < this.min) {
+      return;
+    }
+
+    this.formElement.setValue(newValue);
 	}
 
   protected isNumeric(): boolean {

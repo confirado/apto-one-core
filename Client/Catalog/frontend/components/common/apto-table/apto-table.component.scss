@@ -1,0 +1,28 @@
+table {
+    width: 100%;
+    font-size: inherit;
+
+    caption {
+        font-weight: bold;
+        text-align: center;
+        color: var(--color-title);
+        padding: 10px 0 10px 0;
+        font-size: 18px;
+    }
+
+    th {
+        text-align: center;
+        padding: 10px;
+        background-color: var(--color-background);
+        color: var(--color-title);
+        font-size: inherit;
+    }
+
+    td {
+        text-align: left;
+        vertical-align: middle;
+        padding: 5px 10px;
+        color: var(--color-text);
+        font-size: inherit;
+    }
+}

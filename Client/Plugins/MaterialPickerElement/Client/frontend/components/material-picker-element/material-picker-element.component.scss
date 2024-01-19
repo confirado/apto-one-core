@@ -106,6 +106,10 @@ mat-radio-group {
 }
 
 .material-picker-element {
+    &.selected {
+        border: 3px solid var(--color-border-dimensions);
+        border-radius: var(--border-radius-card);
+    }
 
     .header + .description:not(:empty) {
         margin-top: var(--element-gap);
@@ -123,6 +127,13 @@ mat-radio-group {
 
     .color-filter {
         @include box();
+
+        position: relative;
+
+        .circle {
+            @include circle-checkbox(25px, 'inner');
+            border: 2px solid var(--color-border-selected);
+        }
 
         .available-colors {
             margin-top: var(--element-gap);

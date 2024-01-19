@@ -60,7 +60,7 @@ class PartsListBasketItemDataProvider implements BasketItemDataProvider
         ];
 
         if ($aptoParameter->has('apto_plugin_parts_list')) {
-            $this->parameters = $aptoParameter->get('apto_plugin_parts_list');
+            $this->parameters['add_list_to_basket_item'] = $aptoParameter->get('apto_plugin_parts_list');
         }
     }
 
