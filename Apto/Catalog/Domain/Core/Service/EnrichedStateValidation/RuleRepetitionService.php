@@ -144,7 +144,7 @@ class RuleRepetitionService
                 $rawRule['conditions'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()->getId(),
+                    'elementId' => $criterion->getElementId()?->getId(),
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
@@ -162,7 +162,7 @@ class RuleRepetitionService
                 $rawRule['implications'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()->getId(),
+                    'elementId' => $criterion->getElementId()?->getId(),
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
