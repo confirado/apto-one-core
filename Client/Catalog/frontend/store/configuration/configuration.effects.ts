@@ -38,6 +38,8 @@ import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { environment } from '@apto-frontend/src/environments/environment';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { Configuration, CurrentSection } from './configuration.model';
 
@@ -286,18 +288,19 @@ export class ConfigurationEffects {
 			this.actions$.pipe(
 				ofType(onError),
 				withLatestFrom(
-          this.store$.select(selectLocale).pipe(map((l) => l || 'de_DE')),
+          this.store$.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
           this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage'))
         ),
 				map(([{ message }, locale, snippet]: [{message: MessageBusResponseMessage}, string, ContentSnippet]) => {
-          const defaultMessage: string = snippet.content[locale];
+          const defaultMessage: string = translate(snippet.content, locale);
           let showDefault = true;
           let finalMessage = '';
 
           for (const singleErrorPayload of message.errorPayload) {
-              if (singleErrorPayload.errorMessage[locale]) {
+              const errorMessage = translate(singleErrorPayload.errorMessage, locale)
+              if (errorMessage) {
                 showDefault = false;
-                finalMessage += `${singleErrorPayload.errorMessage[locale]} <br />`;
+                finalMessage += `${errorMessage} <br />`;
               }
           }
 
