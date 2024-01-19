@@ -1,11 +1,13 @@
 <div class="confirm-dialog" [attr.type]="data.type">
     <apto-close-button [mat-dialog-close]="false" [inner]="true"></apto-close-button>
 
-    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.ERROR"><mat-icon [attr.type]="data.type">close</mat-icon></div>
-    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.WARNING"><mat-icon [attr.type]="data.type">warning</mat-icon></div>
-    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CONFIRM"><mat-icon [attr.type]="data.type">done</mat-icon></div>
-    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.INFO"><mat-icon [attr.type]="data.type">info</mat-icon></div>
-    <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CUSTOM"><mat-icon [attr.type]="data.type">info</mat-icon></div>
+    <ng-container *ngIf="!data.hideIcon">
+        <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.ERROR"><mat-icon [attr.type]="data.type">close</mat-icon></div>
+        <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.WARNING"><mat-icon [attr.type]="data.type">warning</mat-icon></div>
+        <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CONFIRM"><mat-icon [attr.type]="data.type">done</mat-icon></div>
+        <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.INFO"><mat-icon [attr.type]="data.type">info</mat-icon></div>
+        <div class="dialog-icon" *ngIf="data.type == dialogTypesEnum.CUSTOM"><mat-icon [attr.type]="data.type">info</mat-icon></div>
+    </ng-container>
 
     <h1 *ngIf="data.title" mat-dialog-title>{{data.title}}</h1>
 
@@ -15,7 +17,7 @@
         ></div>
     </mat-dialog-content>
 
-    <mat-dialog-actions>
+    <mat-dialog-actions *ngIf="data.cancelButtonText || data.confirmButtonText">
         <button *ngIf="data.cancelButtonText" mat-flat-button color="accent" [mat-dialog-close]="false" type="button">{{data.cancelButtonText}}</button>
         <button *ngIf="data.confirmButtonText" mat-flat-button color="primary" [mat-dialog-close]="true">{{data.confirmButtonText}}</button>
     </mat-dialog-actions>

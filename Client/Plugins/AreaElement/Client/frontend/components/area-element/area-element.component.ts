@@ -11,8 +11,9 @@ import { Product, Section } from '@apto-catalog-frontend/store/product/product.m
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Actions, ofType } from '@ngrx/effects';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-area-element',
 	templateUrl: './area-element.component.html',

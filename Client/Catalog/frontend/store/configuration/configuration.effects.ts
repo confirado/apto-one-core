@@ -24,6 +24,17 @@ import { selectConfiguration, selectCurrentPerspective, selectProduct, selectPro
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
 import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
+import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
+import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
+import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { environment } from '@apto-frontend/src/environments/environment';
+import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
+import { Configuration, CurrentSection } from './configuration.model';
 
 interface GetConfigurationResult {
   state: Configuration,
@@ -38,7 +49,8 @@ export class ConfigurationEffects {
 		private productRepository: ProductRepository,
 		private store$: Store,
 		private catalogMessageBusService: CatalogMessageBusService,
-		private matSnackBar: MatSnackBar
+		private matSnackBar: MatSnackBar,
+    private dialogService: DialogService
 	) {}
 
 	public initConfiguration$ = createEffect(() =>
@@ -291,18 +303,28 @@ export class ConfigurationEffects {
 		() =>
 			this.actions$.pipe(
 				ofType(onError),
-				withLatestFrom(this.store$.select(selectProduct), this.store$.select(selectLocale).pipe(map((l) => l || 'de-DE'))),
-				map(([{ message }, product, locale]) => {
-					const sectionName = product.sections.find((e) => e.id === message.errorPayload.section)?.name?.[locale];
+				withLatestFrom(
+          this.store$.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
+          this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage'))
+        ),
+				map(([{ message }, locale, snippet]: [{message: MessageBusResponseMessage}, string, ContentSnippet]) => {
+          const defaultMessage: string = translate(snippet.content, locale);
+          let showDefault = true;
+          let finalMessage = '';
 
-					const element: Element<any> | undefined = product.elements.find((e) => e.id === message.errorPayload.element);
-					const elementName = element?.name?.[locale];
+          for (const singleErrorPayload of message.errorPayload) {
+              const errorMessage = translate(singleErrorPayload.errorMessage, locale)
+              if (errorMessage) {
+                showDefault = false;
+                finalMessage += `${errorMessage} <br />`;
+              }
+          }
 
-					this.matSnackBar.open(
-						`Der Wert ${message.errorPayload.value} ist für das Feld ${message.errorPayload.property} im Element ${elementName} der Sektion ${sectionName} nicht zulässig.`,
-						undefined,
-						{ duration: 3000 }
-					);
+          this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {
+            type: DialogTypesEnum.ERROR,
+            hideIcon: true,
+            descriptionText: showDefault ? defaultMessage : finalMessage
+          });
 				})
 			),
 		{ dispatch: false }
