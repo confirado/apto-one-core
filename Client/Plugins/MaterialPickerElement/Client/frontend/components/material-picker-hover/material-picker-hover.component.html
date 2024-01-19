@@ -11,57 +11,11 @@
         [absorption]="poolItem.material.absorption"
     ></apto-item-light-properties>
 
-    <!--todo check what is materialProperty.icon-->
-    <!--<div class="item-properties" *ngIf="poolItem.material">
-        <ng-template *ngIf="materialProperty.icon">
-            <ng-template *ngFor="let materialProperty of poolItem.material.properties">
-                <div class="item-property" >
-                    <img [src]="materialProperty.icon.fileUrl" title="{{ materialProperty.name | translate }}">
-                </div>
-            </ng-template>
-        </ng-template>
-    </div>-->
-
     <p class="item-price-info" *ngIf="(contentSnippet$ | async | contentSnippet: 'poolItemPriceInfo') &&
             (contentSnippet$ | async | contentSnippet:  'poolItemPriceInfoPercentage') &&  poolItem.priceGroup.additionalCharge !== 0">
         {{ contentSnippet$ | async | contentSnippet: 'poolItemPriceInfo' }}
         <b>{{poolItem.priceGroup.additionalCharge}} {{ contentSnippet$ | async | contentSnippet: 'poolItemPriceInfoPercentage' }}</b>
     </p>
-
-    <div *ngIf="steps$ | async as steps" class="item-buttons">
-        <button color="accent" mat-flat-button *ngIf="poolItem.material.isNotAvailable" class="disabled" disabled="disabled">
-            <span class="select-continue"> {{ contentSnippet$ | async | contentSnippet: 'isNotAvailable' }}</span>
-        </button>
-
-        <!--todo check-->
-        <button color="accent" mat-flat-button *ngIf="steps.currentStep?.section?.allowMultiple && !poolItem.material.isNotAvailable && 1 != 1"
-                class="set-value"
-                (click)="setValues(poolItem.material.id, poolItem.material.name, poolItem.priceGroup.name)"
-        >
-            <span class="select">Todo</span>
-
-            <!--todo check steps.currentStep === 'primary'-->
-            <!--<span class="select-continue" *ngIf="!steps.currentStep.section.allowMultiple || (element.element.definition.staticValues.secondaryMaterialActive && steps.currentStep === 'primary')">
-                {{ contentSnippet$ | async | contentSnippet: 'selectAndContinue' }}
-            </span>-->
-
-            <!--todo check steps.currentStep === 'primary'-->
-            <!--<span class="select" *ngIf="steps.currentStep.section.allowMultiple && !(element.element.definition.staticValues.secondaryMaterialActive && steps.currentStep === 'primary')">
-                {{ contentSnippet$ | async | contentSnippet: 'select' }}
-            </span>-->
-        </button>
-
-        <button color="accent" mat-flat-button *ngIf="!isPoolItemSelected(poolItem, steps) && steps.currentStep?.section?.allowMultiple && !poolItem.material.isNotAvailable"
-                class="set-value"
-                (click)="setValues(poolItem.material.id, poolItem.material.name, poolItem.priceGroup.name)">
-            <span class="select">{{ contentSnippet$ | async | contentSnippet: 'select' }}</span>
-        </button>
-
-        <button color="accent" mat-flat-button *ngIf="isPoolItemSelected(poolItem, steps) && steps.currentStep?.section?.allowMultiple && !poolItem.material.isNotAvailable"
-                class="set-value" (click)="removeMaterial(poolItem.material.id)">
-            <span class="select">{{ contentSnippet$ | async | contentSnippet: 'remove' }}</span>
-        </button>
-    </div>
 
     <div class="item-open-details" *ngIf="(contentSnippet$ | async | contentSnippet: 'poolItemOpenDetails')" (click)="showDetails()">
         <mat-icon>zoom_in</mat-icon> <span class="text">{{contentSnippet$ | async | contentSnippet: 'poolItemOpenDetails'}}</span>
