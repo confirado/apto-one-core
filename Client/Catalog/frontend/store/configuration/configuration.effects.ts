@@ -18,7 +18,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin, tap } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Element } from '../product/product.model';
 import { Configuration, ConfigurationState, CurrentSection } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
@@ -33,8 +32,6 @@ import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/conte
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
-import { Configuration, CurrentSection } from './configuration.model';
 
 interface GetConfigurationResult {
   state: Configuration,
