@@ -179,14 +179,14 @@ class Alias extends AptoEntity
      * @return float
      * @throws InvalidUuidException
      */
-    public function getAliasValue(State $state, Product $product): float
+    public function getAliasValue(State $state, Product $product, int $repetition = 0): float
     {
         $sectionId = new AptoUuid($this->sectionId);
 
         // case: only section and element custom property is given
         if ($this->elementId === null && $this->isCustomProperty) {
             foreach ($product->getElementIds($sectionId) as $elementId) {
-                if (!$state->isElementActive($sectionId, $elementId)) {
+                if (!$state->isElementActive($sectionId, $elementId, $repetition)) {
                     continue;
                 }
                 return floatval(str_replace(',', '.', $product->getElement($sectionId, $elementId)->getCustomProperty($this->property)));
@@ -199,7 +199,7 @@ class Alias extends AptoEntity
 
         // case: specific element custom property is given
         if ($this->isCustomProperty) {
-            if (!$state->isElementActive($sectionId, $elementId)) {
+            if (!$state->isElementActive($sectionId, $elementId, $repetition)) {
                 return 0;
             }
 
@@ -208,11 +208,11 @@ class Alias extends AptoEntity
 
         // case: element selectable value is given
         if ($this->property) {
-            return floatval(str_replace(',', '.', $state->getValue($sectionId, $elementId, $this->property)));
+            return floatval(str_replace(',', '.', $state->getValue($sectionId, $elementId, $this->property, $repetition)));
         }
 
         // no property is given, just check for active or not and return 1 or 0
-        return floatval($state->isElementActive($sectionId, $elementId));
+        return floatval($state->isElementActive($sectionId, $elementId, $repetition));
     }
 
     /**

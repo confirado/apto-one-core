@@ -233,9 +233,9 @@ class Rule
      * @return AptoUuid[]
      * @throws RepeatableValidationException
      */
-    public function getRuleRepeatableSectionIds(Rule $rule, ConfigurableProduct $product): array
+    public function getRuleRepeatableSectionIds(ConfigurableProduct $product): array
     {
-        $sectionUuIds = $this->getRuleSectionIds($rule);
+        $sectionUuIds = $this->getRuleSectionIds();
 
         // this means rule has no section at all
         if (count($sectionUuIds) < 1) {

@@ -196,7 +196,7 @@ class RuleRepetitionService
         }
 
         // now let's see which section ids are coming from repeatable sections
-        $repeatableSectionUuIds = $rule->getRuleRepeatableSectionIds($rule, $this->product);
+        $repeatableSectionUuIds = $rule->getRuleRepeatableSectionIds($this->product);
 
         // We expect to have one, and ONLY one, section in $repeatableSections for both the conditions and implications
         if (count($repeatableSectionUuIds) !== 1) {
