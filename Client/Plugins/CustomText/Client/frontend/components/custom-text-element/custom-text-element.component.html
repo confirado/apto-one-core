@@ -3,6 +3,7 @@
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
      [class.selected]="element.state.active"
+     [class.disabled]="element.state.disabled"
 >
     <apto-slot-outlet class="slot-start-element-container" identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 

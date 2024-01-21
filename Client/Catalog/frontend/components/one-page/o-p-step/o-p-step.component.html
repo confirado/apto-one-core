@@ -12,7 +12,7 @@
             <ng-container class="element" *ngFor="let element of sectionProductElements">
                 <ng-container *ngIf="getProgressElement(element.id) as pElement">
                     <apto-slot-outlet
-                        *ngIf="!isElementDisabled(element.id, element.sectionRepetition)"
+                        *ngIf="!isElementDisabled(element.id, element.sectionRepetition) || !product.keepSectionOrder"
                         [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
                         [product]="product"
                         [section]="section.section"
