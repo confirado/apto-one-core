@@ -79,7 +79,7 @@
              *ngIf="(element.element.description | translate) !== ''"
         >
             <div [innerHTML]="element.element.description | translate | safeHtml"></div>
-            <apto-slot-outlet identifier="area-element-after-description" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+            <apto-slot-outlet identifier="after-area-element-description" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
         </div>
 
         <div class="apply-button">
