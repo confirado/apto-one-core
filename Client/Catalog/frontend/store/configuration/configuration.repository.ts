@@ -3,12 +3,12 @@ import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
   AddBasketConfigurationArguments,
-  AddGuestConfigurationArguments,
+  AddGuestConfigurationArguments, CompressedState,
   ComputedValues,
-  Configuration, FetchPartsListArguments, PartsListPart,
+  Configuration, FetchPartsListArguments, GetParameterStateArguments, PartsListPart,
   RenderImage,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
 @Injectable()
@@ -44,6 +44,17 @@ export class ConfigurationRepository {
 			.getConfigurationState(params.productId, params.compressedState, params.updates)
 			.pipe(map((response) => this.responseToConfigurationState(response)));
 	}
+
+	public getParameterState(params: GetParameterStateArguments): Observable<{ state: CompressedState[] | null }> {
+		const args = [params.compressedState, params.parameters];
+
+		return this.catalogMessageBusService.getParameterState(params.compressedState, params.parameters)
+			.pipe(
+        tap(console.log),
+        map((response) => this.responseToParameterState(response))
+      );
+	}
+
 
 	public addToBasket(params: AddBasketConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addBasketConfiguration(
@@ -120,4 +131,8 @@ export class ConfigurationRepository {
 
 		return { state: state, renderImages: result.renderImages };
 	}
+
+  private responseToParameterState(result: CompressedState[]): { state: CompressedState[] | null } {
+    return { state: result };
+  }
 }

@@ -12,7 +12,7 @@ import {
 import { Page } from '@apto-catalog-frontend/models/pagination';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, PartsListPart, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { CompressedState, ComputedValues, ParameterState, PartsListPart, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -91,6 +91,10 @@ export class CatalogMessageBusService {
 
 	public getConfigurationState(productId: string, compressedState: any, updates: any): Observable<unknown> {
 		return this.query('GetConfigurationState', [productId, compressedState, updates]);
+	}
+
+	public getParameterState(compressedState: CompressedState[], parameters: ParameterState[]): Observable<unknown> {
+		return this.query('GetParameterState', [compressedState, parameters]);
 	}
 
 	public findHumanReadableState(productId: string, compressedState: any): Observable<any> {

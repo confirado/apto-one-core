@@ -81,6 +81,22 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param GetParameterState $query
+     *
+     * @return array
+     */
+    public function handleGetParameterState(GetParameterState $query): array
+    {
+        $state = new State($query->getState());
+
+        foreach ($query->getParameters() as $parameter) {
+            $state->setParameter($parameter['name'], $parameter['value']);
+        }
+
+        return $state->jsonSerialize();
+    }
+
+    /**
      * @param GetConfigurationState $query
      *
      * @return array
@@ -346,6 +362,11 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     {
         yield GetConfigurationState::class => [
             'method' => 'handleGetConfigurationState',
+            'bus' => 'query_bus'
+        ];
+
+        yield GetParameterState::class => [
+            'method' => 'handleGetParameterState',
             'bus' => 'query_bus'
         ];
     }

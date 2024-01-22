@@ -7,9 +7,9 @@ import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalo
 import {
   addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, ConfigurationActionTypes,
   fetchPartsList, fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess,
-  getCurrentRenderImageSuccess, getRenderImagesSuccess, humanReadableStateLoadSuccess, initConfiguration,
+  getCurrentRenderImageSuccess, getParameterState, getParameterStateSuccess, getRenderImagesSuccess, humanReadableStateLoadSuccess, initConfiguration,
   initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess,
-  setStep, setStepSuccess, updateConfigurationState,
+  setStep, setStepSuccess, updateConfigurationState, updateParameterState,
 }
   from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
@@ -18,7 +18,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin, tap } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Configuration, ConfigurationState, CurrentSection } from './configuration.model';
+import { Configuration, ConfigurationState, CurrentSection, ParameterState } from './configuration.model';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -154,29 +154,6 @@ export class ConfigurationEffects {
 		)
 	);
 
-	// public updateParameter$ = createEffect(() =>
-	// 	this.actions$.pipe(
-	// 		ofType(updateParameterState),
-	// 		withLatestFrom(
-  //       this.store$.select(selectParameters),
-  //     ),
-  //     tap(console.log),
-	// 		map(([action, store]) => {
-  //         return getParameterState({
-  //           payload: {
-  //             // quantity: store.productId,
-  //             // compressedState: store.state.compressedState,
-  //             // connector: store.connector,
-  //             // updates: action.updates,
-  //             // currentPerspective: store.currentPerspective,
-  //             // currentUser: currentUser
-  //           },
-  //         });
-  //       }
-	// 		)
-	// 	)
-	// );
-
   public getConfigurationState$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getConfigurationState),
@@ -239,6 +216,51 @@ export class ConfigurationEffects {
       )
     )
   );
+
+  public updateParameter$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateParameterState),
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+      ),
+      map(([action, store]) => {
+          return getParameterState({
+            payload: {
+              compressedState: store.state.compressedState,
+              parameters: action.payload,
+            },
+          });
+        }
+      )
+    )
+  );
+
+
+  public getParameterState$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getParameterState),
+      switchMap((action) => {
+        let payload = {
+          compressedState: action.payload.compressedState,
+          parameters: action.payload.parameters,
+        }
+
+        return this.configurationRepository.getParameterState(payload).pipe(
+          map((result) => ({
+            configuration: result.state,
+          })),
+        );
+      }),
+      map((state) =>
+        getParameterStateSuccess({
+          payload: {
+            configuration: state.configuration,
+          },
+        })
+      )
+    )
+  );
+
 
   public loginStatusChanged$ = createEffect(() =>
     this.actions$.pipe(

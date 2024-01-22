@@ -1,8 +1,9 @@
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 import {
+  CompressedState,
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments, HumanReadableState, PartsListPart,
+  GetConfigurationStateArguments, GetParameterStateArguments, HumanReadableState, ParameterState, PartsListPart, UpdateParameterStateArguments,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -16,6 +17,8 @@ export enum ConfigurationActionTypes {
 	GetConfigurationStateSuccess = '[Configuration] Get State success',
 
   UpdateParameterState = '[Configuration] Update Parameter State',
+  GetParameterState = '[Configuration] Get Parameter State',
+  GetParameterStateSuccess = '[Configuration] Get Parameter State Success',
 
 	SetPrevStep = '[Configuration] Set prev step',
 	SetPrevStepSuccess = '[Configuration] Set prev step success',
@@ -103,8 +106,17 @@ export const getConfigurationStateSuccess = createAction(
 	}>()
 );
 
-// export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState,
-//   props<{ updates: GetParameterStateArguments['updates'] }>());
+export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState, props< UpdateParameterStateArguments >());
+
+export const getParameterState = createAction(ConfigurationActionTypes.GetParameterState, props<{ payload: GetParameterStateArguments }>());
+
+export const getParameterStateSuccess = createAction(ConfigurationActionTypes.GetParameterStateSuccess,
+  props<{
+    payload: {
+      configuration: CompressedState[];
+    };
+  }>()
+);
 
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
 

@@ -4,6 +4,7 @@ import {
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
+  getParameterStateSuccess,
   getRenderImagesSuccess,
   humanReadableStateLoadSuccess,
   initConfigurationSuccess,
@@ -149,6 +150,16 @@ const _configurationReducer = createReducer(
       statePrice: action.payload.statePrice,
       loading: false,
     }
+  }),
+  on(getParameterStateSuccess, (state, action) => {
+    return {
+      ...state,
+      state: {
+        ...state.state,
+        compressedState: action.payload.configuration,
+      },
+      loading: false,
+    };
   }),
 
 	on(getCurrentRenderImageSuccess, (state, action) => ({

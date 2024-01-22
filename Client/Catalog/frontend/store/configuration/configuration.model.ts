@@ -8,7 +8,7 @@ export enum SectionTypes {
 }
 
 // this should be in sync with State.php's ITEM_TYPES
-export enum StateItemTypes {
+export enum ParameterStateTypes {
   QUANTITY = 'quantity',
   IGNORED_RULES = 'ignored_rules',
   REPETITIONS = 'repetitions',
@@ -30,9 +30,11 @@ export interface ConfigurationState {
 }
 
 export interface ParameterState {
-  name: string;
+  name: ParameterStateTypes;
   value: any
 }
+
+export type CompressedState = (ParameterState | HumanReadableState);
 
 export interface CurrentSection {
   id: string;
@@ -66,7 +68,7 @@ export interface ElementState {
 }
 
 export interface Configuration {
-	compressedState: any;
+	compressedState: CompressedState[];
 	sections: SectionState[];
 	elements: ElementState[];
   failedRules: any;
@@ -207,6 +209,16 @@ export interface GetConfigurationStateArguments {
 	perspectives: string[];
 	additionalData: any;
 }
+
+export interface UpdateParameterStateArguments {
+  payload: ParameterState[];
+}
+
+export interface GetParameterStateArguments {
+  compressedState: CompressedState[];
+  parameters: ParameterState[];
+}
+
 export interface StatePrice {
 	discount: Discount;
 	own: Own;
