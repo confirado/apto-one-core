@@ -7,6 +7,7 @@
      [class.input-type-input-slider]="inputType === floatInputTypes.INPUT_SLIDER"
      [class.no-element-preview-image]="!element.element.previewImage && !product.useStepByStep"
      [class.selected]="element.state.active && product.useStepByStep"
+     [class.disabled]="element.state.disabled"
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 

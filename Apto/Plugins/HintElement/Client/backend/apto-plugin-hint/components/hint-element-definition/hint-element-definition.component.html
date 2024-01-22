@@ -1,0 +1,29 @@
+<md-tabs md-dynamic-height md-border-bottom>
+    <md-tab label="Link">
+        <div class="apto-tab-content">
+            <div layout="row" layout-align="start" flex>
+                <md-input-container flex>
+                    <md-checkbox ng-model="$ctrl.values.active">Aktiv</md-checkbox>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <md-input-container class="md-block" flex>
+                    <label>Ziel des Links</label>
+                    <input ng-model="$ctrl.values.link">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start" flex>
+                <apto-translated-value label="'Buttontext'" type="'input'" translated-value="$ctrl.values.buttonText" flex></apto-translated-value>
+                <div flex="5" class="flex-5"></div>
+                <md-input-container class="md-block flex" flex>
+                    <label>Link im neuem Tab öffnen</label>
+                    <md-select ng-model="$ctrl.values.openLinkInNewTab">
+                        <md-option ng-value="rendering.id" ng-repeat="rendering in $ctrl.renderings">{{ rendering.label }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </div>
+    </md-tab>
+</md-tabs>

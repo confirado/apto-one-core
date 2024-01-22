@@ -51,6 +51,7 @@
                                                         ></apto-discount-tag>
                                                     </div>
                                                 </div>
+                                                <apto-slot-outlet identifier="after-summary-configuration-element" [section]="section.section" [element]="element"></apto-slot-outlet>
                                             </ng-container>
                                             <div class="element-summary" *ngIf="!section.active">{{ contentSnippet$ | async | contentSnippet: 'notSelected' }}</div>
                                         </div>

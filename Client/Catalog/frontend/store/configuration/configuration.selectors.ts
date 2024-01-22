@@ -33,7 +33,7 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 }
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
-  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
+  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && (!section.disabled || !state.product.product.keepSectionOrder));
 
 	let currentStep: ProgressStep | undefined;
 	const afterSteps: ProgressStep[] = [];
@@ -46,7 +46,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
       }
 
       const elements = state.configuration.state.elements
-        .filter((e) => !e.disabled && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
+        .filter((e) => (!e.disabled|| !state.product.product.keepSectionOrder) && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
         .map((e) => e.id);
 
       // let in product elements only those are available in state configuration

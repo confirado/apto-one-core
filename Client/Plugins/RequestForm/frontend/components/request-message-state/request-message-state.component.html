@@ -9,7 +9,7 @@
         </div>
         <div class="title">
             <h5>{{ success.title }}</h5>
-            <p>{{ success.subtitle }}</p>
+            <div class="subtitle" [innerHTML]="success.subtitle"></div>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         </div>
         <div class="title">
             <h5>{{ error.title }}</h5>
-            <p>{{ error.subtitle }}</p>
+            <div class="subtitle" [innerHTML]="error.subtitle"></div>
         </div>
     </div>
 

@@ -1,0 +1,70 @@
+@import "globals";
+@import "elements";
+@import "form-inputs";
+
+.hint-element-step-by-step {
+    @include element-grid();
+    @include element-margins();
+
+    position: relative;
+    border-radius: var(--border-radius-card);
+    border: 3px solid transparent;
+
+    .header {
+        grid-area: header;
+        @include header();
+        @include title();
+    }
+
+    .picture {
+        grid-area: picture;
+        @include picture();
+    }
+
+    .element {
+        @include element();
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    .description {
+        grid-area: description;
+        @include description();
+        margin-top: var(--element-gap);
+    }
+
+    .apply-button {
+        grid-area: buttons;
+        @include buttons();
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .hint-element-step-by-step {
+        @include element-grid('tablet');
+        @include element-margins('tablet');
+
+        .header {
+            @include header('tablet');
+            @include title('tablet');
+        }
+
+        .picture {
+            @include picture('tablet');
+        }
+
+        .element {
+            .container {
+                .input {}
+                .hint {}
+                .prefix {}
+                .suffix {}
+            }
+        }
+
+        .description {}
+        .apply-button {
+            @include buttons('tablet');
+        }
+    }
+}

@@ -1,0 +1,35 @@
+<ng-container *ngIf="element && product && section">
+    <div class="hint-element-step-by-step" *ngIf="element && section && product"
+         [class.selected]="element.state.active"
+         [class.step-by-step]="product.useStepByStep"
+         [class.one-page]="!product.useStepByStep"
+         [class.disabled]="element.state.disabled"
+    >
+        <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+
+        <div class="header">
+            <div class="title">
+                <h4>{{ element.element.name | translate }}</h4>
+            </div>
+        </div>
+
+        <div class="picture">
+            <apto-element-picture
+                *ngIf="element.element.previewImage"
+                [previewImage]="element.element.previewImage" [zoomFunction]="element.element.zoomFunction"
+            ></apto-element-picture>
+        </div>
+
+        <div class="description"
+             *ngIf="(element.element.description | translate) !== ''"
+             [innerHTML]="element.element.description | translate | safeHtml"
+        >
+        </div>
+        <div class="element-attachment-download-item element" *ngIf="element.element.attachments.length !== 0">
+            <a (click)="$event.stopPropagation()" class="element-attachment-download" *ngFor="let attachment of element.element.attachments" [href]="mediaUrl + attachment.fileUrl" [download]="attachment.mediaFile.filename | translate">{{ attachment.name | translate }}</a>
+        </div>
+        <div class="apply-button"></div>
+
+        <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+    </div>
+</ng-container>

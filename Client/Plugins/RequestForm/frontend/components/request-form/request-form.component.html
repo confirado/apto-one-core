@@ -4,7 +4,7 @@
             <div class="title">
                 <h5>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}</h5>
                 <div class="break-text">
-                    <p>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline' }}</p>
+                    <div class="subline" [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.subline'"></div>
                 </div>
             </div>
 
