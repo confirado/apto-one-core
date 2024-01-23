@@ -4,6 +4,9 @@ namespace Apto\Catalog\Domain\Core\Service\Formula\FormulaFunction;
 
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FunctionParserException;
 
@@ -57,6 +60,10 @@ class Repetition extends AbstractFormulaFunction
                     $value = $this->add($value, $repetition, $property);
                     break;
                 }
+                case 'addIf': {
+                    $value = $this->isConditionFulfilled($state, $params, $aliases, $repetition) ? $this->add($value, $repetition, $property) : $value;
+                    break;
+                }
             }
         }
 
@@ -81,5 +88,64 @@ class Repetition extends AbstractFormulaFunction
         }
 
         return 0;
+    }
+
+    /**
+     * @param State $state
+     * @param array $params
+     * @param array $aliases
+     * @param array $repetitionValues
+     * @return bool
+     * @throws InvalidUuidException
+     */
+    private function isConditionFulfilled(State $state, array $params, array $aliases, array $repetitionValues): bool
+    {
+        // return false if not all needed params are set
+        if (count($params) < 6) {
+            return false;
+        }
+
+        // get needed params
+        $aliasName = $params[2];
+        $propertyName = $params[3];
+        $compareOperatorName = strtoupper($params[4]);
+        $value = $params[5];
+
+        // get condition alias
+        $alias = null;
+        if (array_key_exists($aliasName, $aliases)) {
+            $alias = $aliases[$aliasName];
+        }
+
+        // return false if no alias is found
+        if (null === $alias) {
+            return false;
+        }
+
+        // get the current repetition from repetition values
+        $repetition = 0;
+        if (array_key_exists('repetition', $repetitionValues)) {
+            $repetition = $repetitionValues['repetition'];
+        }
+
+        // get compare operator value
+        $compareOperator = constant(CompareOperator::class . '::' . $compareOperatorName);
+        if (null === $compareOperator) {
+            return false;
+        }
+
+        // create a criterion
+        $criterion = new DefaultCriterion(
+            true,
+            new CompareOperator($compareOperator),
+            $value,
+            new AptoUuid($alias['sectionId']),
+            new AptoUuid($alias['elementId']),
+            $propertyName,
+            $repetition
+        );
+
+        // return criterion result
+        return $criterion->isFulfilled($state, new RulePayload([]));
     }
 }
