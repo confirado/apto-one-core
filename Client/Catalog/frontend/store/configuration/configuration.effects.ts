@@ -5,11 +5,10 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, ConfigurationActionTypes,
-  fetchPartsList, fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess,
-  getCurrentRenderImageSuccess, getParameterState, getParameterStateSuccess, getRenderImagesSuccess, humanReadableStateLoadSuccess, initConfiguration,
-  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess,
-  setStep, setStepSuccess, updateConfigurationState, updateParameterState,
+  addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
+  fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess,
+  getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
+  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState,
 }
   from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
@@ -139,8 +138,8 @@ export class ConfigurationEffects {
         this.store$.select(selectConfiguration),
         this.store$.select(selectCurrentUser)
       ),
-			map(([action, store, currentUser]) =>
-				getConfigurationState({
+			map(([action, store, currentUser]) => {
+				return getConfigurationState({
 					payload: {
 						productId: store.productId,
 						compressedState: store.state.compressedState,
@@ -150,7 +149,7 @@ export class ConfigurationEffects {
             currentUser: currentUser
 					},
 				})
-			)
+      })
 		)
 	);
 
@@ -216,51 +215,6 @@ export class ConfigurationEffects {
       )
     )
   );
-
-  public updateParameter$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(updateParameterState),
-      withLatestFrom(
-        this.store$.select(selectConfiguration),
-      ),
-      map(([action, store]) => {
-          return getParameterState({
-            payload: {
-              compressedState: store.state.compressedState,
-              parameters: action.payload,
-            },
-          });
-        }
-      )
-    )
-  );
-
-
-  public getParameterState$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(getParameterState),
-      switchMap((action) => {
-        let payload = {
-          compressedState: action.payload.compressedState,
-          parameters: action.payload.parameters,
-        }
-
-        return this.configurationRepository.getParameterState(payload).pipe(
-          map((result) => ({
-            configuration: result.state,
-          })),
-        );
-      }),
-      map((state) =>
-        getParameterStateSuccess({
-          payload: {
-            configuration: state.configuration,
-          },
-        })
-      )
-    )
-  );
-
 
   public loginStatusChanged$ = createEffect(() =>
     this.actions$.pipe(
@@ -420,13 +374,18 @@ export class ConfigurationEffects {
                 );
             }
           }
+
+          // this should NOT run in case, otherwise it causes issue with add remove section,
+          // somehow getConfigurationState call fails
+          return updateConfigurationState({
+            updates: {
+              remove: removeList,
+            },
+          });
         }
 
-				return updateConfigurationState({
-					updates: {
-						remove: removeList,
-					},
-				});
+        // todo this is here for just to return something
+        return hideLoadingFlagAction();
 			})
 		)
 	);

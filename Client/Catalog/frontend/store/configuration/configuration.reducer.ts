@@ -4,8 +4,7 @@ import {
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
-  getParameterStateSuccess,
-  getRenderImagesSuccess,
+  getRenderImagesSuccess, hideLoadingFlagAction,
   humanReadableStateLoadSuccess,
   initConfigurationSuccess,
   resetLoadingFlagAction,
@@ -87,6 +86,12 @@ const _configurationReducer = createReducer(
       loading: false,
     };
   }),
+  on(hideLoadingFlagAction, (state, action) => {
+    return {
+      ...state,
+      loading: false,
+    };
+  }),
   on(createLoadingFlagAction, (state, action) => {
     return {
       ...state,
@@ -151,17 +156,6 @@ const _configurationReducer = createReducer(
       loading: false,
     }
   }),
-  on(getParameterStateSuccess, (state, action) => {
-    return {
-      ...state,
-      state: {
-        ...state.state,
-        compressedState: action.payload.configuration,
-      },
-      loading: false,
-    };
-  }),
-
 	on(getCurrentRenderImageSuccess, (state, action) => ({
 		...state,
 		renderImages: action.payload.renderImages,
@@ -280,10 +274,12 @@ const _configurationReducer = createReducer(
 			...state,
 		};
 	}),
-	on(setStep, (state, action) => ({
-		...state,
-		currentStep: action.payload,
-	})),
+	on(setStep, (state, action) => {
+    return {
+      ...state,
+      currentStep: action.payload,
+    }
+	}),
   on(setHideOnePage, (state, action) => ({
     ...state,
     hideOnePage: action.payload

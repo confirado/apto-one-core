@@ -203,6 +203,7 @@ export interface GetConfigurationStateArguments {
 	updates: {
 		set?: ConfigurationState[];
 		remove?: ConfigurationState[];
+		parameters?: ParameterState[];
 	};
 	locale: string;
 	quantity: number;

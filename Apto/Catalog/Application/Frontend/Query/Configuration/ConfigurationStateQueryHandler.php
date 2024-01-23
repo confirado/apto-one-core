@@ -144,6 +144,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
 
             $this->applySet($product, $enrichedState, $query->getIntention()['set'] ?? []);
+            $this->applyParameters($enrichedState, $query->getIntention()['parameters'] ?? []);
             $this->applyRemove($product, $enrichedState, $query->getIntention()['remove'] ?? []);
             $this->applyComplete($product, $enrichedState, $query->getIntention()['complete'] ?? []);
         } catch (InvalidStateException $e) {
@@ -301,6 +302,25 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
                 $value,
                 $sectionRepetition
             );
+        }
+    }
+
+    /**
+     * Sets configurations parameters if they are valid
+     *
+     * example: quantity, repetitions, ...
+     *
+     * @param EnrichedState       $state
+     * @param array               $items
+     *
+     * @return void
+     */
+    private function applyParameters(EnrichedState $state, array $items): void
+    {
+        $this->valueValidationService->assertValidParameters($items);
+
+        foreach ($items as $item) {
+            $state->getState()->setParameter($item['name'], $item['value']);
         }
     }
 

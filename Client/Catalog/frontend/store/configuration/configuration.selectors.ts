@@ -354,7 +354,7 @@ export const selectQuantity = createSelector(featureSelector, (state: CatalogFea
 //   return result['value'] ? Number(result['value']) : 1;
 // });
 
-export const selectRepetition = createSelector(featureSelector, (state: CatalogFeatureState) => {
+export const selectRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
   const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.REPETITIONS)
   return result['value'] ? Number(result['value']) : 1;
 });

@@ -43,7 +43,10 @@ export enum ConfigurationActionTypes {
   resetLoadingFlagAction = '[Configuration] Reset Loading Flag',
   FetchPartsList = '[Configuration] Fetch Parts List',
   FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
+  HideLoadingFlag = '[Configuration] hide loading flag',
 }
+
+export const hideLoadingFlagAction = createAction(ConfigurationActionTypes.HideLoadingFlag);
 
 export const createLoadingFlagAction = createAction(
   ConfigurationActionTypes.createLoadingFlagAction
@@ -104,18 +107,6 @@ export const getConfigurationStateSuccess = createAction(
       renderImages: [];
 		};
 	}>()
-);
-
-export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState, props< UpdateParameterStateArguments >());
-
-export const getParameterState = createAction(ConfigurationActionTypes.GetParameterState, props<{ payload: GetParameterStateArguments }>());
-
-export const getParameterStateSuccess = createAction(ConfigurationActionTypes.GetParameterStateSuccess,
-  props<{
-    payload: {
-      configuration: CompressedState[];
-    };
-  }>()
 );
 
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
