@@ -8,7 +8,7 @@ import {
   Configuration, FetchPartsListArguments, PartsListPart,
   RenderImage,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { map, Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
 @Injectable()
