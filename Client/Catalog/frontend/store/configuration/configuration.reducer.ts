@@ -110,12 +110,6 @@ const _configurationReducer = createReducer(
       loading: true
     }
   }),
-  // on(updateParameterStateSuccess, (state, action) => {
-  //   return {
-  //     ...state,
-  //     loading: false
-  //   }
-  // }),
   on(initConfigurationSuccess, (state, action) => {
     /*
       productId: string | null;
