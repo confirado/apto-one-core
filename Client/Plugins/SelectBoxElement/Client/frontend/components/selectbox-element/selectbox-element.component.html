@@ -33,6 +33,7 @@
                         [default]="element.element.definition.staticValues.defaultItem?.id"
                         [items]="items"
                         [formControl]="formElement"
+                        [placeholder]="((contentSnippet$ | async | contentSnippet: 'select.please-select'))"
                     >
                     </apto-select-box-field>
                     <apto-select-field

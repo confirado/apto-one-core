@@ -43,7 +43,7 @@
     [cdkConnectedOverlayWidth]="overlayWidth + 'px'"
     (overlayOutsideClick)="toggleOverlay(); $event.stopPropagation()"
 >
-    <div class="overlay" [style.width]="overlayWidth + 'px'">
+    <div class="overlay" >
         <div class="items" *ngFor="let item of _items" (click)="selectItem(item.id)">
 			<div class="item" mat-ripple>
                 <span class="text">{{ item.name | translate }}</span>
