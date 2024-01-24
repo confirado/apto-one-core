@@ -93,10 +93,6 @@ export class CatalogMessageBusService {
 		return this.query('GetConfigurationState', [productId, compressedState, updates]);
 	}
 
-	public getParameterState(compressedState: CompressedState[], parameters: ParameterState[]): Observable<unknown> {
-		return this.query('GetParameterState', [compressedState, parameters]);
-	}
-
 	public findHumanReadableState(productId: string, compressedState: any): Observable<any> {
 		return this.query('FindHumanReadableState', [productId, compressedState]);
 	}

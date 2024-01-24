@@ -211,15 +211,6 @@ export interface GetConfigurationStateArguments {
 	additionalData: any;
 }
 
-export interface UpdateParameterStateArguments {
-  payload: ParameterState[];
-}
-
-export interface GetParameterStateArguments {
-  compressedState: CompressedState[];
-  parameters: ParameterState[];
-}
-
 export interface StatePrice {
 	discount: Discount;
 	own: Own;
