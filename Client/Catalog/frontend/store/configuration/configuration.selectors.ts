@@ -349,12 +349,12 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
 
 export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
 
-// export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => {
-//   const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.QUANTITY)
-//   return result['value'] ? Number(result['value']) : 1;
-// });
+export const selectParameterQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.QUANTITY)
+  return result['value'] ? Number(result['value']) : 1;
+});
 
-export const selectRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
+export const selectParameterRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
   const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.REPETITIONS)
   return result['value'] ? Number(result['value']) : 1;
 });
