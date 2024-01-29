@@ -25,3 +25,10 @@
         }
     }
 }
+
+@media only screen and (max-width: $mobile-max-width) {
+    .step-by-step-container {
+        gap: 30px;
+        margin: 0 0 16px 0;
+    }
+}
