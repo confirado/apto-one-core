@@ -95,6 +95,7 @@ mat-radio-group {
     align-items: flex-start;
     word-break: break-word;
     width: 100%;
+    margin-bottom: 2vh;
 
     mat-radio-button:nth-child(2) {
         margin-top: var(--element-gap);
@@ -118,6 +119,9 @@ mat-radio-group {
     .header {
         @include header();
         @include title();
+
+        flex: 1;
+        padding-top: 2vh;
 
         .results {
             display: flex;
@@ -197,14 +201,36 @@ mat-radio-group {
             display: flex;
             flex-wrap: wrap;
             margin-top: var(--element-gap);
+            width: 100%;
 
             .element {
                 @include colors(135px, 95px, 10px 20px, 22px);
+                flex: 0 0 calc(25% - var(--element-gap));
+
+                &:not(:last-child) {
+                    margin-right: var(--element-gap);
+                }
+            }
+
+            .placeholder {
+                flex: 0 0 calc(25% - var(--element-gap));
+                visibility: hidden;
+            }
+
+            @for $i from 1 through 3 {
+                &:nth-last-child(-n + #{$i}) {
+                    ~ .placeholder {
+                        visibility: visible;
+                    }
+                }
             }
         }
     }
 
     .color-mix {
+        display: flex;
+        flex-wrap: wrap;
+
         @include box();
 
         .picture {

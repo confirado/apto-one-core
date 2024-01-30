@@ -112,6 +112,9 @@
 
                     <div class="element">
                         <apto-input-field [formControl]="filter.controls.searchString" [type]="'text'"></apto-input-field>
+                        <button mat-icon-button type="button" (click)="resetSearchField()">
+                            <mat-icon>clear</mat-icon>
+                        </button>
                     </div>
                 </div>
 
@@ -125,7 +128,7 @@
                     <div class="element">
                         <div class="input" *ngFor="let priceGroup of (priceGroups$ | async) || []"></div>
                         <apto-select-field
-                            [default]="contentSnippet$ | async | contentSnippet: 'allProperty'"
+                            [default]="getDefaultPriceGroup() | async"
                             [items]="(priceGroups$ | async) || []"
                             [formControl]="filter.controls.priceGroup"
                         ></apto-select-field>
@@ -135,35 +138,38 @@
 
             <mat-divider></mat-divider>
 
-            <div class="properties" formGroupName="properties">
-                <div class="header">
-                    <div class="title">
-                        <h4>{{ contentSnippet$ | async | contentSnippet: 'materialProperties' }}</h4>
-                    </div>
-                </div>
-
-                <div class="element">
-                    <div class="input" *ngFor="let singlePropertyGroup of singlePropertyGroups$ | async">
-                        <div class="prefix">{{singlePropertyGroup.name | translate}}</div>
-                        <apto-select-field
-                            [items]="singlePropertyGroup.properties"
-                            [formControlName]="singlePropertyGroup.id"
-                            [default]="contentSnippet$ | async | contentSnippet: 'allProperty'"
-                            [asArray]="true"
-                        >
-                        </apto-select-field>
-                    </div>
-                </div>
-                <div class="element">
-                    <ng-container *ngFor="let multiplePropertyGroup of multiplePropertyGroups$ | async">
-                        <div class="input" *ngFor="let multipleProperty of multiplePropertyGroup.properties">
-                            <mat-checkbox class="mat-checkbox-multiline-label" color="primary" (change)="onMultiplePropertySelected(multiplePropertyGroup, multipleProperty)">{{multipleProperty.name | translate}}</mat-checkbox>
+            <ng-container *ngIf="(singlePropertyGroups$ | async)?.length || (multiplePropertyGroups$ | async)?.length">
+                <div class="properties" formGroupName="properties">
+                    <div class="header">
+                        <div class="title">
+                            <h4>{{ contentSnippet$ | async | contentSnippet: 'materialProperties' }}</h4>
                         </div>
-                    </ng-container>
-                </div>
-            </div>
+                    </div>
 
-            <mat-divider></mat-divider>
+                        <div class="element">
+                            <div class="input" *ngFor="let singlePropertyGroup of singlePropertyGroups$ | async">
+                                <div class="prefix">{{singlePropertyGroup.name | translate}}</div>
+                                <apto-select-field
+                                    [items]="singlePropertyGroup.properties"
+                                    [formControlName]="singlePropertyGroup.id"
+                                    [default]="contentSnippet$ | async | contentSnippet: 'allProperty'"
+                                    [asArray]="true"
+                                >
+                                </apto-select-field>
+                            </div>
+                        </div>
+                        <div class="element">
+                            <ng-container *ngFor="let multiplePropertyGroup of multiplePropertyGroups$ | async">
+                                <div class="input" *ngFor="let multipleProperty of multiplePropertyGroup.properties">
+                                    <mat-checkbox class="mat-checkbox-multiline-label" color="primary" (change)="onMultiplePropertySelected(multiplePropertyGroup, multipleProperty)">{{multipleProperty.name | translate}}</mat-checkbox>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                <mat-divider></mat-divider>
+
+            </ng-container>
 
             <ng-container *ngIf="(items$ | async) || [] as items;">
                 <div class="filtered-materials" id="filtered-materials">
@@ -198,7 +204,7 @@
 
         <mat-divider></mat-divider>
 
-        <div class="apply-button">
+        <div class="apply-button" *ngIf="this.element.element.definition.staticValues.secondaryMaterialActive">
             <button *ngIf="step === 1 && elementState('second-material')" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="nextStep()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.continue' }}
             </button>

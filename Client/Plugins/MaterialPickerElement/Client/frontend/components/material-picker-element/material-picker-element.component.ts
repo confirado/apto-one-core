@@ -2,7 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { combineLatest } from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { environment } from '@apto-frontend/src/environments/environment';
 import { translate } from "@apto-base-core/store/translated-value/translated-value.model";
@@ -47,7 +48,7 @@ export class MaterialPickerElementComponent implements OnInit {
   public locale: string = environment.defaultLocale;
   public step: number = 1;
 
-	public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
+	public readonly contentSnippets$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
 	public readonly contentSnippetButton$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
   public readonly items$ = this.store.select(selectItems);
   public readonly colors$ = this.store.select(selectColors);
@@ -191,41 +192,79 @@ export class MaterialPickerElementComponent implements OnInit {
       formElement = this.secondaryFormElement;
     }
 
-		if (!this.element.element.definition.staticValues.allowMultiple) {
-			if (currentItem && currentItem.id === localeItem.id) {
-        // remove current item if selected item is clicked
-				currentItem = undefined;
-        formElement.setValue([]);
-			} else {
-        // set new current item
-				currentItem = localeItem;
-        formElement.setValue([currentItem]);
-			}
-		} else {
-			const cutItem = currentMaterials.find((i) => i.id === localeItem.id);
-			if (cutItem) {
-        // remove current item if selected item is clicked
-				currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
-			} else if (localeItem) {
-				currentMaterials.push({
-					id: localeItem.id,
-					name: localeItem.name,
-					priceGroup: localeItem.priceGroup,
-				});
-			}
-      formElement.setValue(currentMaterials);
-		}
+    if (this.element.element.definition.staticValues.secondaryMaterialActive === false) {
+      // If secondary material is not active
+      if (this.element.element.definition.staticValues.allowMultiple === true) {
+        // If multiple selection is allowed, toggle selection directly
+        this.toggleSelection(localeItem, currentMaterials);
+      } else {
+        // If only single selection is allowed, update current item
+        currentItem = this.toggleSelection(localeItem, [currentItem])[0];
+      }
+    } else {
+      if (!this.element.element.definition.staticValues.allowMultiple) {
+        if (currentItem && currentItem.id === localeItem.id) {
+          // remove current item if selected item is clicked
+          currentItem = undefined;
+          formElement.setValue([]);
+        } else {
+          // set new current item
+          currentItem = localeItem;
+          formElement.setValue([currentItem]);
+        }
+      } else {
+        const cutItem = currentMaterials.find((i) => i.id === localeItem.id);
+        if (cutItem) {
+          // remove current item if selected item is clicked
+          currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
+        } else if (localeItem) {
+          currentMaterials.push({
+            id: localeItem.id,
+            name: localeItem.name,
+            priceGroup: localeItem.priceGroup,
+          });
+        }
+        formElement.setValue(currentMaterials);
+      }
+    }
 
     if (this.step === 1) {
       this.currentItem = currentItem;
       this.currentMaterials = currentMaterials;
-    }
-
-    if (this.step === 2) {
+    } else if (this.step === 2) {
       this.currentSecondaryItem = currentItem;
       this.currentSecondaryMaterials = currentMaterials;
     }
-	}
+  }
+
+  /**
+   * Toggles the selection of an item in the current items list.
+   * @param localeItem The item to toggle.
+   * @param currentItems The current list of items.
+   */
+  private toggleSelection(localeItem: any, currentItems: any[]): void {
+    // Find the index of the item in the current items list
+    const cutItemIndex = currentItems.findIndex((i) => i.id === localeItem.id);
+
+    // If the item is already in the list, remove it; otherwise, add it to the list
+    if (cutItemIndex !== -1) {
+      currentItems.splice(cutItemIndex, 1); // Remove the item from the list
+    } else if (localeItem) {
+      currentItems.push({ // Add the item to the list
+        id: localeItem.id,
+        name: localeItem.name,
+        priceGroup: localeItem.priceGroup,
+      });
+    }
+
+    // Save the changes
+    this.saveInput();
+
+    // If the list becomes empty after toggling, remove the input
+    if (currentItems.length === 0) {
+      this.removeInput();
+    }
+  }
 
   public onMultiplePropertySelected(group: PropertyGroup, property: Property) {
     if (!this.filter.controls.properties.controls.hasOwnProperty(group.id)) {
@@ -417,5 +456,33 @@ export class MaterialPickerElementComponent implements OnInit {
       return this.element.element.definition.staticValues.secondaryMaterialActive;
     }
     return false;
+  }
+
+  public resetSearchField(): void {
+    this.filter.controls.searchString.setValue('');
+  }
+
+  /**
+   * Retrieves the default price group.
+   * @returns An Observable emitting a string representing the default price group.
+   */
+  public getDefaultPriceGroup(): Observable<string> {
+    return this.priceGroups$.pipe(
+      switchMap(priceGroups => {
+        // Check if priceGroups array exists and contains exactly one element
+        if (priceGroups && priceGroups.length === 1) {
+          // If only one price group is available, return its name in German
+          return of(priceGroups[0].name['de_DE'].toString());
+        } else {
+          // If multiple price groups exist or none is available, retrieve the default content snippet
+          return this.store.select(selectContentSnippet('plugins.materialPickerElement.allProperty')).pipe(
+            map(contentSnippet => {
+              // Extract and return the content snippet's value in German
+              return contentSnippet.content['de_DE'].toString();
+            })
+          );
+        }
+      })
+    );
   }
 }
