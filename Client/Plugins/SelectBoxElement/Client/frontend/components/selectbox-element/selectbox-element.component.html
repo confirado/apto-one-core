@@ -40,8 +40,8 @@
                         *ngIf="!element.element.definition.staticValues.enableMultiSelect"
                         [asArray]="true"
                         [items]="items"
-                        [default]="setBoxName(formElement.value?.[0]) | translate"
                         [formControl]="formElement"
+                        [default]="((contentSnippet$ | async | contentSnippet: 'select.please-select'))"
                     >
                     </apto-select-field>
                 </div>
