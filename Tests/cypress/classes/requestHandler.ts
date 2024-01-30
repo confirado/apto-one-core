@@ -57,7 +57,7 @@ export class RequestHandler {
   }
 
   /**
-   * Before giving an alias name for the request, we use this method to onne more time check if we assign the alias to
+   * Before giving an alias name for the request, we use this method to one more time check if we assign the alias to
    * the correct request. We wait until the request is done, then we add our alis to that request.
    * req argument here comes from cypress and includes all the data from request. If everything is correct, then our
    * alias must be in request's body. For example, for queries request's body looks like this:
@@ -109,9 +109,9 @@ export class RequestHandler {
   /**
    * Creates an aliases array
    *
-   * this is need for cypress "wait" method as argument in interceptions
+   * this is needed for cypress "wait" method as argument in interceptions
    *
-   * Example: ['@FindCurrentUser', '@FindLanguages', '@messagesIsGranted']
+   * Example return: ['@FindCurrentUser', '@FindLanguages', '@messagesIsGranted']
    *
    * @param requests
    */
