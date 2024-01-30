@@ -1,6 +1,5 @@
-import { ProductList } from '../../classes/product-list/product-list';
-import { Common } from '../../classes/common';
-import { ViewportPresetsEnum } from '../../classes/globals';
+import { ProductList } from '../../classes/pages/product-list/product-list';
+import { Core } from '../../classes/common/core';
 
 describe('Footer', () => {
   const baseUrl = Cypress.env('baseUrl');
@@ -27,14 +26,14 @@ describe('Footer', () => {
     // payment options image
     cy.get('.paymentOptions').should('be.visible');
     cy.get('.paymentOptions').find('img').should((img) => {
-      Common.isImageLoadedCheck(img);
+      Core.isImageLoadedCheck(img);
     });
   });
 
 
   it('test footer on mobile', () => {
     // ProductList.visit();
-    // Common.switchViewport(ViewportPresetsEnum.MOBILE);
+    // Core.switchViewport(ViewportPresetsEnum.MOBILE);
     // todo test links in footer that are not broken
   });
 });

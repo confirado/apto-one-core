@@ -1,16 +1,16 @@
 import { Interception } from 'cypress/types/net-stubbing';
-import { Common } from '../../common';
 import { IRequestData, UserFixture, UserTypes } from '../../Models';
 import { Queries } from '../../queries';
 import { RequestHandler } from '../../requestHandler';
 import { Requests } from '../../requests';
 import { IPage } from '../../interfaces/page-interface';
 import Cookie = Cypress.Cookie;
+import { Backend } from '../../common/backend';
 
 export class Login implements IPage {
 
 	public static visit(): void {
-		Common.visitBackend('login');
+		Backend.visit('login');
 	}
 
   /**
@@ -121,7 +121,7 @@ export class Login implements IPage {
     return new Cypress.Promise((resolve) => {
       cy.getCookie(Login.loginCookie).then((cookieBeforeLogout: Cookie) => {
         cy.get('apto-user-status').should('exist');
-        cy.get('[data-cy="logout-link"]').click();
+        cy.dataCy('logout-link').click();
         resolve(cookieBeforeLogout);
       });
     });

@@ -1,15 +1,6 @@
-import { UserRoleEnum, ViewportPresets, ViewportPresetsEnum } from './globals';
-import { IRequestData } from './Models';
+import { ViewportPresets, ViewportPresetsEnum } from '../globals';
 
-export class Common {
-
-  public static visitFrontend(url: string): void {
-    cy.visit(Cypress.env('baseUrl') + url);
-  }
-
-  public static visitBackend(url: string): void {
-    cy.visit(`${Cypress.env('baseUrl')}backend/${url}`);
-  }
+export class Core {
 
   /**
    * Checks if image is correctly loaded
