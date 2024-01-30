@@ -15,6 +15,14 @@ import {
   FrontendUsersLoginComponent
 } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
+import {
+  ForgotPasswordComponent
+} from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
+import { ActivatedRoute } from '@angular/router';
+import { QueryParamActionTypeEnum } from '@apto-base-core/enums/query-param-action-type.enum';
+import {
+  UpdatePasswordFormComponent
+} from '@apto-base-frontend/components/frontend-users-login/update-password-form/update-password-form.component';
 
 @Component({
 	selector: 'apto-header',
@@ -34,7 +42,12 @@ export class HeaderComponent {
   public loginActive: boolean;
   public totalQuantity: number;
 
-	constructor(private store: Store, private dialogService: DialogService, private basketService: BasketService) {
+	constructor(
+    private store: Store,
+    private dialogService: DialogService,
+    private basketService: BasketService,
+    private route: ActivatedRoute
+  ) {
     this.store.select(selectLocale).subscribe((locale) => {
       if (locale !== null) {
         this.locale = locale;
@@ -60,45 +73,57 @@ export class HeaderComponent {
         this.loginActive = translate(next.content, this.locale) === 'active' ? true : false;
       }
     });
+
+    this.route.queryParams.subscribe((result: {action?: string, token?: string}) => {
+      if (result?.action === QueryParamActionTypeEnum.updatePassword && result?.token) {
+        this.showUpdatePasswordModal(result.token);
+      }
+    });
   }
 
-	onChangeLanguage(locale: string) {
+  public onChangeLanguage(locale: string): void {
 		this.store.dispatch(setLocale({ payload: locale }));
 	}
 
-  showLoginButton() {
+  public showLoginButton(): boolean {
     if (this.connector && this.connector.configured === true || this.loginActive === false) {
       return false;
     }
 
-    if (this.isLoggedIn) {
-      return false;
-    }
-
-    return true;
+    return !this.isLoggedIn;
   }
 
-  showLogoutButton() {
+  public showLogoutButton(): boolean {
     if (this.connector && this.connector.configured === true || this.loginActive === false) {
       return false;
     }
 
-    if (!this.isLoggedIn) {
-      return false;
-    }
-
-    return true;
+    return this.isLoggedIn;
   }
 
-  login() {
-    this.dialogService.openCustomDialog(FrontendUsersLoginComponent, DialogSizesEnum.md)
+  public login(): void {
+    this.dialogService.openCustomDialog(FrontendUsersLoginComponent, DialogSizesEnum.md).afterClosed().subscribe((result) => {
+      if (result?.openForgotModal) {
+        this.dialogService.openCustomDialog(ForgotPasswordComponent, DialogSizesEnum.md);
+      }
+    });
   }
 
-  logout() {
+  public logout(): void {
     this.store.dispatch(logout());
   }
 
   public toggleSideBar(): void {
     this.basketService.sideBar?.toggle();
+  }
+
+  private showUpdatePasswordModal(token: string): void {
+    this.dialogService.openCustomDialog(UpdatePasswordFormComponent, DialogSizesEnum.md, {
+      token
+    }).afterClosed().subscribe((result) => {
+      if (result?.openForgotModal) {
+
+      }
+    });
   }
 }

@@ -2,13 +2,17 @@ import { createAction, props } from "@ngrx/store";
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
 export enum FrontendUserActionTypes {
-  Login              = '[FrontendUser] Login',
-  LoginSuccess       = '[FrontendUser] Login Success',
-  LoginError       = '[FrontendUser] Login Error',
-  Logout             = '[FrontendUser] Logout',
-  LogoutSuccess      = '[FrontendUser] Logout Success',
-  LoginStatus        = '[FrontendUser] Login Status',
-  LoginStatusSuccess = '[FrontendUser] Login Status Success'
+  Login                 = '[FrontendUser] Login',
+  LoginSuccess          = '[FrontendUser] Login Success',
+  LoginError            = '[FrontendUser] Login Error',
+  Logout                = '[FrontendUser] Logout',
+  LogoutSuccess         = '[FrontendUser] Logout Success',
+  LoginStatus           = '[FrontendUser] Login Status',
+  LoginStatusSuccess    = '[FrontendUser] Login Status Success',
+  ResetPassword         = '[FrontendUser] ResetPassword',
+  ResetPasswordSuccess  = '[FrontendUser] ResetPasswordSuccess',
+  UpdatePassword        = '[FrontendUser] UpdatePassword',
+  UpdatePasswordSuccess = '[FrontendUser] UpdatePasswordSuccess',
 }
 
 export const login = createAction(
@@ -40,4 +44,28 @@ export const checkLoginStatus = createAction(
 export const checkLoginStatusSuccess = createAction(
   FrontendUserActionTypes.LoginStatusSuccess,
   props<{ payload: { currentUser: FrontendUser | null }; }>()
+);
+
+export const resetPassword = createAction(
+  FrontendUserActionTypes.ResetPassword,
+  props<{ payload: { email: string }; }>()
+);
+
+export const resetPasswordSuccess = createAction(
+  FrontendUserActionTypes.ResetPasswordSuccess
+);
+
+export const updatePassword = createAction(
+  FrontendUserActionTypes.UpdatePassword,
+  props<{
+    payload: {
+      password: string;
+      repeatPassword: string;
+      token: string;
+    };
+  }>()
+);
+
+export const updatePasswordSuccess = createAction(
+  FrontendUserActionTypes.UpdatePasswordSuccess
 );

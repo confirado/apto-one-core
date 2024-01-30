@@ -75,5 +75,15 @@
       "de_DE": "<h2>Seite wurde nicht gefunden.</h2>",
       "en_GB": "<h2>Page not found.</h2>"
     }
+  },
+  "auth": {
+    "mail": {
+      "subject": {
+        "de_DE": "Ihr Passwort wurde erfolgreich aktualisiert"
+      },
+      "description": {
+        "de_DE": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Wenn dies von Ihnen veranlasst wurde, klicken Sie bitte auf den folgenden Link:"
+      }
+    }
   }
 }

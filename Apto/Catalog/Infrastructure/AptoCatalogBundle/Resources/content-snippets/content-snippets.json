@@ -513,6 +513,14 @@
   "aptoRules": {
     "defaultErrorMessage": {
       "de_DE": "Option konnte nicht hinzugefügt werden!"
+    },
+    "errors": {
+      "PasswordValidationException": {
+        "de_DE": "Passwortvalidierung fehlgeschlagen"
+      },
+      "InvalidTokenException": {
+        "de_DE": "Fehler beim Zurücksetzen des Passworts"
+      }
     }
   }
 }

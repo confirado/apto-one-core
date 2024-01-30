@@ -33,6 +33,33 @@
       },
       "dialogLogout": {
         "de_DE": "Logout"
+      },
+      "forgotPassword": {
+        "de_DE": "Passwort vergessen?"
+      },
+      "resetPassword": {
+        "de_DE": "Passwort zurücksetzen"
+      },
+      "resetPasswordTitle": {
+        "de_DE": "Geben Sie bitte Ihre hinterlegte E-Mail-Adresse an, um das Passwort für Ihren Login zurückzusetzen:"
+      },
+      "email": {
+        "de_DE": "E-Mail"
+      },
+      "resetSuccess": {
+        "de_DE": "Ihre Anfrage zum Zurücksetzen des Passworts wurde erfolgreich gestellt. Wenn Ihre eingetragene E-Mail Adresse einem aktivem Nutzer zugeordnet werden kann, erhalten Sie eine E-Mail zum Zurücksetzen des Passworts."
+      },
+      "updatePasswordSuccess": {
+        "de_DE": "Ihr Passwort wurde erfolgreich zurückgesetzt. Sie können sich jetzt mit den neuen Daten anmelden."
+      },
+      "changePassword": {
+        "de_DE": "Passwort ändern"
+      },
+      "changePasswordTitle": {
+        "de_DE": "Passwortänderung"
+      },
+      "repeatPassword": {
+        "de_DE": "Passwort wiederholen"
       }
     }
   }
