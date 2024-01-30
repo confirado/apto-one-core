@@ -137,6 +137,28 @@ export class CatalogMessageBusService {
 		]);
 	}
 
+	public updateBasketConfiguration(
+		productId: string,
+		configurationId: string,
+		compressedState: any,
+		sessionCookies: any,
+		locale: string | undefined,
+		quantity: number,
+		perspectives: unknown,
+		additionalData: any
+	): Observable<unknown> {
+		return this.command<unknown>('UpdateBasketConfiguration', [
+			productId,
+      configurationId,
+			compressedState,
+			sessionCookies,
+			locale,
+			quantity,
+			perspectives,
+			additionalData,
+		]);
+	}
+
 	public addGuestConfiguration(
 		productId: string,
 		compressedState: any,
