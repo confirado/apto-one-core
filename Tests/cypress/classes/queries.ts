@@ -41,4 +41,61 @@ export class Queries {
       payload: { query: 'FindLanguages' },
     };
   }
+
+  public static get FindProductsByFilterPagination(): IRequestData {
+    return {
+      alias: 'FindProductsByFilterPagination',
+      payload: { query: 'FindProductsByFilterPagination' },
+    };
+  }
+
+  public static get FindCategories(): IRequestData {
+    return {
+      alias: 'FindCategories',
+      payload: { query: 'FindCategories' },
+    };
+  }
+
+  public static get FindFilterProperties(): IRequestData {
+    return {
+      alias: 'FindFilterProperties',
+      payload: { query: 'FindFilterProperties' },
+    };
+  }
+
+  public static get FindCategoryTree(): IRequestData {
+    return {
+      alias: 'FindCategoryTree',
+      payload: { query: 'FindCategoryTree' },
+    };
+  }
+
+  public static get FindCustomerGroups(): IRequestData {
+    return {
+      alias: 'FindCustomerGroups',
+      payload: { query: 'FindCustomerGroups' },
+    };
+  }
+
+  public static get FindPriceCalculators(): IRequestData {
+    return {
+      alias: 'FindPriceCalculators',
+      payload: { query: 'FindPriceCalculators' },
+    };
+  }
+
+  public static get FindShops(): IRequestData {
+    return {
+      alias: 'FindShops',
+      payload: { query: 'FindShops' },
+    };
+  }
+
+  public static get FindNextAvailablePosition(): IRequestData {
+    return {
+      alias: 'FindNextAvailablePosition',
+      payload: { query: 'FindNextAvailablePosition' },
+    };
+  }
+
 }
