@@ -23,6 +23,32 @@ class ValueValidationService
     }
 
     /**
+     *  we expect array of array parameters:
+     *  [
+     *     [
+     *        'name' => 'quantity',
+     *        'value' => 1
+     *     ],
+     *     [
+     *        'name' => 'repetitions',
+     *        'value' => 1
+     *     ],
+     *  ];
+     *
+     * @param array $parameters
+     *
+     * @return void
+     */
+    public function assertValidParameters(array $parameters): void
+    {
+        foreach ($parameters as $parameter) {
+            if(!array_key_exists('name', $parameter) || !array_key_exists('value', $parameter)) {
+                throw new \InvalidArgumentException('Parameters must always have name and value properties!');
+            }
+        }
+    }
+
+    /**
      * Checks element value validity (values property in state)
      *
      * @param ConfigurableProduct $product

@@ -7,6 +7,7 @@
      [class.input-type-input-slider]="inputType === floatInputTypes.INPUT_SLIDER"
      [class.no-element-preview-image]="!element.element.previewImage && !product.useStepByStep"
      [class.selected]="element.state.active && product.useStepByStep"
+     [class.disabled]="element.state.disabled"
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
@@ -94,7 +95,7 @@
 
     <div class="apply-button" *ngIf="inputType === 'input'">
         <button mat-flat-button color="primary" (click)="saveInput(formElementInput.value)">
-            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
         </button>
         <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}

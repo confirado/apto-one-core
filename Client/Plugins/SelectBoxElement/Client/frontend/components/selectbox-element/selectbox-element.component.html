@@ -3,10 +3,11 @@
      [class.one-page]="!product.useStepByStep"
      [class.open-in-dialog]="isDialog"
      [class.selected]="element.state.active"
+     [class.disabled]="element.state.disabled"
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
-    <div *ngIf="section?.allowMultiple && product.useStepByStep" class="circle" [class.selected]="element.state.active">
+    <div *ngIf="(section?.allowMultiple && product.useStepByStep) || element.state.active" class="circle" [class.selected]="element.state.active">
         <mat-icon>done</mat-icon>
     </div>
 

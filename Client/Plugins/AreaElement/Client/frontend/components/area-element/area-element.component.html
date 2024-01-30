@@ -5,6 +5,7 @@
          [class.open-in-dialog]="isDialog"
          [attr.type]="'custom'"
          [class.selected]="element.state.active"
+         [class.disabled]="element.state.disabled"
     >
         <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
@@ -77,8 +78,10 @@
 
         <div class="description"
              *ngIf="(element.element.description | translate) !== ''"
-             [innerHTML]="element.element.description | translate | safeHtml"
-        ></div>
+        >
+            <div [innerHTML]="element.element.description | translate | safeHtml"></div>
+            <apto-slot-outlet identifier="after-area-element-description" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
+        </div>
 
         <div class="apply-button">
             <button
@@ -87,7 +90,7 @@
                 color="primary"
                 (click)="saveInput()"
             >
-                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
                 *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
@@ -95,7 +98,7 @@
                 color="primary"
                 (click)="saveInput()"
             >
-                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
                 *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"

@@ -14,9 +14,6 @@ export enum ConfigurationActionTypes {
 	UpdateConfigurationState = '[Configuration] Update State',
 	GetConfigurationState = '[Configuration] Get State',
 	GetConfigurationStateSuccess = '[Configuration] Get State success',
-
-  UpdateParameterState = '[Configuration] Update Parameter State',
-
 	SetPrevStep = '[Configuration] Set prev step',
 	SetPrevStepSuccess = '[Configuration] Set prev step success',
 	SetNextStep = '[Configuration] Set next step',
@@ -40,7 +37,10 @@ export enum ConfigurationActionTypes {
   resetLoadingFlagAction = '[Configuration] Reset Loading Flag',
   FetchPartsList = '[Configuration] Fetch Parts List',
   FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
+  HideLoadingFlag = '[Configuration] hide loading flag',
 }
+
+export const hideLoadingFlagAction = createAction(ConfigurationActionTypes.HideLoadingFlag);
 
 export const createLoadingFlagAction = createAction(
   ConfigurationActionTypes.createLoadingFlagAction
@@ -102,9 +102,6 @@ export const getConfigurationStateSuccess = createAction(
 		};
 	}>()
 );
-
-// export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState,
-//   props<{ updates: GetParameterStateArguments['updates'] }>());
 
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
 

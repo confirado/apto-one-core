@@ -261,7 +261,7 @@ class ComputedProductValue extends AptoEntity
      * @return string
      * @throws InvalidUuidException
      */
-    public function getValue(State $state, array $calculatedValues = [], ?MediaFileSystemConnector $mediaFileSystem = null): string
+    public function getValue(State $state, array $calculatedValues = [], ?MediaFileSystemConnector $mediaFileSystem = null, int $repetition = 0): string
     {
         if (!$this->formula) {
             return '0';
@@ -271,7 +271,7 @@ class ComputedProductValue extends AptoEntity
             '_repetitions_' => $state->getParameter(State::REPETITIONS),
             '_anzahl_' => $state->getParameter(State::QUANTITY),
         ]));
-        $variables = $this->getAliasValues($state, $this->product);
+        $variables = $this->getAliasValues($state, $this->product, $repetition);
 
         $aliases = [];
         /** @var Alias $alias */
@@ -300,12 +300,12 @@ class ComputedProductValue extends AptoEntity
      * @return array
      * @throws InvalidUuidException
      */
-    private function getAliasValues(State $state, Product $product): array
+    private function getAliasValues(State $state, Product $product, int $repetition = 0): array
     {
         $values = [];
         /* @var Alias $alias */
         foreach ($this->aliases as $alias) {
-            $values[$alias->getName()] = $alias->getAliasValue($state, $product);
+            $values[$alias->getName()] = $alias->getAliasValue($state, $product, $repetition);
         }
         return $values;
     }

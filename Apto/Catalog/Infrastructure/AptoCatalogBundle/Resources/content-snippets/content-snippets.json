@@ -509,5 +509,10 @@
         "de_DE": "Deine Konfiguration ist fertig!"
       }
     }
+  },
+  "aptoRules": {
+    "defaultErrorMessage": {
+      "de_DE": "Option konnte nicht hinzugefügt werden!"
+    }
   }
 }

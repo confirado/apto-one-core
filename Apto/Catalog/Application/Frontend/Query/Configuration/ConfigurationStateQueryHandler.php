@@ -81,6 +81,22 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param GetParameterState $query
+     *
+     * @return array
+     */
+    public function handleGetParameterState(GetParameterState $query): array
+    {
+        $state = new State($query->getState());
+
+        foreach ($query->getParameters() as $parameter) {
+            $state->setParameter($parameter['name'], $parameter['value']);
+        }
+
+        return $state->jsonSerialize();
+    }
+
+    /**
      * @param GetConfigurationState $query
      *
      * @return array
@@ -128,6 +144,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
 
             $this->applySet($product, $enrichedState, $query->getIntention()['set'] ?? []);
+            $this->applyParameters($enrichedState, $query->getIntention()['parameters'] ?? []);
             $this->applyRemove($product, $enrichedState, $query->getIntention()['remove'] ?? []);
             $this->applyComplete($product, $enrichedState, $query->getIntention()['complete'] ?? []);
         } catch (InvalidStateException $e) {
@@ -289,6 +306,25 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * Sets configurations parameters if they are valid
+     *
+     * example: quantity, repetitions, ...
+     *
+     * @param EnrichedState       $state
+     * @param array               $items
+     *
+     * @return void
+     */
+    private function applyParameters(EnrichedState $state, array $items): void
+    {
+        $this->valueValidationService->assertValidParameters($items);
+
+        foreach ($items as $item) {
+            $state->getState()->setParameter($item['name'], $item['value']);
+        }
+    }
+
+    /**
      * For example triggered when user clicks on "Abwählen" button
      *
      * @param ConfigurableProduct $product
@@ -346,6 +382,11 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     {
         yield GetConfigurationState::class => [
             'method' => 'handleGetConfigurationState',
+            'bus' => 'query_bus'
+        ];
+
+        yield GetParameterState::class => [
+            'method' => 'handleGetParameterState',
             'bus' => 'query_bus'
         ];
     }

@@ -1,5 +1,5 @@
 <form *ngIf="items$ | async as items" [formGroup]="filter">
-    <div class="material-picker-element" *ngIf="element" [class.selected]="element.state.active">
+    <div class="material-picker-element" *ngIf="element" [class.selected]="element.state.active" [class.disabled]="element.state.disabled">
         <ng-container *ngIf="step === 2">
             <ng-container *ngIf="elementState('second-material')">
                 <div class="color-mix">

@@ -5,7 +5,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -33,7 +33,7 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 }
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
-  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && !section.disabled);
+  const cSections = state.configuration.state.sections.filter((section) => !section.hidden && (!section.disabled || !state.product.product.keepSectionOrder));
 
 	let currentStep: ProgressStep | undefined;
 	const afterSteps: ProgressStep[] = [];
@@ -46,7 +46,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
       }
 
       const elements = state.configuration.state.elements
-        .filter((e) => !e.disabled && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
+        .filter((e) => (!e.disabled|| !state.product.product.keepSectionOrder) && e.sectionId === cSection.id && e.sectionRepetition === cSection.repetition)
         .map((e) => e.id);
 
       // let in product elements only those are available in state configuration
@@ -348,6 +348,17 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
 });
 
 export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
+
+export const selectParameterQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.QUANTITY)
+  return result['value'] ? Number(result['value']) : 1;
+});
+
+export const selectParameterRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.REPETITIONS)
+  return result['value'] ? Number(result['value']) : 1;
+});
+
 
 export const selectElementValues = (element: Element): any =>
 	createSelector(featureSelector, (state: CatalogFeatureState): TranslatedValue[] => {

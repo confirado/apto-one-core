@@ -141,14 +141,15 @@ class RuleRepetitionService
                     continue;
                 }
 
+                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
                 $rawRule['conditions'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()->getId(),
+                    'elementId' => $criterion->getElementId()?->getId(),
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
-                    'repetition' => $repetition,
+                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
                 ];
             }
 
@@ -159,14 +160,15 @@ class RuleRepetitionService
                     continue;
                 }
 
+                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
                 $rawRule['implications'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()->getId(),
+                    'elementId' => $criterion->getElementId()?->getId(),
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
-                    'repetition' => $repetition,
+                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
                 ];
             }
 
@@ -196,7 +198,7 @@ class RuleRepetitionService
         }
 
         // now let's see which section ids are coming from repeatable sections
-        $repeatableSectionUuIds = $rule->getRuleRepeatableSectionIds($rule, $this->product);
+        $repeatableSectionUuIds = $rule->getRuleRepeatableSectionIds($this->product);
 
         // We expect to have one, and ONLY one, section in $repeatableSections for both the conditions and implications
         if (count($repeatableSectionUuIds) !== 1) {

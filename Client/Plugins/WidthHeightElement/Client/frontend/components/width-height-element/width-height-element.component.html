@@ -5,6 +5,7 @@
          [class.open-in-dialog]="isDialog"
          [attr.type]="'custom'"
          [class.selected]="element.state.active"
+         [class.disabled]="element.state.disabled"
     >
         <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 
@@ -136,7 +137,7 @@
                 mat-flat-button
                 color="primary"
                 (click)="saveInput()"
-                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
 
             <button
@@ -144,7 +145,7 @@
                 mat-flat-button
                 color="primary"
                 (click)="saveInput()"
-                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
 
             <button

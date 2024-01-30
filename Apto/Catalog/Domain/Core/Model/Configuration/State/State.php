@@ -88,9 +88,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
                     $this->parameters[] = $configItem;
                 }
                 else {
-                    if (!empty($configItem['values'])) {
-                        $this->state[] = $configItem;
-                    }
+                    $this->state[] = $configItem;
                 }
             }
         }
@@ -113,7 +111,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     private function isParameter(array $stateItem): bool
     {
         foreach (array_keys($stateItem) as $key) {
-            if ($this->isValidParameterName($key)) {
+            if ($key === 'name' && $this->isValidParameterName($stateItem[$key])) {
                 return true;
             }
         }

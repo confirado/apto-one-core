@@ -98,7 +98,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       distinctUntilChanged(),
       /* sync value with input form element only if the value is not equal, otherwise it could cause an endless loop */
-      filter((data) => data && this.formElementInput.value !== data),
+      filter((data) => this.formElementInput.value !== data)
     ).subscribe((data) => {
       this.formElementInput.setValue(data as string);
     });
@@ -246,8 +246,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 	}
 
 	public saveInput(value: string): void {
-
-		if (!this.element || !value) {
+		if (!this.element) {
 			return;
 		}
 
