@@ -137,6 +137,7 @@ export const addToBasket = createAction(
       humanReadableState?: HumanReadableState;
       productImage?: string;
       configurationId?: string
+      configurationType?: string
 		};
 	}>()
 );

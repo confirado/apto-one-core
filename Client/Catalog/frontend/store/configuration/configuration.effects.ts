@@ -439,7 +439,7 @@ export class ConfigurationEffects {
 				}
 
         // this is the case when user from the basket clicks "Konfiguration bearbeiten" and then changes the config and adds again to the basket
-        if (payload.configurationId) {
+        if (payload.configurationId && payload.configurationType === 'basket') {
           return this.configurationRepository.updateBasket({
             productId: configurationState.productId,
             configurationId: payload.configurationId,
