@@ -1,5 +1,5 @@
-import { HttpRequestTypes, RequestTypes } from './Models';
-import { AddPropertiesToReturnValueForClass } from './decorators';
+import { HttpRequestTypes, RequestTypes } from '../models';
+import { AddPropertiesToReturnValueForClass } from '../decorators/decorators';
 
 @AddPropertiesToReturnValueForClass(['endpoint', 'method', 'type'])
 export class Commands {

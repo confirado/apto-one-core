@@ -1,5 +1,5 @@
-import { Queries } from '../../queries';
-import { IRequestData } from '../../Models';
+import { Queries } from '../../message-bus/queries';
+import { IRequestData } from '../../models';
 import { IPage } from '../../interfaces/page-interface';
 import { SIDEBAR_LEFT_ITEMS } from '../../../_support/constants/constants';
 import { Backend } from '../../common/backend';

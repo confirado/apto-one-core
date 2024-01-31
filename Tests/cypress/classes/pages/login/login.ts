@@ -1,8 +1,8 @@
 import { Interception } from 'cypress/types/net-stubbing';
-import { IRequestData, UserFixture, UserTypes } from '../../Models';
-import { Queries } from '../../queries';
+import { IRequestData, UserFixture, UserTypes } from '../../models';
+import { Queries } from '../../message-bus/queries';
 import { RequestHandler } from '../../requestHandler';
-import { Requests } from '../../requests';
+import { Requests } from '../../message-bus/requests';
 import { IPage } from '../../interfaces/page-interface';
 import Cookie = Cypress.Cookie;
 import { Backend } from '../../common/backend';

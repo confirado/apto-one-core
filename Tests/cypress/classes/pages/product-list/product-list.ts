@@ -1,6 +1,6 @@
 import { Page } from '@apto-catalog-frontend/models/pagination';
-import { Queries } from '../../queries';
-import { IRequestData } from '../../Models';
+import { Queries } from '../../message-bus/queries';
+import { IRequestData } from '../../models';
 import { IPage } from '../../interfaces/page-interface';
 
 export interface IProductListResponse extends Page<any>{}

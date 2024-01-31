@@ -1,5 +1,5 @@
-import { HttpRequestTypes, IRequestData, RequestTypes } from './Models';
-import { AddPropertiesToReturnValueForClass } from './decorators';
+import { HttpRequestTypes, IRequestData, RequestTypes } from '../models';
+import { AddPropertiesToReturnValueForClass } from '../decorators/decorators';
 
 /*
   Here we write custom requests that are neither query or command

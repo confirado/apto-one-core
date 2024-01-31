@@ -2,7 +2,7 @@ import { ShopResponse } from '@apto-base-frontend/store/shop/shop.model';
 import { Interception } from 'cypress/types/net-stubbing';
 import { ProductList } from '../../classes/pages/product-list/product-list';
 import { ViewportPresetsEnum } from '../../classes/globals';
-import { Queries } from '../../classes/queries';
+import { Queries } from '../../classes/message-bus/queries';
 import { RequestHandler } from '../../classes/requestHandler';
 import { Core } from '../../classes/common/core';
 

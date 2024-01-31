@@ -1,5 +1,5 @@
 import { CyHttpMessages, Interception } from 'cypress/types/net-stubbing';
-import { IRequestData, RequestTypes } from './Models';
+import { IRequestData, RequestTypes } from './models';
 
 export class RequestHandler {
 

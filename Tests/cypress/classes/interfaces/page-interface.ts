@@ -1,4 +1,4 @@
-import { IRequestData } from '../Models';
+import { IRequestData } from '../models';
 
 export interface AbstractPage {
   visit(): void;
