@@ -37,8 +37,9 @@
 //   }
 // }
 
-import { mount } from 'cypress/angular'
-Cypress.Commands.add('mount', mount);
+// these configs are for the component testing, do not uncomment because they cause issue in e2e testing
+// import { mount } from 'cypress/angular'
+// Cypress.Commands.add('mount', mount);
 
 Cypress.Commands.add('dataCy', (dataId) => {
   return cy.get(`[data-cy="${dataId}"]`);
