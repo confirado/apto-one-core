@@ -11,6 +11,7 @@ use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
+use Apto\Catalog\Application\Core\Service\PriceCalculator\Hooks\StatePricesHook;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\AdditionalPriceInformationProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\BasePriceProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ElementPriceProvider;
@@ -1077,6 +1078,8 @@ class SimplePriceCalculator implements PriceCalculator
             'definitions' => $this->mapPropertyToKey($rawStatePrices['definitions'], 'elementId'),
             'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
         ];
+
+        $statePrices = (new StatePricesHook($statePrices))->getStatePrices();
 
         // init price table
         $this->priceTable = [
