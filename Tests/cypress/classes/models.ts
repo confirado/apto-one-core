@@ -2,8 +2,9 @@ import { MessageBusResponse } from '@apto-base-core/models/message-bus-response'
 import { CyHttpMessages } from 'cypress/types/net-stubbing';
 
 export type Payload = {
-  arguments?: any[],
-  query: string
+  arguments?: any,
+  query?: string,
+  command?: string,
 }
 
 export enum HttpRequestTypes {

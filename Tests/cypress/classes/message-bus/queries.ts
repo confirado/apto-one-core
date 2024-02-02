@@ -98,4 +98,11 @@ export class Queries {
     };
   }
 
+  public static get FindProducts(): IRequestData {
+    return {
+      alias: 'FindProducts',
+      payload: { query: 'FindProducts' },
+    };
+  }
+
 }

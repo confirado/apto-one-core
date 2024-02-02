@@ -3,16 +3,21 @@ import { IRequestData } from '../../models';
 import { IPage } from '../../interfaces/page-interface';
 import { SIDEBAR_LEFT_ITEMS } from '../../../_support/constants/constants';
 import { Backend } from '../../common/backend';
+import { Commands } from '../../message-bus/commands';
 
 export class Product implements IPage {
 
-  public static visit(): void {
-    // Backend.visit('product');
+  public static visit(visitByClick = false): void {
 
-    const parent = 'sidebar-left_' + SIDEBAR_LEFT_ITEMS?.katalog.labal;
-    const sub = 'sidebar-left_sub_' + SIDEBAR_LEFT_ITEMS?.katalog.subItems.produkte.label;
+    if (visitByClick) {
+      const parent = 'sidebar-left_' + SIDEBAR_LEFT_ITEMS?.katalog.labal;
+      const sub = 'sidebar-left_sub_' + SIDEBAR_LEFT_ITEMS?.katalog.subItems.produkte.label;
 
-    Backend.leftMenuItemClick(parent, sub);
+      Backend.leftMenuItemClick(parent, sub);
+    }
+    else {
+      Backend.visit('product');
+    }
   }
 
   public static isCorrectPage(): void {
@@ -54,6 +59,27 @@ export class Product implements IPage {
       Queries.FindPriceCalculators,
       Queries.FindShops,
       Queries.FindNextAvailablePosition,
+    ];
+  }
+
+  /**
+   * fired when clicking on "Abbrechen" button in right bottom corner
+   */
+  public static get cancelProductsQueryList(): IRequestData[] {
+    return [
+      Queries.FindProducts,
+      Queries.FindCategories,
+    ];
+  }
+
+  /**
+   * we click on save product button (Speichern)
+   */
+  public static get saveProductRequests(): IRequestData[] {
+    return [
+      Queries.FindProducts,
+      Queries.FindCategories,
+      Commands.AddProduct,
     ];
   }
 }
