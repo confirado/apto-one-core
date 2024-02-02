@@ -1,7 +1,12 @@
 export class Backend {
 
-  public static visit(url: string): void {
-    cy.visit(`${Cypress.env('baseUrl')}backend/#!/${url}`);
+  public static visit(url = ''): void {
+    if (url === 'login') {
+      cy.visit(`${Cypress.env('baseUrl')}backend/${url}#!/`);
+    }
+    else {
+      cy.visit(`${Cypress.env('baseUrl')}backend/#!/${url}`);
+    }
   }
 
   /**
@@ -27,17 +32,16 @@ export class Backend {
    * @param tabText text within the tab: Product | Domain ,...
    */
   public static topTabItemClick(tabText: string) {
-    cy.get('md-tabs-wrapper').should('exist').within(() => {
-      cy.get('md-tabs-canvas').should('exist').within(($mdCanvas) => {
+    cy.get('md-tabs-wrapper').within(() => {
+      cy.get('md-tabs-canvas').within(($mdCanvas) => {
         cy.wrap($mdCanvas).find('md-tab-item').each(($elm) => {
 
           // go to the given tab
-          if ($elm.text() === 'tabText') {
+          if ($elm.text() === tabText || $elm.text() === tabText.toUpperCase()) {
             cy.wrap($elm).click();
           }
         });
       });
     });
   }
-
 }

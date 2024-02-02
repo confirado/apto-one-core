@@ -1,4 +1,6 @@
 import { ViewportPresets, ViewportPresetsEnum } from '../globals';
+import { Interception } from 'cypress/types/net-stubbing';
+import { RequestHandler } from '../requestHandler';
 
 export class Core {
 
@@ -26,5 +28,20 @@ export class Core {
       .then((response) => {
         expect(response.status).to.be.within(200, 299);
       });
+  }
+
+  /**
+   * html element can have no children but can have some comments, we check here for that
+   *
+   * @param text
+   */
+  public static isElementEmpty(text: string): void {
+    expect(text.trim()).to.equal('');
+  }
+
+  public static checkResponsesForError(responses: Interception[]): void {
+    responses.forEach(($query) => {
+      expect(RequestHandler.hasResponseError($query)).to.equal(false);
+    });
   }
 }
