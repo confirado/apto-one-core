@@ -149,6 +149,11 @@ class SimplePriceCalculator implements PriceCalculator
     private $priceModifier;
 
     /**
+     * @var StatePricesHook
+     */
+    private StatePricesHook $statePricesHook;
+
+    /**
      * @param PriceCalculatorRegistry $priceCalculatorRegistry
      * @param ProductFinder $productFinder
      * @param CustomerGroupFinder $customerGroupFinder
@@ -166,7 +171,8 @@ class SimplePriceCalculator implements PriceCalculator
         ComputedProductValueCalculator $computedProductValueCalculator,
         MediaFileSystemConnector $mediaFileSystem,
         ShopFinder $shopFinder,
-        RequestStore $requestStore
+        RequestStore $requestStore,
+        StatePricesHook $statePricesHook
     ) {
         $this->priceCalculatorRegistry = $priceCalculatorRegistry;
         $this->productFinder = $productFinder;
@@ -187,6 +193,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->shopFinder = $shopFinder;
         $this->requestStore = $requestStore;
         $this->priceModifier = 1;
+        $this->statePricesHook = $statePricesHook;
     }
 
     /**
@@ -1079,7 +1086,7 @@ class SimplePriceCalculator implements PriceCalculator
             'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
         ];
 
-        $statePrices = (new StatePricesHook($statePrices))->getStatePrices();
+        $statePrices = $this->statePricesHook->getStatePrices($statePrices);
 
         // init price table
         $this->priceTable = [
