@@ -1,0 +1,4 @@
+{
+  "productName1": "Product name 1",
+  "defaultPriceCalculator": "SimplePriceCalculator"
+}
