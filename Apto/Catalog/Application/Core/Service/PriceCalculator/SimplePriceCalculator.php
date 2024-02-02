@@ -89,6 +89,11 @@ class SimplePriceCalculator implements PriceCalculator
     protected $fallbackCustomerGroupOrNull;
 
     /**
+     * @var array|null
+     */
+    protected $user;
+
+    /**
      * @var TaxCalculator|null
      */
     protected $taxCalculator;
@@ -183,6 +188,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->displayPrices = true;
         $this->currency = null;
         $this->fallbackCustomerGroupOrNull = null;
+        $this->user = null;
         $this->fallbackCurrency = new Currency('EUR');
         $this->currencyFactor = 1.0;
         $this->currencies = new ISOCurrencies();
@@ -255,9 +261,17 @@ class SimplePriceCalculator implements PriceCalculator
     /**
      * @return array|null
      */
-    public function getFallbackCustomerGroupOrNull()
+    public function getFallbackCustomerGroupOrNull(): ?array
     {
         return $this->fallbackCustomerGroupOrNull;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getUser(): ?array
+    {
+       return $this->user;
     }
 
     /**
@@ -351,6 +365,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
@@ -362,9 +377,11 @@ class SimplePriceCalculator implements PriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        ?array $user = null
     ): array {
         $this->displayPrices = false;
+        $this->user = $user;
         return $this->getCalculatedPrice(
             $state,
             $currency,
@@ -384,6 +401,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
@@ -395,9 +413,11 @@ class SimplePriceCalculator implements PriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        ?array $user = null
     ): array {
         $this->displayPrices = true;
+        $this->user = $user;
         return $this->getCalculatedPrice(
             $state,
             $currency,
@@ -1086,7 +1106,7 @@ class SimplePriceCalculator implements PriceCalculator
             'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
         ];
 
-        $statePrices = $this->statePricesHook->getStatePrices($statePrices);
+        $statePrices = $this->statePricesHook->getStatePrices($this, $statePrices);
 
         // init price table
         $this->priceTable = [
