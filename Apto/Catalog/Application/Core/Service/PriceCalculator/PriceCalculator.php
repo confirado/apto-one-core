@@ -99,6 +99,7 @@ interface PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array $connectorUser
      * @return array
      */
     public function getDisplayPrices(
@@ -108,6 +109,7 @@ interface PriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        array $connectorUser = []
     ): array;
 }

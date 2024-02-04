@@ -6,9 +6,10 @@ class StatePricesHook
 {
     /**
      * @param array $statePrices
+     * @param array $connectorUser
      * @return array
      */
-    public function getStatePrices(array $statePrices): array
+    public function getStatePrices(array $statePrices, array $connectorUser): array
     {
         return $statePrices;
     }

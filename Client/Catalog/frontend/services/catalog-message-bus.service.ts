@@ -74,6 +74,7 @@ export class CatalogMessageBusService {
 			connector.locale,
 			connector.sessionCookies,
 			connector.taxState,
+      connector.user
 		]);
 	}
 

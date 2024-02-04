@@ -10,6 +10,7 @@ use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\Hooks\StatePricesHook;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\AdditionalPriceInformationProvider;
@@ -384,6 +385,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array $connectorUser
      * @return array
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
@@ -395,7 +397,8 @@ class SimplePriceCalculator implements PriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        array $connectorUser = []
     ): array {
         $this->displayPrices = true;
         return $this->getCalculatedPrice(
@@ -405,7 +408,8 @@ class SimplePriceCalculator implements PriceCalculator
             $customerGroup,
             $productId,
             $fallbackCurrency,
-            $currencyFactor
+            $currencyFactor,
+            $connectorUser
         );
     }
 
@@ -1022,9 +1026,11 @@ class SimplePriceCalculator implements PriceCalculator
      * @param AptoUuid $productId
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array $connectorUser
      * @return array
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
+     * @throws CircularReferenceException
      */
     protected function getCalculatedPrice(
         State $state,
@@ -1033,7 +1039,8 @@ class SimplePriceCalculator implements PriceCalculator
         array $customerGroup,
         AptoUuid $productId,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        array $connectorUser = []
     ): array {
         // set properties
         $this->state = $state;
@@ -1086,7 +1093,7 @@ class SimplePriceCalculator implements PriceCalculator
             'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
         ];
 
-        $statePrices = $this->statePricesHook->getStatePrices($statePrices);
+        $statePrices = $this->statePricesHook->getStatePrices($statePrices, $connectorUser);
 
         // init price table
         $this->priceTable = [
