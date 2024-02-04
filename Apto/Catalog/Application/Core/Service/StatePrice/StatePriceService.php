@@ -99,6 +99,7 @@ class StatePriceService
      * @param string|null $customerGroupExternalId
      * @param array $sessionCookies
      * @param string|null $taxState
+     * @param array|null $user
      * @return array
      * @throws InvalidUuidException
      * @throws \Exception
@@ -112,9 +113,8 @@ class StatePriceService
         string $customerGroupExternalId = null,
         array $sessionCookies = [],
         ?string $taxState = null,
-        array $connectorUser = []
-    ): array
-    {
+        ?array $user = null
+    ): array {
         // create shop and display currency
         $shopCurrencyObj = new Currency($shopCurrency['currency']);
         $displayCurrencyObj = new Currency($displayCurrency['currency']);
@@ -168,7 +168,7 @@ class StatePriceService
             $taxCalculator,
             new Currency($connector['currency']), // @todo set fallback currency
             $displayCurrency['factor'] ? $displayCurrency['factor'] : 1,
-            $connectorUser
+            $user
         );
 
         // @todo currency conversion was done before tax apply, tax apply is now done inside price calculator

@@ -41,7 +41,7 @@ class FindPriceByStateHandler implements QueryHandlerInterface
             $query->getCustomerGroupExternalId(),
             $query->getSessionCookies(),
             $query->getTaxState(),
-            $query->getConnectorUser()
+            $query->getUser()
         );
     }
 

@@ -52,9 +52,9 @@ class FindPriceByState implements PublicQueryInterface
     private $taxState;
 
     /**
-     * @var array
+     * @var array|null
      */
-    private array $connectorUser;
+    private ?array $user;
 
     /**
      * @param string $productId
@@ -65,6 +65,7 @@ class FindPriceByState implements PublicQueryInterface
      * @param string $locale
      * @param array $sessionCookies
      * @param string|null $taxState
+     * @param array|null $user
      */
     public function __construct(
         string $productId,
@@ -75,9 +76,8 @@ class FindPriceByState implements PublicQueryInterface
         string $locale,
         array $sessionCookies = [],
         ?string $taxState = null,
-        ?array $connectorUser = []
-    )
-    {
+        ?array $user = null
+    ) {
         $this->productId = $productId;
         $this->state = $state;
         $this->shopCurrency = $shopCurrency;
@@ -86,7 +86,7 @@ class FindPriceByState implements PublicQueryInterface
         $this->locale = $locale;
         $this->sessionCookies = $sessionCookies;
         $this->taxState = $taxState;
-        $this->connectorUser = $connectorUser ?? [];
+        $this->user = $user;
     }
 
     /**
@@ -154,10 +154,10 @@ class FindPriceByState implements PublicQueryInterface
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getConnectorUser(): array
+    public function getUser(): ?array
     {
-        return $this->connectorUser;
+        return $this->user;
     }
 }

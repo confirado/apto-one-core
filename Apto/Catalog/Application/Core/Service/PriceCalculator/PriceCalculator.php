@@ -53,7 +53,12 @@ interface PriceCalculator
     /**
      * @return array|null
      */
-    public function getFallbackCustomerGroupOrNull();
+    public function getFallbackCustomerGroupOrNull(): ?array;
+
+    /**
+     * @return array|null
+     */
+    public function getUser(): ?array;
 
     /**
      * @return TaxCalculator|null
@@ -79,6 +84,7 @@ interface PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array|null $user
      * @return array
      */
     public function getRawPrices(
@@ -88,7 +94,8 @@ interface PriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        ?array $user = null
     ): array;
 
     /**
@@ -99,7 +106,7 @@ interface PriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
-     * @param array $connectorUser
+     * @param array|null $user
      * @return array
      */
     public function getDisplayPrices(
@@ -110,6 +117,6 @@ interface PriceCalculator
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
         float $currencyFactor = 1.0,
-        array $connectorUser = []
+        ?array $user = null
     ): array;
 }
