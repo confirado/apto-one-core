@@ -286,7 +286,10 @@ describe('Product', () => {
       });
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.saveProductRequests))
-      .then(($elem) => {
+      .then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
         cy.dataCy('product-list').should('exist').within(() => {
           cy.get('md-table-container table tbody tr').should('exist').should('have.length', 1);
           cy.get('md-table-container table tbody tr td:nth-child(4)').should('contain.text', dummies.productName1);
