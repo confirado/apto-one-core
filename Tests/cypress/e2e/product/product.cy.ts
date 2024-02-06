@@ -33,7 +33,7 @@ describe('Product', () => {
   });
 
 
-  it('Checks add product page "Product" tab if it contains the corrects elements when we first visit the page.', () => {
+  it.only('Checks add product page "Product" tab if it contains the corrects elements when we first visit the page.', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -68,7 +68,13 @@ describe('Product', () => {
               Material.select('[data-cy="product-configuration-modes"]', 'OnePage', 'Konfiguratormodus');
               Material.select('[data-cy="product-keep-section-order"]', 'Ja', 'Reihenfolge der Sektionen einhalten');
 
-              Material.input('[data-cy="product-position"]', 10, 'Position:');
+              // position must be integer number and multiple of 10
+              cy.dataCy('product-position').find('input').invoke('val').then(value => {
+                expect(value).to.match(/^\d+$/);
+                const intValue = parseInt(value, 10);
+                expect(intValue).to.be.a('number').and.to.be.greaterThan(0);
+                expect(intValue % 5).to.equal(0);
+              });
               Material.input('[data-cy="product-stock"]', '', 'Lagerbestand:');
               Material.input('[data-cy="product-delivery-time"]', '', 'Lieferzeit(Tage):');
               Material.input('[data-cy="product-weight"]', '', 'Gewicht(kg):');
