@@ -20,8 +20,6 @@ import {
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
-import { onError } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 
 @Injectable()
 export class FrontendUserEffects {

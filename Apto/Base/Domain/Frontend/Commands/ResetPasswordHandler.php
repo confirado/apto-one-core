@@ -4,6 +4,7 @@ namespace Apto\Base\Domain\Frontend\Commands;
 
 use Apto\Base\Application\Core\CommandHandlerInterface;
 use Apto\Base\Application\Core\EventBusInterface;
+use Apto\Base\Domain\Core\Model\Auth\PasswordReset;
 use Apto\Base\Domain\Core\Model\Auth\PasswordResetRepository;
 use Apto\Base\Domain\Core\Model\FrontendUser\FrontendUserRepository;
 use Apto\Base\Domain\Core\Service\Exception\InvalidTokenException;
@@ -37,8 +38,9 @@ class ResetPasswordHandler implements CommandHandlerInterface
         if (!$user) {
             return;
         }
+        $passwordReset = new PasswordReset($user->getEmail()->getEmail(), rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='));
 
-        $passwordReset = $this->passwordResetRepository->create($user->getEmail()->getEmail());
+        $passwordReset = $this->passwordResetRepository->add($passwordReset);
         $this->eventBus->handle(new ResetPasswordTokenCreated($passwordReset->getEmail(), $passwordReset->getToken()));
     }
 
@@ -59,7 +61,7 @@ class ResetPasswordHandler implements CommandHandlerInterface
         $user = $user->setPassword($this->passwordEncoder->encodePassword($changePasswordCommand->getPassword()));
         $this->frontendUserRepository->update($user);
         $user->publishEvents();
-        $this->passwordResetRepository->delete($passwordReset);
+        $this->passwordResetRepository->remove($passwordReset);
     }
 
     public static function getHandledMessages(): iterable

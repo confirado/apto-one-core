@@ -84,6 +84,14 @@
       "description": {
         "de_DE": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Wenn dies von Ihnen veranlasst wurde, klicken Sie bitte auf den folgenden Link:"
       }
+    },
+    "errors": {
+      "PasswordValidationException": {
+        "de_DE": "Passwortvalidierung fehlgeschlagen"
+      },
+      "InvalidTokenException": {
+        "de_DE": "Fehler beim Zurücksetzen des Passworts"
+      }
     }
   }
 }

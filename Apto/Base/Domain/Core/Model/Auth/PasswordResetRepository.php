@@ -2,9 +2,11 @@
 
 namespace Apto\Base\Domain\Core\Model\Auth;
 
-interface PasswordResetRepository
+use Apto\Base\Domain\Core\Model\AptoRepository;
+
+interface PasswordResetRepository extends AptoRepository
 {
-    public function create(string $email): PasswordReset;
+    public function add(PasswordReset $passwordReset): PasswordReset;
     public function findOneByToken(string $token): ?PasswordReset;
-    public function delete(PasswordReset $passwordReset): void;
+    public function remove(PasswordReset $passwordReset): void;
 }

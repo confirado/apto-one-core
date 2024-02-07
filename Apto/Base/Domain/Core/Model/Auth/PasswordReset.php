@@ -2,9 +2,10 @@
 
 namespace Apto\Base\Domain\Core\Model\Auth;
 
-class PasswordReset
+use Apto\Base\Domain\Core\Model\AptoAggregate;
+
+class PasswordReset extends AptoAggregate
 {
-    private string $id;
     private string $email;
     private string $token;
 

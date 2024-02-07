@@ -279,7 +279,7 @@ export class ConfigurationEffects {
 				withLatestFrom(
           this.store$.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
           this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage')),
-          this.store$.select(selectContentSnippet('aptoRules.errors'))
+          this.store$.select(selectContentSnippet('auth.errors'))
         ),
 				map(([{ message }, locale, defaultErrorMessage, errors]:
                [{message: MessageBusResponseMessage}, string, ContentSnippet, ContentSnippet]

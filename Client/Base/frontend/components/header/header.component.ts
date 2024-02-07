@@ -120,10 +120,6 @@ export class HeaderComponent {
   private showUpdatePasswordModal(token: string): void {
     this.dialogService.openCustomDialog(UpdatePasswordFormComponent, DialogSizesEnum.md, {
       token
-    }).afterClosed().subscribe((result) => {
-      if (result?.openForgotModal) {
-
-      }
     });
   }
 }
