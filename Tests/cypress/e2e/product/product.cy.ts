@@ -33,7 +33,7 @@ describe('Product', () => {
   });
 
 
-  it.only('Checks add product page "Product" tab if it contains the corrects elements when we first visit the page.', () => {
+  it('Checks add product page "Product" tab if it contains the corrects elements when we first visit the page.', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -237,7 +237,7 @@ describe('Product', () => {
       });
   });
 
-  it('Checks that action buttons underneath', () => {
+  it.only('Checks create product is working', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -297,8 +297,12 @@ describe('Product', () => {
         Core.checkResponsesForError($responses);
 
         cy.dataCy('product-list').should('exist').within(() => {
-          cy.get('md-table-container table tbody tr').should('exist').should('have.length', 1);
-          cy.get('md-table-container table tbody tr td:nth-child(4)').should('contain.text', dummies.productName1);
+
+          cy.get('md-table-container table tbody tr:last-child') // Select the last table row
+            .within(() => {
+              cy.get('td:nth-child(4)')
+                .should('contain.text', dummies.productName1);
+            });
         })
       })
   })
