@@ -4,7 +4,10 @@ import { RequestHandler } from '../../classes/requestHandler';
 import { Interception } from 'cypress/types/net-stubbing';
 import { Backend } from '../../classes/common/backend';
 import { Core } from '../../classes/common/core';
-import { Material } from '../../classes/common/material';
+import { Select } from '../../classes/common/elements/select';
+import { Checkbox } from '../../classes/common/elements/checkbox';
+import { Input } from '../../classes/common/elements/input';
+import { Textarea } from '../../classes/common/elements/textarea';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -60,13 +63,29 @@ describe('Product', () => {
 
               cy.get('md-tabs-content-wrapper').should('exist')
 
-              Material.checkbox('[data-cy="product-active"]', false, 'Aktiv');
-              Material.checkbox('[data-cy="product-hidden"]', false, 'Versteckt');
+              Checkbox.getByAttr('product-active')
+                .hasLabel('Aktiv')
+                .unChecked();
 
-              Material.input('[data-cy="product-identifier"]', '', 'Kennung:');
-              Material.input('[data-cy="product-article-number"]', '', 'Artikelnummer:');
-              Material.select('[data-cy="product-configuration-modes"]', 'OnePage', 'Konfiguratormodus');
-              Material.select('[data-cy="product-keep-section-order"]', 'Ja', 'Reihenfolge der Sektionen einhalten');
+              Checkbox.getByAttr('product-hidden')
+                .hasLabel('Versteckt')
+                .unChecked();
+
+              Input.getByAttr('product-identifier')
+                .hasLabel('Kennung:')
+                .hasValue('');
+
+              Input.getByAttr('product-article-number')
+                .hasLabel('Artikelnummer:')
+                .hasValue('');
+
+              Select.getByAttr('product-configuration-modes')
+                .hasLabel('Konfiguratormodus')
+                .hasValue('OnePage');
+
+              Select.getByAttr('product-keep-section-order')
+                .hasLabel('Reihenfolge der Sektionen einhalten')
+                .hasValue('Ja');
 
               // position must be integer number and multiple of 10
               cy.dataCy('product-position').find('input').invoke('val').then(value => {
@@ -75,21 +94,56 @@ describe('Product', () => {
                 expect(intValue).to.be.a('number').and.to.be.greaterThan(0);
                 expect(intValue % 5).to.equal(0);
               });
-              Material.input('[data-cy="product-stock"]', '', 'Lagerbestand:');
-              Material.input('[data-cy="product-delivery-time"]', '', 'Lieferzeit(Tage):');
-              Material.input('[data-cy="product-weight"]', '', 'Gewicht(kg):');
-              Material.input('[data-cy="product-min-purchase"]', '', 'Mindestabnahme:');
-              Material.input('[data-cy="product-max-purchase"]', '', 'Maximalabnahme:');
-              Material.input('[data-cy="product-tax-rate"]', '', 'Steuersatz(%):');
-              Material.select('[data-cy="product-price-calculator"]', '', 'Preisberechnung:', {'have.attr': 'required'});
 
-              Material.input('[data-cy="product-name"]', '', 'Name (Deutsch):', {'have.attr': 'required'});
-              Material.input('[data-cy="product-meta-title"]', '', 'Meta Titel (Deutsch):');
+              Input.getByAttr('product-stock')
+                .hasLabel('Lagerbestand:')
+                .hasValue('');
 
-              Material.textarea('[data-cy="product-description"]', '', 'Beschreibung (Deutsch):');
-              Material.textarea('[data-cy="product-meta-description"]', '', 'Meta Beschreibung (Deutsch):');
+              Input.getByAttr('product-delivery-time')
+                .hasLabel('Lieferzeit(Tage):')
+                .hasValue('');
 
-              Material.input('[data-cy="product-url"]', '', 'Produkt-Url:');
+              Input.getByAttr('product-weight')
+                .hasLabel('Gewicht(kg):')
+                .hasValue('');
+
+              Input.getByAttr('product-min-purchase')
+                .hasLabel('Mindestabnahme:')
+                .hasValue('');
+
+              Input.getByAttr('product-max-purchase')
+                .hasLabel('Maximalabnahme:')
+                .hasValue('');
+
+              Input.getByAttr('product-tax-rate')
+                .hasLabel('Steuersatz(%):')
+                .hasValue('');
+
+              Select.getByAttr('product-price-calculator')
+                .hasLabel('Preisberechnung:')
+                .isNotSelected()
+                .attributes({'have.attr': 'required'});
+
+              Input.getByAttr('product-name')
+                .hasLabel('Name (Deutsch):')
+                .hasValue('')
+                .attributes({'have.attr': 'required'});
+
+              Input.getByAttr('product-meta-title')
+                .hasLabel('Meta Titel (Deutsch):')
+                .hasValue('');
+
+              Textarea.getByAttr('product-description')
+                .hasLabel('Beschreibung (Deutsch):')
+                .hasValue('');
+
+              Textarea.getByAttr('product-meta-description')
+                .hasLabel('Meta Beschreibung (Deutsch):')
+                .hasValue('');
+
+              Input.getByAttr('product-url')
+                .hasLabel('Produkt-Url:')
+                .hasValue('');
 
               // Vorschaubild
               cy.dataCy('product-preview-picture-text').should('contain.text', 'Vorschaubild:');
@@ -213,13 +267,13 @@ describe('Product', () => {
             cy.get('md-dialog-actions').should('exist').within(() => {
 
               // check that buttons are there
-              Material.button('[data-cy="dialog-actions_button-cancel"]', 'Abbrechen', {'be.visible': null});
-              Material.button('[data-cy="dialog-actions_button-new-save"]', 'Speichern', {'be.visible': null, 'have.class': 'md-primary'});
-              Material.button('[data-cy="dialog-actions_button-save-and-insert"]', 'Speichern und hinzufügen', {'be.visible': null});
+              cy.dataCy('dialog-actions_button-cancel').should('contain.text', 'Abbrechen').should( 'be.visible');
+              cy.dataCy('dialog-actions_button-new-save').should('contain.text', 'Speichern').should( 'have.class', 'md-primary');
+              cy.dataCy('dialog-actions_button-save-and-insert').should('contain.text', 'Speichern und hinzufügen').should( 'be.visible');
 
               // those 2 button are visible when we edit the product
-              Material.button('[data-cy="dialog-actions_button-save-and-close"]', null, {'not.exist': null});
-              Material.button('[data-cy="dialog-actions_button-edit-save"]', null, {'not.exist': null});
+              cy.dataCy('dialog-actions_button-save-and-close').should( 'not.exist');
+              cy.dataCy('dialog-actions_button-edit-save').should( 'not.exist');
 
               RequestHandler.registerInterceptions(Product.cancelProductsQueryList);
 
@@ -237,7 +291,7 @@ describe('Product', () => {
       });
   });
 
-  it.only('Checks create product is working', () => {
+  it('Checks create product is working', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -271,10 +325,14 @@ describe('Product', () => {
               // lets try again saving
               cy.dataCy('dialog-actions_button-new-save').click();
 
+
+
+
               // todo refactor md-select, md-input logic so that they can handle also error checks
               // todo refactor md-select, to select value
               // this is required field as well
               cy.dataCy('product-price-calculator').should('have.class', 'md-input-invalid');
+
               cy.dataCy('product-price-calculator').click();
               cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
                 cy.get('md-content md-option').find('.md-text').should('contain.text', dummies.defaultPriceCalculator).click();
@@ -282,6 +340,9 @@ describe('Product', () => {
 
               // todo change the material.select to select values and check if selected
               cy.dataCy('product-price-calculator').find('.md-select-value').find('.md-text').should('contain.text', dummies.defaultPriceCalculator);
+
+
+
 
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 
@@ -300,11 +361,19 @@ describe('Product', () => {
 
           cy.get('md-table-container table tbody tr:last-child') // Select the last table row
             .within(() => {
-              cy.get('td:nth-child(4)')
-                .should('contain.text', dummies.productName1);
+              cy.get('td:nth-child(4)').should('contain.text', dummies.productName1);
             });
-        })
-      })
-  })
+        });
+      });
+  });
+
+  it('Checks product tabs right after creating it', () => {
+
+  });
+
+  it('Checks edit product', () => {
+
+  });
+
 
 });
