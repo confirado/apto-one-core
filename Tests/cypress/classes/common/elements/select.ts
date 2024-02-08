@@ -72,7 +72,7 @@ export class Select implements Element {
   /**
    * if selected then .md-text should exist
    */
-  public static isSelected() {
+  public static isSelected(): typeof Select {
     cy.get(Select.initialSelector).find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(1);
     });
@@ -83,9 +83,24 @@ export class Select implements Element {
   /**
    * if not selected then element .md-text should not exist
    */
-  public static isNotSelected() {
+  public static isNotSelected(): typeof Select {
     cy.get(Select.initialSelector).find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(0);
+    });
+
+    return Select;
+  }
+
+  /**
+   * selects the given value from selectbox
+   *
+   * @param value
+   */
+  public static select(value: string): typeof Select {
+    cy.dataCy('product-price-calculator').click();
+
+    cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
+      cy.get('md-content md-option').find('.md-text').should('contain.text', value).click();
     });
 
     return Select;

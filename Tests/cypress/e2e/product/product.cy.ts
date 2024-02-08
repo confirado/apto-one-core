@@ -291,7 +291,7 @@ describe('Product', () => {
       });
   });
 
-  it('Checks create product is working', () => {
+  it.only('Checks create product is working', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -325,24 +325,9 @@ describe('Product', () => {
               // lets try again saving
               cy.dataCy('dialog-actions_button-new-save').click();
 
-
-
-
-              // todo refactor md-select, md-input logic so that they can handle also error checks
-              // todo refactor md-select, to select value
-              // this is required field as well
-              cy.dataCy('product-price-calculator').should('have.class', 'md-input-invalid');
-
-              cy.dataCy('product-price-calculator').click();
-              cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
-                cy.get('md-content md-option').find('.md-text').should('contain.text', dummies.defaultPriceCalculator).click();
-              });
-
-              // todo change the material.select to select values and check if selected
-              cy.dataCy('product-price-calculator').find('.md-select-value').find('.md-text').should('contain.text', dummies.defaultPriceCalculator);
-
-
-
+              Select.getByAttr('product-price-calculator')
+                .hasError()
+                .select(dummies.defaultPriceCalculator);
 
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 
