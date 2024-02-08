@@ -1,35 +1,39 @@
+// Global Imports
 @import "globals";
 
+// Component Styles
 :host {
-	background-color: var(--color-background);
-	width: 430px;
-	height: 100%;
+    background-color: var(--color-background);
+    width: 430px;
+    height: 100%;
 
-	h5 {
-		font-size: 25px;
-		font-weight: 500;
-		color: var(--color-text);
-	}
+    h5 {
+        font-size: 25px;
+        font-weight: 500;
+        color: var(--color-text);
+    }
 
-	h4 {
-		font-size: 30px;
-		font-weight: 500;
-		color: var(--color-text);
-		margin: 0;
-	}
+    h4 {
+        font-size: 30px;
+        font-weight: 500;
+        color: var(--color-text);
+        margin: 0;
+    }
 }
 
 .color {
-	color: var(--color-text);
+    color: var(--color-text);
 }
 
 .pointer {
     cursor: pointer;
 }
 
+// Styles for Whole Basket Component
 .whole-basket {
-	margin: 0 42px;
+    margin: 0 42px;
 
+    // Title Section
     .title {
         padding: 46px 0 26px 0;
 
@@ -41,6 +45,7 @@
         }
     }
 
+    // Summary Section
     .summery {
         margin: 26px 0 64px 0;
 
@@ -55,6 +60,7 @@
         }
     }
 
+    // Buttons Section
     .buttons {
         a {
             width: 100%;
@@ -64,22 +70,33 @@
         a + a {
             margin-top: var(--button-gap);
         }
+
+        // Clear Cart Button
+        .clearCartConfirmationButton {
+            background: var(--color-warn);
+            color: white;
+            width: 100%;
+            margin-top: var(--button-gap);
+        }
     }
 }
 
+// Product List Styles
 .product-list {
-	padding: 20px 0px 20px;
-	border-bottom: 1px solid var(--color-border-input);
-	border-top: 1px solid var(--color-border-input);
-	display: flex;
-	flex-direction: column;
-	gap: 34px;
+    padding: 20px 0px 20px;
+    border-bottom: 1px solid var(--color-border-input);
+    border-top: 1px solid var(--color-border-input);
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
     position: relative;
 
+    // Individual Product Styles
     .product {
         display: flex;
         gap: 10px;
 
+        // Product Image Styles
         .image {
             width: 100px;
             height: 70px;
@@ -88,17 +105,20 @@
             background-repeat: no-repeat;
             background-position: center;
 
+            // Empty Image Styles
             &.empty {
                 background-color: #e2e3e3;
             }
         }
 
+        // Product Content Styles
         .content {
             display: flex;
             justify-content: space-between;
             width: 100%;
             padding: 10px;
 
+            // Delete Button Styles
             .delete {
                 display: flex;
                 justify-content: center;
@@ -107,8 +127,10 @@
     }
 }
 
+// Responsive Styles
 @media only screen and (min-width: $mobile-max-width) {
     .whole-basket {
+        // Adjust Button Height for Tablet
         .buttons {
             a {
                 line-height: var(--button-tablet-height);
@@ -119,6 +141,7 @@
 
 @media only screen and (min-width: $tablet-max-width) {
     .whole-basket {
+        // Adjust Button Height for Tablet
         .buttons {
             a {
                 line-height: var(--input-big-height);
