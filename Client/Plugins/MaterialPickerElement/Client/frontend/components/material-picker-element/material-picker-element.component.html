@@ -1,52 +1,59 @@
 <form *ngIf="items$ | async as items" [formGroup]="filter">
+    <!-- Material Picker Element -->
     <div class="material-picker-element" *ngIf="element" [class.selected]="element.state.active" [class.disabled]="element.state.disabled">
+        <!-- Color Mixing Section -->
         <ng-container *ngIf="step === 2">
             <ng-container *ngIf="elementState('second-material')">
                 <div class="color-mix">
+                    <!-- Header -->
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Color Mixing -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'colorMixture' }}</h4>
                         </div>
                     </div>
-
+                    <!-- Picture -->
                     <div class="picture">
+                        <!-- Display monochrome image if not multi-color -->
                         <img *ngIf="!multiColor.value && element.element.definition.staticValues.monochromeImage"
                              [src]="mediaUrl + element.element.definition.staticValues.monochromeImage" />
-
+                        <!-- Display multicolored image with alternately arrangement -->
                         <img *ngIf="multiColor.value && !colorOrder.value && element.element.definition.staticValues.multicoloredImageAlternately"
                              [src]="mediaUrl + element.element.definition.staticValues.multicoloredImageAlternately" />
-
+                        <!-- Display multicolored image with input arrangement -->
                         <img *ngIf="multiColor.value && colorOrder.value && element.element.definition.staticValues.multicoloredImageInput"
                              [src]="mediaUrl + element.element.definition.staticValues.multicoloredImageInput" />
                     </div>
-
+                    <!-- Element for selecting color mixing type -->
                     <div class="element">
                         <mat-radio-group class="flex" [formControl]="multiColor">
-                            <mat-radio-button color="primary" [value]="false">Einfarbig!</mat-radio-button>
-                            <mat-radio-button color="primary" [value]="true">Mehrfarbig!</mat-radio-button>
+                            <mat-radio-button color="primary" [value]="false">Single Color!</mat-radio-button>
+                            <mat-radio-button color="primary" [value]="true">Multi-color!</mat-radio-button>
                         </mat-radio-group>
                     </div>
                 </div>
             </ng-container>
-
+            <!-- Divider -->
             <mat-divider></mat-divider>
-
+            <!-- Color Order Section -->
             <ng-container *ngIf="multiColor.value">
                 <div class="color-order">
+                    <!-- Header -->
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Color Arrangement -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'arrangement' }}</h4>
                         </div>
                     </div>
-
                     <div class="element">
+                        <!-- Input for selecting color arrangement type -->
                         <div class="input input-radio">
                             <mat-radio-group class="flex" [formControl]="colorOrder">
-                                <mat-radio-button color="primary" [value]="false">jede zweite Paneele/Lamelle in zweiter Farbe!</mat-radio-button>
-                                <mat-radio-button color="primary" [value]="true">freie Eingabe für zweite Paneel- / Lamellenfarbe!</mat-radio-button>
+                                <mat-radio-button color="primary" [value]="false">Every other panel/slat in second color!</mat-radio-button>
+                                <mat-radio-button color="primary" [value]="true">Free input for second panel/slat color!</mat-radio-button>
                             </mat-radio-group>
                         </div>
-
+                        <!-- Input field for inputting count of panels/slats -->
                         <div class="input input-input">
                             <apto-input-field
                                 *ngIf="colorOrder.value"
@@ -58,35 +65,40 @@
                 </div>
             </ng-container>
         </ng-container>
-
+        <!-- Divider -->
         <mat-divider></mat-divider>
-
+        <!-- Color Filter Section -->
         <ng-container *ngIf="step === 1 || step === 2 && multiColor.value === true">
             <div class="color-filter">
+                <!-- Circle indicating selected color -->
                 <div class="circle" *ngIf="section?.allowMultiple && product.useStepByStep" [class.selected]="element.state.active">
                     <mat-icon>done</mat-icon>
                 </div>
-
+                <!-- Header -->
                 <div class="header">
                     <div class="title">
+                        <!-- Title for Color Selection -->
                         <h4>{{ contentSnippet$ | async | contentSnippet: 'colorSelection' }}</h4>
                     </div>
                 </div>
-
+                <!-- Description -->
                 <div class="description"
                      *ngIf="(element.element.description | translate) !== ''"
                      [innerHTML]="element.element.description | translate | safeHtml"
                 ></div>
-
+                <!-- Available Colors -->
                 <div class="available-colors">
+                    <!-- All Colors -->
                     <div class="elements all-color">
                         <div class="element" (click)="onSelectColor(null)" [class.selected]="filter.value.colorRating === null">
                             <div class="box linear-gradient">
                                 <div class="circle" [class.selected]="filter.value.colorRating === null"><mat-icon>done</mat-icon></div>
                             </div>
+                            <!-- Text for All Colors -->
                             <div class="name">{{ contentSnippet$ | async | contentSnippet: 'allColors' }}</div>
                         </div>
                     </div>
+                    <!-- Other Colors -->
                     <div class="elements other-colors">
                         <ng-container *ngFor="let color of (colors$ | async) || []">
                             <div class="element" *ngIf="color.inPool" (click)="onSelectColor(color.hex)" [class.selected]="filter.value.colorRating === color.hex">
@@ -99,34 +111,37 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Divider -->
             <mat-divider></mat-divider>
-
+            <!-- Search and Price Group Section -->
             <div class="search-price-container" style="display: flex;">
+                <!-- Search Box -->
                 <div class="search-box" *ngIf="elementState('search-box')">
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Fabric Search -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'fabricSearch' }}</h4>
                         </div>
                     </div>
-
+                    <!-- Input field for search -->
                     <div class="element">
-                        <apto-input-field [formControl]="filter.controls.searchString" [type]="'text'"></apto-input-field>
-                        <button mat-icon-button type="button" (click)="resetSearchField()">
-                            <mat-icon>clear</mat-icon>
-                        </button>
+                        <apto-input-field [formControl]="filter.controls.searchString" [type]="'text'">
+                            <button mat-icon-button type="button" (click)="resetSearchField()">
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                        </apto-input-field>
                     </div>
                 </div>
-
+                <!-- Price Group -->
                 <div class="price-group">
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Price Group -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'priceGroup' }}</h4>
                         </div>
                     </div>
-
                     <div class="element">
-                        <div class="input" *ngFor="let priceGroup of (priceGroups$ | async) || []"></div>
+                        <!-- Dropdown for selecting price group -->
                         <apto-select-field
                             [default]="getDefaultPriceGroup() | async"
                             [items]="(priceGroups$ | async) || []"
@@ -135,51 +150,56 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Divider -->
             <mat-divider></mat-divider>
-
+            <!-- Properties Section -->
             <ng-container *ngIf="(singlePropertyGroups$ | async)?.length || (multiplePropertyGroups$ | async)?.length">
                 <div class="properties" formGroupName="properties">
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Material Properties -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'materialProperties' }}</h4>
                         </div>
                     </div>
-
-                        <div class="element">
-                            <div class="input" *ngFor="let singlePropertyGroup of singlePropertyGroups$ | async">
-                                <div class="prefix">{{singlePropertyGroup.name | translate}}</div>
-                                <apto-select-field
-                                    [items]="singlePropertyGroup.properties"
-                                    [formControlName]="singlePropertyGroup.id"
-                                    [default]="contentSnippet$ | async | contentSnippet: 'allProperty'"
-                                    [asArray]="true"
-                                >
-                                </apto-select-field>
-                            </div>
-                        </div>
-                        <div class="element">
-                            <ng-container *ngFor="let multiplePropertyGroup of multiplePropertyGroups$ | async">
-                                <div class="input" *ngFor="let multipleProperty of multiplePropertyGroup.properties">
-                                    <mat-checkbox class="mat-checkbox-multiline-label" color="primary" (change)="onMultiplePropertySelected(multiplePropertyGroup, multipleProperty)">{{multipleProperty.name | translate}}</mat-checkbox>
-                                </div>
-                            </ng-container>
+                    <!-- Single Property Groups -->
+                    <div class="element">
+                        <div class="input" *ngFor="let singlePropertyGroup of singlePropertyGroups$ | async">
+                            <!-- Dropdown for selecting properties -->
+                            <div class="prefix">{{singlePropertyGroup.name | translate}}</div>
+                            <apto-select-field
+                                [items]="singlePropertyGroup.properties"
+                                [formControlName]="singlePropertyGroup.id"
+                                [default]="contentSnippet$ | async | contentSnippet: 'allProperty'"
+                                [asArray]="true"
+                            >
+                            </apto-select-field>
                         </div>
                     </div>
-
+                    <!-- Multiple Property Groups -->
+                    <div class="element">
+                        <ng-container *ngFor="let multiplePropertyGroup of multiplePropertyGroups$ | async">
+                            <div class="input" *ngFor="let multipleProperty of multiplePropertyGroup.properties">
+                                <!-- Checkbox for selecting multiple properties -->
+                                <mat-checkbox class="mat-checkbox-multiline-label" color="primary" (change)="onMultiplePropertySelected(multiplePropertyGroup, multipleProperty)">{{multipleProperty.name | translate}}</mat-checkbox>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <!-- Divider -->
                 <mat-divider></mat-divider>
-
             </ng-container>
-
+            <!-- Filtered Materials Section -->
             <ng-container *ngIf="(items$ | async) || [] as items;">
                 <div class="filtered-materials" id="filtered-materials">
                     <div class="header">
                         <div class="title">
+                            <!-- Title for Most Popular Colors -->
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'mostPopularColors' }}</h4>
+                            <!-- Display number of results found -->
                             <div class="results">{{ items.length }} {{ contentSnippet$ | async | contentSnippet: 'resultsFound' }}</div>
                         </div>
                     </div>
-
+                    <!-- Display filtered materials -->
                     <div class="elements">
                         <div class="element" *ngFor="let item of items;"
                              (click)="onSelectElement(item)"
@@ -187,10 +207,11 @@
                              aptoTooltip [tooltipContentRef]="tooltipContent"
                         >
                             <div #tooltipContent>
+                                <!-- Material picker hover component -->
                                 <apto-material-picker-hover [poolItem]="item"
                                 ></apto-material-picker-hover>
                             </div>
-
+                            <!-- Material image and name -->
                             <div class="box">
                                 <div class="circle" [class.selected]="isElementSelected(item.material.id)"><mat-icon>done</mat-icon></div>
                                 <img [src]="mediaUrl + item.material.previewImage.path" />
@@ -201,18 +222,19 @@
                 </div>
             </ng-container>
         </ng-container>
-
+        <!-- Divider -->
         <mat-divider></mat-divider>
-
+        <!-- Apply Button Section -->
         <div class="apply-button" *ngIf="this.element.element.definition.staticValues.secondaryMaterialActive">
+            <!-- Continue button if step is 1 and second material is active -->
             <button *ngIf="step === 1 && elementState('second-material')" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="nextStep()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.continue' }}
             </button>
-
+            <!-- Select button if step is 2 or second material is not active -->
             <button *ngIf="step === 2 || !elementState('second-material')" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="saveInput()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.select' }}
             </button>
-
+            <!-- Remove button if element is active -->
             <button *ngIf="elementState('active')" mat-flat-button color="accent" (click)="removeInput()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.remove' }}
             </button>
