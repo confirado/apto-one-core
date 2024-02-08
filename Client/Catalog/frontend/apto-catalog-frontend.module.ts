@@ -69,6 +69,7 @@ import { SelectableValueRangeComponent } from '@apto-base-frontend/components/se
 import { SelectableValueTextComponent } from '@apto-base-frontend/components/selectable-value-text/selectable-value-text.component';
 import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/apto-search/apto-search.component';
 import { DiscountTagComponent } from "@apto-catalog-frontend/components/common/discount-tag/discount-tag.component";
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -109,6 +110,7 @@ RouterRegistry.registerRoutes(Routes);
     SelectableValueRangeComponent,
     SelectableValueTextComponent,
     AptoSearchComponent,
+    UpdatePasswordComponent,
   ],
   exports: [
     QuantityInputEditableComponent,

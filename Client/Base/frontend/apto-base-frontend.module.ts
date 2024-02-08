@@ -46,9 +46,6 @@ import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/fron
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
 import { ForgotPasswordComponent } from './components/frontend-users-login/forgot-password/forgot-password.component';
-import {
-  UpdatePasswordFormComponent
-} from '@apto-base-frontend/components/frontend-users-login/update-password-form/update-password-form.component';
 import { AuthMessageBusService } from '@apto-base-frontend/services/auth-message-bus.service';
 
 RouterRegistry.registerRoutes(Routes);
@@ -69,7 +66,6 @@ RouterRegistry.registerRoutes(Routes);
     LoginCloseButtonComponent,
     SliderComponent,
     ForgotPasswordComponent,
-    UpdatePasswordFormComponent
   ],
 	exports: [
 		FrontendComponent,
@@ -85,7 +81,6 @@ RouterRegistry.registerRoutes(Routes);
     LoginCloseButtonComponent,
     SliderComponent,
     ForgotPasswordComponent,
-    UpdatePasswordFormComponent
   ],
   imports: [
     CommonModule,

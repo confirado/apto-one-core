@@ -49,7 +49,7 @@ class ResetPasswordTokenCreatedHandler implements EventHandlerInterface
             ],
             'template' => $this->getMailTemplate(),
             'context' => [
-                'link' => '#/?action=updatePassword&token=' . $passwordTokenCreated->getToken(),
+                'link' => '#/auth/password/' . $passwordTokenCreated->getToken(),
                 'description' => AptoTranslatedValue::fromArray($contentSnippetTree['auth']['mail']['description'])->getTranslation($this->locale)->getValue(),
             ],
         ]);

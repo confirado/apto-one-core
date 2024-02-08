@@ -19,10 +19,6 @@ import {
   ForgotPasswordComponent
 } from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
 import { ActivatedRoute } from '@angular/router';
-import { QueryParamActionTypeEnum } from '@apto-base-core/enums/query-param-action-type.enum';
-import {
-  UpdatePasswordFormComponent
-} from '@apto-base-frontend/components/frontend-users-login/update-password-form/update-password-form.component';
 
 @Component({
 	selector: 'apto-header',
@@ -73,12 +69,6 @@ export class HeaderComponent {
         this.loginActive = translate(next.content, this.locale) === 'active' ? true : false;
       }
     });
-
-    this.route.queryParams.subscribe((result: {action?: string, token?: string}) => {
-      if (result?.action === QueryParamActionTypeEnum.updatePassword && result?.token) {
-        this.showUpdatePasswordModal(result.token);
-      }
-    });
   }
 
   public onChangeLanguage(locale: string): void {
@@ -115,11 +105,5 @@ export class HeaderComponent {
 
   public toggleSideBar(): void {
     this.basketService.sideBar?.toggle();
-  }
-
-  private showUpdatePasswordModal(token: string): void {
-    this.dialogService.openCustomDialog(UpdatePasswordFormComponent, DialogSizesEnum.md, {
-      token
-    });
   }
 }
