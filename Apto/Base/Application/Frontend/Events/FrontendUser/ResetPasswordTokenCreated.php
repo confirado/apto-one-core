@@ -1,6 +1,6 @@
 <?php
 
-namespace Apto\Base\Domain\Frontend\Events;
+namespace Apto\Base\Application\Frontend\Events\FrontendUser;
 
 use Apto\Base\Application\Core\EventInterface;
 

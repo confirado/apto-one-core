@@ -1,14 +1,14 @@
 <?php
 
-namespace Apto\Base\Domain\Frontend\Subscribers;
+namespace Apto\Base\Application\Frontend\Subscribers\FrontendUser;
 
 use Apto\Base\Application\Core\EventHandlerInterface;
 use Apto\Base\Application\Core\Query\ContentSnippet\ContentSnippetFinder;
 use Apto\Base\Application\Core\Service\RequestStore;
 use Apto\Base\Application\Core\Service\TemplateMailerInterface;
+use Apto\Base\Application\Frontend\Events\FrontendUser\ResetPasswordTokenCreated;
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
-use Apto\Base\Domain\Frontend\Events\ResetPasswordTokenCreated;
 use Apto\Catalog\Domain\Core\Model\Shop\Shop;
 use Apto\Catalog\Domain\Core\Model\Shop\ShopRepository;
 

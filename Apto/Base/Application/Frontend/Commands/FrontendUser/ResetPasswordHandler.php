@@ -1,15 +1,15 @@
 <?php
 
-namespace Apto\Base\Domain\Frontend\Commands;
+namespace Apto\Base\Application\Frontend\Commands\FrontendUser;
 
 use Apto\Base\Application\Core\CommandHandlerInterface;
 use Apto\Base\Application\Core\EventBusInterface;
+use Apto\Base\Application\Frontend\Events\FrontendUser\ResetPasswordTokenCreated;
 use Apto\Base\Domain\Core\Model\Auth\PasswordReset;
 use Apto\Base\Domain\Core\Model\Auth\PasswordResetRepository;
 use Apto\Base\Domain\Core\Model\FrontendUser\FrontendUserRepository;
 use Apto\Base\Domain\Core\Service\Exception\InvalidTokenException;
 use Apto\Base\Domain\Core\Service\PasswordEncoder;
-use Apto\Base\Domain\Frontend\Events\ResetPasswordTokenCreated;
 
 class ResetPasswordHandler implements CommandHandlerInterface
 {
@@ -38,7 +38,12 @@ class ResetPasswordHandler implements CommandHandlerInterface
         if (!$user) {
             return;
         }
-        $passwordReset = new PasswordReset($user->getEmail()->getEmail(), rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='));
+
+        $passwordReset = new PasswordReset(
+            $this->passwordResetRepository->nextIdentity(),
+            $user->getEmail()->getEmail(),
+            rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=')
+        );
 
         $passwordReset = $this->passwordResetRepository->add($passwordReset);
         $this->eventBus->handle(new ResetPasswordTokenCreated($passwordReset->getEmail(), $passwordReset->getToken()));

@@ -1,6 +1,6 @@
 <?php
 
-namespace Apto\Base\Domain\Frontend\Commands;
+namespace Apto\Base\Application\Frontend\Commands\FrontendUser;
 
 use Apto\Base\Application\Core\PublicCommandInterface;
 
