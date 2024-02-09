@@ -63,14 +63,6 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 
 	public isOverlayOpen = false;
 
-  public overlayWidth: number;
-
-  @ViewChild('overlayContent') overlayContent: ElementRef<HTMLElement>;
-
-  calculateOverlayWidth(): number {
-    return this.overlayContent.nativeElement.getBoundingClientRect().width + 2; // +2 for borders
-  }
-
   public writeValue(value: string | null): void {
 		this.value = value;
 		this.updateValue();
@@ -85,7 +77,6 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 	public setDisabledState(isDisabled: boolean): void {}
 
 	public toggleOverlay(): void {
-    this.overlayWidth = this.calculateOverlayWidth();
     this.isOverlayOpen = !this.isOverlayOpen;
   }
 
@@ -94,8 +85,6 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 	}
 
   public selectItem(item: T): void {
-    this.overlayWidth = this.calculateOverlayWidth();
-
 		this.value = item.id;
 		this.updateValue();
 		if (this.asArray) {

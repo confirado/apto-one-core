@@ -1,0 +1,12 @@
+{
+  "superadmin": {
+    "username": "superadmin",
+    "password": "12345678",
+    "email": ""
+  },
+  "admin": {
+    "username": "admin",
+    "password": "12345678",
+    "email": ""
+  }
+}

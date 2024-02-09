@@ -79,7 +79,7 @@ class ComputedProductValueCalculator
 
         // merge repetition values with default values
         $values = array_merge($values, $repetitionValues);
-        $valuesById = array_merge($values, $repetitionValuesById);
+        $valuesById = array_merge($valuesById, $repetitionValuesById);
 
         return $indexedById ? $valuesById : $values;
     }

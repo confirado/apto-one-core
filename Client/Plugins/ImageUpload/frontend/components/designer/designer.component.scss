@@ -119,7 +119,7 @@
 
     .name {
         grid-area: name;
-        @include name();
+        @include name('tablet');
     }
 
     .container {
@@ -191,6 +191,12 @@
         .left,
         .right {
             width: 100%;
+        }
+    }
+
+    .input-field {
+        .name {
+            @include name('mobile');
         }
     }
 }

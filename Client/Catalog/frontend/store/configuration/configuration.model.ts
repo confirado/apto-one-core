@@ -170,6 +170,10 @@ export interface AddBasketConfigurationArguments {
 	additionalData: any;
 }
 
+export interface UpdateBasketConfigurationArguments extends AddBasketConfigurationArguments {
+	configurationId: string;
+}
+
 export interface AddGuestConfigurationArguments {
 	productId: string;
 	compressedState: any;

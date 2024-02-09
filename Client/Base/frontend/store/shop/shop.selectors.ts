@@ -17,7 +17,8 @@ export const selectConnector = createSelector(
 		customerGroup: state.shop.connector.customerGroup,
 		sessionCookies: state.shop.connector.sessionCookies,
 		locale: state.language.locale ? state.language.locale : environment.defaultLocale,
-    configured: state.shop.connector.configured
+    configured: state.shop.connector.configured,
+    user: state.shop.connector.user
 	})
 );
 

@@ -6,7 +6,7 @@ import {
   AddGuestConfigurationArguments,
   ComputedValues,
   Configuration, FetchPartsListArguments, PartsListPart,
-  RenderImage,
+  RenderImage, UpdateBasketConfigurationArguments,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -48,6 +48,19 @@ export class ConfigurationRepository {
 	public addToBasket(params: AddBasketConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addBasketConfiguration(
 			params.productId,
+			params.compressedState,
+			params.sessionCookies,
+			params.locale,
+			params.quantity,
+			params.perspectives,
+			params.additionalData
+		);
+	}
+
+	public updateBasket(params: UpdateBasketConfigurationArguments): Observable<unknown> {
+		return this.catalogMessageBusService.updateBasketConfiguration(
+			params.productId,
+			params.configurationId,
 			params.compressedState,
 			params.sessionCookies,
 			params.locale,

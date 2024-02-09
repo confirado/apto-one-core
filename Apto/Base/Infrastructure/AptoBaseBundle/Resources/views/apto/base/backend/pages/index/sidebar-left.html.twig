@@ -13,17 +13,26 @@
                 <apto-user-status logout-link="{{ path('apto_base_infrastructure_aptobase_login_logout') }}"></apto-user-status>
             </div>
         </md-list-item>
+
         <md-divider ></md-divider>
-        <md-list-item hide-xs hide-sm ng-click="IndexController.toggleSidebarSmall()">
+
+        <md-list-item hide-xs hide-sm ng-click="IndexController.toggleSidebarSmall()" data-cy="sidebar-left_toggle-sidebar">
             <md-icon class="open-menu-icon" ng-if="IndexController.sidebarClass != ''" md-font-set="fa">&#xf101</md-icon>
             <md-icon class="apto-main-menu-list-placeholder-icon" ng-if="IndexController.sidebarClass == ''" md-font-set="fa"></md-icon>
             <p>Hauptmenü</p>
             <md-icon ng-if="IndexController.sidebarClass == ''" md-font-set="fa">&#xf100</md-icon>
         </md-list-item>
+
         <md-divider hide-xs hide-sm></md-divider>
+
         {% for mainMenuEntry in templateLoaderData.mainMenuEntries %}
             {% if mainMenuEntry.subItems is defined %}
-                <md-list-item{% if mainMenuEntry.aclMessagesRequired is defined %} apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}" ng-if="IndexController.oneGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %} class="apto-main-menu-sub-item">
+                <md-list-item {% if mainMenuEntry.aclMessagesRequired is defined %}
+                    apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}"
+                    ng-if="IndexController.oneGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %}
+                    class="apto-main-menu-sub-item"
+                    data-cy="sidebar-left_{{ mainMenuEntry.label }}"
+                >
                     <md-icon md-font-set="fa">&#x{{ mainMenuEntry.icon }}</md-icon>
                     <p class="apto-submenu-root-label md-list-item-text">{{ mainMenuEntry.label }}</p>
                     <md-menu class="md-secondary">
@@ -32,7 +41,14 @@
                         </md-button>
                         <md-menu-content width="4">
                             {% for subItem in mainMenuEntry.subItems %}
-                                <md-menu-item{% if subItem.aclMessagesRequired is defined %} apto-show-granted-info="{{ subItem.aclMessagesRequired }}" ng-if="IndexController.allGranted({{ subItem.aclMessagesRequired }})"{% endif %} ng-click="IndexController.navigateToRoute('{{ subItem.route }}')">
+                                <md-menu-item
+                                    {% if subItem.aclMessagesRequired is defined %}
+                                        apto-show-granted-info="{{ subItem.aclMessagesRequired }}"
+                                        ng-if="IndexController.allGranted({{ subItem.aclMessagesRequired }})"
+                                    {% endif %}
+                                    ng-click="IndexController.navigateToRoute('{{ subItem.route }}')"
+                                    data-cy="sidebar-left_sub_{{ subItem.label }}"
+                                >
                                     <md-button>
                                         <md-icon md-font-set="fa">&#x{{ subItem.icon }}</md-icon>
                                         {{ subItem.label }}
@@ -43,7 +59,12 @@
                     </md-menu>
                 </md-list-item>
             {% else %}
-                <md-list-item{% if mainMenuEntry.aclMessagesRequired is defined %} apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}" ng-if="IndexController.allGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %} ng-click="IndexController.navigateToRoute('{{ mainMenuEntry.route }}')">
+                <md-list-item {% if mainMenuEntry.aclMessagesRequired is defined %}
+                    apto-show-granted-info="{{ mainMenuEntry.aclMessagesRequired }}"
+                    ng-if="IndexController.allGranted({{ mainMenuEntry.aclMessagesRequired }})"{% endif %}
+                    ng-click="IndexController.navigateToRoute('{{ mainMenuEntry.route }}')"
+                    data-cy="sidebar-left_{{ mainMenuEntry.label }}"
+                >
                     <md-icon md-font-set="fa">&#x{{ mainMenuEntry.icon }}</md-icon>
                     <p>{{ mainMenuEntry.label }}</p>
                 </md-list-item>

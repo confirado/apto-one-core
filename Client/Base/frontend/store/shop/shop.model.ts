@@ -31,6 +31,7 @@ export interface ConnectorUser {
 	firstName: string;
 	gender: string;
 	lastName: string;
+  customerNumber: string;
 }
 
 export interface ExternalCustomerGroup {
@@ -87,4 +88,5 @@ export interface SelectConnector {
 	locale: string;
 	customerGroupExternalId: string | null;
   configured: boolean;
+  user: ConnectorUser | null
 }

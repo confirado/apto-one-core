@@ -1,4 +1,3 @@
-import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
   addToBasket, addToBasketSuccess,
   createLoadingFlagAction, fetchPartsListSuccess,
@@ -37,7 +36,6 @@ export interface ConfigurationState {
 	statePrice: StatePrice | null;
 	loading: boolean;
 	productId: string | null;
-	connector: SelectConnector | null;
 	humanReadableState: HumanReadableState[];
 	quantity: number;
   hideOnePage: boolean;
@@ -59,7 +57,6 @@ export const configurationInitialState: ConfigurationState = {
 	statePrice: null,
 	productId: null,
 	loading: false,
-	connector: null,
 	humanReadableState: [],
 	quantity: 1,
   hideOnePage: false,
@@ -113,7 +110,6 @@ const _configurationReducer = createReducer(
   on(initConfigurationSuccess, (state, action) => {
     /*
       productId: string | null;
-      connector: SelectConnector | null;
       humanReadableState: any | null;
       quantity: number;
      */
@@ -129,7 +125,6 @@ const _configurationReducer = createReducer(
       statePrice: action.payload.statePrice,
       loading: false,
       productId: action.payload.productId,
-      connector: action.payload.connector
     }
   }),
   /*

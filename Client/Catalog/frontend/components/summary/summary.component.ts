@@ -49,6 +49,14 @@ export class SummaryComponent implements OnDestroy {
     );
 	}
 
+  private get configurationId() {
+    return this.activatedRoute.snapshot.params['configurationId'];
+  }
+
+  private get configurationType() {
+    return this.activatedRoute.snapshot.params['configurationType'];
+  }
+
   public get showPrices(): boolean {
     return environment.showPrices;
   }
@@ -62,6 +70,8 @@ export class SummaryComponent implements OnDestroy {
             payload: {
               type: 'ADD_TO_BASKET',
               productImage: image.src,
+              configurationId: this.configurationId,
+              configurationType: this.configurationType,
             },
           })
         );
@@ -72,6 +82,8 @@ export class SummaryComponent implements OnDestroy {
           payload: {
             type: 'ADD_TO_BASKET',
             productImage: null,
+            configurationId: this.configurationId,
+            configurationType: this.configurationType,
           },
         })
       );

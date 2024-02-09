@@ -88,3 +88,18 @@
         }
     }
 }
+
+@media only screen and (max-width: $mobile-max-width) {
+    .mat-expansion-panel {
+        .mat-expansion-panel-header {
+            padding: 15px;
+            ::ng-deep .mat-content {
+                mat-panel-title {
+                    h1.headline {
+                        font-size: 22px;
+                    }
+                }
+            }
+        }
+    }
+}

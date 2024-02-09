@@ -108,6 +108,11 @@
 
                 .container {
                     @include element-input-grid('tablet');
+                    grid-template-columns: 1fr auto 1fr;
+
+                    .input {
+                        min-width: var(--input-tablet-width);
+                    }
                 }
             }
 

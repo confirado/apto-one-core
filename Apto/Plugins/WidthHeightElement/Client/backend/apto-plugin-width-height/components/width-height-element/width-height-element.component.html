@@ -63,12 +63,12 @@
             <div layout="row" layout-align="start" flex>
                 <md-input-container class="md-block" flex>
                     <label>Breite Minimum:</label>
-                    <input type="number" min="0" step="0.001" ng-model="$ctrl.width.minimum">
+                    <input type="number" ng-step="{{ $ctrl.width.step }}" ng-model="$ctrl.width.minimum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>
                     <label>Breite Maximum:</label>
-                    <input type="number" min="0" step="0.001" ng-model="$ctrl.width.maximum">
+                    <input type="number" ng-step="{{ $ctrl.width.step }}" ng-model="$ctrl.width.maximum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>
@@ -133,12 +133,12 @@
             <div layout="row" layout-align="start" flex>
                 <md-input-container class="md-block" flex>
                     <label>Höhe Minimum:</label>
-                    <input type="number" min="0" step="1" ng-model="$ctrl.height.minimum">
+                    <input type="number" ng-step="{{ $ctrl.height.step }}" ng-model="$ctrl.height.minimum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>
                     <label>Höhe Maximum:</label>
-                    <input type="number" min="0" step="0.001" ng-model="$ctrl.height.maximum">
+                    <input type="number" ng-step="{{ $ctrl.height.step }}" ng-model="$ctrl.height.maximum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>

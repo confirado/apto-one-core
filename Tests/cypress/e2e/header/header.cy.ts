@@ -1,22 +1,21 @@
 import { ShopResponse } from '@apto-base-frontend/store/shop/shop.model';
 import { Interception } from 'cypress/types/net-stubbing';
-import { ProductList } from '../../classes/product-list/product-list';
+import { ProductList } from '../../classes/pages/product-list/product-list';
 import { ViewportPresetsEnum } from '../../classes/globals';
-import { Common } from '../../classes/common';
-import { Queries } from '../../classes/queries';
+import { Queries } from '../../classes/message-bus/queries';
 import { RequestHandler } from '../../classes/requestHandler';
+import { Core } from '../../classes/common/core';
 
 describe('Header', () => {
 
   beforeEach(() => { });
 
-  it('tests header on desktop', () => {
+  it('tests header on desktop (on product list page)', () => {
 
-    RequestHandler.interceptQuery(Queries.FindShopContext.alias);
+    RequestHandler.registerInterceptions(ProductList.initialRequests);
 
     ProductList.visit();
-
-    cy.get('apto-header').should('exist');
+    ProductList.isCorrectPage();
 
 
     // logo
@@ -26,7 +25,7 @@ describe('Header', () => {
       .should('exist')
       .should('be.visible')
       .should((img) => {
-        Common.isImageLoadedCheck(img);
+        Core.isImageLoadedCheck(img);
       });
 
     cy.get('.logo').find('a img.visible-mobile')
@@ -34,12 +33,21 @@ describe('Header', () => {
       .should('be.hidden');
 
 
-    // languages
-    cy.wait(`@${Queries.FindShopContext.alias}`).then(($response: Interception) => {
+    // Warenkorb test todo
 
-      expect(RequestHandler.hasResponseError($response)).to.equal(false);
 
-      const result = $response.response.body.result as ShopResponse;
+    // languages todo sometimes is empty check why
+    cy.wait(RequestHandler.getAliasesFromRequests(ProductList.initialRequests)).then(($response: Interception[]) => {
+
+      let findShopContextResult = null;
+      $response.forEach((response) => {
+        expect(RequestHandler.hasResponseError(response)).to.equal(false);
+
+        if (response.request.alias === Queries.FindShopContext.alias) {
+          findShopContextResult = response.response.body.result as ShopResponse;
+        }
+      });
+
 
       // language select box
       // @todo this must be added when we add backend test as when we leave only one language language select does not exist any more
@@ -54,7 +62,7 @@ describe('Header', () => {
       // check that the correct number of languages is shown
       cy.get('.language-desktop').find('mat-select').click();
       cy.get('.cdk-overlay-container').find('.mat-select-panel').find('.mat-option')
-        .should('have.length', result.languages.length);
+        .should('have.length', findShopContextResult.languages.length);
       cy.get('body').click();
 
       // click on language select and check that it contains languages from backend response
@@ -65,7 +73,7 @@ describe('Header', () => {
           cy.wrap($option).invoke('attr', 'data-locale').then((dataLocaleValue) => {
 
             // we must find each language from select box in incoming data
-            const matchingLanguage = result.languages.find((resultLanguages) => resultLanguages.isocode === dataLocaleValue);
+            const matchingLanguage = findShopContextResult.languages.find((resultLanguages) => resultLanguages.isocode === dataLocaleValue);
             expect(matchingLanguage).to.not.equal(undefined);
           });
         });
@@ -78,7 +86,7 @@ describe('Header', () => {
   it('tests header on mobile', () => {
 
     ProductList.visit();
-    Common.switchViewport(ViewportPresetsEnum.MOBILE);
+    Core.switchViewport(ViewportPresetsEnum.MOBILE);
 
     // language select box
     cy.get('.language-desktop')
@@ -98,7 +106,7 @@ describe('Header', () => {
       .should('exist')
       .should('be.visible')
       .should((img) => {
-        Common.isImageLoadedCheck(img);
+        Core.isImageLoadedCheck(img);
       });
   });
 });

@@ -90,7 +90,7 @@
                 color="primary"
                 (click)="saveInput()"
             >
-                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
                 *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
@@ -98,7 +98,7 @@
                 color="primary"
                 (click)="saveInput()"
             >
-                {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
                 *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"

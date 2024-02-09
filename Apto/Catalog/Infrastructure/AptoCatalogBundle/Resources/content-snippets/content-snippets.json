@@ -72,6 +72,11 @@
       "continue": {
         "de_DE": "Weiter"
       }
+    },
+    "select": {
+      "please-select": {
+        "de_DE": "Bitte wählen"
+      }
     }
   },
   "AptoLoginController": {

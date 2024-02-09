@@ -104,6 +104,11 @@
 
         .apply-button {
             @include buttons('tablet');
+
+            button {
+                padding: 0 15px !important;
+                height: 50px;
+            }
         }
     }
 }

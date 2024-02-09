@@ -99,12 +99,22 @@ class StatePriceService
      * @param string|null $customerGroupExternalId
      * @param array $sessionCookies
      * @param string|null $taxState
+     * @param array|null $user
      * @return array
      * @throws InvalidUuidException
      * @throws \Exception
      */
-    public function getStatePrice(AptoUuid $productId, State $state, AptoLocale $locale, array $shopCurrency, array $displayCurrency, string $customerGroupExternalId = null, array $sessionCookies = [], ?string $taxState = null): array
-    {
+    public function getStatePrice(
+        AptoUuid $productId,
+        State $state,
+        AptoLocale $locale,
+        array $shopCurrency,
+        array $displayCurrency,
+        string $customerGroupExternalId = null,
+        array $sessionCookies = [],
+        ?string $taxState = null,
+        ?array $user = null
+    ): array {
         // create shop and display currency
         $shopCurrencyObj = new Currency($shopCurrency['currency']);
         $displayCurrencyObj = new Currency($displayCurrency['currency']);
@@ -157,7 +167,8 @@ class StatePriceService
             $state,
             $taxCalculator,
             new Currency($connector['currency']), // @todo set fallback currency
-            $displayCurrency['factor'] ? $displayCurrency['factor'] : 1
+            $displayCurrency['factor'] ? $displayCurrency['factor'] : 1,
+            $user
         );
 
         // @todo currency conversion was done before tax apply, tax apply is now done inside price calculator

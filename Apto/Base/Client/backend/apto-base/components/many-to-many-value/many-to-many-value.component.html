@@ -1,6 +1,6 @@
 <div class="apto-many-to-many-list" layout="row">
     <!-- available entries flat -->
-    <div flex="50" ng-if="!$ctrl.renderAvailableAsTree">
+    <div flex="50" ng-if="!$ctrl.renderAvailableAsTree" data-cy="many-to-many-available-flat">
         <md-subheader class="md-no-sticky">Verfügbar</md-subheader>
 
         <md-list ng-if="!$ctrl.orderField">
@@ -25,7 +25,7 @@
     </div>
 
     <!-- available entries tree -->
-    <div flex="50" ng-if="$ctrl.renderAvailableAsTree">
+    <div flex="50" ng-if="$ctrl.renderAvailableAsTree" data-cy="many-to-many-available-tree">
         <md-subheader style="margin-bottom: 8px;" class="md-no-sticky">Verfügbar</md-subheader>
 
         <treecontrol ng-if="$ctrl.available.length > 0"
@@ -60,7 +60,7 @@
     <md-divider></md-divider>
 
     <!-- assigned entries -->
-    <div flex="50">
+    <div flex="50" data-cy="many-to-many-assigned">
         <md-subheader class="md-no-sticky">Zugeordnet</md-subheader>
 
         <md-list ng-if="!$ctrl.orderField">

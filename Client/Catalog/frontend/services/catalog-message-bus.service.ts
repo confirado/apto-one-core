@@ -74,6 +74,7 @@ export class CatalogMessageBusService {
 			connector.locale,
 			connector.sessionCookies,
 			connector.taxState,
+      connector.user
 		]);
 	}
 
@@ -128,6 +129,28 @@ export class CatalogMessageBusService {
 	): Observable<unknown> {
 		return this.command<unknown>('AddBasketConfiguration', [
 			productId,
+			compressedState,
+			sessionCookies,
+			locale,
+			quantity,
+			perspectives,
+			additionalData,
+		]);
+	}
+
+	public updateBasketConfiguration(
+		productId: string,
+		configurationId: string,
+		compressedState: any,
+		sessionCookies: any,
+		locale: string | undefined,
+		quantity: number,
+		perspectives: unknown,
+		additionalData: any
+	): Observable<unknown> {
+		return this.command<unknown>('UpdateBasketConfiguration', [
+			productId,
+      configurationId,
 			compressedState,
 			sessionCookies,
 			locale,

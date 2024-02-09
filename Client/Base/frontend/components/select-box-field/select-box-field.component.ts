@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
@@ -66,14 +66,6 @@ export class SelectBoxFieldComponent<T extends { id: string; name: TranslatedVal
 
 	public isOverlayOpen = false;
 
-  public overlayWidth: number;
-
-  @ViewChild('overlayContent') overlayContent: ElementRef<HTMLElement>;
-
-  calculateOverlayWidth(): number {
-    return this.overlayContent.nativeElement.getBoundingClientRect().width + 2; // +2 for borders
-  }
-
 	public valueGiven(): boolean {
 		return this.value.length !== 0;
 	}
@@ -94,7 +86,6 @@ export class SelectBoxFieldComponent<T extends { id: string; name: TranslatedVal
 	public setDisabledState(isDisabled: boolean): void {}
 
 	public toggleOverlay(): void {
-    this.overlayWidth = this.calculateOverlayWidth();
     this.isOverlayOpen = !this.isOverlayOpen;
 	}
 
@@ -107,7 +98,6 @@ export class SelectBoxFieldComponent<T extends { id: string; name: TranslatedVal
 	}
 
 	public selectItem(item: string): void {
-    this.overlayWidth = this.calculateOverlayWidth();
     this.value = [...this.value];
 
     if (this.value.includes(item)) {

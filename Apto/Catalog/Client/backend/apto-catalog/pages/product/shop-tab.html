@@ -1,11 +1,27 @@
-<apto-many-to-many-value available="availableShops" assigned="productDetail.shops" name-field="name" id-field="id" on-toggle="onToggleShop(assigned)"></apto-many-to-many-value>
-<h3>Domaineigenschaften</h3>
-<div ng-repeat="domainProperties in productDetail.domainProperties" layout="row" layout-align="start" flex class="md-whiteframe-2dp" style="padding: 2rem; margin-bottom: 1rem;">
-    <div layout="column" flex>
+<apto-many-to-many-value
+    available="availableShops"
+    assigned="productDetail.shops"
+    name-field="name"
+    id-field="id"
+    on-toggle="onToggleShop(assigned)"
+    data-cy="domain-many-to-many"
+></apto-many-to-many-value>
+
+<h3 data-cy="domain-title">Domaineigenschaften</h3>
+
+<div ng-repeat="domainProperties in productDetail.domainProperties"
+     layout="row"
+     layout-align="start"
+     flex
+     class="md-whiteframe-2dp"
+     style="padding: 2rem; margin-bottom: 1rem;"
+     data-cy="domain-properties"
+>
+    <div layout="column" flex data-cy="domain-property-{{domainProperties.shop.name}}">
         <div>
            {{domainProperties.shop.name}}
         </div>
-        <div layout="row" layout-align="start" flex>
+        <div layout="row" layout-align="start" flex data-cy="domain-price-modifier">
             <md-input-container class="md-block" flex>
                 <label>Preismultiplikator (in %)</label>
                 <input type="number" step="0.01" ng-model="domainProperties.priceModifier" ng-change="updateMultiplierHint($index)">

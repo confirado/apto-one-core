@@ -1,20 +1,21 @@
 <div layout="row" layout-align="start" flex>
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container flex>
+            <md-input-container flex data-cy="product-active">
                 <md-checkbox ng-model="productDetail.active" aria-label="Aktiv">
                     Aktiv
                 </md-checkbox>
             </md-input-container>
             <div flex="5"></div>
 
-            <md-input-container flex>
+            <md-input-container flex data-cy="product-hidden">
                 <md-checkbox ng-model="productDetail.hidden" aria-label="Versteckt">
                     Versteckt
                 </md-checkbox>
             </md-input-container>
         </div>
     </div>
+
     <div layout="column" flex="5"></div>
     <div layout="column" flex></div>
 </div>
@@ -22,21 +23,25 @@
 <div layout="row" layout-align="start" flex>
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container flex>
+            <md-input-container flex data-cy="product-identifier">
                 <label>Kennung:</label>
                 <input ng-model="productDetail.identifier">
             </md-input-container>
+
             <div flex="5"></div>
-            <md-input-container flex>
+
+            <md-input-container flex data-cy="product-article-number">
                 <label>Artikelnummer:</label>
                 <input ng-model="productDetail.articleNumber">
             </md-input-container>
         </div>
     </div>
+
     <div layout="column" flex="5"></div>
+
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container flex>
+            <md-input-container flex data-cy="product-configuration-modes">
                 <label>Konfiguratormodus</label>
                 <md-select ng-model="productDetail.useStepByStep">
                     <md-option ng-repeat="mode in configuratorModes" ng-value="mode.value">
@@ -46,7 +51,8 @@
             </md-input-container>
 
             <div flex="5"></div>
-            <md-input-container flex>
+
+            <md-input-container flex data-cy="product-keep-section-order">
                 <label>Reihenfolge der Sektionen einhalten</label>
                 <md-select ng-model="productDetail.keepSectionOrder">
                     <md-option ng-repeat="sectionOrderOption in configuratorKeepSectionOrder" ng-value="sectionOrderOption.value">
@@ -61,45 +67,52 @@
 <div layout="row" layout-align="start" flex>
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container class="md-block" flex>
+            <md-input-container class="md-block" flex data-cy="product-position">
                 <label>Position:</label>
                 <input type="number" min="0" step="1" ng-model="productDetail.position">
             </md-input-container>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-stock">
                 <label>Lagerbestand:</label>
                 <input type="number" min="0" step="1" ng-model="productDetail.stock">
             </md-input-container>
             <div flex="5"></div>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-delivery-time">
                 <label>Lieferzeit(Tage):</label>
                 <input type="text" ng-model="productDetail.deliveryTime">
             </md-input-container>
             <div flex="5"></div>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-weight">
                 <label>Gewicht(kg):</label>
                 <input type="number" min="0" step="0.001" ng-model="productDetail.weight">
             </md-input-container>
             <div flex="5"></div>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-min-purchase">
                 <label>Mindestabnahme:</label>
                 <input type="number" min="0" step="1" ng-model="productDetail.minPurchase">
             </md-input-container>
             <div flex="5"></div>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-max-purchase">
                 <label>Maximalabnahme:</label>
                 <input type="number" min="0" step="1" ng-model="productDetail.maxPurchase">
             </md-input-container>
         </div>
     </div>
     <div flex="5"></div>
+
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
-            <md-input-container class="md-block" flex>
+            <md-input-container class="md-block" flex data-cy="product-tax-rate">
                 <label>Steuersatz(%):</label>
                 <input type="number" min="0" step="0.001" ng-model="productDetail.taxRate">
             </md-input-container>
             <div flex="5"></div>
-            <md-input-container class="md-block" flex>
+
+            <md-input-container class="md-block" flex data-cy="product-price-calculator">
                 <label>Preisberechnung:</label>
                 <md-select required ng-model="productDetail.priceCalculatorId">
                     <md-option ng-value="priceCalculator.id" ng-repeat="priceCalculator in availablePriceCalculators">{{ priceCalculator.name }}</md-option>
@@ -108,18 +121,22 @@
         </div>
     </div>
 </div>
+
 <div layout="row" layout-align="start" flex>
-    <apto-translated-value required label="'Name'" type="'input'" translated-value="productDetail.name" flex></apto-translated-value>
+    <apto-translated-value required label="'Name'" type="'input'" translated-value="productDetail.name" flex data-cy="product-name"></apto-translated-value>
     <div flex="5"></div>
-    <apto-translated-value label="'Meta Titel'" type="'input'" translated-value="productDetail.metaTitle" flex></apto-translated-value>
+    <apto-translated-value label="'Meta Titel'" type="'input'" translated-value="productDetail.metaTitle" flex data-cy="product-meta-title"></apto-translated-value>
 </div>
+
 <div layout="row" layout-align="start" flex>
-    <apto-translated-value label="'Beschreibung'" type="'trumbowyg'" translated-value="productDetail.description" flex="100"></apto-translated-value>
+    <apto-translated-value label="'Beschreibung'" type="'trumbowyg'" translated-value="productDetail.description" flex="100" data-cy="product-description"></apto-translated-value>
 </div>
+
 <div layout="row" layout-align="start" flex>
-    <apto-translated-value label="'Meta Beschreibung'" type="'textarea'" translated-value="productDetail.metaDescription" flex="100"></apto-translated-value>
+    <apto-translated-value label="'Meta Beschreibung'" type="'textarea'" translated-value="productDetail.metaDescription" flex="100" data-cy="product-meta-description"></apto-translated-value>
 </div>
-<div layout="row" layout-align="start" flex>
+
+<div layout="row" layout-align="start" flex data-cy="product-url">
     <div layout="column" flex>
         <div layout="row" layout-align="start" flex>
             <md-input-container flex>
@@ -130,13 +147,25 @@
     </div>
 </div>
 
-<div>
+<div data-cy="product-preview-picture-text">
     <p>Vorschaubild:</p>
 </div>
-<div layout="row" layout-align="start" flex>
+<div layout="row" layout-align="start" flex data-cy="product-preview-picture">
     <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">
-        <apto-media-icon ng-if="productDetail.previewImage" style="display: block;" file="{path: productDetail.previewImage, extension: productDetail.previewImageMediaFile.extension}" size="128x128"></apto-media-icon>
+        <apto-media-icon
+            ng-if="productDetail.previewImage"
+            style="display: block;"
+            file="{path: productDetail.previewImage, extension: productDetail.previewImageMediaFile.extension}"
+            size="128x128"
+        ></apto-media-icon>
     </div>
     <div flex="5"></div>
-    <apto-media-select on-select-file="onSelectPreviewImage(path)" label="'Pfad'" path="productDetail.previewImage" required="false" flex></apto-media-select>
+
+    <apto-media-select
+        on-select-file="onSelectPreviewImage(path)"
+        label="'Pfad'"
+        path="productDetail.previewImage"
+        required="false"
+        flex
+    ></apto-media-select>
 </div>

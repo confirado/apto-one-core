@@ -59,12 +59,12 @@
                         <div layout="row" layout-align="start" flex>
                             <md-input-container class="md-block" flex>
                                 <label>Minimum:</label>
-                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.minimum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.minimum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
                                 <label>Maximum:</label>
-                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.maximum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.maximum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
@@ -113,12 +113,12 @@
                         <div layout="row" layout-align="start" flex>
                             <md-input-container class="md-block" flex>
                                 <label>Minimum:</label>
-                                <input type="number" min="0" step="1" ng-model="$ctrl.fieldValue.minimum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.minimum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
                                 <label>Maximum:</label>
-                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.maximum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.maximum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
