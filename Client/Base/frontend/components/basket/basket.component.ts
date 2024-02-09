@@ -112,10 +112,10 @@ export class BasketComponent {
    * @param basketItemName The name of the basket item to remove.
    */
   protected removeBasketItem(basketItemId: string, basketItemName: string): void {
-    let dialogMessage = ''; // Message to display in the dialog.
-    let dialogTitle = ''; // Title of the dialog.
-    let dialogButtonCancel = ''; // Label for the cancel button.
-    let dialogButtonAccept = ''; // Label for the accept button.
+    let dialogMessage = '';
+    let dialogTitle = '';
+    let dialogButtonCancel = '';
+    let dialogButtonAccept = '';
 
     const confirmDialogSubscription = this.csConfirmDeleteDialog$.subscribe((next) => {
       if (next === null) {
@@ -234,16 +234,16 @@ export class BasketComponent {
       image: string;
     }[]
   ): string {
-    let totalPrice = 0; // Total price of all products.
-    let totalCurrency; // Currency of the products.
+    let totalPrice = 0;
+    let totalCurrency;
     for (const product of products) {
-      const currentPrice = product.quantity * product.price; // Calculating price for the current product.
-      totalPrice += currentPrice; // Adding current product's price to total price.
-      totalCurrency = product.currency; // Setting currency from current product.
+      const currentPrice = product.quantity * product.price;
+      totalPrice += currentPrice;
+      totalCurrency = product.currency;
     }
     if (!totalCurrency) {
-      return 'no currency found!'; // Returning error message if currency is not found.
+      return 'no currency found!';
     }
-    return `${totalPrice.toString()} ${totalCurrency}`; // Returning total price with currency.
+    return `${totalPrice.toString()} ${totalCurrency}`;
   }
 }
