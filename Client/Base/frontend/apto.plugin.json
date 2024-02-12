@@ -5,5 +5,11 @@
   "imports": [{
     "class": "AptoBaseFrontendModule",
     "file": "apto-base-frontend.module.ts"
-  }]
+  }],
+  "aliases": [
+    {
+      "alias": "@base-customs",
+      "path": "base-customs.module.ts"
+    }
+  ]
 }

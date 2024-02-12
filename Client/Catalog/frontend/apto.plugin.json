@@ -5,5 +5,11 @@
   "imports": [{
     "class": "AptoCatalogFrontendModule",
     "file": "apto-catalog-frontend.module.ts"
-  }]
+  }],
+  "aliases": [
+    {
+      "alias": "@catalog-customs",
+      "path": "catalog-customs.module.ts"
+    }
+  ]
 }

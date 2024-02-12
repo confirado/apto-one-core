@@ -69,6 +69,7 @@ import { SelectableValueRangeComponent } from '@apto-base-frontend/components/se
 import { SelectableValueTextComponent } from '@apto-base-frontend/components/selectable-value-text/selectable-value-text.component';
 import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/apto-search/apto-search.component';
 import { DiscountTagComponent } from "@apto-catalog-frontend/components/common/discount-tag/discount-tag.component";
+import { CatalogCustomsModule } from '@catalog-customs';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -124,6 +125,7 @@ RouterRegistry.registerRoutes(Routes);
     SelectableValueRangeComponent,
     SelectableValueTextComponent,
     AptoSearchComponent,
+    CatalogCustomsModule
   ],
 	imports: [
 		RouterModule,
@@ -152,6 +154,7 @@ RouterRegistry.registerRoutes(Routes);
 		OverlayModule,
 		MatRippleModule,
 		MatCheckboxModule,
+    CatalogCustomsModule
 	],
 	providers: [
     ProductRepository,
