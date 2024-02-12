@@ -17,9 +17,13 @@ import { Textarea } from '../../classes/common/elements/textarea';
 describe('Product', () => {
 
   var dummies = null;
+  var productName1 = '';
+
+  before(() => {
+    productName1 = Product.generateName();
+  });
 
   beforeEach(() => {
-
     cy.fixture('dummies').then((data) => {
       dummies = data;
     })
@@ -316,8 +320,8 @@ describe('Product', () => {
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 1);
 
               // after typing value error should dissapear
-              cy.get('[data-cy="product-name"]').type(dummies.productName1);
-              cy.get('.product-title h3').find('span.title-headline').should('contain.text', dummies.productName1);
+              cy.get('[data-cy="product-name"]').type(productName1);
+              cy.get('.product-title h3').find('span.title-headline').should('contain.text', productName1);
 
               cy.dataCy('dialog-actions_button-new-save').click();
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 0);
@@ -346,7 +350,7 @@ describe('Product', () => {
 
           cy.get('md-table-container table tbody tr:last-child') // Select the last table row
             .within(() => {
-              cy.get('td:nth-child(4)').should('contain.text', dummies.productName1);
+              cy.get('td:nth-child(4)').should('contain.text', productName1);
             });
         });
       });

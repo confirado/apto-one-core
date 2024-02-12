@@ -4,6 +4,7 @@ import { IPage } from '../../interfaces/page-interface';
 import { SIDEBAR_LEFT_ITEMS } from '../../../_support/constants/constants';
 import { Backend } from '../../common/backend';
 import { Commands } from '../../message-bus/commands';
+import { CryptoService } from '@apto-base-core/services/crypto-service';
 
 export class Product implements IPage {
 
@@ -24,6 +25,10 @@ export class Product implements IPage {
     cy.get('apto-page-header').should('exist');
     cy.get('apto-page-header .md-toolbar-tools').should('exist');
     cy.dataCy('header_product-title').should('contain.text', 'Produkte');
+  }
+
+  public static generateName(characterCount: number = 8) {
+    return 'product_' + CryptoService.generateRandomString(characterCount);
   }
 
   public static isCorrectPageContent(): void { }
