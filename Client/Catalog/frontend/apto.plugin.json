@@ -8,11 +8,11 @@
   }],
   "aliases": [
     {
-      "alias": "@catalog-customs",
-      "path": "catalog-customs.module.ts"
+      "alias": "@apto-catalog-frontend-custom-module",
+      "path": "apto-catalog-frontend-custom.module.ts"
     },
     {
-      "alias": "@sbs-elements",
+      "alias": "@apto-catalog-frontend-sbs-elements",
       "path": "components/step-by-step/sbs-elements/sbs-elements.component.ts"
     }
   ]

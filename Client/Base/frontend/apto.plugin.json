@@ -8,8 +8,8 @@
   }],
   "aliases": [
     {
-      "alias": "@base-customs",
-      "path": "base-customs.module.ts"
+      "alias": "@apto-base-frontend-custom-module",
+      "path": "apto-base-frontend-custom.module.ts"
     }
   ]
 }

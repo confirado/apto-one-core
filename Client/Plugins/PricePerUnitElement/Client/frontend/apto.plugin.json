@@ -10,15 +10,15 @@
 	],
   "aliases": [
     {
-      "alias": "@price-per-unit-default-element",
+      "alias": "@element-definition-price-per-unit-default-element",
       "path": "components/default-element/default-element.component.ts"
     },
     {
-      "alias": "@price-per-unit-default-element-one-page",
+      "alias": "@element-definition-price-per-unit-default-element-one-page",
       "path": "components/default-element-one-page/default-element-one-page.component.ts"
     },
     {
-      "alias": "@price-per-unit-default-element-step-by-step",
+      "alias": "@element-definition-price-per-unit-default-element-step-by-step",
       "path": "components/default-element-step-by-step/default-element-step-by-step.component.ts"
     }
   ]

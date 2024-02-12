@@ -10,7 +10,7 @@
 	],
   "aliases": [
     {
-      "alias": "@selectbox-element",
+      "alias": "@element-definition-selectbox-element",
       "path": "components/selectbox-element/selectbox-element.component.ts"
     }
   ]

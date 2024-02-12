@@ -4,4 +4,4 @@ import { NgModule } from '@angular/core';
   declarations: [],
   imports: []
 })
-export class CatalogCustomsModule { }
+export class AptoCatalogFrontendCustomModule { }

@@ -10,8 +10,8 @@ import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
-import { AreaElementWrapperComponent } from '@area-element-wrapper';
-import { AreaElementComponent } from '@area-element';
+import { AreaElementWrapperComponent } from '@element-definition-area-element-wrapper';
+import { AreaElementComponent } from '@element-definition-area-element';
 
 @NgModule({
   declarations: [

@@ -11,7 +11,7 @@ import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { MatIconModule } from '@angular/material/icon';
-import { SelectboxElementComponent } from '@selectbox-element';
+import { SelectboxElementComponent } from '@element-definition-selectbox-element';
 
 @NgModule({
 	declarations: [

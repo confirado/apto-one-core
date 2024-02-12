@@ -10,11 +10,11 @@
 	],
   "aliases": [
     {
-      "alias": "@width-height-element-wrapper",
+      "alias": "@element-definition-width-height-element-wrapper",
       "path": "components/width-height-element-wrapper/width-height-element-wrapper.component.ts"
     },
     {
-      "alias": "@width-height-element",
+      "alias": "@element-definition-width-height-element",
       "path": "components/width-height-element/width-height-element.component.ts"
     }
   ]

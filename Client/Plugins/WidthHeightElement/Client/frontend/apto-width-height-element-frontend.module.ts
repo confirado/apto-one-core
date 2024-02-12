@@ -13,8 +13,8 @@ import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-f
 import { MatRippleModule } from '@angular/material/core';
 import { FullscreenOverlayContainer, OverlayContainer, OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { WidthHeightElementComponent } from '@width-height-element';
-import { WidthHeightElementWrapperComponent } from '@width-height-element-wrapper';
+import { WidthHeightElementComponent } from '@element-definition-width-height-element';
+import { WidthHeightElementWrapperComponent } from '@element-definition-width-height-element-wrapper';
 
 @NgModule({
 	declarations: [

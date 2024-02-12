@@ -10,7 +10,7 @@
 	],
   "aliases": [
     {
-      "alias": "@custom-text-element",
+      "alias": "@element-definition-custom-text-element",
       "path": "components/custom-text-element/custom-text-element.component.ts"
     }
   ]

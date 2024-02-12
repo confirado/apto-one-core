@@ -10,11 +10,11 @@
 	],
   "aliases": [
     {
-      "alias": "@area-element",
+      "alias": "@element-definition-area-element",
       "path": "components/area-element/area-element.component.ts"
     },
     {
-      "alias": "@area-element-wrapper",
+      "alias": "@element-definition-area-element-wrapper",
       "path": "components/area-element-wrapper/area-element-wrapper.component.ts"
     }
   ]

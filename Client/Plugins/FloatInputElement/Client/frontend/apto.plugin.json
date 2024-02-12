@@ -10,7 +10,7 @@
 	],
   "aliases": [
     {
-      "alias": "@float-input-element",
+      "alias": "@element-definition-float-input-element",
       "path": "components/float-input-element/float-input-element.component.ts"
     }
   ]

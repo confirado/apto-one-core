@@ -10,9 +10,9 @@ import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
-import { DefaultElementComponent } from '@price-per-unit-default-element';
-import { DefaultElementStepByStepComponent } from '@price-per-unit-default-element-step-by-step';
-import { DefaultElementOnePageComponent } from '@price-per-unit-default-element-one-page';
+import { DefaultElementComponent } from '@element-definition-price-per-unit-default-element';
+import { DefaultElementStepByStepComponent } from '@element-definition-price-per-unit-default-element-step-by-step';
+import { DefaultElementOnePageComponent } from '@element-definition-price-per-unit-default-element-one-page';
 
 @NgModule({
 	declarations: [

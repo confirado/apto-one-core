@@ -41,7 +41,7 @@ import { TextInputFieldComponent } from '@apto-base-frontend/components/text-inp
 import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
-import { BaseCustomsModule } from '@base-customs';
+import { AptoBaseFrontendCustomModule } from '@apto-base-frontend-custom-module';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -74,7 +74,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
-    BaseCustomsModule,
+    AptoBaseFrontendCustomModule,
   ],
   imports: [
     CommonModule,
@@ -97,7 +97,7 @@ RouterRegistry.registerRoutes(Routes);
     MatDialogModule,
     MatDividerModule,
     MatSliderModule,
-    BaseCustomsModule,
+    AptoBaseFrontendCustomModule,
   ],
 	providers: [
     ContentSnippetRepository,
