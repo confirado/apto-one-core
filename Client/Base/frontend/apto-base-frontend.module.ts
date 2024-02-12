@@ -18,21 +18,17 @@ import { MatSliderModule } from '@angular/material/slider';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { RouterRegistry } from '@apto-base-core/router/router-registry';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
-
 import { Routes } from '@apto-base-frontend/apto-base.routes';
 import { featureKey, reducers } from '@apto-base-frontend/store/feature';
-
 import { ShopEffects } from '@apto-base-frontend/store/shop/shop.effects';
 import { FrontendUserEffects } from '@apto-base-frontend/store/frontend-user/frontend-user.effects';
 import { ShopRepository } from '@apto-base-frontend/store/shop/shop.repository';
 import { FrontendUserRepository } from '@apto-base-frontend/store/frontend-user/frontend-user.repository';
 import { ContentSnippetRepository } from '@apto-base-frontend/store/content-snippets/content-snippet.repository';
 import { ContentSnippetPipe } from '@apto-base-frontend/pipes/content-snippet.pipe';
-
 import { BasketComponent } from '@apto-base-frontend/components/basket/basket.component';
 import { FooterComponent } from '@apto-base-frontend/components/footer/footer.component';
 import { FrontendComponent } from '@apto-base-frontend/components/frontend/frontend.component';
@@ -44,8 +40,8 @@ import { SelectFieldComponent } from '@apto-base-frontend/components/select-fiel
 import { TextInputFieldComponent } from '@apto-base-frontend/components/text-input-field/text-input-field.component';
 import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
-import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
+import { AptoBaseFrontendCustomModule } from '@apto-base-frontend-custom-module';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -78,6 +74,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
+    AptoBaseFrontendCustomModule,
   ],
   imports: [
     CommonModule,
@@ -100,6 +97,7 @@ RouterRegistry.registerRoutes(Routes);
     MatDialogModule,
     MatDividerModule,
     MatSliderModule,
+    AptoBaseFrontendCustomModule,
   ],
 	providers: [
     ContentSnippetRepository,

@@ -6,22 +6,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
-import { WidthHeightElementWrapperComponent } from './components/width-height-element-wrapper/width-height-element-wrapper.component';
-import { WidthHeightElementComponent } from './components/width-height-element/width-height-element.component';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { MatRippleModule } from '@angular/material/core';
 import { FullscreenOverlayContainer, OverlayContainer, OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
+import { WidthHeightElementComponent } from '@element-definition-width-height-element';
+import { WidthHeightElementWrapperComponent } from '@element-definition-width-height-element-wrapper';
 
 @NgModule({
 	declarations: [
     WidthHeightElementComponent,
-    WidthHeightElementWrapperComponent]
-  ,
+    WidthHeightElementWrapperComponent
+  ],
 	exports: [],
 	entryComponents: [],
   imports: [

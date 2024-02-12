@@ -7,5 +7,11 @@
 			"class": "AptoFloatInputElementFrontendModule",
 			"file": "apto-float-input-element-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@element-definition-float-input-element",
+      "path": "components/float-input-element/float-input-element.component.ts"
+    }
+  ]
 }

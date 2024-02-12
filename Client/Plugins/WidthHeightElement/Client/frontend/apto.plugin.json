@@ -7,5 +7,15 @@
 			"class": "AptoWidthHeightElementFrontendModule",
 			"file": "apto-width-height-element-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@element-definition-width-height-element-wrapper",
+      "path": "components/width-height-element-wrapper/width-height-element-wrapper.component.ts"
+    },
+    {
+      "alias": "@element-definition-width-height-element",
+      "path": "components/width-height-element/width-height-element.component.ts"
+    }
+  ]
 }
