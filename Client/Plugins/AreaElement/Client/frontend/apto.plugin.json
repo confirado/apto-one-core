@@ -7,5 +7,15 @@
 			"class": "AptoAreaElementFrontendModule",
 			"file": "apto-area-element-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@area-element",
+      "path": "components/area-element/area-element.component.ts"
+    },
+    {
+      "alias": "@area-element-wrapper",
+      "path": "components/area-element-wrapper/area-element-wrapper.component.ts"
+    }
+  ]
 }

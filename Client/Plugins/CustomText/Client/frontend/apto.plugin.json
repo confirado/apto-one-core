@@ -7,5 +7,11 @@
 			"class": "AptoCustomTextFrontendModule",
 			"file": "apto-custom-text-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@custom-text-element",
+      "path": "components/custom-text-element/custom-text-element.component.ts"
+    }
+  ]
 }

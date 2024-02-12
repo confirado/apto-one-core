@@ -11,10 +11,12 @@ import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { MatIconModule } from '@angular/material/icon';
-import { CustomTextElementComponent } from './components/custom-text-element/custom-text-element.component';
+import { CustomTextElementComponent } from '@custom-text-element';
 
 @NgModule({
-	declarations: [CustomTextElementComponent],
+	declarations: [
+    CustomTextElementComponent
+  ],
 	exports: [],
 	entryComponents: [],
   imports: [
