@@ -27,8 +27,13 @@ export class Product implements IPage {
     cy.dataCy('header_product-title').should('contain.text', 'Produkte');
   }
 
+  /**
+   * do not use underscore as separator as in that case on saving product it is later changed to hyphen in product "Kennung" field
+   *
+   * @param characterCount
+   */
   public static generateName(characterCount: number = 8) {
-    return 'product_' + CryptoService.generateRandomString(characterCount);
+    return 'product-' + CryptoService.generateRandomString(characterCount);
   }
 
   public static isCorrectPageContent(): void { }
@@ -64,6 +69,24 @@ export class Product implements IPage {
       Queries.FindPriceCalculators,
       Queries.FindShops,
       Queries.FindNextAvailablePosition,
+    ];
+  }
+
+  public static get editProductQueryList(): IRequestData[] {
+    return [
+      Queries.FindFilterProperties,
+      Queries.FindCategoryTree,
+      Queries.FindCustomerGroups,
+      Queries.FindPriceCalculators,
+      Queries.FindShops,
+      Queries.FindProduct,
+      Queries.FindProductSections,
+      Queries.FindProductRules,
+      Queries.FindProductComputedValues,
+      Queries.FindProductPrices,
+      Queries.FindProductDiscounts,
+      Queries.FindProductCustomProperties,
+      Queries.FindUsedCustomPropertyKeys,
     ];
   }
 
