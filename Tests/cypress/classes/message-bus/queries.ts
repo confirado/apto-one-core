@@ -160,4 +160,11 @@ export class Queries {
       payload: { query: 'FindUsedCustomPropertyKeys' },
     };
   }
+
+  public static get ListMediaFiles(): IRequestData {
+    return {
+      alias: 'ListMediaFiles',
+      payload: { query: 'ListMediaFiles' },
+    };
+  }
 }
