@@ -36,6 +36,35 @@ export class Product implements IPage {
     return 'product-' + CryptoService.generateRandomString(characterCount);
   }
 
+  public static saveNewButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.dataCy('dialog-actions_button-new-save');
+  }
+
+  public static saveEditButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.dataCy('dialog-actions_button-edit-save');
+  }
+
+  public static cancelButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.dataCy('dialog-actions_button-cancel');
+  }
+
+  public static saveAndInsertButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.dataCy('dialog-actions_button-save-and-insert');
+  }
+
+  public static saveAndCloseButton(): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.dataCy('dialog-actions_button-save-and-close');
+  }
+
+  /**
+   * do not use underscore as separator as in that case on saving product it is later changed to hyphen in product "Kennung" field
+   *
+   * @param characterCount
+   */
+  public static generateDescription(characterCount: number = 8) {
+    return 'product-desc-' + CryptoService.generateRandomString(characterCount);
+  }
+
   public static isCorrectPageContent(): void { }
 
   public static get initialQueryList(): IRequestData[] {
