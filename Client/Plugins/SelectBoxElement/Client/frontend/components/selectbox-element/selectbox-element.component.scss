@@ -65,6 +65,14 @@
         grid-area: buttons;
         @include buttons();
     }
+
+    // only a hotfix, remove after refactoring apto-select-box-field and apto-select-field component
+    ::ng-deep {
+        .select-field .container .select .selected-value-wrapper .selected-value.default,
+        .select-box-field .container .select .selected-value-wrapper .selected-value.default {
+            font-weight: 600 !important;
+        }
+    }
 }
 
 
