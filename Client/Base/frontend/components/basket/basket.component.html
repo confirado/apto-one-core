@@ -1,10 +1,7 @@
-<!-- Whole Basket Container -->
 <div class="whole-basket" *ngIf="connector$ | async as connector">
-    <!-- Loading Indicators -->
     <apto-loading-indicator *ngIf="configurationLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
     <apto-loading-indicator *ngIf="selectShopLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
 
-    <!-- Title Section -->
     <div class="title flex justify-between items-center">
         <h3>{{ csAptoBasket$ | async | contentSnippet: 'shoppingCartHeadline' }}</h3>
         <button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Close Sidebar">
@@ -12,53 +9,44 @@
         </button>
     </div>
 
-    <!-- Product List -->
     <div class="product-list">
         <div class="product" *ngFor="let basketItem of connector.basket.articles">
-            <!-- Product Image -->
             <div class="image" *ngIf="!basketItem.thumbnail"></div>
             <div class="image" *ngIf="basketItem.thumbnail" [ngStyle]="{'background-image': 'url(' + basketItem.thumbnail + ')'}"></div>
 
-            <!-- Product Content -->
             <div class="content">
                 <div>
                     <h5>{{ basketItem.quantity }}x {{ basketItem.name }}</h5>
                     <p>{{ basketItem.price }}</p>
                 </div>
                 <div class="delete">
-                    <!-- Delete Product Button -->
                     <mat-icon class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id, basketItem.name)">delete</mat-icon>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Summary Section -->
     <div class="summery flex justify-between">
         <h4 class="text-base color sum">{{ csAptoBasket$ | async | contentSnippet: 'sum' }}</h4>
         <h4 class="text-base color amount">{{ connector.basket.amount }}</h4>
     </div>
 
-    <!-- Buttons Section -->
     <div *ngIf="connector.url?.checkout || connector.url?.cart ||
               (csAptoBasket$ | async | contentSnippet: 'checkoutLink') ||
               (csAptoBasket$ | async | contentSnippet: 'cartLink')"
          class="buttons">
-        <!-- Checkout Button -->
         <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
            [href]="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
            color="primary" mat-flat-button target='_blank'>
             {{ csAptoBasket$ | async | contentSnippet: 'checkout' }}
         </a>
 
-        <!-- Cart Button -->
         <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
            [href]="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
            color="accent" mat-flat-button target='_blank'>
             {{ csAptoBasket$ | async | contentSnippet: 'cart' }}
         </a>
 
-        <!-- Clear Cart Button -->
         <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
             Warenkorb leeren
         </button>
