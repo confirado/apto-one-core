@@ -1,18 +1,14 @@
-// Importing global, common, form-inputs, and elements styles
 @import "globals";
 @import "common";
 @import "form-inputs";
 @import "elements";
 
-// Mixin for styling a box, with customizable padding and width based on screen size
 @mixin box($screen-size: 'mobile') {
-    // Styles for the box
     padding: 34px var(--element-gap) 30px var(--element-gap);
     width: 100%;
     display: flex;
     flex-direction: column;
 
-    // Adjustments based on screen size
     @if ($screen-size == 'mobile') {
         align-items: center;
     }
@@ -22,7 +18,6 @@
     }
 }
 
-// Mixin for styling an element within a box, with width adjustments for different screen sizes
 @mixin box-element($screen-size: 'mobile') {
     justify-items: center;
     margin-top: var(--element-gap);
@@ -36,9 +31,7 @@
     }
 }
 
-// Mixin for styling colors with customizable parameters
 @mixin colors($element-width: 80px, $color-box-width: 40px, $padding: 10px 10px, $checkbox: 22px) {
-    // Styles for the color element
     display: flex;
     align-items: center;
     border-radius: var(--border-radius-card);
@@ -48,12 +41,10 @@
     flex-direction: column;
     position: relative;
 
-    // Hover effect
     &:hover {
         background-color: rgba(0, 0, 0, 0.05);
     }
 
-    // Styles for the color box
     .box {
         display: flex;
         position: relative;
@@ -62,7 +53,6 @@
         border-radius: var(--border-radius-card);
         border: none;
 
-        // Styles for linear gradient box
         &.linear-gradient {
             @include linear-gradient();
         }
@@ -71,7 +61,6 @@
             display: none;
         }
 
-        // Styles for images inside the color box
         img {
             width: 100%;
             height: auto;
@@ -79,17 +68,15 @@
         }
     }
 
-    // Styles for the color name
     .name {
-        @include cut-long-text();
         text-align: center;
         width: 100%;
         font-size: 14px;
         font-weight: 500;
         margin-top: 7px;
+        overflow-wrap: break-word;
     }
 
-    // Styles for the selected state
     &.selected {
         .box {
             border: solid 2px var(--color-border-selected);
@@ -101,7 +88,6 @@
     }
 }
 
-// Styles for mat-radio-group
 mat-radio-group {
     display: flex;
     flex-direction: column;
@@ -119,54 +105,45 @@ mat-radio-group {
     }
 }
 
-// Styles for the main material picker element
 .material-picker-element {
-    // Selected state styles
+
     &.selected {
         border: 3px solid var(--color-border-dimensions);
         border-radius: var(--border-radius-card);
     }
 
-    // Description styling
     .header + .description:not(:empty) {
         margin-top: var(--element-gap);
     }
 
-    // Header styling
     .header {
         @include header();
         @include title();
 
         flex: 1;
-        padding-top: 2vh;
 
-        // Results display styling
         .results {
             display: flex;
             justify-content: center;
         }
     }
 
-    // Color Filter styling
     .color-filter {
         @include box();
 
         position: relative;
 
-        // Circle styling
         .circle {
             @include circle-checkbox(25px, 'inner');
             border: 2px solid var(--color-border-selected);
         }
 
-        // Available Colors styling
         .available-colors {
             margin-top: var(--element-gap);
             display: grid;
             grid-template-columns: 80px auto;
             grid-template-areas: "all-color other-colors";
 
-            // Elements styling
             .elements {
                 display: flex;
                 flex-wrap: wrap;
@@ -180,7 +157,6 @@ mat-radio-group {
                     grid-area: other-colors;
                 }
 
-                // Individual color element styling
                 .element {
                     @include colors(80px, 40px, 10px 10px, 15px);
                 }
@@ -188,16 +164,13 @@ mat-radio-group {
         }
     }
 
-    // Search and Price Container styling
     .search-price-container {
         @include box();
     }
 
-    // Properties styling
     .properties {
         @include box();
 
-        // Individual property element styling
         .element {
             @include box-element();
 
@@ -213,20 +186,17 @@ mat-radio-group {
         }
     }
 
-    // Filtered Materials styling
     .filtered-materials {
         @include box();
 
-        // Individual filtered material styling
         .elements {
             display: flex;
             flex-wrap: wrap;
-            margin-top: var(--element-gap);
             width: 100%;
 
             .element {
                 @include colors(135px, 95px, 10px 20px, 22px);
-                flex: 0 0 calc(25% - var(--element-gap));
+                flex: 0 0 calc(30% - var(--element-gap));
 
                 &:not(:last-child) {
                     margin-right: var(--element-gap);
@@ -248,14 +218,12 @@ mat-radio-group {
         }
     }
 
-    // Color Mix styling
     .color-mix {
         display: flex;
         flex-wrap: wrap;
 
         @include box();
 
-        // Picture styling
         .picture {
             margin-top: var(--element-gap);
 
@@ -264,17 +232,14 @@ mat-radio-group {
             }
         }
 
-        // Element styling
         .element {
             @include box-element();
         }
     }
 
-    // Color Order styling
     .color-order {
         @include box();
 
-        // Element styling
         .element {
             @include box-element();
 
@@ -288,22 +253,18 @@ mat-radio-group {
         }
     }
 
-    // Description styling
     .description {
         @include description();
     }
 
-    // Apply Button styling
     .apply-button {
         @include buttons();
         padding: var(--element-gap);
     }
 }
 
-// Media queries for tablets and larger screens
 @media only screen and (min-width: $mobile-max-width) {
     .material-picker-element {
-        // Header styling for tablet screens
         .header {
             @include header('tablet');
             @include title('tablet');
@@ -312,12 +273,10 @@ mat-radio-group {
             }
         }
 
-        // Color Filter styling for tablet screens
         .color-filter {
             @include box('tablet');
         }
 
-        // Search and Price Container styling for tablet screens
         .search-price-container {
             @include box('tablet');
 
@@ -328,16 +287,23 @@ mat-radio-group {
             justify-content: space-between;
         }
 
-        // Search Box styling for tablet screens
         .search-box {
             width: calc(67% - var(--element-gap)/2);
 
             .element {
                 margin-top: var(--element-gap);
+                display: flex;
+                align-items: center;
             }
         }
 
-        // Price Group styling for tablet screens
+        .clear-search-button {
+            margin-left: 0;
+            background: var(--color-accent);
+            border: var(--color-border-input);
+            border-radius: 0.5vh;
+        }
+
         .price-group {
             width: calc(33% - var(--element-gap)/2);
 
@@ -346,7 +312,6 @@ mat-radio-group {
             }
         }
 
-        // Properties styling for tablet screens
         .properties {
             @include box('tablet');
 
@@ -364,12 +329,10 @@ mat-radio-group {
             }
         }
 
-        // Filtered Materials styling for tablet screens
         .filtered-materials {
             @include box('tablet');
         }
 
-        // Color Mix styling for tablet screens
         .color-mix {
             @include box('tablet');
 
@@ -378,7 +341,6 @@ mat-radio-group {
             }
         }
 
-        // Color Order styling for tablet screens
         .color-order {
             @include box('tablet');
 
@@ -387,7 +349,6 @@ mat-radio-group {
             }
         }
 
-        // Apply Button styling for tablet screens
         .apply-button {
             @include buttons('tablet');
         }
