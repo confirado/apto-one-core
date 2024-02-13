@@ -1,5 +1,3 @@
-import { number } from 'mathjs';
-
 export class Table {
   private static initialSelector: string;
 
@@ -18,7 +16,7 @@ export class Table {
   }
 
   /**
-   * finds value in table
+   * finds value in tables with type "md-table"
    *
    * provide column number for fast search
    *
@@ -26,25 +24,60 @@ export class Table {
    * @param column provide column number ofr fast search
    */
   public static hasValue(text: string, column: number | null = null): typeof Table {
-    cy.get('md-table-container table tbody').within(() => {
-      let found = false;
+    cy.get(Table.initialSelector).should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        let found = false;
 
-      if (column === null) {
-        cy.get('tr').each($tr => {
-          cy.wrap($tr).find('td').each($td => {
-            const cellValue = $td.text().trim();
+        if (column === null) {
+          cy.get('tr').each($tr => {
+            cy.wrap($tr).find('td').each($td => {
+              const cellValue = $td.text().trim();
 
-            if (cellValue.includes(text)) {
-              found = true;
-              return false; // means break the loop if found
-            }
+              if (cellValue.includes(text)) {
+                found = true;
+                return false; // means break the loop if found
+              }
+            });
+          }).then(() => {
+            expect(found).to.be.true;
           });
-        }).then(() => {
-          expect(found).to.be.true;
-        });
-      } else {
-        cy.get('td:nth-child(' + column + ')').should('contain.text', text);
-      }
+        } else {
+          cy.get('td:nth-child(' + column + ')').should('contain.text', text);
+        }
+      });
+    });
+
+    return Table;
+  }
+
+  /**
+   * Table should not contain the given value
+   *
+   * @param text
+   * @param column
+   */
+  public static hasNotValue(text: string, column: number | null = null): typeof Table {
+    cy.get(Table.initialSelector).should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        let found = false;
+
+        if (column === null) {
+          cy.get('tr').each($tr => {
+            cy.wrap($tr).find('td').each($td => {
+              const cellValue = $td.text().trim();
+
+              if (cellValue.includes(text)) {
+                found = true;
+                return false; // means break the loop if found
+              }
+            });
+          }).then(() => {
+            expect(found).to.be.false;
+          });
+        } else {
+          cy.get('td:nth-child(' + column + ')').should('contain.text', text);
+        }
+      });
     });
 
     return Table;
