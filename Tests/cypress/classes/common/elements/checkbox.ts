@@ -62,14 +62,20 @@ export class Checkbox implements Element {
 
   // unique to checkbox methods
 
-  public static checked(): typeof Checkbox {
+  public static isChecked(): typeof Checkbox {
     cy.get(Checkbox.initialSelector).find('md-checkbox').should('have.class', 'md-checked');
 
     return Checkbox;
   }
 
-  public static unChecked(): typeof Checkbox {
+  public static isUnChecked(): typeof Checkbox {
     cy.get(Checkbox.initialSelector).find('md-checkbox').should('have.not.class', 'md-checked');
+
+    return Checkbox;
+  }
+
+  public static click(): typeof Checkbox {
+    cy.get(Checkbox.initialSelector).find('md-checkbox').click();
 
     return Checkbox;
   }
