@@ -33,7 +33,7 @@
                         [default]="element.element.definition.staticValues.defaultItem?.id"
                         [items]="items"
                         [formControl]="formElement"
-                        [placeholder]="(selectedItems ? selectedItems.toString() : '') || ((contentSnippet$ | async | contentSnippet: 'select.please-select'))"
+                        [placeholder]="(selectedItems ? selectedItems.toString() : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
                     >
                     </apto-select-box-field>
                     <apto-select-field
@@ -41,7 +41,7 @@
                         [asArray]="true"
                         [items]="items"
                         [formControl]="formElement"
-                        [default]="((contentSnippet$ | async | contentSnippet: 'select.please-select'))"
+                        [default]="(selectedItems[0].hasOwnProperty('name') ? (selectedItems[0].name | translate) : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
                     >
                     </apto-select-field>
                 </div>
