@@ -1,3 +1,5 @@
+import { TableActionTypes } from '../../enums/table-action-types';
+
 export class Table {
   private static initialSelector: string;
 
@@ -81,10 +83,9 @@ export class Table {
    * searches the row with the given unique text and if finds clicks the action button int ath row
    *
    * @param type
-   * @param uniqueValue
-   * @param selector
+   * @param uniqueValue value that we look in every table row and every cell
    */
-  public static clickAction(type: string, uniqueValue: any, selector: string): typeof Table{
+  public static action(type: TableActionTypes, uniqueValue: any): typeof Table {
     cy.get(Table.initialSelector).should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
@@ -92,12 +93,50 @@ export class Table {
             const cellValue = $td.text().trim();
 
             if (cellValue.includes(uniqueValue)) {
-              cy.wrap($tr).find('td:last-child').find(selector).click();
+              cy.wrap($tr).find('td:last-child').find(type).click();
               return false;
             }
           });
         })
        })
+    });
+
+    return Table;
+  }
+
+  public static selectRow(uniqueValue: any): typeof Table {
+    cy.get(Table.initialSelector).should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        cy.get('tr').each($tr => {
+          cy.wrap($tr).find('td').each($td => {
+            const cellValue = $td.text().trim();
+
+            if (cellValue.includes(uniqueValue)) {
+              cy.wrap($tr).click();
+              return false;
+            }
+          });
+        })
+      })
+    });
+
+    return Table;
+  }
+
+  public static selectCell(uniqueValue: any, columnNumber: number): typeof Table {
+    cy.get(Table.initialSelector).should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        cy.get('tr').each($tr => {
+          cy.wrap($tr).find('td').each($td => {
+            const cellValue = $td.text().trim();
+
+            if (cellValue.includes(uniqueValue)) {
+              cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').click();
+              return false;
+            }
+          });
+        })
+      })
     });
 
     return Table;

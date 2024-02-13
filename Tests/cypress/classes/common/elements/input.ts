@@ -61,4 +61,20 @@ export class Input implements Element {
 
     return Input;
   }
+
+  // custom methods
+
+  /**
+   * This returns value not Input !!!
+   */
+  public static getValue() {
+    return cy.get(Input.initialSelector).find('input').invoke('val');
+  }
+
+  public static writeValue(value: string | number | string[]): typeof Input {
+    cy.get(Input.initialSelector).find('input').clear().type(value.toString());
+
+    return Input;
+  }
+
 }

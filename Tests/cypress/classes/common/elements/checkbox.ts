@@ -74,6 +74,30 @@ export class Checkbox implements Element {
     return Checkbox;
   }
 
+  public static check(): typeof Checkbox {
+    cy.get(Checkbox.initialSelector).find('md-checkbox').then(($checkbox) => {
+      if (!$checkbox.hasClass('md-checked')) {
+        cy.wrap($checkbox).click();
+
+        Checkbox.isChecked();
+      }
+    });
+
+    return Checkbox;
+  }
+
+  public static unCheck(): typeof Checkbox {
+    cy.get(Checkbox.initialSelector).find('md-checkbox').then(($checkbox) => {
+      if ($checkbox.hasClass('md-checked')) {
+        cy.wrap($checkbox).click();
+
+        Checkbox.isUnChecked();
+      }
+    });
+
+    return Checkbox;
+  }
+
   public static click(): typeof Checkbox {
     cy.get(Checkbox.initialSelector).find('md-checkbox').click();
 
