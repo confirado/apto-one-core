@@ -94,7 +94,6 @@ mat-radio-group {
     align-items: flex-start;
     word-break: break-word;
     width: 100%;
-    margin-bottom: 2vh;
 
     mat-radio-button:nth-child(2) {
         margin-top: var(--element-gap);
@@ -120,8 +119,6 @@ mat-radio-group {
         @include header();
         @include title();
 
-        flex: 1;
-
         .results {
             display: flex;
             justify-content: center;
@@ -142,7 +139,6 @@ mat-radio-group {
             margin-top: var(--element-gap);
             display: grid;
             grid-template-columns: 80px auto;
-            grid-template-areas: "all-color other-colors";
 
             .elements {
                 display: flex;
@@ -197,10 +193,6 @@ mat-radio-group {
             .element {
                 @include colors(135px, 95px, 10px 20px, 22px);
                 flex: 0 0 calc(30% - var(--element-gap));
-
-                &:not(:last-child) {
-                    margin-right: var(--element-gap);
-                }
             }
 
             .placeholder {
@@ -294,14 +286,8 @@ mat-radio-group {
                 margin-top: var(--element-gap);
                 display: flex;
                 align-items: center;
+                flex: 0 0 calc(20% - var(--element-gap));
             }
-        }
-
-        .clear-search-button {
-            margin-left: 0;
-            background: var(--color-accent);
-            border: var(--color-border-input);
-            border-radius: 0.5vh;
         }
 
         .price-group {

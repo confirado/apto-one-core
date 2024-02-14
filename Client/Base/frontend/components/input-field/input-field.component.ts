@@ -33,6 +33,9 @@ export class InputFieldComponent implements ControlValueAccessor {
 	@Input() public fullWidth: boolean = false;
 	@Input() public width: string = '';
 
+  @Input()
+  public enableClear = true;
+
 	public formElement = new FormControl();
   public disabled: boolean = false;
 
@@ -146,5 +149,9 @@ export class InputFieldComponent implements ControlValueAccessor {
   private countDigitsAfterZero(number): number {
     const decimalPart = number.toString().split('.')[1];
     return !decimalPart ? 0 : decimalPart.replace(/0*$/, '').length;
+  }
+
+  public clear(): void {
+    this.formElement.setValue(null);
   }
 }

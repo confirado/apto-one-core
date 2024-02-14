@@ -28,6 +28,7 @@
     .container {
         grid-area: container;
         @include container();
+        @include clear-input();
 
         input {
             @include input();

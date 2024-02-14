@@ -30,6 +30,10 @@
                 <mat-icon>arrow_drop_down</mat-icon>
             </div>
         </div>
+
+        <div *ngIf="enableClear" class="clear-input" mat-ripple (click)="clear()">
+            <mat-icon>close</mat-icon>
+        </div>
     </div>
 
     <div class="hint" *ngIf="hint" [class.integer]="type === 'integer'">{{ hint }}</div>
