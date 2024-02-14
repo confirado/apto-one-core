@@ -51,4 +51,14 @@ export class Commands {
       },
     };
   }
+
+  public static get CopyProduct(): IRequestData {
+    return {
+      alias: 'CopyProduct',
+      payload: {
+        command: 'CopyProduct',
+        arguments: { }
+      },
+    };
+  }
 }

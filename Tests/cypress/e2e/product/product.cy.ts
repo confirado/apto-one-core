@@ -412,9 +412,7 @@ describe('Product', () => {
 
   it('Checks delete product', () => {
 
-    const productName = Product.generateName();
-
-    Product.createEmptyProduct(productName);
+    Product.createEmptyProduct(Product.generateName());
 
     // get the last product name in the list and delete it
     cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
@@ -458,6 +456,29 @@ describe('Product', () => {
 
   it('Checks copy product', () => {
 
+    Product.createEmptyProduct(Product.generateName());
+
+    cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
+
+      RequestHandler.registerInterceptions(Product.copyProductRequests);
+
+      Table.getByAttr('product-list')
+        .action(TableActionTypes.COPY, productName);
+
+      cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
+        // the last item in table should contain the product name
+        cy.dataCy('product-list').within(() => {
+          cy.get('table tbody').within(() => {
+            cy.get('tr:last-child td:nth-child(4)').should('contain.text', productName);
+
+            Product.deleteProductByName(productName);
+          });
+        });
+      });
+    });
   });
 
 

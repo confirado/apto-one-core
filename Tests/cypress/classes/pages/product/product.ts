@@ -10,6 +10,7 @@ import { Interception } from 'cypress/types/net-stubbing';
 import { Core } from '../../common/core';
 import { Table } from '../../common/elements/table';
 import { Select } from '../../common/elements/form/select';
+import { TableActionTypes } from '../../enums/table-action-types';
 
 export class Product implements IPage {
 
@@ -109,6 +110,46 @@ export class Product implements IPage {
       });
   }
 
+  public static deleteProductByName(productName: string) {
+    // get the last product name in the list and delete it
+    Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
+
+    // delete dialog should open
+    cy.get('md-dialog-actions').should('exist');
+
+    RequestHandler.registerInterceptions(Product.removeProductRequests);
+
+    cy.get('md-dialog-actions').find('button.md-confirm-button')
+      .should('exist').should('contain.text', 'Löschen')
+      .click();
+
+    cy.get('md-dialog-actions').should('not.exist');
+
+    // wait until delete requests are made
+    cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
+      // the last item in table should not contain the product name
+      cy.dataCy('product-list').within(() => {
+        cy.get('table tbody').within(() => {
+          cy.get('tr:last-child td:nth-child(4)').should('not.contain.text', productName);
+        });
+      });
+    });
+  }
+
+  public static copyProductByName(productName: string) {
+    Table.getByAttr('product-list').action(TableActionTypes.COPY, productName);
+
+    cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
+
+      // the last item in table should contain the product name
+      cy.dataCy('product-list').within(() => {
+        cy.get('table tbody').within(() => {
+          cy.get('tr:last-child td:nth-child(4)').should('contain.text', productName);
+        });
+      });
+    });
+  }
+
   public static isCorrectPageContent(): void { }
 
   public static get initialQueryList(): IRequestData[] {
@@ -190,6 +231,13 @@ export class Product implements IPage {
   public static get removeProductRequests(): IRequestData[] {
     return [
       Commands.RemoveProduct,
+      Queries.FindProductsByFilterPagination,
+    ];
+  }
+
+  public static get copyProductRequests(): IRequestData[] {
+    return [
+      Commands.CopyProduct,
       Queries.FindProductsByFilterPagination,
     ];
   }
