@@ -92,7 +92,7 @@ export class Product implements IPage {
           cy.get('md-dialog-actions').should('exist').then(() => {
 
             // after typing value error should dissapear
-            cy.get('[data-cy="product-name"]').type(name);
+            cy.dataCy('product-name').type(name);
             cy.get('.product-title h3').find('span.title-headline').should('contain.text', name);
 
             Select.getByAttr('product-price-calculator').select(dummies.defaultPriceCalculator);

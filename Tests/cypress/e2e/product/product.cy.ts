@@ -327,7 +327,7 @@ describe('Product', () => {
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 1);
 
               // after typing value error should dissapear
-              cy.get('[data-cy="product-name"]').type(productName1);
+              cy.dataCy('product-name').type(productName1);
               cy.get('.product-title h3').find('span.title-headline').should('contain.text', productName1);
 
               Product.saveNewButton().click();
