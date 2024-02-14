@@ -34,7 +34,7 @@ describe('Product', () => {
   beforeEach(() => {
     cy.fixture('dummies').then((data) => {
       dummies = data;
-    })
+    });
 
     /*  Yes!, we have to do this in every test as cypress removes all the information about page in each test, after each test we get a
         blank page pointing nowhere
@@ -260,7 +260,7 @@ describe('Product', () => {
   });
 
 
-  it('Checks that action buttons underneath', () => {
+  it('Checks product action buttons (bottom right)', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -323,7 +323,7 @@ describe('Product', () => {
 
               Product.saveNewButton().click();
 
-              // name should not have value and we should see browser popup shoing error
+              // name should not have value and we should see browser popup showing error
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 1);
 
               // after typing value error should dissapear
@@ -408,15 +408,52 @@ describe('Product', () => {
         ProductList.isProductLinkOk(selector);
       });
     });
-
-
-    // todo change interfaces, split into multiple small interfaces, write all methods into all interfaces
-    // todo delete product
-    // todo copy product
   });
 
   it('Checks delete product', () => {
 
+    const productName = Product.generateName();
+
+    Product.createEmptyProduct(productName);
+
+    // get the last product name in the list and delete it
+    cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
+      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
+
+      cy.get('md-dialog-actions').should('exist');
+      cy.get('h2.md-title').should('contain.text', 'Den gewählten Eintrag wirklich löschen?');
+      cy.get('.md-dialog-content-body p').should('contain.text', 'Das Löschen kann nicht rückgängig gemacht werden!');
+
+      // check cancel button
+      cy.get('md-dialog-actions').find('button.md-cancel-button')
+        .should('exist').should('contain.text', 'Abbrechen')
+        .click();
+      cy.get('md-dialog-actions').should('not.exist');
+
+      // check delete
+      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
+
+      RequestHandler.registerInterceptions(Product.removeProductRequests);
+
+      cy.get('md-dialog-actions').find('button.md-confirm-button')
+        .should('exist').should('contain.text', 'Löschen')
+        .click();
+
+      cy.get('md-dialog-actions').should('not.exist');
+
+      // wait until delete requests are made
+      cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
+        // the last item in table should not contain the product name
+        cy.dataCy('product-list').within(() => {
+          cy.get('table tbody').within(() => {
+            cy.get('tr:last-child td:nth-child(4)').should('not.contain.text', productName);
+          });
+        });
+      });
+    });
   });
 
   it('Checks copy product', () => {

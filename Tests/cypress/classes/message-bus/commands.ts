@@ -41,4 +41,14 @@ export class Commands {
       },
     };
   }
+
+  public static get RemoveProduct(): IRequestData {
+    return {
+      alias: 'RemoveProduct',
+      payload: {
+        command: 'RemoveProduct',
+        arguments: { }
+      },
+    };
+  }
 }

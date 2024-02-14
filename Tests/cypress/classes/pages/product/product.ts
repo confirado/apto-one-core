@@ -5,6 +5,11 @@ import { SIDEBAR_LEFT_ITEMS } from '../../../_support/constants/constants';
 import { Backend } from '../../common/backend';
 import { Commands } from '../../message-bus/commands';
 import { CryptoService } from '@apto-base-core/services/crypto-service';
+import { RequestHandler } from '../../requestHandler';
+import { Interception } from 'cypress/types/net-stubbing';
+import { Core } from '../../common/core';
+import { Table } from '../../common/elements/table';
+import { Select } from '../../common/elements/form/select';
 
 export class Product implements IPage {
 
@@ -63,6 +68,45 @@ export class Product implements IPage {
    */
   public static generateDescription(characterCount: number = 8) {
     return 'product-desc-' + CryptoService.generateRandomString(characterCount);
+  }
+
+  /**
+   * Creates empty product without making a lot o tests
+   *
+   * @param productName
+   */
+  public static createEmptyProduct(productName?: string|null) {
+
+    const name = productName ?? Product.generateName();
+
+    cy.fixture('dummies').then((data) => {
+      let dummies = data;
+
+      RequestHandler.registerInterceptions(Product.addProductQueryList);
+
+      // click the add product button
+      cy.dataCy('header_add-product-button').click();
+
+      cy.wait(RequestHandler.getAliasesFromRequests(Product.addProductQueryList))
+        .then(() => {
+          cy.get('md-dialog-actions').should('exist').then(() => {
+
+            // after typing value error should dissapear
+            cy.get('[data-cy="product-name"]').type(name);
+            cy.get('.product-title h3').find('span.title-headline').should('contain.text', name);
+
+            Select.getByAttr('product-price-calculator').select(dummies.defaultPriceCalculator);
+            RequestHandler.registerInterceptions(Product.saveProductRequests);
+            Product.saveNewButton().click();
+          });
+        });
+    });
+
+    cy.wait(RequestHandler.getAliasesFromRequests(Product.saveProductRequests))
+      .then(($responses: Interception[]) => {
+        Core.checkResponsesForError($responses);
+        Table.getByAttr('product-list').hasValue(name);
+      });
   }
 
   public static isCorrectPageContent(): void { }
@@ -137,6 +181,16 @@ export class Product implements IPage {
       Queries.FindProducts,
       Queries.FindCategories,
       Commands.AddProduct,
+    ];
+  }
+
+  /**
+   * We click on delete product button
+   */
+  public static get removeProductRequests(): IRequestData[] {
+    return [
+      Commands.RemoveProduct,
+      Queries.FindProductsByFilterPagination,
     ];
   }
 }
