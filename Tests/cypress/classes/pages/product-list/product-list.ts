@@ -50,7 +50,7 @@ export class ProductList implements IPage {
    *
    * @param productName
    */
-  public static hasProduct(productName: string): Cypress.Chainable<any> {
+  public static searchFindProduct(productName: string): Cypress.Chainable<any> {
 
     cy.get('apto-product-list').should('exist');
 
@@ -70,7 +70,7 @@ export class ProductList implements IPage {
    *
    * @param productName
    */
-  public static hasNotProduct(productName: string): Cypress.Chainable<any> {
+  public static searchNotFindProduct(productName: string): Cypress.Chainable<any> {
     cy.get('apto-product-list').should('exist');
 
     RequestHandler.registerInterceptions([Queries.FindProductsByFilter]);
@@ -80,6 +80,10 @@ export class ProductList implements IPage {
     return cy.wait(RequestHandler.getAliasesFromRequests([Queries.FindProductsByFilter])).then(() => {
       cy.get('.product-wrapper').should('have.length', 0);
     });
+  }
+
+  public static hasProduct(selector: string) {
+    cy.get(selector).should('exist');
   }
 
   public static hasProductPreviewImage(selector: string) {

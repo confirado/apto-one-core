@@ -38,7 +38,7 @@ describe('Product list', () => {
 
             // active products should be visible
             if (product.active) {
-              cy.get(selector).should('exist');
+              ProductList.hasProduct(selector)
             }
 
             // if product has image, it should not be broken

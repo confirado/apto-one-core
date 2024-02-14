@@ -8,6 +8,11 @@ import { Select } from '../../classes/common/elements/select';
 import { Checkbox } from '../../classes/common/elements/checkbox';
 import { Input } from '../../classes/common/elements/input';
 import { Textarea } from '../../classes/common/elements/textarea';
+import { ProductList } from '../../classes/pages/product-list/product-list';
+import { Table } from '../../classes/common/elements/table';
+import { TranslatedValue } from '../../classes/common/elements/custom/translated-value';
+import { MediaSelect } from '../../classes/common/elements/custom/media-select';
+import { TableActionTypes } from '../../classes/enums/table-action-types';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -17,10 +22,13 @@ import { Textarea } from '../../classes/common/elements/textarea';
 describe('Product', () => {
 
   var dummies = null;
+  var productId = '';
   var productName1 = '';
+  var productDescription1 = '';
 
   before(() => {
     productName1 = Product.generateName();
+    productDescription1 = Product.generateDescription();
   });
 
   beforeEach(() => {
@@ -69,11 +77,11 @@ describe('Product', () => {
 
               Checkbox.getByAttr('product-active')
                 .hasLabel('Aktiv')
-                .unChecked();
+                .isUnChecked();
 
               Checkbox.getByAttr('product-hidden')
                 .hasLabel('Versteckt')
-                .unChecked();
+                .isUnChecked();
 
               Input.getByAttr('product-identifier')
                 .hasLabel('Kennung:')
@@ -271,18 +279,18 @@ describe('Product', () => {
             cy.get('md-dialog-actions').should('exist').within(() => {
 
               // check that buttons are there
-              cy.dataCy('dialog-actions_button-cancel').should('contain.text', 'Abbrechen').should( 'be.visible');
-              cy.dataCy('dialog-actions_button-new-save').should('contain.text', 'Speichern').should( 'have.class', 'md-primary');
-              cy.dataCy('dialog-actions_button-save-and-insert').should('contain.text', 'Speichern und hinzufügen').should( 'be.visible');
+              Product.cancelButton().should('contain.text', 'Abbrechen').should( 'be.visible');
+              Product.saveNewButton().should('contain.text', 'Speichern').should( 'have.class', 'md-primary');
+              Product.saveAndInsertButton().should('contain.text', 'Speichern und hinzufügen').should( 'be.visible');
 
               // those 2 button are visible when we edit the product
-              cy.dataCy('dialog-actions_button-save-and-close').should( 'not.exist');
-              cy.dataCy('dialog-actions_button-edit-save').should( 'not.exist');
+              Product.saveAndCloseButton().should( 'not.exist');
+              Product.saveEditButton().should( 'not.exist');
 
               RequestHandler.registerInterceptions(Product.cancelProductsQueryList);
 
               // test cancel button
-              cy.dataCy('dialog-actions_button-cancel').click();
+              Product.cancelButton().click();
             });
           });
 
@@ -295,7 +303,7 @@ describe('Product', () => {
       });
   });
 
-  it.only('Checks create product is working', () => {
+  it('Checks create product is working', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -313,8 +321,7 @@ describe('Product', () => {
           .then(() => {
             cy.get('md-dialog-actions').should('exist').then(() => {
 
-              // save button click
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
 
               // name should not have value and we should see browser popup shoing error
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 1);
@@ -323,11 +330,11 @@ describe('Product', () => {
               cy.get('[data-cy="product-name"]').type(productName1);
               cy.get('.product-title h3').find('span.title-headline').should('contain.text', productName1);
 
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 0);
 
               // lets try again saving
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
 
               Select.getByAttr('product-price-calculator')
                 .hasError()
@@ -336,7 +343,7 @@ describe('Product', () => {
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 
               // save button click
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
             });
           });
       });
@@ -346,21 +353,73 @@ describe('Product', () => {
 
         Core.checkResponsesForError($responses);
 
-        cy.dataCy('product-list').should('exist').within(() => {
-
-          cy.get('md-table-container table tbody tr:last-child') // Select the last table row
-            .within(() => {
-              cy.get('td:nth-child(4)').should('contain.text', productName1);
-            });
-        });
+        // check that product is visible in product list page
+        Table.getByAttr('product-list').hasValue(productName1);
       });
   });
 
-  it('Checks product tabs right after creating it', () => {
+  it('Checks if product exist in product list page right after making it', () => {
+
+    // var productName1 = 'product-YgBii7tZ';
+
+    // goto product list page and search for newly created product in previous step
+    ProductList.visit();
+    ProductList.searchNotFindProduct(productName1);
+
+    RequestHandler.registerInterceptions(Product.editProductQueryList);
+    Product.visit();
+
+    // click on edit product button in product list page in backend
+    Table.getByAttr('product-list').action(TableActionTypes.EDIT, productName1);
+
+    // once edit product page is loaded
+    cy.wait(RequestHandler.getAliasesFromRequests(Product.editProductQueryList)).then(() => {
+
+      // read the product id
+      cy.get('.product-title').find('span.title-id').invoke('text').then((id: string) => {
+
+        productId = id.trim();
+
+        // make product active
+        Checkbox.getByAttr('product-active').check();
+
+        TranslatedValue.getByAttr('product-description').writeValue(productDescription1);
+        TranslatedValue.getByAttr('product-meta-title').writeValue(productName1);
+
+        // take product url value from "kennung"
+        Input.getByAttr('product-identifier').getValue().then((productIdentifier) => {
+          Input.getByAttr('product-url').writeValue(productIdentifier);
+        });
+
+        MediaSelect.getByAttr('product-preview-picture').select('logo.png');
+
+        // save product
+        // Product.saveEditButton().click({ force: true });
+        Product.saveAndCloseButton().click({ force: true });
+
+        const selector = `.product-wrapper[data-id="${productId}"]`;
+
+        // check that newly updated product has all updates we made
+        ProductList.visit();
+        ProductList.hasProduct(selector);
+        ProductList.hasProductPreviewImage(selector);
+        ProductList.hasProductTitle(selector);
+        ProductList.hasProductDescription(selector);
+        ProductList.isProductLinkOk(selector);
+      });
+    });
+
+
+    // todo change interfaces, split into multiple small interfaces, write all methods into all interfaces
+    // todo delete product
+    // todo copy product
+  });
+
+  it('Checks delete product', () => {
 
   });
 
-  it('Checks edit product', () => {
+  it('Checks copy product', () => {
 
   });
 
