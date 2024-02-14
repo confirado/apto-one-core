@@ -1,4 +1,6 @@
-export class TranslatedValue {
+import { ElementInterface } from '../../../interfaces/element-interface';
+
+export class TranslatedValue implements ElementInterface{
 
   private static initialSelector: string;
 

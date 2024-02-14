@@ -1,6 +1,6 @@
-import { Attributes, Element } from './element.interface';
+import { Attributes, ElementInterface } from '../../../interfaces/element-interface';
 
-export class Checkbox implements Element {
+export class Checkbox implements ElementInterface {
   private static initialSelector: string;
 
   public static getByAttr(selector: string): typeof Checkbox {

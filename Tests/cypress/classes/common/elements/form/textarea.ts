@@ -1,6 +1,6 @@
-import { Attributes, Element } from './element.interface';
+import { Attributes, ElementInterface } from '../../../interfaces/element-interface';
 
-export class Textarea implements Element {
+export class Textarea implements ElementInterface {
   private static initialSelector: string;
 
   public static getByAttr(selector: string): typeof Textarea {

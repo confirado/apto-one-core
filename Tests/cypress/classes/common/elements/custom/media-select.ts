@@ -2,8 +2,9 @@ import { Table } from '../table';
 import { TableActionTypes } from '../../../enums/table-action-types';
 import { RequestHandler } from '../../../requestHandler';
 import { Queries } from '../../../message-bus/queries';
+import { ElementInterface } from '../../../interfaces/element-interface';
 
-export class MediaSelect {
+export class MediaSelect implements ElementInterface {
 
   private static initialSelector: string;
 
