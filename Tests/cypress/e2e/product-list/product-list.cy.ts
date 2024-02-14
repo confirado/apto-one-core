@@ -46,9 +46,9 @@ describe('Product list', () => {
               ProductList.hasProductPreviewImage(selector);
             }
 
-            ProductList.hasTitle(selector);
-            ProductList.hasDescription(selector);
-            ProductList.isLinkOk(selector);
+            ProductList.hasProductTitle(selector);
+            ProductList.hasProductDescription(selector);
+            ProductList.isProductLinkOk(selector);
           });
         }
       });

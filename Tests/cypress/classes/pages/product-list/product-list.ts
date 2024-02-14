@@ -88,7 +88,7 @@ export class ProductList implements IPage {
     });
   }
 
-  public static hasTitle(selector: string, title: string|null = null) {
+  public static hasProductTitle(selector: string, title: string|null = null) {
     if (title) {
       cy.get(selector).find('.product-description').find('h3').should('contain.text', title);
     } else {
@@ -96,7 +96,7 @@ export class ProductList implements IPage {
     }
   }
 
-  public static hasDescription(selector: string, description: string|null = null) {
+  public static hasProductDescription(selector: string, description: string|null = null) {
     if (description) {
       cy.get(selector).find('.product-description').find('.description').should('contain.text', description);
     } else {
@@ -109,7 +109,7 @@ export class ProductList implements IPage {
    *
    * @param selector
    */
-  public static isLinkOk(selector: string) {
+  public static isProductLinkOk(selector: string) {
     const baseUrl = Cypress.env('baseUrl');
 
     cy.get(selector)
