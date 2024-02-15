@@ -69,7 +69,7 @@ export class Checkbox implements ElementInterface {
   }
 
   public static isUnChecked(): typeof Checkbox {
-    cy.get(Checkbox.initialSelector).find('md-checkbox').should('have.not.class', 'md-checked');
+    cy.get(Checkbox.initialSelector).find('md-checkbox').should('not.have.class', 'md-checked');
 
     return Checkbox;
   }

@@ -18,6 +18,18 @@ export class TranslatedValue implements ElementInterface{
     return TranslatedValue;
   }
 
+  public static hasValue(value: any): typeof TranslatedValue {
+    cy.get(TranslatedValue.initialSelector).find('input').should('have.value', value);
+
+    return TranslatedValue;
+  }
+
+  public static hasNotValue(value: any): typeof TranslatedValue {
+    cy.get(TranslatedValue.initialSelector).find('input').should('not.have.value', value);
+
+    return TranslatedValue;
+  }
+
   public static writeValue(value: string | number | string[]): typeof TranslatedValue {
     cy.get(TranslatedValue.initialSelector).find('input, textarea').clear().type(value.toString());
 
