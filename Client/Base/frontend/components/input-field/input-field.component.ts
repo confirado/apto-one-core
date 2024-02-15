@@ -25,6 +25,7 @@ export class InputFieldComponent implements ControlValueAccessor {
 	@Input() public placeholder: string | undefined = '';
 	@Input() public type: 'text' | 'integer' | 'float' | 'numeric' | 'password' = 'text';
   @Input() public hint: string = '';
+  @Input() public enableClear = false;
 
 	@Input() public step: number = 1;
   @Input() public min: number | undefined;
@@ -32,9 +33,6 @@ export class InputFieldComponent implements ControlValueAccessor {
 
 	@Input() public fullWidth: boolean = false;
 	@Input() public width: string = '';
-
-  @Input()
-  public enableClear = true;
 
 	public formElement = new FormControl();
   public disabled: boolean = false;
