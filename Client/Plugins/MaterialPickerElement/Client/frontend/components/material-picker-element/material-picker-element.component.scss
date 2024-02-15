@@ -139,6 +139,7 @@ mat-radio-group {
             margin-top: var(--element-gap);
             display: grid;
             grid-template-columns: 80px auto;
+            grid-template-areas: "all-color other-colors";
 
             .elements {
                 display: flex;
