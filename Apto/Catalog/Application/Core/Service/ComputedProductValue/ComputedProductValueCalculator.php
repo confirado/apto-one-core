@@ -118,6 +118,19 @@ class ComputedProductValueCalculator
      */
     private function orderCalculatedValues(array $values)
     {
+        // condition to move to calculated value
+        // formula has not computedValuePlaceholder || all computedValuePlaceholder already in $calculated
+        // break condition is a static counter 10000
+        $notCalculated = [
+            't1' => '1',
+            't2' => 't1',
+            't3' => 't2',
+            't4' => 't3',
+            't5' => 't3',
+        ];
+
+        $calculated = [];
+
         $orderedValues = [];
         $dependentValues = [];
         foreach ($values as $value) {
