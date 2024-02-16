@@ -10,7 +10,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement, ProgressState, ProgressStep, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement, ProgressState, ProgressStatuses, ProgressStep, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectElementValues, selectSectionIsValid } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
@@ -28,7 +28,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
 	public index: number | undefined;
 
 	@Input()
-	public status: string | undefined;
+	public status: ProgressStatuses | undefined;
 
 	@Input()
 	public description: string | undefined;
@@ -128,7 +128,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
    */
   protected isSectionSelectable(): boolean {
     if (this.product.keepSectionOrder) {
-      return this.status === 'COMPLETED' || this.status === 'CURRENT';
+      return this.status === ProgressStatuses.COMPLETED || this.status === ProgressStatuses.CURRENT;
     }
     return true;
   }

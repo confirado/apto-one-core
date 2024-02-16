@@ -5,7 +5,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem, ParameterStateTypes,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -98,7 +98,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 
 		if (section.id === currentStepId && section.repetition === currentRepetition) {
 			currentStep = {
-				status: 'CURRENT',
+				status: ProgressStatuses.CURRENT,
 				fulfilled,
 				description,
 				active,
@@ -107,7 +107,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			};
 		} else if (currentStep) {
 			afterSteps.push({
-				status: 'REMAINING',
+				status: ProgressStatuses.REMAINING,
 				fulfilled,
 				description,
 				active,
@@ -116,7 +116,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			});
 		} else {
 			beforeSteps.push({
-				status: 'COMPLETED',
+				status: ProgressStatuses.COMPLETED,
 				fulfilled,
 				description,
 				active,
