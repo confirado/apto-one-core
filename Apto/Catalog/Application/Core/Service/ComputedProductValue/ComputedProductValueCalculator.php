@@ -112,16 +112,6 @@ class ComputedProductValueCalculator
     }
 
     /**
-     * @param array $values
-     * @return array
-     * @throws CircularReferenceException
-     */
-    private function orderCalculatedValues(array $values)
-    {
-        return $this->orderCalculatedValuesRecursively($values, [], 0);
-    }
-
-    /**
      *  Orders calculated values such that later we can put them one after another into the formula and calculate
      *  resulting values for each of them
      *
@@ -149,7 +139,7 @@ class ComputedProductValueCalculator
      * @return array
      * @throws CircularReferenceException
      */
-    private function orderCalculatedValuesRecursively(array $values, array $calculatedNames = [], int $previousRecursionCount = 0): array
+    private function orderCalculatedValues(array $values, array $calculatedNames = [], int $previousRecursionCount = 0): array
     {
         if ($previousRecursionCount >= 1000) {
             throw new CircularReferenceException('Too many Loops, possible self/circular reference');
@@ -197,7 +187,7 @@ class ComputedProductValueCalculator
 
         // we have still variables that we don't know the values
         if (count($notCalculatedNames) > 0) {
-            $this->orderCalculatedValuesRecursively($notCalculated, $calculatedNames, ++$previousRecursionCount);
+            $this->orderCalculatedValues($notCalculated, $calculatedNames, ++$previousRecursionCount);
         } else {
             return $calculated;
         }
