@@ -434,6 +434,9 @@ class MessageBusController extends AbstractSaveExceptionController
             }
         } catch (Exception $e) {
             $duration = $start > 0 ? (microtime(true) - $start) : 0;
+
+            // todo if we get circular references the log list can be very long and and as a result very slow
+            // example: ComputedProductValueCalculator.php
             $exceptionUuid = $this->saveException($e);
             $response = ErrorMessageResponse::fromException(
                 $commandName,
