@@ -10,8 +10,8 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement, ProgressState, ProgressStatuses, ProgressStep, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectElementValues, selectSectionIsValid } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ProgressElement, ProgressState, ProgressStatuses, ProgressStep, SectionTypes, TempStateItem } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { selectTempState, selectElementValues, selectSectionIsValid } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 
@@ -53,6 +53,7 @@ export class SbsStepComponent implements OnInit, OnDestroy {
   public panelOpenState: boolean = false;
   public isActive: boolean = false;
   public sectionIsValid: boolean = false;
+  protected tempState: TempStateItem[];
   protected readonly SectionTypes = SectionTypes;
   private destroy$ = new Subject<void>();
 
@@ -84,6 +85,17 @@ export class SbsStepComponent implements OnInit, OnDestroy {
     this.store.select(selectSectionIsValid(this.section.section.id, this.section.section.repetition)).pipe(
       takeUntil(this.destroy$)
     ).subscribe(next => this.sectionIsValid = next);
+
+    this.store.select(selectTempState).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((next) => {
+      this.tempState = next;
+    });
+  }
+
+  protected isSectionTouched(sectionId: string, repetition: number) {
+    const tempItem = this.tempState.find(item => item.sectionId === sectionId && item.repetition === repetition);
+    return tempItem?.touched ?? false;
   }
 
   public setStep(section: ProgressStep | undefined, seoUrl: string, isStepByStep: boolean): void {

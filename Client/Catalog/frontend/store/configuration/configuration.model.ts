@@ -20,6 +20,12 @@ export enum ParameterStateTypes {
   REPETITIONS = 'repetitions',
 }
 
+export interface TempStateItem {
+  sectionId: string;
+  repetition: number;
+  touched: boolean
+}
+
 export interface HumanReadableState {
   elementId: string;
   repetition: number;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { setNextStep, setPrevStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { setNextStep, setPrevStep, setSectionTouched } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   ElementState,
   ProgressElement,
@@ -14,6 +14,7 @@ import {
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
+import { distinctUntilChanged } from 'rxjs';
 
 @Component({
 	selector: 'apto-sbs-elements',
@@ -40,7 +41,9 @@ export class SbsElementsComponent implements OnInit{
       this.currentStateElements = next;
     });
 
-		this.progressState$.subscribe((next: ProgressState) => {
+		this.progressState$.pipe(
+      distinctUntilChanged(),
+    ).subscribe((next: ProgressState) => {
 			this.progressState = next;
 
       this.stepPositions = [];
@@ -48,6 +51,18 @@ export class SbsElementsComponent implements OnInit{
         this.stepPositions.push(step.section.position);
       }
 		});
+
+    /*  With this we set as touched first section as on page load we are on that section. this is needed otherwise when go to next section, first
+        section remains as untouched, and we can not then display the correct icon for it.   */
+    this.store.dispatch(
+      setSectionTouched({
+        payload: {
+          sectionId: this.progressState.steps[0].section.id,
+          repetition: this.progressState.steps[0].section.repetition,
+          touched: true,
+        },
+      })
+    );
   }
 
   protected get currentPosition(): number {
@@ -80,6 +95,16 @@ export class SbsElementsComponent implements OnInit{
         id: step.section.id, repetition: step.section.repetition,
       },
     }));
+
+    this.store.dispatch(
+      setSectionTouched({
+        payload: {
+          sectionId: step.section.id,
+          repetition: step.section.repetition,
+          touched: true,
+        },
+      })
+    )
 	}
 
 	public nextStep(state: ProgressState): void {
@@ -90,6 +115,16 @@ export class SbsElementsComponent implements OnInit{
         id: step.section.id, repetition: step.section.repetition,
       },
     }));
+
+    this.store.dispatch(
+      setSectionTouched({
+        payload: {
+          sectionId: step.section.id,
+          repetition: step.section.repetition,
+          touched: true,
+        },
+      })
+    )
 	}
 
   protected get sectionIndex(): string {

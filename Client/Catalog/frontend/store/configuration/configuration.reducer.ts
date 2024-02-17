@@ -12,7 +12,7 @@ import {
   setNextStep,
   setPrevPerspective,
   setPrevStep,
-  setQuantity,
+  setQuantity, setSectionTouched,
   setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
@@ -22,7 +22,7 @@ import {
   HumanReadableState,
   PartsListPart,
   RenderImage,
-  StatePrice,
+  StatePrice, TempStateItem,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
@@ -40,6 +40,7 @@ export interface ConfigurationState {
 	quantity: number;
   hideOnePage: boolean;
   partsList: PartsListPart[];
+  tempState: TempStateItem[]
 }
 
 export const configurationInitialState: ConfigurationState = {
@@ -61,6 +62,7 @@ export const configurationInitialState: ConfigurationState = {
 	quantity: 1,
   hideOnePage: false,
   partsList: [],
+  tempState: [],
 };
 
 const _configurationReducer = createReducer(
@@ -269,6 +271,30 @@ const _configurationReducer = createReducer(
       currentStep: action.payload,
     }
 	}),
+  on(setSectionTouched, (state, action) => {
+    const { sectionId, repetition, touched } = action.payload;
+
+    let updatedTempState = state.tempState ? [...state.tempState] : [];
+    let found = false;
+
+    // if section found in temp state then update it, otherwise add it to tempState array
+    updatedTempState = updatedTempState.map(item => {
+      if (item.sectionId === sectionId && item.repetition === repetition) {
+        found = true;
+        return { ...item, touched };
+      }
+      return item;
+    });
+
+    if (!found) {
+      updatedTempState.push({ sectionId, repetition, touched });
+    }
+
+    return {
+      ...state,
+      tempState: updatedTempState
+    };
+  }),
   on(setHideOnePage, (state, action) => ({
     ...state,
     hideOnePage: action.payload
