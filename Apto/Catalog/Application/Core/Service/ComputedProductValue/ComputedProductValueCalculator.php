@@ -112,98 +112,80 @@ class ComputedProductValueCalculator
     }
 
     /**
-     *  Orders calculated values such that later we can put them one after another into the formula and calculate
-     *  resulting values for each of them
-     *
-     *  first of course we put variables that have no reference to other variables, then variables that have reference
-     *  to these "no reference" variables, then the others that have reference to these, and so on.
-     *  We check also for circular references. We can have 3 types of circular references:
-     *
-     *  1. element references himself, element with the name t3 has value like: {t3} + 5
-     *  2. element has reference to element which in turn has back reference on him:
-     *       t3 element has value: {t5}
-     *       t5 has value {t3}
-     *  3. when element has reference on element that has reference to other element and that other
-     *     element has reference back to current element:
-     *       t3 element has value: {t6}
-     *       t6 has value: {t5}
-     *       t5 has value (reference back to t3): {t3}
-     *
-     *  first type we can check directly, but other 2 we check indirectly by counting the number of recursions, because
-     *  if that kind of circular reference happens/exists, we get an infinite loop.
-     *
      * @param array $values
-     * @param array $calculatedNames
-     * @param int   $previousRecursionCount
-     *
      * @return array
      * @throws CircularReferenceException
      */
-    private function orderCalculatedValues(array $values, array $calculatedNames = [], int $previousRecursionCount = 0): array
+    private function orderCalculatedValues(array $values)
     {
-        if ($previousRecursionCount >= 1000) {
-            throw new CircularReferenceException('Too many Loops, possible self/circular reference');
-        }
+        // condition to move to calculated value
+        // formula has not computedValuePlaceholder || all computedValuePlaceholder already in $calculated
+        // break condition is a static counter 10000 or $notCalculated array is empty
+//        $notCalculated = [
+//            't1' => '1',
+//            't2' => 't1',
+//            't3' => 't2',
+//            't4' => 't3',
+//            't5' => 't3',
+//        ];
+//
+//        $calculated = [];
 
-        $calculated = [];
-        $notCalculated = [];
-        $notCalculatedNames = []; // holds the names of the variables that we did not manage to calculate values
-
+        $orderedValues = [];
+        $dependentValues = [];
         foreach ($values as $value) {
             $variables = $this->getNestedVariables($value);
-
-            // if value does not contain variable names
-            if (count($variables) === 0) {
-                $calculated[] = $value;
-                $calculatedNames[] = $value->getName();
+            if (sizeof($variables[0]) > 0) {
+                $dependentValues[] = $value;
             }
             else {
-                $variablesInVariable = 0;
-                foreach ($variables as $variable) {
-                    $variableName = str_replace('{', '', str_replace('}', '', $variable));
-
-                    // first case of circular reference element references himself:
-                    if ($value->getName() === $variableName) {
-                        throw new CircularReferenceException('Circular reference detected: ' . $value->getName());
-                    }
-
-                    if (in_array($variableName, $calculatedNames)) {
-                        $variablesInVariable++;
-                    }
-                }
-
-                /*  if we know all values for all variables the current variable holds reference ex.: t3 = {t1} + {t5}, and
-                    both t1 and t5 are know and are saved into $calculatedNames   */
-                if ($variablesInVariable === count($variables)) {
-                    $calculated[] = $value;
-                    $calculatedNames[] = $value->getName();
-                }
-                else {
-                    $notCalculated[] = $value;
-                    $notCalculatedNames[] = $variableName;
-                }
+                $orderedValues[] = $value;
             }
         }
+        return $this->orderDependentValues($dependentValues, $orderedValues);
+    }
 
-        // we have still variables that we don't know the values
-        if (count($notCalculatedNames) > 0) {
-            $this->orderCalculatedValues($notCalculated, $calculatedNames, ++$previousRecursionCount);
-        } else {
-            return $calculated;
+    /**
+     * @param $dependentValues
+     * @param $orderedValues
+     * @param int $counter
+     * @return array
+     * @throws CircularReferenceException
+     */
+    private function orderDependentValues($dependentValues, $orderedValues, int $counter = 0): array
+    {
+        // TODO: Currently fires on 100 Loops, there must be a better way to detect self/circular references
+        if ($counter === 100) {
+            throw new CircularReferenceException('Too many Loops, possible self/circular reference');
+        }
+        foreach ($dependentValues as $key => $value) {
+            $variables = $this->getNestedVariables($value);
+            $calculatedCount = 0;
+            foreach ($variables[0] as $variable) {
+                foreach ($orderedValues as $orderedValue) {
+                    $variableName = str_replace('{', '', str_replace('}', '', $variable));
+                    if ($variableName === $orderedValue->getName()) {
+                        $calculatedCount++;
+                    }
+                }
+            }
+            if ($calculatedCount === sizeof($variables[0])) {
+                $orderedValues[] = $value;
+                unset($dependentValues[$key]);
+                $dependentValues = array_values($dependentValues);
+            }
+        }
+        if (sizeof($dependentValues) === 0) {
+            return $orderedValues;
+        }
+        else {
+            $counter++;
+            return $this->orderDependentValues($dependentValues, $orderedValues, $counter);
         }
     }
 
     /**
-     * Return array containing all variables name from the formula
-     *
-     * Example return for input "{t1} + {t2}":
-     * Array (
-     *   [0] => {t1}
-     *   [1] => {t2}
-     * )
-     *
      * @param ComputedProductValue $value
-     *
      * @return array
      */
     private function getNestedVariables(ComputedProductValue $value)
@@ -211,8 +193,7 @@ class ComputedProductValueCalculator
         $pattern = '/{[^_]*?}/'; // search for {name}, where name does not contain any underscore (_)
         $variables = [];
         preg_match_all($pattern, $value->getFormula(), $variables);
-
-        return $variables[0];
+        return $variables;
     }
 
     /**
