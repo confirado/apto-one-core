@@ -187,7 +187,7 @@ class ComputedProductValueCalculator
 
         // we have still variables that we don't know the values
         if (count($notCalculatedNames) > 0) {
-            $this->orderCalculatedValues($notCalculated, $calculatedNames, ++$previousRecursionCount);
+            return $this->orderCalculatedValues($notCalculated, $calculatedNames, ++$previousRecursionCount);
         } else {
             return $calculated;
         }
