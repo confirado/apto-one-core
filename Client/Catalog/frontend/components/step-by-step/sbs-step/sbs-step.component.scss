@@ -96,6 +96,7 @@ mat-icon {
 	font-size: small;
 	color: var(--color-text);
 	font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .step {
@@ -113,6 +114,7 @@ mat-icon {
 
     .title {
         font-size: 18px;
+        margin-bottom: 4px;
     }
 
     .element-title,
@@ -121,6 +123,10 @@ mat-icon {
         font-weight: 500;
         color: var(--color-text);
         opacity: 0.64;
+    }
+
+    .element-value {
+        font-weight: 300;
     }
 }
 

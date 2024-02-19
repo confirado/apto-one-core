@@ -41,7 +41,7 @@
                         [asArray]="true"
                         [items]="items"
                         [formControl]="formElement"
-                        [default]="(selectedItems[0].hasOwnProperty('name') ? (selectedItems[0].name | translate) : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
+                        [default]="(selectedItems.length > 0 && selectedItems[0].hasOwnProperty('name') ? (selectedItems[0].name | translate) : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
                     >
                     </apto-select-field>
                 </div>

@@ -82,7 +82,11 @@ export class SbsElementsComponent implements OnInit{
     }));
 	}
 
-	public nextStep(state: ProgressState): void {
+	public nextStep(state: ProgressState, nextStepScrollTarget: HTMLElement): void {
+    if (nextStepScrollTarget) {
+      nextStepScrollTarget.scrollIntoView({behavior: 'smooth'});
+    }
+
     const step = state.afterSteps.length ? state.afterSteps[0] : state.currentStep;
 
     this.store.dispatch(setNextStep({

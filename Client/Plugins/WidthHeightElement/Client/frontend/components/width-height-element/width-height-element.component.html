@@ -54,6 +54,8 @@
                         [step]="stepHeight"
                         [min]="element.element.definition.properties.height?.[0]?.minimum"
                         [max]="element.element.definition.properties.height?.[0]?.maximum"
+                        [increaseStep]="this.increaseStep"
+                        [decreaseStep]="this.decreaseStep"
                     >
                     </apto-input-field>
 
@@ -99,6 +101,8 @@
                         [step]="stepWidth"
                         [min]="element.element.definition.properties.width?.[0]?.minimum"
                         [max]="element.element.definition.properties.width?.[0]?.maximum"
+                        [increaseStep]="this.increaseStep"
+                        [decreaseStep]="this.decreaseStep"
                     >
                     </apto-input-field>
 

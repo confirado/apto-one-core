@@ -1,6 +1,6 @@
 <ng-container *ngIf="progressState$ | async as progressState">
 	<ng-container *ngIf="progressState.currentStep">
-		<div class="headline" [class.no-image]="!progressState.currentStep.section.previewImage">
+        <div #nextStepScrollTarget class="headline" [class.no-image]="!progressState.currentStep.section.previewImage">
 			<apto-section-picture
 				*ngIf="progressState.currentStep.section.previewImage"
 				class="image"
@@ -39,7 +39,7 @@
 			<button
 				*ngIf="!lastSection(progressState)"
 				[disabled]="progressState.currentStep.section.isMandatory && !progressState.currentStep.fulfilled"
-				(click)="nextStep(progressState)"
+				(click)="nextStep(progressState, nextStepScrollTarget)"
 				color="primary"
 				mat-flat-button
 			>
