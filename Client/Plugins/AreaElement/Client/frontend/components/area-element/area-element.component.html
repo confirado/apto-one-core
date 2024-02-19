@@ -45,6 +45,8 @@
                         [step]="element.element.definition.properties['field_' + i][0].step"
                         [min]="element.element.definition.properties['field_'+i][0].minimum"
                         [max]="element.element.definition.properties['field_'+i][0].maximum"
+                        [increaseStep]="this.increaseStep"
+                        [decreaseStep]="this.decreaseStep"
                     ></apto-input-field>
 
                     <apto-select-field
