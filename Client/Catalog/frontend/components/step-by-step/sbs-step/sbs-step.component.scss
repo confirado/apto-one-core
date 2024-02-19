@@ -113,6 +113,7 @@ mat-icon {
 
     .title {
         font-size: 18px;
+        margin-bottom: 4px;
     }
 
     .element-title,
@@ -121,6 +122,14 @@ mat-icon {
         font-weight: 500;
         color: var(--color-text);
         opacity: 0.64;
+    }
+
+    .element-value {
+        font-weight: 300;
+    }
+
+    .element-value:last-child {
+        margin-bottom: 4px;
     }
 }
 
