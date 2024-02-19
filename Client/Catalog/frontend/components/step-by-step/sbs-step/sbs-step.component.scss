@@ -96,6 +96,7 @@ mat-icon {
 	font-size: small;
 	color: var(--color-text);
 	font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .step {
@@ -126,10 +127,6 @@ mat-icon {
 
     .element-value {
         font-weight: 300;
-    }
-
-    .element-value:last-child {
-        margin-bottom: 4px;
     }
 }
 
