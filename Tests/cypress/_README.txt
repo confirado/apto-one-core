@@ -13,7 +13,7 @@ mac or windows direct installs.
     Dont forget Linux Prerequisites:
         https://docs.cypress.io/guides/getting-started/installing-cypress#Linux-Prerequisites
 
-2.  Install [x-server] from
+2.  Install x-server from
 
         https://sourceforge.net/projects/vcxsrv/
 
@@ -87,7 +87,7 @@ should begin with prefix "tests/" followed the customer name. Example: "tests/ap
 Folder structure
 ------------------------------------------------------------------------------------------------------------------------
 
-We 3 locations to look for cypress files:
+We have 3 locations to look for cypress files:
 
     1. configuration file: cypress.config.ts
 
@@ -95,7 +95,7 @@ We 3 locations to look for cypress files:
 
     3. component test (we dont have now) should be written in component folder together with component/.ts/.html/.sass files.
 
-The most interesting is "Tests" folder are e2e and classes folders. in e2e we write our end-to-end tests in cypress,
+The most interesting is "Tests" folder are the 'e2e' and 'classes' folders. In e2e we write our end-to-end tests in cypress,
 in classes folder we have our classes do some test common tests to prevent code duplication.
 
 
@@ -119,13 +119,13 @@ tests and so one.
 classes folder
 -------------------------------------------------------------
 
-As said we write classes to prevent code duplication for our tests. We try to name classes similar to what they test or
-prevent code duplication. for example, we have product class that contains methods that are used in product page testing
-in e2e folder. classes that are for page testing are grouped into pages folder.
+As said, we write classes to prevent code duplication for our tests. We try to name classes similar to what they test or
+prevent code duplication. For example, we have product class that contains methods that are used in product page testing
+in e2e folder. Classes that are for page testing are grouped into pages folder.
 
-In commmon folder as the name suggests we have classes that can be used not only in one page but in many. Like in our
+In common folder as the name suggests we have classes that can be used not only in one page but in many. Like in our
 main application here we have also divided all common methods into 3 different classes: backend, core, frontend (you
-can guess already why). in backend we have methods that are for backend testing only, in frontend only for frontend and
+can guess already why). In backend we have methods that are for backend testing only, in frontend only for frontend and
 in core methods that can be used both in frontend and in backend.
 
 In elements folder we have classes for testing small pieces of code like form inputs, tables, some custom components
@@ -163,7 +163,7 @@ wait for it and create alias for it with:
 Testing form inputs
 -------------------------------------------------------------
 
-For testing form input we have special classes in "src/apto-one-core/Tests/cypress/classes/common/elements/form". All
+For testing form inputs we have special classes in "src/apto-one-core/Tests/cypress/classes/common/elements/form". All
 methods here are written so that you can chain them.
 
 Example "Input":
@@ -180,7 +180,7 @@ selectbox:
         .attributes({'have.attr': 'required'});
 
 
-We can not only test but also perform some actions on form inputs. this selects from selectbox given value.
+We can not only test but also perform some actions on form inputs. this selects from selectbox the given value.
 
     Select.getByAttr('product-price-calculator')
         .select(dummies.defaultPriceCalculator);
