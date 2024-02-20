@@ -133,19 +133,19 @@ class ComputedProductValueCalculator
      *  if that kind of circular reference happens/exists, we get an infinite loop.
      *
      * @param array $values
+     * @param array $calculated
      * @param array $calculatedNames
      * @param int   $previousRecursionCount
      *
      * @return array
      * @throws CircularReferenceException
      */
-    private function orderCalculatedValues(array $values, array $calculatedNames = [], int $previousRecursionCount = 0): array
+    private function orderCalculatedValues(array $values, array $calculated = [], array $calculatedNames = [], int $previousRecursionCount = 0): array
     {
         if ($previousRecursionCount >= 1000) {
             throw new CircularReferenceException('Too many Loops, possible self/circular reference');
         }
 
-        $calculated = [];
         $notCalculated = [];
         $notCalculatedNames = []; // holds the names of the variables that we did not manage to calculate values
 
@@ -187,7 +187,7 @@ class ComputedProductValueCalculator
 
         // we have still variables that we don't know the values
         if (count($notCalculatedNames) > 0) {
-            return $this->orderCalculatedValues($notCalculated, $calculatedNames, ++$previousRecursionCount);
+            return $this->orderCalculatedValues($notCalculated, $calculated, $calculatedNames, ++$previousRecursionCount);
         } else {
             return $calculated;
         }
