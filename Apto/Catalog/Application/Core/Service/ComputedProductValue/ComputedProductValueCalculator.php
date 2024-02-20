@@ -180,7 +180,7 @@ class ComputedProductValueCalculator
                 }
                 else {
                     $notCalculated[] = $value;
-                    $notCalculatedNames[] = $variableName;
+                    $notCalculatedNames[] = $value->getName();
                 }
             }
         }
