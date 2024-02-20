@@ -2,7 +2,7 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import {
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments, HumanReadableState, PartsListPart,
+  GetConfigurationStateArguments, HumanReadableState, PartsListPart, TempStateItem,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -38,6 +38,7 @@ export enum ConfigurationActionTypes {
   FetchPartsList = '[Configuration] Fetch Parts List',
   FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
   HideLoadingFlag = '[Configuration] hide loading flag',
+  SetSectionTouched = '[Configuration] Set Section Touched',
 }
 
 export const hideLoadingFlagAction = createAction(ConfigurationActionTypes.HideLoadingFlag);
@@ -175,3 +176,5 @@ export const onError = createAction(ConfigurationActionTypes.OnError, props<{ me
 
 export const fetchPartsList = createAction(ConfigurationActionTypes.FetchPartsList);
 export const fetchPartsListSuccess = createAction(ConfigurationActionTypes.FetchPartsListSuccess, props<{ payload: PartsListPart[] }>());
+
+export const setSectionTouched = createAction(ConfigurationActionTypes.SetSectionTouched, props<{ payload: TempStateItem }>());

@@ -5,7 +5,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem, ParameterStateTypes,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -31,6 +31,8 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 
 	return description;
 }
+
+export const selectTempState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.tempState);
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
   const cSections = state.configuration.state.sections.filter((section) => !section.hidden && (!section.disabled || !state.product.product.keepSectionOrder));
@@ -98,7 +100,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 
 		if (section.id === currentStepId && section.repetition === currentRepetition) {
 			currentStep = {
-				status: 'CURRENT',
+				status: ProgressStatuses.CURRENT,
 				fulfilled,
 				description,
 				active,
@@ -107,7 +109,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			};
 		} else if (currentStep) {
 			afterSteps.push({
-				status: 'REMAINING',
+				status: ProgressStatuses.REMAINING,
 				fulfilled,
 				description,
 				active,
@@ -116,7 +118,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			});
 		} else {
 			beforeSteps.push({
-				status: 'COMPLETED',
+				status: ProgressStatuses.COMPLETED,
 				fulfilled,
 				description,
 				active,
@@ -445,26 +447,21 @@ export const selectSectionIsValid = (sectionId: string, repetition: number) => c
 });
 
 function sectionIsValid(section, elements) {
-  // check disabled section
+  // if section is disabled we consider it as valid, so that we can go to the next sections
   if (section.disabled === true) {
     return true;
   }
 
-  // check allow multiple section
   if (section.multiple === true) {
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      if (
-        element.disabled === false &&
-        element.active === false &&
-        element.mandatory === true
-      ) {
+    for (let element of elements) {
+      // all mandatory elements in the section that are not disabled must be selected, otherwise we consider the whole section as invalid
+      if (element.disabled === false && element.mandatory === true && element.active === false) {
         return false;
       }
     }
   }
 
-  // check section mandatory field
+  // if section is mandatory then it must be selected
   if (section.mandatory === true && section.active === false) {
     return false;
   }

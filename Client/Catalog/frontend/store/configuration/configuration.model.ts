@@ -1,6 +1,12 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { Element, Section } from '@apto-catalog-frontend/store/product/product.model';
 
+export enum ProgressStatuses {
+  CURRENT = 'CURRENT',
+  REMAINING = 'REMAINING',
+  COMPLETED = 'COMPLETED',
+}
+
 // eslint-disable-next-line no-shadow
 export enum SectionTypes {
   STATISCH = 'Statisch',
@@ -12,6 +18,12 @@ export enum ParameterStateTypes {
   QUANTITY = 'quantity',
   IGNORED_RULES = 'ignored_rules',
   REPETITIONS = 'repetitions',
+}
+
+export interface TempStateItem {
+  sectionId: string;
+  repetition: number;
+  touched: boolean
 }
 
 export interface HumanReadableState {
@@ -111,7 +123,7 @@ export interface ProgressElement<ElementDefinitionProperties = any> {
 }
 
 export interface ProgressStep {
-	status: string;
+	status: ProgressStatuses;
 	fulfilled: boolean;
 	description: string;
 	section: Section;
