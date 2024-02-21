@@ -10,6 +10,8 @@ import {
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';
+import { TempStateItem } from './configuration.model';
+import { ProductState } from '../product/product.reducer';
 
 export const selectConfiguration = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration);
 
@@ -147,25 +149,41 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 	return progressState;
 });
 
-export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
-  // if current step is undefined we hav no step let to configure so we can return 100
-  if (!state.currentStep) {
-    return 100;
+export const selectProgress = createSelector(
+  featureSelector, selectProgressState, selectTempState, selectProduct, (state: CatalogFeatureState, progressState: ProgressState, tempState: TempStateItem[], product: ProductState) => {
+    // if current step is undefined we have no step let to configure so we can return 100
+    if (!progressState.currentStep) {
+      return 100;
+    }
+
+    let completedSteps = 0;
+    if (product.product.keepSectionOrder === true) {
+      // case section order is fixed
+      completedSteps = progressState.beforeSteps.length;
+      let currentActiveElements = progressState.currentStep.elements.filter(e => e.state.active).length;
+      let currentMandatoryElements = progressState.currentStep.elements.filter(e => e.state.mandatory).length;
+      let currentMandatoryActiveElements = progressState.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
+
+      // if current step seems complete we add 1 step to completed steps
+      // current step is complete if minimum 1 element is selected and all mandatory elements are selected
+      if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
+        completedSteps++;
+      }
+    } else {
+      // case section order is not fixed
+      progressState.steps.forEach((step: ProgressStep) => {
+        const section = state.configuration.state.sections.find((section) => section.id === step.section.id && section.repetition === step.section.repetition);
+        const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+        const tempStateItem = tempState.find((tempStateItem) => tempStateItem.sectionId === section.id && tempStateItem.touched === true && tempStateItem.repetition === section.repetition);
+        if (sectionIsValid(section, elements) && tempStateItem) {
+          completedSteps++;
+        }
+      });
+    }
+
+    return Math.round((completedSteps / progressState.steps.length) * 100);
   }
-
-  let completedSteps = state.beforeSteps.length;
-  let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
-  let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
-  let currentMandatoryActiveElements = state.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
-
-  // if current step seems complete we add 1 step to completed steps
-  // current step is complete if minimum 1 element is selected and all mandatory elements are selected
-  if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
-    completedSteps++;
-  }
-
-  return Math.round((completedSteps / state.steps.length) * 100);
-});
+);
 
 export const selectCompressedState = createSelector(
 	featureSelector,
@@ -428,7 +446,7 @@ export const configurationIsValid = createSelector(featureSelector, (state: Cata
 
   for (let i = 0; i < state.configuration.state.sections.length; i++) {
     const section = state.configuration.state.sections[i];
-    const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+    const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id && element.sectionRepetition === section.repetition);
     if (!sectionIsValid(section, elements)) {
       return false;
     }
