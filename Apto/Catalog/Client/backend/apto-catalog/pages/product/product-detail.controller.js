@@ -59,6 +59,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addProductRule: ProductActions.addProductRule,
         updateProductRule: ProductActions.updateProductRule,
         removeProductRule: ProductActions.removeProductRule,
+        copyProductRule: ProductActions.copyProductRule,
         setDetailValue: ProductActions.setDetailValue,
         availableShopsFetch: ProductActions.availableShopsFetch,
         getNextPosition: ProductActions.getNextPosition,
@@ -205,6 +206,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                 ruleId: ruleId
             },
             controller: RuleDetailController
+        });
+    }
+
+    function copyRule($event, ruleId) {
+        $scope.copyProductRule(productId, ruleId).then(() => {
+            $scope.fetchRules(productId);
         });
     }
 
@@ -441,6 +448,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.editRuleName = editRuleName;
     $scope.setRuleActive = setRuleActive;
     $scope.removeRule = removeRule;
+    $scope.copyRule = copyRule;
     $scope.removeComputedValue = removeComputedValue;
     $scope.setSectionIsActive = setSectionIsActive;
     $scope.setSectionIsMandatory = setSectionIsMandatory;

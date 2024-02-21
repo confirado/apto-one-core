@@ -3711,6 +3711,41 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid $ruleId
+     *
+     * @return $this
+     * @throws InvalidUuidException
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRule(AptoUuid $ruleId): Product
+    {
+        // todo we have issue when comping not empty rule
+
+        $rule = $this->getRule($ruleId);
+        $newRuleId = $this->nextRuleId();
+        $entityMapping = new ArrayCollection();
+
+        $entityMapping->set(
+            $this->getId()->getId(),
+            $this
+        );
+
+        $copiedRule = $rule->copy($newRuleId, $entityMapping);
+
+        if ($rule !== null) {
+            $this->rules->set(
+                $newRuleId->getId(),
+                $copiedRule
+            );
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Collection $entityMapping
      * @return Collection
      * @throws InvalidTranslatedValueException

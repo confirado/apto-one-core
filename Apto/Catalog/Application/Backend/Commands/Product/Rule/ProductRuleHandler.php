@@ -72,6 +72,31 @@ class ProductRuleHandler extends ProductChildHandler
     }
 
     /**
+     * @param CopyProductRule $command
+     *
+     * @return void
+     * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
+     * @throws \Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException
+     * @throws \Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException
+     * @throws \Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidTypeException
+     * @throws \Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException
+     */
+    public function handleCopyProductRule(CopyProductRule $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+
+        if (null !== $product) {
+            $product->copyRule(
+                new AptoUuid(
+                    $command->getRuleId()
+                ),
+            );
+
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
      * @param AddProductRuleCondition $command
      */
     public function handleAddProductRuleCondition(AddProductRuleCondition $command)
@@ -190,6 +215,11 @@ class ProductRuleHandler extends ProductChildHandler
 
         yield RemoveProductRule::class => [
             'method' => 'handleRemoveProductRule',
+            'bus' => 'command_bus'
+        ];
+
+        yield CopyProductRule::class => [
+            'method' => 'handleCopyProductRule',
             'bus' => 'command_bus'
         ];
 

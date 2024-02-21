@@ -14,7 +14,7 @@
         <tr md-row>
             <th md-column style="width:30px;">Aktiv</th>
             <th md-column>Name</th>
-            <th md-column style="width:120px;">Aktionen</th>
+            <th md-column style="width:170px;">Aktionen</th>
         </tr>
         </thead>
         <tbody md-body>
@@ -32,6 +32,15 @@
                         ng-click="editRule($event, rule.id)">
                     <md-icon md-font-set="fa">&#xf044</md-icon>
                 </md-button>
+
+                <md-button
+                    title="Kopieren"
+                    class="md-icon-button md-primary"
+                    ng-click="copyRule($event, rule.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf24d</md-icon>
+                </md-button>
+
                 <md-button
                         title="Löschen"
                         class="md-icon-button md-warn"

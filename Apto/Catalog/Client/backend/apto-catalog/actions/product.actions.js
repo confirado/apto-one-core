@@ -780,6 +780,13 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
+    function copyProductRule(productId, ruleId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE'),
+            payload: MessageBusFactory.command('CopyProductRule', [productId, ruleId])
+        }
+    }
+
     function removeProductRuleCondition(productId, ruleId, conditionId) {
         return {
             type: getType('REMOVE_PRODUCT_RULE_CONDITION'),
@@ -941,6 +948,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         addProductRule: addProductRule,
         updateProductRule: updateProductRule,
         removeProductRule: removeProductRule,
+        copyProductRule: copyProductRule,
         addProductRuleCondition: addProductRuleCondition,
         addProductRuleImplication: addProductRuleImplication,
         removeProductRuleCondition: removeProductRuleCondition,
