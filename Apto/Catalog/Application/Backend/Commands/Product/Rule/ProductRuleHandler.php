@@ -46,7 +46,8 @@ class ProductRuleHandler extends ProductChildHandler
                 )
                 ->setRuleConditionsOperator($ruleId, $command->getConditionsOperator())
                 ->setRuleImplicationsOperator($ruleId, $command->getImplicationsOperator())
-                ->setSoftRule($ruleId, $command->getSoftRule());
+                ->setSoftRule($ruleId, $command->getSoftRule())
+                ->setRuleDescription($ruleId, $command->getDescription());
 
             $this->productRepository->update($product);
         }

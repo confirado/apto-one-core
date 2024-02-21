@@ -35,25 +35,40 @@ class UpdateProductRule extends ProductRuleCommand
     private $softRule;
 
     /**
-     * UpdateProductRule constructor.
+     * @var string
+     */
+    private string $description;
+
+    /**
      * @param string $productId
      * @param string $ruleId
      * @param string $ruleName
-     * @param bool $active
-     * @param array $errorMessage
-     * @param int $conditionsOperator
-     * @param int $implicationsOperator
-     * @param bool $softRule
+     * @param bool   $active
+     * @param array  $errorMessage
+     * @param int    $conditionsOperator
+     * @param int    $implicationsOperator
+     * @param bool   $softRule
+     * @param string $description
      */
-    public function __construct(string $productId, string $ruleId, string $ruleName, bool $active = true, array $errorMessage = [], int $conditionsOperator = 0, int $implicationsOperator = 0, $softRule = false)
-    {
+    public function __construct(
+        string $productId,
+        string $ruleId,
+        string $ruleName,
+        bool $active = true,
+        array $errorMessage = [],
+        int $conditionsOperator = 0,
+        int $implicationsOperator = 0,
+        bool $softRule = false,
+        string $description = ''
+    ) {
         parent::__construct($productId, $ruleId);
-        $this->active = $active;
         $this->ruleName = $ruleName;
+        $this->active = $active;
         $this->errorMessage = $errorMessage;
         $this->conditionsOperator = $conditionsOperator;
         $this->implicationsOperator = $implicationsOperator;
         $this->softRule = $softRule;
+        $this->description = $description;
     }
 
     /**
@@ -102,5 +117,13 @@ class UpdateProductRule extends ProductRuleCommand
     public function getSoftRule(): bool
     {
         return $this->softRule;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 }

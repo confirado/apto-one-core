@@ -619,7 +619,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             $scope.detail.errorMessage,
             $scope.detail.conditionsOperator,
             $scope.detail.implicationsOperator,
-            $scope.detail.softRule
+            $scope.detail.softRule,
+            $scope.detail.description
         ).then(() => {
             $scope.fetchDetail(ruleId);
             $scope.fetchProductRules(productId);

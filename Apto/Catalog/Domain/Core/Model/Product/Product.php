@@ -3234,6 +3234,35 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid $ruleId
+     *
+     * @return string|null
+     */
+    public function getRuleDescription(AptoUuid $ruleId)
+    {
+        $rule = $this->getRule($ruleId);
+
+        return $rule !== null ? $rule->getDescription() : null;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param string   $description
+     *
+     * @return $this
+     */
+    public function setRuleDescription(AptoUuid $ruleId, string $description): Product
+    {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule !== null) {
+            $rule->setDescription($description);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return AptoUuid
      * @throws InvalidUuidException
      */

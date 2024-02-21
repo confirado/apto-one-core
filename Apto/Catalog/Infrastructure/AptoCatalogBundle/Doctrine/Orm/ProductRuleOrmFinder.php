@@ -28,7 +28,8 @@ class ProductRuleOrmFinder extends AptoOrmFinder implements ProductRuleFinder
                     'errorMessage',
                     'conditionsOperator',
                     'implicationsOperator',
-                    'softRule'
+                    'softRule',
+                    'description',
                 ]
             ])
             ->setPostProcess([

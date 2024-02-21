@@ -73,6 +73,11 @@ class Rule extends AptoEntity
     protected $errorMessage;
 
     /**
+     * @var string
+     */
+    protected string $description;
+
+    /**
      * Rule constructor.
      * @param AptoUuid $id
      * @param Product $product
@@ -89,6 +94,7 @@ class Rule extends AptoEntity
         $this->implicationsOperator = self::OPERATOR_AND;
         $this->softRule = false;
         $this->implications = new ArrayCollection();
+        $this->description = '';
     }
 
     /**
@@ -453,7 +459,8 @@ class Rule extends AptoEntity
             ->setErrorMessage($this->getErrorMessage())
             ->setConditionsOperator($this->getConditionsOperator())
             ->setImplicationsOperator($this->getImplicationsOperator())
-            ->setSoftRule($this->getSoftRule());
+            ->setSoftRule($this->getSoftRule())
+            ->setDescription($this->getDescription());
 
         // return new rule
         return $rule;
@@ -561,5 +568,24 @@ class Rule extends AptoEntity
     public function hasImplication(AptoUuid $id): bool
     {
         return $this->implications->containsKey($id->getId());
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return $this
+     */
+    public function setDescription(string $description): Rule
+    {
+        $this->description = $description;
+        return $this;
     }
 }

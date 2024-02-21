@@ -751,7 +751,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function updateProductRule(productId, ruleId, ruleName, ruleActive, errorMessage, conditionsOperator, implicationsOperator, softRule) {
+    function updateProductRule(productId, ruleId, ruleName, ruleActive, errorMessage, conditionsOperator, implicationsOperator, softRule, description) {
         let commandArguments = [];
 
         commandArguments.push(productId);
@@ -765,6 +765,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(conditionsOperator);
         commandArguments.push(implicationsOperator);
         commandArguments.push(softRule);
+        commandArguments.push(description);
 
         return {
             type: getType('UPDATE_PRODUCT_RULE'),
