@@ -1,5 +1,5 @@
 <ng-container *ngIf="product$ | async as product">
-    <div class="page">
+    <div class="page" [class.show-request-form-on-bottom]="showRequestFormOnBottom">
         <form [formGroup]="requestForm">
             <div class="title">
                 <h5>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.beforeSend.headline' }}</h5>
@@ -102,7 +102,7 @@
                     <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
                 </mat-checkbox>
             </div>
-            <div class="request-button">
+            <div class="request-button" *ngIf="!showRequestFormOnBottom">
                 <apto-quantity-input-editable
                     [minValue]="product.minPurchase"
                     [maxValue]="product.maxPurchase"

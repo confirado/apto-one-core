@@ -13,6 +13,7 @@
                         </div>
                     </div>
                 </div>
+                <apto-summary-configuration *ngIf="showRequestFormOnBottom" [showPrices]="showPrices"></apto-summary-configuration>
                 <apto-request-form
                     id="summary-request-form"
                     *ngIf="!requestState.sending && !requestState.success && !requestState.error"
@@ -32,7 +33,7 @@
                         message: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.messageError'
                     }"
                 ></apto-request-message-state>
-                <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
+                <apto-summary-configuration *ngIf="!showRequestFormOnBottom" [showPrices]="showPrices"></apto-summary-configuration>
                 <div
                     *ngIf="!requestState.sending && !requestState.success && !requestState.error"
                     class="summary bottom"

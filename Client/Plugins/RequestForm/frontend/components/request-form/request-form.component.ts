@@ -8,6 +8,7 @@ import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/front
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { FieldsWhenUserIsLoggedInEnum, Gender } from '@apto-request-form-frontend/store/request-form.model';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
+import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
 	selector: 'apto-request-form',
@@ -27,6 +28,7 @@ export class RequestFormComponent {
   public readonly currentUser$ = this.store.select(selectCurrentUser);
   public product$ = this.store.select(selectProduct);
   public readonly locale$ = this.store.select(selectLocale);
+  public readonly showRequestFormOnBottom = environment.hasOwnProperty('showRequestFormOnBottom') ? environment['showRequestFormOnBottom'] : false;
 
   public diverse: Gender = {
     surrogateId: 'd',

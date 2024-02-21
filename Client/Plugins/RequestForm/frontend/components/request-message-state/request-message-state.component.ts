@@ -30,7 +30,5 @@ export class RequestMessageStateComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.error(this.success)
   }
-
 }

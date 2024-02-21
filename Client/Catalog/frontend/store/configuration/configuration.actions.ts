@@ -100,6 +100,7 @@ export const getConfigurationStateSuccess = createAction(
 			currentPerspective: string | null;
 			statePrice: any;
       renderImages: [];
+      updates: any
 		};
 	}>()
 );

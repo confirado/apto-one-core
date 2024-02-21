@@ -30,12 +30,7 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
-import { Configuration, ConfigurationState, CurrentSection } from './configuration.model';
-
-interface GetConfigurationResult {
-  state: Configuration,
-  renderImages: []
-}
+import { Configuration, ConfigurationState, CurrentSection, GetConfigurationResult } from './configuration.model';
 
 @Injectable()
 export class ConfigurationEffects {
@@ -179,6 +174,7 @@ export class ConfigurationEffects {
             renderImages: result.renderImages,
             currentPerspective: action.payload.currentPerspective,
             currentUser: action.payload.currentUser,
+            updates: result.updates
           }))
         );
       }),
@@ -196,6 +192,7 @@ export class ConfigurationEffects {
             perspectives: joinResult[1],
             currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
             statePrice: joinResult[2],
+            updates: result.updates
           }))
         )
       ),
@@ -209,6 +206,7 @@ export class ConfigurationEffects {
             perspectives: state.perspectives,
             currentPerspective: state.currentPerspective,
             statePrice: state.statePrice,
+            updates: state.updates
           },
         })
       )

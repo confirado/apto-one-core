@@ -227,6 +227,12 @@ export interface GetConfigurationStateArguments {
 	additionalData: any;
 }
 
+export interface GetConfigurationResult {
+  state: Configuration,
+  renderImages: [],
+  updates: any
+}
+
 export interface StatePrice {
 	discount: Discount;
 	own: Own;
