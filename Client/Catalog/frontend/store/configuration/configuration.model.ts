@@ -105,6 +105,8 @@ export interface RenderImageData {
   realHeight: number,
   realOffsetX: number,
   realOffsetY: number
+  sectionId: string
+  elementId: string
 }
 
 export interface RenderImage {

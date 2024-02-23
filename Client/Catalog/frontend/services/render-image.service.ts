@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { selectCurrentRenderImages } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectElement } from '@apto-catalog-frontend/store/product/product.selectors';
+import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 
 @Injectable({
   providedIn: 'root',
@@ -135,6 +137,46 @@ export class RenderImageService implements OnDestroy {
     }
   }
 
+  private hexToRgb(hex: string): number[] {
+    hex = hex.replace(/^#/, '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return [r, g, b];
+  }
+
+  private drawImageWithColorReplacement(imageHtml: HTMLImageElement, colorSearchHex: string, colorReplaceHex: string): HTMLCanvasElement {
+    const imageWidth = imageHtml.width;
+    const imageHeight = imageHtml.height;
+    // temp canvas for pixels manipulations
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = imageWidth;
+    tempCanvas.height = imageHeight;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    tempCtx.drawImage(imageHtml, 0, 0, imageWidth, imageHeight);
+
+    const imageData = tempCtx.getImageData(0, 0, imageWidth, imageHeight);
+    const data = imageData.data;
+    const colorSearch = this.hexToRgb(colorSearchHex);
+    const colorReplace = this.hexToRgb(colorReplaceHex);
+
+    // change colors for each pixel if match criteria
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] === colorSearch[0] && data[i + 1] === colorSearch[1] && data[i + 2] === colorSearch[2]) { // Sprawdzenie, czy piksel jest biały
+        data[i] = colorReplace[0];
+        data[i + 1] = colorReplace[1];
+        data[i + 2] = colorReplace[2];
+        data[i + 3] = 255;
+      }
+    }
+
+    tempCtx.putImageData(imageData, 0, 0);
+
+    return tempCanvas;
+  }
+
   /**
    * This draws images on canvas by repeating the repeatable images, also it does not resize the images and draws them in the original size
    *
@@ -143,26 +185,36 @@ export class RenderImageService implements OnDestroy {
    * @private
    */
   private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData): void {
-    const imageWidth = imageHtml.width;
-    const imageHeight = imageHtml.height;
-    const imageRepeatWidth = imgObj.realWidth;
-    const imageRepeatHeight = imgObj.realHeight;
-    const offsetX = imgObj.realOffsetX;
-    const offsetY = imgObj.realOffsetY;
+    this.store.select(selectElement(imgObj.elementId)).subscribe((storeElement) => {
+      let tempCanvas = null;
+      const imageWidth = imageHtml.width;
+      const imageHeight = imageHtml.height;
+      const imageRepeatWidth = imgObj.realWidth;
+      const imageRepeatHeight = imgObj.realHeight;
+      const offsetX = imgObj.realOffsetX;
+      const offsetY = imgObj.realOffsetY;
 
-    if (imgObj.renderImageOptions?.renderImageOptions?.type.toLowerCase() === 'wiederholbar') {
-      let y = offsetY;
-      do {
-        let x = offsetX;
+      const customPropertyColor: CustomProperty = storeElement.customProperties.find((e) => e.key === 'overlayColor');
+      if (customPropertyColor) {
+        // value in the format e.g.	#E7E7E7,#800080
+        const colors = (customPropertyColor.value as string).split(',');
+        tempCanvas = this.drawImageWithColorReplacement(imageHtml, colors[0], colors[1]);
+      }
+
+      if (imgObj.renderImageOptions?.renderImageOptions?.type.toLowerCase() === 'wiederholbar') {
+        let y = offsetY;
         do {
-          this.ctx.drawImage(imageHtml, x, y);
-          x += imageWidth;
-        } while (x < imageRepeatWidth);
-        y += imageHeight;
-      } while (y < imageRepeatHeight);
-    } else {
-      this.ctx.drawImage(imageHtml, offsetX, offsetY);
-    }
+          let x = offsetX;
+          do {
+            this.ctx.drawImage(tempCanvas || imageHtml, x, y);
+            x += imageWidth;
+          } while (x < imageRepeatWidth);
+          y += imageHeight;
+        } while (y < imageRepeatHeight);
+      } else {
+        this.ctx.drawImage(tempCanvas || imageHtml, offsetX, offsetY);
+      }
+    });
   }
 
   /**

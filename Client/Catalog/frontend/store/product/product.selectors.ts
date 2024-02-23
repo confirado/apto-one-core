@@ -1,8 +1,12 @@
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { RuleRepairSettings } from '@apto-catalog-frontend/store/product/product.model';
+import { Element } from '@apto-catalog-frontend/store/product/product.model';
 
 export const selectProduct = createSelector(featureSelector, (state: CatalogFeatureState) => state.product.product);
+export const selectElement = (id: string) => createSelector(featureSelector,
+  (state: CatalogFeatureState) => state.product.elements.find((e: Element) => e.id === id)
+);
 
 export const selectProductList = createSelector(featureSelector, (state: CatalogFeatureState) => state.product.productList);
 
