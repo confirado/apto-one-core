@@ -38,8 +38,13 @@
 // }
 
 // these configs are for the component testing, do not uncomment because they cause issue in e2e testing
-// import { mount } from 'cypress/angular'
-// Cypress.Commands.add('mount', mount);
+import { mount } from 'cypress/angular';
+import { Type } from '@angular/core';
+
+Cypress.Commands.add('mount', (component: Type<any> | string, config) => {
+  // uncomment this in component testing, and comment in e2e testing otherwise error
+  // return mount(component, config);
+});
 
 Cypress.Commands.add('dataCy', (dataId) => {
   return cy.get(`[data-cy="${dataId}"]`);

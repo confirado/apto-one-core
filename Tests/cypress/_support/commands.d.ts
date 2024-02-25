@@ -8,9 +8,7 @@ declare global {
 
     interface Chainable {
       mount: typeof mount
-    }
 
-    interface Chainable {
       /**
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')

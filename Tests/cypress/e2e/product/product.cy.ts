@@ -4,7 +4,15 @@ import { RequestHandler } from '../../classes/requestHandler';
 import { Interception } from 'cypress/types/net-stubbing';
 import { Backend } from '../../classes/common/backend';
 import { Core } from '../../classes/common/core';
-import { Material } from '../../classes/common/material';
+import { Select } from '../../classes/common/elements/form/select';
+import { Checkbox } from '../../classes/common/elements/form/checkbox';
+import { Input } from '../../classes/common/elements/form/input';
+import { Textarea } from '../../classes/common/elements/form/textarea';
+import { ProductList } from '../../classes/pages/product-list/product-list';
+import { Table } from '../../classes/common/elements/table';
+import { TranslatedValue } from '../../classes/common/elements/custom/translated-value';
+import { MediaSelect } from '../../classes/common/elements/custom/media-select';
+import { TableActionTypes } from '../../classes/enums/table-action-types';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -14,12 +22,19 @@ import { Material } from '../../classes/common/material';
 describe('Product', () => {
 
   var dummies = null;
+  var productId = '';
+  var productName1 = '';
+  var productDescription1 = '';
+
+  before(() => {
+    productName1 = Product.generateName();
+    productDescription1 = Product.generateDescription();
+  });
 
   beforeEach(() => {
-
     cy.fixture('dummies').then((data) => {
       dummies = data;
-    })
+    });
 
     /*  Yes!, we have to do this in every test as cypress removes all the information about page in each test, after each test we get a
         blank page pointing nowhere
@@ -60,30 +75,87 @@ describe('Product', () => {
 
               cy.get('md-tabs-content-wrapper').should('exist')
 
-              Material.checkbox('[data-cy="product-active"]', false, 'Aktiv');
-              Material.checkbox('[data-cy="product-hidden"]', false, 'Versteckt');
+              Checkbox.getByAttr('product-active')
+                .hasLabel('Aktiv')
+                .isUnChecked();
 
-              Material.input('[data-cy="product-identifier"]', '', 'Kennung:');
-              Material.input('[data-cy="product-article-number"]', '', 'Artikelnummer:');
-              Material.select('[data-cy="product-configuration-modes"]', 'OnePage', 'Konfiguratormodus');
-              Material.select('[data-cy="product-keep-section-order"]', 'Ja', 'Reihenfolge der Sektionen einhalten');
+              Checkbox.getByAttr('product-hidden')
+                .hasLabel('Versteckt')
+                .isUnChecked();
 
-              Material.input('[data-cy="product-position"]', 10, 'Position:');
-              Material.input('[data-cy="product-stock"]', '', 'Lagerbestand:');
-              Material.input('[data-cy="product-delivery-time"]', '', 'Lieferzeit(Tage):');
-              Material.input('[data-cy="product-weight"]', '', 'Gewicht(kg):');
-              Material.input('[data-cy="product-min-purchase"]', '', 'Mindestabnahme:');
-              Material.input('[data-cy="product-max-purchase"]', '', 'Maximalabnahme:');
-              Material.input('[data-cy="product-tax-rate"]', '', 'Steuersatz(%):');
-              Material.select('[data-cy="product-price-calculator"]', '', 'Preisberechnung:', {'have.attr': 'required'});
+              Input.getByAttr('product-identifier')
+                .hasLabel('Kennung:')
+                .hasValue('');
 
-              Material.input('[data-cy="product-name"]', '', 'Name (Deutsch):', {'have.attr': 'required'});
-              Material.input('[data-cy="product-meta-title"]', '', 'Meta Titel (Deutsch):');
+              Input.getByAttr('product-article-number')
+                .hasLabel('Artikelnummer:')
+                .hasValue('');
 
-              Material.textarea('[data-cy="product-description"]', '', 'Beschreibung (Deutsch):');
-              Material.textarea('[data-cy="product-meta-description"]', '', 'Meta Beschreibung (Deutsch):');
+              Select.getByAttr('product-configuration-modes')
+                .hasLabel('Konfiguratormodus')
+                .hasValue('OnePage');
 
-              Material.input('[data-cy="product-url"]', '', 'Produkt-Url:');
+              Select.getByAttr('product-keep-section-order')
+                .hasLabel('Reihenfolge der Sektionen einhalten')
+                .hasValue('Ja');
+
+              // position must be integer number and multiple of 10
+              cy.dataCy('product-position').find('input').invoke('val').then(value => {
+                expect(value).to.match(/^\d+$/);
+                const intValue = parseInt(value, 10);
+                expect(intValue).to.be.a('number').and.to.be.greaterThan(0);
+                expect(intValue % 5).to.equal(0);
+              });
+
+              Input.getByAttr('product-stock')
+                .hasLabel('Lagerbestand:')
+                .hasValue('');
+
+              Input.getByAttr('product-delivery-time')
+                .hasLabel('Lieferzeit(Tage):')
+                .hasValue('');
+
+              Input.getByAttr('product-weight')
+                .hasLabel('Gewicht(kg):')
+                .hasValue('');
+
+              Input.getByAttr('product-min-purchase')
+                .hasLabel('Mindestabnahme:')
+                .hasValue('');
+
+              Input.getByAttr('product-max-purchase')
+                .hasLabel('Maximalabnahme:')
+                .hasValue('');
+
+              Input.getByAttr('product-tax-rate')
+                .hasLabel('Steuersatz(%):')
+                .hasValue('');
+
+              Select.getByAttr('product-price-calculator')
+                .hasLabel('Preisberechnung:')
+                .isNotSelected()
+                .attributes({'have.attr': 'required'});
+
+              Input.getByAttr('product-name')
+                .hasLabel('Name (Deutsch):')
+                .hasValue('')
+                .attributes({'have.attr': 'required'});
+
+              Input.getByAttr('product-meta-title')
+                .hasLabel('Meta Titel (Deutsch):')
+                .hasValue('');
+
+              Textarea.getByAttr('product-description')
+                .hasLabel('Beschreibung (Deutsch):')
+                .hasValue('');
+
+              Textarea.getByAttr('product-meta-description')
+                .hasLabel('Meta Beschreibung (Deutsch):')
+                .hasValue('');
+
+              Input.getByAttr('product-url')
+                .hasLabel('Produkt-Url:')
+                .hasValue('');
 
               // Vorschaubild
               cy.dataCy('product-preview-picture-text').should('contain.text', 'Vorschaubild:');
@@ -188,7 +260,7 @@ describe('Product', () => {
   });
 
 
-  it('Checks that action buttons underneath', () => {
+  it('Checks product action buttons (bottom right)', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -207,18 +279,18 @@ describe('Product', () => {
             cy.get('md-dialog-actions').should('exist').within(() => {
 
               // check that buttons are there
-              Material.button('[data-cy="dialog-actions_button-cancel"]', 'Abbrechen', {'be.visible': null});
-              Material.button('[data-cy="dialog-actions_button-new-save"]', 'Speichern', {'be.visible': null, 'have.class': 'md-primary'});
-              Material.button('[data-cy="dialog-actions_button-save-and-insert"]', 'Speichern und hinzufügen', {'be.visible': null});
+              Product.cancelButton().should('contain.text', 'Abbrechen').should( 'be.visible');
+              Product.saveNewButton().should('contain.text', 'Speichern').should( 'have.class', 'md-primary');
+              Product.saveAndInsertButton().should('contain.text', 'Speichern und hinzufügen').should( 'be.visible');
 
               // those 2 button are visible when we edit the product
-              Material.button('[data-cy="dialog-actions_button-save-and-close"]', null, {'not.exist': null});
-              Material.button('[data-cy="dialog-actions_button-edit-save"]', null, {'not.exist': null});
+              Product.saveAndCloseButton().should( 'not.exist');
+              Product.saveEditButton().should( 'not.exist');
 
               RequestHandler.registerInterceptions(Product.cancelProductsQueryList);
 
               // test cancel button
-              cy.dataCy('dialog-actions_button-cancel').click();
+              Product.cancelButton().click();
             });
           });
 
@@ -231,7 +303,7 @@ describe('Product', () => {
       });
   });
 
-  it('Checks that action buttons underneath', () => {
+  it('Checks create product is working', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests))
       .then(($responses: Interception[]) => {
@@ -249,49 +321,165 @@ describe('Product', () => {
           .then(() => {
             cy.get('md-dialog-actions').should('exist').then(() => {
 
-              // save button click
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
 
-              // name should not have value and we should see browser popup shoing error
+              // name should not have value and we should see browser popup showing error
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 1);
 
               // after typing value error should dissapear
-              cy.get('[data-cy="product-name"]').type(dummies.productName1);
-              cy.get('.product-title h3').find('span.title-headline').should('contain.text', dummies.productName1);
+              cy.dataCy('product-name').type(productName1);
+              cy.get('.product-title h3').find('span.title-headline').should('contain.text', productName1);
 
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
               cy.get('[data-cy="product-name"] input:invalid').should('have.length', 0);
 
               // lets try again saving
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
 
-              // todo refactor md-select, md-input logic so that they can handle also error checks
-              // todo refactor md-select, to select value
-              // this is required field as well
-              cy.dataCy('product-price-calculator').should('have.class', 'md-input-invalid');
-              cy.dataCy('product-price-calculator').click();
-              cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
-                cy.get('md-content md-option').find('.md-text').should('contain.text', dummies.defaultPriceCalculator).click();
-              });
-
-              // todo change the material.select to select values and check if selected
-              cy.dataCy('product-price-calculator').find('.md-select-value').find('.md-text').should('contain.text', dummies.defaultPriceCalculator);
+              Select.getByAttr('product-price-calculator')
+                .hasError()
+                .select(dummies.defaultPriceCalculator);
 
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 
               // save button click
-              cy.dataCy('dialog-actions_button-new-save').click();
+              Product.saveNewButton().click();
             });
           });
       });
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.saveProductRequests))
-      .then(($elem) => {
-        cy.dataCy('product-list').should('exist').within(() => {
-          cy.get('md-table-container table tbody tr').should('exist').should('have.length', 1);
-          cy.get('md-table-container table tbody tr td:nth-child(4)').should('contain.text', dummies.productName1);
-        })
-      })
-  })
+      .then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
+        // check that product is visible in product list page
+        Table.getByAttr('product-list').hasValue(productName1);
+      });
+  });
+
+  it('Checks if product exist in product list page right after making it', () => {
+
+    // var productName1 = 'product-YgBii7tZ';
+
+    // goto product list page and search for newly created product in previous step
+    ProductList.visit();
+    ProductList.searchNotFindProduct(productName1);
+
+    RequestHandler.registerInterceptions(Product.editProductQueryList);
+    Product.visit();
+
+    // click on edit product button in product list page in backend
+    Table.getByAttr('product-list').action(TableActionTypes.EDIT, productName1);
+
+    // once edit product page is loaded
+    cy.wait(RequestHandler.getAliasesFromRequests(Product.editProductQueryList)).then(() => {
+
+      // read the product id
+      cy.get('.product-title').find('span.title-id').invoke('text').then((id: string) => {
+
+        productId = id.trim();
+
+        // make product active
+        Checkbox.getByAttr('product-active').check();
+
+        TranslatedValue.getByAttr('product-description').writeValue(productDescription1);
+        TranslatedValue.getByAttr('product-meta-title').writeValue(productName1);
+
+        // take product url value from "kennung"
+        Input.getByAttr('product-identifier').getValue().then((productIdentifier) => {
+          Input.getByAttr('product-url').writeValue(productIdentifier);
+        });
+
+        MediaSelect.getByAttr('product-preview-picture').select('logo.png');
+
+        // save product
+        // Product.saveEditButton().click({ force: true });
+        Product.saveAndCloseButton().click({ force: true });
+
+        const selector = `.product-wrapper[data-id="${productId}"]`;
+
+        // check that newly updated product has all updates we made
+        ProductList.visit();
+        ProductList.hasProduct(selector);
+        ProductList.hasProductPreviewImage(selector);
+        ProductList.hasProductTitle(selector);
+        ProductList.hasProductDescription(selector);
+        ProductList.isProductLinkOk(selector);
+      });
+    });
+  });
+
+  it('Checks delete product', () => {
+
+    Product.createEmptyProduct(Product.generateName());
+
+    // get the last product name in the list and delete it
+    cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
+      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
+
+      cy.get('md-dialog-actions').should('exist');
+      cy.get('h2.md-title').should('contain.text', 'Den gewählten Eintrag wirklich löschen?');
+      cy.get('.md-dialog-content-body p').should('contain.text', 'Das Löschen kann nicht rückgängig gemacht werden!');
+
+      // check cancel button
+      cy.get('md-dialog-actions').find('button.md-cancel-button')
+        .should('exist').should('contain.text', 'Abbrechen')
+        .click();
+      cy.get('md-dialog-actions').should('not.exist');
+
+      // check delete
+      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
+
+      RequestHandler.registerInterceptions(Product.removeProductRequests);
+
+      cy.get('md-dialog-actions').find('button.md-confirm-button')
+        .should('exist').should('contain.text', 'Löschen')
+        .click();
+
+      cy.get('md-dialog-actions').should('not.exist');
+
+      // wait until delete requests are made
+      cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
+        // the last item in table should not contain the product name
+        cy.dataCy('product-list').within(() => {
+          cy.get('table tbody').within(() => {
+            cy.get('tr:last-child td:nth-child(4)').should('not.contain.text', productName);
+          });
+        });
+      });
+    });
+  });
+
+  it('Checks copy product', () => {
+
+    Product.createEmptyProduct(Product.generateName());
+
+    cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
+
+      RequestHandler.registerInterceptions(Product.copyProductRequests);
+
+      Table.getByAttr('product-list')
+        .action(TableActionTypes.COPY, productName);
+
+      cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
+
+        Core.checkResponsesForError($responses);
+
+        // the last item in table should contain the product name
+        cy.dataCy('product-list').within(() => {
+          cy.get('table tbody').within(() => {
+            cy.get('tr:last-child td:nth-child(4)').should('contain.text', productName);
+
+            Product.deleteProductByName(productName);
+          });
+        });
+      });
+    });
+  });
+
 
 });
