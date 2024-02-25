@@ -5,8 +5,8 @@ import {
   AddBasketConfigurationArguments,
   AddGuestConfigurationArguments,
   ComputedValues,
-  Configuration, FetchPartsListArguments, PartsListPart,
-  RenderImage,
+  Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
+  RenderImage, UpdateBasketConfigurationArguments,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -37,9 +37,7 @@ export class ConfigurationRepository {
 		return this.catalogMessageBusService.findProductComputedValuesCalculated(productId, compressedState);
 	}
 
-	public getConfigurationState(params: any): Observable<{state: Configuration | null, renderImages: []}> {
-		const args = [params.productId, params.compressedState, params.updates];
-
+	public getConfigurationState(params: any): Observable<GetConfigurationResult> {
 		return this.catalogMessageBusService
 			.getConfigurationState(params.productId, params.compressedState, params.updates)
 			.pipe(map((response) => this.responseToConfigurationState(response)));
@@ -48,6 +46,19 @@ export class ConfigurationRepository {
 	public addToBasket(params: AddBasketConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addBasketConfiguration(
 			params.productId,
+			params.compressedState,
+			params.sessionCookies,
+			params.locale,
+			params.quantity,
+			params.perspectives,
+			params.additionalData
+		);
+	}
+
+	public updateBasket(params: UpdateBasketConfigurationArguments): Observable<unknown> {
+		return this.catalogMessageBusService.updateBasketConfiguration(
+			params.productId,
+			params.configurationId,
 			params.compressedState,
 			params.sessionCookies,
 			params.locale,
@@ -78,7 +89,7 @@ export class ConfigurationRepository {
     );
   }
 
-	private responseToConfigurationState(result: any): { state: Configuration | null, renderImages: [] } {
+	private responseToConfigurationState(result: any): GetConfigurationResult {
 		const state: Configuration = {
 			compressedState: result.compressedState || [],
 			sections: [],
@@ -118,6 +129,6 @@ export class ConfigurationRepository {
       });
     }
 
-		return { state: state, renderImages: result.renderImages };
+		return { state: state, renderImages: result.renderImages, updates: result.intention };
 	}
 }

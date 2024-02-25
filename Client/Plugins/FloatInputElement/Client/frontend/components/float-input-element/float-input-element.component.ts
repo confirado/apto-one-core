@@ -42,6 +42,8 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public inputType: string = FloatInputTypes.INPUT;
   public minValue: number | null;
   public maxValue: number | null;
+  public increaseStep: number | undefined;
+  public decreaseStep: number | undefined;
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
   private readonly destroy$ = new Subject<void>();
@@ -53,6 +55,12 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public constructor(private store: Store) {}
 
 	public ngOnInit(): void {
+    if (!this.element) {
+      return;
+    }
+
+    this.initIncreaseDecreaseStep();
+
     this.mathjsParser = parser();
 
     this.inputType = this.element?.element.definition.staticValues.renderingType;
@@ -125,6 +133,22 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 
   public get suffix(): TranslatedValue {
     return this.element.element.definition.staticValues.suffix;
+  }
+
+  private initIncreaseDecreaseStep() {
+    let increaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'increaseStep';
+    });
+    let decreaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'decreaseStep';
+    });
+
+    if (increaseStep && typeof increaseStep.value === 'string') {
+      this.increaseStep = parseFloat(increaseStep.value);
+    }
+    if (decreaseStep && typeof decreaseStep.value === 'string') {
+      this.decreaseStep = parseFloat(decreaseStep.value);
+    }
   }
 
   /**

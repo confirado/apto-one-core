@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import {
   ElementState,
-  ProgressElement,
-  ProgressStep
+  ProgressElement, ProgressStatuses,
+  ProgressStep,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
   selectSectionProductElements,
@@ -26,7 +26,7 @@ export class OPStepComponent implements OnInit {
 	public index: number | undefined;
 
 	@Input()
-	public status: string | undefined;
+	public status: ProgressStatuses | undefined;
 
 	@Input()
 	public description: string | undefined;

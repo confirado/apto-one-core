@@ -4,14 +4,22 @@
              [ngClass]="status || ''"
              [class.keep-section-order]="product.keepSectionOrder"
              [class.dont-keep-section-order]="!product.keepSectionOrder"
+
+             [class.section-valid]="sectionIsValid"
+             [class.section-not-valid]="!sectionIsValid"
+             [class.section-touched]="isSectionTouched(section.section.id, section.section.repetition)"
+             [class.section-not-touched]="!isSectionTouched(section.section.id, section.section.repetition)"
         >
-            <div class="circle" *ngIf="!this.sectionIsValid">
+            <div class="circle" *ngIf="!sectionIsValid || (sectionIsValid && !isSectionTouched(section.section.id, section.section.repetition))">
                 {{ index }}
             </div>
-            <div class="circle completed" *ngIf="this.sectionIsValid">
+
+            <div class="circle" *ngIf="sectionIsValid && isSectionTouched(section.section.id, section.section.repetition)">
                 <mat-icon>done</mat-icon>
             </div>
+
             <div *ngIf="last" class="white-overlay"></div>
+
             <div (click)="setStep(section, product.seoUrl, product.useStepByStep)" class="step" [class.select]="isSectionSelectable()">
                 <div class="title"> {{ section.section.name | translate }} {{ sectionIndex }}</div>
                 <div *ngFor="let element of section.elements">

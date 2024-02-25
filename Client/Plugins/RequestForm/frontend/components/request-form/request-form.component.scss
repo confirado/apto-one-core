@@ -9,6 +9,11 @@
 .page {
     padding: 40px 130px;
     border-bottom: 1px solid #dcdcdc;
+
+    &.show-request-form-on-bottom {
+        border-bottom: none;
+        padding-top: 0;
+    }
 }
 
 .title {

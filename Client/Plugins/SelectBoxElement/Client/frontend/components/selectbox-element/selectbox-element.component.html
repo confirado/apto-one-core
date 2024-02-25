@@ -33,14 +33,15 @@
                         [default]="element.element.definition.staticValues.defaultItem?.id"
                         [items]="items"
                         [formControl]="formElement"
+                        [placeholder]="(selectedItems ? selectedItems.toString() : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
                     >
                     </apto-select-box-field>
                     <apto-select-field
                         *ngIf="!element.element.definition.staticValues.enableMultiSelect"
                         [asArray]="true"
                         [items]="items"
-                        [default]="setBoxName(formElement.value?.[0]) | translate"
                         [formControl]="formElement"
+                        [default]="(selectedItems.length > 0 && selectedItems[0].hasOwnProperty('name') ? (selectedItems[0].name | translate) : '') || (contentSnippet$ | async | contentSnippet: 'select.please-select')"
                     >
                     </apto-select-field>
                 </div>

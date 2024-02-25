@@ -26,9 +26,7 @@ abstract class AbstractFormulaFunction implements FormulaFunction
     {
         $values = [];
         foreach ($params as $param) {
-            if (array_key_exists($param, $variables)) {
-                $values[] = self::replaceParam($param, $variables);
-            }
+            $values[] = self::replaceParam($param, $variables);
         }
 
         return $values;

@@ -17,8 +17,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { EMPTY, forkJoin, tap } from 'rxjs';
 import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { Configuration, ConfigurationState, CurrentSection } from './configuration.model';
-import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
 import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/product.selectors';
 import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
@@ -31,11 +29,8 @@ import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/conte
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { environment } from '@apto-frontend/src/environments/environment';
-
-interface GetConfigurationResult {
-  state: Configuration,
-  renderImages: []
-}
+import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
+import { Configuration, ConfigurationState, CurrentSection, GetConfigurationResult } from './configuration.model';
 
 @Injectable()
 export class ConfigurationEffects {
@@ -124,7 +119,7 @@ export class ConfigurationEffects {
 						perspectives: result.perspectives,
 						currentPerspective: result.currentPerspective,
 						statePrice: result.statePrice,
-            renderImages: result.renderImages
+            renderImages: result.renderImages,
 					},
 				});
 			})
@@ -136,20 +131,19 @@ export class ConfigurationEffects {
 			ofType(updateConfigurationState),
 			withLatestFrom(
         this.store$.select(selectConfiguration),
-        this.store$.select(selectCurrentUser)
+        this.store$.select(selectCurrentUser),
+        this.store$.select(selectConnector)
       ),
-			map(([action, store, currentUser]) => {
-				return getConfigurationState({
+			map(([action, store, currentUser, connector]) => getConfigurationState({
 					payload: {
 						productId: store.productId,
 						compressedState: store.state.compressedState,
-						connector: store.connector,
+						connector,
 						updates: action.updates,
 						currentPerspective: store.currentPerspective,
-            currentUser: currentUser
+            currentUser,
 					},
-				})
-      })
+				}))
 		)
 	);
 
@@ -157,17 +151,17 @@ export class ConfigurationEffects {
     this.actions$.pipe(
       ofType(getConfigurationState),
       withLatestFrom(
-        this.store$.select(selectRuleRepairSettings),
+        this.store$.select(selectRuleRepairSettings)
       ),
       switchMap(([action, ruleRepairSettings]) => {
-        let payload = {
+        const payload = {
           ...action.payload,
           updates: {
-            ...action.payload.updates
-          }
-        }
+            ...action.payload.updates,
+          },
+        };
 
-        if (null !== ruleRepairSettings) {
+        if (ruleRepairSettings !== null) {
           payload.updates.repair = ruleRepairSettings;
         }
 
@@ -180,7 +174,8 @@ export class ConfigurationEffects {
             renderImages: result.renderImages,
             currentPerspective: action.payload.currentPerspective,
             currentUser: action.payload.currentUser,
-          })),
+            updates: result.updates
+          }))
         );
       }),
       switchMap((result) =>
@@ -197,6 +192,7 @@ export class ConfigurationEffects {
             perspectives: joinResult[1],
             currentPerspective: this.getCurrentPerspective(joinResult[1], result.currentPerspective),
             statePrice: joinResult[2],
+            updates: result.updates
           }))
         )
       ),
@@ -210,6 +206,7 @@ export class ConfigurationEffects {
             perspectives: state.perspectives,
             currentPerspective: state.currentPerspective,
             statePrice: state.statePrice,
+            updates: state.updates
           },
         })
       )
@@ -221,17 +218,18 @@ export class ConfigurationEffects {
       ofType(loginSuccess, logoutSuccess),
       withLatestFrom(
         this.store$.select(selectConfiguration),
-        this.store$.select(selectCurrentUser)
+        this.store$.select(selectCurrentUser),
+        this.store$.select(selectConnector)
       ),
-      map(([action, store, currentUser]) =>
+      map(([action, store, currentUser, connector]) =>
         getConfigurationState({
           payload: {
             productId: store.productId,
             compressedState: store.state.compressedState,
-            connector: store.connector,
+            connector,
             updates: {},
             currentPerspective: store.currentPerspective,
-            currentUser: currentUser
+            currentUser,
           },
         })
       )
@@ -278,25 +276,33 @@ export class ConfigurationEffects {
 				ofType(onError),
 				withLatestFrom(
           this.store$.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
-          this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage'))
+          this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage')),
+          this.store$.select(selectContentSnippet('auth.errors'))
         ),
-				map(([{ message }, locale, snippet]: [{message: MessageBusResponseMessage}, string, ContentSnippet]) => {
-          const defaultMessage: string = translate(snippet.content, locale);
+				map(([{ message }, locale, defaultErrorMessage, errors]:
+               [{message: MessageBusResponseMessage}, string, ContentSnippet, ContentSnippet]
+        ) => {
+          let defaultMessage: string = translate(defaultErrorMessage.content, locale);
           let showDefault = true;
           let finalMessage = '';
 
           for (const singleErrorPayload of message.errorPayload) {
-              const errorMessage = translate(singleErrorPayload.errorMessage, locale)
+              const errorMessage = translate(singleErrorPayload.errorMessage, locale);
               if (errorMessage) {
                 showDefault = false;
                 finalMessage += `${errorMessage} <br />`;
               }
           }
 
+          if (showDefault) {
+            const errorTranslation = errors.children.find((c) => c.name === message.errorType);
+            defaultMessage = errorTranslation ? translate(errorTranslation.content, locale) : defaultMessage;
+          }
+
           this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {
             type: DialogTypesEnum.ERROR,
             hideIcon: true,
-            descriptionText: showDefault ? defaultMessage : finalMessage
+            descriptionText: showDefault ? defaultMessage : finalMessage,
           });
 				})
 			),
@@ -353,7 +359,7 @@ export class ConfigurationEffects {
 			withLatestFrom(
         this.store$.select(selectConfiguration),
         this.store$.select(selectProgressState),
-        this.store$.select(selectProduct),
+        this.store$.select(selectProduct)
       ),
 			map(([action, configuration, progressState, product]) => {
         const removeList: ConfigurationState[] = [];
@@ -395,19 +401,20 @@ export class ConfigurationEffects {
 			ofType(addToBasket),
 			withLatestFrom(
         this.store$.select(selectConfiguration),
-        this.store$.select(selectCurrentUser)
+        this.store$.select(selectCurrentUser),
+        this.store$.select(selectConnector)
       ),
-			switchMap(([{ payload }, configurationState, currentUser]) => {
+			switchMap(([{ payload }, configurationState, currentUser, connector]) => {
 				if (!configurationState.productId) {
 					return EMPTY;
 				}
 
 				let additionalData: any = {
-          productImages: payload.productImage ? [payload.productImage] : []
+          productImages: payload.productImage ? [payload.productImage] : [],
         };
 
         if (payload.type === 'REQUEST_FORM') {
-          let customerGroup = configurationState.connector?.customerGroup;
+          let customerGroup = connector?.customerGroup;
           if (currentUser) {
             customerGroup = {
               id: currentUser.customerGroup.externalId,
@@ -422,35 +429,48 @@ export class ConfigurationEffects {
               customer: payload.formData,
               quantity: {
                 value: {
-                  name: configurationState.quantity + ' Stück',
-                  value: configurationState.quantity
-                }
-              }
+                  name: `${configurationState.quantity} Stück`,
+                  value: configurationState.quantity,
+                },
+              },
             },
 						humanReadableState: payload.humanReadableState,
-						locale: configurationState.connector?.locale,
+						locale: connector?.locale,
 						compressedState: configurationState.state.compressedState,
-						shopCurrency: configurationState.connector?.shopCurrency,
-						displayCurrency: configurationState.connector?.displayCurrency,
-						customerGroup: customerGroup,
+						shopCurrency: connector?.shopCurrency,
+						displayCurrency: connector?.displayCurrency,
+						customerGroup,
             customerGroupExternalId: customerGroup.id,
             productId: configurationState.productId,
 					};
 				}
 
-				return this.configurationRepository.addToBasket({
-					productId: configurationState.productId,
-					locale: configurationState.connector?.locale,
-					compressedState: configurationState.state.compressedState,
-					quantity: configurationState.quantity,
-					perspectives: configurationState.perspectives,
-					sessionCookies: configurationState.connector?.sessionCookies,
-					additionalData
-				});
+        // this is the case when user from the basket clicks "Konfiguration bearbeiten" and then changes the config and adds again to the basket
+        if (payload.configurationId && payload.configurationType === 'basket') {
+          return this.configurationRepository.updateBasket({
+            productId: configurationState.productId,
+            configurationId: payload.configurationId,
+            locale: connector?.locale,
+            compressedState: configurationState.state.compressedState,
+            quantity: configurationState.quantity,
+            perspectives: configurationState.perspectives,
+            sessionCookies: connector?.sessionCookies,
+            additionalData,
+          });
+        }
+          return this.configurationRepository.addToBasket({
+            productId: configurationState.productId,
+            locale: connector?.locale,
+            compressedState: configurationState.state.compressedState,
+            quantity: configurationState.quantity,
+            perspectives: configurationState.perspectives,
+            sessionCookies: connector?.sessionCookies,
+            additionalData,
+          });
 			}),
-      switchMap(result => [
+      switchMap((result) => [
         addToBasketSuccess(),
-        initShop()
+        initShop(),
       ])
 		)
 	);
@@ -458,18 +478,19 @@ export class ConfigurationEffects {
   public fetchPartsList$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fetchPartsList),
-      withLatestFrom(this.store$.select(selectConfiguration)),
-      switchMap(([action, state]) =>
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+        this.store$.select(selectConnector)
+      ),
+      switchMap(([action, state, connector]) =>
         this.configurationRepository.fetchPartsList({
           productId: state.productId as string,
           compressedState: state.state.compressedState,
-          currency: state.connector.displayCurrency.currency,
-          customerGroupExternalId: state.connector.customerGroup.id
+          currency: connector?.displayCurrency.currency,
+          customerGroupExternalId: connector?.customerGroup.id,
         })
       ),
-      map((result) => {
-        return fetchPartsListSuccess({payload: result});
-      })
+      map((result) => fetchPartsListSuccess({ payload: result }))
     )
   );
 

@@ -44,8 +44,10 @@ import { SelectFieldComponent } from '@apto-base-frontend/components/select-fiel
 import { TextInputFieldComponent } from '@apto-base-frontend/components/text-input-field/text-input-field.component';
 import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
-import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
+import { ForgotPasswordComponent } from './components/frontend-users-login/forgot-password/forgot-password.component';
+import { AuthMessageBusService } from '@apto-base-frontend/services/auth-message-bus.service';
+import { AptoBaseFrontendCustomModule } from '@apto-base-frontend-custom-module';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -64,6 +66,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
+    ForgotPasswordComponent,
   ],
 	exports: [
 		FrontendComponent,
@@ -78,6 +81,8 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
+    ForgotPasswordComponent,
+    AptoBaseFrontendCustomModule,
   ],
   imports: [
     CommonModule,
@@ -100,12 +105,14 @@ RouterRegistry.registerRoutes(Routes);
     MatDialogModule,
     MatDividerModule,
     MatSliderModule,
+    AptoBaseFrontendCustomModule,
   ],
 	providers: [
     ContentSnippetRepository,
     ShopRepository,
     FrontendUserRepository,
-    { provide: OverlayContainer, useClass: FullscreenOverlayContainer }
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
+    AuthMessageBusService
   ],
 })
 export class AptoBaseFrontendModule {

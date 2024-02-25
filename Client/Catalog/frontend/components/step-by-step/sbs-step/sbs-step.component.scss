@@ -1,3 +1,4 @@
+.keep-section-order,
 .dont-keep-section-order {
     .circle {
         border-radius: var(--border-radius-bubble);
@@ -9,72 +10,41 @@
         align-items: center;
         flex-shrink: 0;
         z-index: 10;
-
-        border: 2px solid var(--color-primary);
-        background-color: var(--color-background-sidebar);
-        color: var(--color-primary);
-
-        &.completed {
-            border: 2px solid var(--color-background-completed);
-            background-color: var(--color-background-completed);
-            color: var(--color-completed);
-        }
     }
 
     &.CURRENT {
+        .title {
+            font-weight: 700;
+        }
+
+        // current should always have filled (blue) cycle
         .circle {
             border: 2px solid var(--color-primary);
             background-color: var(--color-primary);
             color: var(--color-background-sidebar);
         }
-
-        .title {
-            font-weight: 700;
-        }
-    }
-}
-
-.keep-section-order {
-    .circle {
-        border-radius: var(--border-radius-bubble);
-        height: 41px;
-        width: 41px;
-        font-size: x-large;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-shrink: 0;
-        z-index: 10;
     }
 
-    &.CURRENT {
-        .circle {
-            border: 2px solid var(--color-primary);
-            background-color: var(--color-primary);
-            color: var(--color-background-sidebar);
-        }
-
-        .title {
-            font-weight: 700;
-        }
-    }
-
-    &.REMAINING {
+    &.REMAINING,
+    &.COMPLETED {
+        // not ok case
         .circle {
             background-color: var(--color-background-sidebar);
             color: var(--color-primary);
             border: 2px solid var(--color-primary);
         }
-    }
 
-    &.COMPLETED {
-        .circle {
-            border: 2px solid var(--color-background-completed);
-            background-color: var(--color-background-completed);
-            color: var(--color-completed);
+        // ok case
+        &.section-valid.section-touched  {
+            .circle {
+                border: 2px solid var(--color-background-completed);
+                background-color: var(--color-background-completed);
+                color: var(--color-completed);
+            }
         }
     }
 }
+
 
 .section {
 	display: flex;
@@ -96,6 +66,7 @@ mat-icon {
 	font-size: small;
 	color: var(--color-text);
 	font-weight: 600;
+    margin-bottom: 4px;
 }
 
 .step {
@@ -113,6 +84,7 @@ mat-icon {
 
     .title {
         font-size: 18px;
+        margin-bottom: 4px;
     }
 
     .element-title,
@@ -121,6 +93,10 @@ mat-icon {
         font-weight: 500;
         color: var(--color-text);
         opacity: 0.64;
+    }
+
+    .element-value {
+        font-weight: 300;
     }
 }
 

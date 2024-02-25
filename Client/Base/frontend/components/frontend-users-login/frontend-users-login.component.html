@@ -10,6 +10,9 @@
             <div class="error-message" *ngIf="loginError$ | async">{{ contentSnippets$ | async | contentSnippet: 'LoginNotSuccessFull' }}</div>
             <apto-input-field [fullWidth]="true" [name]="contentSnippets$ | async | contentSnippet: 'EMailUsername'" [type]="'text'" formControlName="username"></apto-input-field>
             <apto-input-field [fullWidth]="true" [name]="contentSnippets$ | async | contentSnippet: 'Password'" [type]="'password'" formControlName="password"></apto-input-field>
+            <div class="forgot-password" (click)="openPasswordResetModal()">
+                {{contentSnippets$ | async | contentSnippet: 'forgotPassword'}}
+            </div>
         </mat-dialog-content>
 
         <mat-dialog-actions>
