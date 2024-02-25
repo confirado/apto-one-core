@@ -141,6 +141,14 @@
     }
   },
   "aptoSummary": {
+    "finishMessage": {
+      "title": {
+        "de_DE": "Glückwunsch!"
+      },
+      "subline": {
+        "de_DE": "Die Konfiguration ist abgeschlossen"
+      }
+    },
     "totalPrice": {
       "de_DE": "Stückpreis"
     },
