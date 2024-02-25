@@ -2,6 +2,8 @@
 @import "elements";
 
 :host {
+    margin: 0 15px;
+
     .headline {
         @include headline('mobile');
     }
@@ -51,4 +53,29 @@
             gap: 40px;
         }
 	}
+}
+
+@media only screen and (min-width: $desktop-max-width) {
+    :host {
+        margin: 0 0 50px 0;
+
+        .headline {
+            padding-top: 50px;
+        }
+    }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+    :host {
+        .headline {
+            margin-bottom: 30px;
+            h2 {
+                font-size: 20px;
+            }
+
+            .description {
+                font-size: 16px;
+            }
+        }
+    }
 }

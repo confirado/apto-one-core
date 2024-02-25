@@ -11,11 +11,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
-import { FloatInputElementComponent } from './components/float-input-element/float-input-element.component';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
+import { FloatInputElementComponent } from '@element-definition-float-input-element';
 
 @NgModule({
-	declarations: [FloatInputElementComponent],
+	declarations: [
+    FloatInputElementComponent
+  ],
 	exports: [],
 	entryComponents: [],
     imports: [

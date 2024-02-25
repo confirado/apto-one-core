@@ -7,5 +7,11 @@
 			"class": "AptoSelectBoxElementFrontendModule",
 			"file": "apto-select-box-element-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@element-definition-selectbox-element",
+      "path": "components/selectbox-element/selectbox-element.component.ts"
+    }
+  ]
 }

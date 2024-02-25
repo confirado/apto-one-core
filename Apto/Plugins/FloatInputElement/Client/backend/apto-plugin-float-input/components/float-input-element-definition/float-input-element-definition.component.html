@@ -36,12 +36,12 @@
             <div layout="row" layout-align="start" flex>
                 <md-input-container class="md-block" flex>
                     <label>Wert Minimum:</label>
-                    <input type="number" min="0" step="0.001" ng-model="$ctrl.value.minimum">
+                    <input type="number" ng-step="{{ $ctrl.value.step }}" ng-model="$ctrl.value.minimum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>
                     <label>Wert Maximum:</label>
-                    <input type="number" min="0" step="0.001" ng-model="$ctrl.value.maximum">
+                    <input type="number" ng-step="{{ $ctrl.value.step }}" ng-model="$ctrl.value.maximum">
                 </md-input-container>
                 <div flex="5"></div>
                 <md-input-container class="md-block" flex>

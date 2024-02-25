@@ -54,9 +54,14 @@ mat-toolbar {
 
 @media only screen and (max-width: $mobile-max-width) {
     .paymentOptions {
+        padding: 15px 0;
         img {
             width: 100%;
         }
+    }
+
+    .copyright {
+        padding: 15px 0;
     }
 	mat-toolbar {
 		width: 100%;

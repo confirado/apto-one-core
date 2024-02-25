@@ -39,6 +39,8 @@
                     [type]="'float'"
                     [step]="stepValue"
                     [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
+                    [increaseStep]="this.increaseStep"
+                    [decreaseStep]="this.decreaseStep"
                 >
                 </apto-input-field>
             </div>
@@ -65,6 +67,8 @@
                     [suffix]="suffix | translate"
                     [type]="'float'"
                     [step]="stepValue"
+                    [increaseStep]="this.increaseStep"
+                    [decreaseStep]="this.decreaseStep"
                 >
                 </apto-input-field>
 
@@ -95,7 +99,7 @@
 
     <div class="apply-button" *ngIf="inputType === 'input'">
         <button mat-flat-button color="primary" (click)="saveInput(formElementInput.value)">
-            {{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+            {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
         </button>
         <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}

@@ -141,6 +141,7 @@ class RuleRepetitionService
                     continue;
                 }
 
+                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
                 $rawRule['conditions'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
@@ -148,7 +149,7 @@ class RuleRepetitionService
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
-                    'repetition' => $repetition,
+                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
                 ];
             }
 
@@ -159,6 +160,7 @@ class RuleRepetitionService
                     continue;
                 }
 
+                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
                 $rawRule['implications'][] = [
                     'type' => $criterion::TYPE,
                     'sectionId' => $criterion->getSectionId()->getId(),
@@ -166,7 +168,7 @@ class RuleRepetitionService
                     'property' => $criterion->getProperty(),
                     'operator' => $criterion->getOperator()->getOperator(),
                     'value' => $criterion->getValue(),
-                    'repetition' => $repetition,
+                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
                 ];
             }
 

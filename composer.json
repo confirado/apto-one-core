@@ -1,6 +1,6 @@
 {
     "name": "apto-one/core",
-    "version": "2.1.68",
+    "version": "2.1.87",
     "autoload": {
         "psr-4": {
             "": ""

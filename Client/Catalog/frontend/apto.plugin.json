@@ -5,5 +5,15 @@
   "imports": [{
     "class": "AptoCatalogFrontendModule",
     "file": "apto-catalog-frontend.module.ts"
-  }]
+  }],
+  "aliases": [
+    {
+      "alias": "@apto-catalog-frontend-custom-module",
+      "path": "apto-catalog-frontend-custom.module.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sbs-elements",
+      "path": "components/step-by-step/sbs-elements/sbs-elements.component.ts"
+    }
+  ]
 }

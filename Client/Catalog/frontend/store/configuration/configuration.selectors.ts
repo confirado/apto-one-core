@@ -5,11 +5,13 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem, ParameterStateTypes,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';
+import { TempStateItem } from './configuration.model';
+import { ProductState } from '../product/product.reducer';
 
 export const selectConfiguration = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration);
 
@@ -31,6 +33,8 @@ function getDescription(section: Section, state: CatalogFeatureState, locale: st
 
 	return description;
 }
+
+export const selectTempState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.tempState);
 
 export const selectProgressState = createSelector(featureSelector, selectLocale, (state: CatalogFeatureState, locale: string | null) => {
   const cSections = state.configuration.state.sections.filter((section) => !section.hidden && (!section.disabled || !state.product.product.keepSectionOrder));
@@ -98,7 +102,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 
 		if (section.id === currentStepId && section.repetition === currentRepetition) {
 			currentStep = {
-				status: 'CURRENT',
+				status: ProgressStatuses.CURRENT,
 				fulfilled,
 				description,
 				active,
@@ -107,7 +111,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			};
 		} else if (currentStep) {
 			afterSteps.push({
-				status: 'REMAINING',
+				status: ProgressStatuses.REMAINING,
 				fulfilled,
 				description,
 				active,
@@ -116,7 +120,7 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			});
 		} else {
 			beforeSteps.push({
-				status: 'COMPLETED',
+				status: ProgressStatuses.COMPLETED,
 				fulfilled,
 				description,
 				active,
@@ -145,25 +149,41 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 	return progressState;
 });
 
-export const selectProgress = createSelector(selectProgressState, (state: ProgressState) => {
-  // if current step is undefined we hav no step let to configure so we can return 100
-  if (!state.currentStep) {
-    return 100;
+export const selectProgress = createSelector(
+  featureSelector, selectProgressState, selectTempState, selectProduct, (state: CatalogFeatureState, progressState: ProgressState, tempState: TempStateItem[], product: ProductState) => {
+    // if current step is undefined we have no step let to configure so we can return 100
+    if (!progressState.currentStep) {
+      return 100;
+    }
+
+    let completedSteps = 0;
+    if (product.product.keepSectionOrder === true) {
+      // case section order is fixed
+      completedSteps = progressState.beforeSteps.length;
+      let currentActiveElements = progressState.currentStep.elements.filter(e => e.state.active).length;
+      let currentMandatoryElements = progressState.currentStep.elements.filter(e => e.state.mandatory).length;
+      let currentMandatoryActiveElements = progressState.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
+
+      // if current step seems complete we add 1 step to completed steps
+      // current step is complete if minimum 1 element is selected and all mandatory elements are selected
+      if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
+        completedSteps++;
+      }
+    } else {
+      // case section order is not fixed
+      progressState.steps.forEach((step: ProgressStep) => {
+        const section = state.configuration.state.sections.find((section) => section.id === step.section.id && section.repetition === step.section.repetition);
+        const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+        const tempStateItem = tempState.find((tempStateItem) => tempStateItem.sectionId === section.id && tempStateItem.touched === true && tempStateItem.repetition === section.repetition);
+        if (sectionIsValid(section, elements) && tempStateItem) {
+          completedSteps++;
+        }
+      });
+    }
+
+    return Math.round((completedSteps / progressState.steps.length) * 100);
   }
-
-  let completedSteps = state.beforeSteps.length;
-  let currentActiveElements = state.currentStep.elements.filter(e => e.state.active).length;
-  let currentMandatoryElements = state.currentStep.elements.filter(e => e.state.mandatory).length;
-  let currentMandatoryActiveElements = state.currentStep.elements.filter(e => e.state.mandatory && e.state.active).length;
-
-  // if current step seems complete we add 1 step to completed steps
-  // current step is complete if minimum 1 element is selected and all mandatory elements are selected
-  if (currentActiveElements > 0 && currentMandatoryElements === currentMandatoryActiveElements) {
-    completedSteps++;
-  }
-
-  return Math.round((completedSteps / state.steps.length) * 100);
-});
+);
 
 export const selectCompressedState = createSelector(
 	featureSelector,
@@ -426,7 +446,7 @@ export const configurationIsValid = createSelector(featureSelector, (state: Cata
 
   for (let i = 0; i < state.configuration.state.sections.length; i++) {
     const section = state.configuration.state.sections[i];
-    const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id);
+    const elements = state.configuration.state.elements.filter((element) => element.sectionId === section.id && element.sectionRepetition === section.repetition);
     if (!sectionIsValid(section, elements)) {
       return false;
     }
@@ -445,26 +465,21 @@ export const selectSectionIsValid = (sectionId: string, repetition: number) => c
 });
 
 function sectionIsValid(section, elements) {
-  // check disabled section
+  // if section is disabled we consider it as valid, so that we can go to the next sections
   if (section.disabled === true) {
     return true;
   }
 
-  // check allow multiple section
   if (section.multiple === true) {
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      if (
-        element.disabled === false &&
-        element.active === false &&
-        element.mandatory === true
-      ) {
+    for (let element of elements) {
+      // all mandatory elements in the section that are not disabled must be selected, otherwise we consider the whole section as invalid
+      if (element.disabled === false && element.mandatory === true && element.active === false) {
         return false;
       }
     }
   }
 
-  // check section mandatory field
+  // if section is mandatory then it must be selected
   if (section.mandatory === true && section.active === false) {
     return false;
   }

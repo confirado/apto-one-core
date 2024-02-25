@@ -1,4 +1,5 @@
 @import "form-inputs";
+@import "globals";
 
 :host {
     @include input-host();
@@ -36,3 +37,11 @@
 }
 
 @include select-overlay();
+
+@media only screen and (min-width: $mobile-max-width) {
+    .select-field {
+        .name {
+            @include name('tablet');
+        }
+    }
+}

@@ -1,4 +1,5 @@
-/// <reference types="cypress" />
+/// <reference path="./commands.d.ts" />
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -35,3 +36,11 @@
 //     }
 //   }
 // }
+
+// these configs are for the component testing, do not uncomment because they cause issue in e2e testing
+// import { mount } from 'cypress/angular'
+// Cypress.Commands.add('mount', mount);
+
+Cypress.Commands.add('dataCy', (dataId) => {
+  return cy.get(`[data-cy="${dataId}"]`);
+});
