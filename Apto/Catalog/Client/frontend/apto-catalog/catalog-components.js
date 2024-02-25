@@ -16,9 +16,6 @@ import SelectComponent from './components/select/select.component';
 import ElementAttachmentImageZoom from './components/element-attachment-image-zoom/element-attachment-image-zoom.component';
 import ElementIsNotAvailable from "./components/element-is-not-available/element-is-not-available";
 import RouteAccessFailedComponent from "./components/route-access-failed/route-access-failed.component";
-import {
-    UpdatePasswordComponent
-} from '../../../../../Client/Catalog/frontend/components/update-password/update-password.component';
 
 const AptoFrontendComponents = [
     HomeComponent,
@@ -37,8 +34,7 @@ const AptoFrontendComponents = [
     SliderAction,
     ElementAttachmentImageZoom,
     ElementIsNotAvailable,
-    RouteAccessFailedComponent,
-    UpdatePasswordComponent
+    RouteAccessFailedComponent
 ];
 
 export default AptoFrontendComponents;
