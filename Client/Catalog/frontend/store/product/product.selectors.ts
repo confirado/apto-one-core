@@ -7,6 +7,9 @@ export const selectProduct = createSelector(featureSelector, (state: CatalogFeat
 export const selectElement = (id: string) => createSelector(featureSelector,
   (state: CatalogFeatureState) => state.product.elements.find((e: Element) => e.id === id)
 );
+export const selectElements = (ids: string[]) => createSelector(featureSelector,
+  (state: CatalogFeatureState) => state.product.elements.filter((e: Element) => ids.includes(e.id))
+);
 
 export const selectProductList = createSelector(featureSelector, (state: CatalogFeatureState) => state.product.productList);
 

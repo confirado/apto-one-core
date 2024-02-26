@@ -2,10 +2,14 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectCurrentRenderImages } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { selectElement } from '@apto-catalog-frontend/store/product/product.selectors';
+import { ElementState, RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  selectCurrentRenderImages,
+  selectCurrentStateElements, selectStateActiveElements,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectElement, selectElements } from '@apto-catalog-frontend/store/product/product.selectors';
 import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
+import { ReplaceColorData } from '@apto-catalog-frontend/models/replace-color-data';
 
 @Injectable({
   providedIn: 'root',
@@ -129,12 +133,42 @@ export class RenderImageService implements OnDestroy {
    * @param loadedImages
    * @private
    */
-  private drawImagesOnCanvas(loadedImages): void {
+  private async drawImagesOnCanvas(loadedImages): Promise<void> {
+    const colorsToReplace = await this.findAllCustomPropertiesValues('overlayProductColor');
     for (const img of loadedImages) {
-      this.drawImageByRepeating(img.imageHtml, img.imgObj);
+      this.drawImageByRepeating(img.imageHtml, img.imgObj, colorsToReplace);
       // this.drawImageByScaling(img.imageHtml, img.imgObj);
       // this.drawImageByScalingAndRepeating(img.imageHtml, img.imgObj);
     }
+  }
+
+  private findAllCustomPropertiesValues(key: string): Promise<ReplaceColorData[]> {
+    return new Promise((resolve) => {
+      this.store.select(selectStateActiveElements).subscribe((result: ElementState[]) => {
+        const data: ReplaceColorData[] = [];
+        const elementIds = result.map((e: ElementState) => e.id);
+        this.store.select(selectElements(elementIds)).subscribe((elements) => {
+          for (const singleElement of elements) {
+            const customPropertyColor: CustomProperty = singleElement.customProperties.find((e) => e.key === key);
+            if (customPropertyColor) {
+              // value in the format e.g.	#E7E7E7,#800080
+              const colors = (customPropertyColor.value as string).split(',');
+              const colorData = data.find((c) => c.search === colors[0]);
+              if (colorData) {
+                colorData.replace = colors[1];
+              } else {
+                data.push({
+                  search: colors[0],
+                  replace: colors[1],
+                });
+              }
+            }
+          }
+
+          return resolve(data);
+        });
+      });
+    });
   }
 
   private hexToRgb(hex: string): number[] {
@@ -182,9 +216,10 @@ export class RenderImageService implements OnDestroy {
    *
    * @param imageHtml
    * @param imgObj
+   * @param colorsToReplace
    * @private
    */
-  private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData): void {
+  private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData, colorsToReplace: ReplaceColorData[]): void {
     this.store.select(selectElement(imgObj.elementId)).subscribe((storeElement) => {
       let tempCanvas = null;
       const imageWidth = imageHtml.width;
@@ -198,7 +233,14 @@ export class RenderImageService implements OnDestroy {
       if (customPropertyColor) {
         // value in the format e.g.	#E7E7E7,#800080
         const colors = (customPropertyColor.value as string).split(',');
-        tempCanvas = this.drawImageWithColorReplacement(imageHtml, colors[0], colors[1]);
+        colorsToReplace.push({
+          search: colors[0],
+          replace: colors[1],
+        });
+      }
+
+      for (const colorReplacement of colorsToReplace) {
+        tempCanvas = this.drawImageWithColorReplacement(imageHtml, colorReplacement.search, colorReplacement.replace);
       }
 
       if (imgObj.renderImageOptions?.renderImageOptions?.type.toLowerCase() === 'wiederholbar') {
