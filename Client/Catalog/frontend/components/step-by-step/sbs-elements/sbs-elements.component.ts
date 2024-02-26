@@ -82,7 +82,7 @@ export class SbsElementsComponent implements OnInit{
 	}
 
 	public prevStep(state: ProgressState): void {
-    const step = state.beforeSteps.length ? state.beforeSteps[0] : state.currentStep;
+    const step = state.beforeSteps.length ? state.beforeSteps[state.beforeSteps.length - 1] : state.currentStep;
 
 		this.store.dispatch(setStep({
       payload: {
