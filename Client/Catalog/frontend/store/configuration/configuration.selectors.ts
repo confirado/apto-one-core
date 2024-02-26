@@ -5,7 +5,7 @@ import {
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses, ElementState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
@@ -429,6 +429,10 @@ export const selectElementState = (elementId: string) => createSelector(featureS
 
 export const selectStateElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
   return state.configuration.state.elements;
+});
+
+export const selectStateActiveElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  return state.configuration.state.elements.filter((e: ElementState) => e.active);
 });
 
 export const configurationIsValid = createSelector(featureSelector, (state: CatalogFeatureState) => {
