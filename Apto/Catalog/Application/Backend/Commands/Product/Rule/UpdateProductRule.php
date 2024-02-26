@@ -40,6 +40,11 @@ class UpdateProductRule extends ProductRuleCommand
     private string $description;
 
     /**
+     * @var int
+     */
+    private int $position;
+
+    /**
      * @param string $productId
      * @param string $ruleId
      * @param string $ruleName
@@ -49,6 +54,7 @@ class UpdateProductRule extends ProductRuleCommand
      * @param int    $implicationsOperator
      * @param bool   $softRule
      * @param string $description
+     * @param int    $position
      */
     public function __construct(
         string $productId,
@@ -59,7 +65,8 @@ class UpdateProductRule extends ProductRuleCommand
         int $conditionsOperator = 0,
         int $implicationsOperator = 0,
         bool $softRule = false,
-        string $description = ''
+        string $description = '',
+        int $position = 0,
     ) {
         parent::__construct($productId, $ruleId);
         $this->ruleName = $ruleName;
@@ -69,6 +76,7 @@ class UpdateProductRule extends ProductRuleCommand
         $this->implicationsOperator = $implicationsOperator;
         $this->softRule = $softRule;
         $this->description = $description;
+        $this->position = $position;
     }
 
     /**
@@ -125,5 +133,13 @@ class UpdateProductRule extends ProductRuleCommand
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 }

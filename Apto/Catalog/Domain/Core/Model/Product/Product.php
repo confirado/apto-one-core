@@ -3263,6 +3263,35 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid $ruleId
+     *
+     * @return int|null
+     */
+    public function getRulePosition(AptoUuid $ruleId): ?int
+    {
+        $rule = $this->getRule($ruleId);
+
+        return $rule?->getPosition();
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param int      $position
+     *
+     * @return $this
+     */
+    public function setRulePosition(AptoUuid $ruleId, int $position): Product
+    {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule !== null) {
+            $rule->setPosition($position);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return AptoUuid
      * @throws InvalidUuidException
      */

@@ -109,6 +109,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                 $scope.productDetail.position = angular.copy($scope.nextPosition);
             });
         }
+
+        console.log('rules')
+        console.log($scope.rules)
     }
 
     function assignDefaultShop() {
@@ -257,7 +260,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         var editRuleNameDialog = {
             modelValue: rule.name,
             save: function (input) {
-                $scope.updateProductRule(productId, rule.id, input.$modelValue, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description).then(() => {
+                $scope.updateProductRule(productId, rule.id, input.$modelValue, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description, rule.position).then(() => {
                     $scope.fetchRules(productId);
                 });
             },
@@ -269,7 +272,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function setRuleActive(rule) {
-        $scope.updateProductRule(productId, rule.id, rule.name, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description).then(() => {
+        $scope.updateProductRule(productId, rule.id, rule.name, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description, rule.position).then(() => {
             $scope.fetchRules(productId);
         });
     }

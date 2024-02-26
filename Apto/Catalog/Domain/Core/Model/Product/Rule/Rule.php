@@ -78,6 +78,11 @@ class Rule extends AptoEntity
     protected string $description;
 
     /**
+     * @var int
+     */
+    protected int $position;
+
+    /**
      * Rule constructor.
      * @param AptoUuid $id
      * @param Product $product
@@ -95,6 +100,7 @@ class Rule extends AptoEntity
         $this->softRule = false;
         $this->implications = new ArrayCollection();
         $this->description = '';
+        $this->position = 0;
     }
 
     /**
@@ -700,7 +706,8 @@ class Rule extends AptoEntity
             ->setConditionsOperator($this->getConditionsOperator())
             ->setImplicationsOperator($this->getImplicationsOperator())
             ->setSoftRule($this->getSoftRule())
-            ->setDescription($this->getDescription());
+            ->setDescription($this->getDescription())
+            ->setPosition($this->getPosition());
 
         // return new rule
         return $rule;
@@ -864,6 +871,25 @@ class Rule extends AptoEntity
     public function setDescription(string $description): Rule
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int $position
+     *
+     * @return $this
+     */
+    public function setPosition(int $position): Rule
+    {
+        $this->position = $position;
         return $this;
     }
 }

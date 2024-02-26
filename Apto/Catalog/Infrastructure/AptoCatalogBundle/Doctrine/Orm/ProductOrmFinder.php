@@ -534,7 +534,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'conditionsOperator',
                     'implicationsOperator',
                     'softRule',
-                    'description'
+                    'description',
+                    'position',
                 ],
                 'c' => [
                     ['id.id', 'id'],
@@ -749,7 +750,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'conditionsOperator',
                     'implicationsOperator',
                     'softRule',
-                    'description'
+                    'description',
+                    'position',
                 ]
             ])
             ->setJoins([
