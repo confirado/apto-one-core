@@ -3134,7 +3134,7 @@ class Product extends AptoAggregate
      * @param AptoUuid $ruleId
      * @return Rule|null
      */
-    private function getRule(AptoUuid $ruleId): ?Rule
+    public function getRule(AptoUuid $ruleId): ?Rule
     {
         if ($this->hasRule($ruleId)) {
             return $this->rules->get($ruleId->getId());
@@ -3411,6 +3411,23 @@ class Product extends AptoAggregate
     public function getComputedProductValues(): Collection
     {
         return $this->computedProductValues;
+    }
+
+    /**
+     * @param string $computedValueId
+     *
+     * @return ComputedProductValue|null
+     */
+    public function getComputedProductValue(string $computedValueId): ?ComputedProductValue
+    {
+        /** @var ComputedProductValue $value */
+        foreach ($this->getComputedProductValues() as $value) {
+            if ($value->getId()->getId() === $computedValueId) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -3722,25 +3739,74 @@ class Product extends AptoAggregate
      */
     public function copyRule(AptoUuid $ruleId): Product
     {
-        // todo we have issue when comping not empty rule
-
         $rule = $this->getRule($ruleId);
-        $newRuleId = $this->nextRuleId();
-        $entityMapping = new ArrayCollection();
+        if ($rule === null) {
+            return $this;
+        }
 
-        $entityMapping->set(
-            $this->getId()->getId(),
-            $this
-        );
+        $newRuleId = $this->nextRuleId();
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
 
         $copiedRule = $rule->copy($newRuleId, $entityMapping);
 
-        if ($rule !== null) {
-            $this->rules->set(
-                $newRuleId->getId(),
-                $copiedRule
-            );
+        $this->rules->set(
+            $newRuleId->getId(),
+            $copiedRule
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param AptoUuid $conditionId
+     *
+     * @return $this
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRuleCondition(AptoUuid $ruleId, AptoUuid $conditionId): Product
+    {
+        $rule = $this->getRule($ruleId);
+        if ($rule === null) {
+            return $this;
         }
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($rule->getId()->getId(), $rule);
+
+        $rule->copyCondition($conditionId, $entityMapping);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param AptoUuid $implicationId
+     *
+     * @return $this
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRuleImplication(AptoUuid $ruleId, AptoUuid $implicationId): Product
+    {
+        $rule = $this->getRule($ruleId);
+        if ($rule === null) {
+            return $this;
+        }
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($rule->getId()->getId(), $rule);
+
+        $rule->copyImplication($implicationId, $entityMapping);
 
         return $this;
     }

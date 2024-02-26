@@ -232,6 +232,126 @@ class Rule extends AptoEntity
     }
 
     /**
+     * @param AptoUuid $conditionId
+     * @param int      $type
+     *
+     * @return $this
+     */
+    public function updateConditionType(AptoUuid $conditionId, int $type): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setType($type);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid             $conditionId
+     * @param ComputedProductValue $computedValue
+     *
+     * @return $this
+     */
+    public function updateConditionComputedValue(AptoUuid $conditionId, ComputedProductValue $computedValue): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setComputedProductValue($computedValue);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $conditionId
+     * @param string|null $sectionId
+     *
+     * @return $this
+     * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
+     */
+    public function updateConditionSectionId(AptoUuid $conditionId, ?string $sectionId): Rule
+    {
+        $sectionId = $sectionId !== null ? new AptoUuid($sectionId) : null;
+
+        $condition = $this->getCondition($conditionId);
+
+        if ($condition === null) {
+            return $this;
+        }
+
+        $condition->setSectionId($sectionId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $conditionId
+     * @param string|null $elementId
+     *
+     * @return $this
+     * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
+     */
+    public function updateConditionElementId(AptoUuid $conditionId, ?string $elementId): Rule
+    {
+        $elementId = $elementId !== null ? new AptoUuid($elementId) : null;
+
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setElementId(new AptoUuid($elementId));
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $conditionId
+     * @param string|null $property
+     *
+     * @return $this
+     */
+    public function updateConditionProperty(AptoUuid $conditionId, ?string $property): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setProperty($property);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid              $conditionId
+     * @param RuleCriterionOperator $ruleCriterionOperator
+     *
+     * @return $this
+     */
+    public function updateConditionOperator(AptoUuid $conditionId, RuleCriterionOperator $ruleCriterionOperator): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setOperator($ruleCriterionOperator);
+
+        return $this;
+    }
+
+    /**
      * @param AptoUuid $id
      * @param string $value
      * @return $this
@@ -276,7 +396,7 @@ class Rule extends AptoEntity
     /**
      * @return AptoUuid
      */
-    private function nextConditionId(): AptoUuid
+    public function nextConditionId(): AptoUuid
     {
         return new AptoUuid();
     }
@@ -369,6 +489,126 @@ class Rule extends AptoEntity
                 $value
             )
         );
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $implicationId
+     * @param int      $type
+     *
+     * @return $this
+     */
+    public function updateImplicationType(AptoUuid $implicationId, int $type): Rule
+    {
+        $implication = $this->getImplication($implicationId);
+
+        if ($implication === null) {
+            return $this;
+        }
+
+        $implication->setType($type);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid             $implicationId
+     * @param ComputedProductValue $computedValue
+     *
+     * @return $this
+     */
+    public function updateImplicationComputedValue(AptoUuid $implicationId, ComputedProductValue $computedValue): Rule
+    {
+        $implication = $this->getImplication($implicationId);
+
+        if (null === $implication) {
+            return $this;
+        }
+
+        $implication->setComputedProductValue($computedValue);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $implicationId
+     * @param string|null $sectionId
+     *
+     * @return $this
+     * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
+     */
+    public function updateImplicationSectionId(AptoUuid $implicationId, ?string $sectionId): Rule
+    {
+        $sectionId = $sectionId !== null ? new AptoUuid($sectionId) : null;
+
+        $implication = $this->getImplication($implicationId);
+
+        if ($implication === null) {
+            return $this;
+        }
+
+        $implication->setSectionId($sectionId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $implicationId
+     * @param string|null $elementId
+     *
+     * @return $this
+     * @throws \Apto\Base\Domain\Core\Model\InvalidUuidException
+     */
+    public function updateImplicationElementId(AptoUuid $implicationId, ?string $elementId): Rule
+    {
+        $elementId = $elementId !== null ? new AptoUuid($elementId) : null;
+
+        $implication = $this->getImplication($implicationId);
+
+        if (null === $implication) {
+            return $this;
+        }
+
+        $implication->setElementId(new AptoUuid($elementId));
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid    $implicationId
+     * @param string|null $property
+     *
+     * @return $this
+     */
+    public function updateImplicationProperty(AptoUuid $implicationId, ?string $property): Rule
+    {
+        $implication = $this->getImplication($implicationId);
+
+        if (null === $implication) {
+            return $this;
+        }
+
+        $implication->setProperty($property);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid              $implicationId
+     * @param RuleCriterionOperator $ruleCriterionOperator
+     *
+     * @return $this
+     */
+    public function updateImplicationOperator(AptoUuid $implicationId, RuleCriterionOperator $ruleCriterionOperator): Rule
+    {
+        $implication = $this->getImplication($implicationId);
+
+        if (null === $implication) {
+            return $this;
+        }
+
+        $implication->setOperator($ruleCriterionOperator);
+
         return $this;
     }
 
@@ -467,6 +707,25 @@ class Rule extends AptoEntity
     }
 
     /**
+     * @param AptoUuid   $conditionId
+     * @param Collection $entityMapping
+     *
+     * @return AptoUuid|null
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyCondition(AptoUuid $conditionId, Collection &$entityMapping): ?AptoUuid
+    {
+        $newConditionId = $this->nextConditionId();
+        $copiedCondition = $this->getCondition($conditionId)->copy($newConditionId, $entityMapping);
+        $this->conditions->set($newConditionId->getId(), $copiedCondition);
+
+        return $copiedCondition->getId();
+    }
+
+    /**
      * @param Collection $entityMapping
      * @return Collection
      * @throws RuleCriterionInvalidOperatorException
@@ -524,6 +783,25 @@ class Rule extends AptoEntity
         }
 
         return $collection;
+    }
+
+    /**
+     * @param AptoUuid   $implicationId
+     * @param Collection $entityMapping
+     *
+     * @return AptoUuid|null
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyImplication(AptoUuid $implicationId, Collection &$entityMapping): ?AptoUuid
+    {
+        $newImplicationId = $this->nextImplicationId();
+        $copiedImplication = $this->getImplication($implicationId)->copy($newImplicationId, $entityMapping);
+        $this->implications->set($newImplicationId->getId(), $copiedImplication);
+
+        return $copiedImplication->getId();
     }
 
     /**

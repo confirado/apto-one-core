@@ -33,11 +33,20 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         fetchProductRules: ProductActions.fetchRules,
         addProductRuleCondition: ProductActions.addProductRuleCondition,
         addProductRuleImplication: ProductActions.addProductRuleImplication,
+
+        updateProductRuleCondition: ProductActions.updateProductRuleCondition,
+        copyProductRuleCondition: ProductActions.copyProductRuleCondition,
         removeProductRuleCondition: ProductActions.removeProductRuleCondition,
-        removeProductRuleImplication: ProductActions.removeProductRuleImplication
+
+        updateProductRuleImplication: ProductActions.updateProductRuleImplication,
+        copyProductRuleImplication: ProductActions.copyProductRuleImplication,
+        removeProductRuleImplication: ProductActions.removeProductRuleImplication,
     })($scope);
 
     function init() {
+        $scope.currentConditionId = null;
+        $scope.currentImplicationId = null;
+
         $scope.criterionTypes = [
             {
                 name: 'Standard',
@@ -181,6 +190,86 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         }
         // @todo show error message
         return false;
+    }
+
+    function saveCondition() {
+        const condition = {
+            computedProductValueId: $scope.selectedConditionComputedValue ? $scope.selectedConditionComputedValue.id : null,
+            elementId: $scope.selectedConditionElement ? $scope.selectedConditionElement[0].id : null,
+            id: $scope.currentConditionId,
+            operatorId: $scope.selectedConditionOperator ? $scope.selectedConditionOperator.id : null,
+            property: $scope.selectedConditionProperty ? $scope.selectedConditionProperty[0] : null,
+            sectionId: $scope.selectedConditionSection ? $scope.selectedConditionSection[0].id : null,
+            typeId: $scope.conditionCriterionType.id,
+            value: $scope.selectedConditionValue,
+        }
+
+        $scope.updateProductRuleCondition(productId, ruleId, condition).then(() => {
+            $scope.fetchConditions(ruleId);
+            resetSelectedCondition();
+            $scope.currentConditionId = null;
+        });
+    }
+
+    function updateCondition(conditionId) {
+
+        $scope.currentConditionId = conditionId;
+
+        $scope.fetchSections(productId).then(() => {
+            $scope.conditions.forEach(condition => {
+                if (condition.id === conditionId) {
+                    // sections
+                    if (condition.type === 0) {
+                        // Type
+                        $scope.conditionCriterionType = {
+                            name: 'Standard',
+                            id: 0
+                        }
+                        $scope.onChangeConditionCriterionType();
+
+                        // section
+                        $scope.selectedConditionSection = [getSection(condition.sectionId)];
+                        onChangeSelectedConditionSection();
+
+                        // element
+                        const element = getElement(condition.sectionId, condition.elementId);
+                        if (element) {
+                            $scope.selectedConditionElement = [element];
+                            onChangeSelectedConditionElement();
+                        }
+                    // berechnete werte
+                    } else {
+                        $scope.conditionCriterionType = {
+                            name: 'Berechneter Wert',
+                            id: 1
+                        }
+                        $scope.onChangeConditionCriterionType();
+
+                        $scope.selectedConditionComputedValue = condition.computedProductValue[0];
+                    }
+
+                    // field
+                    const property = condition.property;
+                    if (property) {
+                        $scope.selectedConditionProperty = [property];
+                        onChangeSelectedConditionProperty();
+                    }
+
+                    // operator
+                    $scope.selectedConditionOperator = getOperator(condition.operator);
+                    onChangeSelectedConditionOperator();
+
+                    // value
+                    $scope.selectedConditionValue = condition.value;
+                }
+            });
+        });
+    }
+
+    function copyCondition(conditionId) {
+        $scope.copyProductRuleCondition(productId, ruleId, conditionId).then(() => {
+            $scope.fetchConditions(ruleId);
+        })
     }
 
     function removeCondition(conditionId) {
@@ -357,6 +446,11 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         };
     }
 
+    function resetConditionForm() {
+        resetSelectedCondition();
+        $scope.currentConditionId = null;
+    }
+
     function addImplication() {
         const implications = getValidImplications();
         if (false !== implications) {
@@ -374,6 +468,87 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         }
         // @todo show error message
         return false;
+    }
+
+
+    function saveImplication(implicationId) {
+        const implication = {
+            id: $scope.currentImplicationId,
+            typeId: $scope.implicationCriterionType.id,
+            computedProductValueId: $scope.selectedImplicationComputedValue ? $scope.selectedImplicationComputedValue.id : null,
+            sectionId: $scope.selectedImplicationSection ? $scope.selectedImplicationSection[0].id : null,
+            elementId: $scope.selectedImplicationElement ? $scope.selectedImplicationElement[0].id : null,
+            operatorId: $scope.selectedImplicationOperator ? $scope.selectedImplicationOperator.id : null,
+            property: $scope.selectedImplicationProperty ? $scope.selectedImplicationProperty[0] : null,
+            value: $scope.selectedImplicationValue,
+        }
+
+        $scope.updateProductRuleImplication(productId, ruleId, implication).then(() => {
+            $scope.fetchImplications(ruleId);
+            resetSelectedImplication();
+            $scope.currentImplicationId = null;
+        })
+    }
+
+    function updateImplication(implicationId) {
+
+        $scope.currentImplicationId = implicationId;
+
+        $scope.fetchSections(productId).then(() => {
+            $scope.implications.forEach(implication => {
+
+                if (implication.id === implicationId) {
+                    if (implication.type === 0) { // sections
+                        // Type
+                        $scope.implicationCriterionType = {
+                            name: 'Standard',
+                            id: 0
+                        }
+                        $scope.onChangeImplicationCriterionType();
+
+                        // section
+                        $scope.selectedImplicationSection = [getSection(implication.sectionId)];
+                        onChangeSelectedImplicationSection();
+
+                        // element
+                        const element = getElement(implication.sectionId, implication.elementId);
+                        if (element) {
+                            $scope.selectedImplicationElement = [element];
+                            onChangeSelectedImplicationElement();
+                        }
+                    } else { // berechnete werte
+
+                        $scope.implicationCriterionType = {
+                            name: 'Berechneter Wert',
+                            id: 1
+                        }
+                        $scope.onChangeImplicationCriterionType();
+
+                        $scope.selectedImplicationComputedValue = implication.computedProductValue[0];
+                    }
+
+                    // field
+                    const property = implication.property;
+                    if (property) {
+                        $scope.selectedImplicationProperty = [property];
+                        onChangeSelectedImplicationProperty();
+                    }
+
+                    // operator
+                    $scope.selectedImplicationOperator = getOperator(implication.operator);
+                    onChangeSelectedImplicationOperator();
+
+                    // value
+                    $scope.selectedImplicationValue = implication.value;
+                }
+            });
+        });
+    }
+
+    function copyImplication(implicationId) {
+        $scope.copyProductRuleImplication(productId, ruleId, implicationId).then(() => {
+            $scope.fetchImplications(ruleId);
+        });
     }
 
     function removeImplication(implicationId) {
@@ -548,9 +723,14 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         };
     }
 
+    function resetImplicationForm() {
+        resetSelectedImplication();
+        $scope.currentImplicationId = null;
+    }
+
     function getSection(sectionId) {
         for (let i = 0; i < $scope.sections.length; i++) {
-            if ($scope.sections[i].id == sectionId) {
+            if ($scope.sections[i].id === sectionId) {
                 return angular.copy($scope.sections[i]);
             }
         }
@@ -559,7 +739,7 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function getElement(sectionId, elementId) {
         const section = getSection(sectionId);
         for (let i = 0; i < section.elements.length; i++) {
-            if (section.elements[i].id == elementId) {
+            if (section.elements[i].id === elementId) {
                 return angular.copy(section.elements[i]);
             }
         }
@@ -567,15 +747,19 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
 
     function getOperator(operatorId) {
         for (let i = 0; i < $scope.operatorsFull.length; i++) {
-            if ($scope.operatorsFull[i].id == operatorId) {
+            if ($scope.operatorsFull[i].id === operatorId) {
                 return angular.copy($scope.operatorsFull[i]);
             }
         }
     }
 
     function getSectionIdentifier(sectionId) {
+        if (null === sectionId) {
+            return null;
+        }
         const section = getSection(sectionId);
-        return section.identifier;
+
+        return section ? section.identifier : '';
     }
 
     function getElementIdentifier(sectionId, elementId) {
@@ -583,7 +767,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             return null;
         }
         const element = getElement(sectionId, elementId);
-        return element.identifier;
+
+        return element ? element.identifier : '';
     }
 
     function getOperatorName(operatorId) {
@@ -638,16 +823,27 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     $scope.onChangeSelectedConditionOperator = onChangeSelectedConditionOperator;
     $scope.onChangeConditionCriterionType = onChangeConditionCriterionType;
     $scope.addCondition = addCondition;
-    $scope.removeCondition = removeCondition;
-    $scope.isValidCondition = isValidCondition;
 
+    $scope.copyCondition = copyCondition;
+    $scope.updateCondition = updateCondition;
+    $scope.removeCondition = removeCondition;
+    $scope.saveCondition = saveCondition;
+
+    $scope.isValidCondition = isValidCondition;
     $scope.onChangeSelectedImplicationSection = onChangeSelectedImplicationSection;
     $scope.onChangeSelectedImplicationElement = onChangeSelectedImplicationElement;
     $scope.onChangeSelectedImplicationProperty = onChangeSelectedImplicationProperty;
     $scope.onChangeSelectedImplicationOperator = onChangeSelectedImplicationOperator;
     $scope.onChangeImplicationCriterionType = onChangeImplicationCriterionType;
     $scope.addImplication = addImplication;
+    $scope.saveImplication = saveImplication;
+    $scope.resetImplicationForm = resetImplicationForm;
+    $scope.resetConditionForm = resetConditionForm;
+
     $scope.removeImplication = removeImplication;
+    $scope.copyImplication = copyImplication;
+    $scope.updateImplication = updateImplication;
+
     $scope.isValidImplication = isValidImplication;
 
     $scope.getSectionIdentifier = getSectionIdentifier;

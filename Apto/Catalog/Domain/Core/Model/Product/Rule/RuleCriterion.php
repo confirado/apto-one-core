@@ -13,6 +13,9 @@ use Doctrine\Common\Collections\Collection;
 
 abstract class RuleCriterion extends AptoEntity
 {
+    const STANDARD_TYPE = 0;
+    const COMPUTED_VALUE_TYPE = 1;
+
     /**
      * @var int
      */
@@ -117,6 +120,8 @@ abstract class RuleCriterion extends AptoEntity
                 throw new RuleCriterionInvalidOperatorException('The given operator must be \'ACTIVE\' or \'NOT_ACTIVE\' if no elementId or property is set.');
             }
         }
+
+        // if "Berechneter Wert" is selected than it has to have a value
         if ($type === ComputedProductValueCriterion::TYPE && (null === $computedProductValue || null === $value)) {
             throw new RuleCriterionInvalidValueException('A ComputedProductValue and a value to compare with has to be set!');
         }
@@ -140,11 +145,35 @@ abstract class RuleCriterion extends AptoEntity
     }
 
     /**
+     * @param AptoUuid|null $sectionId
+     *
+     * @return $this
+     */
+    public function setSectionId(?AptoUuid $sectionId): self
+    {
+        $this->sectionId = $sectionId;
+
+        return $this;
+    }
+
+    /**
      * @return AptoUuid|null
      */
     public function getElementId(): ?AptoUuid
     {
         return $this->elementId;
+    }
+
+    /**
+     * @param AptoUuid|null $elementId
+     *
+     * @return $this
+     */
+    public function setElementId(?AptoUuid $elementId): self
+    {
+        $this->elementId = $elementId;
+
+        return $this;
     }
 
     /**
@@ -156,11 +185,35 @@ abstract class RuleCriterion extends AptoEntity
     }
 
     /**
+     * @param string|null $property
+     *
+     * @return $this
+     */
+    public function setProperty(?string $property): self
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
      * @return RuleCriterionOperator
      */
     public function getOperator(): RuleCriterionOperator
     {
         return $this->operator;
+    }
+
+    /**
+     * @param RuleCriterionOperator $operator
+     *
+     * @return $this
+     */
+    public function setOperator(RuleCriterionOperator $operator): self
+    {
+        $this->operator = $operator;
+
+        return $this;
     }
 
     /**
@@ -184,7 +237,6 @@ abstract class RuleCriterion extends AptoEntity
         return $this;
     }
 
-
     /**
      * @param AptoUuid $id
      * @param Collection $entityMapping
@@ -201,18 +253,44 @@ abstract class RuleCriterion extends AptoEntity
 
         // set section id
         $orgSectionId = $this->getSectionId();
-        /** @var Section|null $section */
-        $section = null === $orgSectionId ? null : $entityMapping->get($orgSectionId->getId());
-        $sectionId = null === $section ? null : $section->getId();
+        $sectionId = null;
+
+        if ($orgSectionId !== null) {
+            /** @var Section|null $section */
+            $section = $entityMapping->get($orgSectionId->getId());
+
+            // $section case is when we copy product, $orgSectionId case when we copy rule
+            $sectionId = $section === null ? $orgSectionId : $section->getId();
+        }
 
         // set element id
         $orgElementId = $this->getElementId();
-        /** @var Element|null $element */
-        $element = null === $orgElementId ? null : $entityMapping->get($orgElementId->getId());
-        $elementId = null === $element ? null : $element->getId();
+        $elementId = null;
 
-        // set computed product value
-        $computedProductValue = null === $this->getComputedProductValue() ? null : $entityMapping->get($this->getComputedProductValue()->getId()->getId());
+        if ($orgElementId !== null) {
+            /** @var Element|null $element */
+            $element = $entityMapping->get($orgElementId->getId());
+
+            // $element = null case is when we copy product, $orgSectionId case when we copy rule
+            $elementId = $element === null ? $orgElementId : $element->getId();
+        }
+
+        /*
+         * if $entityMapping contains computedProductValue then we copy product, otherwise it should not be set
+         * and we copy rule or criteria or implication.
+         * see Product -> copy method
+         */
+        $orgComputedProductValue = $this->getComputedProductValue();
+        $computedProductValue = null;
+
+        // we copy product case
+        if ($orgComputedProductValue !== null) {
+            if ($entityMapping->get($this->getComputedProductValue()->getId()->getId()) !== null) {
+                $computedProductValue = $entityMapping->get($this->getComputedProductValue()->getId()->getId());
+            } else {
+                $computedProductValue = $orgComputedProductValue;
+            }
+        }
 
         // return new ruleCriterion
         return new static(

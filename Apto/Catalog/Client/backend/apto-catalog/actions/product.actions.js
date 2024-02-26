@@ -787,10 +787,65 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
+    function updateProductRuleCondition(productId, ruleId, condition) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(ruleId);
+        commandArguments.push(condition.id);
+        commandArguments.push(condition.typeId);
+        commandArguments.push(condition.computedProductValueId);
+        commandArguments.push(condition.sectionId);
+        commandArguments.push(condition.elementId);
+        commandArguments.push(condition.property);
+        commandArguments.push(condition.operatorId);
+        commandArguments.push(condition.value);
+
+        return {
+            type: getType('UPDATE_PRODUCT_RULE_CONDITION'),
+            payload: MessageBusFactory.command('UpdateProductRuleCondition', commandArguments)
+        }
+    }
+
+    function copyProductRuleCondition(productId, ruleId, conditionId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE_CONDITION'),
+            payload: MessageBusFactory.command('CopyProductRuleCondition', [productId, ruleId, conditionId])
+        }
+    }
+
     function removeProductRuleCondition(productId, ruleId, conditionId) {
         return {
             type: getType('REMOVE_PRODUCT_RULE_CONDITION'),
             payload: MessageBusFactory.command('RemoveProductRuleCondition', [productId, ruleId, conditionId])
+        }
+    }
+
+
+    function updateProductRuleImplication(productId, ruleId, implication) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(ruleId);
+        commandArguments.push(implication.id);
+        commandArguments.push(implication.typeId);
+        commandArguments.push(implication.computedProductValueId);
+        commandArguments.push(implication.sectionId);
+        commandArguments.push(implication.elementId);
+        commandArguments.push(implication.property);
+        commandArguments.push(implication.operatorId);
+        commandArguments.push(implication.value);
+
+        return {
+            type: getType('UPDATE_PRODUCT_RULE_IMPLICATION'),
+            payload: MessageBusFactory.command('UpdateProductRuleImplication', commandArguments)
+        }
+    }
+
+    function copyProductRuleImplication(productId, ruleId, implicationId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE_IMPLICATION'),
+            payload: MessageBusFactory.command('CopyProductRuleImplication', [productId, ruleId, implicationId])
         }
     }
 
@@ -951,8 +1006,15 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         copyProductRule: copyProductRule,
         addProductRuleCondition: addProductRuleCondition,
         addProductRuleImplication: addProductRuleImplication,
+
+        updateProductRuleCondition: updateProductRuleCondition,
+        copyProductRuleCondition: copyProductRuleCondition,
         removeProductRuleCondition: removeProductRuleCondition,
+
+        updateProductRuleImplication: updateProductRuleImplication,
+        copyProductRuleImplication: copyProductRuleImplication,
         removeProductRuleImplication: removeProductRuleImplication,
+
         setDetailValue: setDetailValue,
         productsFetchByFilter: productsFetchByFilter,
         getNextPosition: getNextPosition,
