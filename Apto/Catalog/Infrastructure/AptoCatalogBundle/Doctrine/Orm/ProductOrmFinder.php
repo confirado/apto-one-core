@@ -583,7 +583,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'errorMessage' => [DqlQueryBuilder::class, 'decodeJson'],
                     'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
                     'implicationsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
-                    'softRule' => [DqlQueryBuilder::class, 'decodeBool']
+                    'softRule' => [DqlQueryBuilder::class, 'decodeBool'],
+                    'position' => [DqlQueryBuilder::class, 'decodeInteger'],
                 ],
                 'c' => [
                     'value' => [DqlQueryBuilder::class, 'castString'],
@@ -593,6 +594,9 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'value' => [DqlQueryBuilder::class, 'castString'],
                     'type' => [DqlQueryBuilder::class, 'decodeInteger']
                 ]
+            ])
+            ->setOrderBy([
+                ['r.position', 'ASC']
             ]);
 
         $result = $ruleBuilder->getSingleResultOrNull($this->entityManager);
@@ -765,8 +769,12 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'errorMessage' => [DqlQueryBuilder::class, 'decodeJson'],
                     'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
                     'implicationsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
-                    'softRule' => [DqlQueryBuilder::class, 'decodeBool']
+                    'softRule' => [DqlQueryBuilder::class, 'decodeBool'],
+                    'position' => [DqlQueryBuilder::class, 'decodeInteger'],
                 ]
+            ])
+            ->setOrderBy([
+                ['pr.position', 'ASC']
             ]);
 
         return $builder->getSingleResultOrNull($this->entityManager);

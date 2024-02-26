@@ -39,7 +39,8 @@ class ProductRuleOrmFinder extends AptoOrmFinder implements ProductRuleFinder
                     'errorMessage' => [DqlQueryBuilder::class, 'decodeJson'],
                     'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
                     'implicationsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
-                    'softRule' => [DqlQueryBuilder::class, 'decodeBool']
+                    'softRule' => [DqlQueryBuilder::class, 'decodeBool'],
+                    'position' => [DqlQueryBuilder::class, 'decodeInteger']
                 ]
             ]);
 
