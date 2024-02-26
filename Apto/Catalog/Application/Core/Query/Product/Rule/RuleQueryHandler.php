@@ -39,12 +39,32 @@ class RuleQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindRuleCondition $query
+     *
+     * @return mixed
+     */
+    public function handleFindRuleCondition(FindRuleCondition $query)
+    {
+        return $this->productRuleFinder->findCondition($query->getRuleId(), $query->getConditionId());
+    }
+
+    /**
      * @param FindRuleImplications $query
      * @return array|null
      */
     public function handleFindRuleImplications(FindRuleImplications $query)
     {
         return $this->productRuleFinder->findImplications($query->getRuleId());
+    }
+
+    /**
+     * @param FindRuleImplication $query
+     *
+     * @return mixed
+     */
+    public function handleFindRuleImplication(FindRuleImplication $query)
+    {
+        return $this->productRuleFinder->findImplication($query->getRuleId(), $query->getImplicationId());
     }
 
     /**
@@ -62,8 +82,18 @@ class RuleQueryHandler implements QueryHandlerInterface
             'bus' => 'query_bus'
         ];
 
+        yield FindRuleCondition::class => [
+            'method' => 'handleFindRuleCondition',
+            'bus' => 'query_bus'
+        ];
+
         yield FindRuleImplications::class => [
             'method' => 'handleFindRuleImplications',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindRuleImplication::class => [
+            'method' => 'handleFindRuleImplication',
             'bus' => 'query_bus'
         ];
     }

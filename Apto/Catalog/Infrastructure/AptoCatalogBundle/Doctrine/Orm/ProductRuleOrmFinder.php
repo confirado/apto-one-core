@@ -90,6 +90,50 @@ class ProductRuleOrmFinder extends AptoOrmFinder implements ProductRuleFinder
         return $builder->getSingleResultOrNull($this->entityManager);
     }
 
+    public function findCondition(string $ruleId, string $conditionId)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($ruleId)
+            ->setValues([
+                'r' => [
+                ],
+                'c' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'r' => [
+                    ['conditions', 'c', 'id']
+                ],
+                'c' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'c' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ])
+            ->setWhere('c.id.id = :conditionId', [
+                'conditionId' => $conditionId
+            ]);
+
+        return $builder->getSingleResultOrNull($this->entityManager);
+    }
+
     /**
      * @param string $id
      * @return array|null
@@ -131,6 +175,50 @@ class ProductRuleOrmFinder extends AptoOrmFinder implements ProductRuleFinder
                     'value' => [DqlQueryBuilder::class, 'castString'],
                     'type' => [DqlQueryBuilder::class, 'decodeInteger']
                 ]
+            ]);
+
+        return $builder->getSingleResultOrNull($this->entityManager);
+    }
+
+    public function findImplication(string $ruleId, string $implicationId)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($ruleId)
+            ->setValues([
+                'r' => [
+                ],
+                'i' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'r' => [
+                    ['implications', 'i', 'id']
+                ],
+                'i' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'i' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ])
+            ->setWhere('i.id.id = :implicationId', [
+                'implicationId' => $implicationId
             ]);
 
         return $builder->getSingleResultOrNull($this->entityManager);
