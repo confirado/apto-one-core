@@ -40,11 +40,18 @@ const ContentSnippetActions = function(MessageBusFactory, PageHeaderActions) {
             let commandArguments = [];
             commandArguments.push(ContentSnippet.name);
             commandArguments.push(ContentSnippet.active);
-            commandArguments.push(ContentSnippet.content);
+
+            if (Object.values(ContentSnippet.content).some(x => (x !== null && x !== ''))) {
+                commandArguments.push(ContentSnippet.content);
+            } else {
+                ContentSnippet.content = {};
+                commandArguments.push(ContentSnippet.content);
+            }
+
             commandArguments.push(ContentSnippet.parent);
             commandArguments.push(ContentSnippet.html);
 
-            if(typeof ContentSnippet.id !== "undefined") {
+            if (typeof ContentSnippet.id !== "undefined") {
                 commandArguments.unshift(ContentSnippet.id);
                 return dispatch({
                     type: getType('DETAIL_UPDATE'),
