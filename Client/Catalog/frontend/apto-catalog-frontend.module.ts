@@ -50,8 +50,6 @@ import { SidebarSummaryPriceComponent } from './components/shared/sidebar-summar
 import { SidebarSummaryProgressComponent } from './components/shared/sidebar-summary-progress/sidebar-summary-progress.component';
 import { SidebarSummaryRenderImageComponent } from './components/shared/sidebar-summary-render-image/sidebar-summary-render-image.component';
 import { SidebarSummaryComponent } from './components/shared/sidebar-summary/sidebar-summary.component';
-import { SbsStepComponent } from './components/step-by-step/sbs-step/sbs-step.component';
-import { SbsStepsComponent } from './components/step-by-step/sbs-steps/sbs-steps.component';
 import { StepByStepComponent } from './components/step-by-step/step-by-step.component';
 import { SummaryWrapperComponent } from './components/summary-wrapper/summary-wrapper.component';
 import { SummaryComponent } from './components/summary/summary.component';
@@ -70,6 +68,8 @@ import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/ap
 import { DiscountTagComponent } from "@apto-catalog-frontend/components/common/discount-tag/discount-tag.component";
 import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 import { SbsElementsComponent } from '@apto-catalog-frontend-sbs-elements';
+import { SbsStepsComponent } from '@apto-catalog-frontend-sbs-steps';
+import { SbsStepComponent } from '@apto-catalog-frontend-sbs-step';
 import { AptoCatalogFrontendCustomModule } from '@apto-catalog-frontend-custom-module';
 
 RouterRegistry.registerRoutes(Routes);
