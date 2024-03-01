@@ -14,24 +14,24 @@ class UpdateProductRuleImplication extends AddProductRuleCriterion
      * @param string      $ruleId
      * @param string      $implicationId
      * @param int         $type
+     * @param int         $operator
+     * @param string      $value
      * @param string|null $computedValueId
      * @param string|null $sectionId
      * @param string|null $elementId
      * @param string|null $property
-     * @param int         $operator
-     * @param string      $value
      */
     public function __construct(
         string $productId,
         string $ruleId,
         string $implicationId,
         int $type,
+        int $operator,
+        string $value,
         string $computedValueId = null,
         string $sectionId = null,
         string $elementId = null,
         string $property = null,
-        int $operator,
-        string $value
     ) {
         parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $property, $computedValueId, $operator, $value);
 

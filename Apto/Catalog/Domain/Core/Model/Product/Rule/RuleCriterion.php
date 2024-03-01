@@ -253,44 +253,18 @@ abstract class RuleCriterion extends AptoEntity
 
         // set section id
         $orgSectionId = $this->getSectionId();
-        $sectionId = null;
-
-        if ($orgSectionId !== null) {
-            /** @var Section|null $section */
-            $section = $entityMapping->get($orgSectionId->getId());
-
-            // $section case is when we copy product, $orgSectionId case when we copy rule
-            $sectionId = $section === null ? $orgSectionId : $section->getId();
-        }
+        /** @var Section|null $section */
+        $section = null === $orgSectionId ? null : $entityMapping->get($orgSectionId->getId());
+        $sectionId = null === $section ? null : $section->getId();
 
         // set element id
         $orgElementId = $this->getElementId();
-        $elementId = null;
+        /** @var Element|null $element */
+        $element = null === $orgElementId ? null : $entityMapping->get($orgElementId->getId());
+        $elementId = null === $element ? null : $element->getId();
 
-        if ($orgElementId !== null) {
-            /** @var Element|null $element */
-            $element = $entityMapping->get($orgElementId->getId());
-
-            // $element = null case is when we copy product, $orgSectionId case when we copy rule
-            $elementId = $element === null ? $orgElementId : $element->getId();
-        }
-
-        /*
-         * if $entityMapping contains computedProductValue then we copy product, otherwise it should not be set
-         * and we copy rule or criteria or implication.
-         * see Product -> copy method
-         */
-        $orgComputedProductValue = $this->getComputedProductValue();
-        $computedProductValue = null;
-
-        // we copy product case
-        if ($orgComputedProductValue !== null) {
-            if ($entityMapping->get($this->getComputedProductValue()->getId()->getId()) !== null) {
-                $computedProductValue = $entityMapping->get($this->getComputedProductValue()->getId()->getId());
-            } else {
-                $computedProductValue = $orgComputedProductValue;
-            }
-        }
+        // set computed product value
+        $computedProductValue = null === $this->getComputedProductValue() ? null : $entityMapping->get($this->getComputedProductValue()->getId()->getId());
 
         // return new ruleCriterion
         return new static(

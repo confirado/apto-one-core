@@ -183,25 +183,15 @@ class ProductRuleHandler extends ProductChildHandler
         if (null !== $product) {
             $ruleId = new AptoUuid($command->getRuleId());
             $conditionId = new AptoUuid($command->getConditionId());
-            $rule = $product->getRule($ruleId);
+            $type = $command->getType();
+            $operator = new RuleCriterionOperator($command->getOperator());
+            $value = $command->getValue();
+            $computedValueId = new AptoUuid($command->getComputedValueId());
+            $sectionId = new AptoUuid($command->getSectionId());
+            $elementId = new AptoUuid($command->getElementId());
+            $property = $command->getProperty();
 
-            // type is required in both cases, so we don't check if it is there or not
-            $rule->updateConditionType($conditionId, $command->getType());
-
-            if ($command->getType() === RuleCriterion::STANDARD_TYPE) {
-                $rule->updateConditionSectionId($conditionId, $command->getSectionId());
-                $rule->updateConditionElementId($conditionId,  $command->getElementId());
-                $rule->updateConditionProperty($conditionId, $command->getProperty());
-            }
-            else if ($command->getType() === RuleCriterion::COMPUTED_VALUE_TYPE) {
-                $rule->updateConditionComputedValue($conditionId, $product->getComputedProductValue($command->getComputedValueId()));
-            }
-
-            // operator is required in both cases
-            $rule->updateConditionOperator($conditionId, new RuleCriterionOperator($command->getOperator()));
-
-            // value can be null, we might want to unset the value
-            $rule->updateConditionValue($conditionId, $command->getValue());
+            $product->setRuleCondition($ruleId, $conditionId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);
 
             $this->productRepository->update($product);
         }
@@ -261,25 +251,15 @@ class ProductRuleHandler extends ProductChildHandler
         if (null !== $product) {
             $ruleId = new AptoUuid($command->getRuleId());
             $implicationId = new AptoUuid($command->getImplicationId());
-            $rule = $product->getRule($ruleId);
+            $type = $command->getType();
+            $operator = new RuleCriterionOperator($command->getOperator());
+            $value = $command->getValue();
+            $computedValueId = new AptoUuid($command->getComputedValueId());
+            $sectionId = new AptoUuid($command->getSectionId());
+            $elementId = new AptoUuid($command->getElementId());
+            $property = $command->getProperty();
 
-            // type is required in both cases, so we don't check if it is there or not
-            $rule->updateImplicationType($implicationId, $command->getType());
-
-            if ($command->getType() === RuleCriterion::STANDARD_TYPE) {
-                $rule->updateImplicationSectionId($implicationId, $command->getSectionId());
-                $rule->updateImplicationElementId($implicationId,  $command->getElementId());
-                $rule->updateImplicationProperty($implicationId, $command->getProperty());
-            }
-            else if ($command->getType() === RuleCriterion::COMPUTED_VALUE_TYPE) {
-                $rule->updateImplicationComputedValue($implicationId, $product->getComputedProductValue($command->getComputedValueId()));
-            }
-
-            // operator is required in both cases
-            $rule->updateImplicationOperator($implicationId, new RuleCriterionOperator($command->getOperator()));
-
-            // value can be null, we might want to unset the value
-            $rule->updateImplicationValue($implicationId, $command->getValue());
+            $product->setRuleImplication($ruleId, $implicationId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);
 
             $this->productRepository->update($product);
         }

@@ -10,6 +10,7 @@ use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalid
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 
 class ComputedProductValueCriterion extends Criterion
@@ -17,7 +18,7 @@ class ComputedProductValueCriterion extends Criterion
     /**
      * Define type
      */
-    const TYPE = 1;
+    const TYPE = RuleCriterion::COMPUTED_VALUE_TYPE;
 
     /**
      * @var string

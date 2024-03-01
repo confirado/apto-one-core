@@ -795,12 +795,12 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(ruleId);
         commandArguments.push(condition.id);
         commandArguments.push(condition.typeId);
+        commandArguments.push(condition.operatorId);
+        commandArguments.push(condition.value);
         commandArguments.push(condition.computedProductValueId);
         commandArguments.push(condition.sectionId);
         commandArguments.push(condition.elementId);
         commandArguments.push(condition.property);
-        commandArguments.push(condition.operatorId);
-        commandArguments.push(condition.value);
 
         return {
             type: getType('UPDATE_PRODUCT_RULE_CONDITION'),
@@ -830,12 +830,12 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(ruleId);
         commandArguments.push(implication.id);
         commandArguments.push(implication.typeId);
+        commandArguments.push(implication.operatorId);
+        commandArguments.push(implication.value);
         commandArguments.push(implication.computedProductValueId);
         commandArguments.push(implication.sectionId);
         commandArguments.push(implication.elementId);
         commandArguments.push(implication.property);
-        commandArguments.push(implication.operatorId);
-        commandArguments.push(implication.value);
 
         return {
             type: getType('UPDATE_PRODUCT_RULE_IMPLICATION'),
