@@ -5,11 +5,12 @@ namespace Apto\Plugins\SelectBoxElement\Domain\Core\Model\Product\Element;
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionDefaultValues;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementJsonValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementSingleTextValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 
-class SelectBoxElementDefinition implements ElementDefinition
+class SelectBoxElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues
 {
     const NAME = 'SelectBox Element';
     const BACKEND_COMPONENT = '<select-box-element-definition definition-validation="setDefinitionValidation(definitionValidation)" product-id="productId" section-id="sectionId" element="detail"></select-box-element-definition>';
@@ -95,6 +96,28 @@ class SelectBoxElementDefinition implements ElementDefinition
             'enableMultiSelect' => $this->enableMultiSelect,
             'multiplierPrefix' => $this->multiplierPrefix,
             'multiplierSuffix' => $this->multiplierSuffix
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultValues(): array
+    {
+        if (!$this->defaultItem) {
+            return [];
+        }
+
+        return [
+            'aptoElementDefinitionId' => 'apto-element-select-box',
+            'boxes' => [[
+                'id' => $this->defaultItem['id'],
+                'multi' => '1',
+                'name' => $this->defaultItem['name']
+            ]],
+            'selectedItem' => [
+                $this->defaultItem['id']
+            ],
         ];
     }
 

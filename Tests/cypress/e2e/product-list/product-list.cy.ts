@@ -34,43 +34,21 @@ describe('Product list', () => {
           cy.get('.product-wrapper').should('have.length', result.numberOfRecords);
 
           result.data.forEach((product: Product) => {
-            cy.get(`.product-wrapper[data-id="${product.id}"]`).then((productElement) => {
+            const selector = `.product-wrapper[data-id="${product.id}"]`;
 
-              // active products should be visible
-              if (product.active) {
-                cy.wrap(productElement).should('exist');
-              }
+            // active products should be visible
+            if (product.active) {
+              ProductList.hasProduct(selector)
+            }
 
-              // if product has image, it should not be broken
-              if (product.previewImage && product.previewImage.length) {
-                cy.wrap(productElement).find('img').should((img) => {
-                  Core.isImageLoadedCheck(img);
-                });
-              }
+            // if product has image, it should not be broken
+            if (product.previewImage && product.previewImage.length) {
+              ProductList.hasProductPreviewImage(selector);
+            }
 
-              // product title
-              cy.wrap(productElement).find('.product-description').find('h3').should('not.be.empty');
-
-              // product description
-              if (Language.isTranslatedValueSet(product.description)) {
-                cy.wrap(productElement).find('.product-description').find('.description').should('not.be.empty');
-              }
-              else {
-                cy.wrap(productElement).find('.product-description').find('.description').should('not.exist');
-              }
-
-
-              // check that links for each product are clickable and exist
-              cy.wrap(productElement)
-                .find('.product-description button')
-                .invoke('attr', 'data-link')
-                .then((link) => {
-                  cy.wrap(link).should('exist');
-                  cy.wrap(link).should('not.be.empty');
-
-                  Core.isLinkBrokenTest(`${baseUrl}#${link}`);
-                });
-            });
+            ProductList.hasProductTitle(selector);
+            ProductList.hasProductDescription(selector);
+            ProductList.isProductLinkOk(selector);
           });
         }
       });

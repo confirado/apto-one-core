@@ -105,4 +105,66 @@ export class Queries {
     };
   }
 
+  public static get FindProduct(): IRequestData {
+    return {
+      alias: 'FindProduct',
+      payload: { query: 'FindProduct' },
+    };
+  }
+
+  public static get FindProductSections(): IRequestData {
+    return {
+      alias: 'FindProductSections',
+      payload: { query: 'FindProductSections' },
+    };
+  }
+
+  public static get FindProductRules(): IRequestData {
+    return {
+      alias: 'FindProductRules',
+      payload: { query: 'FindProductRules' },
+    };
+  }
+
+  public static get FindProductComputedValues(): IRequestData {
+    return {
+      alias: 'FindProductComputedValues',
+      payload: { query: 'FindProductComputedValues' },
+    };
+  }
+
+  public static get FindProductPrices(): IRequestData {
+    return {
+      alias: 'FindProductPrices',
+      payload: { query: 'FindProductPrices' },
+    };
+  }
+
+  public static get FindProductDiscounts(): IRequestData {
+    return {
+      alias: 'FindProductDiscounts',
+      payload: { query: 'FindProductDiscounts' },
+    };
+  }
+
+  public static get FindProductCustomProperties(): IRequestData {
+    return {
+      alias: 'FindProductCustomProperties',
+      payload: { query: 'FindProductCustomProperties' },
+    };
+  }
+
+  public static get FindUsedCustomPropertyKeys(): IRequestData {
+    return {
+      alias: 'FindUsedCustomPropertyKeys',
+      payload: { query: 'FindUsedCustomPropertyKeys' },
+    };
+  }
+
+  public static get ListMediaFiles(): IRequestData {
+    return {
+      alias: 'ListMediaFiles',
+      payload: { query: 'ListMediaFiles' },
+    };
+  }
 }

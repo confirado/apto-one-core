@@ -1,18 +1,25 @@
 <div layout="row" layout-align="start" flex>
-    <apto-translated-value label="'Name'" type="'input'" translated-value="newSection.value" flex></apto-translated-value>
+    <apto-translated-value label="'Name'" type="'input'" translated-value="newSection.value" data-cy="sections_name" flex="60"></apto-translated-value>
     <div flex="5"></div>
 
-    <md-input-container>
-        <md-checkbox style="margin-top: 8px;" ng-model="newSection.addDefaultElement">Default Element erzeugen</md-checkbox>
+    <md-input-container flex="20">
+        <md-checkbox style="margin-top: 8px;" ng-model="newSection.addDefaultElement" data-cy="sections_add-default-element">
+            Default Element erzeugen
+        </md-checkbox>
     </md-input-container>
 
     <div flex="5"></div>
-    <md-input-container>
-        <md-button ng-disabled="!languageFactory.translate(newSection.value)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addSection()">Hinzufügen</md-button>
+    <md-input-container flex>
+        <md-button ng-disabled="!languageFactory.translate(newSection.value)"
+                   style="margin: 0; float: right"
+                   class="md-raised md-primary md-cornered"
+                   ng-click="addSection()"
+                   data-cy="sections_insert-button"
+        >Hinzufügen</md-button>
     </md-input-container>
 </div>
 
-<md-table-container class="md-whiteframe-2dp">
+<md-table-container class="md-whiteframe-2dp" data-cy="sections_section-list">
     <table md-table>
         <thead md-head>
             <tr md-row>

@@ -18,17 +18,21 @@ import { MatSliderModule } from '@angular/material/slider';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { RouterRegistry } from '@apto-base-core/router/router-registry';
 import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
+
 import { Routes } from '@apto-base-frontend/apto-base.routes';
 import { featureKey, reducers } from '@apto-base-frontend/store/feature';
+
 import { ShopEffects } from '@apto-base-frontend/store/shop/shop.effects';
 import { FrontendUserEffects } from '@apto-base-frontend/store/frontend-user/frontend-user.effects';
 import { ShopRepository } from '@apto-base-frontend/store/shop/shop.repository';
 import { FrontendUserRepository } from '@apto-base-frontend/store/frontend-user/frontend-user.repository';
 import { ContentSnippetRepository } from '@apto-base-frontend/store/content-snippets/content-snippet.repository';
 import { ContentSnippetPipe } from '@apto-base-frontend/pipes/content-snippet.pipe';
+
 import { BasketComponent } from '@apto-base-frontend/components/basket/basket.component';
 import { FooterComponent } from '@apto-base-frontend/components/footer/footer.component';
 import { FrontendComponent } from '@apto-base-frontend/components/frontend/frontend.component';
@@ -41,6 +45,8 @@ import { TextInputFieldComponent } from '@apto-base-frontend/components/text-inp
 import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { LoginCloseButtonComponent } from '@apto-base-frontend/components/frontend-users-login/login-close-button/login-close-button.component';
 import { SliderComponent } from '@apto-base-frontend/components/slider/slider.component';
+import { ForgotPasswordComponent } from './components/frontend-users-login/forgot-password/forgot-password.component';
+import { AuthMessageBusService } from '@apto-base-frontend/services/auth-message-bus.service';
 import { AptoBaseFrontendCustomModule } from '@apto-base-frontend-custom-module';
 
 RouterRegistry.registerRoutes(Routes);
@@ -60,6 +66,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
+    ForgotPasswordComponent,
   ],
 	exports: [
 		FrontendComponent,
@@ -74,6 +81,7 @@ RouterRegistry.registerRoutes(Routes);
     FrontendUsersLoginComponent,
     LoginCloseButtonComponent,
     SliderComponent,
+    ForgotPasswordComponent,
     AptoBaseFrontendCustomModule,
   ],
   imports: [
@@ -103,7 +111,8 @@ RouterRegistry.registerRoutes(Routes);
     ContentSnippetRepository,
     ShopRepository,
     FrontendUserRepository,
-    { provide: OverlayContainer, useClass: FullscreenOverlayContainer }
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
+    AuthMessageBusService
   ],
 })
 export class AptoBaseFrontendModule {

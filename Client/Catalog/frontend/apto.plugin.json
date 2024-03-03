@@ -14,6 +14,14 @@
     {
       "alias": "@apto-catalog-frontend-sbs-elements",
       "path": "components/step-by-step/sbs-elements/sbs-elements.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sbs-steps",
+      "path": "components/step-by-step/sbs-steps/sbs-steps.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sbs-step",
+      "path": "components/step-by-step/sbs-step/sbs-step.component.ts"
     }
   ]
 }

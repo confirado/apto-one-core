@@ -276,10 +276,13 @@ export class ConfigurationEffects {
 				ofType(onError),
 				withLatestFrom(
           this.store$.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
-          this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage'))
+          this.store$.select(selectContentSnippet('aptoRules.defaultErrorMessage')),
+          this.store$.select(selectContentSnippet('auth.errors'))
         ),
-				map(([{ message }, locale, snippet]: [{message: MessageBusResponseMessage}, string, ContentSnippet]) => {
-          const defaultMessage: string = translate(snippet.content, locale);
+				map(([{ message }, locale, defaultErrorMessage, errors]:
+               [{message: MessageBusResponseMessage}, string, ContentSnippet, ContentSnippet]
+        ) => {
+          let defaultMessage: string = translate(defaultErrorMessage.content, locale);
           let showDefault = true;
           let finalMessage = '';
 
@@ -289,6 +292,11 @@ export class ConfigurationEffects {
                 showDefault = false;
                 finalMessage += `${errorMessage} <br />`;
               }
+          }
+
+          if (showDefault) {
+            const errorTranslation = errors.children.find((c) => c.name === message.errorType);
+            defaultMessage = errorTranslation ? translate(errorTranslation.content, locale) : defaultMessage;
           }
 
           this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {

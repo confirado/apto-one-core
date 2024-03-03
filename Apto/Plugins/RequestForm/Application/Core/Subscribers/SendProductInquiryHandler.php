@@ -811,7 +811,46 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->saveHtml($header, $footer, $body);
         }
 
+        // for testing only!!!, saves the pdf into media folder as pdf and as html
+        // $this->saveHTMLToDisk($stylesheet, $header, $body, $footer);
+        // $this->savePdfToDisk($mpdf);
+
         return $mpdf->Output('', 'S');
+    }
+
+    /**
+     *  Save as pdf file in media folder
+     *
+     * @param $mpdf
+     *
+     * @return void
+     * @throws \Random\RandomException
+     */
+    private function savePdfToDisk($mpdf): void
+    {
+        $mpdf->Output( $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.pdf', 'F');
+    }
+
+    /**
+     *  Save the content of pdf as html file
+     *
+     *  For testing only!!!
+     *
+     * @param $stylesheet
+     * @param $header
+     * @param $body
+     * @param $footer
+     *
+     * @return void
+     * @throws \Random\RandomException
+     */
+    private function saveHTMLToDisk($stylesheet, $header, $body, $footer): void
+    {
+        $filename = $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.html';
+        $stylesheet = str_replace('@media print {', '@media print, all {', $stylesheet);
+        $content = '<html><body>' .'<style>' . $stylesheet . '</style>'. $header . $body . $footer  . '</body></html>';
+
+        file_put_contents($filename, $content);
     }
 
     /**

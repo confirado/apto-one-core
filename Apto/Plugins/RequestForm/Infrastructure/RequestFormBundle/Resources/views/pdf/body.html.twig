@@ -9,9 +9,17 @@
     <div class="customer-address-container margin-bottom-small">
         <p>
             {{ customer.company }}<br>
-            {{ customer.name }} {{ customer.surname }}<br>
+            {% if customer.gender == 'm' %}
+                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% elseif customer.gender == 'f' %}
+                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% else %}
+                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% endif %}
             {{ customer.street }} <br>
-            {{ customer.zipCode }} {{ customer.city }}
+            {{ customer.zipCode }} {{ customer.city }} <br>
+            {{ contentSnippets.common.telephoneName[locale] | default('') }}: {{ customer.phone }} <br>
+            {{ contentSnippets.common.mailName[locale] | default('') }}: {{ customer.email }} <br>
         </p>
     </div>
 

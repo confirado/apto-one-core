@@ -148,7 +148,7 @@ class FrontendUser extends AptoAggregate
      */
     public function getEmail(): Email
     {
-        return $this->email;
+        return $this->email instanceof Email ? $this->email : new Email($this->email);
     }
 
     /**

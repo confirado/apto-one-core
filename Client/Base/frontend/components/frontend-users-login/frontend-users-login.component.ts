@@ -59,4 +59,10 @@ export class FrontendUsersLoginComponent {
       }
     }));
   }
+
+  public openPasswordResetModal(): void {
+    this.dialogRef.close({
+      openForgotModal: true
+    });
+  }
 }
