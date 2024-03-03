@@ -58,16 +58,22 @@ class RuleRepetitionService
     private RulePayload $rulePayloadByName;
 
     /**
+     * @var RulePayload
+     */
+    private RulePayload $rulePayloadById;
+
+    /**
      * @param ConfigurableProduct $product
-     * @param RulePayload         $rulePayloadByName
-     *
+     * @param RulePayload $rulePayloadByName
+     * @param RulePayload $rulePayloadById
      * @throws InvalidUuidException
      * @throws RepeatableValidationException
      */
-    public function __construct(ConfigurableProduct $product, RulePayload $rulePayloadByName)
+    public function __construct(ConfigurableProduct $product, RulePayload $rulePayloadByName, RulePayload $rulePayloadById)
     {
         $this->product = $product;
         $this->rulePayloadByName = $rulePayloadByName;
+        $this->rulePayloadById = $rulePayloadById;
         $this->rules = $this->getRepetitionRules();
     }
 
@@ -121,61 +127,94 @@ class RuleRepetitionService
         $sectionRepetitionCount = $this->product->getSectionRepetitionCount($sectionId, $this->rulePayloadByName);
 
         for($repetition = 0; $repetition < $sectionRepetitionCount; $repetition++) {
-            $rawRule = [
-                'id' => $rule->getId()->getId(),
-                'active' => $rule->isActive(),
-                'name' => $rule->getName(),
-                'errorMessage' => $rule->getErrorMessage()->jsonSerialize(),
-                'softRule' => $rule->isSoft(),
-                'repetition' => $repetition,
-                'conditionsOperator' => $rule->getCondition()->getOperator()->getOperator(),
-                'implicationsOperator' => $rule->getImplication()->getOperator()->getOperator(),
-                'conditions' => [],
-                'implications' => [],
-            ];
+            $rawRule = $this->getRuleAsArray($rule, $repetition);
 
             foreach ($rule->getCondition()->getCriteria() as $criterion) {
-
-                // If the condition type is not a "Standard" type then skipp it, because it cannot have sections
-                if (!($criterion instanceof Rule\DefaultCriterion)) {
-                    continue;
-                }
-
-                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
-                $rawRule['conditions'][] = [
-                    'type' => $criterion::TYPE,
-                    'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()?->getId(),
-                    'property' => $criterion->getProperty(),
-                    'operator' => $criterion->getOperator()->getOperator(),
-                    'value' => $criterion->getValue(),
-                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
-                ];
+                $rawRule['conditions'][] = $this->getCriterionAsArray($criterion, $sectionId, $repetition);
             }
 
             foreach ($rule->getImplication()->getCriteria() as $criterion) {
-
-                // If the condition type is not a "Standard" type then skipp it, because it cannot have applied sections
-                if (!($criterion instanceof Rule\DefaultCriterion)) {
-                    continue;
-                }
-
-                $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
-                $rawRule['implications'][] = [
-                    'type' => $criterion::TYPE,
-                    'sectionId' => $criterion->getSectionId()->getId(),
-                    'elementId' => $criterion->getElementId()?->getId(),
-                    'property' => $criterion->getProperty(),
-                    'operator' => $criterion->getOperator()->getOperator(),
-                    'value' => $criterion->getValue(),
-                    'repetition' => $isRepetitionCriterion ? $repetition : 0,
-                ];
+                $rawRule['implications'][] = $this->getCriterionAsArray($criterion, $sectionId, $repetition);
             }
 
             $rules[] = RuleFactory::fromArray($rawRule);
         }
 
         return $rules;
+    }
+
+    /**
+     * @param Rule $rule
+     * @param int $repetition
+     * @return array
+     */
+    private function getRuleAsArray(Rule $rule, int $repetition): array
+    {
+        return [
+            'id' => $rule->getId()->getId(),
+            'active' => $rule->isActive(),
+            'name' => $rule->getName(),
+            'errorMessage' => $rule->getErrorMessage()->jsonSerialize(),
+            'softRule' => $rule->isSoft(),
+            'repetition' => $repetition,
+            'conditionsOperator' => $rule->getCondition()->getOperator()->getOperator(),
+            'implicationsOperator' => $rule->getImplication()->getOperator()->getOperator(),
+            'conditions' => [],
+            'implications' => [],
+        ];
+    }
+
+    /**
+     * @param Rule\Criterion $criterion
+     * @param AptoUuid $sectionId
+     * @param int $repetition
+     * @return array
+     */
+    private function getCriterionAsArray(Rule\Criterion $criterion, AptoUuid $sectionId, int $repetition): array
+    {
+        $criterionArray = [];
+
+        if ($criterion instanceof Rule\DefaultCriterion) {
+            $isRepetitionCriterion = $criterion->getSectionId()->getId() === $sectionId->getId();
+            $criterionArray = [
+                'type' => $criterion::TYPE,
+                'sectionId' => $criterion->getSectionId()->getId(),
+                'elementId' => $criterion->getElementId()?->getId(),
+                'property' => $criterion->getProperty(),
+                'operator' => $criterion->getOperator()->getOperator(),
+                'value' => $criterion->getValue(),
+                'repetition' => $isRepetitionCriterion ? $repetition : 0,
+            ];
+        }
+
+        if ($criterion instanceof Rule\ComputedProductValueCriterion) {
+            $criterionArray = [
+                'type' => $criterion::TYPE,
+                'operator' => $criterion->getOperator()->getOperator(),
+                'value' => $criterion->getValue(),
+                'computedProductValue' => [[
+                    'id' => $this->getComputedValueRepetitionName($criterion, $repetition)
+                ]],
+                'repetition' => $repetition
+            ];
+        }
+
+        return $criterionArray;
+    }
+
+    /**
+     * @param Rule\ComputedProductValueCriterion $criterion
+     * @param int $repetition
+     * @return string
+     */
+    private function getComputedValueRepetitionName(Rule\ComputedProductValueCriterion $criterion, int $repetition): string
+    {
+        $computedValues = $this->rulePayloadById->getComputedValues();
+        $repetitionName = $criterion->getComputedProductValueId() . '[' . $repetition . ']';
+        if (array_key_exists($repetitionName, $computedValues)) {
+            return $repetitionName;
+        }
+        return $criterion->getComputedProductValueId();
     }
 
     /**
