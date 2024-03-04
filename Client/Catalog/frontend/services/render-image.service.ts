@@ -3,7 +3,10 @@ import { Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectCurrentRenderImages } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import {
+  selectCurrentRenderImages,
+  selectRenderImagesForPerspective,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -22,30 +25,42 @@ export class RenderImageService implements OnDestroy {
   public imageWidth: number | string;
   public imageHeight: number | string;
 
-  public readonly renderImages$ = this.store.select(selectCurrentRenderImages);
-
   public outputSrcSubject = new Subject();
 
   constructor(private store: Store) {
     this.init();
   }
 
-  public init() {
+  public init(): void {
     this.ngOnDestroy();
     this.subscriptions.push(
       // data for renderImage$ is sent from multiple directions, so to call all this stuff only once we put a debounce time here
-      this.renderImages$.subscribe((data) => {
+      this.store.select(selectCurrentRenderImages).subscribe((data) => {
         this.renderImages = data;
-
-        if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
-          this.canvas = document.createElement('canvas');
-          this.ctx = this.canvas.getContext('2d');
-          this.drawImages();
-        } else {
-          this.outputSrcSubject.next(null);
-        }
+        this.finalizeInit();
       })
     );
+  }
+
+  public initForPerspective(perspective: string): void {
+    this.ngOnDestroy();
+    this.subscriptions.push(
+      // data for renderImage$ is sent from multiple directions, so to call all this stuff only once we put a debounce time here
+      this.store.select(selectRenderImagesForPerspective(perspective)).subscribe((data) => {
+        this.renderImages = data;
+        this.finalizeInit();
+      })
+    );
+  }
+
+  private finalizeInit(): void {
+    if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
+      this.canvas = document.createElement('canvas');
+      this.ctx = this.canvas.getContext('2d');
+      this.drawImages();
+    } else {
+      this.outputSrcSubject.next(null);
+    }
   }
 
   public resize(img: any, width: number) {

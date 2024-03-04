@@ -2,8 +2,10 @@
 @import "form-inputs";
 
 :host {
-    display: block;
-    margin-bottom: 40px;
+    display: none;
+    &.visible {
+        display: block;
+    }
 }
 
 .designer {
@@ -60,25 +62,6 @@
     }
 }
 
-.designer-areas {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-left: 200px;
-    margin-right: 300px;
-    margin-bottom: 40px;
-}
-
-.designer-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.designer-actions-left {
-    display: flex;
-    gap: 20px;
-}
 
 .motive-container {
     display: flex;

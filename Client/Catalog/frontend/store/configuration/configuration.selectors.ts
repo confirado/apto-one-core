@@ -218,6 +218,19 @@ export const selectCurrentRenderImages = createSelector(featureSelector, (state:
   return currentRenderImages;
 });
 
+export const selectRenderImagesForPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImageData[] => {
+  let currentRenderImages: RenderImageData[] = [];
+
+  // search current render image
+  Object.keys(state.configuration.renderImages).forEach((key,index) => {
+    if (key === perspective) {
+      currentRenderImages = state.configuration.renderImages[key];
+    }
+  });
+
+  return currentRenderImages;
+});
+
 export const selectRenderImageByPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImage | null => {
     let currentRenderImage: RenderImage | null = null;
 

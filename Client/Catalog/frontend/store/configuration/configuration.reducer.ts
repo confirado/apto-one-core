@@ -9,7 +9,7 @@ import {
   resetLoadingFlagAction,
   setHideOnePage,
   setNextPerspective,
-  setNextStep,
+  setNextStep, setPerspective,
   setPrevPerspective,
   setPrevStep,
   setQuantity, setSectionTouched,
@@ -217,6 +217,12 @@ const _configurationReducer = createReducer(
 			currentPerspective: state.perspectives[currentIndex + 1],
 		};
 	}),
+  on(setPerspective, (state, { perspective }) => {
+    return {
+      ...state,
+      currentPerspective: perspective
+    };
+  }),
 	on(setPrevStep, (state) => {
 		const sections = state.state.sections.filter((section) => !section.disabled);
     const currentIndex = sections.findIndex((section) => section.id === state.currentStep.id && section.repetition === state.currentStep.repetition);

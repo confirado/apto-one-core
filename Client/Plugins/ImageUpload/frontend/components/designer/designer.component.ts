@@ -1,4 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
@@ -11,14 +14,9 @@ import FontFaceObserver from 'fontfaceobserver';
 import { v4 as uuidv4 } from 'uuid';
 
 import { environment } from '@apto-frontend/src/environments/environment';
-import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
-import { sha1 } from '@apto-base-core/helper/encrypt';
-import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { setHideOnePage, updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
@@ -27,34 +25,46 @@ import { selectCanvas } from '@apto-image-upload-frontend/store/canvas/canvas.se
 import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.reducer';
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
 import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'apto-designer',
   templateUrl: './designer.component.html',
   styleUrls: ['./designer.component.scss'],
+  providers: [RenderImageService]
 })
 export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('htmlCanvas') htmlCanvas: ElementRef;
   @ViewChild('htmlRenderImage') htmlRenderImage: ElementRef;
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
-  private locale: string;
   private initStarted: boolean = false;
   private subscriptions: Subscription[] = [];
 
-  public canvas: CanvasState | null = null;
   public mediaUrl: string = environment.api.media;
   public renderImage: any = null;
   public imageUploadControl: FormControl;
   public imageUploadErrors: Array<any> = [];
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.imageUpload'));
-  public readonly cancelMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.cancelMessage'));
-  public readonly resetMessage$ = this.store.select(selectContentSnippet('plugins.imageUpload.upload.resetMessage'));
 
   public printAreas: PrintArea[] = [];
   public canvasStyle: CanvasStyle = { width: '0px', height: '0px', left: '0px' };
+
+  @Input()
+  public currentPerspective: string;
+
+  @Input()
+  public locale: string;
+
+  @Input()
+  public canvas: CanvasState;
+
+  @Input()
   public product: Product;
+
+  @HostBinding('class.visible') @Input() visible: boolean;
 
   public middleWidth: number = 0;
   public canvasWidth: number = 0;
@@ -75,7 +85,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     lockScalingX: true,
     lockScalingY: true,
     lockSkewingX: true,
-    lockSkewingY: true
+    lockSkewingY: true,
   };
 
   public controlOptionsEditable = {
@@ -89,7 +99,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     lockScalingX: false,
     lockScalingY: false,
     lockSkewingX: true,
-    lockSkewingY: true
+    lockSkewingY: true,
   };
 
   public controlVisibility = {
@@ -102,44 +112,21 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     mb: false, // midle bottom
     ml: false, // middle left
     mr: false, // middle right
-  }
+  };
 
   public fonts: Font[] = [];
   public selectedFont: Font | null = null;
   public file: File | null;
 
-  public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, private http: HttpClient, private dialogService: DialogService, public renderImageService: RenderImageService) {
-    // set default locale
-    this.locale = environment.defaultLocale;
-    this.imageUploadControl = new FormControl(this.file, [
-      Validators.required,
-      // 1024 * 1024 equals to 1MB, max value must be given in byte
-      MaxSizeValidator(1024 * 1024)
-    ]);
+  public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, public renderImageService: RenderImageService) {
   }
 
   public ngOnInit(): void {
-    // subscribe for locale store value
-    this.store.select(selectLocale).subscribe((locale: string) => {
-      if (locale === null) {
-        this.locale = environment.defaultLocale;
-      } else {
-        this.locale = locale;
-      }
-    });
-
-    this.store.select(selectProduct).subscribe((next: Product) => {
-      this.product = next;
-    });
-
-    // subscribe for canvas
-    this.store.select(selectCanvas).subscribe((next: CanvasState) => {
-      this.canvas = next;
-      this.imageUploadControl.setValidators([
-        Validators.required,
-        MaxSizeValidator(this.canvas.element.staticValues.image.maxFileSize * 1024 * 1024)
-      ]);
-    });
+    this.imageUploadControl = new FormControl(this.file, [
+      Validators.required,
+      // 1024 * 1024 equals to 1MB, max value must be given in byte
+      MaxSizeValidator(this.canvas.element.staticValues.image[this.currentPerspective]?.maxFileSize * 1024 * 1024)
+    ]);
 
     // subscribe for image upload
     this.imageUploadControl.valueChanges.subscribe((file) => {
@@ -158,7 +145,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit(): void {
-    this.renderImageService.init();
+    this.renderImageService.initForPerspective(this.currentPerspective);
     this.subscriptions.push(
       this.renderImageService.outputSrcSubject.subscribe((next) => {
         this.renderImage = next;
@@ -171,7 +158,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  public init() {
+  public init(): void {
     this.initFonts().then(() => {
       setTimeout(() => {
         this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
@@ -199,10 +186,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  initFonts() {
+  private initFonts(): Promise<any> {
     this.fonts = [];
     this.selectedFont = null;
-    let promises = [(new FontFaceObserver('Montserrat')).load()];
+    const promises = [(new FontFaceObserver('Montserrat')).load()];
 
     if (!this.canvas.element.staticValues.text.fonts) {
       return Promise.all(promises);
@@ -228,19 +215,24 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     return Promise.all(promises);
   }
 
-  initCanvasSize() {
+  private initCanvasSize(): void {
     this.updateCanvasStyle();
     this.calculatePrintAreas();
     this.setCanvasSize();
   }
 
-  initTextBoxes() {
+  private initTextBoxes(): void {
+    this.fabricTextBoxes = [];
     if (!this.canvas.element.staticValues.text.active) {
       return;
     }
 
     this.canvas.element.staticValues.text.boxes.forEach((box) => {
-      let textOptions = {
+      if (box.perspective !== this.currentPerspective) {
+        return;
+      }
+
+      const textOptions = {
         identifier: box.identifier,
         fontSize: box.fontSize,
         fill: box.fill,
@@ -257,7 +249,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       // cant use IText actually, see: https://github.com/fabricjs/fabric.js/issues/8865
-      let fabricText = new fabric.Text(box.default, {
+      const fabricText = new fabric.Text(box.default, {
         ...textOptions,
         ...this.getTextBoxControlOptions(box)
       }).setControlsVisibility(this.controlVisibility);
@@ -271,7 +263,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  initState(callback) {
+  private initState(callback): void {
     this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
@@ -296,48 +288,50 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onResizedBackground(event: ResizedEvent) {
+  public onResizedBackground(event: ResizedEvent): void {
     if (event.isFirst) {
       return;
     }
     this.initCanvasSize();
   }
 
-  onResizedMiddle(event: ResizedEvent) {
+  public onResizedMiddle(event: ResizedEvent): void {
     if (event.isFirst) {
       return;
     }
     this.initCanvasSize();
   }
 
-  calculatePrintAreas() {
+  private calculatePrintAreas(): void {
     if (!this.canvas) {
       return;
     }
     this.printAreas = [];
-    let factor = this.canvasWidth / this.renderImage.width;
+    const factor = this.canvasWidth / this.renderImage.width;
 
     this.canvas.element.staticValues.area.forEach((area) => {
-      this.printAreas.push({
-        width: area.width * factor,
-        height: area.height * factor,
-        left: area.left * factor,
-        top: area.top * factor
-      });
+      if (area.perspective === this.currentPerspective) {
+        this.printAreas.push({
+          width: area.width * factor,
+          height: area.height * factor,
+          left: area.left * factor,
+          top: area.top * factor
+        });
+      }
     });
   }
 
-  setCanvasSize() {
+  private setCanvasSize(): void {
     if (!this.fabricCanvas || !this.canvas || this.canvasWidth < 1 || this.canvasHeight < 1) {
       return;
     }
-    let factor = this.canvasWidth / this.renderImage.width;
+    const factor = this.canvasWidth / this.renderImage.width;
     this.fabricCanvas.setWidth(this.canvasWidth);
     this.fabricCanvas.setHeight(this.canvasHeight);
     this.fabricCanvas.setZoom(factor);
   }
 
-  updateCanvasStyle() {
+  private updateCanvasStyle(): void {
     if (!this.htmlRenderImage) {
       return;
     }
@@ -351,7 +345,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasStyle.left = this.canvasLeft + 'px';
   }
 
-  public addImage(url, options, layer = null, center = false) {
+  public addImage(url, options, layer = null, center = false): void {
     fabric.Image.fromURL(url, (fabricImage) => {
       fabricImage.setOptions(options);
       fabricImage.setControlsVisibility(this.controlVisibility);
@@ -375,7 +369,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  public addMotive(file) {
+  public addMotive(file): void {
     let fileIsAlreadySelected: true | false = false;
     const url = this.mediaUrl + file.path;
     const canvasObjects = this.fabricCanvas.getObjects();
@@ -389,7 +383,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       fileIsAlreadySelected = canvasObjects[i].payload.file.url === file.url;
     }
 
-    if (true === fileIsAlreadySelected) {
+    if (fileIsAlreadySelected) {
       return;
     }
 
@@ -408,7 +402,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.addImage(url, options, 'back');
   }
 
-  public addImageFromFile(file) {
+  public addImageFromFile(file): void {
     const date: Date = new Date();
     const fileId = uuidv4();
     const extension = this.getExtensionFromFileName(file.name);
@@ -438,7 +432,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.fabricCanvasService.uploadFile(file, fileId, extension, directory).subscribe((next) => {
-        const scale = this.getImageScale(this.canvas.element.staticValues.image.previewSize, dimensions);
+        const scale = this.getImageScale(this.canvas.element.staticValues.image[this.currentPerspective]?.previewSize, dimensions);
         const options = {
           ...this.controlOptionsEditable,
           scaleX: scale,
@@ -455,18 +449,18 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  public selectionUpdated(event) {
+  public selectionUpdated(event): void {
     this.fabricSelectedObject = null;
     if (event.selected.length > 0) {
       this.fabricSelectedObject = event.selected[0];
     }
   }
 
-  public selectionCleared(event) {
+  public selectionCleared(event): void {
     this.fabricSelectedObject = null;
   }
 
-  public removeSelectedObject() {
+  public removeSelectedObject(): void {
     if (null === this.fabricSelectedObject) {
       return;
     }
@@ -479,21 +473,21 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fabricSelectedObject = null;
   }
 
-  public updateText(event, identifier) {
+  public updateText(event, identifier): void {
     this.updateTextPropery(identifier, 'text', event.target.value);
   }
 
-  public removeDefaultText(box) {
+  public removeDefaultText(box): void {
     if (box.get('text') === box.payload.box.default) {
       this.updateTextPropery(box.payload.box.identifier, 'text', '');
     }
   }
 
-  public updateTextColor(event, identifier) {
+  public updateTextColor(event, identifier): void {
     this.updateTextPropery(identifier, 'fill', '#' + event.value.hex, { color: event.value });
   }
 
-  public updateTextFont(event) {
+  public updateTextFont(event): void {
     this.selectedFont = event.value;
     this.fabricCanvas.getObjects().forEach((object) => {
       if (object.get('type') === 'text') {
@@ -505,21 +499,6 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fabricCanvas.renderAll();
   }
 
-  private updateTextPropery(identifier, property, value, payload = {}) {
-    this.fabricCanvas.getObjects().forEach((object) => {
-      if (object.get('type') === 'text' && object.get('identifier') === identifier) {
-        object.setOptions({
-          [property]: value,
-          payload: {
-            ...object.payload,
-            ...payload
-          }
-        });
-        this.fabricCanvas.renderAll();
-      }
-    });
-  }
-
   public getObjectValue(type, identifier, property): Color {
     const object = this.fabricCanvas.getObjects().find((o) => o.get('type') === type && o.get('identifier') === identifier);
     if (!object || !object.hasOwnProperty(property)) {
@@ -528,7 +507,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     return object[property];
   }
 
-  public getColorFromHex(hex) {
+  public getColorFromHex(hex): Color {
     if (hex === null) {
       return new Color(0, 0, 0, 1);
     }
@@ -551,128 +530,10 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public getAcceptedFileTypes(): string {
-    return this.canvas.element.staticValues.image.allowedMimeTypes.join(',')
+    return this.canvas.element.staticValues.image[this.currentPerspective]?.allowedMimeTypes.join(',')
   }
 
-  public reset() {
-    let dialogMessage = '';
-    this.resetMessage$.subscribe((next) => {
-      dialogMessage = translate(next.content, this.locale);
-    });
-
-    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Zurücksetzen' ).afterClosed().subscribe((next) => {
-      if (true === next) {
-        this.store.dispatch(
-          updateConfigurationState({
-            updates: {
-              remove: [
-                {
-                  // todo make designer compatiple with repeatable section logic (read correct repetition id)
-                  sectionRepetition: 0,
-                  sectionId: this.canvas.element.sectionId,
-                  elementId: this.canvas.element.elementId,
-                  property: null,
-                  value: null
-                }
-              ],
-            },
-          })
-        );
-
-        this.store.dispatch(
-          setHideOnePage({
-            payload: false
-          })
-        );
-      }
-    });
-  }
-
-  public cancel() {
-    let dialogMessage = '';
-    this.cancelMessage$.subscribe((next) => {
-      dialogMessage = translate(next.content, this.locale);
-    });
-
-    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Verwerfen' ).afterClosed().subscribe((next) => {
-      if (true === next) {
-        this.store.dispatch(
-          setHideOnePage({
-            payload: false
-          })
-        );
-      }
-    });
-  }
-
-  public save(): void {
-    let fabricCanvas = this.fabricCanvas.toJSON(['identifier', 'payload']);
-    fabricCanvas.objects = [];
-
-    this.fabricCanvas.getObjects().forEach((object) => {
-      fabricCanvas.objects.push(object.toJSON(['identifier', 'payload']));
-    });
-
-    const date: Date = new Date();
-    const fabricCanvasJson = JSON.stringify(fabricCanvas);
-    const productId = this.product.id;
-    const directory = '/apto-plugin-image-upload/render-images/' + date.getFullYear() + '/' + (date.getMonth() + 1).toString().padStart(2, '0') + '/';
-    const fileName = sha1(fabricCanvasJson);
-
-    const payload = {
-      json: fabricCanvasJson,
-      renderImages: []
-    }
-
-    this.canvas.element.staticValues.area.forEach((area) => {
-      payload.renderImages.push({
-        fileName: fileName + '-' + area.identifier,
-        renderImageId: fileName + '-' + area.identifier,
-        productId: productId,
-        directory: directory,
-        path: directory + fileName + '-' + area.identifier + '.png',
-        extension: 'png',
-        perspective: area.perspective,
-        layer: area.layer,
-        offsetX: area.left * 100 / this.renderImage.width,
-        offsetY: area.top * 100 / this.renderImage.height
-      });
-    });
-
-    this.fabricCanvasService.uploadLayerImage(this.fabricCanvas, this.canvas.element.staticValues.area, this.renderImage, fileName, directory, (upload: Observable<any>) => {
-      upload.subscribe((next) => {
-        if (next.message.error === false) {
-          this.store.dispatch(
-            updateConfigurationState({
-              updates: {
-                set: [{
-                  sectionRepetition: 0,
-                  sectionId: this.canvas.element.sectionId,
-                  elementId: this.canvas.element.elementId,
-                  property: 'aptoElementDefinitionId',
-                  value: 'apto-element-image-upload',
-                }, {
-                  sectionRepetition: 0,
-                  sectionId: this.canvas.element.sectionId,
-                  elementId: this.canvas.element.elementId,
-                  property: 'payload',
-                  value: payload,
-                }],
-              },
-            })
-          );
-
-          this.store.dispatch(
-            setHideOnePage({
-              payload: false
-            })
-          );
-        }
-      })
-    });
-  }
-
-  public getPrintAreaId(area) {
+  public getPrintAreaId(area): string {
     return area.perspective + area.layer + area.width + area.height + area.left + area.top;
   }
 
@@ -680,52 +541,52 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     return box.locked ? this.controlOptionsLocked : this.controlOptionsEditable;
   }
 
-  private getExtensionFromFileName(fileName) {
-    let extension = fileName.split('.');
+  private getExtensionFromFileName(fileName): string {
+    const extension = fileName.split('.');
     if (extension.length === 1 || (extension[0] === "" && extension.length === 2)) {
       return '';
     }
     return ('' + extension.pop()).toLowerCase();
   }
 
-  public getNameFromFileName(fileName) {
-    return fileName.replace('.' + this.getExtensionFromFileName(fileName), '')
+  public getNameFromFileName(fileName): string {
+    return fileName.replace('.' + this.getExtensionFromFileName(fileName), '');
   }
 
-  private getImageScale(maxWidth, dimensions) {
-    let width = null, height = null;
-
-    if (dimensions.width >= dimensions.height) {
-      width = maxWidth;
-      height = Math.floor(maxWidth / (dimensions.width / dimensions.height));
-    }
-
-    if (dimensions.height > dimensions.width) {
-      width = Math.floor(maxWidth / (dimensions.height / dimensions.width));
-      height = maxWidth;
-    }
-
-    return  maxWidth / dimensions.width;
+  private getImageScale(maxWidth, dimensions): number {
+    return maxWidth / dimensions.width;
   }
 
-  private assertValidDimensions(dimensions) {
-    const minWidth = this.canvas.element.staticValues.image.minWidth;
-    const minHeight = this.canvas.element.staticValues.image.minHeight;
+  public ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
+    this.renderImageService.ngOnDestroy();
+  }
 
-    if (minWidth > 0 && dimensions.width < minWidth) {
-      return false;
-    }
+  private updateTextPropery(identifier, property, value, payload = {}): void {
+    this.fabricCanvas.getObjects().forEach((object) => {
+      if (object.get('type') === 'text' && object.get('identifier') === identifier) {
+        object.setOptions({
+          [property]: value,
+          payload: {
+            ...object.payload,
+            ...payload
+          }
+        });
+        this.fabricCanvas.renderAll();
+      }
+    });
+  }
 
-    if (minHeight > 0 && dimensions.width < minHeight) {
+  private assertValidDimensions(dimensions): boolean {
+    const minWidth = this.canvas.element.staticValues.image[this.currentPerspective]?.minWidth;
+    const minHeight = this.canvas.element.staticValues.image[this.currentPerspective]?.minHeight;
+
+    if ((minWidth > 0 && dimensions.width < minWidth) || (minHeight > 0 && dimensions.width < minHeight)) {
       return false;
     }
 
     return true;
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    })
   }
 }
