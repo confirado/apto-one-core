@@ -167,4 +167,32 @@ export class Queries {
       payload: { query: 'ListMediaFiles' },
     };
   }
+
+  public static get FindRule(): IRequestData {
+    return {
+      alias: 'FindRule',
+      payload: { query: 'FindRule' },
+    };
+  }
+
+  public static get FindProductSectionsElements(): IRequestData {
+    return {
+      alias: 'FindProductSectionsElements',
+      payload: { query: 'FindProductSectionsElements' },
+    };
+  }
+
+  public static get FindRuleConditions(): IRequestData {
+    return {
+      alias: 'FindRuleConditions',
+      payload: { query: 'FindRuleConditions' },
+    };
+  }
+
+  public static get FindRuleImplications(): IRequestData {
+    return {
+      alias: 'FindRuleImplications',
+      payload: { query: 'FindRuleImplications' },
+    };
+  }
 }

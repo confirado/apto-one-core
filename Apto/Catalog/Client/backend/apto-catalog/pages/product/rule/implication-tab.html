@@ -1,5 +1,5 @@
 <div layout="row" layout-align="start" flex>
-    <md-input-container flex>
+    <md-input-container flex data-cy="implication-criterion-type">
         <label>Type:</label>
         <md-select
                 multiple="false"
@@ -13,9 +13,10 @@
         </md-select>
     </md-input-container>
     <div flex="5"></div>
+
     <!-- section select box -->
     <!-- Had to use ng-hide, because ng-if resulted in some weird behaviour -->
-    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0" data-cy="implication-section">
         <label>Sektion:</label>
         <md-select
                 multiple="true"
@@ -31,7 +32,7 @@
     <div flex="5"></div>
 
     <!-- element select box -->
-    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0" data-cy="implication-element">
         <label>Element:</label>
         <md-select
                 multiple="true"
@@ -48,7 +49,7 @@
     <div flex="5"></div>
 
     <!-- properties select box -->
-    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 0" data-cy="implication-properties">
         <label>Feld:</label>
         <md-select
                 multiple="true"
@@ -64,7 +65,7 @@
     <div flex="5"></div>
 
     <!-- computedValues select box -->
-    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 1">
+    <md-input-container flex ng-hide="$parent.implicationCriterionType.id !== 1" data-cy="implication-computed-value">
         <label>Berechneter Wert:</label>
         <md-select
                 multiple="false"
@@ -79,7 +80,7 @@
     <div flex="5"></div>
 
     <!-- operator select box -->
-    <md-input-container flex>
+    <md-input-container flex data-cy="implication-operator">
         <label>Operator:</label>
         <md-select
                 multiple="false"
@@ -95,7 +96,7 @@
     <div flex="5"></div>
 
     <!-- value text field -->
-    <md-input-container flex>
+    <md-input-container flex data-cy="implication-value">
         <label>Wert:</label>
         <input ng-disabled="$parent.selectedImplicationOperator === null || $parent.selectedImplicationOperator.id === 0 || $parent.selectedImplicationOperator.id === 1" ng-model="$parent.selectedImplicationValue">
     </md-input-container>
@@ -103,15 +104,15 @@
 
     <!-- add button -->
     <md-input-container>
-        <md-button ng-disabled="!isValidImplication()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addImplication()">Hinzufügen</md-button>
-        <md-button ng-disabled="!isValidImplication()" ng-if="currentImplicationId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveImplication()">Speichern</md-button>
-        <md-button ng-disabled="!currentImplicationId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetImplicationForm()">
+        <md-button ng-disabled="!isValidImplication()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addImplication()" data-cy="implication-add-button">Hinzufügen</md-button>
+        <md-button ng-disabled="!isValidImplication()" ng-if="currentImplicationId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveImplication()"  data-cy="implication-save-button">Speichern</md-button>
+        <md-button ng-disabled="!currentImplicationId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetImplicationForm()" data-cy="implication-reset-button">
             <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
         </md-button>
     </md-input-container>
 </div>
 
-<md-table-container class="md-whiteframe-2dp">
+<md-table-container class="md-whiteframe-2dp" data-cy="implications-table">
     <table md-table>
         <thead md-head>
             <tr md-row>

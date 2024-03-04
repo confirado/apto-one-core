@@ -53,6 +53,12 @@ export class Select implements ElementInterface {
     return Select;
   }
 
+  /**
+   * pass null if attribute is not key value
+   * .attributes({ 'not.be.visible': null })
+   *
+   * @param attributes
+   */
   public static attributes(attributes: Attributes): typeof Select {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
