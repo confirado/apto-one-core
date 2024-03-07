@@ -3113,8 +3113,7 @@ class Product extends AptoAggregate
         AptoUuid $sectionId = null,
         AptoUuid $elementId = null,
         string $property = null,
-    ): Product
-    {
+    ): Product {
         $rule = $this->getRule($ruleId);
 
         if ($rule === null) {

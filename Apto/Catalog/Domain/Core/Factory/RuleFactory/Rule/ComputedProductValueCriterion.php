@@ -2,14 +2,10 @@
 
 namespace Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
 
-use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalidOperatorException;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalidPropertyException;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalidValueException;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
-use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 

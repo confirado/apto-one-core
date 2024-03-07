@@ -6,7 +6,6 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Application\Backend\Commands\Product\ProductChildHandler;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidTypeException;
@@ -353,11 +352,6 @@ class ProductRuleHandler extends ProductChildHandler
 
         yield RemoveProductRuleCondition::class => [
             'method' => 'handleRemoveProductRuleCondition',
-            'bus' => 'command_bus'
-        ];
-
-        yield RemoveProductRuleImplication::class => [
-            'method' => 'handleRemoveProductRuleImplication',
             'bus' => 'command_bus'
         ];
 

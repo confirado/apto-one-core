@@ -109,9 +109,6 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                 $scope.productDetail.position = angular.copy($scope.nextPosition);
             });
         }
-
-        console.log('rules')
-        console.log($scope.rules)
     }
 
     function assignDefaultShop() {
