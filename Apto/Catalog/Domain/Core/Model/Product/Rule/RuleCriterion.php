@@ -13,6 +13,9 @@ use Doctrine\Common\Collections\Collection;
 
 abstract class RuleCriterion extends AptoEntity
 {
+    const STANDARD_TYPE = 0;
+    const COMPUTED_VALUE_TYPE = 1;
+
     /**
      * @var int
      */
@@ -117,6 +120,8 @@ abstract class RuleCriterion extends AptoEntity
                 throw new RuleCriterionInvalidOperatorException('The given operator must be \'ACTIVE\' or \'NOT_ACTIVE\' if no elementId or property is set.');
             }
         }
+
+        // if "Berechneter Wert" is selected than it has to have a value
         if ($type === ComputedProductValueCriterion::TYPE && (null === $computedProductValue || null === $value)) {
             throw new RuleCriterionInvalidValueException('A ComputedProductValue and a value to compare with has to be set!');
         }
@@ -140,11 +145,35 @@ abstract class RuleCriterion extends AptoEntity
     }
 
     /**
+     * @param AptoUuid|null $sectionId
+     *
+     * @return $this
+     */
+    public function setSectionId(?AptoUuid $sectionId): self
+    {
+        $this->sectionId = $sectionId;
+
+        return $this;
+    }
+
+    /**
      * @return AptoUuid|null
      */
     public function getElementId(): ?AptoUuid
     {
         return $this->elementId;
+    }
+
+    /**
+     * @param AptoUuid|null $elementId
+     *
+     * @return $this
+     */
+    public function setElementId(?AptoUuid $elementId): self
+    {
+        $this->elementId = $elementId;
+
+        return $this;
     }
 
     /**
@@ -156,11 +185,35 @@ abstract class RuleCriterion extends AptoEntity
     }
 
     /**
+     * @param string|null $property
+     *
+     * @return $this
+     */
+    public function setProperty(?string $property): self
+    {
+        $this->property = $property;
+
+        return $this;
+    }
+
+    /**
      * @return RuleCriterionOperator
      */
     public function getOperator(): RuleCriterionOperator
     {
         return $this->operator;
+    }
+
+    /**
+     * @param RuleCriterionOperator $operator
+     *
+     * @return $this
+     */
+    public function setOperator(RuleCriterionOperator $operator): self
+    {
+        $this->operator = $operator;
+
+        return $this;
     }
 
     /**
@@ -183,7 +236,6 @@ abstract class RuleCriterion extends AptoEntity
         $this->value = $value;
         return $this;
     }
-
 
     /**
      * @param AptoUuid $id

@@ -19,8 +19,24 @@ interface ProductRuleFinder extends AptoFinder
     public function findConditions(string $id);
 
     /**
+     * @param string $ruleId
+     * @param string $conditionId
+     *
+     * @return mixed
+     */
+    public function findCondition(string $ruleId, string $conditionId);
+
+    /**
      * @param string $id
      * @return array|null
      */
     public function findImplications(string $id);
+
+    /**
+     * @param string $ruleId
+     * @param string $implicationId
+     *
+     * @return mixed
+     */
+    public function findImplication(string $ruleId, string $implicationId);
 }

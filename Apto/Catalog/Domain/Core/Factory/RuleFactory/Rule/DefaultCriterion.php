@@ -9,13 +9,14 @@ use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalid
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\CriterionInvalidValueException;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
+use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
 
 class DefaultCriterion extends Criterion
 {
     /**
      * Define type
      */
-    const TYPE = 0;
+    const TYPE = RuleCriterion::STANDARD_TYPE;
 
     /**
      * @var AptoUuid

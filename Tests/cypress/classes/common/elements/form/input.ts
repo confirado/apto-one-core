@@ -52,10 +52,10 @@ export class Input implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Input {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get(Input.initialSelector).should(condition, attributes[condition]);
+        cy.get(Input.initialSelector).find('input').should(condition, attributes[condition]);
       }
       else {
-        cy.get(Input.initialSelector).should(condition);
+        cy.get(Input.initialSelector).find('input').should(condition);
       }
     }
 

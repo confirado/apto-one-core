@@ -21,6 +21,12 @@
         <field name="conditionsOperator" column="conditions_operator" type="integer"/>
         <field name="implicationsOperator" column="implications_operator" type="integer"/>
         <field name="softRule" type="boolean" column="soft_rule"/>
+        <field name="description" type="text" column="description"/>
+        <field name="position" type="integer" column="position_column">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
 

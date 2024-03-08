@@ -13,6 +13,7 @@ import { Table } from '../../classes/common/elements/table';
 import { TranslatedValue } from '../../classes/common/elements/custom/translated-value';
 import { MediaSelect } from '../../classes/common/elements/custom/media-select';
 import { TableActionTypes } from '../../classes/enums/table-action-types';
+import { Tabs } from '../../classes/common/elements/tabs';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -73,7 +74,7 @@ describe('Product', () => {
               // check that from all tabs product tab ich clicked
               cy.dataCy('header_product-title').should('contain.text', 'Produkt');
 
-              cy.get('md-tabs-content-wrapper').should('exist')
+              Tabs.get('md-tabs').hasContent();
 
               Checkbox.getByAttr('product-active')
                 .hasLabel('Aktiv')
@@ -188,10 +189,8 @@ describe('Product', () => {
           .then(() => {
             cy.get('.md-dialog-content').should('exist').then(() => {
 
-              cy.get('md-tabs-wrapper').should('exist');
-              cy.get('md-tabs-content-wrapper').should('exist');
-
-              Backend.topTabItemClick('Domains');
+              Tabs.get('md-tabs').hasContent();
+              Tabs.get('md-tabs').select('Domains');
 
               cy.dataCy('domain-many-to-many').should('be.visible').then(() => {
                 // Domaineigenschaften
@@ -237,10 +236,8 @@ describe('Product', () => {
           .then(() => {
             cy.get('.md-dialog-content').should('exist').within(() => {
 
-              cy.get('md-tabs-wrapper').should('exist');
-              cy.get('md-tabs-content-wrapper').should('exist');
-
-              Backend.topTabItemClick('Kategorien');
+              Tabs.get('md-tabs').hasContent();
+              Tabs.get('md-tabs').select('Kategorien');
 
               cy.dataCy('category-many-to-many').should('be.visible').within(() => {
                 // Verfügbar

@@ -32,6 +32,7 @@ export class Table {
         cy.get('tr').each($tr => {
           // cy.wrap($tr).scrollIntoView();
 
+          // @ts-ignore
           cy.wrap($tr).find('td').each($td => {
             const cellValue = $td.text().trim();
 
@@ -60,6 +61,7 @@ export class Table {
         let found = false;
 
         cy.get('tr').each($tr => {
+          // @ts-ignore
           cy.wrap($tr).find('td').each($td => {
             const cellValue = $td.text().trim();
 
@@ -89,11 +91,12 @@ export class Table {
     cy.get(Table.initialSelector).should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
+          // @ts-ignore
           cy.wrap($tr).find('td').each($td => {
             const cellValue = $td.text().trim();
 
             if (cellValue.includes(uniqueValue)) {
-              cy.wrap($tr).find('td:last-child').find(type).click();
+              cy.wrap($tr).find('td:last-child').find(type).click({force: true});
               return false;
             }
           });
@@ -104,15 +107,24 @@ export class Table {
     return Table;
   }
 
+  /**
+   * Selects the table cell by unique value then click on the given column.
+   * makes sense for clicking on table's given row
+   *
+   * for example from the rules list page we want to click on the rule with the given name
+   *
+   * @param uniqueValue
+   */
   public static selectRow(uniqueValue: any): typeof Table {
     cy.get(Table.initialSelector).should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
+          // @ts-ignore
           cy.wrap($tr).find('td').each($td => {
             const cellValue = $td.text().trim();
 
             if (cellValue.includes(uniqueValue)) {
-              cy.wrap($tr).click();
+              cy.wrap($tr).click({force: true});
               return false;
             }
           });
@@ -123,15 +135,21 @@ export class Table {
     return Table;
   }
 
+  /**
+   * the same like selectRow, but you can also target the column you want
+   * @param uniqueValue
+   * @param columnNumber
+   */
   public static selectCell(uniqueValue: any, columnNumber: number): typeof Table {
     cy.get(Table.initialSelector).should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
+          // @ts-ignore
           cy.wrap($tr).find('td').each($td => {
             const cellValue = $td.text().trim();
 
             if (cellValue.includes(uniqueValue)) {
-              cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').click();
+              cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').click({force: true});
               return false;
             }
           });

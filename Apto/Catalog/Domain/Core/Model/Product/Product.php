@@ -38,6 +38,7 @@ use Apto\Catalog\Domain\Core\Model\Product\Element\RenderImage;
 use Apto\Catalog\Domain\Core\Model\Product\Element\RenderImageOptions;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ZoomFunction;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\Rule;
+use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidTypeException;
@@ -3090,6 +3091,63 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid              $ruleId
+     * @param AptoUuid              $conditionId
+     * @param int                   $type
+     * @param RuleCriterionOperator $operator
+     * @param string                $value
+     * @param AptoUuid|null         $computedValueId
+     * @param AptoUuid|null         $sectionId
+     * @param AptoUuid|null         $elementId
+     * @param string|null           $property
+     *
+     * @return $this
+     */
+    public function setRuleCondition(
+        AptoUuid $ruleId,
+        AptoUuid $conditionId,
+        int $type,
+        RuleCriterionOperator $operator,
+        string $value,
+        AptoUuid $computedValueId = null,
+        AptoUuid $sectionId = null,
+        AptoUuid $elementId = null,
+        string $property = null,
+    ): Product {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule === null) {
+            return $this;
+        }
+
+        // type is required in both cases, so we don't check if it is there or not
+        $rule->setConditionType($conditionId, $type);
+
+        if ($type === RuleCriterion::STANDARD_TYPE) {
+            $rule->setConditionSectionId($conditionId, $sectionId);
+            $rule->setConditionElementId($conditionId,  $elementId);
+            $rule->setConditionProperty($conditionId, $property);
+
+            $rule->setConditionComputedValue($conditionId, null);
+        }
+        else if ($type === RuleCriterion::COMPUTED_VALUE_TYPE) {
+            $rule->setConditionComputedValue($conditionId, $this->getComputedProductValue($computedValueId));
+
+            $rule->setConditionSectionId($conditionId, null);
+            $rule->setConditionElementId($conditionId,  null);
+            $rule->setConditionProperty($conditionId, null);
+        }
+
+        // operator is required in both cases
+        $rule->setConditionOperator($conditionId, $operator);
+
+        // value can be null, we might want to unset the value
+        $rule->setConditionValue($conditionId, $value);
+
+        return $this;
+    }
+
+    /**
      * @param AptoUuid $ruleId
      * @param int $operator
      * @return Product
@@ -3101,6 +3159,63 @@ class Product extends AptoAggregate
         if (null !== $rule) {
             $rule->setImplicationsOperator($operator);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid              $ruleId
+     * @param AptoUuid              $implicationId
+     * @param int                   $type
+     * @param RuleCriterionOperator $operator
+     * @param string                $value
+     * @param AptoUuid|null         $computedValueId
+     * @param AptoUuid|null         $sectionId
+     * @param AptoUuid|null         $elementId
+     * @param string|null           $property
+     *
+     * @return $this
+     */
+    public function setRuleImplication(
+        AptoUuid $ruleId,
+        AptoUuid $implicationId,
+        int $type,
+        RuleCriterionOperator $operator,
+        string $value,
+        AptoUuid $computedValueId = null,
+        AptoUuid $sectionId = null,
+        AptoUuid $elementId = null,
+        string $property = null,
+    ): Product {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule === null) {
+            return $this;
+        }
+
+        // type is required in both cases, so we don't check if it is there or not
+        $rule->setImplicationType($implicationId, $type);
+
+        if ($type === RuleCriterion::STANDARD_TYPE) {
+            $rule->setImplicationSectionId($implicationId, $sectionId);
+            $rule->setImplicationElementId($implicationId,  $elementId);
+            $rule->setImplicationProperty($implicationId, $property);
+
+            $rule->setImplicationComputedValue($implicationId, null);
+        }
+        else if ($type === RuleCriterion::COMPUTED_VALUE_TYPE) {
+            $rule->setImplicationComputedValue($implicationId, $this->getComputedProductValue($computedValueId));
+
+            $rule->setImplicationSectionId($implicationId, null);
+            $rule->setImplicationElementId($implicationId,  null);
+            $rule->setImplicationProperty($implicationId, null);
+        }
+
+        // operator is required in both cases
+        $rule->setImplicationOperator($implicationId, $operator);
+
+        // value can be null, we might want to unset the value
+        $rule->setImplicationValue($implicationId, $value);
 
         return $this;
     }
@@ -3228,6 +3343,40 @@ class Product extends AptoAggregate
 
         if (null !== $rule) {
             $rule->removeAllImplications();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param string   $description
+     *
+     * @return $this
+     */
+    public function setRuleDescription(AptoUuid $ruleId, string $description): Product
+    {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule !== null) {
+            $rule->setDescription($description);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param int      $position
+     *
+     * @return $this
+     */
+    public function setRulePosition(AptoUuid $ruleId, int $position): Product
+    {
+        $rule = $this->getRule($ruleId);
+
+        if ($rule !== null) {
+            $rule->setPosition($position);
         }
 
         return $this;
@@ -3382,6 +3531,23 @@ class Product extends AptoAggregate
     public function getComputedProductValues(): Collection
     {
         return $this->computedProductValues;
+    }
+
+    /**
+     * @param AptoUuid $computedValueId
+     *
+     * @return ComputedProductValue|null
+     */
+    private function getComputedProductValue(AptoUuid $computedValueId): ?ComputedProductValue
+    {
+        /** @var ComputedProductValue $value */
+        foreach ($this->getComputedProductValues() as $value) {
+            if ($value->getId()->getId() === $computedValueId->getId()) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -3679,6 +3845,164 @@ class Product extends AptoAggregate
         }
 
         return $collection;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     *
+     * @return $this
+     * @throws InvalidUuidException
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRule(AptoUuid $ruleId): Product
+    {
+        $rule = $this->getRule($ruleId);
+        if ($rule === null) {
+            return $this;
+        }
+
+        $newRuleId = $this->nextRuleId();
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+
+        foreach ($rule->getConditions() as $condition) {
+            $sectionId = $condition->getSectionId();
+            $elementId = $condition->getElementId();
+            $computedProductValue = $condition->getComputedProductValue();
+
+            if ($sectionId !== null) {
+                $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
+            }
+
+            if ($elementId !== null) {
+                $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
+            }
+
+            if ($computedProductValue !== null) {
+                $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+            }
+        }
+
+        foreach ($rule->getImplications() as $implication) {
+            $sectionId = $implication->getSectionId();
+            $elementId = $implication->getElementId();
+            $computedProductValue = $implication->getComputedProductValue();
+
+            if ($sectionId !== null) {
+                $entityMapping->set($sectionId->getId(), $this->getSection($implication->getSectionId()));
+            }
+
+            if ($elementId !== null) {
+                $entityMapping->set($elementId->getId(), $this->getElement($implication->getSectionId(), $implication->getElementId()));
+            }
+
+            if ($computedProductValue !== null) {
+                $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+            }
+        }
+
+        $copiedRule = $rule->copy($newRuleId, $entityMapping);
+
+        $this->rules->set(
+            $newRuleId->getId(),
+            $copiedRule
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param AptoUuid $conditionId
+     *
+     * @return $this
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRuleCondition(AptoUuid $ruleId, AptoUuid $conditionId): Product
+    {
+        $rule = $this->getRule($ruleId);
+        if ($rule === null) {
+            return $this;
+        }
+
+        $condition = $rule->getCondition($conditionId);
+
+        $sectionId = $condition->getSectionId();
+        $elementId = $condition->getElementId();
+        $computedProductValue = $condition->getComputedProductValue();
+
+        $entityMapping = new ArrayCollection();
+
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($rule->getId()->getId(), $rule);
+
+        if ($sectionId !== null) {
+            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
+        }
+
+        if ($elementId !== null) {
+            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
+        }
+
+        if ($computedProductValue !== null) {
+            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+        }
+
+        $rule->copyCondition($conditionId, $entityMapping);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $ruleId
+     * @param AptoUuid $implicationId
+     *
+     * @return $this
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidTypeException
+     * @throws RuleCriterionInvalidValueException
+     */
+    public function copyRuleImplication(AptoUuid $ruleId, AptoUuid $implicationId): Product
+    {
+        $rule = $this->getRule($ruleId);
+        if ($rule === null) {
+            return $this;
+        }
+
+        $implication = $rule->getImplication($implicationId);
+
+        $sectionId = $implication->getSectionId();
+        $elementId = $implication->getElementId();
+        $computedProductValue = $implication->getComputedProductValue();
+
+        $entityMapping = new ArrayCollection();
+
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($rule->getId()->getId(), $rule);
+
+        if ($sectionId !== null) {
+            $entityMapping->set($sectionId->getId(), $this->getSection($implication->getSectionId()));
+        }
+
+        if ($elementId !== null) {
+            $entityMapping->set($elementId->getId(), $this->getElement($implication->getSectionId(), $implication->getElementId()));
+        }
+
+        if ($computedProductValue !== null) {
+            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+        }
+
+        $rule->copyImplication($implicationId, $entityMapping);
+
+        return $this;
     }
 
     /**

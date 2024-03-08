@@ -751,7 +751,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function updateProductRule(productId, ruleId, ruleName, ruleActive, errorMessage, conditionsOperator, implicationsOperator, softRule) {
+    function updateProductRule(productId, ruleId, ruleName, ruleActive, errorMessage, conditionsOperator, implicationsOperator, softRule, description, position) {
         let commandArguments = [];
 
         commandArguments.push(productId);
@@ -765,6 +765,8 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(conditionsOperator);
         commandArguments.push(implicationsOperator);
         commandArguments.push(softRule);
+        commandArguments.push(description);
+        commandArguments.push(position);
 
         return {
             type: getType('UPDATE_PRODUCT_RULE'),
@@ -779,10 +781,72 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
+    function copyProductRule(productId, ruleId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE'),
+            payload: MessageBusFactory.command('CopyProductRule', [productId, ruleId])
+        }
+    }
+
+    function updateProductRuleCondition(productId, ruleId, condition) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(ruleId);
+        commandArguments.push(condition.id);
+        commandArguments.push(condition.typeId);
+        commandArguments.push(condition.operatorId);
+        commandArguments.push(condition.value);
+        commandArguments.push(condition.computedProductValueId);
+        commandArguments.push(condition.sectionId);
+        commandArguments.push(condition.elementId);
+        commandArguments.push(condition.property);
+
+        return {
+            type: getType('UPDATE_PRODUCT_RULE_CONDITION'),
+            payload: MessageBusFactory.command('UpdateProductRuleCondition', commandArguments)
+        }
+    }
+
+    function copyProductRuleCondition(productId, ruleId, conditionId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE_CONDITION'),
+            payload: MessageBusFactory.command('CopyProductRuleCondition', [productId, ruleId, conditionId])
+        }
+    }
+
     function removeProductRuleCondition(productId, ruleId, conditionId) {
         return {
             type: getType('REMOVE_PRODUCT_RULE_CONDITION'),
             payload: MessageBusFactory.command('RemoveProductRuleCondition', [productId, ruleId, conditionId])
+        }
+    }
+
+
+    function updateProductRuleImplication(productId, ruleId, implication) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(ruleId);
+        commandArguments.push(implication.id);
+        commandArguments.push(implication.typeId);
+        commandArguments.push(implication.operatorId);
+        commandArguments.push(implication.value);
+        commandArguments.push(implication.computedProductValueId);
+        commandArguments.push(implication.sectionId);
+        commandArguments.push(implication.elementId);
+        commandArguments.push(implication.property);
+
+        return {
+            type: getType('UPDATE_PRODUCT_RULE_IMPLICATION'),
+            payload: MessageBusFactory.command('UpdateProductRuleImplication', commandArguments)
+        }
+    }
+
+    function copyProductRuleImplication(productId, ruleId, implicationId) {
+        return {
+            type: getType('COPY_PRODUCT_RULE_IMPLICATION'),
+            payload: MessageBusFactory.command('CopyProductRuleImplication', [productId, ruleId, implicationId])
         }
     }
 
@@ -940,10 +1004,18 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         addProductRule: addProductRule,
         updateProductRule: updateProductRule,
         removeProductRule: removeProductRule,
+        copyProductRule: copyProductRule,
         addProductRuleCondition: addProductRuleCondition,
         addProductRuleImplication: addProductRuleImplication,
+
+        updateProductRuleCondition: updateProductRuleCondition,
+        copyProductRuleCondition: copyProductRuleCondition,
         removeProductRuleCondition: removeProductRuleCondition,
+
+        updateProductRuleImplication: updateProductRuleImplication,
+        copyProductRuleImplication: copyProductRuleImplication,
         removeProductRuleImplication: removeProductRuleImplication,
+
         setDetailValue: setDetailValue,
         productsFetchByFilter: productsFetchByFilter,
         getNextPosition: getNextPosition,
