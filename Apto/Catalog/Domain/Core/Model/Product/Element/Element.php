@@ -192,6 +192,9 @@ class Element extends AptoEntity
         $this->extendedPriceCalculationFormula = '';
         $this->openLinksInDialog = false;
         $this->zoomFunction = new ZoomFunction();
+        $this->name = AptoTranslatedValue::fromArray([]);
+        $this->description = AptoTranslatedValue::fromArray([]);
+        $this->errorMessage = AptoTranslatedValue::fromArray([]);
     }
 
     /**
