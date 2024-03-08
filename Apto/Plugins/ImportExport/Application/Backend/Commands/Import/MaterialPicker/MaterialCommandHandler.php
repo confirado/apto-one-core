@@ -249,7 +249,8 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $priceMatrix = [
             'id' => null,
             'row' => null,
-            'column' => null
+            'column' => null,
+            'pricePostProcess' => null
         ];
 
         // set price-matrix id

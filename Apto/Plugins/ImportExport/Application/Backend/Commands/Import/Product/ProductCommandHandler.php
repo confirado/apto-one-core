@@ -558,14 +558,14 @@ class ProductCommandHandler extends AbstractImportDataTypeCommandHandler
         // init section
         $this->sectionId = $this->getSectionId($sectionIdentifier);
         if (null === $this->sectionId) {
-            $this->addSection($sectionIdentifier);
+            $this->addSection($sectionIdentifier, $locale);
             $this->sectionId = $this->getSectionId($sectionIdentifier);
         }
 
         // init element
         $this->elementId = $this->getElementId($this->sectionId, $elementIdentifier);
         if (null === $this->elementId) {
-            $this->addElement($elementIdentifier);
+            $this->addElement($elementIdentifier, $locale);
             $this->elementId = $this->getElementId($this->sectionId, $elementIdentifier);
         }
     }
@@ -603,7 +603,7 @@ class ProductCommandHandler extends AbstractImportDataTypeCommandHandler
         if (array_key_exists('product-name', $fields)) {
             $this->product->setName(
                 AptoTranslatedValue::addTranslation(
-                    $this->product->getName(),
+                    $this->product->getName() ?? new AptoTranslatedValue([]),
                     new AptoTranslatedValueItem(new AptoLocale($locale), $fields['product-name'])
                 )
             );
@@ -613,7 +613,7 @@ class ProductCommandHandler extends AbstractImportDataTypeCommandHandler
         if (array_key_exists('product-beschreibung', $fields)) {
             $this->product->setDescription(
                 AptoTranslatedValue::addTranslation(
-                    $this->product->getDescription(),
+                    $this->product->getDescription() ?? new AptoTranslatedValue([]),
                     new AptoTranslatedValueItem(new AptoLocale($locale), $fields['product-beschreibung'])
                 )
             );
@@ -1551,24 +1551,28 @@ class ProductCommandHandler extends AbstractImportDataTypeCommandHandler
 
     /**
      * @param Identifier $identifier
+     * @param string $locale
+     * @return void
      * @throws IdentifierUniqueException
      * @throws InvalidUuidException
      */
-    private function addSection(Identifier $identifier)
+    private function addSection(Identifier $identifier, string $locale): void
     {
         $this->product->addSection(
-            $identifier, null, true
+            $identifier, AptoTranslatedValue::fromArray([$locale => $identifier->getValue()]), true
         );
     }
 
     /**
      * @param Identifier $identifier
+     * @param string $locale
+     * @return void
      * @throws IdentifierUniqueException
      */
-    private function addElement(Identifier $identifier)
+    private function addElement(Identifier $identifier, string $locale): void
     {
         $this->product->addElement(
-            $this->sectionId, $identifier, null, null, true, false
+            $this->sectionId, $identifier, null, AptoTranslatedValue::fromArray([$locale => $identifier->getValue()]), true, false
         );
     }
 

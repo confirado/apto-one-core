@@ -119,12 +119,12 @@ class RuleCommandHandler extends AbstractCommandHandler
 
         $product->addRuleCondition(
             $ruleId,
+            $operator,
             DefaultCriterion::TYPE,
             $sectionId,
             $elementId,
             $property,
             null,
-            $operator,
             $value
         );
 
@@ -171,12 +171,12 @@ class RuleCommandHandler extends AbstractCommandHandler
 
         $product->addRuleImplication(
             $ruleId,
+            $operator,
             DefaultCriterion::TYPE,
             $sectionId,
             $elementId,
             $property,
             null,
-            $operator,
             $value
         );
 
