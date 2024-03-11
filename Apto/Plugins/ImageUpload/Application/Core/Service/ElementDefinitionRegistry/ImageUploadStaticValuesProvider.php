@@ -75,10 +75,13 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
         $textData = $canvas['textSettings'];
         $textData['boxes'] = [];
 
-        foreach ($canvas['textSettings']['boxes'] as $box) {
-            $box['perspective'] = $box['perspective'] ?? 'persp1';
-            $textData['boxes'][] = $box;
+        if (isset($canvas['textSettings']['boxes'])) {
+            foreach ($canvas['textSettings']['boxes'] as $box) {
+                $box['perspective'] = $box['perspective'] ?? 'persp1';
+                $textData['boxes'][] = $box;
+            }
         }
+
         $staticValues['text'] = $textData;
         $staticValues['area'] = $canvas['areaSettings'];
         $staticValues['price'] = $canvas['priceSettings'];

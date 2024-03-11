@@ -207,7 +207,7 @@ export class RenderImageService {
       const offsetX = imgObj.realOffsetX;
       const offsetY = imgObj.realOffsetY;
 
-      const customPropertyColor: CustomProperty = storeElement.customProperties.find((e) => e.key === 'overlayColor');
+      const customPropertyColor: CustomProperty = storeElement?.customProperties.find((e) => e.key === 'overlayColor');
       if (customPropertyColor) {
         // value in the format e.g.	#E7E7E7,#800080
         const colors = (customPropertyColor.value as string).split(',');

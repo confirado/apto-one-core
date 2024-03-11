@@ -163,37 +163,39 @@ export class DesignerPerspectiveComponent implements OnInit {
   }
 
   public reset(): void {
-    // let dialogMessage = '';
-    // this.resetMessage$.subscribe((next) => {
-    //   dialogMessage = translate(next.content, this.locale);
-    // });
-    //
-    // this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Zurücksetzen' ).afterClosed().subscribe((next) => {
-    //   if (true === next) {
-    //     this.store.dispatch(
-    //       updateConfigurationState({
-    //         updates: {
-    //           remove: [
-    //             {
-    //               // todo make designer compatiple with repeatable section logic (read correct repetition id)
-    //               sectionRepetition: 0,
-    //               sectionId: this.canvas.element.sectionId,
-    //               elementId: this.canvas.element.elementId,
-    //               property: null,
-    //               value: null
-    //             }
-    //           ],
-    //         },
-    //       })
-    //     );
-    //
-    //     this.store.dispatch(
-    //       setHideOnePage({
-    //         payload: false
-    //       })
-    //     );
-    //   }
-    // });
+    let dialogMessage = '';
+    this.resetMessage$.subscribe((next) => {
+      dialogMessage = translate(next.content, this.locale);
+    });
+
+    this.dialogService.openWarningDialog(DialogSizesEnum.md, 'Achtung!', dialogMessage, 'Abbrechen', 'Zurücksetzen' ).afterClosed().subscribe((next) => {
+      if (true === next) {
+        this.store.dispatch(
+          updateConfigurationState({
+            updates: {
+              remove: [
+                {
+                  sectionRepetition: 0,
+                  sectionId: this.canvas.element.sectionId,
+                  elementId: this.canvas.element.elementId,
+                  property: null,
+                  value: null
+                }
+              ],
+            },
+          })
+        );
+
+        this.actions$.pipe(
+          ofType(getConfigurationStateSuccess),
+          take(1)
+        ).subscribe(() => {
+          this.store.dispatch(
+            setHideOnePage({ payload: false })
+          );
+        });
+      }
+    });
   }
 
   public cancel(): void {
