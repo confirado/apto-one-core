@@ -6,7 +6,7 @@ import {
   AddGuestConfigurationArguments,
   ComputedValues,
   Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
-  RenderImage, UpdateBasketConfigurationArguments,
+  RenderImage, StatePrice, UpdateBasketConfigurationArguments,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -15,7 +15,7 @@ import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-u
 export class ConfigurationRepository {
 	public constructor(private catalogMessageBusService: CatalogMessageBusService) {}
 
-	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<StatePrice> {
 		return this.catalogMessageBusService.findPriceByState(productId, compressedState, connector, currentUser);
 	}
 
