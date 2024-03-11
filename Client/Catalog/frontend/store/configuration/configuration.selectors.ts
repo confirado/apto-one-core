@@ -219,33 +219,8 @@ export const selectCurrentRenderImages = createSelector(featureSelector, (state:
 });
 
 export const selectRenderImagesForPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImageData[] => {
-  let currentRenderImages: RenderImageData[] = [];
-
-  // search current render image
-  Object.keys(state.configuration.renderImages).forEach((key,index) => {
-    if (key === perspective) {
-      currentRenderImages = state.configuration.renderImages[key];
-    }
-  });
-
-  return currentRenderImages;
+  return state.configuration.renderImages[perspective] ?? [];
 });
-
-export const selectRenderImageByPerspective = (perspective: string) => createSelector(featureSelector, (state: CatalogFeatureState): RenderImage | null => {
-    let currentRenderImage: RenderImage | null = null;
-
-    // search current render image
-    // state.configuration.renderImages.every((renderImage) => {
-    //   if (renderImage.perspective === perspective) {
-    //     currentRenderImage = renderImage;
-    //     return false;
-    //   }
-    //   return true;
-    // });
-
-    return currentRenderImage;
-  }
-);
 
 export const selectSumPrice = createSelector(featureSelector, (state: CatalogFeatureState) => {
 	if (state.configuration.statePrice === null) {

@@ -1,18 +1,15 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import {
-  selectCurrentRenderImages,
-  selectRenderImagesForPerspective,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectRenderImagesForPerspective } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ImageFromCanvas } from '@apto-catalog-frontend/models/image-from-canvas';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RenderImageService implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class RenderImageService {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private scale = 1;
@@ -25,45 +22,35 @@ export class RenderImageService implements OnDestroy {
   public imageWidth: number | string;
   public imageHeight: number | string;
 
-  public outputSrcSubject = new Subject();
+  constructor(private store: Store) {}
 
-  constructor(private store: Store) {
-    this.init();
-  }
-
-  public init(): void {
-    this.ngOnDestroy();
-    this.subscriptions.push(
-      // data for renderImage$ is sent from multiple directions, so to call all this stuff only once we put a debounce time here
-      this.store.select(selectCurrentRenderImages).subscribe((data) => {
+  public drawImageForPerspective(perspective: string, editMode = false): Promise<ImageFromCanvas | null> {
+    return new Promise((resolve) => {
+      this.store.select(selectRenderImagesForPerspective(perspective)).pipe(take(1)).subscribe((data) => {
         this.renderImages = data;
-        this.finalizeInit();
-      })
-    );
+        if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
+          this.canvas = document.createElement('canvas');
+          this.ctx = this.canvas.getContext('2d');
+          this.clearCanvas();
+          this.adjustCanvasSize();
+          this.loadImages()
+            .then((loadedImages) => {
+              this.drawImagesOnCanvas(editMode ? [loadedImages[0]] : loadedImages);
+
+              // we need to give some time the canvas to finish drawing, and only then convert the image, without setTimeout not working
+              setTimeout(() => {
+                this.adjustImageSize();
+                return resolve(this.generateImageFromCanvas('image/png'));
+              }, 0);
+            });
+        } else {
+          return resolve(null);
+        }
+      });
+    });
   }
 
-  public initForPerspective(perspective: string): void {
-    this.ngOnDestroy();
-    this.subscriptions.push(
-      // data for renderImage$ is sent from multiple directions, so to call all this stuff only once we put a debounce time here
-      this.store.select(selectRenderImagesForPerspective(perspective)).subscribe((data) => {
-        this.renderImages = data;
-        this.finalizeInit();
-      })
-    );
-  }
-
-  private finalizeInit(): void {
-    if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
-      this.canvas = document.createElement('canvas');
-      this.ctx = this.canvas.getContext('2d');
-      this.drawImages();
-    } else {
-      this.outputSrcSubject.next(null);
-    }
-  }
-
-  public resize(img: any, width: number) {
+  public resize(img: any, width: number): Promise<any> {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const height = Math.floor(width / (img.width / img.height));
@@ -71,8 +58,8 @@ export class RenderImageService implements OnDestroy {
     canvas.width = width;
     canvas.height = height;
 
-    return new Promise(resolve => {
-      var image = new Image();
+    return new Promise((resolve) => {
+      const image = new Image();
       image.onload = function() {
         // draw source image into the off-screen canvas:
         ctx.drawImage(image, 0, 0, width, height);
@@ -80,34 +67,12 @@ export class RenderImageService implements OnDestroy {
         // encode image to data-uri with base64 version of compressed image
         resolve({
           src: canvas.toDataURL(),
-          height: height,
-          width: width
-        })
+          height,
+          width
+        });
       };
       image.src = img.src;
     });
-  }
-
-  /**
-   * This is the main function tha draws the image first on hidden canvas then converts to data-url image
-   *
-   * @private
-   */
-  private drawImages(): void {
-    this.clearCanvas();
-    this.adjustCanvasSize();
-    this.loadImages()
-      .then((loadedImages) => {
-        this.drawImagesOnCanvas(loadedImages);
-
-        // we need to give some time the canvas to finish drawing, and only then convert the image, without setTimeout not working
-        setTimeout(() => {
-          this.generateImageFromCanvas();
-          this.adjustImageSize();
-          //this.afterCanvasReady.emit();
-          // this.ctx.scale(this.scale, this.scale);
-        }, 0);
-      });
   }
 
   private clearCanvas(): void {
@@ -145,8 +110,6 @@ export class RenderImageService implements OnDestroy {
   private drawImagesOnCanvas(loadedImages): void {
     for (const img of loadedImages) {
       this.drawImageByRepeating(img.imageHtml, img.imgObj);
-      // this.drawImageByScaling(img.imageHtml, img.imgObj);
-      // this.drawImageByScalingAndRepeating(img.imageHtml, img.imgObj);
     }
   }
 
@@ -303,18 +266,18 @@ export class RenderImageService implements OnDestroy {
     }
   }
 
-  private generateImageFromCanvas(type = 'image/png'): void {
+  private generateImageFromCanvas(type = 'image/png'): ImageFromCanvas | null {
     this.outputImageSrc = this.canvas.toDataURL(type);
-    let next = null;
+
     if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
-      next = {
+      return {
         src: this.outputImageSrc,
         width: this.firstImageWidth,
         height: this.firstImageHeight
       };
     }
 
-    this.outputSrcSubject.next(next);
+    return null;
   }
 
   /**
@@ -356,11 +319,5 @@ export class RenderImageService implements OnDestroy {
 
   private get availableHeight(): number {
     return this.canvas.clientHeight;
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    })
   }
 }

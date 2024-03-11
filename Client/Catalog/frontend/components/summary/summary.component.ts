@@ -1,23 +1,26 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { addToBasket } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectConfiguration, selectSumPrice } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import {
+  selectConfiguration, selectCurrentPerspective,
+  selectSumPrice,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { environment } from '@apto-frontend/src/environments/environment';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-summary',
 	templateUrl: './summary.component.html',
 	styleUrls: ['./summary.component.scss'],
 })
-export class SummaryComponent implements OnDestroy {
-  private subscriptions: Subscription[] = [];
+export class SummaryComponent {
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
 	public product$ = this.store.select(selectProduct);
@@ -33,7 +36,7 @@ export class SummaryComponent implements OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private renderImageService: RenderImageService,
-    private basketService: BasketService,
+    private basketService: BasketService
   ) {
     this.configuration$.subscribe((c) => {
       if (!c.loading && c.state.sections.length === 0) {
@@ -41,19 +44,16 @@ export class SummaryComponent implements OnDestroy {
       }
     });
 
-    this.renderImageService.init();
-    this.subscriptions.push(
-      this.renderImageService.outputSrcSubject.subscribe((next) => {
-        this.renderImage = next;
-      })
-    );
+    this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
+      this.renderImage = await this.renderImageService.drawImageForPerspective(result);
+    });
 	}
 
-  private get configurationId() {
+  private get configurationId(): string {
     return this.activatedRoute.snapshot.params['configurationId'];
   }
 
-  private get configurationType() {
+  private get configurationType(): string {
     return this.activatedRoute.snapshot.params['configurationType'];
   }
 
@@ -91,10 +91,4 @@ export class SummaryComponent implements OnDestroy {
 
 		this.basketService.sideBar?.toggle();
 	}
-
-  public ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    })
-  }
 }

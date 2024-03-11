@@ -1,10 +1,7 @@
 import {
-  AfterViewInit, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
-  ViewChild,
+  AfterViewInit, Component, ElementRef, HostBinding, Input, OnInit, ViewChild
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ResizedEvent } from 'angular-resize-event';
 import { Color, stringInputToObject } from '@angular-material-components/color-picker';
@@ -12,20 +9,14 @@ import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { fabric } from 'fabric';
 import FontFaceObserver from 'fontfaceobserver';
 import { v4 as uuidv4 } from 'uuid';
-
 import { environment } from '@apto-frontend/src/environments/environment';
-
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-
-import { selectCanvas } from '@apto-image-upload-frontend/store/canvas/canvas.selectors';
 import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.reducer';
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
 import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -34,13 +25,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   styleUrls: ['./designer.component.scss'],
   providers: [RenderImageService]
 })
-export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DesignerComponent implements OnInit, AfterViewInit {
   @ViewChild('htmlCanvas') htmlCanvas: ElementRef;
   @ViewChild('htmlRenderImage') htmlRenderImage: ElementRef;
   @ViewChild('htmlMiddle') htmlMiddle: ElementRef;
 
   private initStarted: boolean = false;
-  private subscriptions: Subscription[] = [];
 
   public mediaUrl: string = environment.api.media;
   public renderImage: any = null;
@@ -116,13 +106,12 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public fonts: Font[] = [];
   public selectedFont: Font | null = null;
-  public file: File | null;
 
   public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, public renderImageService: RenderImageService) {
   }
 
   public ngOnInit(): void {
-    this.imageUploadControl = new FormControl(this.file, [
+    this.imageUploadControl = new FormControl(null, [
       Validators.required,
       // 1024 * 1024 equals to 1MB, max value must be given in byte
       MaxSizeValidator(this.canvas.element.staticValues.image[this.currentPerspective]?.maxFileSize * 1024 * 1024)
@@ -144,21 +133,16 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  public ngAfterViewInit(): void {
-    this.renderImageService.initForPerspective(this.currentPerspective);
-    this.subscriptions.push(
-      this.renderImageService.outputSrcSubject.subscribe((next) => {
-        this.renderImage = next;
+  public async ngAfterViewInit() {
+    this.renderImage = await this.renderImageService.drawImageForPerspective(this.currentPerspective, true);
 
-        if (null !== next && this.initStarted === false) {
-          this.initStarted = true;
-          this.init();
-        }
-      })
-    );
+    if (this.renderImage && this.initStarted === false) {
+      this.initStarted = true;
+      this.init();
+    }
   }
 
-  public init(): void {
+  private init(): void {
     this.initFonts().then(() => {
       setTimeout(() => {
         this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
@@ -174,7 +158,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
           'selection:cleared': this.selectionCleared.bind(this),
         });
 
-        if (this.canvas.element.state.payload === null) {
+        if (!this.canvas.element.state.payload || !this.canvas.element.state.payload[this.currentPerspective]) {
           this.initTextBoxes();
           this.fabricCanvas.requestRenderAll();
         } else {
@@ -264,7 +248,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initState(callback): void {
-    this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload.json, () => {
+    this.fabricCanvas.loadFromJSON(this.canvas.element.state.payload[this.currentPerspective].json, () => {
       this.fabricCanvas.getObjects().forEach((object) => {
         const payload = object.get('payload');
 
@@ -363,14 +347,14 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
 
-      if (true === center) {
+      if (center) {
         this.fabricCanvas.viewportCenterObject(fabricImage);
       }
     });
   }
 
   public addMotive(file): void {
-    let fileIsAlreadySelected: true | false = false;
+    let fileIsAlreadySelected: boolean = false;
     const url = this.mediaUrl + file.path;
     const canvasObjects = this.fabricCanvas.getObjects();
 
@@ -389,8 +373,8 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const options = {
       ...this.controlOptionsLocked,
-      left: this.canvas.element.staticValues.motive.left,
-      top: this.canvas.element.staticValues.motive.top,
+      left: this.canvas.element.staticValues.motive[this.currentPerspective].left,
+      top: this.canvas.element.staticValues.motive[this.currentPerspective].top,
       payload: {
         type: 'motive',
         file: file,
@@ -424,7 +408,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Get the dimensions
     getHeightAndWidthFromDataUrl(fileAsDataURL).then((dimensions) => {
-      if (false === this.assertValidDimensions(dimensions)) {
+      if (!this.assertValidDimensions(dimensions)) {
         this.imageUploadErrors.push({
           type: 'minDimensions'
         })
@@ -447,6 +431,9 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addImage(this.mediaUrl + directory + fileId + '.' + extension, options, 'front', true);
       });
     });
+
+    this.imageUploadControl.reset();
+    this.fabricSelectedObject = null;
   }
 
   public selectionUpdated(event): void {
@@ -461,7 +448,7 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public removeSelectedObject(): void {
-    if (null === this.fabricSelectedObject) {
+    if (!this.fabricSelectedObject) {
       return;
     }
 
@@ -555,13 +542,6 @@ export class DesignerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private getImageScale(maxWidth, dimensions): number {
     return maxWidth / dimensions.width;
-  }
-
-  public ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
-    this.renderImageService.ngOnDestroy();
   }
 
   private updateTextPropery(identifier, property, value, payload = {}): void {

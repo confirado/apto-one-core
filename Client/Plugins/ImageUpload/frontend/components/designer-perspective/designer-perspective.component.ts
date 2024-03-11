@@ -9,6 +9,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { combineLatest, Observable, take } from 'rxjs';
 import {
+  getConfigurationStateSuccess,
   setHideOnePage, setPerspective, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
@@ -24,6 +25,8 @@ import { selectProduct } from '@apto-catalog-frontend/store/product/product.sele
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { sha1 } from '@apto-base-core/helper/encrypt';
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
+import { Actions, ofType } from '@ngrx/effects';
+import { resetPasswordSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 
 @UntilDestroy()
 @Component({
@@ -51,7 +54,8 @@ export class DesignerPerspectiveComponent implements OnInit {
     private store: Store,
     private http: HttpClient,
     private dialogService: DialogService,
-    private fabricCanvasService: FabricCanvasService
+    private fabricCanvasService: FabricCanvasService,
+    private actions$: Actions
   ) {
     this.locale = environment.defaultLocale;
   }
@@ -66,11 +70,9 @@ export class DesignerPerspectiveComponent implements OnInit {
     ]).pipe(take(1)).subscribe((result: [string, CanvasState, string[], string, Product]) => {
       this.locale = result[0] || environment.defaultLocale;
       this.canvas = result[1];
-      console.log(this.canvas)
       this.perspectives = result[2];
       this.currentPerspective = result[3];
       this.product = result[4];
-
       this.createDesigners();
     });
   }
@@ -85,7 +87,9 @@ export class DesignerPerspectiveComponent implements OnInit {
     }
   }
 
-  public save(): void {
+  public async save() {
+    const perspectivePayloads = {};
+
     for (const designer of this.designers) {
       const fabricCanvas = designer.component.instance.fabricCanvas.toJSON(['identifier', 'payload']);
       fabricCanvas.objects = [];
@@ -103,59 +107,61 @@ export class DesignerPerspectiveComponent implements OnInit {
       const payload = {
         json: fabricCanvasJson,
         renderImages: []
-      }
+      };
 
       const areas = this.canvas.element.staticValues.area.filter((area) => area.perspective === designer.id);
 
-      areas.forEach((area) => {
-        payload.renderImages.push({
-          fileName: fileName + '-' + area.identifier,
-          renderImageId: fileName + '-' + area.identifier,
-          productId,
-          directory,
-          path: directory + fileName + '-' + area.identifier + '.png',
-          extension: 'png',
-          perspective: area.perspective,
-          layer: area.layer,
-          offsetX: area.left * 100 / designer.component.instance.renderImage.width,
-          offsetY: area.top * 100 / designer.component.instance.renderImage.height
-        });
-      });
+      for (const area of areas) {
+        const uploadResponse = await this.fabricCanvasService.uploadLayerImageForArea(designer.component.instance.fabricCanvas, area, designer.component.instance.renderImage, fileName, directory);
 
-      this.fabricCanvasService.uploadLayerImage(designer.component.instance.fabricCanvas, areas, designer.component.instance.renderImage, fileName, directory, (upload: Observable<any>) => {
-        upload.subscribe((next) => {
-          if (next.message.error === false) {
-            this.store.dispatch(
-              updateConfigurationState({
-                updates: {
-                  set: [{
-                    sectionRepetition: 0,
-                    sectionId: this.canvas.element.sectionId,
-                    elementId: this.canvas.element.elementId,
-                    property: 'aptoElementDefinitionId',
-                    value: 'apto-element-image-upload',
-                  }, {
-                    sectionRepetition: 0,
-                    sectionId: this.canvas.element.sectionId,
-                    elementId: this.canvas.element.elementId,
-                    property: 'payload',
-                    value: payload,
-                  }],
-                },
-              })
-            );
+        if (!uploadResponse.message.error) {
+          payload.renderImages.push({
+            fileName: fileName + '-' + area.identifier,
+            renderImageId: fileName + '-' + area.identifier,
+            productId,
+            directory,
+            path: directory + fileName + '-' + area.identifier + '.png',
+            extension: 'png',
+            perspective: area.perspective,
+            layer: area.layer,
+            offsetX: area.left * 100 / designer.component.instance.renderImage.width,
+            offsetY: area.top * 100 / designer.component.instance.renderImage.height
+          });
+        }
+      }
 
-            this.store.dispatch(
-              setHideOnePage({
-                payload: false
-              })
-            );
-          }
-        })
-      });
-
+      perspectivePayloads[designer.id] = payload;
     }
+    this.store.dispatch(
+      updateConfigurationState({
+        updates: {
+          set: [{
+            sectionRepetition: 0,
+            sectionId: this.canvas.element.sectionId,
+            elementId: this.canvas.element.elementId,
+            property: 'aptoElementDefinitionId',
+            value: 'apto-element-image-upload',
+          }, {
+            sectionRepetition: 0,
+            sectionId: this.canvas.element.sectionId,
+            elementId: this.canvas.element.elementId,
+            property: 'payload',
+            value: perspectivePayloads,
+          }],
+        },
+      })
+    );
+
+    this.actions$.pipe(
+      ofType(getConfigurationStateSuccess),
+      take(1)
+    ).subscribe(() => {
+      this.store.dispatch(
+        setHideOnePage({ payload: false })
+      );
+    });
   }
+
   public reset(): void {
     // let dialogMessage = '';
     // this.resetMessage$.subscribe((next) => {

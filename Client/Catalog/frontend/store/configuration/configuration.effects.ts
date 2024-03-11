@@ -5,10 +5,26 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
-  fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess,
-  getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
-  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState,
+  addGuestConfiguration,
+  addGuestConfigurationSuccess,
+  addToBasket,
+  addToBasketSuccess,
+  fetchPartsList,
+  fetchPartsListSuccess,
+  getConfigurationState,
+  getConfigurationStateSuccess,
+  getCurrentRenderImageSuccess,
+  getRenderImagesSuccess,
+  hideLoadingFlagAction,
+  humanReadableStateLoadSuccess,
+  initConfiguration,
+  initConfigurationSuccess,
+  onError,
+  setPrevStep,
+  setPrevStepSuccess,
+  setStep,
+  setStepSuccess,
+  updateConfigurationState,
 }
   from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
