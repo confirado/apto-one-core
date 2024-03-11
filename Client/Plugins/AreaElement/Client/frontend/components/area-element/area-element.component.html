@@ -85,6 +85,8 @@
             <apto-slot-outlet identifier="after-area-element-description" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
         </div>
 
+        <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
+
         <div class="apply-button">
             <button
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
