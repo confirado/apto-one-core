@@ -1,5 +1,10 @@
 import { ElementInterface } from '../../../interfaces/element-interface';
 
+export enum TranslatedValueTypes {
+  INPUT = 'input',
+  TEXTAREA = 'textarea',
+}
+
 export class TranslatedValue implements ElementInterface{
 
   private static initialSelector: string;
@@ -18,14 +23,34 @@ export class TranslatedValue implements ElementInterface{
     return TranslatedValue;
   }
 
-  public static hasValue(value: any): typeof TranslatedValue {
-    cy.get(TranslatedValue.initialSelector).find('input').should('have.value', value);
+  public static hasLabel(value: any): typeof TranslatedValue {
+    cy.get(TranslatedValue.initialSelector).find('apto-translated-value').find('label').should('contain.text', value);
 
     return TranslatedValue;
   }
 
-  public static hasNotValue(value: any): typeof TranslatedValue {
-    cy.get(TranslatedValue.initialSelector).find('input').should('not.have.value', value);
+  public static hasNotLabel(value: any): typeof TranslatedValue {
+    cy.get(TranslatedValue.initialSelector).find('apto-translated-value').find('label').should('not.contain.text', value);
+
+    return TranslatedValue;
+  }
+
+  public static hasValue(value: any, type: TranslatedValueTypes): typeof TranslatedValue {
+    if (type === TranslatedValueTypes.INPUT) {
+      cy.get(TranslatedValue.initialSelector).find('input').should('have.value', value);
+    } else if (type === TranslatedValueTypes.TEXTAREA){
+      cy.get(TranslatedValue.initialSelector).find('textarea').should('have.value', value);
+    }
+
+    return TranslatedValue;
+  }
+
+  public static hasNotValue(value: any, type: TranslatedValueTypes): typeof TranslatedValue {
+    if (type === TranslatedValueTypes.INPUT) {
+      cy.get(TranslatedValue.initialSelector).find('input').should('not.have.value', value);
+    } else if (type === TranslatedValueTypes.TEXTAREA){
+      cy.get(TranslatedValue.initialSelector).find('textarea').should('not.have.value', value);
+    }
 
     return TranslatedValue;
   }

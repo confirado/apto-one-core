@@ -4,10 +4,9 @@ import { RequestHandler } from '../../classes/requestHandler';
 import { Table } from '../../classes/common/elements/table';
 import { TableActionTypes } from '../../classes/enums/table-action-types';
 import { Checkbox } from '../../classes/common/elements/form/checkbox';
-import { Backend } from '../../classes/common/backend';
 import { Sections } from '../../classes/pages/product/sections';
-import { Translator } from '@angular/compiler-cli/linker/src/file_linker/translator';
-import { TranslatedValue } from '../../classes/common/elements/custom/translated-value';
+import { TranslatedValue, TranslatedValueTypes } from '../../classes/common/elements/custom/translated-value';
+import { Tabs } from '../../classes/common/elements/tabs';
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
 // but maybe do not use cypress's component testing rather use custom classes that have component test and can be loaded here
@@ -52,9 +51,9 @@ describe('Sectionen', () => {
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.editProductQueryList)).then(() => {
 
-      Backend.topTabItemClick('Sektionen');
+      Tabs.get('md-tabs').select('Sektionen');
 
-      TranslatedValue.getByAttr('sections_name').hasValue('');
+      TranslatedValue.getByAttr('sections_name').hasValue('', TranslatedValueTypes.INPUT);
 
       Checkbox.getByAttr('sections_add-default-element').isUnChecked();
 

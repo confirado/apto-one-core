@@ -25,23 +25,4 @@ export class Backend {
       cy.dataCy(subSelector).click();
     }
   }
-
-  /**
-   * Clicks on the top tab item
-   *
-   * @param tabText text within the tab: Product | Domain ,...
-   */
-  public static topTabItemClick(tabText: string) {
-    cy.get('md-tabs-wrapper').within(() => {
-      cy.get('md-tabs-canvas').within(($mdCanvas) => {
-        cy.wrap($mdCanvas).find('md-tab-item').each(($elm) => {
-
-          // go to the given tab
-          if ($elm.text() === tabText || $elm.text() === tabText.toUpperCase()) {
-            cy.wrap($elm).click();
-          }
-        });
-      });
-    });
-  }
 }

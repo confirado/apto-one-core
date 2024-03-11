@@ -61,4 +61,14 @@ export class Commands {
       },
     };
   }
+
+  public static get AddProductRule(): IRequestData {
+    return {
+      alias: 'AddProductRule',
+      payload: {
+        command: 'AddProductRule',
+        arguments: { }
+      },
+    };
+  }
 }

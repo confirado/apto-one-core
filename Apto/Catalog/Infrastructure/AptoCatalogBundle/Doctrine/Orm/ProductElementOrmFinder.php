@@ -379,6 +379,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
         $dql = 'SELECT
                   p.id.id as productId,
                   r.id.id as renderImageId,
+                  el.id.id as elementId,
+                  s.id.id as sectionId,
                   r.layer,
                   r.perspective,
                   r.offsetX,
@@ -397,6 +399,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
                   e.renderImages r
               LEFT JOIN
                   r.mediaFile m
+              LEFT JOIN
+                  r.element el
               WHERE
                   (e.id.id IN (:elementIds) AND r.perspective = :perspective)
               ORDER BY
