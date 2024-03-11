@@ -41,8 +41,10 @@
         }
     }
 
-    .summery {
+    .summary {
         margin: 26px 0 64px 0;
+        display: flex;
+        justify-content: space-between;
 
         .sum {
             font-size: 26px;
