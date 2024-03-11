@@ -1,9 +1,9 @@
-<div class="flex gap-2 card" *ngIf="progress !== undefined && progress !== null">
+<div class="flex gap-2 card-elem" *ngIf="progress !== undefined && progress !== null">
 	<div class="progress-content">
 		<mat-progress-spinner color="accent" mode="determinate" value="100" diameter="70" strokeWidth="5"></mat-progress-spinner>
 		<mat-spinner color="primary" [mode]="'determinate'" [value]="progress" diameter="70" strokeWidth="5"></mat-spinner>
 		<div class="number">
-			<div class="progress">{{ progress | number: '1.0-0' }}%</div>
+			<div class="progress-number">{{ progress | number: '1.0-0' }}%</div>
 		</div>
 	</div>
 	<div class="info">
