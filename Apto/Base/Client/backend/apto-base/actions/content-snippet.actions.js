@@ -44,8 +44,7 @@ const ContentSnippetActions = function(MessageBusFactory, PageHeaderActions) {
             if (Object.values(ContentSnippet.content).some(x => (x !== null && x !== ''))) {
                 commandArguments.push(ContentSnippet.content);
             } else {
-                ContentSnippet.content = {};
-                commandArguments.push(ContentSnippet.content);
+                commandArguments.push({});
             }
 
             commandArguments.push(ContentSnippet.parent);
