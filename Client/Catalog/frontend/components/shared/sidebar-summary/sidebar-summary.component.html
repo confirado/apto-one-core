@@ -1,7 +1,9 @@
 <ng-container *ngIf="product$ | async as product">
 	<ng-container *ngIf="product.useStepByStep">
 		<div class="list sbs">
-			<div class="element">
+            <apto-slot-outlet identifier="sidebar-summary-sbs-top"></apto-slot-outlet>
+
+            <div class="element">
 				<div class="divider">
 					<apto-sidebar-summary-render-image
 						[perspectives]="perspectives$ | async"
@@ -20,17 +22,23 @@
 			</div>
 			<apto-sidebar-summary-progress [progress]="progress$ | async"></apto-sidebar-summary-progress>
 			<apto-sidebar-summary-button></apto-sidebar-summary-button>
-		</div>
+
+            <apto-slot-outlet identifier="sidebar-summary-sbs-bottom" [product]="product"></apto-slot-outlet>
+        </div>
 	</ng-container>
 	<ng-container *ngIf="!product.useStepByStep">
 		<div class="list one-page">
-			<apto-sidebar-summary-price
+            <apto-slot-outlet identifier="sidebar-summary-one-page-top"></apto-slot-outlet>
+
+            <apto-sidebar-summary-price
 				[product]="product"
 				[progress]="progress$ | async"
 				[sumPrice]="sumPrice$ | async"
 				[sumPseudoPrice]="sumPseudoPrice$ | async"
 				[discount]="(configuration$ | async)?.statePrice?.discount?.discount"
 			></apto-sidebar-summary-price>
-		</div>
+
+            <apto-slot-outlet identifier="sidebar-summary-one-page-bottom" [product]="product"></apto-slot-outlet>
+        </div>
 	</ng-container>
 </ng-container>
