@@ -452,4 +452,14 @@ export class MaterialPickerElementComponent implements OnInit {
       })
     );
   }
+
+  public getBackgroundImage(item) {
+    return {
+      'background-image': `url(${this.mediaUrl}${item.material.previewImage.path})`,
+      'background-size': 'contain',
+      'background-position': 'center',
+      'background-repeat': 'no-repeat'
+    };
+  }
+
 }

@@ -192,8 +192,7 @@ mat-radio-group {
             width: 100%;
 
             .element {
-                @include colors(135px, 95px, 10px 20px, 22px);
-                flex: 0 0 calc(30% - var(--element-gap));
+                @include colors(50%, 95px, 10px 20px, 22px);
             }
 
             .placeholder {
@@ -318,6 +317,12 @@ mat-radio-group {
 
         .filtered-materials {
             @include box('tablet');
+
+            .elements{
+                .element{
+                    width: 25%
+                }
+            }
         }
 
         .color-mix {
