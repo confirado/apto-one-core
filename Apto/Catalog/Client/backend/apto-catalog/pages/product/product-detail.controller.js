@@ -8,6 +8,7 @@ import ComputedValuesTab from './computed-values-tab.html';
 import DiscountTab from './discount-tab.html';
 import CustomPropertiesTab from './custom-properties-tab.html';
 import FilterPropertyTab from './filter-properties-tab.html';
+import GlobalConditionTab from './global-condition-tab.html'
 
 import SectionDetailTemplate from './section/section-detail.controller.html';
 import SectionDetailController from './section/section-detail.controller';
@@ -30,6 +31,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $templateCache.put('catalog/pages/product/discount-tab.html', DiscountTab);
     $templateCache.put('catalog/pages/product/custom-properties-tab.html', CustomPropertiesTab);
     $templateCache.put('catalog/pages/product/filter-properties-tab.html', FilterPropertyTab);
+    $templateCache.put('catalog/pages/product/global-condition-tab.html', GlobalConditionTab);
 
     const subscribedActions = $ngRedux.connect(mapState, {
         productsFetch: ProductActions.productsFetch,
@@ -67,7 +69,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addComputedProductValueAlias: ProductActions.addComputedProductValueAlias,
         addComputedProductValue: ProductActions.addComputedProductValue,
         fetchComputedProductValues: ProductActions.fetchComputedProductValues,
-        removeComputedProductValue: ProductActions.removeComputedProductValue
+        removeComputedProductValue: ProductActions.removeComputedProductValue,
+
+
     })($scope);
 
     function mapState(state) {
@@ -79,6 +83,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             availablePriceCalculators: state.product.availablePriceCalculators,
             sections: state.product.sections,
             rules: state.product.rules,
+            globaleCondition: state.product.globaleCondition,
             computedValues: state.product.computedValues,
             prices: state.product.prices,
             discounts: state.product.discounts,
@@ -96,6 +101,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             });
             $scope.fetchSections(productId);
             $scope.fetchRules(productId);
+            $scope.fetchGlobaleCondition(productId);
             $scope.fetchComputedProductValues(productId);
             $scope.fetchPrices(productId);
             $scope.fetchDiscounts(productId);
