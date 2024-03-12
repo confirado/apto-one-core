@@ -102,7 +102,7 @@ class Product extends AptoAggregate
     /**
      * Reset configurator steps when going backwards in configurator or not
      *
-     * @var string
+     * @var bool
      */
     protected $keepSectionOrder;
 
@@ -234,6 +234,7 @@ class Product extends AptoAggregate
         $this->previewImage = null;
         $this->filterProperties = new ArrayCollection();
         $this->domainProperties = new ArrayCollection();
+        $this->keepSectionOrder = true;
     }
 
     /**
@@ -282,9 +283,9 @@ class Product extends AptoAggregate
     }
 
     /**
-     * @return AptoTranslatedValue
+     * @return AptoTranslatedValue|null
      */
-    public function getName()
+    public function getName(): ?AptoTranslatedValue
     {
         return $this->name;
     }
@@ -309,9 +310,9 @@ class Product extends AptoAggregate
     }
 
     /**
-     * @return AptoTranslatedValue
+     * @return AptoTranslatedValue|null
      */
-    public function getDescription()
+    public function getDescription(): ?AptoTranslatedValue
     {
         return $this->description;
     }
