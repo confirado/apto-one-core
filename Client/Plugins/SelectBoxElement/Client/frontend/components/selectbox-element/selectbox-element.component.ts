@@ -141,6 +141,10 @@ export class SelectboxElementComponent implements OnInit {
     }
   }
 
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
 	public saveInput(): void {
 		if (!this.element) {
 			return;

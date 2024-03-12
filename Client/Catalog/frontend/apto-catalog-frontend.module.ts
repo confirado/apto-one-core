@@ -71,6 +71,7 @@ import { SbsElementsComponent } from '@apto-catalog-frontend-sbs-elements';
 import { SbsStepsComponent } from '@apto-catalog-frontend-sbs-steps';
 import { SbsStepComponent } from '@apto-catalog-frontend-sbs-step';
 import { AptoCatalogFrontendCustomModule } from '@apto-catalog-frontend-custom-module';
+import { ElementAttachmentComponent } from '@apto-catalog-frontend/components/common/element-attachment/element-attachment.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -112,6 +113,7 @@ RouterRegistry.registerRoutes(Routes);
     SelectableValueTextComponent,
     AptoSearchComponent,
     UpdatePasswordComponent,
+    ElementAttachmentComponent,
   ],
   exports: [
     QuantityInputEditableComponent,
@@ -127,7 +129,8 @@ RouterRegistry.registerRoutes(Routes);
     SelectableValueRangeComponent,
     SelectableValueTextComponent,
     AptoSearchComponent,
-    AptoCatalogFrontendCustomModule
+    AptoCatalogFrontendCustomModule,
+    ElementAttachmentComponent,
   ],
 	imports: [
 		RouterModule,
