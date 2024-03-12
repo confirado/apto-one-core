@@ -36,6 +36,7 @@ use Apto\Plugins\RequestForm\Domain\Core\Model\RandomNumber\AllRandomNumbersHasU
 use Apto\Plugins\FileUpload\Domain\Core\Model\Service\Converter\MimeTypeExtensionConverter;
 use Apto\Plugins\PartsList\Application\Core\Service\Converter\CsvStringConverter;
 use Apto\Plugins\RequestForm\Application\Core\Service\Pdf\PdfFactory;
+use Apto\Plugins\RequestForm\Application\Core\Service\Pdf\PdfTemplateVars;
 
 class SendProductInquiryHandler implements EventHandlerInterface
 {
@@ -150,6 +151,11 @@ class SendProductInquiryHandler implements EventHandlerInterface
     private CsvStringConverter $csvStringConverter;
 
     /**
+     * @var PdfTemplateVars
+     */
+    private PdfTemplateVars $pdfTemplateVars;
+
+    /**
      * @param RequestStore $requestSessionStore
      * @param RandomNumberRepository $randomNumberRepository
      * @param OfferHtmlRepository $offerHtmlRepository
@@ -163,6 +169,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param AptoParameterInterface $aptoParameter
      * @param MediaFileSystemConnector $mediaFileSystemConnector
      * @param CsvStringConverter $csvStringConverter
+     * @param PdfTemplateVars $pdfTemplateVars
      */
     public function __construct(
         RequestStore $requestSessionStore,
@@ -177,7 +184,8 @@ class SendProductInquiryHandler implements EventHandlerInterface
         TemplateRendererInterface $templateRenderer,
         AptoParameterInterface $aptoParameter,
         MediaFileSystemConnector $mediaFileSystemConnector,
-        CsvStringConverter $csvStringConverter
+        CsvStringConverter $csvStringConverter,
+        PdfTemplateVars $pdfTemplateVars
     ) {
         $this->requestSessionStore = $requestSessionStore;
         $this->randomNumberRepository = $randomNumberRepository;
@@ -191,6 +199,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
         $this->csvStringConverter = $csvStringConverter;
         $this->contentSnippets = $this->contentSnippetFinder->getTree(true, $this->requestSessionStore->getHttpHost());
+        $this->pdfTemplateVars = $pdfTemplateVars;
 
         // params
         $this->mediaRelativePath = $aptoParameter->get('media_relative_path');
@@ -755,7 +764,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $productInquiry->getAdditionalData()['apto-plugin-parts-list'][$customerGroup['id']] : [];
 
         // set template vars
-        $templateVars = [
+        $this->pdfTemplateVars->setTemplateVars([
             'locale' => $locale->getName(),
             'formData' => $formData,
             'customer' => $customer,
@@ -770,7 +779,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             'customerGroup' => $customerGroup,
             'showPrices' => $this->config['showPrices'],
             'partsList' => $partsList,
-        ];
+        ]);
 
         // create pdf and set options
         $mpdf = PdfFactory::create();
@@ -782,9 +791,9 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $mpdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
 
         // render templates
-        $header = $this->templateRenderer->render('@RequestForm/pdf/header.html.twig', $templateVars);
-        $footer = $this->templateRenderer->render('@RequestForm/pdf/footer.html.twig', $templateVars);
-        $body = $this->templateRenderer->render('@RequestForm/pdf/body.html.twig', $templateVars);
+        $header = $this->templateRenderer->render('@RequestForm/pdf/header.html.twig', $this->pdfTemplateVars->getTemplateVars($productInquiry));
+        $footer = $this->templateRenderer->render('@RequestForm/pdf/footer.html.twig', $this->pdfTemplateVars->getTemplateVars($productInquiry));
+        $body = $this->templateRenderer->render('@RequestForm/pdf/body.html.twig', $this->pdfTemplateVars->getTemplateVars($productInquiry));
 
         // set pdf html
         $mpdf->SetHTMLHeader(
@@ -802,7 +811,46 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->saveHtml($header, $footer, $body);
         }
 
+        // for testing only!!!, saves the pdf into media folder as pdf and as html
+        // $this->saveHTMLToDisk($stylesheet, $header, $body, $footer);
+        // $this->savePdfToDisk($mpdf);
+
         return $mpdf->Output('', 'S');
+    }
+
+    /**
+     *  Save as pdf file in media folder
+     *
+     * @param $mpdf
+     *
+     * @return void
+     * @throws \Random\RandomException
+     */
+    private function savePdfToDisk($mpdf): void
+    {
+        $mpdf->Output( $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.pdf', 'F');
+    }
+
+    /**
+     *  Save the content of pdf as html file
+     *
+     *  For testing only!!!
+     *
+     * @param $stylesheet
+     * @param $header
+     * @param $body
+     * @param $footer
+     *
+     * @return void
+     * @throws \Random\RandomException
+     */
+    private function saveHTMLToDisk($stylesheet, $header, $body, $footer): void
+    {
+        $filename = $this->mediaDirectory . '/'. substr(bin2hex(random_bytes(5)), 0, 10) . '.html';
+        $stylesheet = str_replace('@media print {', '@media print, all {', $stylesheet);
+        $content = '<html><body>' .'<style>' . $stylesheet . '</style>'. $header . $body . $footer  . '</body></html>';
+
+        file_put_contents($filename, $content);
     }
 
     /**
@@ -860,200 +908,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
             'inputGross' => true,
             'fallback' => false
         ];
-    }
-
-    /**
-     * @param $id
-     * @param $array
-     * @return bool
-     */
-    private function idInArray($id, $array): bool
-    {
-        foreach ($array as $key => $item) {
-            if ($id === $key) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Old $humanReadableState:
-     * array:2 [
-     *   "general" => array:1 [
-     *      0 => array:3 [
-     *         "id" => "1c0662f1-73c0-4ab8-94a1-39c3bf86b430"
-     *         "name" => "anzahl layer"
-     *         "values" => []
-     *      ]
-     *   ]
-     *   "layer" => array:2 [
-     *     0 => array:3 [
-     *       "id" => "22bf38a0-0ca3-4af9-b8f9-56c01a643cb7"
-     *       "name" => "winkel"
-     *       "values" => []
-     *     ]
-     *     1 => array:3 [
-     *       "id" => "3d455314-0e29-4cf6-b67c-ed942de6d226"
-     *       "name" => "winkel 2"
-     *       "values" => []
-     *     ]
-     *   ]
-     * ]
-     *
-     * old return values:
-     * array:3 [
-     *   "1c0662f1-73c0-4ab8-94a1-39c3bf86b430" => []
-     *   "22bf38a0-0ca3-4af9-b8f9-56c01a643cb7" => []
-     *   "3d455314-0e29-4cf6-b67c-ed942de6d226" => []
-     * ]
-     *
-     * @param array $humanReadableState
-     *
-     * @return array
-     */
-    private function getElementProperties(array $humanReadableState): array
-    {
-        $elementProperties = [];
-
-        foreach ($humanReadableState as $section) {
-            foreach ($section as $element) {
-                $elementProperties[$element['id']] = $element['values'];
-            }
-        }
-
-        return $elementProperties;
-    }
-
-    /**
-     * @param array  $productSection
-     * @param State  $compressedState
-     * @param array  $prices
-     * @param string $locale
-     * @param bool   $prioData
-     *
-     * @return array|null
-     * @throws InvalidUuidException
-     */
-    private function getPDFVars(array $productSection, State $compressedState, array $prices, string $locale, bool $prioData): ?array
-    {
-        $relevantData = [];
-        $priorities = [];
-        $hasPriorities = false;
-        $hasPrioOnly = false;
-
-        foreach ($productSection as $section) {
-            $sectionId = new AptoUuid($section['id']);
-
-            if ($compressedState->isSectionSet($sectionId)) {
-                foreach ($section['elements'] as $element) {
-                    $append = true;
-                    $isPrio = false;
-                    $elementId = new AptoUuid($element['id']);
-
-                    if ($compressedState->isItemSet($sectionId, $elementId)) {
-                        $tempArray = [];
-                        $tempArray['elementId'] = $elementId->getId();
-                        $tempArray['name'] = $element['name'];
-                        $tempArray['description'] = $element['description'];
-                        $tempArray['sectionName'] = $section['name'];
-
-                        foreach ($prices[$sectionId->getId()] as $repetition => $item) {
-                            if ($item['elements'][$elementId->getId()]['own']['price']['amount'] === 0.0) {
-                                $price = null;
-
-                                foreach ($element['customProperties'] as $customProperty) {
-                                    if ($customProperty['key'] === 'pdfPrice') {
-                                        $price = $customProperty['value'][$locale];
-                                    }
-                                    if ($customProperty['key'] === 'hideInPDF' || $customProperty['key'] === 'prioritySeperate') {
-                                        $append = false;
-                                    }
-                                    if ($customProperty['key'] === 'sendPDFToCustomer') {
-                                        $this->sendPDFToCustomer = false;
-                                    }
-                                    if($customProperty['key'] === 'priorityOnly' || $customProperty['key'] === 'prioritySeperate'){
-                                        $hasPriorities = true;
-                                        $isPrio = true;
-                                    }
-                                    if($customProperty['key'] === 'priorityOnly'){
-                                        $hasPrioOnly = true;
-                                        $this->priorityOnly = true;
-                                    }
-                                    if($customProperty['key'] === 'prioritySeperate'){
-                                        $this->prioritySeperate = true;
-                                    }
-                                }
-
-                                $tempArray['price'] = $price;
-
-                            } else {
-                                $tempArray['price'] = $item['elements'][$elementId->getId()]['own']['price']['formatted'];
-                            }
-
-                            if ($append) {
-                                array_push($relevantData, $tempArray);
-                            }
-
-                            if($isPrio){
-                                array_push($priorities, $tempArray);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($hasPrioOnly) {
-            return $priorities;
-        }
-        else if($prioData && $hasPriorities) {
-            return $priorities;
-        }
-        /** @phpstan-ignore-next-line  */
-        else if ($prioData && !$hasPriorities) {
-            return null;
-        }
-        return $relevantData;
-    }
-
-    /**
-     * @param array  $productSection
-     * @param State  $compressedState
-     * @param string $locale
-     *
-     * @return mixed|null
-     * @throws InvalidUuidException
-     */
-    private function getProductTitle(array $productSection, State $compressedState, string $locale)
-    {
-        $productTitle = null;
-        foreach ($productSection as $section) {
-            $sectionId = new AptoUuid($section['id']);
-            if ($compressedState->isSectionSet($sectionId)) {
-                foreach ($section['elements'] as $element) {
-                    $elementId = new AptoUuid($element['id']);
-                    if ($compressedState->isItemSet($sectionId, $elementId)) {
-                        foreach ($element['customProperties'] as $customProperty) {
-                            if($customProperty['key'] === 'pdfProductTitle') {
-                                $productTitle = $compressedState->getValue($sectionId, $elementId, 'value');
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Must not be an Selected Element
-            foreach ($section['elements'] as $element) {
-                $elementId = $element['id'];
-                foreach ($element['customProperties'] as $customProperty) {
-                    if($customProperty['key'] === 'customProductTitle') {
-                        $productTitle = $customProperty['value'][$locale] ?? $customProperty['value'];
-                    }
-                }
-            }
-        }
-        return $productTitle;
     }
 
     /**

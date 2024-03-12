@@ -1,6 +1,12 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { Element, Section } from '@apto-catalog-frontend/store/product/product.model';
 
+export enum ProgressStatuses {
+  CURRENT = 'CURRENT',
+  REMAINING = 'REMAINING',
+  COMPLETED = 'COMPLETED',
+}
+
 // eslint-disable-next-line no-shadow
 export enum SectionTypes {
   STATISCH = 'Statisch',
@@ -8,10 +14,16 @@ export enum SectionTypes {
 }
 
 // this should be in sync with State.php's ITEM_TYPES
-export enum StateItemTypes {
+export enum ParameterStateTypes {
   QUANTITY = 'quantity',
   IGNORED_RULES = 'ignored_rules',
   REPETITIONS = 'repetitions',
+}
+
+export interface TempStateItem {
+  sectionId: string;
+  repetition: number;
+  touched: boolean
 }
 
 export interface HumanReadableState {
@@ -30,9 +42,11 @@ export interface ConfigurationState {
 }
 
 export interface ParameterState {
-  name: string;
+  name: ParameterStateTypes;
   value: any
 }
+
+export type CompressedState = (ParameterState | HumanReadableState);
 
 export interface CurrentSection {
   id: string;
@@ -66,7 +80,7 @@ export interface ElementState {
 }
 
 export interface Configuration {
-	compressedState: any;
+	compressedState: CompressedState[];
 	sections: SectionState[];
 	elements: ElementState[];
   failedRules: any;
@@ -91,6 +105,8 @@ export interface RenderImageData {
   realHeight: number,
   realOffsetX: number,
   realOffsetY: number
+  sectionId: string
+  elementId: string
 }
 
 export interface RenderImage {
@@ -109,7 +125,7 @@ export interface ProgressElement<ElementDefinitionProperties = any> {
 }
 
 export interface ProgressStep {
-	status: string;
+	status: ProgressStatuses;
 	fulfilled: boolean;
 	description: string;
 	section: Section;
@@ -168,6 +184,10 @@ export interface AddBasketConfigurationArguments {
 	additionalData: any;
 }
 
+export interface UpdateBasketConfigurationArguments extends AddBasketConfigurationArguments {
+	configurationId: string;
+}
+
 export interface AddGuestConfigurationArguments {
 	productId: string;
 	compressedState: any;
@@ -201,12 +221,20 @@ export interface GetConfigurationStateArguments {
 	updates: {
 		set?: ConfigurationState[];
 		remove?: ConfigurationState[];
+		parameters?: ParameterState[];
 	};
 	locale: string;
 	quantity: number;
 	perspectives: string[];
 	additionalData: any;
 }
+
+export interface GetConfigurationResult {
+  state: Configuration,
+  renderImages: [],
+  updates: any
+}
+
 export interface StatePrice {
 	discount: Discount;
 	own: Own;

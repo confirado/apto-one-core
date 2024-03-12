@@ -1,5 +1,4 @@
 import {
-  ConfigurationActionTypes,
   initConfiguration,
   initConfigurationSuccess,
   setNextStep, setPrevStep, setStep

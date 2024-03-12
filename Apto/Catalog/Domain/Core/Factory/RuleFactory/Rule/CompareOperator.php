@@ -150,7 +150,7 @@ class CompareOperator
 
             // ACTIVE
             case self::ACTIVE: {
-                $state->setValue($sectionId, $elementId, $repetition);
+                $state->setValue($sectionId, $elementId, null, null, $repetition);
                 break;
             }
 

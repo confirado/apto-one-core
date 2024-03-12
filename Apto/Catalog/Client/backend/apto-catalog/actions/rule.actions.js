@@ -25,10 +25,24 @@ const RuleActions = function (MessageBusFactory) {
         }
     }
 
+    function fetchCondition(ruleId, conditionId) {
+        return {
+            type: getType('FETCH_CONDITION'),
+            payload: MessageBusFactory.query('FindRuleCondition', [ruleId, conditionId])
+        }
+    }
+
     function fetchImplications(productId) {
         return {
             type: getType('FETCH_IMPLICATIONS'),
             payload: MessageBusFactory.query('FindRuleImplications', [productId])
+        }
+    }
+
+    function fetchImplication(ruleId, implicationId) {
+        return {
+            type: getType('FETCH_IMPLICATION'),
+            payload: MessageBusFactory.query('FindRuleImplication', [ruleId, implicationId])
         }
     }
 
@@ -42,7 +56,9 @@ const RuleActions = function (MessageBusFactory) {
         fetchDetail: fetchDetail,
         fetchSections: fetchSections,
         fetchConditions: fetchConditions,
+        fetchCondition: fetchCondition,
         fetchImplications: fetchImplications,
+        fetchImplication: fetchImplication,
         reset: reset
     }
 };

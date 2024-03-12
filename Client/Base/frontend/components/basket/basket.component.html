@@ -3,61 +3,52 @@
     <apto-loading-indicator *ngIf="selectShopLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
 
     <div class="title flex justify-between items-center">
-		<h3>{{ csAptoBasket$ | async | contentSnippet: 'shoppingCartHeadline' }}</h3>
-		<button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Example icon button with a plus one icon">
-			<mat-icon>close</mat-icon>
-		</button>
-	</div>
+        <h3>{{ csAptoBasket$ | async | contentSnippet: 'shoppingCartHeadline' }}</h3>
+        <button (click)="toggleSideBar()" mat-mini-fab color="accent" aria-label="Close Sidebar">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
 
-	<div class="product-list">
+    <div class="product-list">
         <div class="product" *ngFor="let basketItem of connector.basket.articles">
-			<div class="image" *ngIf="!basketItem.thumbnail"></div>
+            <div class="image" *ngIf="!basketItem.thumbnail"></div>
             <div class="image" *ngIf="basketItem.thumbnail" [ngStyle]="{'background-image': 'url(' + basketItem.thumbnail + ')'}"></div>
-			<div class="content">
-				<div>
-					<h5>{{ basketItem.quantity }}x {{ basketItem.name }}</h5>
-					<p>{{ basketItem.price }}</p>
-				</div>
-				<div class="delete">
-					<mat-icon
-                        class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id, basketItem.name)"
-                    >
-                        delete
-                    </mat-icon>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div class="summery flex justify-between">
-		<h4 class="text-base color sum">{{ csAptoBasket$ | async | contentSnippet: 'sum' }}</h4>
-		<h4 class="text-base color amount">{{ connector.basket.amount }}</h4>
-	</div>
+            <div class="content">
+                <div>
+                    <h5>{{ basketItem.quantity }}x {{ basketItem.name }}</h5>
+                    <p>{{ basketItem.price }}</p>
+                </div>
+                <div class="delete">
+                    <mat-icon class="color pointer" *ngIf="basketItem.deletable" (click)="removeBasketItem(basketItem.id, basketItem.name)">delete</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div
-        *ngIf="connector.url?.checkout || connector.url?.cart ||
-          (csAptoBasket$ | async | contentSnippet: 'checkoutLink') ||
-          (csAptoBasket$ | async | contentSnippet: 'cartLink')"
-        class="buttons"
-    >
-        <a
-            *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
-            [href]="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
-            color="primary"
-            mat-flat-button
-            target='_blank'
-        >
+    <div class="summary sum-amount">
+        <h4 class="text-base color sum">{{ csAptoBasket$ | async | contentSnippet: 'sum' }}</h4>
+        <h4 class="text-base color amount">{{ connector.basket.amount }}</h4>
+    </div>
+
+    <div *ngIf="connector.url?.checkout || connector.url?.cart ||
+              (csAptoBasket$ | async | contentSnippet: 'checkoutLink') ||
+              (csAptoBasket$ | async | contentSnippet: 'cartLink')"
+         class="buttons">
+        <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
+           [href]="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
+           color="primary" mat-flat-button target='_blank'>
             {{ csAptoBasket$ | async | contentSnippet: 'checkout' }}
         </a>
 
-        <a
-            *ngIf="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
-            [href]="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
-            color="accent"
-            mat-flat-button
-            target='_blank'
-        >
+        <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
+           [href]="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
+           color="accent" mat-flat-button target='_blank'>
             {{ csAptoBasket$ | async | contentSnippet: 'cart' }}
         </a>
+
+        <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
+            Warenkorb leeren
+        </button>
     </div>
 </div>

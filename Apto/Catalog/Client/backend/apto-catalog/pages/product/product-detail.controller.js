@@ -59,6 +59,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addProductRule: ProductActions.addProductRule,
         updateProductRule: ProductActions.updateProductRule,
         removeProductRule: ProductActions.removeProductRule,
+        copyProductRule: ProductActions.copyProductRule,
         setDetailValue: ProductActions.setDetailValue,
         availableShopsFetch: ProductActions.availableShopsFetch,
         getNextPosition: ProductActions.getNextPosition,
@@ -208,6 +209,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         });
     }
 
+    function copyRule($event, ruleId) {
+        $scope.copyProductRule(productId, ruleId).then(() => {
+            $scope.fetchRules(productId);
+        });
+    }
+
     function removeRule(ruleId) {
         $scope.removeProductRule(productId, ruleId).then(() => {
             $scope.fetchRules(productId);
@@ -250,7 +257,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         var editRuleNameDialog = {
             modelValue: rule.name,
             save: function (input) {
-                $scope.updateProductRule(productId, rule.id, input.$modelValue, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule).then(() => {
+                $scope.updateProductRule(productId, rule.id, input.$modelValue, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description, rule.position).then(() => {
                     $scope.fetchRules(productId);
                 });
             },
@@ -262,7 +269,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function setRuleActive(rule) {
-        $scope.updateProductRule(productId, rule.id, rule.name, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule).then(() => {
+        $scope.updateProductRule(productId, rule.id, rule.name, rule.active, rule.errorMessage, rule.conditionsOperator, rule.implicationsOperator, rule.softRule, rule.description, rule.position).then(() => {
             $scope.fetchRules(productId);
         });
     }
@@ -441,6 +448,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.editRuleName = editRuleName;
     $scope.setRuleActive = setRuleActive;
     $scope.removeRule = removeRule;
+    $scope.copyRule = copyRule;
     $scope.removeComputedValue = removeComputedValue;
     $scope.setSectionIsActive = setSectionIsActive;
     $scope.setSectionIsMandatory = setSectionIsMandatory;

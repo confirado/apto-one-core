@@ -47,7 +47,7 @@ class RuleValidationService
         // @todo should be done in one operation because of heavy computing time for computed values
         $rulePayload = $this->rulePayloadFactory->getPayload($product, $state);
         $rulePayloadByName = $this->rulePayloadFactory->getPayload($product, $state, false);
-        $ruleRepetitionService = new RuleRepetitionService($product, $rulePayloadByName);
+        $ruleRepetitionService = new RuleRepetitionService($product, $rulePayloadByName, $rulePayload);
 
         // validate rules and sort them accordingly to their results
         foreach ($ruleRepetitionService->getRules() as $rule) {

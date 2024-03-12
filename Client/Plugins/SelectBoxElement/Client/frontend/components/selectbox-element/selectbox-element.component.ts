@@ -67,6 +67,7 @@ export class SelectboxElementComponent implements OnInit {
 			}
 		}
 
+    let initialized = false;
 		this.catalogMessageBusService
 			.findSelectBoxItems(this.element.element.id)
 			.pipe(untilDestroyed(this))
@@ -112,7 +113,12 @@ export class SelectboxElementComponent implements OnInit {
 						this.currentFormArray = [];
 					}
 
-          this.saveInput();
+          if (initialized === false) {
+            initialized = true;
+            this.updateSelectedItems();
+          } else {
+            this.saveInput();
+          }
 				});
 			});
 	}
@@ -124,18 +130,28 @@ export class SelectboxElementComponent implements OnInit {
 		return { de_DE: '' };
 	}
 
+  public updateSelectedItems() {
+    this.selectedItems = [];
+    for (const item of this.currentFormArray) {
+      this.selectedItems.push({
+        id: item.id,
+        name: item.name,
+        multi: item.multi.value.toString(),
+      });
+    }
+  }
+
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
 	public saveInput(): void {
 		if (!this.element) {
 			return;
 		}
-		this.selectedItems = [];
-		for (const item of this.currentFormArray) {
-			this.selectedItems.push({
-				id: item.id,
-				name: item.name,
-				multi: item.multi.value.toString(),
-			});
-		}
+
+    this.updateSelectedItems();
+
 		if (this.formElement && this.formElement.value && this.formElement.value.length > 0) {
 			this.store.dispatch(
 				updateConfigurationState({

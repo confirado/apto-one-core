@@ -185,6 +185,12 @@
           },
           "telephoneName": {
             "de_DE": "Telefon"
+          },
+          "faxName": {
+            "de_DE": "Fax"
+          },
+          "postalCodeName": {
+            "de_DE": "Postfach"
           }
         },
         "company": {
@@ -211,6 +217,18 @@
           },
           "street": {
             "de_DE": "Salzpforte"
+          },
+          "postalCode": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "fax": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "contactPerson": {
+            "name": "",
+            "shortName": "",
+            "email": "",
+            "position": ""
           }
         },
         "header": {

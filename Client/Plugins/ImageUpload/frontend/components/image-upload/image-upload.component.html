@@ -13,4 +13,11 @@
             <p>{{ element.element.name | translate }}</p>
         </div>
     </div>
+
+    <div class="description"
+         *ngIf="(element.element.description | translate) !== ''"
+         [innerHTML]="element.element.description | translate | safeHtml"
+    ></div>
+
+    <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 </ng-container>

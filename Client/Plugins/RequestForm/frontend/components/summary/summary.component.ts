@@ -38,6 +38,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
     success: false,
     error: false,
   };
+  public readonly showRequestFormOnBottom = environment.hasOwnProperty('showRequestFormOnBottom') ? environment['showRequestFormOnBottom'] : false;
 
   public constructor(
     private store: Store,

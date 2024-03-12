@@ -1,4 +1,5 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { MessageBusErrorTypeEnum } from '@apto-base-core/enums/message-bus-error-type.enum';
 
 export interface SingleErrorPayload {
   id: string;
@@ -14,7 +15,7 @@ export interface MessageBusResponseMessage {
 	date: string;
 	duration: number;
 	error: true;
-	errorType: string;
+	errorType: MessageBusErrorTypeEnum;
 	errorPayload: SingleErrorPayload[];
 	uuid: string;
 	url: string;

@@ -232,6 +232,10 @@ export class MaterialPickerElementComponent implements OnInit {
     }
   }
 
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
   public onMultiplePropertySelected(group: PropertyGroup, property: Property) {
 
     if (!this.filter.controls.properties.controls.hasOwnProperty(group.id)) {

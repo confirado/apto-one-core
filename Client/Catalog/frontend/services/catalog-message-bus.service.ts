@@ -12,7 +12,7 @@ import {
 import { Page } from '@apto-catalog-frontend/models/pagination';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ComputedValues, PartsListPart, RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ComputedValues, PartsListPart, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -59,7 +59,7 @@ export class CatalogMessageBusService {
 		return this.query<RenderImage[] | undefined>('FindRenderImagesByState', [compressedState, perspectives, productId]);
 	}
 
-	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<StatePrice> {
     let customerGroupId = connector.customerGroup.id;
     if (currentUser !== null && connector.configured === false) {
       customerGroupId = currentUser.customerGroup.externalId
@@ -74,6 +74,7 @@ export class CatalogMessageBusService {
 			connector.locale,
 			connector.sessionCookies,
 			connector.taxState,
+      connector.user
 		]);
 	}
 
@@ -128,6 +129,28 @@ export class CatalogMessageBusService {
 	): Observable<unknown> {
 		return this.command<unknown>('AddBasketConfiguration', [
 			productId,
+			compressedState,
+			sessionCookies,
+			locale,
+			quantity,
+			perspectives,
+			additionalData,
+		]);
+	}
+
+	public updateBasketConfiguration(
+		productId: string,
+		configurationId: string,
+		compressedState: any,
+		sessionCookies: any,
+		locale: string | undefined,
+		quantity: number,
+		perspectives: unknown,
+		additionalData: any
+	): Observable<unknown> {
+		return this.command<unknown>('UpdateBasketConfiguration', [
+			productId,
+      configurationId,
 			compressedState,
 			sessionCookies,
 			locale,

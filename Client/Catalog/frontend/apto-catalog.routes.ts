@@ -1,6 +1,7 @@
 import { RegisteredRoute } from '@apto-base-core/router/router-registry';
 import { ConfigurationComponent } from '@apto-catalog-frontend/components/configuration/configuration.component';
 import { ProductListComponent } from '@apto-catalog-frontend/components/product-list/product-list.component';
+import { UpdatePasswordComponent } from '@apto-catalog-frontend/components/update-password/update-password.component';
 import { SummaryWrapperComponent } from './components/summary-wrapper/summary-wrapper.component';
 
 export const Routes: RegisteredRoute[] = [
@@ -9,5 +10,6 @@ export const Routes: RegisteredRoute[] = [
   { route: { path: 'configuration/:configurationType/:configurationId', component: ConfigurationComponent }, priority: 1000 },
 	{ route: { path: 'product/:productId/summary', component: SummaryWrapperComponent }, priority: 2000 },
   { route: { path: 'configuration/:configurationType/:configurationId/summary', component: SummaryWrapperComponent }, priority: 2000 },
+  { route: { path: 'auth/password/:token', component: UpdatePasswordComponent }, priority: 2000 },
 	{ route: { path: '*', redirectTo: '' }, priority: 2000 },
 ];

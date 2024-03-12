@@ -72,6 +72,11 @@
       "continue": {
         "de_DE": "Weiter"
       }
+    },
+    "select": {
+      "please-select": {
+        "de_DE": "Bitte wählen"
+      }
     }
   },
   "AptoLoginController": {
@@ -136,6 +141,14 @@
     }
   },
   "aptoSummary": {
+    "finishMessage": {
+      "title": {
+        "de_DE": "Glückwunsch!"
+      },
+      "subline": {
+        "de_DE": "Die Konfiguration ist abgeschlossen"
+      }
+    },
     "totalPrice": {
       "de_DE": "Stückpreis"
     },
@@ -232,6 +245,20 @@
     },
     "shoppingCartHeadline": {
       "de_DE": "Warenkorb"
+    },
+    "clearCartConfirmation": {
+      "confirm": {
+        "de_DE": "Warenkorb leeren"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
+      },
+      "title": {
+        "de_DE": "Warenkorb leeren?"
+      },
+      "text": {
+        "de_DE": "Möchten Sie wirklich den gesamten Warenkorb leeren?"
+      }
     }
   },
   "AptoGuestConfigurationDialog": {

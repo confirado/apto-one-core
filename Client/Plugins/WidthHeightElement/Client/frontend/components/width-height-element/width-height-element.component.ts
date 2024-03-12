@@ -40,17 +40,20 @@ export class WidthHeightElementComponent implements OnInit {
     quantityInput: new FormControl<number>(1),
 	});
 
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
 	public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}
 
 	public stepWidth: number = 1;
-
 	public stepHeight: number = 1;
-
 	public itemsHeight: SelectItem[] = [];
-
 	public itemsWidth: SelectItem[] = [];
+  public increaseStep: number | undefined;
+  public decreaseStep: number | undefined;
 
 	public getSelectValues(min: number, max: number, step: number): SelectItem[] {
 		const items: SelectItem[] = [];
@@ -77,6 +80,9 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.initIncreaseDecreaseStep();
+
 		// eslint-disable-next-line dot-notation
 		this.formElement.controls['height'].setValue(
 			this.element?.state.values.height || this.element.element.definition.staticValues.defaultHeight || 0
@@ -174,6 +180,22 @@ export class WidthHeightElementComponent implements OnInit {
 			})
 		);
 	}
+
+  private initIncreaseDecreaseStep() {
+    let increaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'increaseStep';
+    });
+    let decreaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'decreaseStep';
+    });
+
+    if (increaseStep && typeof increaseStep.value === 'string') {
+      this.increaseStep = parseFloat(increaseStep.value);
+    }
+    if (decreaseStep && typeof decreaseStep.value === 'string') {
+      this.decreaseStep = parseFloat(decreaseStep.value);
+    }
+  }
 
   private addRequirementsForInput(): void {
     if (this.element.element.definition.staticValues.renderingHeight === 'input') {

@@ -14,6 +14,7 @@
                 </md-button>
             </div>
         </md-toolbar>
+
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-tabs md-dynamic-height md-border-bottom>
@@ -50,14 +51,15 @@
                 </md-tabs>
             </div>
         </md-dialog-content>
+
         <md-dialog-actions layout="row">
-            <md-button class="md-raised md-cornered" ng-click="close()">Abbrechen</md-button>
+            <md-button class="md-raised md-cornered" ng-click="close()" data-cy="dialog-actions_button-cancel">Abbrechen</md-button>
 
-            <md-button ng-if="productDetail.id" class="md-raised md-cornered" ng-click="save(productForm, true)" type="submit">Speichern und schließen</md-button>
-            <md-button ng-if="productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm)" type="submit">Speichern</md-button>
+            <md-button ng-if="productDetail.id" class="md-raised md-cornered" ng-click="save(productForm, true)" type="submit" data-cy="dialog-actions_button-save-and-close">Speichern und schließen</md-button>
+            <md-button ng-if="productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm)" type="submit" data-cy="dialog-actions_button-edit-save">Speichern</md-button>
 
-            <md-button ng-if="!productDetail.id" class="md-raised md-cornered" ng-click="save(productForm)" type="submit">Speichern und hinzufügen</md-button>
-            <md-button ng-if="!productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm, true)" type="submit">Speichern</md-button>
+            <md-button ng-if="!productDetail.id" class="md-raised md-cornered" ng-click="save(productForm)" type="submit" data-cy="dialog-actions_button-save-and-insert">Speichern und hinzufügen</md-button>
+            <md-button ng-if="!productDetail.id" class="md-raised md-primary md-cornered" ng-click="save(productForm, true)" type="submit" data-cy="dialog-actions_button-new-save">Speichern</md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

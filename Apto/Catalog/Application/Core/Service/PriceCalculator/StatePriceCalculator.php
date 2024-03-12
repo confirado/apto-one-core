@@ -39,6 +39,7 @@ class StatePriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array|null $user
      * @return array
      */
     public function getRawPrices(
@@ -48,11 +49,12 @@ class StatePriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        ?array $user = null
     ): array {
         return $this
             ->getPriceCalculator($productId)
-            ->getRawPrices($productId, $customerGroup, $currency, $state, $taxCalculator, $fallbackCurrency, $currencyFactor);
+            ->getRawPrices($productId, $customerGroup, $currency, $state, $taxCalculator, $fallbackCurrency, $currencyFactor, $user);
     }
 
     /**
@@ -63,6 +65,7 @@ class StatePriceCalculator
      * @param TaxCalculator $taxCalculator
      * @param Currency|null $fallbackCurrency
      * @param float $currencyFactor
+     * @param array|null $user
      * @return array
      */
     public function getDisplayPrices(
@@ -72,11 +75,12 @@ class StatePriceCalculator
         State $state,
         TaxCalculator $taxCalculator,
         Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
+        float $currencyFactor = 1.0,
+        ?array $user = null
     ): array {
         return $this
             ->getPriceCalculator($productId)
-            ->getDisplayPrices($productId, $customerGroup, $currency, $state, $taxCalculator, $fallbackCurrency, $currencyFactor);
+            ->getDisplayPrices($productId, $customerGroup, $currency, $state, $taxCalculator, $fallbackCurrency, $currencyFactor, $user);
     }
 
     /**

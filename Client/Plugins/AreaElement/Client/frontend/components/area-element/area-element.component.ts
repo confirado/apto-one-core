@@ -39,6 +39,8 @@ export class AreaElementComponent implements OnInit {
 	public itemFieldList: SelectItem[][] = [];
 
   public sumOfFieldValues = 0;
+  public increaseStep: number | undefined;
+  public decreaseStep: number | undefined;
 
 	public constructor(
     private store: Store,
@@ -65,6 +67,8 @@ export class AreaElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.initIncreaseDecreaseStep();
 
 		for (
 			let i = 0;
@@ -113,7 +117,11 @@ export class AreaElementComponent implements OnInit {
     });
   }
 
-	public hasValues(): boolean {
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
+  public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}
 
@@ -165,6 +173,22 @@ export class AreaElementComponent implements OnInit {
 
   public closeModal(): void {
     this.dialogRef.close();
+  }
+
+  private initIncreaseDecreaseStep() {
+    let increaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'increaseStep';
+    });
+    let decreaseStep = this.element.element.customProperties.find((customProperty) => {
+      return customProperty.key === 'decreaseStep';
+    });
+
+    if (increaseStep && typeof increaseStep.value === 'string') {
+      this.increaseStep = parseFloat(increaseStep.value);
+    }
+    if (decreaseStep && typeof decreaseStep.value === 'string') {
+      this.decreaseStep = parseFloat(decreaseStep.value);
+    }
   }
 
   private markAllControlsAsDirty(): void {

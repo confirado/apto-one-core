@@ -1,4 +1,4 @@
-.card {
+.card-elem {
     background-color: var(--color-background-card);
     border-radius: var(--border-radius-card);
     box-shadow: var(--box-shadow);
@@ -22,7 +22,7 @@
             position: absolute;
             width: 100%;
 
-            .progress {
+            .progress-number {
                 position: relative;
                 color: var(--color-primary);
                 font-weight: 700;
@@ -38,7 +38,7 @@
         h4 {
             color: var(--color-primary);
             font-weight: 600;
-            font-size: 17px;
+            font-size: 18px;
             margin-bottom: 5px;
         }
 

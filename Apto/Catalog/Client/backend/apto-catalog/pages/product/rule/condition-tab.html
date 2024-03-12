@@ -1,5 +1,5 @@
 <div layout="row" layout-align="start" flex>
-    <md-input-container flex>
+    <md-input-container flex data-cy="condition-criterion-type">
         <label>Type:</label>
         <md-select
                 multiple="false"
@@ -13,9 +13,10 @@
         </md-select>
     </md-input-container>
     <div flex="5"></div>
+
     <!-- section select box -->
     <!-- Had to use ng-hide, because ng-if resulted in some weird behaviour -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-section">
         <label>Sektion:</label>
         <md-select
                 multiple="true"
@@ -31,7 +32,7 @@
     <div flex="5"></div>
 
     <!-- element select box -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-element">
         <label>Element:</label>
         <md-select
                 multiple="true"
@@ -48,7 +49,7 @@
     <div flex="5"></div>
 
     <!-- properties select box -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
         <label>Feld:</label>
         <md-select
                 multiple="true"
@@ -64,7 +65,7 @@
     <div flex="5"></div>
 
     <!-- computedValues select box -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 1">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 1" data-cy="condition-computed-value">
         <label>Berechneter Wert:</label>
         <md-select
                 multiple="false"
@@ -79,7 +80,7 @@
     <div flex="5"></div>
 
     <!-- operator select box -->
-    <md-input-container flex>
+    <md-input-container flex data-cy="condition-operator">
         <label>Operator:</label>
         <md-select
                 multiple="false"
@@ -95,7 +96,7 @@
     <div flex="5"></div>
 
     <!-- value text field -->
-    <md-input-container flex>
+    <md-input-container flex data-cy="condition-value">
         <label>Wert:</label>
         <input ng-disabled="$parent.selectedConditionOperator === null || $parent.selectedConditionOperator.id === 0 || $parent.selectedConditionOperator.id === 1" ng-model="$parent.selectedConditionValue">
     </md-input-container>
@@ -103,33 +104,52 @@
 
     <!-- add button -->
     <md-input-container>
-        <md-button ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()">Hinzufügen</md-button>
+        <md-button ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
+        <md-button ng-disabled="!isValidCondition()" ng-if="currentConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
+        <md-button ng-disabled="!currentConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetConditionForm()" data-cy="condition-reset-button">
+            <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
+        </md-button>
     </md-input-container>
 </div>
 
-<md-table-container class="md-whiteframe-2dp">
+<md-table-container class="md-whiteframe-2dp" data-cy="conditions-table">
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column style="width:19%;">Sektion/Type</th>
-            <th md-column style="width:19%;">Element</th>
-            <th md-column style="width:19%;">Feld</th>
-            <th md-column style="width:19%;">Operator</th>
-            <th md-column style="width:19%;">Wert</th>
-            <th md-column style="width:5%;"></th>
+            <th md-column>Sektion/Type</th>
+            <th md-column>Element</th>
+            <th md-column>Feld</th>
+            <th md-column>Operator</th>
+            <th md-column>Wert</th>
+            <th md-column style="width: 170px;"></th>
         </tr>
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="condition in conditions">
-            <td ng-if="condition.type === 0" md-cell style="width:19%;">{{ getSectionIdentifier(condition.sectionId) }}</td>
-            <td ng-if="condition.type === 0" md-cell style="width:19%;">{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
-            <td ng-if="condition.type === 0" md-cell style="width:19%;">{{ condition.property }}</td>
-            <td ng-if="condition.type === 1" md-cell style="width:19%;">Berechneter Wert</td>
-            <td ng-if="condition.type === 1" md-cell style="width:19%;"></td>
-            <td ng-if="condition.type === 1" md-cell style="width:19%;">{{ condition.computedProductValue[0].name }}</td>
-            <td md-cell style="width:19%;">{{ getOperatorName(condition.operator) }}</td>
-            <td md-cell style="width:19%;">{{ condition.value }}</td>
-            <td md-cell style="width:5%;">
+            <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
+            <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
+            <td ng-if="condition.type === 1" md-cell></td>
+            <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>
+            <td md-cell>{{ getOperatorName(condition.operator) }}</td>
+            <td md-cell>{{ condition.value }}</td>
+            <td md-cell>
+                <md-button
+                    title="Bearbeiten"
+                    class="md-icon-button md-primary"
+                    ng-click="updateCondition(condition.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+
+                <md-button
+                    title="Kopieren"
+                    class="md-icon-button md-primary"
+                    ng-click="copyCondition(condition.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf24d</md-icon>
+                </md-button>
+
                 <md-button
                         title="Löschen"
                         class="md-icon-button md-warn"

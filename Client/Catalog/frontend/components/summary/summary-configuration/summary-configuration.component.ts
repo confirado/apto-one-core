@@ -12,7 +12,7 @@ import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/conte
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
-import { fetchPartsList, setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
@@ -67,9 +67,6 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-
-    this.store.dispatch(fetchPartsList());
-
     // subscribe for locale store value
     this.store.select(selectLocale).pipe(
       takeUntil(this.destroy$)

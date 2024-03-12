@@ -1,10 +1,9 @@
-import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import {
   addToBasket, addToBasketSuccess,
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
-  getRenderImagesSuccess,
+  getRenderImagesSuccess, getStatePriceSuccess, hideLoadingFlagAction,
   humanReadableStateLoadSuccess,
   initConfigurationSuccess,
   resetLoadingFlagAction,
@@ -13,7 +12,7 @@ import {
   setNextStep,
   setPrevPerspective,
   setPrevStep,
-  setQuantity,
+  setQuantity, setSectionTouched,
   setStep, updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import {
@@ -23,7 +22,7 @@ import {
   HumanReadableState,
   PartsListPart,
   RenderImage,
-  StatePrice,
+  StatePrice, TempStateItem,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
@@ -37,11 +36,11 @@ export interface ConfigurationState {
 	statePrice: StatePrice | null;
 	loading: boolean;
 	productId: string | null;
-	connector: SelectConnector | null;
 	humanReadableState: HumanReadableState[];
 	quantity: number;
   hideOnePage: boolean;
   partsList: PartsListPart[];
+  tempState: TempStateItem[]
 }
 
 export const configurationInitialState: ConfigurationState = {
@@ -59,11 +58,11 @@ export const configurationInitialState: ConfigurationState = {
 	statePrice: null,
 	productId: null,
 	loading: false,
-	connector: null,
 	humanReadableState: [],
 	quantity: 1,
   hideOnePage: false,
   partsList: [],
+  tempState: [],
 };
 
 const _configurationReducer = createReducer(
@@ -81,6 +80,12 @@ const _configurationReducer = createReducer(
     };
   }),
   on(addToBasketSuccess, (state, action) => {
+    return {
+      ...state,
+      loading: false,
+    };
+  }),
+  on(hideLoadingFlagAction, (state, action) => {
     return {
       ...state,
       loading: false,
@@ -104,16 +109,9 @@ const _configurationReducer = createReducer(
       loading: true
     }
   }),
-  // on(updateParameterStateSuccess, (state, action) => {
-  //   return {
-  //     ...state,
-  //     loading: false
-  //   }
-  // }),
   on(initConfigurationSuccess, (state, action) => {
     /*
       productId: string | null;
-      connector: SelectConnector | null;
       humanReadableState: any | null;
       quantity: number;
      */
@@ -129,7 +127,6 @@ const _configurationReducer = createReducer(
       statePrice: action.payload.statePrice,
       loading: false,
       productId: action.payload.productId,
-      connector: action.payload.connector
     }
   }),
   /*
@@ -150,7 +147,6 @@ const _configurationReducer = createReducer(
       loading: false,
     }
   }),
-
 	on(getCurrentRenderImageSuccess, (state, action) => ({
 		...state,
 		renderImages: action.payload.renderImages,
@@ -269,10 +265,36 @@ const _configurationReducer = createReducer(
 			...state,
 		};
 	}),
-	on(setStep, (state, action) => ({
-		...state,
-		currentStep: action.payload,
-	})),
+	on(setStep, (state, action) => {
+    return {
+      ...state,
+      currentStep: action.payload,
+    }
+	}),
+  on(setSectionTouched, (state, action) => {
+    const { sectionId, repetition, touched } = action.payload;
+
+    let updatedTempState = state.tempState ? [...state.tempState] : [];
+    let found = false;
+
+    // if section found in temp state then update it, otherwise add it to tempState array
+    updatedTempState = updatedTempState.map(item => {
+      if (item.sectionId === sectionId && item.repetition === repetition) {
+        found = true;
+        return { ...item, touched };
+      }
+      return item;
+    });
+
+    if (!found) {
+      updatedTempState.push({ sectionId, repetition, touched });
+    }
+
+    return {
+      ...state,
+      tempState: updatedTempState
+    };
+  }),
   on(setHideOnePage, (state, action) => ({
     ...state,
     hideOnePage: action.payload
@@ -281,6 +303,12 @@ const _configurationReducer = createReducer(
     ...state,
     partsList: action.payload
   })),
+  on(getStatePriceSuccess, (state, action) => {
+    return {
+      ...state,
+      statePrice: action.payload,
+    }
+  })
 );
 
 export function configurationReducer(state: ConfigurationState | undefined, action: Action): ConfigurationState {

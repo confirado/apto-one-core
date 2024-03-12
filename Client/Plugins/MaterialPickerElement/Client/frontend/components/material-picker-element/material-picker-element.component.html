@@ -69,6 +69,9 @@
                      *ngIf="(element.element.description | translate) !== ''"
                      [innerHTML]="element.element.description | translate | safeHtml"
                 ></div>
+
+                <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
+
                 <div class="available-colors">
                     <div class="elements all-color">
                         <div class="element" (click)="onSelectColor(null)" [class.selected]="filter.value.colorRating === null">

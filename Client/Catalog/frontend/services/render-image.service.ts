@@ -2,8 +2,14 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectCurrentRenderImages } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ElementState, RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  selectCurrentRenderImages,
+  selectCurrentStateElements, selectStateActiveElements,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectElement, selectElements } from '@apto-catalog-frontend/store/product/product.selectors';
+import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
+import { ReplaceColorData } from '@apto-catalog-frontend/models/replace-color-data';
 
 @Injectable({
   providedIn: 'root',
@@ -127,12 +133,82 @@ export class RenderImageService implements OnDestroy {
    * @param loadedImages
    * @private
    */
-  private drawImagesOnCanvas(loadedImages): void {
+  private async drawImagesOnCanvas(loadedImages): Promise<void> {
+    const colorsToReplace = await this.findAllCustomPropertiesValues('overlayProductColor');
     for (const img of loadedImages) {
-      this.drawImageByRepeating(img.imageHtml, img.imgObj);
+      this.drawImageByRepeating(img.imageHtml, img.imgObj, colorsToReplace);
       // this.drawImageByScaling(img.imageHtml, img.imgObj);
       // this.drawImageByScalingAndRepeating(img.imageHtml, img.imgObj);
     }
+  }
+
+  private findAllCustomPropertiesValues(key: string): Promise<ReplaceColorData[]> {
+    return new Promise((resolve) => {
+      this.store.select(selectStateActiveElements).subscribe((result: ElementState[]) => {
+        const data: ReplaceColorData[] = [];
+        const elementIds = result.map((e: ElementState) => e.id);
+        this.store.select(selectElements(elementIds)).subscribe((elements) => {
+          for (const singleElement of elements) {
+            const customPropertyColor: CustomProperty = singleElement.customProperties.find((e) => e.key === key);
+            if (customPropertyColor) {
+              // value in the format e.g.	#E7E7E7,#800080
+              const colors = (customPropertyColor.value as string).split(',');
+              const colorData = data.find((c) => c.search === colors[0]);
+              if (colorData) {
+                colorData.replace = colors[1];
+              } else {
+                data.push({
+                  search: colors[0],
+                  replace: colors[1],
+                });
+              }
+            }
+          }
+
+          return resolve(data);
+        });
+      });
+    });
+  }
+
+  private hexToRgb(hex: string): number[] {
+    hex = hex.replace(/^#/, '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return [r, g, b];
+  }
+
+  private drawImageWithColorReplacement(imageHtml: HTMLImageElement, colorSearchHex: string, colorReplaceHex: string): HTMLCanvasElement {
+    const imageWidth = imageHtml.width;
+    const imageHeight = imageHtml.height;
+    // temp canvas for pixels manipulations
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = imageWidth;
+    tempCanvas.height = imageHeight;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    tempCtx.drawImage(imageHtml, 0, 0, imageWidth, imageHeight);
+
+    const imageData = tempCtx.getImageData(0, 0, imageWidth, imageHeight);
+    const data = imageData.data;
+    const colorSearch = this.hexToRgb(colorSearchHex);
+    const colorReplace = this.hexToRgb(colorReplaceHex);
+
+    // change colors for each pixel if match criteria
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] === colorSearch[0] && data[i + 1] === colorSearch[1] && data[i + 2] === colorSearch[2]) { // Sprawdzenie, czy piksel jest biały
+        data[i] = colorReplace[0];
+        data[i + 1] = colorReplace[1];
+        data[i + 2] = colorReplace[2];
+        data[i + 3] = 255;
+      }
+    }
+
+    tempCtx.putImageData(imageData, 0, 0);
+
+    return tempCanvas;
   }
 
   /**
@@ -140,29 +216,47 @@ export class RenderImageService implements OnDestroy {
    *
    * @param imageHtml
    * @param imgObj
+   * @param colorsToReplace
    * @private
    */
-  private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData): void {
-    const imageWidth = imageHtml.width;
-    const imageHeight = imageHtml.height;
-    const imageRepeatWidth = imgObj.realWidth;
-    const imageRepeatHeight = imgObj.realHeight;
-    const offsetX = imgObj.realOffsetX;
-    const offsetY = imgObj.realOffsetY;
+  private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData, colorsToReplace: ReplaceColorData[]): void {
+    this.store.select(selectElement(imgObj.elementId)).subscribe((storeElement) => {
+      let tempCanvas = null;
+      const imageWidth = imageHtml.width;
+      const imageHeight = imageHtml.height;
+      const imageRepeatWidth = imgObj.realWidth;
+      const imageRepeatHeight = imgObj.realHeight;
+      const offsetX = imgObj.realOffsetX;
+      const offsetY = imgObj.realOffsetY;
 
-    if (imgObj.renderImageOptions?.renderImageOptions?.type.toLowerCase() === 'wiederholbar') {
-      let y = offsetY;
-      do {
-        let x = offsetX;
+      const customPropertyColor: CustomProperty = storeElement.customProperties.find((e) => e.key === 'overlayColor');
+      if (customPropertyColor) {
+        // value in the format e.g.	#E7E7E7,#800080
+        const colors = (customPropertyColor.value as string).split(',');
+        colorsToReplace.push({
+          search: colors[0],
+          replace: colors[1],
+        });
+      }
+
+      for (const colorReplacement of colorsToReplace) {
+        tempCanvas = this.drawImageWithColorReplacement(imageHtml, colorReplacement.search, colorReplacement.replace);
+      }
+
+      if (imgObj.renderImageOptions?.renderImageOptions?.type.toLowerCase() === 'wiederholbar') {
+        let y = offsetY;
         do {
-          this.ctx.drawImage(imageHtml, x, y);
-          x += imageWidth;
-        } while (x < imageRepeatWidth);
-        y += imageHeight;
-      } while (y < imageRepeatHeight);
-    } else {
-      this.ctx.drawImage(imageHtml, offsetX, offsetY);
-    }
+          let x = offsetX;
+          do {
+            this.ctx.drawImage(tempCanvas || imageHtml, x, y);
+            x += imageWidth;
+          } while (x < imageRepeatWidth);
+          y += imageHeight;
+        } while (y < imageRepeatHeight);
+      } else {
+        this.ctx.drawImage(tempCanvas || imageHtml, offsetX, offsetY);
+      }
+    });
   }
 
   /**

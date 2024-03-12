@@ -1,0 +1,31 @@
+<div ng-if="!$ctrl.reduxProps.useStepByStep">
+    <!--
+    <article class="default-element tool-tip-container"
+             apto-tool-tip
+             ng-class="{'element-disabled': $ctrl.elementIsDisabled($ctrl.section.id, $ctrl.element.id), 'element-selected': $ctrl.elementIsSelected($ctrl.section.id, $ctrl.element.id)}"
+             ng-click="$ctrl.setActiveValue()">
+        <img ng-if="$ctrl.element.previewImage" ng-src="{{$ctrl.element.previewImage.fileUrl}}" style="display: block; width: 100%; height: 100%;" />
+        <div ng-if="!$ctrl.element.previewImage" style="background: #ffffff; width: 100%; height: 100%;"></div>
+        <div class="tool-tip">
+            {{ $ctrl.translate($ctrl.element.name) }}
+        </div>
+    </article>
+    -->
+</div>
+
+<div ng-if="$ctrl.reduxProps.useStepByStep">
+    <article class="sbs-element hint block-group">
+        <div class="image-container block">
+            <apto-sbs-preview-image element="$ctrl.element"></apto-sbs-preview-image>
+        </div>
+        <div class="content-container block">
+            <h4 class="headline">{{ $ctrl.translate($ctrl.element.name)}}</h4>
+            <div class="description" ng-bind-html="$ctrl.translateTrustAsHtml($ctrl.element.description)"></div>
+        </div>
+        <div class="action-container block-group" ng-if="$ctrl.staticValues.active">
+            <button class="set-value">
+                <span class="select-continue" ng-click="$ctrl.gotoLink()">{{ $ctrl.translate($ctrl.staticValues.buttonText) }}</span>
+            </button>
+        </div>
+    </article>
+</div>

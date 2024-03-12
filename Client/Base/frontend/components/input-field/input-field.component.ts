@@ -19,22 +19,24 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 })
 export class InputFieldComponent implements ControlValueAccessor {
 
-	@Input() public name: string = '';
-	@Input() public prefix: string | undefined;
-	@Input() public suffix: string | undefined;
-	@Input() public placeholder: string | undefined = '';
-	@Input() public type: 'text' | 'integer' | 'float' | 'numeric' | 'password' = 'text';
+  @Input() public name: string = '';
+  @Input() public prefix: string | undefined;
+  @Input() public suffix: string | undefined;
+  @Input() public placeholder: string | undefined = '';
+  @Input() public type: 'text' | 'integer' | 'float' | 'numeric' | 'password' = 'text';
   @Input() public hint: string = '';
   @Input() public enableClear = false;
 
-	@Input() public step: number = 1;
+  @Input() public step: number = 1;
+  @Input() public increaseStep: number | undefined;
+  @Input() public decreaseStep: number | undefined;
   @Input() public min: number | undefined;
   @Input() public max: number | undefined;
 
-	@Input() public fullWidth: boolean = false;
-	@Input() public width: string = '';
+  @Input() public fullWidth: boolean = false;
+  @Input() public width: string = '';
 
-	public formElement = new FormControl();
+  public formElement = new FormControl();
   public disabled: boolean = false;
 
   public registerOnChange(fn: any): void {
@@ -95,11 +97,12 @@ export class InputFieldComponent implements ControlValueAccessor {
     }
 
     let newValue = 0;
+    const increaseStep = this.increaseStep ? this.increaseStep : this.step;
 
     if (this.isInteger()) {
-      newValue = this.parseInputNumber() + this.step;
+      newValue = this.parseInputNumber() + increaseStep;
     } else {
-      newValue = parseFloat((this.parseInputNumber() + this.step).toFixed(this.countDigitsAfterZero(this.step)));
+      newValue = parseFloat((this.parseInputNumber() + increaseStep).toFixed(this.countDigitsAfterZero(this.step)));
     }
 
     if (this.max !== undefined && newValue > this.max) {
@@ -115,11 +118,12 @@ export class InputFieldComponent implements ControlValueAccessor {
     }
 
     let newValue = 0;
+    const decreaseStep = this.decreaseStep ? this.decreaseStep : this.step;
 
     if (this.isInteger()) {
-      newValue = this.parseInputNumber() - this.step;
+      newValue = this.parseInputNumber() - decreaseStep;
     } else {
-      newValue = parseFloat((this.parseInputNumber() - this.step).toFixed(this.countDigitsAfterZero(this.step)));
+      newValue = parseFloat((this.parseInputNumber() - decreaseStep).toFixed(this.countDigitsAfterZero(this.step)));
     }
 
     if (this.min !== undefined && newValue < this.min) {

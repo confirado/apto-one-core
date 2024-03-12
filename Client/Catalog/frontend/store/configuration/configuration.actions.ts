@@ -2,7 +2,7 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import {
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments, HumanReadableState, PartsListPart,
+  GetConfigurationStateArguments, HumanReadableState, PartsListPart, StatePrice, TempStateItem
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -14,9 +14,6 @@ export enum ConfigurationActionTypes {
 	UpdateConfigurationState = '[Configuration] Update State',
 	GetConfigurationState = '[Configuration] Get State',
 	GetConfigurationStateSuccess = '[Configuration] Get State success',
-
-  UpdateParameterState = '[Configuration] Update Parameter State',
-
 	SetPrevStep = '[Configuration] Set prev step',
 	SetPrevStepSuccess = '[Configuration] Set prev step success',
 	SetNextStep = '[Configuration] Set next step',
@@ -40,7 +37,12 @@ export enum ConfigurationActionTypes {
   resetLoadingFlagAction = '[Configuration] Reset Loading Flag',
   FetchPartsList = '[Configuration] Fetch Parts List',
   FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
+  HideLoadingFlag = '[Configuration] hide loading flag',
+  SetSectionTouched = '[Configuration] Set Section Touched',
+  GetStatePriceSuccess = '[Configuration] Get state price success',
 }
+
+export const hideLoadingFlagAction = createAction(ConfigurationActionTypes.HideLoadingFlag);
 
 export const createLoadingFlagAction = createAction(
   ConfigurationActionTypes.createLoadingFlagAction
@@ -48,6 +50,13 @@ export const createLoadingFlagAction = createAction(
 
 export const resetLoadingFlagAction = createAction(
   ConfigurationActionTypes.resetLoadingFlagAction
+);
+
+export const getStatePriceSuccess = createAction(
+  ConfigurationActionTypes.GetStatePriceSuccess,
+  props<{
+    payload: StatePrice
+  }>()
 );
 
 export const initConfiguration = createAction(
@@ -99,12 +108,10 @@ export const getConfigurationStateSuccess = createAction(
 			currentPerspective: string | null;
 			statePrice: any;
       renderImages: [];
+      updates: any
 		};
 	}>()
 );
-
-// export const updateParameterState = createAction(ConfigurationActionTypes.UpdateParameterState,
-//   props<{ updates: GetParameterStateArguments['updates'] }>());
 
 export const getCurrentRenderImageSuccess = createAction(ConfigurationActionTypes.GetCurrentRenderImageSuccess, props<{ payload: any }>());
 
@@ -139,6 +146,8 @@ export const addToBasket = createAction(
 			formData?: any;
       humanReadableState?: HumanReadableState;
       productImage?: string;
+      configurationId?: string
+      configurationType?: string
 		};
 	}>()
 );
@@ -176,3 +185,5 @@ export const onError = createAction(ConfigurationActionTypes.OnError, props<{ me
 
 export const fetchPartsList = createAction(ConfigurationActionTypes.FetchPartsList);
 export const fetchPartsListSuccess = createAction(ConfigurationActionTypes.FetchPartsListSuccess, props<{ payload: PartsListPart[] }>());
+
+export const setSectionTouched = createAction(ConfigurationActionTypes.SetSectionTouched, props<{ payload: TempStateItem }>());

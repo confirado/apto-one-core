@@ -54,6 +54,8 @@
                         [step]="stepHeight"
                         [min]="element.element.definition.properties.height?.[0]?.minimum"
                         [max]="element.element.definition.properties.height?.[0]?.maximum"
+                        [increaseStep]="this.increaseStep"
+                        [decreaseStep]="this.decreaseStep"
                     >
                     </apto-input-field>
 
@@ -99,6 +101,8 @@
                         [step]="stepWidth"
                         [min]="element.element.definition.properties.width?.[0]?.minimum"
                         [max]="element.element.definition.properties.width?.[0]?.maximum"
+                        [increaseStep]="this.increaseStep"
+                        [decreaseStep]="this.decreaseStep"
                     >
                     </apto-input-field>
 
@@ -131,13 +135,15 @@
              [innerHTML]="element.element.description | translate | safeHtml"
         ></div>
 
+        <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
+
         <div class="apply-button">
             <button
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product?.useStepByStep"
                 mat-flat-button
                 color="primary"
                 (click)="saveInput()"
-                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
 
             <button
@@ -145,7 +151,7 @@
                 mat-flat-button
                 color="primary"
                 (click)="saveInput()"
-                >{{ contentSnippet$ | async | contentSnippet: 'buttons.select' }}
+                >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
 
             <button

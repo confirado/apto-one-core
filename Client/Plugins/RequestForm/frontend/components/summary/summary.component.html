@@ -13,6 +13,7 @@
                         </div>
                     </div>
                 </div>
+                <apto-summary-configuration *ngIf="showRequestFormOnBottom" [showPrices]="showPrices"></apto-summary-configuration>
                 <apto-request-form
                     id="summary-request-form"
                     *ngIf="!requestState.sending && !requestState.success && !requestState.error"
@@ -21,12 +22,18 @@
                 <apto-request-message-state
                     *ngIf="requestState.sending || requestState.success || requestState.error"
                     [state]="requestState"
-                    [success]="{ title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineSuccess',
-                    subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineSuccess', message: '' }"
-                    [error]="{ title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineError',
-                    subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineError', message: '' }"
+                    [success]="{
+                        title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineSuccess',
+                        subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineSuccess',
+                        message: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.messageSuccess'
+                    }"
+                    [error]="{
+                        title: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.headlineError',
+                        subtitle: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.sublineError',
+                        message: requestForm$ | async | contentSnippet: 'aptoSummary.afterSend.messageError'
+                    }"
                 ></apto-request-message-state>
-                <apto-summary-configuration [showPrices]="showPrices"></apto-summary-configuration>
+                <apto-summary-configuration *ngIf="!showRequestFormOnBottom" [showPrices]="showPrices"></apto-summary-configuration>
                 <div
                     *ngIf="!requestState.sending && !requestState.success && !requestState.error"
                     class="summary bottom"

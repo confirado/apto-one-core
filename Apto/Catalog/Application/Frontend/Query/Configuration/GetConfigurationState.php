@@ -36,6 +36,13 @@ class GetConfigurationState implements PublicQueryInterface
      *     // without complete flag section will set to complete true
      *     ['sectionId' => '123123-123123132-123123']
      *   ],
+     *   'parameters' => [
+     *     [
+     *        'name' => repetitions|quantity,..,
+     *        'value' => mixed
+     *     ],
+     *     ...
+     *   ],
      *   'repair' => [
      *     'maxTries' => 3,
      *     'operators' => [1, 3]
@@ -45,8 +52,8 @@ class GetConfigurationState implements PublicQueryInterface
     private $intention;
 
     /**
-     * @param string $productId
-     * @param array $state
+     * @param string     $productId
+     * @param array      $state
      * @param array|null $intention
      */
     public function __construct(string $productId, array $state, ?array $intention = null)

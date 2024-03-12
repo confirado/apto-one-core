@@ -1,0 +1,7 @@
+services:
+  Apto\Plugins\HintElement\:
+    autowire: true
+    autoconfigure: true
+    resource: '../../../../'
+    exclude:
+      - '../../DependencyInjection/'
