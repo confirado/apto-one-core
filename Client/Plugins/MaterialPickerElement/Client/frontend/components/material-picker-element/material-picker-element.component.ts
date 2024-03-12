@@ -2,10 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { combineLatest } from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 import { environment } from '@apto-frontend/src/environments/environment';
 import { translate } from "@apto-base-core/store/translated-value/translated-value.model";
+
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
@@ -27,6 +29,10 @@ import {
   initMaterialPicker
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.actions";
 
+/**
+ * Angular component for the Material Picker Element.
+ * This component handles the selection of materials and related properties.
+ */
 @UntilDestroy()
 @Component({
 	selector: 'apto-material-picker-element',
@@ -59,14 +65,13 @@ export class MaterialPickerElementComponent implements OnInit {
 	public currentMaterials: { id: string; name: string; priceGroup: string }[] = [];
   public currentSecondaryItem: { id: string; name: string; priceGroup: string } | undefined;
   public currentSecondaryMaterials: { id: string; name: string; priceGroup: string }[] = [];
-
   public formElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
   public secondaryFormElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
 	public multiColor = new FormControl<boolean>(false);
 	public colorOrder = new FormControl<boolean>(false);
 	public inputCount = new FormControl<number>(0);
 
-	public filter = new FormGroup<MaterialPickerFilterForm>({
+  public filter = new FormGroup<MaterialPickerFilterForm>({
 		colorRating: new FormControl<string | null>(null),
 		priceGroup: new FormControl<string | null>(null),
 		properties: new FormGroup<any>({}),
@@ -86,17 +91,17 @@ export class MaterialPickerElementComponent implements OnInit {
       }
     });
 
-    // init property group form controls
     combineLatest([this.singlePropertyGroups$, this.multiplePropertyGroups$]).subscribe(([singlePropertyGroups, multiplePropertyGroups]) => {
       const addPropertyFormControl = (propertyGroup: PropertyGroup) => {
         this.filter.controls.properties.addControl(
           propertyGroup.id,
           new FormControl<string[]>([]),
           { emitEvent: false }
-        )
+        );
       };
 
       singlePropertyGroups?.forEach(addPropertyFormControl);
+
       multiplePropertyGroups?.forEach(addPropertyFormControl);
     });
 
@@ -110,17 +115,14 @@ export class MaterialPickerElementComponent implements OnInit {
       this.inputCount.setValue(parseInt(this.element.state.values.materialColorQuantity, 10));
     }
 
-    // init single
     if (!this.element.element.definition.staticValues.allowMultiple) {
       this.initSingleSelection();
     }
 
-    // init multiple
     if (this.element.element.definition.staticValues.allowMultiple) {
       this.initMultiSelection();
     }
 
-    // apply filter on filter values change
     this.filter.valueChanges.subscribe((next) => {
       this.applyFilter();
     });
@@ -158,86 +160,92 @@ export class MaterialPickerElementComponent implements OnInit {
     }
 
     this.currentSecondaryMaterials = [];
+
     if (this.element.state.values.materialsSecondary) {
       for (const item of this.element.state.values.materialsSecondary) {
         this.currentSecondaryMaterials.push(item);
       }
     }
+
     this.secondaryFormElement.setValue(this.currentSecondaryMaterials);
+
     this.formElement.setValue(this.currentMaterials);
   }
 
-	public onSelectColor(hex: string | null): void {
-		this.filter.controls.colorRating.setValue(this.filter.controls.colorRating.value === hex ? null : hex);
-	}
+  public onSelectColor(hex: string | null): void {
+    this.filter.controls.colorRating.setValue(this.filter.controls.colorRating.value === hex ? null : hex);
+  }
 
-	public onSelectElement(item: MaterialPickerItem): void {
-		if (!this.element) {
-			return;
-		}
+  public onSelectElement(item: MaterialPickerItem): void {
+    if (!this.element) {
+      return;
+    }
 
-    const localeItem = {
+    const localeItem: any = {
       id: item.material.id,
       name: translate(item.material.name, this.locale),
       priceGroup: translate(item.priceGroup.name, this.locale)
     };
 
-    let currentItem = this.currentItem;
-    let currentMaterials = this.currentMaterials;
-    let formElement = this.formElement;
-    if (this.step === 2) {
-      currentItem = this.currentSecondaryItem;
-      currentMaterials = this.currentSecondaryMaterials;
-      formElement = this.secondaryFormElement;
-    }
+    let currentItem = this.step === 2 ? this.currentSecondaryItem : this.currentItem;
+    let currentMaterials = this.step === 2 ? this.currentSecondaryMaterials : this.currentMaterials;
+    let formElement = this.step === 2 ? this.secondaryFormElement : this.formElement;
 
-		if (!this.element.element.definition.staticValues.allowMultiple) {
-			if (currentItem && currentItem.id === localeItem.id) {
-        // remove current item if selected item is clicked
-				currentItem = undefined;
+    if (!this.element.element.definition.staticValues.allowMultiple) {
+      if (currentItem && currentItem.id === localeItem.id) {
+        currentItem = undefined;
         formElement.setValue([]);
-			} else {
-        // set new current item
-				currentItem = localeItem;
+      } else {
+        currentItem = localeItem;
         formElement.setValue([currentItem]);
-			}
-		} else {
-			const cutItem = currentMaterials.find((i) => i.id === localeItem.id);
-			if (cutItem) {
-        // remove current item if selected item is clicked
-				currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
-			} else if (localeItem) {
-				currentMaterials.push({
-					id: localeItem.id,
-					name: localeItem.name,
-					priceGroup: localeItem.priceGroup,
-				});
-			}
+      }
+    } else {
+      const cutItem = currentMaterials.find((i: any) => i.id === localeItem.id);
+      if (cutItem) {
+        currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
+      } else if (localeItem) {
+        currentMaterials.push({
+          id: localeItem.id,
+          name: localeItem.name,
+          priceGroup: localeItem.priceGroup,
+        });
+      }
+
       formElement.setValue(currentMaterials);
-		}
+    }
 
     if (this.step === 1) {
       this.currentItem = currentItem;
       this.currentMaterials = currentMaterials;
-    }
-
-    if (this.step === 2) {
+    } else if (this.step === 2) {
       this.currentSecondaryItem = currentItem;
       this.currentSecondaryMaterials = currentMaterials;
     }
-	}
+
+    if (!this.element.element.definition.staticValues.secondaryMaterialActive) {
+      if (this.currentMaterials.length === 0 && this.element.element.definition.staticValues.allowMultiple ||
+        this.currentItem === undefined && !this.element.element.definition.staticValues.allowMultiple) {
+        this.removeInput();
+      } else {
+        this.saveInput();
+      }
+    }
+  }
 
   protected get hasAttachments(): boolean {
     return this.element.element.attachments?.length !== 0;
   }
 
   public onMultiplePropertySelected(group: PropertyGroup, property: Property) {
+
     if (!this.filter.controls.properties.controls.hasOwnProperty(group.id)) {
       return;
     }
 
     const currentIndex = this.filter.controls.properties.controls[group.id].value.indexOf(property.id);
+
     const value = this.filter.controls.properties.controls[group.id].value;
+
     if (currentIndex === -1) {
       value.push(property.id);
     } else {
@@ -250,6 +258,7 @@ export class MaterialPickerElementComponent implements OnInit {
   public isElementSelected(id: string): boolean {
     let currentItem = this.currentItem;
     let currentMaterials = this.currentMaterials;
+
     if (this.step === 2) {
       currentItem = this.currentSecondaryItem;
       currentMaterials = this.currentSecondaryMaterials;
@@ -258,11 +267,13 @@ export class MaterialPickerElementComponent implements OnInit {
     if (this.elementState('multiple')) {
       return currentMaterials.some((i) => i.id === id);
     }
+
     if (!this.elementState('multiple')) {
       if (currentItem) {
         return currentItem.id === id;
       }
     }
+
     return false;
   }
 
@@ -292,7 +303,7 @@ export class MaterialPickerElementComponent implements OnInit {
         properties: [],
         orderBy: 'asc',
       }
-    }
+    };
 
     Object.entries<string[]>(this.filter.controls.properties.value).forEach(([key, values]) => {
       payload.filter.properties = payload.filter.properties.concat(values);
@@ -301,29 +312,31 @@ export class MaterialPickerElementComponent implements OnInit {
     return payload;
   }
 
-	public saveInput(): void {
-		if (!this.element) {
-			return;
-		}
+  public saveInput(): void {
+    if (!this.element) {
+      return;
+    }
 
-		let materialColorMixing = 'monochrome';
-		if (this.multiColor.value) {
-			materialColorMixing = 'multicolored';
-		}
-		let materialColorOrder = 'alternately';
-		if (this.colorOrder.value) {
-			materialColorOrder = 'input';
-		}
-		let inputCountString = '';
-		if (this.inputCount.value && this.inputCount.value > 0) {
-			inputCountString = this.inputCount.value.toString();
-		}
+    let materialColorMixing = 'monochrome';
+    if (this.multiColor.value) {
+      materialColorMixing = 'multicolored';
+    }
 
-		if (this.element.element.definition.staticValues.allowMultiple) {
-			this.store.dispatch(
-				updateConfigurationState({
-					updates: {
-						set: [
+    let materialColorOrder = 'alternately';
+    if (this.colorOrder.value) {
+      materialColorOrder = 'input';
+    }
+
+    let inputCountString = '';
+    if (this.inputCount.value && this.inputCount.value > 0) {
+      inputCountString = this.inputCount.value.toString();
+    }
+
+    if (this.element.element.definition.staticValues.allowMultiple) {
+      this.store.dispatch(
+        updateConfigurationState({
+          updates: {
+            set: [
               this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
               this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
               this.getStateUpdateObject('productId', this.product?.id),
@@ -338,11 +351,11 @@ export class MaterialPickerElementComponent implements OnInit {
               this.getStateUpdateObject('materialColorMixing', materialColorMixing),
               this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
               this.getStateUpdateObject('materialColorQuantity', inputCountString)
-						],
-					},
-				})
-			);
-		} else if (this.currentItem) {
+            ],
+          },
+        })
+      );
+    } else if (this.currentItem) {
       let secondaryItem = this.currentSecondaryItem;
       if (!secondaryItem) {
         secondaryItem = {
@@ -352,10 +365,10 @@ export class MaterialPickerElementComponent implements OnInit {
         };
       }
 
-			this.store.dispatch(
-				updateConfigurationState({
-					updates: {
-						set: [
+      this.store.dispatch(
+        updateConfigurationState({
+          updates: {
+            set: [
               this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
               this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
               this.getStateUpdateObject('productId', this.product?.id),
@@ -369,29 +382,30 @@ export class MaterialPickerElementComponent implements OnInit {
               this.getStateUpdateObject('materialColorMixing', materialColorMixing),
               this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
               this.getStateUpdateObject('materialColorQuantity', inputCountString)
-						],
-					},
-				})
-			);
-		}
-	}
+            ],
+          },
+        })
+      );
+    }
+  }
 
-	public removeInput(): void {
-		if (!this.element) {
-			return;
-		}
+  public removeInput(): void {
+    if (!this.element) {
+      return;
+    }
 
     this.step = 1;
-		this.store.dispatch(
-			updateConfigurationState({
-				updates: {
-					remove: [
+
+    this.store.dispatch(
+      updateConfigurationState({
+        updates: {
+          remove: [
             this.getStateUpdateObject()
-					],
-				},
-			})
-		);
-	}
+          ],
+        },
+      })
+    );
+  }
 
   private getStateUpdateObject(property: string = null, value: any = null) {
     return {
@@ -400,7 +414,7 @@ export class MaterialPickerElementComponent implements OnInit {
       sectionRepetition: this.element.state.sectionRepetition,
       property: property,
       value: value,
-    }
+    };
   }
 
   public elementState(type: string): boolean {
@@ -422,4 +436,34 @@ export class MaterialPickerElementComponent implements OnInit {
     }
     return false;
   }
+
+  public resetSearchField(): void {
+    this.filter.controls.searchString.setValue('');
+  }
+
+  public getDefaultPriceGroup(): Observable<string> {
+    return this.priceGroups$.pipe(
+      switchMap(priceGroups => {
+        if (priceGroups && priceGroups.length === 1) {
+          return of(priceGroups[0].name['de_DE'].toString());
+        } else {
+          return this.store.select(selectContentSnippet('plugins.materialPickerElement.allProperty')).pipe(
+            map(contentSnippet => {
+              return contentSnippet.content['de_DE'].toString();
+            })
+          );
+        }
+      })
+    );
+  }
+
+  public getBackgroundImage(item) {
+    return {
+      'background-image': `url(${this.mediaUrl}${item.material.previewImage.path})`,
+      'background-size': 'contain',
+      'background-position': 'center',
+      'background-repeat': 'no-repeat'
+    };
+  }
+
 }

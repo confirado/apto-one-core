@@ -25,6 +25,7 @@ export class InputFieldComponent implements ControlValueAccessor {
   @Input() public placeholder: string | undefined = '';
   @Input() public type: 'text' | 'integer' | 'float' | 'numeric' | 'password' = 'text';
   @Input() public hint: string = '';
+  @Input() public enableClear = false;
 
   @Input() public step: number = 1;
   @Input() public increaseStep: number | undefined;
@@ -150,5 +151,9 @@ export class InputFieldComponent implements ControlValueAccessor {
   private countDigitsAfterZero(number): number {
     const decimalPart = number.toString().split('.')[1];
     return !decimalPart ? 0 : decimalPart.replace(/0*$/, '').length;
+  }
+
+  public clear(): void {
+    this.formElement.setValue(null);
   }
 }
