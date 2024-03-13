@@ -1,5 +1,5 @@
 <div class="quantity-input-editable">
-	<div class="container" *ngIf="quantity$ | async as quantity" [style.width]="width" [class]="size">
+	<div class="container-elem" *ngIf="quantity$ | async as quantity" [style.width]="width" [class]="size">
         <input #inputRef
                [(ngModel)]="inputValue"
                (keyup)="onKeyUp($event)"

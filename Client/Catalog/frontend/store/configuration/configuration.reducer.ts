@@ -3,7 +3,7 @@ import {
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
   getCurrentRenderImageSuccess,
-  getRenderImagesSuccess, hideLoadingFlagAction,
+  getRenderImagesSuccess, getStatePriceSuccess, hideLoadingFlagAction,
   humanReadableStateLoadSuccess,
   initConfigurationSuccess,
   resetLoadingFlagAction,
@@ -309,6 +309,12 @@ const _configurationReducer = createReducer(
     ...state,
     partsList: action.payload
   })),
+  on(getStatePriceSuccess, (state, action) => {
+    return {
+      ...state,
+      statePrice: action.payload,
+    }
+  })
 );
 
 export function configurationReducer(state: ConfigurationState | undefined, action: Action): ConfigurationState {

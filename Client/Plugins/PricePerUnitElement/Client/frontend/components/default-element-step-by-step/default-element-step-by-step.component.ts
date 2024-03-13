@@ -22,4 +22,8 @@ export class DefaultElementStepByStepComponent {
   public isDialog = false;
 
   public mediaUrl = environment.api.media;
+
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
 }

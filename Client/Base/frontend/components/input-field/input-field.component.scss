@@ -25,9 +25,10 @@
         @include prefix();
     }
 
-    .container {
+    .container-elem {
         grid-area: container;
         @include container();
+        @include clear-input();
 
         input {
             @include input();

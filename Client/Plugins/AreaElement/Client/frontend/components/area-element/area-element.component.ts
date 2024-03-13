@@ -117,7 +117,11 @@ export class AreaElementComponent implements OnInit {
     });
   }
 
-	public hasValues(): boolean {
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
+  public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}
 

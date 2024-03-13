@@ -2,7 +2,7 @@
     <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
     <div class="name" *ngIf="name" [class.integer]="type === 'integer'">{{ name }}</div>
 
-    <div class="container" [style.width]="width">
+    <div class="container-elem" [style.width]="width">
         <input *ngIf="isNumeric()"
            type="number"
            (focus)="onInputFocus($event)"
@@ -29,6 +29,10 @@
             <div class="control" mat-ripple (click)="decrease()" [matRippleDisabled]="disabled" [class.input-disabled]="disabled">
                 <mat-icon>arrow_drop_down</mat-icon>
             </div>
+        </div>
+
+        <div *ngIf="enableClear" class="clear-input" mat-ripple (click)="clear()">
+            <mat-icon>close</mat-icon>
         </div>
     </div>
 

@@ -1,0 +1,53 @@
+<div class="md-whiteframe-2dp" style="margin: 8px;">
+    <div style="padding: 12px 24px 0 24px;" layout="row" layout-align="start" flex>
+        <p>
+            Wählen Sie zuerst eine Sprache aus und laden anschießend eine CSV-Datei hoch, um den Import zu starten.<br  /><br  />
+            Eine Übersicht der erlaubten Felder finden Sie hier: <a ng-href="{{ $ctrl.documentationLink }}" target="_blank">Erlaubte Felder</a>
+        </p>
+    </div>
+
+    <div style="padding: 12px 24px 0 24px;" layout="row" layout-align="start" flex>
+        <md-input-container flex>
+            <label>Domain:</label>
+            <md-select required ng-model="$ctrl.selectedShop">
+                <md-option ng-value="shop" ng-repeat="shop in $ctrl.state.shops track by shop.id">{{ shop.domain }}</md-option>
+            </md-select>
+        </md-input-container>
+
+        <div flex="5"></div>
+
+        <md-input-container flex>
+            <label>Sprache:</label>
+            <md-select required ng-model="$ctrl.selectedLanguage">
+                <md-option ng-value="language" ng-repeat="language in $ctrl.state.languages track by language.id">{{ $ctrl.languageFactory.translate(language.name) }}</md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+
+    <div class="apto-media-list" style="padding: 12px 24px 0 24px;" layout="row" layout-align="start" flex>
+        <md-card
+            flex
+            class="drop-zone"
+            ng-class="{'disabled': $ctrl.selectedShop === null || $ctrl.selectedLanguage === null}"
+            ng-disabled="$ctrl.selectedLanguage === null"
+
+            multiple="false"
+            ngf-select="$ctrl.uploadFiles($files, $invalidFiles)"
+            ngf-drop="$ctrl.uploadFiles($files, $invalidFiles)"
+            ngf-drag-over-class="'dragover'"
+            ngf-pattern="'.csv'"
+        >
+            <md-card-content>
+                <i class="fa {{ $ctrl.uploadInProgress ? 'fa-circle-o-notch fa-spin' : 'fa-upload' }}"></i>
+                Datei-Upload via Drag'n'Drop oder Klick
+            </md-card-content>
+        </md-card>
+    </div>
+
+    <div style="padding: 12px 24px 24px 24px;" ng-repeat="result in $ctrl.state.results">
+        <h4>{{ result.file }}</h4>
+        <div ng-if="result.errors.length > 0">Beim Import sind Fehler aufgetreten:</div>
+        <pre ng-if="result.errors.length > 0" ng-bind-html="result.errors | json"></pre>
+        <pre ng-if="result.errors.length < 1">Import abgeschlossen.</pre>
+    </div>
+</div>
