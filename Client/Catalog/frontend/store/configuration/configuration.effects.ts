@@ -30,7 +30,13 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
-import { Configuration, ConfigurationState, CurrentSection, GetConfigurationResult } from './configuration.model';
+import {
+  Configuration,
+  ConfigurationState,
+  CurrentSection,
+  GetConfigurationResult,
+  SectionState
+} from './configuration.model';
 
 @Injectable()
 export class ConfigurationEffects {
@@ -81,6 +87,7 @@ export class ConfigurationEffects {
                 renderImages: configuration.renderImages,
 								currentPerspective,
                 currentUser,
+                action
 							}))
 						);
 					})
@@ -102,7 +109,12 @@ export class ConfigurationEffects {
 				)
 			),
 			map((result) => {
-				const sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
+        let sections: SectionState[] = [];
+        if (result.product.product.keepSectionOrder === false && result.action.payload.type === null) {
+          sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden);
+        } else {
+          sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
+        }
         const currentStep: CurrentSection | null = sections.length > 0 ? { id: sections[0].id, repetition: sections[0].repetition } : null;
 
 				return initConfigurationSuccess({
