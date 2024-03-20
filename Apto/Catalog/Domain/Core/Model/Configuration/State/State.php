@@ -642,7 +642,7 @@ class State implements AptoJsonSerializable, \JsonSerializable
     {
         foreach ($this->state as $state) {
             if ($state['elementId'] === $elementId->getId() && $state['repetition'] === $repetition) {
-                return !empty($state['elementId']['values']);
+                return !empty($state['values']);
             }
         }
         return false;

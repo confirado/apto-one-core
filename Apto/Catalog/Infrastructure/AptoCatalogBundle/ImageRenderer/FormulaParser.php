@@ -152,7 +152,6 @@ trait FormulaParser
      */
     private function getComputableValue(State $state, string $sectionId, string $elementId, string $selectableValue): ?string
     {
-        $stateArray = $state->getStateWithoutParameters();
         $sectionUuId = new AptoUuid($sectionId);
         $elementUuId = new AptoUuid($elementId);
 
