@@ -1,0 +1,172 @@
+<!-- Product condition identifier -->
+<div layout="row" layout-align="start" flex>
+    <pre ng-bind-html="selectedProductConditionElement | json | prettify"></pre>
+    <md-input-container flex data-cy="condition-name">
+        <label>Identifier:</label>
+        <input ng-model="newConditionIdentifier.value">
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- Type selection -->
+    <md-input-container flex data-cy="condition-type">
+        <label>Type:</label>
+        <md-select
+            multiple="false"
+            ng-model="$parent.conditionType"
+            ng-model-options="{trackBy: '$value.id'}"
+            ng-change="onChangeProductConditionType()"
+        >
+            <md-option ng-repeat="type in $parent.conditionTypes" ng-value="type">
+                {{type.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <!-- Had to use ng-hide, because ng-if resulted in some weird behaviour -->
+
+    <!-- section select box -->
+    <md-input-container flex ng-hide="$parent.conditionType.id !== 0" data-cy="condition-section">
+        <label>Sektion:</label>
+        <md-select
+            multiple="true"
+            ng-model="$parent.selectedProductConditionSection"
+            ng-model-options="{trackBy: '$value.id'}"
+            ng-change="onChangeSelectedProductConditionSection()"
+        >
+            <md-option ng-repeat="section in sectionsElements" ng-value="section">
+                {{section.identifier}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- element select box -->
+    <md-input-container flex ng-hide="$parent.conditionType.id !== 0" data-cy="condition-element">
+        <label>Element:</label>
+        <md-select
+            multiple="true"
+            ng-disabled="$parent.selectedProductConditionSection === null || $parent.selectedProductConditionSection[0].elements.length <= 0 || $parent.selectedProductConditionSection.length !== 1"
+            ng-model="$parent.selectedProductConditionElement"
+            ng-model-options="{trackBy: '$value.id'}"
+            ng-change="onChangeSelectedProductConditionElement()"
+        >
+            <md-option ng-if="$parent.selectedProductConditionSection[0]" ng-repeat="element in $parent.selectedProductConditionSection[0].elements" ng-value="element">
+                {{element.identifier}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- properties select box -->
+    <md-input-container flex ng-hide="$parent.conditionType.id !== 0" data-cy="condition-properties">
+        <label>Feld:</label>
+        <md-select
+            multiple="true"
+            ng-disabled="$parent.selectableProductConditionProperties === null || $parent.selectedProductConditionElement.length !== 1"
+            ng-model="$parent.selectedProductConditionProperty"
+            ng-change="onChangeSelectedProductConditionProperty()"
+        >
+            <md-option ng-repeat="property in $parent.selectableProductConditionProperties" ng-value="property">
+                {{property}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- computedValues select box -->
+    <md-input-container flex ng-hide="$parent.conditionType.id !== 1" data-cy="condition-computed-value">
+        <label>Berechneter Wert:</label>
+        <md-select
+            multiple="false"
+            ng-model="$parent.selectedProductConditionComputedValue"
+            ng-model-options="{trackBy: '$value.id'}"
+        >
+            <md-option ng-repeat="value in $parent.computedValues" ng-value="value">
+                {{value.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- operator select box -->
+    <md-input-container flex data-cy="condition-operator">
+        <label>Operator:</label>
+        <md-select
+            multiple="false"
+            ng-model="$parent.selectedProductConditionOperator"
+            ng-model-options="{trackBy: '$value.id'}"
+            ng-change="onChangeSelectedProductConditionOperator()"
+        >
+            <md-option ng-repeat="operator in $parent.selectableProductConditionOperators" ng-value="operator">
+                {{operator.name}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- value text field -->
+    <md-input-container flex data-cy="condition-value">
+        <label>Wert:</label>
+        <input ng-disabled="$parent.selectedProductConditionOperator === null || $parent.selectedProductConditionOperator.id === 0 || $parent.selectedProductConditionOperator.id === 1" ng-model="$parent.selectedProductConditionValue">
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- add button -->
+    <md-input-container>
+        <md-button ng-disabled="!isValidProductCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
+        <md-button ng-disabled="!isValidProductCondition()" ng-if="currentProductConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
+        <md-button ng-disabled="!currentProductConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetProductConditionForm()" data-cy="condition-reset-button">
+            <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
+        </md-button>
+    </md-input-container>
+</div>
+
+<md-table-container class="md-whiteframe-2dp" data-cy="conditions-table">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Sektion/Type</th>
+            <th md-column>Element</th>
+            <th md-column>Feld</th>
+            <th md-column>Operator</th>
+            <th md-column>Wert</th>
+            <th md-column style="width: 170px;"></th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="condition in conditions">
+            <td ng-if="conditions.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
+            <td ng-if="conditions.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
+            <td ng-if="conditions.type === 0" md-cell>{{ condition.property }}</td>
+            <td ng-if="conditions.type === 1" md-cell>Berechneter Wert</td>
+            <td ng-if="conditions.type === 1" md-cell></td>
+            <td ng-if="conditions.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>
+            <td md-cell>{{ getOperatorName(condition.operator) }}</td>
+            <td md-cell>{{ condition.value }}</td>
+            <td md-cell>
+                <md-button
+                    title="Bearbeiten"
+                    class="md-icon-button md-primary"
+                    ng-click="updateCondition(condition.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+
+                <md-button
+                    title="Kopieren"
+                    class="md-icon-button md-primary"
+                    ng-click="copyCondition(condition.id)"
+                >
+                    <md-icon md-font-set="fa">&#xf24d</md-icon>
+                </md-button>
+
+                <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    apto-confirm-remove="removeCondition(condition.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

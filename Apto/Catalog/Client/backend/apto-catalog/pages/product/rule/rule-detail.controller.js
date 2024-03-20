@@ -19,7 +19,7 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             sections: state.rule.sections,
             conditions: state.rule.conditions,
             implications: state.rule.implications,
-            computedValues: state.product.computedValues
+            computedValues: state.product.computedValues,
         }
     };
 

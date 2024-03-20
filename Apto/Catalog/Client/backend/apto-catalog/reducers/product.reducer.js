@@ -380,6 +380,13 @@ const ProductReducer = function(AptoReducersProvider) {
                     }
                 });
                 return newState;
+            case getType('FETCH_GLOBAL_CONDITIONS_FULFILLED'):
+                newState = update(state, {
+                    globalConditions: {
+                        $set: action.payload.data.result.globalConditions
+                    }
+                });
+                return newState;
             case getType('SET_DETAIL_VALUE'):
                 let detailUpdate = {};
                 detailUpdate[action.payload.key] = {

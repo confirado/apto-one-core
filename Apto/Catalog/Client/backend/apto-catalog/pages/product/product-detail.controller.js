@@ -8,7 +8,7 @@ import ComputedValuesTab from './computed-values-tab.html';
 import DiscountTab from './discount-tab.html';
 import CustomPropertiesTab from './custom-properties-tab.html';
 import FilterPropertyTab from './filter-properties-tab.html';
-import GlobalConditionTab from './global-condition-tab.html'
+import ConditionTab from './condition-tab.html'
 
 import SectionDetailTemplate from './section/section-detail.controller.html';
 import SectionDetailController from './section/section-detail.controller';
@@ -31,7 +31,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $templateCache.put('catalog/pages/product/discount-tab.html', DiscountTab);
     $templateCache.put('catalog/pages/product/custom-properties-tab.html', CustomPropertiesTab);
     $templateCache.put('catalog/pages/product/filter-properties-tab.html', FilterPropertyTab);
-    $templateCache.put('catalog/pages/product/global-condition-tab.html', GlobalConditionTab);
+    $templateCache.put('catalog/pages/product/condition-tab.html', ConditionTab);
 
     const subscribedActions = $ngRedux.connect(mapState, {
         productsFetch: ProductActions.productsFetch,
@@ -49,6 +49,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addProductCustomProperty: ProductActions.addProductCustomProperty,
         removeProductCustomProperty: ProductActions.removeProductCustomProperty,
         fetchSections: ProductActions.fetchSections,
+        fetchSectionsElements: ProductActions.fetchSectionsElements,
         fetchRules: ProductActions.fetchRules,
         fetchPrices: ProductActions.fetchPrices,
         fetchDiscounts: ProductActions.fetchDiscounts,
@@ -70,8 +71,11 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addComputedProductValue: ProductActions.addComputedProductValue,
         fetchComputedProductValues: ProductActions.fetchComputedProductValues,
         removeComputedProductValue: ProductActions.removeComputedProductValue,
-
-
+        fetchProductConditions: ProductActions.fetchProductConditions,
+        addProductCondition: ProductActions.addProductCondition,
+        updateProductCondition: ProductActions.updateProductCondition,
+        copyProductCondition: ProductActions.copyProductCondition,
+        removeProductCondition: ProductActions.removeProductCondition,
     })($scope);
 
     function mapState(state) {
@@ -82,8 +86,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             availableCustomerGroups: state.product.availableCustomerGroups,
             availablePriceCalculators: state.product.availablePriceCalculators,
             sections: state.product.sections,
+            sectionsElements: state.product.sectionsElements,
             rules: state.product.rules,
-            globaleCondition: state.product.globaleCondition,
+            conditions: state.product.conditions,
+            operatorsActive: state.rule.operatorsActive,
+            operatorsEqual: state.rule.operatorsEqual,
+            operatorsFull: state.rule.operatorsFull,
             computedValues: state.product.computedValues,
             prices: state.product.prices,
             discounts: state.product.discounts,
@@ -100,8 +108,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                 initDomainPropsMultiplierHints();
             });
             $scope.fetchSections(productId);
+            $scope.fetchSectionsElements(productId);
             $scope.fetchRules(productId);
-            $scope.fetchGlobaleCondition(productId);
+            $scope.fetchProductConditions(productId);
             $scope.fetchComputedProductValues(productId);
             $scope.fetchPrices(productId);
             $scope.fetchDiscounts(productId);
@@ -115,6 +124,32 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                 $scope.productDetail.position = angular.copy($scope.nextPosition);
             });
         }
+
+        $scope.conditionTypes = [
+            {
+                name: 'Standard',
+                id: 0
+            },
+            {
+                name: 'Berechneter Wert',
+                id: 1
+            }
+        ];
+
+        $scope.conditionType = {
+            name: 'Standard',
+            id: 0
+        };
+
+        $scope.currentProductConditionIdentifier = null;
+        $scope.selectableProductConditionProperties = null;
+        $scope.selectableProductConditionOperators = $scope.operatorsActive;
+        $scope.selectedProductConditionSection = null;
+        $scope.selectedProductConditionElement = null;
+        $scope.selectedProductConditionProperty = null;
+        $scope.selectedProductConditionOperator = null;
+        $scope.selectedProductConditionValue = '';
+        $scope.selectedProductConditionComputedValue = null;
     }
 
     function assignDefaultShop() {
@@ -389,6 +424,350 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         }
     }
 
+    function onChangeProductConditionType() {
+        if ($scope.conditionTypes.id === 1) {
+            $scope.selectableProductConditionOperators = $scope.operatorsEqual;
+        }
+    }
+
+    function onChangeSelectedProductConditionSection() {
+        console.error($scope.selectedProductConditionSection)
+        if ($scope.selectedProductConditionSection && $scope.selectedProductConditionSection.length === 0) {
+            $scope.selectedProductConditionSection = null;
+        }
+        $scope.selectedProductConditionElement = null;
+        $scope.selectedProductConditionProperty = null;
+        $scope.selectedProductConditionOperator = null;
+        $scope.selectableProductConditionProperties = null;
+        $scope.selectableProductConditionOperators = $scope.operatorsActive;
+    }
+
+    function onChangeSelectedProductConditionElement() {
+        if ($scope.selectedProductConditionElement && $scope.selectedProductConditionElement.length === 0) {
+            $scope.selectedProductConditionElement = null;
+        }
+        $scope.selectedProductConditionProperty = null;
+        $scope.selectedProductConditionOperator = null;
+        if ($scope.selectedProductConditionElement && $scope.selectedProductConditionElement.length === 1) {
+            $scope.selectableProductConditionProperties = getElementSelectableProperties($scope.selectedProductConditionElement[0].definition);
+        }
+        $scope.selectableProductConditionOperators = $scope.operatorsActive;
+    }
+
+    function onChangeSelectedProductConditionProperty() {
+        if ($scope.selectedProductConditionProperty && $scope.selectedProductConditionProperty.length === 0) {
+            $scope.selectedProductConditionProperty = null;
+        }
+        $scope.selectedProductConditionOperator = null;
+        if ($scope.selectedProductConditionProperty !== null) {
+            $scope.selectableProductConditionOperators = $scope.operatorsEqual;
+        } else {
+            $scope.selectableProductConditionOperators = $scope.operatorsActive;
+        }
+    }
+
+    function onChangeSelectedProductConditionOperator() {
+        if ($scope.selectedProductConditionOperator.id === 0 || $scope.selectedProductConditionOperator.id === 1) {
+            $scope.selectedProductConditionValue = '';
+        }
+    }
+
+    function getElementSelectableProperties(definitionClass) {
+        console.error('definitionClass'+definitionClass);
+        if (!definitionClass.properties) {
+            console.error('Keine Props')
+            return null;
+        }
+        return Object.keys(definitionClass.properties);
+    }
+
+    function addProductCondition() {
+        const conditions = getValidProductConditions();
+
+        if (false !== conditions) {
+            let calledCommands = [];
+
+            for (let i = 0; i < conditions.length; i++) {
+                calledCommands.push($scope.addProductCondition(productId, conditions[i]));
+            }
+
+            Promise.all(calledCommands).then((values) => {
+                $scope.fetchConditions(productId);
+            });
+
+            resetSelectedProductCondition();
+        }
+        // @todo show error message
+        return false;
+    }
+
+    function saveCondition() {
+        const condition = {
+            computedProductValueId: $scope.selectedProductConditionComputedValue ? $scope.selectedProductConditionComputedValue.id : null,
+            elementId: $scope.selectedProductConditionElement ? $scope.selectedProductConditionElement[0].id : null,
+            identifier: $scope.currentProductConditionIdentifier,
+            operatorId: $scope.selectedProductConditionOperator ? $scope.selectedProductConditionOperator.id : null,
+            property: $scope.selectedProductConditionProperty ? $scope.selectedProductConditionProperty[0] : null,
+            sectionId: $scope.selectedProductConditionSection ? $scope.selectedProductConditionSection[0].id : null,
+            typeId: $scope.conditionType.id,
+            value: $scope.selectedProductConditionValue,
+        }
+
+        $scope.updateProductCondition(productId, condition).then(() => {
+            $scope.fetchConditions(productId);
+            resetSelectedProductCondition();
+            $scope.currentProductConditionId = null;
+        });
+    }
+
+    function updateCondition(conditionId) {
+
+        $scope.currentProductConditionIdentifier = conditionId;
+
+        $scope.fetchSections(productId).then(() => {
+            $scope.conditions.forEach(condition => {
+                if (condition.id === conditionId) {
+                    // sections
+                    if (condition.type === 0) {
+                        // Type
+                        $scope.conditionType = {
+                            name: 'Standard',
+                            id: 0
+                        }
+                        $scope.onChangeProductConditionType();
+
+                        // section
+                        $scope.selectedProductConditionSection = [getSection(condition.sectionId)];
+                        onChangeSelectedProductConditionSection();
+
+                        // element
+                        const element = getElement(condition.sectionId, condition.elementId);
+                        if (element) {
+                            $scope.selectedProductConditionElement = [element];
+                            onChangeSelectedProductConditionElement();
+                        }
+                        // berechnete werte
+                    } else {
+                        $scope.conditionType = {
+                            name: 'Berechneter Wert',
+                            id: 1
+                        }
+                        $scope.onChangeProductConditionType();
+
+                        $scope.selectedProductConditionComputedValue = condition.computedProductValue[0];
+                    }
+
+                    // field
+                    const property = condition.property;
+                    if (property) {
+                        $scope.selectedProductConditionProperty = [property];
+                        onChangeSelectedProductConditionProperty();
+                    }
+
+                    // operator
+                    $scope.selectedProductConditionOperator = getOperator(condition.operator);
+                    onChangeSelectedProductConditionOperator();
+
+                    // value
+                    $scope.selectedProductConditionValue = condition.value;
+                }
+            });
+        });
+    }
+
+    function copyCondition(conditionId) {
+        $scope.copyProductCondition(productId, conditionId).then(() => {
+            $scope.fetchProductConditions(productId);
+        })
+    }
+
+    function removeCondition(conditionId) {
+        $scope.removeProductCondition(productId, conditionId).then(() => {
+            $scope.fetchProductConditions(productId);
+        })
+    }
+
+    function getValidProductConditions() {
+        if (isValidProductCondition()) {
+            // init conditions array
+            let conditions = [];
+
+            // if computedValue
+            if ($scope.conditionType.id === 1) {
+                return [{
+                    conditionId: $scope.condition.id,
+                    identifier: $scope.currentProductConditionIdentifier,
+                    type: $scope.conditionType.id,
+                    operator: $scope.selectedProductConditionOperator.id,
+                    computedValue: $scope.selectedProductConditionComputedValue.id,
+                    value: $scope.selectedProductConditionValue
+                }]
+            }
+
+            // if more then one section is selected only section conditions will be returned
+            if ($scope.selectedProductConditionSection.length > 1) {
+                for (let i = 0; i < $scope.selectedProductConditionSection.length; i++) {
+                    const section = $scope.selectedProductConditionSection[i];
+
+                    conditions.push({
+                        identifier: $scope.currentProductConditionIdentifier,
+                        sectionId: section.id,
+                        elementId: null,
+                        property: null,
+                        operator: $scope.selectedProductConditionOperator.id,
+                        value: ''
+                    });
+                }
+
+                return conditions;
+            }
+
+            // check if one section is selected
+            if (!$scope.selectedProductConditionSection[0]) {
+                return false;
+            }
+
+            // if only one section is selected this section is for all selected elements
+            const section = $scope.selectedProductConditionSection[0];
+
+            // if no element is selected add single section
+            if(null === $scope.selectedProductConditionElement) {
+                return [{
+                    conditionId: $scope.condition.id,
+                    identifier: $scope.currentProductConditionIdentifier,
+                    sectionId: section.id,
+                    elementId: null,
+                    property: null,
+                    operator: $scope.selectedProductConditionOperator.id,
+                    value: $scope.selectedProductConditionValue
+                }];
+            }
+
+            // if more then one element is selected only section->element conditions will be returned
+            if ($scope.selectedProductConditionElement.length > 1) {
+                for (let i = 0; i < $scope.selectedProductConditionElement.length; i++) {
+                    const element = $scope.selectedProductConditionElement[i];
+
+                    conditions.push({
+                        conditionId: $scope.condition.id,
+                        identifier: $scope.currentProductConditionIdentifier,
+                        sectionId: section.id,
+                        elementId: element.id,
+                        property: null,
+                        operator: $scope.selectedProductConditionOperator.id,
+                        value: ''
+                    });
+                }
+
+                return conditions;
+            }
+
+            // check if one element is selected
+            if (!$scope.selectedProductConditionElement[0]) {
+                return false;
+            }
+
+            // if only one element is selected this element is for all selected properties
+            const element = $scope.selectedProductConditionElement[0];
+
+            // if no property is selected add single section->element
+            if(null === $scope.selectedProductConditionProperty) {
+                return [{
+                    conditionId: $scope.condition.id,
+                    identifier: $scope.currentProductConditionIdentifier,
+                    sectionId: section.id,
+                    elementId: element.id,
+                    property: null,
+                    operator: $scope.selectedProductConditionOperator.id,
+                    value: $scope.selectedProductConditionValue
+                }];
+            }
+
+            // if more then one property is selected only section->element->property conditions will be returned
+            if ($scope.selectedProductConditionProperty.length > 1) {
+                for (let i = 0; i < $scope.selectedProductConditionProperty.length; i++) {
+                    const property = $scope.selectedProductConditionProperty[i];
+
+                    conditions.push({
+                        conditionId: $scope.condition.id,
+                        identifier: $scope.currentProductConditionIdentifier,
+                        sectionId: section.id,
+                        elementId: element.id,
+                        property: property,
+                        operator: $scope.selectedProductConditionOperator.id,
+                        value: $scope.selectedProductConditionValue
+                    });
+                }
+
+                return conditions;
+            }
+
+            // check if one property is selected
+            if (!$scope.selectedProductConditionProperty[0]) {
+                return false;
+            }
+
+            // add one single section->element->property condition
+            const property = $scope.selectedProductConditionProperty[0];
+            return [{
+                conditionId: $scope.condition.id,
+                identifier: $scope.currentProductConditionIdentifier,
+                sectionId: section.id,
+                elementId: element.id,
+                property: property,
+                operator: $scope.selectedProductConditionOperator.id,
+                value: $scope.selectedProductConditionValue
+            }];
+        }
+
+        // return false if no condition can be created
+        return false;
+    }
+
+    function isValidProductCondition() {
+        if ($scope.conditionType.id === 0) {
+            if (
+                (null === $scope.selectedConditionElement && null !== $scope.selectedConditionProperty)
+                || null === $scope.selectedP
+                || null === $scope.selectedConditionSection
+                || null === $scope.selectedConditionOperator
+            ) {
+                return false;
+            }
+        }
+        if ($scope.conditionType.id === 1) {
+            if (
+                null === $scope.selectedConditionComputedValue
+                || null === $scope.selectedConditionOperator
+                || '' === $scope.selectedConditionValue
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function resetSelectedProductCondition() {
+        $scope.currentProductConditionIdentifier = null;
+        $scope.selectableProductConditionProperties = null;
+        $scope.selectableProductConditionOperators = $scope.operatorsActive;
+        $scope.selectedProductConditionSection = null;
+        $scope.selectedProductConditionElement = null;
+        $scope.selectedProductConditionProperty = null;
+        $scope.selectedProductConditionOperator = null;
+        $scope.selectedProductConditionComputedValue = null;
+        $scope.selectedProductConditionValue = '';
+        $scope.conditionType = {
+            name: 'Standard',
+            id: 0
+        };
+    }
+
+    function resetProductConditionForm() {
+        resetSelectedProductCondition();
+        $scope.currentConditionId = null;
+    }
+
     function close() {
         $scope.productDetailReset();
         $scope.productsFetch(
@@ -411,6 +790,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.newRuleName = {
         value: ''
     };
+    $scope.newConditionIdentifier = {
+        value: ''
+    }
     $scope.newComputedValue = {
         name: ''
     };
@@ -465,6 +847,21 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.updateMultiplierHint = updateMultiplierHint;
     $scope.onSelectDomainPreviewImage = onSelectDomainPreviewImage;
     $scope.save = save;
+
+    $scope.onChangeProductConditionType = onChangeProductConditionType;
+    $scope.onChangeSelectedProductConditionSection = onChangeSelectedProductConditionSection;
+    $scope.onChangeSelectedProductConditionElement = onChangeSelectedProductConditionElement;
+    $scope.onChangeSelectedProductConditionProperty = onChangeSelectedProductConditionProperty;
+    $scope.onChangeSelectedProductConditionOperator = onChangeSelectedProductConditionOperator;
+
+    $scope.addProductCondition = addProductCondition;
+    $scope.copyCondition = copyCondition;
+    $scope.updateCondition = updateCondition;
+    $scope.removeCondition = removeCondition;
+    $scope.saveCondition = saveCondition;
+    $scope.isValidProductCondition = isValidProductCondition;
+    $scope.resetProductConditionForm = resetProductConditionForm;
+
     $scope.close = close;
 
     $scope.$on('$destroy', subscribedActions);
