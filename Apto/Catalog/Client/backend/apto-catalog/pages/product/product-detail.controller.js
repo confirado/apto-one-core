@@ -431,7 +431,6 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function onChangeSelectedProductConditionSection() {
-        console.error($scope.selectedProductConditionSection)
         if ($scope.selectedProductConditionSection && $scope.selectedProductConditionSection.length === 0) {
             $scope.selectedProductConditionSection = null;
         }
@@ -473,9 +472,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function getElementSelectableProperties(definitionClass) {
-        console.error('definitionClass'+definitionClass);
         if (!definitionClass.properties) {
-            console.error('Keine Props')
             return null;
         }
         return Object.keys(definitionClass.properties);
