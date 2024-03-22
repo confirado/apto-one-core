@@ -21,6 +21,10 @@
             border-radius: var(--border-radius-card);
             max-width: calc(100vw - var(--element-gap));
             overflow: visible; // when hidden popups in material picker element are not visible on second material
+
+            &.element-is-disabled .element-inner {
+                opacity: 0.25;
+            }
         }
     }
 
