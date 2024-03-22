@@ -3,6 +3,12 @@
 
 :host {
     @include input-host();
+
+    &.ng-invalid.ng-dirty {
+        .container {
+            border: 1px solid var(--color-warn) !important;
+        }
+    }
 }
 
 .text-input-field {

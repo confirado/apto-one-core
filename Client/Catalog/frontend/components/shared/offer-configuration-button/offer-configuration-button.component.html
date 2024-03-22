@@ -1,0 +1,19 @@
+<div class="offer-configuration-button">
+    <div class="buttons">
+        <button *ngIf="aptoSliderAction$ | async | contentSnippet: 'save'"
+                (click)="openModal()"
+                class="save-button"
+                color="accent"
+                mat-flat-button
+        >
+            <mat-icon>bookmark</mat-icon><span>{{ aptoSummary$ | async | contentSnippet: 'requestOffer' }}</span>
+        </button>
+    </div>
+
+    <div class="info">
+        <div>
+            <mat-icon>info</mat-icon>
+        </div>
+        <p>{{ sidebarSummary$ | async | contentSnippet: 'offerNotification' }}</p>
+    </div>
+</div>

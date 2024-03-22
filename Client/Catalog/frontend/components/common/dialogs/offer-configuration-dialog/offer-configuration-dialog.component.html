@@ -1,0 +1,70 @@
+<div class="offer-configuration-dialog" [attr.type]="'custom'">
+    <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
+
+    <ng-container *ngIf="!offerConfigurationSent">
+        <h1>{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'beforeSave.header' }}</h1>
+
+        <mat-divider></mat-divider>
+
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <mat-dialog-content>
+                <apto-loading-indicator *ngIf="selectLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
+
+                <p>{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'beforeSave.info' }}</p>
+
+                <apto-input-field
+                    [fullWidth]="true"
+                    [name]="AptoOfferConfigurationDialog$ | async | contentSnippet: 'form.mail'"
+                    [type]="'text'"
+                    formControlName="email"
+                    required
+                    [class.invalid]="!formGroup.get('email').valid && formGroup.get('email').touched"
+                ></apto-input-field>
+
+                <apto-input-field [fullWidth]="true" [name]="AptoOfferConfigurationDialog$ | async | contentSnippet: 'form.name'" [type]="'text'" formControlName="name"></apto-input-field>
+
+                <ng-container *ngFor="let field of extraFormFields.children">
+                    <ng-container *ngIf="typeAttr(field) !== 'textarea'">
+                        <apto-input-field
+                            [fullWidth]="true"
+                            [type]="'text'"
+                            [name]="labelAttr(field)"
+                            [formControlName]="nameAttr(field)"
+                            [required]="requiredAttr(field)"
+                        ></apto-input-field>
+                    </ng-container>
+
+                    <ng-container *ngIf="typeAttr(field) === 'textarea'">
+                        <apto-text-input-field
+                            [name]="labelAttr(field)"
+                            [formControlName]="nameAttr(field)"
+                            [required]="requiredAttr(field)"
+                            [rows]="2"
+                        ></apto-text-input-field>
+                    </ng-container>
+                </ng-container>
+            </mat-dialog-content>
+
+            <mat-dialog-actions>
+                <button mat-flat-button color="accent" [mat-dialog-close]="true" type="button">{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'form.cancel' }}</button>
+                <button mat-flat-button color="primary" type="submit" [disabled]="!isFormValid">{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'form.submit' }}</button>
+            </mat-dialog-actions>
+        </form>
+    </ng-container>
+
+    <ng-container *ngIf="offerConfigurationSent">
+        <h1>{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'afterSave.header' }}</h1>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-content>
+            <p>{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'afterSave.info' }}</p>
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-dialog-actions>
+            <button mat-flat-button color="accent" type="button" [mat-dialog-close]="true">{{ AptoOfferConfigurationDialog$ | async | contentSnippet: 'afterSave.close' }}</button>
+        </mat-dialog-actions>
+    </ng-container>
+</div>

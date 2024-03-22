@@ -23,6 +23,8 @@
 			<apto-sidebar-summary-progress [progress]="progress$ | async"></apto-sidebar-summary-progress>
 			<apto-sidebar-summary-button></apto-sidebar-summary-button>
 
+            <apto-offer-configuration-button *ngIf="isOfferConfigurationEnabled" [product]="product"></apto-offer-configuration-button>
+
             <apto-slot-outlet identifier="sidebar-summary-sbs-bottom" [product]="product"></apto-slot-outlet>
         </div>
 	</ng-container>

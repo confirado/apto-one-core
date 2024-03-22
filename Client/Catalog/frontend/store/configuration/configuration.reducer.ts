@@ -1,8 +1,9 @@
 import {
+  addOfferConfiguration, addOfferConfigurationSuccess,
   addToBasket, addToBasketSuccess,
   createLoadingFlagAction, fetchPartsListSuccess,
   getConfigurationStateSuccess,
-  getCurrentRenderImageSuccess,
+  getCurrentRenderImageSuccess, getElementComputableValuesSuccess,
   getRenderImagesSuccess, getStatePriceSuccess, hideLoadingFlagAction,
   humanReadableStateLoadSuccess,
   initConfigurationSuccess,
@@ -155,6 +156,24 @@ const _configurationReducer = createReducer(
 		...state,
 		renderImages: action.payload.renderImages,
 	})),
+  on(addOfferConfiguration, (state, action) => {
+    return {
+      ...state,
+      loading: true,
+    }
+  }),
+  on(addOfferConfigurationSuccess, (state, action) => {
+    return {
+      ...state,
+      loading: false,
+    }
+  }),
+  on(getElementComputableValuesSuccess, (state, action) => {
+    return {
+      ...state,
+      searchMapping: action.payload.searchMapping
+    }
+  }),
 	on(humanReadableStateLoadSuccess, (state, action) => ({
 		...state,
 		humanReadableState: action.payload,

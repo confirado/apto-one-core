@@ -4,6 +4,12 @@
 
 :host {
     @include input-host();
+
+    &.ng-invalid.ng-dirty {
+        .container-elem {
+            border: 1px solid var(--color-warn) !important;
+        }
+    }
 }
 
 .input-field {
@@ -19,7 +25,7 @@
         @include prefix();
     }
 
-    .container {
+    .container-elem {
         grid-area: container;
         @include container();
 
