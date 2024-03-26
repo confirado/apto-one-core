@@ -1,17 +1,19 @@
-import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { translate, TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
   PartsListPart,
   ProgressState,
   ProgressStep,
   RenderImage,
-  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses, ElementState,
+  RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses, ElementState, SectionTypes, HumanReadableFullState,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';
 import { TempStateItem } from './configuration.model';
 import { ProductState } from '../product/product.reducer';
+
+import { getHumanReadableFullState } from '@apto-catalog-frontend/services/store-utilities';
 
 export const selectConfiguration = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration);
 
@@ -393,6 +395,10 @@ export const selectElementValues = (element: Element): any =>
 
 export const selectHumanReadableState = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.humanReadableState);
 
+export const selectHumanReadableFullState = createSelector(featureSelector, selectLocale, selectHumanReadableState, (state: CatalogFeatureState, locale: string | null, configurationHumanReadableState): HumanReadableFullState[] => {
+  return getHumanReadableFullState(state, locale, configurationHumanReadableState);
+});
+
 export const selectCurrentProductElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
   let currentStepId = null;
   if (state.configuration.currentStep) {
@@ -433,6 +439,10 @@ export const selectStateElements = createSelector(featureSelector, (state: Catal
 
 export const selectStateActiveElements = createSelector(featureSelector, (state: CatalogFeatureState) => {
   return state.configuration.state.elements.filter((e: ElementState) => e.active);
+});
+
+export const selectElementComputableValues = createSelector(featureSelector, (state: CatalogFeatureState): any => {
+  return state.configuration['searchMapping'];
 });
 
 export const configurationIsValid = createSelector(featureSelector, (state: CatalogFeatureState) => {

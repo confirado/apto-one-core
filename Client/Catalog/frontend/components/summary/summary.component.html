@@ -48,6 +48,8 @@
                             {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
                         </button>
                     </div>
+
+                    <apto-offer-configuration-button *ngIf="isOfferConfigurationEnabled" [product]="product"></apto-offer-configuration-button>
                 </div>
             </div>
         </form>

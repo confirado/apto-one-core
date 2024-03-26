@@ -3,7 +3,7 @@ import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
   AddBasketConfigurationArguments,
-  AddGuestConfigurationArguments,
+  AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
   ComputedValues,
   Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
   RenderImage, StatePrice, UpdateBasketConfigurationArguments,
@@ -79,6 +79,16 @@ export class ConfigurationRepository {
 			params.payload
 		);
 	}
+
+  public addOfferConfiguration(params: AddOfferConfigurationArguments): Observable<unknown> {
+    return this.catalogMessageBusService.addOfferConfiguration(
+      params.productId,
+      params.compressedState,
+      params.email,
+      params.name,
+      params.payload
+    );
+  }
 
   public fetchPartsList(params: FetchPartsListArguments): Observable<PartsListPart[]> {
     return this.catalogMessageBusService.fetchPartsList(

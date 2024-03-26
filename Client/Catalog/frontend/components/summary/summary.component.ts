@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { environment } from '@apto-frontend/src/environments/environment';
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 
 @Component({
 	selector: 'apto-summary',
@@ -20,7 +21,11 @@ export class SummaryComponent implements OnDestroy {
   private subscriptions: Subscription[] = [];
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
-	public product$ = this.store.select(selectProduct);
+  protected readonly AptoOfferConfigurationDialog$ = this.store.select(selectContentSnippet('AptoOfferConfigurationDialog'));
+  protected readonly locale$ = this.store.select(selectLocale);
+  private locale = 'de_DE';
+  protected isOfferConfigurationEnabled = false;
+  public product$ = this.store.select(selectProduct);
 	public configuration$ = this.store.select(selectConfiguration);
 	public readonly sumPrice$ = this.store.select(selectSumPrice);
   public quantityInputGroup = new FormGroup({
@@ -39,6 +44,18 @@ export class SummaryComponent implements OnDestroy {
       if (!c.loading && c.state.sections.length === 0) {
         router.navigate(['..'], { relativeTo: activatedRoute });
       }
+    });
+
+    this.locale$.subscribe((next) => {
+      this.locale = next;
+    });
+
+    this.AptoOfferConfigurationDialog$.subscribe((data) => {
+      data.children.forEach((dialogItem) => {
+        if (dialogItem.name === 'enabled') {
+          this.isOfferConfigurationEnabled = dialogItem.content[this.locale] === 'true';
+        }
+      });
     });
 
     this.renderImageService.init();

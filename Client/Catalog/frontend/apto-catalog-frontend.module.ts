@@ -72,6 +72,8 @@ import { SbsStepsComponent } from '@apto-catalog-frontend-sbs-steps';
 import { SbsStepComponent } from '@apto-catalog-frontend-sbs-step';
 import { AptoCatalogFrontendCustomModule } from '@apto-catalog-frontend-custom-module';
 import { ElementAttachmentComponent } from '@apto-catalog-frontend/components/common/element-attachment/element-attachment.component';
+import { OfferConfigurationButtonComponent } from '@apto-catalog-frontend/components/shared/offer-configuration-button/offer-configuration-button.component';
+import { OfferConfigurationDialogComponent } from "@apto-catalog-frontend/components/common/dialogs/offer-configuration-dialog/offer-configuration-dialog.component";
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -90,6 +92,8 @@ RouterRegistry.registerRoutes(Routes);
 		SidebarSummaryPriceComponent,
 		SidebarSummaryRenderImageComponent,
 		SidebarSummaryButtonComponent,
+    OfferConfigurationButtonComponent,
+    OfferConfigurationDialogComponent,
 		QuantityInputComponent,
     QuantityInputEditableComponent,
     DiscountTagComponent,
@@ -159,7 +163,7 @@ RouterRegistry.registerRoutes(Routes);
 		OverlayModule,
 		MatRippleModule,
 		MatCheckboxModule,
-    AptoCatalogFrontendCustomModule
+    AptoCatalogFrontendCustomModule,
 	],
 	providers: [
     ProductRepository,
