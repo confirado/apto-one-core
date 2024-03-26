@@ -91,9 +91,17 @@ export const selectProgressState = createSelector(featureSelector, selectLocale,
 			}
 		}
 
-		if (cSection.mandatory && fulfilledElements.every((e) => e) && active) {
-			fulfilled = true;
-		}
+    // if section allows multiple elements then all mandatory elements must be selected, if not multiple then only one of them can be selected
+    // to consider the section as fulfilled, so we check section for active in that case (see above)
+    if (section.allowMultiple) {
+      if (cSection.mandatory && fulfilledElements.every((e) => e) && active) {
+        fulfilled = true;
+      }
+    } else {
+      if (cSection.mandatory && active) {
+        fulfilled = true;
+      }
+    }
 
     let currentStepId = null;
     let currentRepetition = 0;
