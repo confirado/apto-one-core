@@ -131,9 +131,10 @@ class ElementQueryHandler implements QueryHandlerInterface
         $state = new State($query->getState());
         $sectionId = new AptoUuid($query->getSectionId());
         $elementId = new AptoUuid($query->getElementId());
+        $repetition = $query->getRepetition();
 
         $element = $this->productElementFinder->findById($elementId->getId());
-        $elementState = $state->getElementState($sectionId, $elementId);
+        $elementState = $state->getElementState($sectionId, $elementId, $repetition);
 
         if (null === $element || null === $elementState || empty($elementState)) {
             return [];

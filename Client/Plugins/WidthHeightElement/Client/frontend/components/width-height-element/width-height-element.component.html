@@ -79,7 +79,9 @@
                     </apto-select-field>
                 </div>
 <!--                <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>-->
-                <div class="hint">{{element.element.definition.properties.height?.[0]?.minimum + ' - ' + element.element.definition.properties.height?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixHeight | translate)}}</div>
+                <div class="hint" *ngIf="element.element.definition.staticValues.renderingHeight !== 'select'">
+                    {{element.element.definition.properties.height?.[0]?.minimum + ' - ' + element.element.definition.properties.height?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixHeight | translate)}}
+                </div>
             </div>
         </div>
 
@@ -126,7 +128,9 @@
                     </apto-select-field>
                 </div>
 <!--                <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>-->
-                <div class="hint">{{element.element.definition.properties.width?.[0]?.minimum  + ' - ' + element.element.definition.properties.width?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate)}}</div>
+                <div class="hint" *ngIf="element.element.definition.staticValues.renderingWidth !== 'select'">
+                    {{element.element.definition.properties.width?.[0]?.minimum  + ' - ' + element.element.definition.properties.width?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate)}}
+                </div>
             </div>
         </div>
 
@@ -134,6 +138,8 @@
              *ngIf="(element.element.description | translate) !== ''"
              [innerHTML]="element.element.description | translate | safeHtml"
         ></div>
+
+        <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 
         <div class="apply-button">
             <button

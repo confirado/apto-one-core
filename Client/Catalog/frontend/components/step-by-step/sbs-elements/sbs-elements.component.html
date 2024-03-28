@@ -11,18 +11,20 @@
 			<div class="description" [innerHTML]="progressState.currentStep.section.description | translate | safeHtml"></div>
 		</div>
 
-        <div class="element-list">
+        <div class="element-list section-{{ progressState.currentStep.section.identifier }}">
             <ng-container *ngFor="let element of currentProductElements$ | async">
-                <div class="element" *ngIf="getProgressElement(element.id) as pElement">
-                    <ng-container *ngIf="product$ | async as product">
-                        <apto-slot-outlet
-                            *ngIf="!isElementDisabled(element.id, element.sectionRepetition) || !product.keepSectionOrder"
-                            [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
-                            [product]="product$ | async"
-                            [section]="progressState.currentStep.section"
-                            [element]="pElement"
-                        ></apto-slot-outlet>
-                    </ng-container>
+                <div class="element" *ngIf="getProgressElement(element.id) as pElement" [class.element-is-disabled]="isElementDisabled(element.id, element.sectionRepetition)">
+                    <div class="element-inner">
+                        <ng-container *ngIf="product$ | async as product">
+                            <apto-slot-outlet
+                                *ngIf="!isElementDisabled(element.id, element.sectionRepetition) || !product.keepSectionOrder"
+                                [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
+                                [product]="product$ | async"
+                                [section]="progressState.currentStep.section"
+                                [element]="pElement"
+                            ></apto-slot-outlet>
+                        </ng-container>
+                    </div>
                 </div>
             </ng-container>
         </div>

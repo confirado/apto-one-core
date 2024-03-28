@@ -245,6 +245,20 @@
     },
     "shoppingCartHeadline": {
       "de_DE": "Warenkorb"
+    },
+    "clearCartConfirmation": {
+      "confirm": {
+        "de_DE": "Warenkorb leeren"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
+      },
+      "title": {
+        "de_DE": "Warenkorb leeren?"
+      },
+      "text": {
+        "de_DE": "Möchten Sie wirklich den gesamten Warenkorb leeren?"
+      }
     }
   },
   "AptoGuestConfigurationDialog": {
@@ -347,6 +361,9 @@
       },
       "submit": {
         "de_DE": "Anfragen"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
       },
       "name": {
         "de_DE": "Name"

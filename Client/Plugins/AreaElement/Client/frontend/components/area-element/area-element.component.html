@@ -63,11 +63,11 @@
                     <div *ngIf="field.key === 'sumOfFieldValue'"><b>Summe aller felder</b></div>
                 </div>
 
-                <div class="hint" *ngIf="field.key !== 'sumOfFieldValue'">
+                <div class="hint" *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
                     {{element.element.definition.properties['field_'+i][0].minimum + ' - ' + element.element.definition.properties['field_'+i][0].maximum + ' ' + (element.element.definition.staticValues.fields?.[i]?.suffix |translate)}}
                 </div>
 
-                <div class="hint" *ngIf="field.key === 'sumOfFieldValue'">
+                <div class="hint" *ngIf="field.key === 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
                     <div *ngIf="field.key === 'sumOfFieldValue'">{{sumOfFieldValues}}</div>
                     {{element.element.definition.properties['sumOfFieldValue'][0].minimum + ' - ' + element.element.definition.properties['sumOfFieldValue'][0].maximum}}
                 </div>
@@ -84,6 +84,8 @@
             <div [innerHTML]="element.element.description | translate | safeHtml"></div>
             <apto-slot-outlet identifier="after-area-element-description" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
         </div>
+
+        <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 
         <div class="apply-button">
             <button

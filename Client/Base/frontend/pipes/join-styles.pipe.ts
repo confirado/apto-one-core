@@ -22,6 +22,6 @@ export class JoinStylesPipe implements PipeTransform {
 
     return Object.keys(styles)
       .map((key) => `${key}: ${styles[key]}`)
-      .join(', ');
+      .join('; ');
   }
 }

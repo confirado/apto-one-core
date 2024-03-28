@@ -6,6 +6,7 @@ use Apto\Base\Domain\Core\Model\FileSystem\Directory\Directory;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;
 use Apto\Base\Domain\Core\Model\FileSystem\FileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
+use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
 use Apto\Base\Domain\Core\Service\AptoParameterInterface;
 use Apto\Catalog\Application\Core\Query\Product\Element\ProductElementFinder;
 use Apto\Catalog\Application\Core\Service\RenderImage\RenderImageProvider;
@@ -39,17 +40,20 @@ class RenderImageFactory implements RenderImageFactoryInterface
      * @param RenderImageRegistry $renderImageRegistry
      * @param ProductElementFinder $productElementFinder
      * @param AptoParameterInterface $aptoParameter
+     * @param AptoJsonSerializer $aptoJsonSerializer
      */
     public function __construct(
         MediaFileSystemConnector $srcFilesystem,
         RenderImageRegistry $renderImageRegistry,
         ProductElementFinder $productElementFinder,
-        AptoParameterInterface $aptoParameter
+        AptoParameterInterface $aptoParameter,
+        AptoJsonSerializer $aptoJsonSerializer
     ) {
         $this->srcFilesystem = $srcFilesystem;
         $this->renderImageRegistry = $renderImageRegistry;
         $this->productElementFinder = $productElementFinder;
         $this->aptoParameter = $aptoParameter;
+        $this->aptoJsonSerializer = $aptoJsonSerializer;
     }
 
     public function getRenderImagesByImageList(State $state, string $productId = null): array

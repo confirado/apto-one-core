@@ -22,6 +22,10 @@ export class ImageUploadComponent {
 
   public constructor(private store: Store) {}
 
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
   public showDesigner(): void {
     this.store.dispatch(
       setCanvasElement({

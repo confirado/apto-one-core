@@ -120,6 +120,12 @@ export class RenderImageService {
     }
   }
 
+  /**
+   * In element's custom properties we expect value with key "overlayColor" and as value 2 hexadecimal color values separated by comma: #CCCCCC,#000000
+   *
+   * @param key
+   * @private
+   */
   private findAllCustomPropertiesValues(key: string): Promise<ReplaceColorData[]> {
     return new Promise((resolve) => {
       this.store.select(selectStateActiveElements).subscribe((result: ElementState[]) => {
@@ -228,9 +234,9 @@ export class RenderImageService {
           do {
             this.ctx.drawImage(tempCanvas || imageHtml, x, y);
             x += imageWidth;
-          } while (x < imageRepeatWidth);
+          } while (x < imageRepeatWidth + offsetX);
           y += imageHeight;
-        } while (y < imageRepeatHeight);
+        } while (y < imageRepeatHeight + offsetY);
       } else {
         this.ctx.drawImage(tempCanvas || imageHtml, offsetX, offsetY);
       }
@@ -298,9 +304,9 @@ export class RenderImageService {
             this.ctx.drawImage(imageHtml, x, y);
           }
           x += imageWidth;
-        } while (x < imageRepeatWidth);
+        } while (x < imageRepeatWidth + offsetX * this.scale);
         y += imageHeight;
-      } while (y < imageRepeatHeight);
+      } while (y < imageRepeatHeight + offsetY * this.scale);
     } else {
       // if scale is not 1 it means we need to resize the canvas, otherwise draw image as it is
       if (this.scale !== 1) {
@@ -352,7 +358,7 @@ export class RenderImageService {
         this.imageHeight = firstImageRatio > 1 ? this.imageWidth * firstImageRatio : this.imageWidth / firstImageRatio;
       }
     }
-    // this is the image too small cas we dont have to shrink it to fit into canvas
+    // this is the image too small case we dont have to shrink it to fit into canvas
     else {
       // we draw the canvas as big as config dimensions are
       this.imageWidth = firstImageWidth;

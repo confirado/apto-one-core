@@ -1,4 +1,6 @@
 <mat-toolbar>
+    <apto-slot-outlet identifier="header-top"></apto-slot-outlet>
+
     <div class="login-button" *ngIf="showLoginButton()" (click)="login()"> {{ csLogin$ | async | contentSnippet: 'login' }} </div>
     <div class="login-button" *ngIf="showLogoutButton()" (click)="logout()"> {{ csLogin$ | async | contentSnippet: 'logout' }} </div>
 
@@ -54,4 +56,6 @@
             </mat-select>
         </div>
     </ng-container>
+
+    <apto-slot-outlet identifier="header-bottom"></apto-slot-outlet>
 </mat-toolbar>

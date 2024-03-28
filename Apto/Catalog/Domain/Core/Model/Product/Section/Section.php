@@ -121,6 +121,8 @@ class Section extends AptoEntity
             ->setIsMandatory(false)
             ->setAllowMultiple(false)
             ->setIsZoomable(false);
+        $this->name = AptoTranslatedValue::fromArray([]);
+        $this->description = AptoTranslatedValue::fromArray([]);
     }
 
     /**
