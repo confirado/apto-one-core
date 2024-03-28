@@ -3,10 +3,10 @@ import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
   AddBasketConfigurationArguments,
-  AddGuestConfigurationArguments,
+  AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
   ComputedValues,
   Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
-  RenderImage, UpdateBasketConfigurationArguments,
+  RenderImage, StatePrice, UpdateBasketConfigurationArguments,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -15,7 +15,7 @@ import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-u
 export class ConfigurationRepository {
 	public constructor(private catalogMessageBusService: CatalogMessageBusService) {}
 
-	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<string> {
+	public getStatePrice(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<StatePrice> {
 		return this.catalogMessageBusService.findPriceByState(productId, compressedState, connector, currentUser);
 	}
 
@@ -79,6 +79,16 @@ export class ConfigurationRepository {
 			params.payload
 		);
 	}
+
+  public addOfferConfiguration(params: AddOfferConfigurationArguments): Observable<unknown> {
+    return this.catalogMessageBusService.addOfferConfiguration(
+      params.productId,
+      params.compressedState,
+      params.email,
+      params.name,
+      params.payload
+    );
+  }
 
   public fetchPartsList(params: FetchPartsListArguments): Observable<PartsListPart[]> {
     return this.catalogMessageBusService.fetchPartsList(

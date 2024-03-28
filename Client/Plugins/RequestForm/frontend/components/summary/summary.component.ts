@@ -34,7 +34,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   public product$ = this.store.select(selectProduct);
   public configuration$ = this.store.select(selectConfiguration);
   public readonly sumPrice$ = this.store.select(selectSumPrice);
-  private humanReadableState: HumanReadableState;
+  private humanReadableState: any;
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
   });

@@ -83,7 +83,7 @@
                 <ng-container *ngFor="let box of fabricTextBoxes">
                     <div class="input-field">
                         <div class="name">{{ getTextBoxProperty(box.identifier, 'name') }}</div>
-                        <div class="container">
+                        <div class="container-elem">
                             <input *ngIf="box.payload.box.colorPicker" class="color-picker-input" [ngxMatColorPicker]="picker" [value]="getColorFromHex(getObjectValue('text', box.identifier, 'fill'))" (colorChange)="updateTextColor($event, box.identifier)"  >
                             <input class="text-input" [maxLength]="box.payload.box.maxlength ? box.payload.box.maxlength : 20" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)" (focusin)="removeDefaultText(box)">
                             <span  class="color-picker-select">
@@ -95,7 +95,7 @@
                 </ng-container>
                 <div class="input-field" *ngIf="fonts.length > 0">
                     <div class="name">Schriftart:</div>
-                    <div class="container">
+                    <div class="container-elem">
                         <mat-select class="text-input" [value]="selectedFont" (selectionChange)="updateTextFont($event)">
                             <mat-option *ngFor="let font of fonts" [value]="font">
                                 {{ font.family }}

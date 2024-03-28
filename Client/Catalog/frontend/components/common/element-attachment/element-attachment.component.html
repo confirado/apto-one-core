@@ -1,0 +1,10 @@
+<div class="element-attachment-download-item element">
+    <a *ngFor="let attachment of attachments"
+       class="element-attachment-download"
+       (click)="$event.stopPropagation()"
+       [href]="mediaUrl + attachment.fileUrl"
+       [download]="attachment.mediaFile.filename | translate"
+    >
+        {{ attachment.name | translate }}
+    </a>
+</div>

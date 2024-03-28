@@ -25,6 +25,7 @@ export class FrontendComponent implements OnInit, AfterViewInit {
   public loginActive: boolean;
   public loginRequired: boolean;
   public loginInitialized: boolean;
+  public readonly isInline = !!environment.aptoInline;
 
 	@ViewChild('drawer', { static: true }) public drawer!: MatDrawer;
 

@@ -30,7 +30,19 @@ export interface HumanReadableState {
   elementId: string;
   repetition: number;
   sectionId: string;
-  values: Array<{ [key: string]: TranslatedValue }>;
+  values: { [key: string]: TranslatedValue };
+}
+
+export interface HumanReadableFullState {
+  id: string;
+  name: string;
+  previewImage: string | null;
+  values: { [key: string]: TranslatedValue };
+}
+
+export interface HumanReadableFullStatePayload {
+  formData: object;
+  humanReadableState: HumanReadableFullState[]
 }
 
 export interface ConfigurationState {
@@ -196,6 +208,14 @@ export interface AddGuestConfigurationArguments {
 	sendMail: boolean;
 	id: string;
 	payload: any;
+}
+
+export interface AddOfferConfigurationArguments {
+	productId: string;
+	compressedState: any;
+	email: string;
+	name: string;
+	payload: undefined | HumanReadableFullStatePayload;
 }
 
 export interface FetchPartsListArguments {
