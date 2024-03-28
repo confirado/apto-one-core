@@ -25,6 +25,7 @@ export enum ConfigurationActionTypes {
   SetRenderImages = '[RenderImage] Set Render Images',
 	SetPrevPerspective = '[Perspective] Set prev Perspective',
 	SetNextPerspective = '[Perspective] Set next Perspective',
+	SetPerspective = '[Perspective] Set Perspective',
 	SetQuantity = '[Quantity] Set Quantity',
 	AddToBasket = '[Basket] Add to basket',
   AddToBasketSuccess = '[Basket] Add to basket success',
@@ -155,6 +156,8 @@ export const setStepSuccess = createAction(ConfigurationActionTypes.SetStepSucce
 export const setPrevPerspective = createAction(ConfigurationActionTypes.SetPrevPerspective);
 
 export const setNextPerspective = createAction(ConfigurationActionTypes.SetNextPerspective);
+
+export const setPerspective = createAction(ConfigurationActionTypes.SetPerspective, props<{ perspective: string }>());
 
 export const setQuantity = createAction(ConfigurationActionTypes.SetQuantity, props<{ quantity: number }>());
 

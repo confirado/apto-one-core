@@ -2,7 +2,7 @@
 
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
-        <md-checkbox ng-model="detail.imageSettings.active" aria-label="Aktiv">
+        <md-checkbox ng-model="newImageSettings.active" aria-label="Aktiv">
             Aktiv
         </md-checkbox>
     </md-input-container>
@@ -11,24 +11,31 @@
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
         <label>Maximale Dateigröße (MB):</label>
-        <input type="number" min="1" step="1" ng-model="detail.imageSettings.maxFileSize">
+        <input type="number" min="1" step="1" ng-model="newImageSettings.maxFileSize">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Default Größe (px):</label>
-        <input type="number" min="1" step="1" ng-model="detail.imageSettings.previewSize">
+        <input type="number" min="1" step="1" ng-model="newImageSettings.previewSize">
     </md-input-container>
 </div>
 
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
         <label>Minimale Breite (px):</label>
-        <input required type="number" min="0" step="1" ng-model="detail.imageSettings.minWidth">
+        <input required type="number" min="0" step="1" ng-model="newImageSettings.minWidth">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Minimale Höhe (px):</label>
-        <input required type="number" min="0" step="1" ng-model="detail.imageSettings.minHeight">
+        <input required type="number" min="0" step="1" ng-model="newImageSettings.minHeight">
+    </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Perspective*: </label>
+        <input required type="text" ng-model="newImageSettings.perspective">
     </md-input-container>
 </div>
 
@@ -53,13 +60,82 @@
         </tr>
         </thead>
         <tbody md-body>
-        <tr md-row ng-repeat="file in detail.imageSettings.allowedFileTypes">
+        <tr md-row ng-repeat="file in newImageSettings.allowedFileTypes">
             <td md-cell>{{ file }}</td>
             <td md-cell style="width: 5%;" >
                 <md-button
                         title="Löschen"
                         class="md-icon-button md-warn"
                         ng-click="removeAllowedFileTypeValue($index)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>
+
+<div layout="row" layout-align="start" flex style="justify-content: space-between;">
+    <md-input-container>
+        <md-button ng-if="newImageSettingsEditMode" style="margin: 0;" class="md-raised md-cornered" ng-click="cancelEditImageSettings()">Neue Motiv</md-button>
+    </md-input-container>
+    <md-input-container ng-if="!newImageSettingsEditMode">
+        <md-button ng-disabled="!newImageSettings.perspective || !newImageSettings.allowedFileTypes.length" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewImageSettings()">Hinzufügen</md-button>
+    </md-input-container>
+    <md-input-container ng-if="newImageSettingsEditMode">
+        <md-button ng-disabled="!newImageSettings.perspective || !newImageSettings.allowedFileTypes.length" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewImageSettings()">Speichern</md-button>
+    </md-input-container>
+</div>
+
+<h4>Uploads</h4>
+<md-table-container>
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column style="width: 10%;">Aktiv</th>
+            <th md-column style="width: 10%;">Maximale Dateigröße</th>
+            <th md-column style="width: 15%;">Default Größe</th>
+            <th md-column style="width: 10%;">Minimale Breite</th>
+            <th md-column style="width: 10%;">Minimale Höhe</th>
+            <th md-column style="width: 10%;">Perspective</th>
+            <th md-column style="width: 10%;">Dateitypen</th>
+            <th md-column style="width: 10%;"></th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="settings in detail.imageSettings">
+            <td md-cell>
+                {{ settings.active }}
+            </td>
+            <td md-cell>
+                {{ settings.maxFileSize }}px
+            </td>
+            <td md-cell>
+                {{ settings.previewSize }}px
+            </td>
+            <td md-cell>
+                {{ settings.minWidth }}px
+            </td>
+            <td md-cell>
+                {{ settings.minHeight }}px
+            </td>
+            <td md-cell>
+                {{ settings.perspective }}
+            </td>
+            <td md-cell>
+                {{ settings.allowedFileTypes }}
+            </td>
+            <td md-cell>
+                <md-button
+                    class="md-icon-button md-primary"
+                    title="Bearbeiten"
+                    ng-click="editImageSettings($index)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+                <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    ng-click="removeImageSettings($index)">
                     <md-icon md-font-set="fa">&#xf014</md-icon>
                 </md-button>
             </td>

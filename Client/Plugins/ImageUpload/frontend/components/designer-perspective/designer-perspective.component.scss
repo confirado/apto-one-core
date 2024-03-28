@@ -1,0 +1,24 @@
+.absolute-designer-container {
+    position: relative;
+}
+
+.designer-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.designer-actions-left {
+    display: flex;
+    gap: 20px;
+}
+
+.designer-areas {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: 200px;
+    margin-right: 300px;
+    margin-bottom: 40px;
+}

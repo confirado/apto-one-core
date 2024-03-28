@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
+import { MessageBusResponse } from '@apto-base-core/models/message-bus-response';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,20 +12,20 @@ export class FabricCanvasService {
   public constructor(private http: HttpClient) {
   }
 
-  public uploadLayerImage(fabricCanvas, printAreas, renderImage, fileNameId, directory, callback) {
+  public uploadLayerImageForArea(fabricCanvas, printArea, renderImage, fileNameId: string, directory: string): Promise<MessageBusResponse<null>> {
     // create a copy from fabric original canvas
-    let canvasCopyBuffer = document.createElement('canvas');
-    let canvasCopy = new fabric.Canvas(canvasCopyBuffer);
+    const canvasCopyBuffer = document.createElement('canvas');
+    const canvasCopy = new fabric.Canvas(canvasCopyBuffer);
 
-    canvasCopy.loadFromJSON(JSON.stringify(fabricCanvas), () => {
-      canvasCopy.setWidth(renderImage.width);
-      canvasCopy.setHeight(renderImage.height);
-      canvasCopy.setZoom(1);
-      canvasCopy.renderAll();
+    return new Promise(resolve => {
+      canvasCopy.loadFromJSON(JSON.stringify(fabricCanvas), () => {
+        canvasCopy.setWidth(renderImage.width);
+        canvasCopy.setHeight(renderImage.height);
+        canvasCopy.setZoom(1);
+        canvasCopy.renderAll();
 
-      printAreas.forEach((printArea) => {
-        let fileName = fileNameId + '-' + printArea.identifier;
-        let dataUrl = canvasCopy.toDataURL({
+        const fileName = fileNameId + '-' + printArea.identifier;
+        const dataUrl = canvasCopy.toDataURL({
           format: 'png',
           left: printArea.left,
           top: printArea.top,
@@ -32,14 +33,17 @@ export class FabricCanvasService {
           height: printArea.height
         });
 
-        let blob = this.dataUrlToBlob(dataUrl);
-        let file = this.blobToFile(blob, fileName + '.png');
-        callback(this.uploadFile(file, fileName, 'png', directory));
+        const blob = this.dataUrlToBlob(dataUrl);
+        const file = this.blobToFile(blob, fileName + '.png');
+
+        this.uploadFile(file, fileName, 'png', directory).subscribe((result) => {
+          return resolve(result);
+        });
       });
     });
   }
 
-  public uploadFile(file, fileName, extension, directory) {
+  public uploadFile(file, fileName, extension, directory): Observable<MessageBusResponse<null>> {
     const formData = new FormData();
     formData.append('file[0]', file);
     formData.append('command', 'UploadUserImageFile');
@@ -47,7 +51,7 @@ export class FabricCanvasService {
     formData.append('arguments[1]', extension);
     formData.append('arguments[2]', directory);
 
-    return this.http.post(environment.api.command, formData);
+    return this.http.post<MessageBusResponse<null>>(environment.api.command, formData);
   }
 
   public updateTextElementForBending(textElement, bendValue) {

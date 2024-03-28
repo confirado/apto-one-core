@@ -1,16 +1,18 @@
 <ng-container *ngIf="product$ | async as product">
 	<div class="one-page {{ product.identifier }}">
-		<div class="content" [ngClass]="{ hidden: hideOnePage$ | async }">
+		<div class="content" [ngClass]="{ hidden: hideOnePage }">
             <apto-loading-indicator *ngIf="(configurationLoading$ | async)" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
 
 			<div class="render-img-menu">
 				<apto-o-p-full-screen [ngClass]="{'hidden-fullscreen': !renderImage}"
 					[perspectives]="perspectives$ | async"
 					[product]="product"
+                    [renderImage]="renderImage"
 				></apto-o-p-full-screen>
-				<div *ngIf="!renderImage" class="no-render-image">Nicht genügend konfiguriert um eine Demo darzustellen!</div>
+				<div *ngIf="!renderImage && !(configurationLoading$ | async)" class="no-render-image">Nicht genügend konfiguriert um eine Demo darzustellen!</div>
 				<apto-sidebar-summary-render-image *ngIf="renderImage"
                     [perspectives]="perspectives$ | async"
+                    [renderImage]="renderImage"
                     [product]="product">
                 </apto-sidebar-summary-render-image>
                 <apto-o-p-button></apto-o-p-button>
@@ -29,7 +31,7 @@
                 <apto-sidebar-summary> </apto-sidebar-summary>
             </div>
         </div>
-        <apto-slot-outlet *ngIf="(hideOnePage$ | async)" identifier="one-page-designer"></apto-slot-outlet>
+        <apto-slot-outlet *ngIf="hideOnePage" identifier="one-page-designer"></apto-slot-outlet>
         <div class="description">
             <h2 *ngIf="((contentSnippet$ | async | contentSnippet: 'productDetail.title'))">{{ (contentSnippet$ | async | contentSnippet: 'productDetail.title') }}</h2>
             <apto-slot-outlet identifier="before-product-description"></apto-slot-outlet>

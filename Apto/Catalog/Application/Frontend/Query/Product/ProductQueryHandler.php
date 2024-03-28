@@ -126,7 +126,6 @@ class ProductQueryHandler implements QueryHandlerInterface
                 'configuration' => null
             ];
         }
-
         // get configuration by type
         $configuration = null;
         switch ($query->getType()) {
@@ -155,7 +154,6 @@ class ProductQueryHandler implements QueryHandlerInterface
         if (null === $configuration) {
             return null;
         }
-
         // set configuration properties
         /** @var State $state */
         $state = $this->aptoJsonSerializer->jsonUnSerialize($configuration['state']);
@@ -171,7 +169,6 @@ class ProductQueryHandler implements QueryHandlerInterface
         if ($query->getType() === 'immutable') {
             $this->makeProductImmutable($product, $configuration);
         }
-
         // return result
         return [
             'product' => $product,

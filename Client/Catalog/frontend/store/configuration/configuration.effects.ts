@@ -8,7 +8,7 @@ import {
   addGuestConfiguration, addGuestConfigurationSuccess, addOfferConfiguration, addOfferConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
   fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess, getElementComputableValues, getElementComputableValuesSuccess,
   getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
-  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState,
+  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState
 }
   from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';

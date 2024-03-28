@@ -56,20 +56,26 @@ class Canvas extends AptoAggregate
 
         // set default settings
         $this->imageSettings = [
-            'active' => true,
-            'previewSize' => 250,
-            'maxFileSize' => 4,
-            'minWidth' => 0,
-            'minHeight' => 0,
-            'allowedFileTypes' => ['jpg', 'jpeg', 'png']
+           [
+               'active' => true,
+               'previewSize' => 250,
+               'maxFileSize' => 4,
+               'minWidth' => 0,
+               'minHeight' => 0,
+               'perspective' => 'persp1',
+               'allowedFileTypes' => ['jpg', 'jpeg', 'png']
+           ]
         ];
 
         $this->motiveSettings = [
-            'active' => false,
-            'previewSize' => 250,
-            'folder' => null,
-            'left' => 0,
-            'top' => 0
+           [
+               'active' => false,
+               'previewSize' => 250,
+               'folder' => null,
+               'left' => 0,
+               'top' => 0,
+               'perspective' => 'persp1'
+           ]
         ];
 
         $this->textSettings = [

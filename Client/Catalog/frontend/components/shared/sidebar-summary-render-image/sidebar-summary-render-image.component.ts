@@ -1,34 +1,26 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
 import { setNextPerspective, setPrevPerspective } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { RenderImage } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-sidebar-summary-render-image',
 	templateUrl: './sidebar-summary-render-image.component.html',
 	styleUrls: ['./sidebar-summary-render-image.component.scss'],
 })
-export class SidebarSummaryRenderImageComponent implements OnDestroy{
-  private subscriptions: Subscription[] = [];
-
+export class SidebarSummaryRenderImageComponent {
 	@Input()
 	public perspectives: string[] | undefined | null;
 
 	@Input()
 	public product: Product | null | undefined;
 
+  @Input()
   public renderImage = null;
 
-	public constructor(private store: Store, private renderImageService: RenderImageService) {
-    this.renderImageService.init();
-    this.subscriptions.push(
-      this.renderImageService.outputSrcSubject.subscribe((next) => {
-        this.renderImage = next;
-      })
-    );
+	public constructor(private store: Store) {
   }
 
 	public prevRenderImage(): void {
@@ -38,10 +30,4 @@ export class SidebarSummaryRenderImageComponent implements OnDestroy{
 	public nextRenderImage(): void {
 		this.store.dispatch(setNextPerspective());
 	}
-
-  public ngOnDestroy() {
-    this.subscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    })
-  }
 }

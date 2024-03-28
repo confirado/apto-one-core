@@ -35,6 +35,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         initNewPrice();
         initNewArea();
         initNewTextBox();
+        initNewMotive();
+        initNewImageSettings();
 
         if (typeof canvasId !== "undefined") {
             $scope.fetchCanvas(canvasId).then(() => {
@@ -103,7 +105,32 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             radius: 0,
             locked: true,
             colorPicker: true,
-            maxlength: 20
+            maxlength: 20,
+            perspective: 'persp1'
+        }
+    }
+
+    function initNewMotive() {
+        $scope.newMotive = {
+            active: true,
+            previewSize: 250,
+            folder: null,
+            left: 0,
+            top: 0,
+            perspective: 'persp1',
+            identifier: '',
+        }
+    }
+
+    function initNewImageSettings() {
+        $scope.newImageSettings = {
+            active: true,
+            previewSize: 250,
+            maxFileSize: 4,
+            minWidth: 0,
+            minHeight: 0,
+            allowedFileTypes: ['jpg', 'jpeg', 'png'],
+            perspective: 'persp1'
         }
     }
 
@@ -130,16 +157,16 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     }
 
     function addAllowedFileTypeValue() {
-        $scope.detail.imageSettings.allowedFileTypes.push($scope.newAllowedFileType.value);
+        $scope.newImageSettings.allowedFileTypes.push($scope.newAllowedFileType.value);
         initNewAllowedFileType();
     }
 
     function removeAllowedFileTypeValue(index) {
-        $scope.detail.imageSettings.allowedFileTypes.splice(index, 1);
+        $scope.newImageSettings.allowedFileTypes.splice(index, 1);
     }
 
     function allowedFileTypeIsDuplicate(fileType) {
-        const allowedFileTypes = $scope.detail.imageSettings.allowedFileTypes;
+        const allowedFileTypes = $scope.newImageSettings.allowedFileTypes;
         for (let i = 0; i < allowedFileTypes.length; i++) {
             if (fileType === allowedFileTypes[i]) {
                 return true;
@@ -265,9 +292,37 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         $scope.newTextBoxEditMode = false;
     }
 
+    function addNewMotive() {
+        if (!$scope.newMotiveEditMode) {
+            $scope.detail.motiveSettings.push($scope.newMotive);
+        }
+
+        $scope.newMotiveEditMode = false;
+        initNewMotive();
+    }
+
+    function addNewImageSettings() {
+        if (!$scope.newImageSettingsEditMode) {
+            $scope.detail.imageSettings.push($scope.newImageSettings);
+        }
+
+        $scope.newImageSettingsEditMode = false;
+        initNewImageSettings();
+    }
+
     function editTextBox(index) {
         $scope.newTextBoxEditMode = true;
         $scope.newTextBox = $scope.detail.textSettings.boxes[index];
+    }
+
+    function editMotive(index) {
+        $scope.newMotiveEditMode = true;
+        $scope.newMotive = $scope.detail.motiveSettings[index];
+    }
+
+    function editImageSettings(index) {
+        $scope.newImageSettingsEditMode = true;
+        $scope.newImageSettings = $scope.detail.imageSettings[index];
     }
 
     function cancelEditTextBox() {
@@ -275,8 +330,26 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         $scope.newTextBoxEditMode = false;
     }
 
+    function cancelEditMotive() {
+        initNewMotive();
+        $scope.newMotiveEditMode = false;
+    }
+
+    function cancelEditImageSettings() {
+        initNewImageSettings();
+        $scope.newImageSettingsEditMode = false;
+    }
+
     function removeTextBox(index) {
         $scope.detail.textSettings.boxes.splice(index, 1);
+    }
+
+    function removeMotive(index) {
+        $scope.detail.motiveSettings.splice(index, 1);
+    }
+
+    function removeImageSettings(index) {
+        $scope.detail.imageSettings.splice(index, 1);
     }
 
     function textBoxIdentifierExists() {
@@ -330,6 +403,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     $scope.priceTypes = ['Bild', 'Text'];
     $scope.newAreaEditMode = false;
     $scope.newTextBoxEditMode = false;
+    $scope.newMotiveEditMode = false;
+    $scope.newImageSettingsEditMode = false;
     $scope.save = save;
     $scope.close = close;
     $scope.onSelectNewFont = onSelectNewFont;
@@ -349,9 +424,17 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     $scope.cancelEditArea = cancelEditArea;
     $scope.areaIdentifierExists = areaIdentifierExists;
     $scope.addNewTextBox = addNewTextBox;
+    $scope.addNewMotive = addNewMotive;
+    $scope.addNewImageSettings = addNewImageSettings;
     $scope.editTextBox = editTextBox;
+    $scope.editMotive = editMotive;
+    $scope.editImageSettings = editImageSettings;
     $scope.removeTextBox = removeTextBox;
+    $scope.removeMotive = removeMotive;
+    $scope.removeImageSettings = removeImageSettings;
     $scope.cancelEditTextBox = cancelEditTextBox;
+    $scope.cancelEditMotive = cancelEditMotive;
+    $scope.cancelEditImageSettings = cancelEditImageSettings;
     $scope.textBoxIdentifierExists = textBoxIdentifierExists;
     $scope.addSurchargePrice = addSurchargePrice;
     $scope.removePrice = removePrice;

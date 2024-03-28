@@ -22,13 +22,14 @@ class ImageUploadRenderImageProvider implements RenderImageProvider
                 $element['values']['aptoElementDefinitionId'] !== 'apto-element-image-upload' ||
 
                 // has no render image in state
-                !array_key_exists('renderImages', $element['values']['payload']) ||
-                !is_array($element['values']['payload']['renderImages'])
+                !isset($element['values']['payload'][$perspective]) ||
+                !array_key_exists('renderImages', $element['values']['payload'][$perspective]) ||
+                !is_array($element['values']['payload'][$perspective]['renderImages'])
             ) {
                 continue;
             }
 
-            $renderImages = $element['values']['payload']['renderImages'];
+            $renderImages = $element['values']['payload'][$perspective]['renderImages'];
             foreach ($renderImages as $renderImage) {
                 if (
                     // render image not matches requested perspective
