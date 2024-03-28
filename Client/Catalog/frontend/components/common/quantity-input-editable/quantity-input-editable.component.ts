@@ -156,7 +156,7 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
       this.store.dispatch(updateConfigurationState({
         updates: {
           parameters: [{
-            name: ParameterStateTypes.REPETITIONS,
+            name: ParameterStateTypes.QUANTITY,
             value: quantity
           }]
       }
