@@ -116,15 +116,24 @@ export class Select implements ElementInterface {
   }
 
   /**
-   * selects the given value from selectbox
+   * selects the given value from select-box
    *
    * @param value
    */
   public static select(value: string): typeof Select {
-    cy.dataCy('product-price-calculator').click();
+    cy.get('@cypressElem').click();
+    cy.get('.md-select-menu-container.md-active.md-clickable').should('exist');
 
     cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
-      cy.get('md-content md-option').find('.md-text').should('contain.text', value).click();
+      cy.get('md-content md-option').each($option => {
+        cy.wrap($option).find('.md-text').each($mdText => {
+          const cellValue = $mdText.text().trim();
+
+          if (cellValue.includes(value)) {
+            cy.wrap($option).click();
+          }
+        });
+      })
     });
 
     return Select;

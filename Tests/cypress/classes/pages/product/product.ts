@@ -75,8 +75,9 @@ export class Product implements IPage {
    * Creates empty product without making a lot o tests
    *
    * @param productName
+   * @param mode
    */
-  public static createEmptyProduct(productName?: string|null) {
+  public static createEmptyProduct(productName?: string|null, mode: 'OnePage'|'StepByStep' = 'StepByStep') {
 
     const name = productName ?? Product.generateName();
 
@@ -97,6 +98,13 @@ export class Product implements IPage {
             cy.get('.product-title h3').find('span.title-headline').should('contain.text', name);
 
             Select.getByAttr('product-price-calculator').select(dummies.defaultPriceCalculator);
+
+            if (mode === 'StepByStep') {
+              Select.getByAttr('product-configuration-modes').select('StepByStep');
+            } else {
+              Select.getByAttr('product-configuration-modes').select('OnePage');
+            }
+
             RequestHandler.registerInterceptions(Product.saveProductRequests);
             Product.saveNewButton().click();
           });
