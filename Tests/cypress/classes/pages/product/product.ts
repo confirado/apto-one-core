@@ -12,6 +12,7 @@ import { Table } from '../../common/elements/table';
 import { Select } from '../../common/elements/form/select';
 import { TableActionTypes } from '../../enums/table-action-types';
 import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
+import { Checkbox } from '../../common/elements/form/checkbox';
 
 export class Product implements IPage {
 
@@ -93,6 +94,8 @@ export class Product implements IPage {
       cy.wait(RequestHandler.getAliasesFromRequests(Product.addProductQueryList))
         .then(() => {
           cy.get('md-dialog-actions').should('exist').then(() => {
+
+            Checkbox.getByAttr('product-active').check();
 
             // after typing value error should dissapear
             cy.dataCy('product-name').type(name);
