@@ -4,15 +4,15 @@ import Chainable = Cypress.Chainable;
 export class Textarea implements ElementInterface {
 
   public static getByAttr(selector: string): typeof Textarea {
-    cy.get(`[data-cy="${selector}"]`).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('textareaElem');
+    cy.get('@textareaElem').should('exist');
 
     return Textarea;
   }
 
   public static get(selector: string): typeof Textarea {
-    cy.get(selector).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(selector).as('textareaElem');
+    cy.get('@textareaElem').should('exist');
 
     return Textarea;
   }
@@ -30,31 +30,31 @@ export class Textarea implements ElementInterface {
    * @param elem
    */
   public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Textarea {
-    elem.as('cypressElem');
+    elem.as('textareaElem');
 
     return Textarea;
   }
 
   public static hasLabel(label: string): typeof Textarea {
-    cy.get('@cypressElem').find('label').should('contain.text', label);
+    cy.get('@textareaElem').find('label').should('contain.text', label);
 
     return Textarea;
   }
 
   public static hasNotLabel(label: string): typeof Textarea {
-    cy.get('@cypressElem').find('label').should('not.contain.text', label);
+    cy.get('@textareaElem').find('label').should('not.contain.text', label);
 
     return Textarea;
   }
 
   public static hasValue(value: any): typeof Textarea {
-    cy.get('@cypressElem').find('textarea').should('contain.value', value);
+    cy.get('@textareaElem').find('textarea').should('contain.value', value);
 
     return Textarea;
   }
 
   public static hasNotValue(value: any): typeof Textarea {
-    cy.get('@cypressElem').find('textarea').should('not.contain.value', value);
+    cy.get('@textareaElem').find('textarea').should('not.contain.value', value);
 
     return Textarea;
   }
@@ -72,10 +72,10 @@ export class Textarea implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Textarea {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get('@cypressElem').should(condition, attributes[condition]);
+        cy.get('@textareaElem').should(condition, attributes[condition]);
       }
       else {
-        cy.get('@cypressElem').should(condition);
+        cy.get('@textareaElem').should(condition);
       }
     }
 

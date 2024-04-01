@@ -4,15 +4,15 @@ import Chainable = Cypress.Chainable;
 export class Input implements ElementInterface {
 
   public static getByAttr(selector: string): typeof Input {
-    cy.get(`[data-cy="${selector}"]`).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('inputElem');
+    cy.get('@inputElem').should('exist');
 
     return Input;
   }
 
   public static get(selector: string): typeof Input {
-    cy.get(selector).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(selector).as('inputElem');
+    cy.get('@inputElem').should('exist');
 
     return Input;
   }
@@ -30,31 +30,31 @@ export class Input implements ElementInterface {
    * @param elem
    */
   public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Input {
-    elem.as('cypressElem');
+    elem.as('inputElem');
 
     return Input;
   }
 
   public static hasLabel(label: string): typeof Input {
-    cy.get('@cypressElem').find('label').should('contain.text', label);
+    cy.get('@inputElem').find('label').should('contain.text', label);
 
     return Input;
   }
 
   public static hasNotLabel(label: string): typeof Input {
-    cy.get('@cypressElem').find('label').should('not.contain.text', label);
+    cy.get('@inputElem').find('label').should('not.contain.text', label);
 
     return Input;
   }
 
   public static hasValue(value: any): typeof Input {
-    cy.get('@cypressElem').find('input').should('have.value', value);
+    cy.get('@inputElem').find('input').should('have.value', value);
 
     return Input;
   }
 
   public static hasNotValue(value: any): typeof Input {
-    cy.get('@cypressElem').find('input').should('not.have.value', value);
+    cy.get('@inputElem').find('input').should('not.have.value', value);
 
     return Input;
   }
@@ -70,10 +70,10 @@ export class Input implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Input {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get('@cypressElem').find('input').should(condition, attributes[condition]);
+        cy.get('@inputElem').find('input').should(condition, attributes[condition]);
       }
       else {
-        cy.get('@cypressElem').find('input').should(condition);
+        cy.get('@inputElem').find('input').should(condition);
       }
     }
 
@@ -86,11 +86,11 @@ export class Input implements ElementInterface {
    * This returns value not Input !!!
    */
   public static getValue() {
-    return cy.get('@cypressElem').find('input').invoke('val');
+    return cy.get('@inputElem').find('input').invoke('val');
   }
 
   public static writeValue(value: string | number | string[]): typeof Input {
-    cy.get('@cypressElem').find('input').clear().type(value.toString());
+    cy.get('@inputElem').find('input').clear().type(value.toString());
 
     return Input;
   }

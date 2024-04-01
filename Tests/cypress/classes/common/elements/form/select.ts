@@ -4,15 +4,15 @@ import Chainable = Cypress.Chainable;
 export class Select implements ElementInterface {
 
   public static getByAttr(selector: string): typeof Select {
-    cy.get(`[data-cy="${selector}"]`).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('selectElem');
+    cy.get('@selectElem').should('exist');
 
     return Select;
   }
 
   public static get(selector: string): typeof Select {
-    cy.get(selector).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(selector).as('selectElem');
+    cy.get('@selectElem').should('exist');
 
     return Select;
   }
@@ -30,43 +30,43 @@ export class Select implements ElementInterface {
    * @param elem
    */
   public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Select {
-    elem.as('cypressElem');
+    elem.as('selectElem');
 
     return Select;
   }
 
   public static hasLabel(label: string): typeof Select {
-    cy.get('@cypressElem').find('label').should('contain.text', label);
+    cy.get('@selectElem').find('label').should('contain.text', label);
 
     return Select;
   }
 
   public static hasNotLabel(label: string): typeof Select {
-    cy.get('@cypressElem').find('label').should('not.contain.text', label);
+    cy.get('@selectElem').find('label').should('not.contain.text', label);
 
     return Select;
   }
 
   public static hasValue(value: any): typeof Select {
-    cy.get('@cypressElem').find('md-select md-select-value').find('.md-text').should('contain.text', value);
+    cy.get('@selectElem').find('md-select md-select-value').find('.md-text').should('contain.text', value);
 
     return Select;
   }
 
   public static hasNotValue(value: any): typeof Select {
-    cy.get('@cypressElem').find('md-select md-select-value').find('.md-text').should('not.contain.text', value);
+    cy.get('@selectElem').find('md-select md-select-value').find('.md-text').should('not.contain.text', value);
 
     return Select;
   }
 
   public static hasError(): typeof Select {
-    cy.get('@cypressElem').should('have.class', 'md-input-invalid');
+    cy.get('@selectElem').should('have.class', 'md-input-invalid');
 
     return Select;
   }
 
   public static hasNotError(): typeof Select {
-    cy.get('@cypressElem').should('not.have.class', 'md-input-invalid');
+    cy.get('@selectElem').should('not.have.class', 'md-input-invalid');
 
     return Select;
   }
@@ -80,10 +80,10 @@ export class Select implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Select {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get('@cypressElem').find('md-select').should(condition, attributes[condition]);
+        cy.get('@selectElem').find('md-select').should(condition, attributes[condition]);
       }
       else {
-        cy.get('@cypressElem').find('md-select').should(condition);
+        cy.get('@selectElem').find('md-select').should(condition);
       }
     }
 
@@ -97,7 +97,7 @@ export class Select implements ElementInterface {
    * if selected then .md-text should exist
    */
   public static isSelected(): typeof Select {
-    cy.get('@cypressElem').find('md-select md-select-value').should(($span) => {
+    cy.get('@selectElem').find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(1);
     });
 
@@ -108,7 +108,7 @@ export class Select implements ElementInterface {
    * if not selected then element .md-text should not exist
    */
   public static isNotSelected(): typeof Select {
-    cy.get('@cypressElem').find('md-select md-select-value').should(($span) => {
+    cy.get('@selectElem').find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(0);
     });
 
@@ -121,7 +121,7 @@ export class Select implements ElementInterface {
    * @param value
    */
   public static select(value: string): typeof Select {
-    cy.get('@cypressElem').click();
+    cy.get('@selectElem').click();
     cy.get('.md-select-menu-container.md-active.md-clickable').should('exist');
 
     cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {

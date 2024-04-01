@@ -4,15 +4,15 @@ import Chainable = Cypress.Chainable;
 export class Checkbox implements ElementInterface {
 
   public static getByAttr(selector: string): typeof Checkbox {
-    cy.get(`[data-cy="${selector}"]`).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('checkboxElem');
+    cy.get('@checkboxElem').should('exist');
 
     return Checkbox;
   }
 
   public static get(selector: string): typeof Checkbox {
-    cy.get(selector).as('cypressElem');
-    cy.get('@cypressElem').should('exist');
+    cy.get(selector).as('checkboxElem');
+    cy.get('@checkboxElem').should('exist');
 
     return Checkbox;
   }
@@ -30,19 +30,19 @@ export class Checkbox implements ElementInterface {
    * @param elem
    */
   public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Checkbox {
-    elem.as('cypressElem');
+    elem.as('checkboxElem');
 
     return Checkbox;
   }
 
   public static hasLabel(label: string): typeof Checkbox {
-    cy.get('@cypressElem').find('.md-label').should('contain.text', label);
+    cy.get('@checkboxElem').find('.md-label').should('contain.text', label);
 
     return Checkbox;
   }
 
   public static hasNotLabel(label: string): typeof Checkbox {
-    cy.get('@cypressElem').find('.md-label').should('not.contain.text', label);
+    cy.get('@checkboxElem').find('.md-label').should('not.contain.text', label);
 
     return Checkbox;
   }
@@ -67,10 +67,10 @@ export class Checkbox implements ElementInterface {
 
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get('@cypressElem').should(condition, attributes[condition]);
+        cy.get('@checkboxElem').should(condition, attributes[condition]);
       }
       else {
-        cy.get('@cypressElem').should(condition);
+        cy.get('@checkboxElem').should(condition);
       }
     }
 
@@ -81,19 +81,19 @@ export class Checkbox implements ElementInterface {
   // unique to checkbox methods
 
   public static isChecked(): typeof Checkbox {
-    cy.get('@cypressElem').find('md-checkbox').should('have.class', 'md-checked');
+    cy.get('@checkboxElem').find('md-checkbox').should('have.class', 'md-checked');
 
     return Checkbox;
   }
 
   public static isUnChecked(): typeof Checkbox {
-    cy.get('@cypressElem').find('md-checkbox').should('not.have.class', 'md-checked');
+    cy.get('@checkboxElem').find('md-checkbox').should('not.have.class', 'md-checked');
 
     return Checkbox;
   }
 
   public static check(): typeof Checkbox {
-    cy.get('@cypressElem').find('md-checkbox').then(($checkbox) => {
+    cy.get('@checkboxElem').find('md-checkbox').then(($checkbox) => {
       if (!$checkbox.hasClass('md-checked')) {
         cy.wrap($checkbox).click();
 
@@ -105,7 +105,7 @@ export class Checkbox implements ElementInterface {
   }
 
   public static unCheck(): typeof Checkbox {
-    cy.get('@cypressElem').find('md-checkbox').then(($checkbox) => {
+    cy.get('@checkboxElem').find('md-checkbox').then(($checkbox) => {
       if ($checkbox.hasClass('md-checked')) {
         cy.wrap($checkbox).click();
 
@@ -117,7 +117,7 @@ export class Checkbox implements ElementInterface {
   }
 
   public static click(): typeof Checkbox {
-    cy.get('@cypressElem').find('md-checkbox').click();
+    cy.get('@checkboxElem').find('md-checkbox').click();
 
     return Checkbox;
   }
