@@ -45,7 +45,7 @@ describe('Product', () => {
     Login.login()
       .then((data) => {
         RequestHandler.registerInterceptions(Product.initialRequests);
-        Product.visit(true);
+        Product.visitBackend(true);
     });
   });
 
@@ -367,7 +367,7 @@ describe('Product', () => {
     ProductList.visit();
     ProductList.searchNotFindProduct(productName1);
 
-    Product.visit();
+    Product.visitBackend();
 
     RequestHandler.registerInterceptions(Product.editProductQueryList);
 
@@ -398,12 +398,11 @@ describe('Product', () => {
           .isImageSelected('logo.png');
 
         // save product
-        // Product.saveEditButton().click({ force: true });
         Product.saveAndCloseButton().click({ force: true });
 
         const selector = `.product-wrapper[data-id="${productId}"]`;
 
-        // check that newly updated product has all updates we made
+        // check that newly updated product has all updates we made in frontend
         ProductList.visit();
         ProductList.hasProduct(selector);
         ProductList.hasProductPreviewImage(selector);
@@ -413,6 +412,19 @@ describe('Product', () => {
       });
     });
   });
+
+  it('Checks product page in frontend', () => {
+    // now select the product in frontend
+    Product.visitFrontend(productId);
+
+    cy.get('apto-sbs-steps').should('exist');
+    cy.get('mat-expansion-panel-header mat-panel-title')
+      .find('h1')
+      .invoke('text').then(($text) => {
+        expect($text.trim()).to.include(productName1);
+      });
+  });
+
 
   it('Checks delete product', () => {
     Product.createEmptyProduct(Product.generateName());

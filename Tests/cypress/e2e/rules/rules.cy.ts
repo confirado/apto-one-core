@@ -27,7 +27,7 @@ describe('Product list', () => {
     Login.login()
       .then((data) => {
         RequestHandler.registerInterceptions(Product.initialRequests);
-        Product.visit(true);
+        Product.visitBackend(true);
       });
   });
 
@@ -71,7 +71,7 @@ describe('Product list', () => {
 
           // it should be unchecked first
           Table.getByAttr('rules-table')
-            .isRowUnChecked(ruleName);
+            .rowIsUnChecked(ruleName);
         });
       });
     });

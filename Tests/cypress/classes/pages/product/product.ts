@@ -13,10 +13,11 @@ import { Select } from '../../common/elements/form/select';
 import { TableActionTypes } from '../../enums/table-action-types';
 import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
 import { Checkbox } from '../../common/elements/form/checkbox';
+import { Frontend } from '../../common/frontend';
 
 export class Product implements IPage {
 
-  public static visit(visitByClick = false): void {
+  public static visitBackend(visitByClick = false): void {
 
     if (visitByClick) {
       const parent = 'sidebar-left_' + SIDEBAR_LEFT_ITEMS?.katalog.labal;
@@ -27,6 +28,15 @@ export class Product implements IPage {
     else {
       Backend.visit('product');
     }
+  }
+
+  /**
+   * Visit the given product in frontend
+   *
+   * @param productId
+   */
+  public static visitFrontend(productId: string) {
+    Frontend.visit('product/' + productId);
   }
 
   public static isCorrectPage(): void {

@@ -8,7 +8,7 @@ import { Queries } from '../../message-bus/queries';
 export class Rules implements IPage {
 
   public static visit(visitByClick = false): void {
-    Product.visit(visitByClick);
+    Product.visitBackend(visitByClick);
   }
 
   public static isCorrectPage(): void {

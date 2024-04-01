@@ -189,7 +189,7 @@ export class Table {
    * @param uniqueValue
    * @param columnNumber
    */
-  public static isRowChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
+  public static rowIsChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
     cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
@@ -216,7 +216,7 @@ export class Table {
    * @param uniqueValue
    * @param columnNumber
    */
-  public static isRowUnChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
+  public static rowIsUnChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
     cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
