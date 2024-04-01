@@ -14,6 +14,7 @@ import { TranslatedValue } from '../../classes/common/elements/custom/translated
 import { MediaSelect } from '../../classes/common/elements/custom/media-select';
 import { TableActionTypes } from '../../classes/enums/table-action-types';
 import { Tabs } from '../../classes/common/elements/tabs';
+import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -336,6 +337,9 @@ describe('Product', () => {
               Select.getByAttr('product-price-calculator')
                 .hasError()
                 .select(dummies.defaultPriceCalculator);
+
+              Select.getByAttr('product-configuration-modes')
+                .select(ProductModes.STEP_BY_STEP);
 
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 

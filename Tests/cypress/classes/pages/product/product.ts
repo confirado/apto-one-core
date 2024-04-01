@@ -11,6 +11,7 @@ import { Core } from '../../common/core';
 import { Table } from '../../common/elements/table';
 import { Select } from '../../common/elements/form/select';
 import { TableActionTypes } from '../../enums/table-action-types';
+import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
 
 export class Product implements IPage {
 
@@ -77,7 +78,7 @@ export class Product implements IPage {
    * @param productName
    * @param mode
    */
-  public static createEmptyProduct(productName?: string|null, mode: 'OnePage'|'StepByStep' = 'StepByStep') {
+  public static createEmptyProduct(productName?: string|null, mode: ProductModes = ProductModes.STEP_BY_STEP) {
 
     const name = productName ?? Product.generateName();
 
@@ -99,10 +100,10 @@ export class Product implements IPage {
 
             Select.getByAttr('product-price-calculator').select(dummies.defaultPriceCalculator);
 
-            if (mode === 'StepByStep') {
-              Select.getByAttr('product-configuration-modes').select('StepByStep');
-            } else {
-              Select.getByAttr('product-configuration-modes').select('OnePage');
+            if (mode === ProductModes.STEP_BY_STEP) {
+              Select.getByAttr('product-configuration-modes').select(ProductModes.STEP_BY_STEP);
+            } else if (ProductModes.ONE_PAGE) {
+              Select.getByAttr('product-configuration-modes').select(ProductModes.ONE_PAGE);
             }
 
             RequestHandler.registerInterceptions(Product.saveProductRequests);
