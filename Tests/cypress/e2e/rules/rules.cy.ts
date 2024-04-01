@@ -62,22 +62,24 @@ describe('Product list', () => {
 
         cy.dataCy('rule-insert-button').click();
 
-        cy.wait(RequestHandler.getAliasesFromRequests(Rules.createRuleRequests)).then(() => {
+        cy.wait(RequestHandler.getAliasesFromRequests(Rules.createRuleRequests)).then(($responses: Interception[]) => {
           Core.checkResponsesForError($responses);
 
           // check that rule was really created
           Table.getByAttr('rules-table')
             .hasValue(ruleName);
+
+          // it should be unchecked first
+          Table.getByAttr('rules-table')
+            .isRowUnChecked(ruleName);
         });
       });
     });
   });
 
-  it.only('Checks edit rule page has is working and has correct inputs', () => {
+  it.only('Checks edit rule page is working and has correct inputs', () => {
 
     Rules.isCorrectPage();
-
-    ruleName = 'rules-6okR7n14';
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.initialRequests)).then(($responses: Interception[]) => {
       Core.checkResponsesForError($responses);
@@ -96,7 +98,7 @@ describe('Product list', () => {
 
         Table.getByAttr('rules-table').action(TableActionTypes.EDIT, ruleName);
 
-        cy.wait(RequestHandler.getAliasesFromRequests(Rules.editRuleRequests)).then(() => {
+        cy.wait(RequestHandler.getAliasesFromRequests(Rules.editRuleRequests)).then(($responses: Interception[]) => {
           Core.checkResponsesForError($responses);
 
 

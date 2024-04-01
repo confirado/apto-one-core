@@ -357,14 +357,15 @@ describe('Product', () => {
 
   it('Checks if product exist in product list page right after making it', () => {
 
-    // var productName1 = 'product-YgBii7tZ';
+    // var productName1 = 'product-UGAQFVNQ';
 
     // goto product list page and search for newly created product in previous step
     ProductList.visit();
     ProductList.searchNotFindProduct(productName1);
 
-    RequestHandler.registerInterceptions(Product.editProductQueryList);
     Product.visit();
+
+    RequestHandler.registerInterceptions(Product.editProductQueryList);
 
     // click on edit product button in product list page in backend
     Table.getByAttr('product-list').action(TableActionTypes.EDIT, productName1);
@@ -388,7 +389,9 @@ describe('Product', () => {
           Input.getByAttr('product-url').writeValue(productIdentifier);
         });
 
-        MediaSelect.getByAttr('product-preview-picture').select('logo.png');
+        MediaSelect.getByAttr('product-preview-picture')
+          .select('logo.png', 1)
+          .isImageSelected('logo.png');
 
         // save product
         // Product.saveEditButton().click({ force: true });
@@ -408,7 +411,6 @@ describe('Product', () => {
   });
 
   it('Checks delete product', () => {
-
     Product.createEmptyProduct(Product.generateName());
 
     // get the last product name in the list and delete it
@@ -426,28 +428,7 @@ describe('Product', () => {
       cy.get('md-dialog-actions').should('not.exist');
 
       // check delete
-      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
-
-      RequestHandler.registerInterceptions(Product.removeProductRequests);
-
-      cy.get('md-dialog-actions').find('button.md-confirm-button')
-        .should('exist').should('contain.text', 'Löschen')
-        .click();
-
-      cy.get('md-dialog-actions').should('not.exist');
-
-      // wait until delete requests are made
-      cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
-
-        Core.checkResponsesForError($responses);
-
-        // the last item in table should not contain the product name
-        cy.dataCy('product-list').within(() => {
-          cy.get('table tbody').within(() => {
-            cy.get('tr:last-child td:nth-child(4)').should('not.contain.text', productName);
-          });
-        });
-      });
+      Product.deleteProductByName(productName);
     });
   });
 
@@ -456,27 +437,8 @@ describe('Product', () => {
     Product.createEmptyProduct(Product.generateName());
 
     cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
-
-      RequestHandler.registerInterceptions(Product.copyProductRequests);
-
-      Table.getByAttr('product-list')
-        .action(TableActionTypes.COPY, productName);
-
-      cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
-
-        Core.checkResponsesForError($responses);
-
-        // the last item in table should contain the product name
-        cy.dataCy('product-list').within(() => {
-          cy.get('table tbody').within(() => {
-            cy.get('tr:last-child td:nth-child(4)').should('contain.text', productName);
-
-            Product.deleteProductByName(productName);
-          });
-        });
-      });
+      Product.copyProductByName(productName);
     });
   });
-
 
 });

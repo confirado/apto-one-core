@@ -127,6 +127,8 @@ export class Product implements IPage {
 
     // wait until delete requests are made
     cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
+      Core.checkResponsesForError($responses);
+
       // the last item in table should not contain the product name
       cy.dataCy('product-list').within(() => {
         cy.get('table tbody').within(() => {
@@ -137,9 +139,12 @@ export class Product implements IPage {
   }
 
   public static copyProductByName(productName: string) {
+    RequestHandler.registerInterceptions(Product.copyProductRequests);
+
     Table.getByAttr('product-list').action(TableActionTypes.COPY, productName);
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
+      Core.checkResponsesForError($responses);
 
       // the last item in table should contain the product name
       cy.dataCy('product-list').within(() => {

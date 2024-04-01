@@ -1,18 +1,37 @@
 import { TableActionTypes } from '../../enums/table-action-types';
+import Chainable = Cypress.Chainable;
+import { Checkbox } from './form/checkbox';
 
 export class Table {
-  private static initialSelector: string;
 
   public static getByAttr(selector: string): typeof Table {
-    Table.initialSelector = `[data-cy="${selector}"]`;
-    cy.get(Table.initialSelector).should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('cypressElem');
+    cy.get('@cypressElem').should('exist');
 
     return Table;
   }
 
   public static get(selector: string): typeof Table {
-    Table.initialSelector = selector;
-    cy.get(Table.initialSelector).should('exist');
+    cy.get(selector).as('cypressElem');
+    cy.get('@cypressElem').should('exist');
+
+    return Table;
+  }
+
+  /**
+   * Sets a custom cypress element for testing
+   *
+   * makes sense in cases when we don't select our element but rather we get it from search or so, then we can with this method make it as
+   * testing object and apply all our methods to it
+   *
+   *  Checkbox.set(cy.dataCy('product-active'))
+   *          .hasLabel('Aktiv')
+   *          .isUnChecked();
+   *
+   * @param elem
+   */
+  public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Table {
+    elem.as('cypressElem');
 
     return Table;
   }
@@ -25,7 +44,7 @@ export class Table {
    * @param text value to find in table
    */
   public static hasValue(text: string): typeof Table {
-    cy.get(Table.initialSelector).should('exist').within(() => {
+    cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         let found = false;
 
@@ -38,7 +57,7 @@ export class Table {
 
             if (cellValue.includes(text)) {
               found = true;
-              return false; // means break the loop if found
+              // return false; // means break the loop if found
             }
           });
         }).then(() => {
@@ -56,7 +75,7 @@ export class Table {
    * @param text
    */
   public static hasNotValue(text: string): typeof Table {
-    cy.get(Table.initialSelector).should('exist').within(() => {
+    cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         let found = false;
 
@@ -88,7 +107,7 @@ export class Table {
    * @param uniqueValue value that we look in every table row and every cell
    */
   public static action(type: TableActionTypes, uniqueValue: any): typeof Table {
-    cy.get(Table.initialSelector).should('exist').within(() => {
+    cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
           // @ts-ignore
@@ -116,7 +135,7 @@ export class Table {
    * @param uniqueValue
    */
   public static selectRow(uniqueValue: any): typeof Table {
-    cy.get(Table.initialSelector).should('exist').within(() => {
+    cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
           // @ts-ignore
@@ -141,7 +160,7 @@ export class Table {
    * @param columnNumber
    */
   public static selectCell(uniqueValue: any, columnNumber: number): typeof Table {
-    cy.get(Table.initialSelector).should('exist').within(() => {
+    cy.get('@cypressElem').should('exist').within(() => {
       cy.get('table tbody').within(() => {
         cy.get('tr').each($tr => {
           // @ts-ignore
@@ -149,7 +168,66 @@ export class Table {
             const cellValue = $td.text().trim();
 
             if (cellValue.includes(uniqueValue)) {
-              cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').click({force: true});
+              cy.wrap($tr).scrollIntoView().should('be.visible');
+
+              cy.wrap($tr).within(() => {
+                cy.wait(100);
+                cy.get('td:nth-child(' + columnNumber + ')').click({ force: true });
+              })
+            }
+          });
+        })
+      })
+    });
+
+    return Table;
+  }
+
+  /**
+   * Checks that the given row's given column's checkbox is checked
+   *
+   * @param uniqueValue
+   * @param columnNumber
+   */
+  public static isRowChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
+    cy.get('@cypressElem').should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        cy.get('tr').each($tr => {
+          // @ts-ignore
+          cy.wrap($tr).find('td').each($td => {
+            const cellValue = $td.text().trim();
+
+            if (cellValue.includes(uniqueValue)) {
+              Checkbox.set(cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').find('md-input-container'))
+                .isChecked();
+              return false;
+            }
+          });
+        })
+      })
+    });
+
+    return Table;
+  }
+
+  /**
+   * Checks that the given row's given column's checkbox is unchecked
+   *
+   * @param uniqueValue
+   * @param columnNumber
+   */
+  public static isRowUnChecked(uniqueValue: any, columnNumber: number = 1): typeof Table {
+    cy.get('@cypressElem').should('exist').within(() => {
+      cy.get('table tbody').within(() => {
+        cy.get('tr').each($tr => {
+          // @ts-ignore
+          cy.wrap($tr).find('td').each($td => {
+            const cellValue = $td.text().trim();
+
+            if (cellValue.includes(uniqueValue)) {
+              Checkbox
+                .set(cy.wrap($tr).find('td:nth-child(' + columnNumber + ')').find('md-input-container'))
+                .isUnChecked();
               return false;
             }
           });
