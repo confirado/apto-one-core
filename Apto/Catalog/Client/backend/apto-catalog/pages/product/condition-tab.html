@@ -1,8 +1,9 @@
 <!-- Product condition identifier -->
 <div layout="row" layout-align="start" flex>
+    <!-- identifier text field -->
     <md-input-container flex data-cy="condition-name">
         <label>Identifier:</label>
-        <input ng-model="$parent.$parent.newConditionIdentifier.value">
+        <input ng-model="$parent.$parent.selectedProductConditionIdentifier">
     </md-input-container>
     <div flex="5"></div>
 
@@ -112,9 +113,9 @@
 
     <!-- add button -->
     <md-input-container>
-        <md-button ng-disabled="!isValidProductCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
-        <md-button ng-disabled="!isValidProductCondition()" ng-if="currentProductConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
-        <md-button ng-disabled="!currentProductConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetProductConditionForm()" data-cy="condition-reset-button">
+        <md-button ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
+        <md-button ng-disabled="!isValidCondition()" ng-if="currentProductConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
+        <md-button ng-disabled="!currentProductConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetConditionForm()" data-cy="condition-reset-button">
             <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
         </md-button>
     </md-input-container>
@@ -134,14 +135,16 @@
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="condition in conditions">
-            <td ng-if="conditions.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
-            <td ng-if="conditions.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
-            <td ng-if="conditions.type === 0" md-cell>{{ condition.property }}</td>
-            <td ng-if="conditions.type === 1" md-cell>Berechneter Wert</td>
-            <td ng-if="conditions.type === 1" md-cell></td>
-            <td ng-if="conditions.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getIdentifier(id) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
+            <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
+            <td ng-if="condition.type === 1" md-cell></td>
+            <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>
             <td md-cell>{{ getOperatorName(condition.operator) }}</td>
             <td md-cell>{{ condition.value }}</td>
+            <td md-cell> hallo Welt</td>
             <td md-cell>
                 <md-button
                     title="Bearbeiten"

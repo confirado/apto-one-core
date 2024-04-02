@@ -2,36 +2,43 @@
 
 namespace Apto\Catalog\Domain\Core\Model\Product;
 
-use Apto\Base\Domain\Core\Model\AptoCustomProperties;
 use Apto\Base\Domain\Core\Model\AptoAggregate;
+use Apto\Base\Domain\Core\Model\AptoCustomProperties;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
+use Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscountDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscounts;
+use Apto\Base\Domain\Core\Model\AptoPrice\AptoPriceDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPrices;
 use Apto\Base\Domain\Core\Model\AptoPriceFormula\AptoPriceFormulaDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
-use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
-use Apto\Base\Domain\Core\Model\AptoPrice\AptoPriceDuplicateException;
-use Apto\Base\Domain\Core\Model\InvalidUuidException;
-use Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscountDuplicateException;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
+use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
 use Apto\Catalog\Domain\Core\Model\Group\Group;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\Criterion;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidTypeException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Element\Element;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefaultUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionCopyAware;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionSelectableValuesUpdated;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementExtendedPriceCalculationActiveUpdated;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementExtendedPriceCalculationFormulaUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementIsActiveUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementIsMandatoryUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementIsNotAvailableUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementIsZoomableUpdated;
-use Apto\Catalog\Domain\Core\Model\Product\Element\ElementExtendedPriceCalculationActiveUpdated;
-use Apto\Catalog\Domain\Core\Model\Product\Element\ElementExtendedPriceCalculationFormulaUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementOpenLinksInDialogUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementPercentageSurchargeUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementPositionUpdated;
-use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionSelectableValuesUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementPriceMatrixUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementZoomFunctionUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Element\RenderImage;
@@ -39,18 +46,13 @@ use Apto\Catalog\Domain\Core\Model\Product\Element\RenderImageOptions;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ZoomFunction;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\Rule;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterion;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidTypeException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Section\Section;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionAllowMultipleUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsActiveUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsHiddenUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsMandatoryUpdated;
-use Apto\Catalog\Domain\Core\Model\Product\Section\SectionPositionUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionIsZoomableUpdated;
+use Apto\Catalog\Domain\Core\Model\Product\Section\SectionPositionUpdated;
 use Apto\Catalog\Domain\Core\Model\Product\Section\SectionRepeatableUpdated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -203,6 +205,11 @@ class Product extends AptoAggregate
     protected $domainProperties;
 
     /**
+     * @var Collection
+     */
+    protected $conditions;
+
+    /**
      * Product constructor.
      * @param AptoUuid $id
      * @param Identifier $identifier
@@ -234,6 +241,7 @@ class Product extends AptoAggregate
         $this->previewImage = null;
         $this->filterProperties = new ArrayCollection();
         $this->domainProperties = new ArrayCollection();
+        $this->conditions = new ArrayCollection();
     }
 
     /**
@@ -2950,22 +2958,22 @@ class Product extends AptoAggregate
      * @param AptoUuid|null $elementId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param $value
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      */
     public function addRuleCondition(
-        AptoUuid $ruleId,
-        RuleCriterionOperator $operator,
-        int $type = 0,
-        ?AptoUuid $sectionId = null,
-        ?AptoUuid $elementId = null,
-        ?string $property = null,
+        AptoUuid              $ruleId,
+        CriterionOperator     $operator,
+        int                   $type = 0,
+        ?AptoUuid             $sectionId = null,
+        ?AptoUuid             $elementId = null,
+        ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string               $value = null
     ): Product
     {
         $rule = $this->getRule($ruleId);
@@ -2984,22 +2992,22 @@ class Product extends AptoAggregate
      * @param AptoUuid|null $elementId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param $value
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      */
     public function addRuleImplication(
-        AptoUuid $ruleId,
-        RuleCriterionOperator $operator,
-        int $type = 0,
-        ?AptoUuid $sectionId = null,
-        ?AptoUuid $elementId = null,
-        ?string $property = null,
+        AptoUuid              $ruleId,
+        CriterionOperator     $operator,
+        int                   $type = 0,
+        ?AptoUuid             $sectionId = null,
+        ?AptoUuid             $elementId = null,
+        ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string               $value = null
     ): Product
     {
         $rule = $this->getRule($ruleId);
@@ -3094,7 +3102,7 @@ class Product extends AptoAggregate
      * @param AptoUuid              $ruleId
      * @param AptoUuid              $conditionId
      * @param int                   $type
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param string                $value
      * @param AptoUuid|null         $computedValueId
      * @param AptoUuid|null         $sectionId
@@ -3104,15 +3112,15 @@ class Product extends AptoAggregate
      * @return $this
      */
     public function setRuleCondition(
-        AptoUuid $ruleId,
-        AptoUuid $conditionId,
-        int $type,
-        RuleCriterionOperator $operator,
-        string $value,
-        AptoUuid $computedValueId = null,
-        AptoUuid $sectionId = null,
-        AptoUuid $elementId = null,
-        string $property = null,
+        AptoUuid          $ruleId,
+        AptoUuid          $conditionId,
+        int               $type,
+        CriterionOperator $operator,
+        string            $value,
+        AptoUuid          $computedValueId = null,
+        AptoUuid          $sectionId = null,
+        AptoUuid          $elementId = null,
+        string            $property = null,
     ): Product {
         $rule = $this->getRule($ruleId);
 
@@ -3167,7 +3175,7 @@ class Product extends AptoAggregate
      * @param AptoUuid              $ruleId
      * @param AptoUuid              $implicationId
      * @param int                   $type
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param string                $value
      * @param AptoUuid|null         $computedValueId
      * @param AptoUuid|null         $sectionId
@@ -3177,15 +3185,15 @@ class Product extends AptoAggregate
      * @return $this
      */
     public function setRuleImplication(
-        AptoUuid $ruleId,
-        AptoUuid $implicationId,
-        int $type,
-        RuleCriterionOperator $operator,
-        string $value,
-        AptoUuid $computedValueId = null,
-        AptoUuid $sectionId = null,
-        AptoUuid $elementId = null,
-        string $property = null,
+        AptoUuid          $ruleId,
+        AptoUuid          $implicationId,
+        int               $type,
+        CriterionOperator $operator,
+        string            $value,
+        AptoUuid          $computedValueId = null,
+        AptoUuid          $sectionId = null,
+        AptoUuid          $elementId = null,
+        string            $property = null,
     ): Product {
         $rule = $this->getRule($ruleId);
 
@@ -3825,10 +3833,10 @@ class Product extends AptoAggregate
      * @param Collection $entityMapping
      * @return Collection
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
-     * @throws RuleCriterionInvalidTypeException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
+     * @throws CriterionInvalidTypeException
      */
     private function copyRules(Collection &$entityMapping): Collection
     {
@@ -3852,10 +3860,10 @@ class Product extends AptoAggregate
      *
      * @return $this
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copyRule(AptoUuid $ruleId): Product
     {
@@ -3920,10 +3928,10 @@ class Product extends AptoAggregate
      * @param AptoUuid $conditionId
      *
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copyRuleCondition(AptoUuid $ruleId, AptoUuid $conditionId): Product
     {
@@ -3965,10 +3973,10 @@ class Product extends AptoAggregate
      * @param AptoUuid $implicationId
      *
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copyRuleImplication(AptoUuid $ruleId, AptoUuid $implicationId): Product
     {
@@ -4096,5 +4104,331 @@ class Product extends AptoAggregate
                 throw new InvalidComputedValueNameException('ComputedProductValue with name ' . $computedProductValue->getName() . ' already exists in current Product');
             }
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getProductConditions(): Collection
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return Condition|null
+     */
+    private function getProductCondition(AptoUuid $conditionId): ?Condition
+    {
+        if ($this->hasProductCondition($conditionId)) {
+            return $this->conditions->get($conditionId->getId());
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @return AptoUuid
+     */
+    public function nextProductConditionId(): AptoUuid
+    {
+        return new AptoUuid();
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @return bool
+     */
+    public function hasProductCondition(AptoUuid $id): bool
+    {
+        return $this->conditions->containsKey($id->getId());
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @param CriterionOperator $operator
+     * @param int $type
+     * @param AptoUuid|null $sectionId
+     * @param AptoUuid|null $elementId
+     * @param string|null $property
+     * @param ComputedProductValue|null $computedProductValue
+     * @param string|null $value
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function addProductCondition(
+        Identifier            $identifier,
+        CriterionOperator     $operator,
+        int                   $type = 0,
+        ?AptoUuid             $sectionId = null,
+        ?AptoUuid             $elementId = null,
+        ?string               $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string               $value = null
+    ): Product {
+        $conditionId = $this->nextProductConditionId();
+        $this->conditions = new ArrayCollection();
+        $this->conditions->set(
+            $conditionId->getId(),
+            new Condition(
+                $conditionId,
+                $this,
+                $identifier,
+                $operator,
+                $type,
+                $sectionId,
+                $elementId,
+                $property,
+                $computedProductValue,
+                $value
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param Identifier $identifier
+     * @param int $type
+     * @param CriterionOperator $operator
+     * @param string $value
+     * @param AptoUuid|null $computedValueId
+     * @param AptoUuid|null $sectionId
+     * @param AptoUuid|null $elementId
+     * @param string|null $property
+     * @return $this
+     */
+    public function setProductCondition(
+        AptoUuid          $conditionId,
+        Identifier        $identifier,
+        int               $type,
+        AptoUuid          $computedValueId = null,
+        AptoUuid          $sectionId = null,
+        AptoUuid          $elementId = null,
+        string            $property = null,
+        CriterionOperator $operator,
+        string            $value,
+    ): Product {
+        $condition = $this->getProductCondition($conditionId);
+
+        if ($condition === null) {
+            return $this;
+        }
+
+        // identifier is required in both cases, so we don't check if it is there or not
+        $condition->setIdentifier($identifier);
+
+        // type is required in both cases, so we don't check if it is there or not
+        $condition->setType($type);
+
+        if ($type === Criterion::STANDARD_TYPE) {
+            $condition->setSectionId($sectionId);
+            $condition->setElementId($elementId);
+            $condition->setProperty($property);
+
+            $condition->setComputedProductValue(null);
+        }
+        else if ($type === Criterion::COMPUTED_VALUE_TYPE) {
+            $condition->setComputedProductValue($this->getComputedProductValue($computedValueId));
+
+            $condition->setSectionId(null);
+            $condition->setElementId(null);
+            $condition->setProperty(null);
+        }
+
+        // operator is required in both cases
+        $condition->setOperator($operator);
+
+        // value can be null, we might want to unset the value
+        $condition->setValue($value);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return $this
+     */
+    public function removeCondition(AptoUuid $conditionId): Product
+    {
+        if ($this->conditions->containsKey($conditionId->getId())) {
+            $this->conditions->remove($conditionId->getId());
+        }
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param Identifier $identifier
+     * @return $this
+     */
+    public function setProductConditionIdentifier(AptoUuid $conditionId, Identifier $identifier): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null !== $condition) {
+            $condition->setIdentifier($identifier);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param int $type
+     * @return $this
+     */
+    public function setProductConditionType(AptoUuid $conditionId, int $type): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setType($type);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param ComputedProductValue|null $computedValue
+     * @return $this
+     */
+    public function setProductConditionComputedValue(AptoUuid $conditionId, ?ComputedProductValue $computedValue): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setComputedProductValue($computedValue);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param AptoUuid|null $sectionId
+     * @return $this
+     */
+    public function setProductConditionSectionId(AptoUuid $conditionId, ?AptoUuid $sectionId): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if ($condition === null) {
+            return $this;
+        }
+
+        $condition->setSectionId($sectionId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param AptoUuid|null $elementId
+     * @return $this
+     */
+    public function setProductConditionElementId(AptoUuid $conditionId, ?AptoUuid $elementId): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setElementId($elementId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param string|null $property
+     * @return $this
+     */
+    public function setProductConditionProperty(AptoUuid $conditionId, ?string $property): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setProperty($property);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param CriterionOperator $CriterionOperator
+     * @return $this
+     */
+    public function setProductConditionOperator(AptoUuid $conditionId, CriterionOperator $CriterionOperator): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setOperator($CriterionOperator);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @param string $value
+     * @return $this
+     */
+    public function setProductConditionValue(AptoUuid $id, string $value): Product
+    {
+        $condition = $this->getProductCondition($id);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setValue($value);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return $this
+     */
+    public function removeProductCondition(AptoUuid $conditionId): Product
+    {
+        if ($this->conditions->containsKey($conditionId->getId())) {
+            $this->conditions->remove($conditionId->getId());
+        }
+        return $this;
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @return array
+     */
+    public function getProductConditionIdsByIdentifier(Identifier $identifier): array
+    {
+        $conditionIds = [];
+
+        foreach ($this->conditions as $condition) {
+            if ($condition->getIdentifier() === $identifier) {
+                $conditionIds[] = $condition->getId();
+            }
+        }
+        return $conditionIds;
     }
 }

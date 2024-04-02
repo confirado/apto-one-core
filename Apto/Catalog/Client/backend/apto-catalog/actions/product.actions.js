@@ -952,12 +952,12 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
                 productId,
                 condition.identifier,
                 condition.type,
+                condition.operator,
+                condition.value,
                 condition.sectionId,
                 condition.elementId,
                 condition.property,
                 condition.computedValue,
-                condition.operator,
-                condition.value
             ])
         }
     }

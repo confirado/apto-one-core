@@ -7,12 +7,25 @@ use Apto\Base\Application\Core\QueryHandlerInterface;
 class ProductConditionHandler implements QueryHandlerInterface
 {
     /**
-     * @param FindProductConditions $query
-     * @return array
+     * @var
      */
-    public function handleFindProductConditions(FindProductConditions $query): array
+    private $productConditionFinder;
+
+    /**
+     * @param ProductConditionFinder $productConditionFinder
+     */
+    public function __construct(ProductConditionFinder $productConditionFinder)
     {
-        return [];
+        $this->productConditionFinder = $productConditionFinder;
+    }
+
+    /**
+     * @param FindConditions $query
+     * @return array|null
+     */
+    public function handleFindConditions(FindConditions $query)
+    {
+        return $this->productConditionFinder->findConditions($query->getProductId());
     }
 
     /**
@@ -21,7 +34,7 @@ class ProductConditionHandler implements QueryHandlerInterface
     public static function getHandledMessages(): iterable
     {
         yield FindProductConditions::class => [
-            'method' => 'handleFindProductConditions',
+            'method' => 'handleFindConditions',
             'bus' => 'query_bus'
         ];
     }

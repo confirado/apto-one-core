@@ -7,11 +7,11 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
 
 class RuleCondition extends AptoEntity
 {
@@ -26,7 +26,7 @@ class RuleCondition extends AptoEntity
     protected $productId;
 
     /**
-     * @var RuleCriterionOperator
+     * @var CriterionOperator
      */
     protected $operator;
 
@@ -59,27 +59,27 @@ class RuleCondition extends AptoEntity
      * @param AptoUuid $id
      * @param RuleUsage $rule
      * @param Product $product
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param string $value
      * @param string|null $sectionId
      * @param string|null $elementId
      * @param string|null $property
      * @param string|null $computedValueId
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      * @throws InvalidUuidException
      */
     public function __construct(
-        AptoUuid $id,
-        RuleUsage $rule,
-        Product $product,
-        RuleCriterionOperator $operator,
-        string $value,
-        string $sectionId = null,
-        string $elementId = null,
-        string $property = null,
-        string $computedValueId = null
+        AptoUuid          $id,
+        RuleUsage         $rule,
+        Product           $product,
+        CriterionOperator $operator,
+        string            $value,
+        string            $sectionId = null,
+        string            $elementId = null,
+        string            $property = null,
+        string            $computedValueId = null
     ) {
         parent::__construct($id);
 
@@ -92,26 +92,26 @@ class RuleCondition extends AptoEntity
         }
 
         if (null === $elementId && null !== $property) {
-            throw new RuleCriterionInvalidPropertyException('The given property must be null if no elementId is set.');
+            throw new CriterionInvalidPropertyException('The given property must be null if no elementId is set.');
         }
 
         if (null !== $elementId && null !== $property && !array_key_exists($property, $product->getElementSelectableValues(new AptoUuid($sectionId), new AptoUuid($elementId)))) {
-            throw new RuleCriterionInvalidPropertyException('The given property \'' . $property . '\' is not defined in the given element\'s definition.');
+            throw new CriterionInvalidPropertyException('The given property \'' . $property . '\' is not defined in the given element\'s definition.');
         }
 
-        if (RuleCriterionOperator::NOT_ACTIVE === $operator->getOperator() || RuleCriterionOperator::ACTIVE === $operator->getOperator()) {
+        if (CriterionOperator::NOT_ACTIVE === $operator->getOperator() || CriterionOperator::ACTIVE === $operator->getOperator()) {
             if (null !== $value) {
-                throw new RuleCriterionInvalidValueException('The given value must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
+                throw new CriterionInvalidValueException('The given value must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
             }
             if (null !== $property) {
-                throw new RuleCriterionInvalidValueException('The given property must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
+                throw new CriterionInvalidValueException('The given property must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
             }
             if (null !== $computedValueId) {
-                throw new RuleCriterionInvalidValueException('The given computed Value must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
+                throw new CriterionInvalidValueException('The given computed Value must be empty when operator \'NOT_ACTIVE\' or \'ACTIVE\' is set.');
             }
         } else {
             if ((null === $elementId || null === $property) && null === $computedValueId) {
-                throw new RuleCriterionInvalidOperatorException('The given operator must be ACTIVE or NOT_ACTIVE if no element or property is set.');
+                throw new CriterionInvalidOperatorException('The given operator must be ACTIVE or NOT_ACTIVE if no element or property is set.');
             }
         }
 
@@ -142,9 +142,9 @@ class RuleCondition extends AptoEntity
     }
 
     /**
-     * @return RuleCriterionOperator
+     * @return CriterionOperator
      */
-    public function getOperator(): RuleCriterionOperator
+    public function getOperator(): CriterionOperator
     {
         return $this->operator;
     }

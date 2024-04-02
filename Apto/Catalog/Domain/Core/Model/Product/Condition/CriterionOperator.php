@@ -1,8 +1,8 @@
 <?php
 
-namespace Apto\Catalog\Domain\Core\Model\Product\Rule;
+namespace Apto\Catalog\Domain\Core\Model\Product\Condition;
 
-class RuleCriterionOperator
+class CriterionOperator
 {
     /**
      * valid values
@@ -41,14 +41,14 @@ class RuleCriterionOperator
     protected $operator;
 
     /**
-     * RuleCriterionOperator constructor.
+     * CriterionOperator constructor.
      * @param int $operator
-     * @throws RuleCriterionInvalidOperatorException
+     * @throws CriterionInvalidOperatorException
      */
     public function __construct(int $operator)
     {
         if (!in_array($operator, self::$validValues)) {
-            throw new RuleCriterionInvalidOperatorException('The given value \'' . $operator . '\' is not a valid operator.');
+            throw new CriterionInvalidOperatorException('The given value \'' . $operator . '\' is not a valid operator.');
         }
         $this->operator = $operator;
     }
@@ -63,10 +63,10 @@ class RuleCriterionOperator
 
     /**
      * Compare this operator to another one
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @return bool
      */
-    public function matches(RuleCriterionOperator $operator)
+    public function matches(CriterionOperator $operator)
     {
         return $operator->getOperator() == $this->getOperator();
     }

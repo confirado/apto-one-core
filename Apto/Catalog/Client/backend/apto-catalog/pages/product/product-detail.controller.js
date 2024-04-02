@@ -141,7 +141,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             id: 0
         };
 
-        $scope.currentProductConditionIdentifier = null;
+        $scope.selectedProductConditionIdentifier = null;
         $scope.selectableProductConditionProperties = null;
         $scope.selectableProductConditionOperators = $scope.operatorsActive;
         $scope.selectedProductConditionSection = null;
@@ -478,9 +478,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         return Object.keys(definitionClass.properties);
     }
 
-    function addProductCondition() {
-        const conditions = getValidProductConditions();
-
+    function addCondition() {
+        const conditions = getValidConditions();
         if (false !== conditions) {
             let calledCommands = [];
 
@@ -489,10 +488,10 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             }
 
             Promise.all(calledCommands).then((values) => {
-                $scope.fetchConditions(productId);
+                $scope.fetchProductConditions(productId);
             });
 
-            resetSelectedProductCondition();
+            resetSelectedCondition();
         }
         // @todo show error message
         return false;
@@ -502,7 +501,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         const condition = {
             computedProductValueId: $scope.selectedProductConditionComputedValue ? $scope.selectedProductConditionComputedValue.id : null,
             elementId: $scope.selectedProductConditionElement ? $scope.selectedProductConditionElement[0].id : null,
-            identifier: $scope.currentProductConditionIdentifier,
+            identifier: $scope.selectedProductConditionIdentifier,
+            id: $scope.currentConditionId,
             operatorId: $scope.selectedProductConditionOperator ? $scope.selectedProductConditionOperator.id : null,
             property: $scope.selectedProductConditionProperty ? $scope.selectedProductConditionProperty[0] : null,
             sectionId: $scope.selectedProductConditionSection ? $scope.selectedProductConditionSection[0].id : null,
@@ -511,15 +511,15 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         }
 
         $scope.updateProductCondition(productId, condition).then(() => {
-            $scope.fetchConditions(productId);
-            resetSelectedProductCondition();
+            $scope.fetchProductConditions(productId);
+            resetSelectedCondition();
             $scope.currentProductConditionId = null;
         });
     }
 
     function updateCondition(conditionId) {
 
-        $scope.currentProductConditionIdentifier = conditionId;
+        $scope.currentConditionId = conditionId;
 
         $scope.fetchSections(productId).then(() => {
             $scope.conditions.forEach(condition => {
@@ -584,16 +584,16 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         })
     }
 
-    function getValidProductConditions() {
-        if (isValidProductCondition()) {
+    function getValidConditions() {
+        if (isValidCondition()) {
             // init conditions array
             let conditions = [];
 
             // if computedValue
             if ($scope.conditionType.id === 1) {
                 return [{
-                    conditionId: $scope.condition.id,
-                    identifier: $scope.currentProductConditionIdentifier,
+                    conditionId: $scope.id,
+                    identifier: $scope.selectedProductConditionIdentifier,
                     type: $scope.conditionType.id,
                     operator: $scope.selectedProductConditionOperator.id,
                     computedValue: $scope.selectedProductConditionComputedValue.id,
@@ -607,12 +607,14 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                     const section = $scope.selectedProductConditionSection[i];
 
                     conditions.push({
-                        identifier: $scope.currentProductConditionIdentifier,
+                        conditionId: $scope.id,
+                        identifier: $scope.selectedProductConditionIdentifier,
+                        type: $scope.conditionType.id,
+                        operator: $scope.selectedProductConditionOperator.id,
+                        value: '',
                         sectionId: section.id,
                         elementId: null,
                         property: null,
-                        operator: $scope.selectedProductConditionOperator.id,
-                        value: ''
                     });
                 }
 
@@ -630,8 +632,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             // if no element is selected add single section
             if(null === $scope.selectedProductConditionElement) {
                 return [{
-                    conditionId: $scope.condition.id,
-                    identifier: $scope.currentProductConditionIdentifier,
+                    conditionId: $scope.id,
+                    identifier: $scope.selectedProductConditionIdentifier,
                     sectionId: section.id,
                     elementId: null,
                     property: null,
@@ -646,8 +648,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                     const element = $scope.selectedProductConditionElement[i];
 
                     conditions.push({
-                        conditionId: $scope.condition.id,
-                        identifier: $scope.currentProductConditionIdentifier,
+                        conditionId: $scope.id,
+                        identifier: $scope.selectedProductConditionIdentifier,
                         sectionId: section.id,
                         elementId: element.id,
                         property: null,
@@ -670,8 +672,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             // if no property is selected add single section->element
             if(null === $scope.selectedProductConditionProperty) {
                 return [{
-                    conditionId: $scope.condition.id,
-                    identifier: $scope.currentProductConditionIdentifier,
+                    conditionId: $scope.id,
+                    identifier: $scope.selectedProductConditionIdentifier,
                     sectionId: section.id,
                     elementId: element.id,
                     property: null,
@@ -686,8 +688,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
                     const property = $scope.selectedProductConditionProperty[i];
 
                     conditions.push({
-                        conditionId: $scope.condition.id,
-                        identifier: $scope.currentProductConditionIdentifier,
+                        conditionId: $scope.id,
+                        identifier: $scope.selectedProductConditionIdentifier,
                         sectionId: section.id,
                         elementId: element.id,
                         property: property,
@@ -708,7 +710,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             const property = $scope.selectedProductConditionProperty[0];
             return [{
                 conditionId: $scope.condition.id,
-                identifier: $scope.currentProductConditionIdentifier,
+                identifier: $scope.selectedProductConditionIdentifier,
                 sectionId: section.id,
                 elementId: element.id,
                 property: property,
@@ -721,22 +723,23 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         return false;
     }
 
-    function isValidProductCondition() {
+    function isValidCondition() {
         if ($scope.conditionType.id === 0) {
             if (
-                (null === $scope.selectedConditionElement && null !== $scope.selectedConditionProperty)
-                || null === $scope.selectedP
-                || null === $scope.selectedConditionSection
-                || null === $scope.selectedConditionOperator
+                (null === $scope.selectedProductConditionElement && null !== $scope.selectedProductConditionProperty)
+                || null === $scope.selectedProductConditionIdentifier
+                || null === $scope.selectedProductConditionSection
+                || null === $scope.selectedProductConditionOperator
             ) {
                 return false;
             }
         }
         if ($scope.conditionType.id === 1) {
             if (
-                null === $scope.selectedConditionComputedValue
-                || null === $scope.selectedConditionOperator
-                || '' === $scope.selectedConditionValue
+                null === $scope.selectedProductConditionComputedValue
+                || null === $scope.selectedProductConditionIdentifier
+                || null === $scope.selectedProductConditionOperator
+                || '' === $scope.selectedProductConditionValue
             ) {
                 return false;
             }
@@ -744,8 +747,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         return true;
     }
 
-    function resetSelectedProductCondition() {
-        $scope.currentProductConditionIdentifier = null;
+    function resetSelectedCondition() {
+        $scope.selectedProductConditionIdentifier = null;
         $scope.selectableProductConditionProperties = null;
         $scope.selectableProductConditionOperators = $scope.operatorsActive;
         $scope.selectedProductConditionSection = null;
@@ -760,9 +763,52 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         };
     }
 
-    function resetProductConditionForm() {
-        resetSelectedProductCondition();
+    function resetConditionForm() {
+        resetSelectedCondition();
         $scope.currentConditionId = null;
+    }
+
+    function getSection(sectionId) {
+        for (let i = 0; i < $scope.sections.length; i++) {
+            if ($scope.sections[i].id === sectionId) {
+                return angular.copy($scope.sections[i]);
+            }
+        }
+    }
+
+    function getSectionIdentifier(sectionId) {
+        if (null === sectionId) {
+            return null;
+        }
+        const section = getSection(sectionId);
+
+        return section ? section.identifier : '';
+    }
+
+    function getElementIdentifier(sectionId, elementId) {
+        if (null === elementId) {
+            return null;
+        }
+        const element = getElement(sectionId, elementId);
+
+        return element ? element.identifier : '';
+    }
+
+    function getElement(sectionId, elementId) {
+        const section = getSection(sectionId);
+        for (let i = 0; i < section.elements.length; i++) {
+            if (section.elements[i].id === elementId) {
+                return angular.copy(section.elements[i]);
+            }
+        }
+    }
+
+    function getOperator(operatorId) {
+        for (let i = 0; i < $scope.operatorsFull.length; i++) {
+            if ($scope.operatorsFull[i].id === operatorId) {
+                return angular.copy($scope.operatorsFull[i]);
+            }
+        }
     }
 
     function close() {
@@ -790,9 +836,6 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.newConditionIdentifier = {
         value: ''
     }
-    $scope.newComputedValue = {
-        name: ''
-    };
     $scope.newPrice = {
         amount: '',
         currencyCode: 'EUR',
@@ -851,13 +894,13 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.onChangeSelectedProductConditionProperty = onChangeSelectedProductConditionProperty;
     $scope.onChangeSelectedProductConditionOperator = onChangeSelectedProductConditionOperator;
 
-    $scope.addProductCondition = addProductCondition;
+    $scope.addCondition = addCondition;
     $scope.copyCondition = copyCondition;
     $scope.updateCondition = updateCondition;
     $scope.removeCondition = removeCondition;
     $scope.saveCondition = saveCondition;
-    $scope.isValidProductCondition = isValidProductCondition;
-    $scope.resetProductConditionForm = resetProductConditionForm;
+    $scope.isValidCondition = isValidCondition;
+    $scope.resetConditionForm = resetConditionForm;
 
     $scope.close = close;
 
