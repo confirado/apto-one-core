@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Application\Backend\Commands\Product\Condition;
 
-class RemoveProductCondition extends ProductConditionCommand
+class RemoveCondition extends ProductConditionCommand
 {
 
 }

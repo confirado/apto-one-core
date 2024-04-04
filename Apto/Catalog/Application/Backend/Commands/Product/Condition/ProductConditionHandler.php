@@ -16,7 +16,7 @@ use Apto\Catalog\Domain\Core\Model\Product\Identifier;
 class ProductConditionHandler extends ProductChildHandler
 {
     /**
-     * @param AddProductCondition $command
+     * @param AddCondition $command
      * @return void
      * @throws CriterionInvalidOperatorException
      * @throws CriterionInvalidPropertyException
@@ -25,9 +25,10 @@ class ProductConditionHandler extends ProductChildHandler
      * @throws InvalidUuidException
      * @throws \Exception
      */
-    public function handleAddProductCondition(AddProductCondition $command)
+    public function handleAddProductCondition(AddCondition $command)
     {
         $product = $this->productRepository->findById($command->getProductId());
+
         $computedProductValue = null;
         if ($command->getComputedValueId() !== null) {
             /** @var ComputedProductValue $value */
@@ -54,12 +55,12 @@ class ProductConditionHandler extends ProductChildHandler
     }
 
     /**
-     * @param UpdateProductCondition $command
+     * @param UpdateCondition $command
      * @return void
      * @throws CriterionInvalidOperatorException
      * @throws InvalidUuidException
      */
-    public function handleUpdateProductCondition(UpdateProductCondition $command)
+    public function handleUpdateProductCondition(UpdateCondition $command)
     {
         $product = $this->productRepository->findById($command->getProductId());
 
@@ -81,11 +82,11 @@ class ProductConditionHandler extends ProductChildHandler
     }
 
     /**
-     * @param RemoveProductCondition $command
+     * @param RemoveCondition $command
      * @return void
      * @throws InvalidUuidException
      */
-    public function handleRemoveProductCondition(RemoveProductCondition $command)
+    public function handleRemoveProductCondition(RemoveCondition $command)
     {
         $product = $this->productRepository->findById($command->getProductId());
 
@@ -103,17 +104,17 @@ class ProductConditionHandler extends ProductChildHandler
      */
     public static function getHandledMessages(): iterable
     {
-        yield AddProductCondition::class => [
+        yield AddCondition::class => [
             'method' => 'handleAddProductCondition',
             'bus' => 'command_bus'
         ];
 
-        yield UpdateProductCondition::class => [
+        yield UpdateCondition::class => [
             'method' => 'handleUpdateProductCondition',
             'bus' => 'command_bus'
         ];
 
-        yield RemoveProductCondition::class => [
+        yield RemoveCondition::class => [
             'method' => 'handleRemoveProductCondition',
             'bus' => 'command_bus'
         ];

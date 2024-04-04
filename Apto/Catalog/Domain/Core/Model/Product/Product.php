@@ -4131,7 +4131,7 @@ class Product extends AptoAggregate
     /**
      * @return AptoUuid
      */
-    public function nextProductConditionId(): AptoUuid
+    public function nextConditionId(): AptoUuid
     {
         return new AptoUuid();
     }
@@ -4170,13 +4170,12 @@ class Product extends AptoAggregate
         ?ComputedProductValue $computedProductValue = null,
         ?string               $value = null
     ): Product {
-        $conditionId = $this->nextProductConditionId();
-        $this->conditions = new ArrayCollection();
+        $conditionId = $this->nextConditionId();
         $this->conditions->set(
             $conditionId->getId(),
             new Condition(
-                $conditionId,
                 $this,
+                $conditionId,
                 $identifier,
                 $operator,
                 $type,
@@ -4184,12 +4183,13 @@ class Product extends AptoAggregate
                 $elementId,
                 $property,
                 $computedProductValue,
-                $value
+                $value,
             )
         );
 
         return $this;
     }
+
 
     /**
      * @param AptoUuid $conditionId

@@ -7,11 +7,17 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\ComputedProductValueCriterion;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Model\Product\Product;
 
 abstract class Criterion extends AptoEntity
 {
     const STANDARD_TYPE = 0;
     const COMPUTED_VALUE_TYPE = 1;
+
+    /**
+     * @var Product
+     */
+    protected $product;
 
     /**
      * @var int
@@ -50,6 +56,7 @@ abstract class Criterion extends AptoEntity
 
     /**
      * @param AptoUuid $id
+     * @param Product $product
      * @param CriterionOperator $operator
      * @param int|null $type
      * @param AptoUuid|null $sectionId
@@ -63,8 +70,9 @@ abstract class Criterion extends AptoEntity
      * @throws CriterionInvalidValueException
      */
      public function __construct(
-        AptoUuid $id,
-        CriterionOperator $operator,
+         Product $product,
+         AptoUuid $id,
+         CriterionOperator $operator,
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
@@ -72,6 +80,8 @@ abstract class Criterion extends AptoEntity
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
     ) {
+         $this->product = $product;
+
          parent::__construct($id);
 
         if (null === $type) {
@@ -119,6 +129,14 @@ abstract class Criterion extends AptoEntity
         $this->value = $value;
         $this->type = $type;
         $this->computedProductValue = $computedProductValue;
+    }
+
+    /**
+     * @return Product
+     */
+    public function getProduct(): Product
+    {
+        return $this->product;
     }
 
     /**

@@ -938,17 +938,17 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function fetchProductConditions(productId) {
+    function fetchConditions(productId) {
         return {
             type: getType('FETCH_CONDITIONS'),
-            payload: MessageBusFactory.query('FindProductConditions', [productId])
+            payload: MessageBusFactory.query('FindConditions', [productId])
         }
     }
 
-    function addProductCondition(productId, condition) {
+    function addCondition(productId, condition) {
         return {
-            type: getType('ADD_PRODUCT_GLOBAL_CONDITION'),
-            payload: MessageBusFactory.command('AddProductCondition', [
+            type: getType('ADD_CONDITION'),
+            payload: MessageBusFactory.command('AddCondition', [
                 productId,
                 condition.identifier,
                 condition.type,
@@ -962,7 +962,7 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function updateProductCondition(productId, condition) {
+    function updateCondition(productId, condition) {
         let commandArguments = [];
 
         commandArguments.push(productId);
@@ -977,22 +977,22 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(condition.property);
 
         return {
-            type: getType('UPDATE_PRODUCT_CONDITION'),
-            payload: MessageBusFactory.command('UpdateProductCondition', commandArguments)
+            type: getType('UPDATE_CONDITION'),
+            payload: MessageBusFactory.command('UpdateCondition', commandArguments)
         }
     }
 
-    function copyProductCondition(productId, conditionId) {
+    function copyCondition(productId, conditionId) {
         return {
-            type: getType('COPY_PRODUCT_CONDITION'),
-            payload: MessageBusFactory.command('CopyProductCondition', [productId, conditionId])
+            type: getType('COPY_CONDITION'),
+            payload: MessageBusFactory.command('CopyCondition', [productId, conditionId])
         }
     }
 
-    function removeProductCondition(productId, conditionId) {
+    function removeCondition(productId, conditionId) {
         return {
-            type: getType('REMOVE_PRODUCT_CONDITION'),
-            payload: MessageBusFactory.command('RemoveProductCondition', [productId, conditionId])
+            type: getType('REMOVE_CONDITION'),
+            payload: MessageBusFactory.command('RemoveCondition', [productId, conditionId])
         }
     }
 
@@ -1086,11 +1086,11 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         removeComputedProductValueAlias: removeComputedProductValueAlias,
         removeComputedProductValue: removeComputedProductValue,
 
-        fetchProductConditions: fetchProductConditions,
-        addProductCondition: addProductCondition,
-        updateProductCondition: updateProductCondition,
-        copyProductCondition: copyProductCondition,
-        removeProductCondition: removeProductCondition,
+        fetchConditions: fetchConditions,
+        addCondition: addCondition,
+        updateCondition: updateCondition,
+        copyCondition: copyCondition,
+        removeCondition: removeCondition,
     };
 };
 

@@ -36,8 +36,8 @@ class Condition extends Criterion
      * @throws CriterionInvalidValueException
      */
     final public function __construct(
-        AptoUuid              $id,
         Product               $product,
+        AptoUuid              $id,
         Identifier            $identifier,
         CriterionOperator     $operator,
         ?int                  $type,
@@ -49,6 +49,7 @@ class Condition extends Criterion
     )
     {
         parent::__construct(
+            $product,
             $id,
             $operator,
             $type,
@@ -62,8 +63,6 @@ class Condition extends Criterion
         if (null !== $elementId && null !== $property && !array_key_exists($property, $product->getElementSelectableValues($sectionId, $elementId))) {
             throw new CriterionInvalidPropertyException('The given property \'' . $property . '\' is not defined in the given element\'s definition.');
         }
-
-        $this->product = $product;
         $this->identifier = $identifier;
     }
 

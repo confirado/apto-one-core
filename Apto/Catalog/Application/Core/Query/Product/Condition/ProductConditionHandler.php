@@ -33,7 +33,7 @@ class ProductConditionHandler implements QueryHandlerInterface
      */
     public static function getHandledMessages(): iterable
     {
-        yield FindProductConditions::class => [
+        yield FindConditions::class => [
             'method' => 'handleFindConditions',
             'bus' => 'query_bus'
         ];

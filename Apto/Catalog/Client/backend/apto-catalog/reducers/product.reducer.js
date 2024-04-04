@@ -120,6 +120,7 @@ const ProductReducer = function(AptoReducersProvider) {
         sections: [],
         sectionsElements: [],
         rules: [],
+        conditions: [],
         prices: [],
         discounts: [],
         customProperties: [],
@@ -344,6 +345,13 @@ const ProductReducer = function(AptoReducersProvider) {
                     }
                 });
                 return newState;
+            case getType('FETCH_CONDITIONS_FULFILLED'):
+                newState = update(state, {
+                    conditions: {
+                        $set: action.payload.data.result.conditions
+                    }
+                });
+                return newState;
             case getType('FETCH_PRICES_FULFILLED'):
                 newState = update(state, {
                     prices: {
@@ -377,13 +385,6 @@ const ProductReducer = function(AptoReducersProvider) {
                 newState = update(state, {
                     computedValueDetail: {
                         $set: computedValueDetail
-                    }
-                });
-                return newState;
-            case getType('FETCH_GLOBAL_CONDITIONS_FULFILLED'):
-                newState = update(state, {
-                    globalConditions: {
-                        $set: action.payload.data.result.globalConditions
                     }
                 });
                 return newState;
