@@ -12,6 +12,17 @@ import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Actions, ofType } from '@ngrx/effects';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  ConfirmationDialogComponent
+} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { combineLatest, take } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
+import { environment } from '@apto-frontend/src/environments/environment';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 
 @UntilDestroy()
 @Component({
@@ -73,6 +84,7 @@ export class WidthHeightElementComponent implements OnInit {
 	public constructor(
     private store: Store,
     private dialogRef: MatDialogRef<WidthHeightElementComponent>,
+    private dialogService: DialogService,
     private readonly actions$: Actions
   ) { }
 
@@ -131,6 +143,17 @@ export class WidthHeightElementComponent implements OnInit {
     this.markAllControlsAsDirty();
 
     if (!this.formElement.valid) {
+      combineLatest(
+        this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
+        this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer.incorrectValuesInRange')),
+      ).pipe(take(1)).subscribe((result) => {
+        this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {
+          type: DialogTypesEnum.ERROR,
+          hideIcon: true,
+          descriptionText: translate(result[1].content, result[0]),
+        });
+      });
+
       return;
     }
 
