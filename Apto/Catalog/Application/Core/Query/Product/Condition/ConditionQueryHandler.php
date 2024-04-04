@@ -4,7 +4,7 @@ namespace Apto\Catalog\Application\Core\Query\Product\Condition;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
 
-class ProductConditionHandler implements QueryHandlerInterface
+class ConditionQueryHandler implements QueryHandlerInterface
 {
     /**
      * @var
