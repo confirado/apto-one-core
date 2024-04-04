@@ -136,7 +136,7 @@
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="condition in conditions">
-            <td ng-if="condition.type === 0" md-cell>{{ getIdentifier(id) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getIdentifier(condition.id) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
