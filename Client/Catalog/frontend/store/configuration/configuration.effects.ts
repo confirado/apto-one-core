@@ -330,12 +330,14 @@ export class ConfigurationEffects {
           let showDefault = true;
           let finalMessage = '';
 
-          for (const singleErrorPayload of message.errorPayload) {
+          if (Array.isArray(message.errorPayload)) {
+            for (const singleErrorPayload of message.errorPayload) {
               const errorMessage = translate(singleErrorPayload.errorMessage, locale);
               if (errorMessage) {
                 showDefault = false;
                 finalMessage += `${errorMessage} <br />`;
               }
+            }
           }
 
           if (showDefault) {
