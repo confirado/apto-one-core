@@ -15,11 +15,6 @@ abstract class Criterion extends AptoEntity
     const COMPUTED_VALUE_TYPE = 1;
 
     /**
-     * @var Product
-     */
-    protected $product;
-
-    /**
      * @var int
      */
     protected $type;
@@ -56,7 +51,7 @@ abstract class Criterion extends AptoEntity
 
     /**
      * @param AptoUuid $id
-     * @param Product $product
+     // * @param Product $product
      * @param CriterionOperator $operator
      * @param int|null $type
      * @param AptoUuid|null $sectionId
@@ -70,7 +65,6 @@ abstract class Criterion extends AptoEntity
      * @throws CriterionInvalidValueException
      */
      public function __construct(
-         Product $product,
          AptoUuid $id,
          CriterionOperator $operator,
         ?int $type,
@@ -80,8 +74,6 @@ abstract class Criterion extends AptoEntity
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
     ) {
-         $this->product = $product;
-
          parent::__construct($id);
 
         if (null === $type) {
@@ -129,14 +121,6 @@ abstract class Criterion extends AptoEntity
         $this->value = $value;
         $this->type = $type;
         $this->computedProductValue = $computedProductValue;
-    }
-
-    /**
-     * @return Product
-     */
-    public function getProduct(): Product
-    {
-        return $this->product;
     }
 
     /**
