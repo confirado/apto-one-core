@@ -6,11 +6,11 @@ use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AptoOrmFinder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlQueryBuilder;
 use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
-use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
+use Apto\Catalog\Domain\Core\Model\Product\Product;
 
 class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditionFinder
 {
-    const ENTITY_CLASS = Condition::class;
+    const ENTITY_CLASS = Product::class;
 
     /**
      * @param string $id
@@ -23,6 +23,8 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
         $builder
             ->findById($id)
             ->setValues([
+                'p' => [
+                ],
                 'c' => [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier'],
@@ -40,6 +42,9 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
                 ]
             ])
             ->setJoins([
+                'p' => [
+                    ['conditions', 'c', 'id']
+                ],
                 'c' => [
                     ['computedProductValue', 'cpv', 'surrogateId']
                 ]

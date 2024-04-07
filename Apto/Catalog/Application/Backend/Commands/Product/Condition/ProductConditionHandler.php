@@ -100,6 +100,25 @@ class ProductConditionHandler extends ProductChildHandler
     }
 
     /**
+     * @param CopyCondition $command
+     *
+     * @return void
+     * @throws InvalidUuidException
+     */
+    public function handleCopyProductCondition(CopyCondition $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+
+        if (null !== $product) {
+            $product->copyCondition(
+                new AptoUuid($command->getConditionId())
+            );
+
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
      * @return iterable
      */
     public static function getHandledMessages(): iterable
@@ -116,6 +135,11 @@ class ProductConditionHandler extends ProductChildHandler
 
         yield RemoveCondition::class => [
             'method' => 'handleRemoveProductCondition',
+            'bus' => 'command_bus'
+        ];
+
+        yield CopyCondition::class => [
+            'method' => 'handleCopyProductCondition',
             'bus' => 'command_bus'
         ];
     }

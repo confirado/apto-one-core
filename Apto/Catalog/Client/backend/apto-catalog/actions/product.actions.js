@@ -971,10 +971,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(condition.typeId);
         commandArguments.push(condition.operatorId);
         commandArguments.push(condition.value);
-        commandArguments.push(condition.computedProductValueId);
         commandArguments.push(condition.sectionId);
         commandArguments.push(condition.elementId);
         commandArguments.push(condition.property);
+        commandArguments.push(condition.computedProductValueId);
 
         return {
             type: getType('UPDATE_CONDITION'),

@@ -45,7 +45,7 @@
         <label>Element:</label>
         <md-select
             multiple="true"
-            ng-disabled="selectedConditionSection === null || selectedConditionSection[0].elements.length <= 0 || selectedConditionSection.length !== 1"
+            ng-disabled="selectedConditionSection === null || selectedConditionSection[0].elements.length <= 0 || areMultipleSectionsSelected()"
             ng-model="$parent.$parent.selectedConditionElement"
             ng-model-options="{trackBy: '$value.id'}"
             ng-change="onChangeSelectedConditionElement()"
@@ -107,14 +107,15 @@
     <!-- value text field -->
     <md-input-container flex data-cy="condition-value">
         <label>Wert:</label>
-        <input ng-disabled="selectedConditionOperator === null || selectedConditionOperator.id === 0 || selectedConditionOperator.id === 1" ng-model="$parent.$parent.selectedConditionValue">
+        <input ng-disabled="selectedConditionOperator === null || selectedConditionOperator.id === 0 || selectedConditionOperator.id === 1"
+               ng-model="$parent.$parent.selectedConditionValue">
     </md-input-container>
     <div flex="5"></div>
 
     <!-- add button -->
     <md-input-container>
         <md-button ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
-        <md-button ng-disabled="!isValidCondition()" ng-if="currentConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
+        <md-button ng-disabled="!isValidCondition() || (areMultipleSectionsSelected() && conditionType.id === 0)" ng-if="currentConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
         <md-button ng-disabled="!currentConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetConditionForm()" data-cy="condition-reset-button">
             <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
         </md-button>
@@ -136,17 +137,15 @@
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="condition in conditions">
-            <td ng-if="condition.type === 0" md-cell>{{ getIdentifier(condition.id) }}</td>
+            <td md-cell>{{ condition.identifier }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
-            <td ng-if="condition.type === 1" md-cell>{{ getIdentifier(condition.id) }}</td>
             <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
             <td ng-if="condition.type === 1" md-cell></td>
             <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>
             <td md-cell>{{ getOperatorName(condition.operator) }}</td>
             <td md-cell>{{ condition.value }}</td>
-            <td md-cell> hallo Welt</td>
             <td md-cell>
                 <md-button
                     title="Bearbeiten"
