@@ -1,7 +1,18 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged, of, Subject, takeUntil, filter, tap, map } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  of,
+  Subject,
+  takeUntil,
+  filter,
+  tap,
+  map,
+  combineLatest,
+  take,
+} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectStateElements } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
@@ -11,7 +22,15 @@ import { Product, FloatInputTypes, CompareValueTypes, Section } from '@apto-cata
 
 import { number, Parser, parser } from 'mathjs';
 import { BigNumber } from 'bignumber.js';
-import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { translate, TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
+import { environment } from '@apto-frontend/src/environments/environment';
+import {
+  ConfirmationDialogComponent
+} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 
 @Component({
 	selector: 'apto-float-input-element',
@@ -52,7 +71,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   private saveDelay = 500;
   private mathjsParser: Parser;
 
-  public constructor(private store: Store) {}
+  public constructor(private store: Store, private dialogService: DialogService) {}
 
 	public ngOnInit(): void {
     if (!this.element) {
@@ -79,6 +98,11 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
         this.stateElements = stateElements;
         this.minValue = this.calculateMinMaxValues().minValue;
         this.maxValue = this.calculateMinMaxValues().maxValue;
+
+        this.formElementInput.setValidators([
+          Validators.min(this.minValue),
+          Validators.max(this.maxValue)
+        ]);
       });
 
     // we dont need form element subscriptions in that case, because save is triggered by save button
@@ -280,6 +304,17 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 
     // do not save the value into the store if it is not in the allowed range
     if (number(value) < this.minValue || number(value) > this.maxValue) {
+      combineLatest(
+        this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
+        this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer.incorrectValuesInRange')),
+      ).pipe(take(1)).subscribe((result) => {
+        this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {
+          type: DialogTypesEnum.ERROR,
+          hideIcon: true,
+          descriptionText: translate(result[1].content, result[0]),
+        });
+      });
+
       return;
     }
 
