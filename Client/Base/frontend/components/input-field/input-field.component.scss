@@ -6,8 +6,8 @@
     @include input-host();
 
     &.ng-invalid.ng-dirty {
-        .container {
-            border: 1px solid red !important;
+        .container-elem {
+            border: 1px solid var(--color-warn) !important;
         }
     }
 }
@@ -25,9 +25,10 @@
         @include prefix();
     }
 
-    .container {
+    .container-elem {
         grid-area: container;
         @include container();
+        @include clear-input();
 
         input {
             @include input();

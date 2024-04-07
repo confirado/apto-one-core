@@ -22,16 +22,22 @@ class FindElementComputableValues implements PublicQueryInterface
     private $elementId;
 
     /**
-     * FindElementComputableValues constructor.
-     * @param array $state
+     * @var int
+     */
+    private int $repetition;
+
+    /**
+     * @param array  $state
      * @param string $sectionId
      * @param string $elementId
+     * @param int    $repetition
      */
-    public function __construct(array $state, string $sectionId, string $elementId)
+    public function __construct(array $state, string $sectionId, string $elementId, int $repetition)
     {
         $this->state = $state;
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
+        $this->repetition = $repetition;
     }
 
     /**
@@ -56,5 +62,13 @@ class FindElementComputableValues implements PublicQueryInterface
     public function getElementId(): string
     {
         return $this->elementId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRepetition(): int
+    {
+        return $this->repetition;
     }
 }

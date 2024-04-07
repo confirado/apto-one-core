@@ -1,0 +1,19 @@
+:host {
+    display: block;
+
+    ::ng-deep {
+        div {
+            fill: inherit;
+            stroke: inherit;
+            svg {
+                fill: inherit;
+                stroke: inherit;
+                path {
+                    fill: inherit;
+                    stroke: inherit;
+                }
+            }
+        }
+    }
+}
+

@@ -78,5 +78,7 @@
          [innerHTML]="element.element.description | translate | safeHtml"
     ></div>
 
+    <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
+
     <apto-slot-outlet identifier="end-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 </div>

@@ -38,3 +38,9 @@ mat-expansion-panel {
 apto-slot-outlet {
     display: none;
 }
+
+.element-container {
+    &.element-is-disabled {
+        opacity: 0.5;
+    }
+}

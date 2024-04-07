@@ -5,8 +5,8 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  addGuestConfiguration, addGuestConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
-  fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess,
+  addGuestConfiguration, addGuestConfigurationSuccess, addOfferConfiguration, addOfferConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
+  fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess, getElementComputableValues, getElementComputableValuesSuccess,
   getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
   initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState,
 }
@@ -30,7 +30,13 @@ import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-re
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectConfiguration, selectCurrentPerspective, selectProduct, selectProgressState } from './configuration.selectors';
-import { Configuration, ConfigurationState, CurrentSection, GetConfigurationResult } from './configuration.model';
+import {
+  Configuration,
+  ConfigurationState,
+  CurrentSection,
+  GetConfigurationResult,
+  SectionState
+} from './configuration.model';
 
 @Injectable()
 export class ConfigurationEffects {
@@ -81,6 +87,7 @@ export class ConfigurationEffects {
                 renderImages: configuration.renderImages,
 								currentPerspective,
                 currentUser,
+                action
 							}))
 						);
 					})
@@ -102,7 +109,12 @@ export class ConfigurationEffects {
 				)
 			),
 			map((result) => {
-				const sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
+        let sections: SectionState[] = [];
+        if (result.product.product.keepSectionOrder === false && result.action.payload.type === null) {
+          sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden);
+        } else {
+          sections = result.configuration.sections.filter((section) => !section.disabled && !section.hidden && !section.active);
+        }
         const currentStep: CurrentSection | null = sections.length > 0 ? { id: sections[0].id, repetition: sections[0].repetition } : null;
 
 				return initConfigurationSuccess({
@@ -270,6 +282,38 @@ export class ConfigurationEffects {
 		{ dispatch: false }
 	);
 
+  public addOfferConfiguration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addOfferConfiguration),
+      withLatestFrom(this.store$.select(selectConfiguration)),
+      switchMap(([action, store]) =>
+        this.configurationRepository.addOfferConfiguration({
+          productId: store.productId,
+          compressedState: store.state.compressedState,
+          email: action.payload.email,
+          name: action.payload.name,
+          payload: action.payload.payload,
+        })
+      ),
+      map(() => addOfferConfigurationSuccess())
+    )
+  );
+
+  public addOfferConfigurationSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(addOfferConfigurationSuccess),
+        map(() => {
+          this.matSnackBar.open(
+            'Ihre Konfiguration wurde gespeichert. Sie erhalten in Kürze eine E-Mail mit dem Link zur Konfiguration.',
+            undefined,
+            { duration: 3000 }
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
 	public onError$ = createEffect(
 		() =>
 			this.actions$.pipe(
@@ -335,6 +379,19 @@ export class ConfigurationEffects {
 			map((state) => getRenderImagesSuccess({ payload: state }))
 		)
 	);
+
+  public getElementComputableValues$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getElementComputableValues),
+      switchMap((action) =>
+        this.catalogMessageBusService
+          .findElementComputableValues(action.payload.compressedState, action.payload.sectionId, action.payload.elementId, action.payload.repetition)
+          .pipe(
+            map((searchMapping) => getElementComputableValuesSuccess({ payload: searchMapping })),
+          )
+      )
+    )
+  );
 
 	public setPrevStep$ = createEffect(() =>
 		this.actions$.pipe(

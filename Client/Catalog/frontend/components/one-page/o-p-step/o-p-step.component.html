@@ -8,8 +8,8 @@
                 </mat-panel-title>
             </div>
         </mat-expansion-panel-header>
-        <div class="one-page-elements">
-            <ng-container class="element" *ngFor="let element of sectionProductElements">
+        <div class="one-page-elements section-{{ section.section.identifier }}">
+            <div class="element-container" *ngFor="let element of sectionProductElements" [class.element-is-disabled]="isElementDisabled(element.id, element.sectionRepetition)">
                 <ng-container *ngIf="getProgressElement(element.id) as pElement">
                     <apto-slot-outlet
                         *ngIf="!isElementDisabled(element.id, element.sectionRepetition) || !product.keepSectionOrder"
@@ -19,7 +19,7 @@
                         [element]="pElement"
                     ></apto-slot-outlet>
                 </ng-container>
-            </ng-container>
+            </div>
         </div>
     </mat-expansion-panel>
 </ng-container>

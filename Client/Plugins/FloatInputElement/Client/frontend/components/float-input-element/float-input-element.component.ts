@@ -265,6 +265,10 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     this.formElementSlider.setValue(value);
   }
 
+  protected get hasAttachments(): boolean {
+    return this.element.element.attachments?.length !== 0;
+  }
+
 	public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
 	}

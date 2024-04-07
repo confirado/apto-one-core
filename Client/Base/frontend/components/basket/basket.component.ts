@@ -17,19 +17,22 @@ import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-base-cor
 	styleUrls: ['./basket.component.scss'],
 })
 export class BasketComponent {
+
   public readonly csAptoBasket$ = this.store.select(selectContentSnippet('aptoBasket'));
   public readonly csConfirmDeleteDialog$ = this.store.select(selectContentSnippet('aptoBasket.confirmDeleteDialog'));
+  public readonly csClearCartConfirmation$ = this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation'));
   protected readonly loadingIndicatorTypes = LoadingIndicatorTypes;
   public readonly configurationLoading$ = this.store.select(selectConfigurationLoading);
   public readonly connector$ = this.store.select(selectFullConnector);
   public readonly selectShopLoading$ = this.store.select(selectShopLoading);
+
   public locale: string;
 
-	public toggleSideBar(): void {
-		this.basketService.sideBar?.toggle();
-	}
+  public toggleSideBar(): void {
+    this.basketService.sideBar?.toggle();
+  }
 
-	public constructor(
+  public constructor(
     private store: Store,
     private basketService: BasketService,
     private dialogService: DialogService
@@ -81,6 +84,60 @@ export class BasketComponent {
         .subscribe((next) => {
           if (next === true) {
             this.store.dispatch(deleteBasketItem({ payload: { basketItemId: basketItemId } }));
+          }
+          confirmDialogSubscription.unsubscribe();
+        });
+    });
+  }
+
+  protected removeAllBasketItems(basketItems: any[]): void {
+    let dialogMessage = '';
+    let dialogTitle = '';
+    let dialogButtonCancel = '';
+    let dialogButtonAccept = '';
+
+    const confirmDialogSubscription = this.csClearCartConfirmation$.subscribe((next) => {
+      if (next === null) {
+        basketItems.forEach(item => {
+          this.store.dispatch(deleteBasketItem({ payload: { basketItemId: item.id } }));
+        });
+        confirmDialogSubscription.unsubscribe();
+        return;
+      }
+      next.children.forEach((value) => {
+        if (value.name === 'title') {
+          dialogTitle = translate(value.content, this.locale);
+        }
+        if (value.name === 'text') {
+          dialogMessage = translate(
+            value.content,
+            this.locale
+          ).replace(
+            '{_productName_}',
+            basketItems.map(item => item.name).join(', ')
+          );
+        }
+        if (value.name === 'cancel') {
+          dialogButtonCancel = translate(value.content, this.locale);
+        }
+        if (value.name === 'confirm') {
+          dialogButtonAccept = translate(value.content, this.locale);
+        }
+      });
+      this.dialogService
+        .openWarningDialog(
+          DialogSizesEnum.md,
+          dialogTitle,
+          dialogMessage,
+          dialogButtonCancel,
+          dialogButtonAccept
+        )
+        .afterClosed()
+        .subscribe((next) => {
+          if (next === true) {
+            basketItems.forEach(item => {
+              this.store.dispatch(deleteBasketItem({ payload: { basketItemId: item.id } }));
+            });
           }
           confirmDialogSubscription.unsubscribe();
         });

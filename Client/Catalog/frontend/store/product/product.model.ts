@@ -160,6 +160,18 @@ export interface Definition<Properties> {
 	staticValues: StaticValues;
 }
 
+export interface Attachments {
+  id: string;
+  name: TranslatedValue;
+  mediaFile: {
+    id: string;
+    path: string;
+    filename: TranslatedValue;
+    extension: string;
+  };
+  fileUrl: string;
+}
+
 export interface Element<DefinitionProperties = unknown> {
 	id: string;
 	identifier: string;
@@ -173,7 +185,7 @@ export interface Element<DefinitionProperties = unknown> {
 	isMandatory: boolean;
 	position: number;
 	customProperties: CustomProperty[];
-  attachments: any;
+  attachments: Attachments[];
   zoomFunction: ElementZoomFunctionEnum;
   sectionRepetition?: number;
 }

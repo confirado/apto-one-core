@@ -31,7 +31,6 @@
     }
 }
 
-
 @mixin colors($element-width: 80px, $color-box-width: 40px, $padding: 10px 10px, $checkbox: 22px) {
     display: flex;
     align-items: center;
@@ -70,12 +69,12 @@
     }
 
     .name {
-        @include cut-long-text();
         text-align: center;
         width: 100%;
         font-size: 14px;
         font-weight: 500;
         margin-top: 7px;
+        overflow-wrap: break-word;
     }
 
     &.selected {
@@ -106,6 +105,7 @@ mat-radio-group {
 }
 
 .material-picker-element {
+
     &.selected {
         border: 3px solid var(--color-border-dimensions);
         border-radius: var(--border-radius-card);
@@ -139,8 +139,7 @@ mat-radio-group {
             margin-top: var(--element-gap);
             display: grid;
             grid-template-columns: 80px auto;
-            grid-template-areas:
-            "all-color other-colors";
+            grid-template-areas: "all-color other-colors";
 
             .elements {
                 display: flex;
@@ -164,12 +163,6 @@ mat-radio-group {
 
     .search-price-container {
         @include box();
-    }
-
-    .search-box {
-    }
-
-    .price-group {
     }
 
     .properties {
@@ -196,15 +189,31 @@ mat-radio-group {
         .elements {
             display: flex;
             flex-wrap: wrap;
-            margin-top: var(--element-gap);
+            width: 100%;
 
             .element {
-                @include colors(135px, 95px, 10px 20px, 22px);
+                @include colors(50%, 95px, 10px 20px, 22px);
+            }
+
+            .placeholder {
+                flex: 0 0 calc(25% - var(--element-gap));
+                visibility: hidden;
+            }
+
+            @for $i from 1 through 3 {
+                &:nth-last-child(-n + #{$i}) {
+                    ~ .placeholder {
+                        visibility: visible;
+                    }
+                }
             }
         }
     }
 
     .color-mix {
+        display: flex;
+        flex-wrap: wrap;
+
         @include box();
 
         .picture {
@@ -275,6 +284,9 @@ mat-radio-group {
 
             .element {
                 margin-top: var(--element-gap);
+                display: flex;
+                align-items: center;
+                flex: 0 0 calc(20% - var(--element-gap));
             }
         }
 
@@ -305,6 +317,12 @@ mat-radio-group {
 
         .filtered-materials {
             @include box('tablet');
+
+            .elements{
+                .element{
+                    width: 25%
+                }
+            }
         }
 
         .color-mix {

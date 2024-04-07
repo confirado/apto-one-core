@@ -1,8 +1,9 @@
 import { MessageBusResponseMessage } from '@apto-base-core/models/message-bus-response';
 import {
+  CompressedState,
   ComputedValues,
   Configuration, CurrentSection,
-  GetConfigurationStateArguments, HumanReadableState, PartsListPart, TempStateItem,
+  GetConfigurationStateArguments, HumanReadableFullStatePayload, HumanReadableState, PartsListPart, StatePrice, TempStateItem,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
@@ -30,7 +31,9 @@ export enum ConfigurationActionTypes {
 	SetElementProperties = '[Update] Set Element Properties',
 	HumanReadableStateLoadSuccess = '[HumanReadableState] Load success',
 	AddGuestConfiguration = '[Configuration] Add guest configuration',
-	AddGuestConfigurationSuccess = '[Configuration] Add guest configuration success',
+  AddGuestConfigurationSuccess = '[Configuration] Add guest configuration success',
+  AddOfferConfiguration = '[Configuration] Add guest configuration',
+	AddOfferConfigurationSuccess = '[Configuration] Add guest configuration success',
   SetHideOnePage = '[OnePage] Hide One Page',
 	OnError = '[Configuration] Error',
   createLoadingFlagAction = '[Configuration] Create Loading Flag',
@@ -39,7 +42,25 @@ export enum ConfigurationActionTypes {
   FetchPartsListSuccess = '[Configuration] Fetch Parts List Success',
   HideLoadingFlag = '[Configuration] hide loading flag',
   SetSectionTouched = '[Configuration] Set Section Touched',
+  GetStatePriceSuccess = '[Configuration] Get state price success',
+  GetElementComputableValues = '[Configuration] Get Element Computable Values',
+  GetElementComputableValuesSuccess = '[Configuration] Get Element Computable Values Success',
 }
+
+export const getElementComputableValues = createAction(
+  ConfigurationActionTypes.GetElementComputableValues,
+  props<{
+    payload: {
+      compressedState: CompressedState[];
+      repetition: number,
+      sectionId: string;
+      elementId: string;
+    }
+  }>()
+);
+
+export const getElementComputableValuesSuccess = createAction(ConfigurationActionTypes.GetElementComputableValuesSuccess, props<{ payload: any }>());
+
 
 export const hideLoadingFlagAction = createAction(ConfigurationActionTypes.HideLoadingFlag);
 
@@ -49,6 +70,13 @@ export const createLoadingFlagAction = createAction(
 
 export const resetLoadingFlagAction = createAction(
   ConfigurationActionTypes.resetLoadingFlagAction
+);
+
+export const getStatePriceSuccess = createAction(
+  ConfigurationActionTypes.GetStatePriceSuccess,
+  props<{
+    payload: StatePrice
+  }>()
 );
 
 export const initConfiguration = createAction(
@@ -170,6 +198,19 @@ export const addGuestConfiguration = createAction(
 );
 
 export const addGuestConfigurationSuccess = createAction(ConfigurationActionTypes.AddGuestConfigurationSuccess);
+
+export const addOfferConfiguration = createAction(
+	ConfigurationActionTypes.AddOfferConfiguration,
+	props<{
+		payload: {
+      email: string;
+      name: string;
+      payload: undefined | HumanReadableFullStatePayload
+		};
+	}>()
+);
+
+export const addOfferConfigurationSuccess = createAction(ConfigurationActionTypes.AddOfferConfigurationSuccess);
 
 export const setHideOnePage = createAction(ConfigurationActionTypes.SetHideOnePage, props<{ payload: boolean }>());
 

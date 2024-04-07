@@ -1,0 +1,50 @@
+@import "globals";
+@import "dialogs";
+
+.offer-configuration-button {
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 15px;
+
+        button {
+            display: flex;
+            flex-grow: 1;
+            flex-basis: 0;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+
+            .mat-icon {
+                margin-right: 5px !important;
+            }
+        }
+    }
+
+    .info {
+        display: flex;
+        gap: 10px;
+        margin-top: var(--input-elements-gap);
+
+        mat-icon {
+            color: var(--color-text);
+        }
+
+        p {
+            color: var(--color-info-text);
+            font-size: 14px;
+        }
+    }
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .offer-configuration-button {
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    }
+}

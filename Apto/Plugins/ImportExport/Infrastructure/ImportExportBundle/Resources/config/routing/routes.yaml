@@ -1,0 +1,3 @@
+apto_plugin_import_export:
+  resource: Apto\Plugins\ImportExport\Infrastructure\ImportExportBundle\Controller\ImportExportController
+  type:     annotation

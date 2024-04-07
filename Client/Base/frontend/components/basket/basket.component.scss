@@ -1,26 +1,26 @@
 @import "globals";
 
 :host {
-	background-color: var(--color-background);
-	width: 430px;
-	height: 100%;
+    background-color: var(--color-background);
+    width: 430px;
+    height: 100%;
 
-	h5 {
-		font-size: 25px;
-		font-weight: 500;
-		color: var(--color-text);
-	}
+    h5 {
+        font-size: 25px;
+        font-weight: 500;
+        color: var(--color-text);
+    }
 
-	h4 {
-		font-size: 30px;
-		font-weight: 500;
-		color: var(--color-text);
-		margin: 0;
-	}
+    h4 {
+        font-size: 30px;
+        font-weight: 500;
+        color: var(--color-text);
+        margin: 0;
+    }
 }
 
 .color {
-	color: var(--color-text);
+    color: var(--color-text);
 }
 
 .pointer {
@@ -28,7 +28,7 @@
 }
 
 .whole-basket {
-	margin: 0 42px;
+    margin: 0 42px;
 
     .title {
         padding: 46px 0 26px 0;
@@ -41,8 +41,10 @@
         }
     }
 
-    .summery {
+    .summary {
         margin: 26px 0 64px 0;
+        display: flex;
+        justify-content: space-between;
 
         .sum {
             font-size: 26px;
@@ -64,16 +66,23 @@
         a + a {
             margin-top: var(--button-gap);
         }
+
+        .clear-cart-confirmation-button {
+            background: var(--color-warn);
+            color: white;
+            width: 100%;
+            margin-top: var(--button-gap);
+        }
     }
 }
 
 .product-list {
-	padding: 20px 0px 20px;
-	border-bottom: 1px solid var(--color-border-input);
-	border-top: 1px solid var(--color-border-input);
-	display: flex;
-	flex-direction: column;
-	gap: 34px;
+    padding: 20px 0px 20px;
+    border-bottom: 1px solid var(--color-border-input);
+    border-top: 1px solid var(--color-border-input);
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
     position: relative;
 
     .product {
