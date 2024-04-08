@@ -5,6 +5,11 @@
         <form [formGroup]="quantityInputGroup" class="quantity-form">
             <div class="whole-summary">
                 <div class="summary top">
+                    <div class="zoom">
+                        <apto-o-p-full-screen [perspectives]="perspectives$ | async"
+                                              [product]="product"
+                        ></apto-o-p-full-screen>
+                    </div>
                     <img *ngIf="renderImage" [src]="renderImage.src" />
                     <div class="summary basket">
                         <div class="basket price" *ngIf="showPrices">

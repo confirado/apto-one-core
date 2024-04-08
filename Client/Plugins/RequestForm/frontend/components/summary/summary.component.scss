@@ -32,6 +32,7 @@
 	box-shadow: var(--box-shadow);
 	max-width: 980px;
 	margin-top: 50px;
+    position: relative;
 
     .summary {
         display: flex;
@@ -41,6 +42,20 @@
 
         &.top {
             border-bottom: 1px solid #dcdcdc;
+
+            .zoom {
+                position: absolute;
+                left: calc(50% - 200px);
+                top: 10px;
+
+                ::ng-deep apto-o-p-full-screen {
+                    .full-screen-button {
+                        width: 50px;
+                        height: 50px;
+                        padding: 0 !important;
+                    }
+                }
+            }
 
             img {
                 height: auto;
