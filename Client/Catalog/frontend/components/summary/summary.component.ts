@@ -4,7 +4,11 @@ import { Subscription } from 'rxjs';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { addToBasket } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectConfiguration, selectSumPrice } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import {
+  selectConfiguration,
+  selectPerspectives,
+  selectSumPrice,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -23,6 +27,7 @@ export class SummaryComponent implements OnDestroy {
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
   protected readonly AptoOfferConfigurationDialog$ = this.store.select(selectContentSnippet('AptoOfferConfigurationDialog'));
   protected readonly locale$ = this.store.select(selectLocale);
+  public readonly perspectives$ = this.store.select(selectPerspectives);
   private locale = 'de_DE';
   protected isOfferConfigurationEnabled = false;
   public product$ = this.store.select(selectProduct);
