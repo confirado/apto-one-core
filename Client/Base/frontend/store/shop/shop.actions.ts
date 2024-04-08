@@ -7,6 +7,7 @@ export enum ShopActionTypes {
   InitShop = '[Shops] Init Shop',
   InitShopSuccess = '[Shops] Init Shop success',
   DeleteBasketItem = '[Shops] Delete Basket Item',
+  DeleteBasketAllItems = '[Shops] Delete Basket All Items',
   DeleteBasketItemSuccess = '[Shops] Delete Basket Item Success',
 }
 
@@ -22,6 +23,11 @@ export const initShopSuccess = createAction(
 export const deleteBasketItem = createAction(
   ShopActionTypes.DeleteBasketItem,
   props<{ payload: { basketItemId: string } }>()
+);
+
+export const deleteBasketAllItems = createAction(
+  ShopActionTypes.DeleteBasketAllItems,
+  props<{ payload: { basketItemIds: string[] } }>()
 );
 
 export const deleteBasketItemSuccess = createAction(
