@@ -195,4 +195,46 @@ export class Queries {
       payload: { query: 'FindRuleImplications' },
     };
   }
+
+  public static get FindSection(): IRequestData {
+    return {
+      alias: 'FindSection',
+      payload: { query: 'FindSection' },
+    };
+  }
+
+  public static get FindSectionElements(): IRequestData {
+    return {
+      alias: 'FindSectionElements',
+      payload: { query: 'FindSectionElements' },
+    };
+  }
+
+  public static get FindSectionPrices(): IRequestData {
+    return {
+      alias: 'FindSectionPrices',
+      payload: { query: 'FindSectionPrices' },
+    };
+  }
+
+  public static get FindSectionDiscounts(): IRequestData {
+    return {
+      alias: 'FindSectionDiscounts',
+      payload: { query: 'FindSectionDiscounts' },
+    };
+  }
+
+  public static get FindSectionCustomProperties(): IRequestData {
+    return {
+      alias: 'FindSectionCustomProperties',
+      payload: { query: 'FindSectionCustomProperties' },
+    };
+  }
+
+  public static get FindGroups(): IRequestData {
+    return {
+      alias: 'FindGroups',
+      payload: { query: 'FindGroups' },
+    };
+  }
 }
