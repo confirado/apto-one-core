@@ -2,25 +2,25 @@
 
 namespace Apto\Plugins\PartsList\Application\Backend\Commands\Part;
 
-use Exception;
-use Money\Currency;
-use Money\Money;
 use Apto\Base\Application\Core\Commands\AbstractCommandHandler;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPriceDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Part;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\PartRepository;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\UnitRepository;
+use Exception;
+use Money\Currency;
+use Money\Money;
 
 class PartCommandHandler extends AbstractCommandHandler
 {
@@ -389,9 +389,9 @@ class PartCommandHandler extends AbstractCommandHandler
     /**
      * @param AddRuleUsageCondition $command
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      */
     public function handleAddRuleUsageCondition(AddRuleUsageCondition $command)
     {
@@ -407,7 +407,7 @@ class PartCommandHandler extends AbstractCommandHandler
             ->addRuleUsageCondition(
                 new AptoUuid($command->getUsageId()),
                 $product,
-                new RuleCriterionOperator($command->getOperator()),
+                new CriterionOperator($command->getOperator()),
                 $command->getValue(),
                 $command->getSectionId(),
                 $command->getElementId(),
@@ -446,9 +446,9 @@ class PartCommandHandler extends AbstractCommandHandler
     /**
      * @param UpdateRuleUsageCondition $command
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      * @throws Exception
      */
     public function handleUpdateRuleUsageCondition(UpdateRuleUsageCondition $command)
@@ -474,7 +474,7 @@ class PartCommandHandler extends AbstractCommandHandler
         $part->addRuleUsageCondition(
             new AptoUuid($command->getUsageId()),
             $product,
-            new RuleCriterionOperator($command->getOperator()),
+            new CriterionOperator($command->getOperator()),
             $command->getValue(),
             $command->getSectionId(),
             $command->getElementId(),

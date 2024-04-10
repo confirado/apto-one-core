@@ -24,7 +24,7 @@
 
         <embedded name="id" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false"/>
         <embedded name="productId" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="true" column-prefix="product_id_"/>
-        <embedded name="operator" class="Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator" use-column-prefix="false"/>
+        <embedded name="operator" class="Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator" use-column-prefix="false"/>
 
         <many-to-one field="rule" target-entity="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleUsage" inversed-by="conditions">
             <join-column name="rule_id" referenced-column-name="surrogate_id"/>

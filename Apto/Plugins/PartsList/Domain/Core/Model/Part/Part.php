@@ -2,20 +2,17 @@
 
 namespace Apto\Plugins\PartsList\Domain\Core\Model\Part;
 
-use Exception;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Apto\Base\Domain\Core\Model\AptoAggregate;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPrices;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ElementUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ProductUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity;
@@ -24,6 +21,9 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleCondition;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\SectionUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Exception;
 use InvalidArgumentException;
 
 class Part extends AptoAggregate
@@ -480,7 +480,7 @@ class Part extends AptoAggregate
     /**
      * @param AptoUuid $usageId
      * @param Product $product
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param string $value
      * @param string|null $sectionId
      * @param string|null $elementId
@@ -489,20 +489,20 @@ class Part extends AptoAggregate
      * @param string|null $computedValueId
      * @return $this
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      */
     public function addRuleUsageCondition(
-        AptoUuid $usageId,
-        Product $product,
-        RuleCriterionOperator $operator,
-        string $value,
-        string $sectionId = null,
-        string $elementId = null,
-        string $property = null,
-        AptoUuid $conditionId = null,
-        string $computedValueId = null
+        AptoUuid          $usageId,
+        Product           $product,
+        CriterionOperator $operator,
+        string            $value,
+        string            $sectionId = null,
+        string            $elementId = null,
+        string            $property = null,
+        AptoUuid          $conditionId = null,
+        string            $computedValueId = null
     ): Part {
         /** @var RuleUsage $ruleUsage */
         $ruleUsage = $this->ruleUsages->get($usageId->getId());

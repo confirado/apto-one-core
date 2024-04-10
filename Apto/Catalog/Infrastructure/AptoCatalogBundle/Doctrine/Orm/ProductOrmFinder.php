@@ -609,6 +609,55 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      * @return array
      * @throws DqlBuilderException
      */
+    protected function getProductConditions(string $field, string $value): array
+    {
+        $conditionBuilder = new DqlQueryBuilder($this->entityClass);
+        $conditionBuilder
+            ->setWhere('p.' . $field . ' = :configurableProductSearchParam', ['configurableProductSearchParam' => $value])
+            ->setValues([
+                'p' => [],
+                'pc' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                    'type',
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    'operator',
+                    'value'
+                ],
+                'ccpv' => [
+                    ['id.id', 'id']
+                ],
+                'icpv' => [
+                    ['id.id', 'id']
+                ]
+            ])
+            ->setJoins([
+                'p' => [
+                    ['conditions', 'pc', 'id']
+                ],
+                'pc' => [
+                    ['computedProductValue', 'ccpv', 'id']
+                ]
+            ])
+            ->setPostProcess([
+                'pc' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
+
+        $result = $conditionBuilder->getSingleResultOrNull($this->entityManager);
+        return $result ? $result['conditions'] : [];
+    }
+
+    /**
+     * @param string $field
+     * @param string $value
+     * @return array
+     * @throws DqlBuilderException
+     */
     protected function getComputedValues(string $field, string $value): array
     {
         $ruleBuilder = new DqlQueryBuilder($this->entityClass);
@@ -777,6 +826,44 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                 ['pr.position', 'ASC']
             ]);
 
+        return $builder->getSingleResultOrNull($this->entityManager);
+    }
+
+    /**
+     * @param string $id
+     * @return array|null
+     * @throws DqlBuilderException
+     */
+    public function findProductConditions(string $id)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($id)
+            ->setValues([
+                'p' => [
+                ],
+                'pc' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ]
+            ])
+            ->setJoins([
+                'p' => [
+                    ['conditions', 'pc', 'id']
+                ]
+            ])
+            ->setPostProcess([
+                'pc' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
         return $builder->getSingleResultOrNull($this->entityManager);
     }
 
