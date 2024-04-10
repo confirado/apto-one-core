@@ -1,54 +1,72 @@
 import { Attributes, ElementInterface } from '../../../interfaces/element-interface';
+import Chainable = Cypress.Chainable;
 
 export class Select implements ElementInterface {
-  private static initialSelector: string;
 
   public static getByAttr(selector: string): typeof Select {
-    Select.initialSelector = `[data-cy="${selector}"]`;
-    cy.get(Select.initialSelector).should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('selectElem');
+    cy.get('@selectElem').should('exist');
 
     return Select;
   }
 
   public static get(selector: string): typeof Select {
-    Select.initialSelector = selector;
-    cy.get(Select.initialSelector).should('exist');
+    cy.get(selector).as('selectElem');
+    cy.get('@selectElem').should('exist');
+
+    return Select;
+  }
+
+  /**
+   * Sets a custom cypress element for testing
+   *
+   * makes sense in cases when we don't select our element but rather we get it from search or so, then we can with this method make it as
+   * testing object and apply all our methods to it
+   *
+   *  Checkbox.set(cy.dataCy('product-active'))
+   *          .hasLabel('Aktiv')
+   *          .isUnChecked();
+   *
+   * @param elem
+   */
+  public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Select {
+    elem.as('selectElem');
 
     return Select;
   }
 
   public static hasLabel(label: string): typeof Select {
-    cy.get(Select.initialSelector).find('label').should('contain.text', label);
+    cy.get('@selectElem').find('label').should('contain.text', label);
 
     return Select;
   }
 
   public static hasNotLabel(label: string): typeof Select {
-    cy.get(Select.initialSelector).find('label').should('not.contain.text', label);
+    cy.get('@selectElem').find('label').should('not.contain.text', label);
 
     return Select;
   }
 
   public static hasValue(value: any): typeof Select {
-    cy.get(Select.initialSelector).find('md-select md-select-value').find('.md-text').should('contain.text', value);
+    cy.get('@selectElem').find('md-select md-select-value').find('.md-text').should('contain.text', value);
 
     return Select;
   }
 
   public static hasNotValue(value: any): typeof Select {
-    cy.get(Select.initialSelector).find('md-select md-select-value').find('.md-text').should('not.contain.text', value);
+    cy.get('@selectElem').find('md-select md-select-value').find('.md-text').should('not.contain.text', value);
 
     return Select;
   }
 
   public static hasError(): typeof Select {
-    cy.get(Select.initialSelector).should('have.class', 'md-input-invalid');
+    cy.get('@selectElem').should('have.class', 'md-input-invalid');
 
     return Select;
   }
 
   public static hasNotError(): typeof Select {
-    cy.get(Select.initialSelector).should('not.have.class', 'md-input-invalid');
+    cy.get('@selectElem').should('not.have.class', 'md-input-invalid');
 
     return Select;
   }
@@ -62,10 +80,10 @@ export class Select implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Select {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get(Select.initialSelector).find('md-select').should(condition, attributes[condition]);
+        cy.get('@selectElem').find('md-select').should(condition, attributes[condition]);
       }
       else {
-        cy.get(Select.initialSelector).find('md-select').should(condition);
+        cy.get('@selectElem').find('md-select').should(condition);
       }
     }
 
@@ -79,7 +97,7 @@ export class Select implements ElementInterface {
    * if selected then .md-text should exist
    */
   public static isSelected(): typeof Select {
-    cy.get(Select.initialSelector).find('md-select md-select-value').should(($span) => {
+    cy.get('@selectElem').find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(1);
     });
 
@@ -90,7 +108,7 @@ export class Select implements ElementInterface {
    * if not selected then element .md-text should not exist
    */
   public static isNotSelected(): typeof Select {
-    cy.get(Select.initialSelector).find('md-select md-select-value').should(($span) => {
+    cy.get('@selectElem').find('md-select md-select-value').should(($span) => {
       expect($span.find('.md-text')).to.have.length(0);
     });
 
@@ -98,15 +116,24 @@ export class Select implements ElementInterface {
   }
 
   /**
-   * selects the given value from selectbox
+   * selects the given value from select-box
    *
    * @param value
    */
   public static select(value: string): typeof Select {
-    cy.dataCy('product-price-calculator').click();
+    cy.get('@selectElem').click();
+    cy.get('.md-select-menu-container.md-active.md-clickable').should('exist');
 
     cy.get('.md-select-menu-container.md-active.md-clickable').within(() => {
-      cy.get('md-content md-option').find('.md-text').should('contain.text', value).click();
+      cy.get('md-content md-option').each($option => {
+        cy.wrap($option).find('.md-text').each($mdText => {
+          const cellValue = $mdText.text().trim();
+
+          if (cellValue.includes(value)) {
+            cy.wrap($option).click();
+          }
+        });
+      })
     });
 
     return Select;

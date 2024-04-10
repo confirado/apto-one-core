@@ -202,6 +202,11 @@ export enum FloatInputTypes {
   INPUT_SLIDER = 'input_slider'
 }
 
+export enum ProductModes {
+  STEP_BY_STEP = 'StepByStep',
+  ONE_PAGE = 'OnePage',
+}
+
 export interface RuleRepairSettings {
   maxTries: number;
   operators: number[];

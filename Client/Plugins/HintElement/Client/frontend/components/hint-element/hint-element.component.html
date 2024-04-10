@@ -4,6 +4,7 @@
          [class.step-by-step]="product.useStepByStep"
          [class.one-page]="!product.useStepByStep"
          [class.disabled]="element.state.disabled"
+         [class.no-element-preview-image]="!element.element.previewImage"
     >
         <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 

@@ -6,11 +6,14 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Application\Backend\Commands\Product\ProductChildHandler;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidPropertyException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidTypeException;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionInvalidValueException;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 
 class ProductRuleHandler extends ProductChildHandler
 {
@@ -102,6 +105,14 @@ class ProductRuleHandler extends ProductChildHandler
 
     /**
      * @param AddProductRuleCondition $command
+     * @return void
+     * @throws InvalidUuidException
+     * @throws RuleCriterionInvalidOperatorException
+     * @throws RuleCriterionInvalidPropertyException
+     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      */
     public function handleAddProductRuleCondition(AddProductRuleCondition $command)
     {
@@ -119,7 +130,7 @@ class ProductRuleHandler extends ProductChildHandler
         if (null !== $product) {
             $product->addRuleCondition(
                 new AptoUuid($command->getRuleId()),
-                new RuleCriterionOperator($command->getOperator()),
+                new CriterionOperator($command->getOperator()),
                 $command->getType(),
                 null !== $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null,
                 null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
@@ -134,6 +145,9 @@ class ProductRuleHandler extends ProductChildHandler
     /**
      * @param AddProductRuleImplication $command
      * @return void
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidValueException
      * @throws InvalidUuidException
      * @throws RuleCriterionInvalidOperatorException
      * @throws RuleCriterionInvalidPropertyException
@@ -155,7 +169,7 @@ class ProductRuleHandler extends ProductChildHandler
         if (null !== $product) {
             $product->addRuleImplication(
                 new AptoUuid($command->getRuleId()),
-                new RuleCriterionOperator($command->getOperator()),
+                new CriterionOperator($command->getOperator()),
                 $command->getType(),
                 new AptoUuid($command->getSectionId()),
                 null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
@@ -170,10 +184,9 @@ class ProductRuleHandler extends ProductChildHandler
 
     /**
      * @param UpdateProductRuleCondition $command
-     *
      * @return void
+     * @throws CriterionInvalidOperatorException
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
      */
     public function handleUpdateProductRuleCondition(UpdateProductRuleCondition $command): void
     {
@@ -183,11 +196,11 @@ class ProductRuleHandler extends ProductChildHandler
             $ruleId = new AptoUuid($command->getRuleId());
             $conditionId = new AptoUuid($command->getConditionId());
             $type = $command->getType();
-            $operator = new RuleCriterionOperator($command->getOperator());
+            $operator = new CriterionOperator($command->getOperator());
             $value = $command->getValue();
-            $computedValueId = new AptoUuid($command->getComputedValueId());
-            $sectionId = new AptoUuid($command->getSectionId());
-            $elementId = new AptoUuid($command->getElementId());
+            $computedValueId = $command->getComputedValueId() ? new AptoUuid($command->getComputedValueId()) : null;
+            $sectionId = $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null;
+            $elementId = $command->getElementId() ? new AptoUuid($command->getElementId()) : null;
             $property = $command->getProperty();
 
             $product->setRuleCondition($ruleId, $conditionId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);
@@ -238,10 +251,9 @@ class ProductRuleHandler extends ProductChildHandler
 
     /**
      * @param UpdateProductRuleImplication $command
-     *
      * @return void
+     * @throws CriterionInvalidOperatorException
      * @throws InvalidUuidException
-     * @throws RuleCriterionInvalidOperatorException
      */
     public function handleUpdateProductRuleImplication(UpdateProductRuleImplication $command): void
     {
@@ -251,11 +263,11 @@ class ProductRuleHandler extends ProductChildHandler
             $ruleId = new AptoUuid($command->getRuleId());
             $implicationId = new AptoUuid($command->getImplicationId());
             $type = $command->getType();
-            $operator = new RuleCriterionOperator($command->getOperator());
+            $operator = new CriterionOperator($command->getOperator());
             $value = $command->getValue();
-            $computedValueId = new AptoUuid($command->getComputedValueId());
-            $sectionId = new AptoUuid($command->getSectionId());
-            $elementId = new AptoUuid($command->getElementId());
+            $computedValueId = $command->getComputedValueId() ? new AptoUuid($command->getComputedValueId()) : null;
+            $sectionId = $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null;
+            $elementId = $command->getElementId() ? new AptoUuid($command->getElementId()) : null;
             $property = $command->getProperty();
 
             $product->setRuleImplication($ruleId, $implicationId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);

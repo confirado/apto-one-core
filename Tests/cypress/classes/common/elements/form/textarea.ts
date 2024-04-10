@@ -1,42 +1,60 @@
 import { Attributes, ElementInterface } from '../../../interfaces/element-interface';
+import Chainable = Cypress.Chainable;
 
 export class Textarea implements ElementInterface {
-  private static initialSelector: string;
 
   public static getByAttr(selector: string): typeof Textarea {
-    Textarea.initialSelector = `[data-cy="${selector}"]`;
-    cy.get(Textarea.initialSelector).should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('textareaElem');
+    cy.get('@textareaElem').should('exist');
 
     return Textarea;
   }
 
   public static get(selector: string): typeof Textarea {
-    Textarea.initialSelector = selector;
-    cy.get(Textarea.initialSelector).should('exist');
+    cy.get(selector).as('textareaElem');
+    cy.get('@textareaElem').should('exist');
+
+    return Textarea;
+  }
+
+  /**
+   * Sets a custom cypress element for testing
+   *
+   * makes sense in cases when we don't select our element but rather we get it from search or so, then we can with this method make it as
+   * testing object and apply all our methods to it
+   *
+   *  Checkbox.set(cy.dataCy('product-active'))
+   *          .hasLabel('Aktiv')
+   *          .isUnChecked();
+   *
+   * @param elem
+   */
+  public static set(elem: Chainable<JQuery<HTMLElement>>): typeof Textarea {
+    elem.as('textareaElem');
 
     return Textarea;
   }
 
   public static hasLabel(label: string): typeof Textarea {
-    cy.get(Textarea.initialSelector).find('label').should('contain.text', label);
+    cy.get('@textareaElem').find('label').should('contain.text', label);
 
     return Textarea;
   }
 
   public static hasNotLabel(label: string): typeof Textarea {
-    cy.get(Textarea.initialSelector).find('label').should('not.contain.text', label);
+    cy.get('@textareaElem').find('label').should('not.contain.text', label);
 
     return Textarea;
   }
 
   public static hasValue(value: any): typeof Textarea {
-    cy.get(Textarea.initialSelector).find('textarea').should('contain.value', value);
+    cy.get('@textareaElem').find('textarea').should('contain.value', value);
 
     return Textarea;
   }
 
   public static hasNotValue(value: any): typeof Textarea {
-    cy.get(Textarea.initialSelector).find('textarea').should('not.contain.value', value);
+    cy.get('@textareaElem').find('textarea').should('not.contain.value', value);
 
     return Textarea;
   }
@@ -54,10 +72,10 @@ export class Textarea implements ElementInterface {
   public static attributes(attributes: Attributes): typeof Textarea {
     for(let condition in attributes) {
       if (attributes[condition] !== null) {
-        cy.get(Textarea.initialSelector).should(condition, attributes[condition]);
+        cy.get('@textareaElem').should(condition, attributes[condition]);
       }
       else {
-        cy.get(Textarea.initialSelector).should(condition);
+        cy.get('@textareaElem').should(condition);
       }
     }
 
