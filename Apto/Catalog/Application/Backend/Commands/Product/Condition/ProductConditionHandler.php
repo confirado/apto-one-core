@@ -70,9 +70,9 @@ class ProductConditionHandler extends ProductChildHandler
             $type = $command->getType();
             $operator = new CriterionOperator($command->getOperator());
             $value = $command->getValue();
-            $computedValueId = new AptoUuid($command->getComputedValueId());
-            $sectionId = new AptoUuid($command->getSectionId());
-            $elementId = new AptoUuid($command->getElementId());
+            $computedValueId = $command->getComputedValueId() ? new AptoUuid($command->getComputedValueId()) : null;
+            $sectionId = $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null;
+            $elementId = $command->getElementId() ? new AptoUuid($command->getElementId()) : null;
             $property = $command->getProperty();
 
             $product->setProductCondition($conditionId, $identifier, $type, $computedValueId, $sectionId, $elementId, $property, $operator, $value);
