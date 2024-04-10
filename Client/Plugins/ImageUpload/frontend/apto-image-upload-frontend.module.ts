@@ -22,10 +22,11 @@ import { ImageUploadComponent } from '@apto-image-upload-frontend/components/ima
 import { DesignerComponent } from '@apto-image-upload-frontend/components/designer/designer.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DesignerPerspectiveComponent } from './components/designer-perspective/designer-perspective.component';
 
 @NgModule({
-  declarations: [ImageUploadComponent, DesignerComponent],
-  exports: [DesignerComponent],
+  declarations: [ImageUploadComponent, DesignerComponent, DesignerPerspectiveComponent],
+  exports: [DesignerComponent, DesignerPerspectiveComponent],
   entryComponents: [],
 	imports: [
 		RouterModule,
@@ -55,6 +56,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 export class AptoImageUploadFrontendModule {
   public constructor() {
     SlotRegistry.components.set('apto-element-image-upload', ImageUploadComponent);
-    SlotRegistry.components.set('one-page-designer', DesignerComponent);
+    SlotRegistry.components.set('one-page-designer', DesignerPerspectiveComponent);
   }
 }

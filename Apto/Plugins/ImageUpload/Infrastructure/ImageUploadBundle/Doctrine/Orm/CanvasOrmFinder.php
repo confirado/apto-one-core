@@ -40,8 +40,8 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
             ])
             ->setPostProcess([
                 'c' => [
-                    'imageSettings' => [self::class, 'decodeSerialized'],
-                    'motiveSettings' => [self::class, 'decodeSerialized'],
+                    'imageSettings' => [self::class, 'decodeAndTransferToNewFormat'],
+                    'motiveSettings' => [self::class, 'decodeAndTransferToNewFormat'],
                     'textSettings' => [self::class, 'decodeSerialized'],
                     'areaSettings' => [self::class, 'decodeSerialized'],
                     'priceSettings' => [self::class, 'decodeSerialized']
@@ -87,8 +87,8 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
             ], $searchString)
             ->setPostProcess([
                 'c' => [
-                    'imageSettings' => [self::class, 'decodeSerialized'],
-                    'motiveSettings' => [self::class, 'decodeSerialized'],
+                    'imageSettings' => [self::class, 'decodeAndTransferToNewFormat'],
+                    'motiveSettings' => [self::class, 'decodeAndTransferToNewFormat'],
                     'textSettings' => [self::class, 'decodeSerialized'],
                     'areaSettings' => [self::class, 'decodeSerialized'],
                     'priceSettings' => [self::class, 'decodeSerialized']
@@ -129,5 +129,24 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
     public static function decodeSerialized($value)
     {
         return unserialize(trim($value));
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public static function decodeAndTransferToNewFormat($data): array
+    {
+        $unserialized = unserialize(trim($data));
+        //incorrect old format
+        if (isset($unserialized['active'])) {
+            if (!isset($unserialized['perspective'])) {
+                $unserialized['perspective'] = 'persp1';
+            }
+
+            return [$unserialized];
+        }
+
+        return $unserialized;
     }
 }

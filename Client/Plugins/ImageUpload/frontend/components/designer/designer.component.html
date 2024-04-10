@@ -18,7 +18,7 @@
 <ng-container *ngIf="canvas && renderImage">
     <div class="designer">
         <div class="left">
-            <ng-container *ngIf="canvas.element.staticValues.image.active">
+            <ng-container *ngIf="canvas.element.staticValues.image[currentPerspective]?.active">
                 <div class="image-upload-container">
                     <div class="input-field image-upload-header">
                         <div class="name">Bildupload:</div>
@@ -35,10 +35,10 @@
                                 <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.pattern'"></span> {{ getAcceptedFileTypes() }}
                             </p>
                             <p *ngIf="error.type === 'maxSize'">
-                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.prefix'"></span> {{ canvas.element.staticValues.image.maxFileSize }}MB <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.suffix'"></span>
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.prefix'"></span> {{ canvas.element.staticValues.image[currentPerspective]?.maxFileSize }}MB <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.maxSize.suffix'"></span>
                             </p>
                             <p *ngIf="error.type === 'minDimensions'">
-                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.prefix'"></span> {{ canvas.element.staticValues.image.minWidth }} x {{ canvas.element.staticValues.image.minHeight }} <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.suffix'"></span>
+                                <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.prefix'"></span> {{ canvas.element.staticValues.image[currentPerspective]?.minWidth }} x {{ canvas.element.staticValues.image[currentPerspective]?.minHeight }} <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.minDimensions.suffix'"></span>
                             </p>
                             <p *ngIf="error.type === 'default'">
                                 <span [innerHTML]="contentSnippet$ | async | contentSnippet: 'error.default'"></span>
@@ -49,13 +49,12 @@
                     <button *ngIf="fabricSelectedObject && fabricSelectedObject.payload.type === 'image'" class="image-upload-delete" color="warn" mat-flat-button (click)="removeSelectedObject()">{{ contentSnippet$ | async | contentSnippet: 'upload.deleteImage' }}</button>
                 </div>
             </ng-container>
-
-            <ng-container *ngIf="canvas.element.staticValues.motive.active && canvas.element.staticValues.motive.files.length > 0">
+            <ng-container *ngIf="canvas.element.staticValues.motive[currentPerspective]?.active && canvas.element.staticValues.motive[currentPerspective]?.files.length > 0">
                 <div class="input-field">
                     <div class="name">Motive:</div>
                 </div>
                 <div class="motive-container">
-                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive.files">
+                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive[currentPerspective]?.files">
                         <img [src]="mediaUrl + file.path" (click)="addMotive(file)" />
                         <div class="motive-item-name">{{ getNameFromFileName(file.name) }}</div>
                     </div>
@@ -106,22 +105,5 @@
                 </div>
             </ng-container>
         </div>
-    </div>
-
-    <!--
-    @todo we dont need an Area switch but we need a perspective switch here
-    <div class="designer-areas">
-        <mat-button-toggle-group name="favoriteColor" aria-label="Favorite Color" value="{{ getPrintAreaId(canvas.element.staticValues.area[currentArea]) }}">
-            <mat-button-toggle (click)="setPrintArea(index)" selected="selected" value="{{ getPrintAreaId(area) }}" *ngFor="let area of canvas.element.staticValues.area; let index=index;">{{ area.name ? area.name : area.perspective }}</mat-button-toggle>
-        </mat-button-toggle-group>
-    </div>
-    -->
-
-    <div class="designer-actions">
-        <div class="designer-actions-left">
-            <button color="accent" mat-flat-button (click)="reset()">{{ contentSnippet$ | async | contentSnippet: 'upload.reset' }}</button>
-            <button color="accent" mat-flat-button (click)="cancel()">{{ contentSnippet$ | async | contentSnippet: 'upload.cancel' }}</button>
-        </div>
-        <button color="primary" mat-flat-button (click)="save()">{{ contentSnippet$ | async | contentSnippet: 'upload.save' }}</button>
     </div>
 </ng-container>
