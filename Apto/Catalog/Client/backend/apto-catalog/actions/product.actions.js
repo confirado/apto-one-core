@@ -319,10 +319,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductSectionPrice(productId, sectionId, amount, currencyCode, customerGroupId) {
+    function addProductSectionPrice(productId, sectionId, amount, currencyCode, customerGroupId, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_SECTION_PRICE'),
-            payload: MessageBusFactory.command('AddProductSectionPrice', [productId, sectionId, amount, currencyCode, customerGroupId])
+            payload: MessageBusFactory.command('AddProductSectionPrice', [productId, sectionId, amount, currencyCode, customerGroupId, productConditionId])
         }
     }
 
@@ -430,10 +430,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductElementPrice(productId, sectionId, elementId, amount, currencyCode, customerGroupId) {
+    function addProductElementPrice(productId, sectionId, elementId, amount, currencyCode, customerGroupId, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_ELEMENT_PRICE'),
-            payload: MessageBusFactory.command('AddProductElementPrice', [productId, sectionId, elementId, amount, currencyCode, customerGroupId])
+            payload: MessageBusFactory.command('AddProductElementPrice', [productId, sectionId, elementId, amount, currencyCode, customerGroupId, productConditionId])
         }
     }
 
@@ -682,10 +682,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductPrice(productId, amount, currencyCode, customerGroupId) {
+    function addProductPrice(productId, amount, currencyCode, customerGroupId, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_PRICE'),
-            payload: MessageBusFactory.command('AddProductPrice', [productId, amount, currencyCode, customerGroupId])
+            payload: MessageBusFactory.command('AddProductPrice', [productId, amount, currencyCode, customerGroupId, productConditionId])
         }
     }
 

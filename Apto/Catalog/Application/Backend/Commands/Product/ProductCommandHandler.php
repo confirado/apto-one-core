@@ -402,7 +402,8 @@ class ProductCommandHandler extends ProductChildHandler
                 ),
                 new AptoUuid(
                     $command->getCustomerGroupId()
-                )
+                ),
+                $command->getProductConditionId() ? new AptoUuid($command->getProductConditionId()) : null
             );
             $this->productRepository->update($product);
             $product->publishEvents();

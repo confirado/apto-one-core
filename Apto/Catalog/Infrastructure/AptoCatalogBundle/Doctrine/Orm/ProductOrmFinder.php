@@ -921,7 +921,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     ['id.id', 'id'],
                     ['price.amount', 'amount'],
                     ['price.currency.code', 'currencyCode'],
-                    ['customerGroupId.id', 'customerGroupId']
+                    ['customerGroupId.id', 'customerGroupId'],
+                    ['productConditionId', 'productConditionId'],
                 ]
             ])
             ->setJoins([
@@ -1735,7 +1736,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                   p.id.id as productId,
                   pp.price.amount as amount,
                   pp.price.currency.code as currencyCode,
-                  pp.customerGroupId.id as customerGroupId
+                  pp.customerGroupId.id as customerGroupId,
+                  pp.productConditionId as productConditionId
               FROM
                   ' . $this->entityClass . ' p
               JOIN

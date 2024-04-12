@@ -8,6 +8,7 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
@@ -18,6 +19,9 @@ use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ElementP
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductPriceProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductSurchargeProvider;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\TaxCalculator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
@@ -159,6 +163,11 @@ class SimplePriceCalculator implements PriceCalculator
     private StatePricesHook $statePricesHook;
 
     /**
+     * @var ProductConditionFinder
+     */
+    private ProductConditionFinder $productConditionFinder;
+
+    /**
      * @param PriceCalculatorRegistry $priceCalculatorRegistry
      * @param ProductFinder $productFinder
      * @param CustomerGroupFinder $customerGroupFinder
@@ -177,7 +186,8 @@ class SimplePriceCalculator implements PriceCalculator
         MediaFileSystemConnector $mediaFileSystem,
         ShopFinder $shopFinder,
         RequestStore $requestStore,
-        StatePricesHook $statePricesHook
+        StatePricesHook $statePricesHook,
+        ProductConditionFinder $productConditionFinder
     ) {
         $this->priceCalculatorRegistry = $priceCalculatorRegistry;
         $this->productFinder = $productFinder;
@@ -200,6 +210,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->requestStore = $requestStore;
         $this->priceModifier = 1;
         $this->statePricesHook = $statePricesHook;
+        $this->productConditionFinder = $productConditionFinder;
     }
 
     /**
@@ -1096,6 +1107,7 @@ class SimplePriceCalculator implements PriceCalculator
         if ($rawStatePrices['priceModifier'] === null || $rawStatePrices['priceModifier'] === '') {
             $rawStatePrices['priceModifier'] = 100;
         }
+        $rawStatePrices['prices'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state);
 
         $statePrices = [
             'prices' => $this->mapProperties($rawStatePrices['prices'], $keyMapping, true),
@@ -1136,6 +1148,61 @@ class SimplePriceCalculator implements PriceCalculator
         array_walk_recursive($this->priceTable, array($this, 'addDomainPriceModifier'));
 
         return $this->priceTable;
+    }
+
+    private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state): array
+    {
+        $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices);
+        $productConditionsResult = $this->productConditionFinder->findByIds($productConditionIds);
+        $productConditions = [];
+        foreach ($productConditionsResult['data'] as $element) {
+            $productConditions[$element['id']] = $element;
+        }
+
+        $newRawStatePrices = ['products' => [], 'sections' => [], 'elements' => []];
+
+        foreach (['products', 'sections', 'elements'] as $type) {
+            foreach ($rawStatePrices['prices'][$type] as $price) {
+                if (empty($price['productConditionId'])) {
+                    unset($price['productConditionId']);
+                    $newRawStatePrices[$type][] = $price;
+                    continue;
+                }
+                $productCondition = $productConditions[$price['productConditionId']];
+
+                // @TODO: take care about repetition in DefaultCriterion
+                $criterion = new DefaultCriterion(
+                    true,
+                    new CompareOperator($productCondition['operator']),
+                    $productCondition['value'],
+                    new AptoUuid($productCondition['sectionId']),
+                    new AptoUuid($productCondition['elementId']),
+                    $productCondition['property']
+                );
+
+                if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                    unset($price['productConditionId']);
+                    $newRawStatePrices[$type][] = $price;
+                }
+            }
+        }
+
+        return $newRawStatePrices;
+    }
+
+    private function collectAllProductConditionIdsFromRawStatement(array $rawStatePrices): array
+    {
+        $ids = [];
+
+        foreach (['products', 'sections', 'elements'] as $category) {
+            foreach ($rawStatePrices['prices'][$category] as $price) {
+                if (!empty($price['productConditionId'])) {
+                    $ids[] = $price['productConditionId'];
+                }
+            }
+        }
+
+        return $ids;
     }
 
     /**

@@ -152,6 +152,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         $scope.selectedConditionComputedValue = null;
     }
 
+    $scope.getConditionName = function (id) {
+        const condition = $scope.conditions.find((c) => c.id === id);
+
+        return condition ? condition.identifier : null;
+    }
+
     function assignDefaultShop() {
         if ($scope.productDetail.shops.length === 0 && $scope.availableShops.length > 0) {
             let autoAssignedShop = [$scope.availableShops[0]];
@@ -316,11 +322,12 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     }
 
     function addPrice() {
-        $scope.addProductPrice(productId, $scope.newPrice.amount, $scope.newPrice.currencyCode, $scope.newPrice.customerGroupId).then(() => {
+        $scope.addProductPrice(productId, $scope.newPrice.amount, $scope.newPrice.currencyCode, $scope.newPrice.customerGroupId, $scope.newPrice.productConditionId).then(() => {
             $scope.newPrice = {
                 amount: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: null,
             };
             $scope.fetchPrices(productId);
         });

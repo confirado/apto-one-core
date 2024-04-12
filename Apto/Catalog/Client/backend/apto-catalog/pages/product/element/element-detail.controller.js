@@ -38,7 +38,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             availableSections: state.element.sections,
             sectionIdentifiers: state.element.sectionIdentifiers,
             elementIdentifiers: state.element.elementIdentifiers,
-            customProperties: state.element.customProperties
+            customProperties: state.element.customProperties,
+            conditions: state.product.conditions,
         }
     };
 
@@ -78,7 +79,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         setDetailValue: ElementActions.setDetailValue,
         resetDefinitionValues: ElementActions.resetDefinitionValues,
         resetStore: ElementActions.reset,
-        fetchSections: ElementActions.fetchSections
+        fetchSections: ElementActions.fetchSections,
+        fetchConditions: ProductActions.fetchConditions,
     })($scope);
 
     function init() {
@@ -119,6 +121,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         $scope.elementListOpen = false;
 
         $scope.productId = productId;
+        $scope.fetchConditions(productId);
         $scope.sectionId = sectionId;
 
         $scope.fetchSections(productId).then(() => {
@@ -129,6 +132,12 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             updateAvailableComputableValues(false, 'renderImageOptions');
             updateAvailableComputableValues(false, 'offsetOptions');
         });
+    }
+
+    $scope.getConditionName = function (id) {
+        const condition = $scope.conditions.find((c) => c.id === id);
+
+        return condition ? condition.identifier : null;
     }
 
     function initOptions(renderImage, copy = false) {
@@ -266,12 +275,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             elementId,
             $scope.newPrice.amount,
             $scope.newPrice.currencyCode,
-            $scope.newPrice.customerGroupId
+            $scope.newPrice.customerGroupId,
+            $scope.newPrice.productConditionId
         ).then(() => {
             $scope.newPrice = {
                 amount: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: null
             };
             $scope.fetchPrices(elementId);
         });

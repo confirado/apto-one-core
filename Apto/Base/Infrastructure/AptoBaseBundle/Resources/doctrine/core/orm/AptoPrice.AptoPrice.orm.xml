@@ -14,6 +14,8 @@
             <generator strategy="IDENTITY"/>
         </id>
 
+        <field name="productConditionId" column="product_condition_id" type="AptoPropertyUuid" nullable="true"/>
+
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
         <embedded class="Money\Money" use-column-prefix="true" column-prefix="price_" name="price"/>
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="true" column-prefix="customer_group_" name="customerGroupId"/>

@@ -26,6 +26,11 @@ class AddProductSectionPrice extends ProductChildCommand
     private $customerGroupId;
 
     /**
+     * @var string|null
+     */
+    private ?string $productConditionId;
+
+    /**
      * @ todo define accepted type for amount
      * AddProductSectionPrice constructor.
      * @param string $productId
@@ -34,13 +39,14 @@ class AddProductSectionPrice extends ProductChildCommand
      * @param string $currency
      * @param string $customerGroupId
      */
-    public function __construct(string $productId, string $sectionId, $amount, string $currency, string $customerGroupId)
+    public function __construct(string $productId, string $sectionId, $amount, string $currency, string $customerGroupId, ?string $productConditionId)
     {
         parent::__construct($productId);
         $this->sectionId = $sectionId;
         $this->amount = $amount;
         $this->currency = $currency;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -73,5 +79,13 @@ class AddProductSectionPrice extends ProductChildCommand
     public function getCustomerGroupId(): string
     {
         return $this->customerGroupId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductConditionId(): ?string
+    {
+        return $this->productConditionId;
     }
 }
