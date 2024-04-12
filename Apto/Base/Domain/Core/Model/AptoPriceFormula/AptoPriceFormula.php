@@ -24,18 +24,24 @@ class AptoPriceFormula extends AptoEntity
     protected $customerGroupId;
 
     /**
+     * @var AptoUuid|null
+     */
+    private ?AptoUuid $productConditionId;
+
+    /**
      * AptoPrice constructor.
      * @param AptoUuid $id
      * @param string $formula
      * @param Currency $currency
      * @param AptoUuid $customerGroupId
      */
-    public function __construct(AptoUuid $id, string $formula, Currency $currency, AptoUuid $customerGroupId)
+    public function __construct(AptoUuid $id, string $formula, Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId)
     {
         parent::__construct($id);
         $this->formula = $formula;
         $this->currency = $currency;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -103,10 +109,19 @@ class AptoPriceFormula extends AptoEntity
             $id,
             $this->getFormula(),
             $this->getCurrency(),
-            $this->getCustomerGroupId()
+            $this->getCustomerGroupId(),
+            $this->getProductConditionId()
         );
 
         // return copy
         return $priceFormula;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getProductConditionId(): ?AptoUuid
+    {
+        return $this->productConditionId;
     }
 }

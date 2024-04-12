@@ -135,6 +135,13 @@
                     </md-select>
                 </md-input-container>
                 <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Condition:</label>
+                    <md-select ng-model="newPriceFormula.productConditionId">
+                        <md-option ng-value="condition.id" ng-repeat="condition in conditions">{{ condition.identifier }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
                 <md-input-container>
                     <md-button ng-disabled="!newPriceFormula.formula || !newPriceFormula.currencyCode || !newPriceFormula.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addPriceFormula()">Hinzufügen</md-button>
                 </md-input-container>
@@ -144,9 +151,10 @@
                 <table md-table>
                     <thead md-head>
                     <tr md-row>
-                        <th md-column style="width:30%;">Formel</th>
-                        <th md-column style="width:30%;">Währung</th>
-                        <th md-column style="width:40%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Formel</th>
+                        <th md-column style="width:25%;">Währung</th>
+                        <th md-column style="width:25%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Condition</th>
                         <th md-column style="width:60px;">Aktionen</th>
                     </tr>
                     </thead>
@@ -157,6 +165,7 @@
                         <td md-cell>
                             <apto-customer-group-name customer-group-id="priceFormula.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
                         </td>
+                        <td md-cell>{{getConditionName(priceFormula.productConditionId)}}</td>
                         <td md-cell>
                             <md-button
                                     title="Löschen"

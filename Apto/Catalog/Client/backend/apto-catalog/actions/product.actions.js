@@ -437,10 +437,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductElementPriceFormula(productId, sectionId, elementId, formula, currencyCode, customerGroupId) {
+    function addProductElementPriceFormula(productId, sectionId, elementId, formula, currencyCode, customerGroupId, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_ELEMENT_PRICE_FORMULA'),
-            payload: MessageBusFactory.command('AddProductElementPriceFormula', [productId, sectionId, elementId, formula, currencyCode, customerGroupId])
+            payload: MessageBusFactory.command('AddProductElementPriceFormula', [productId, sectionId, elementId, formula, currencyCode, customerGroupId, productConditionId])
         }
     }
 

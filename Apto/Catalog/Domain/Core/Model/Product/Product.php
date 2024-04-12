@@ -2133,7 +2133,7 @@ class Product extends AptoAggregate
      * @throws AptoPriceFormulaDuplicateException
      * @throws InvalidUuidException
      */
-    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId): Product
+    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId): Product
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2142,7 +2142,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to element
-        $element->addAptoPriceFormula($formula, $currency, $customerGroupId);
+        $element->addAptoPriceFormula($formula, $currency, $customerGroupId, $productConditionId);
 
         return $this;
     }

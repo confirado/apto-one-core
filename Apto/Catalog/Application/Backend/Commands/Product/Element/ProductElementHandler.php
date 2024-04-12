@@ -600,7 +600,8 @@ class ProductElementHandler extends ProductChildHandler
             ),
             new AptoUuid(
                 $command->getCustomerGroupId()
-            )
+            ),
+            $command->getProductConditionId() ? new AptoUuid($command->getProductConditionId()) : null
         );
 
         $this->productRepository->update($product);

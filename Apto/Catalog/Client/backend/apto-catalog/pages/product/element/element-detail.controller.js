@@ -306,12 +306,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             elementId,
             $scope.newPriceFormula.formula,
             $scope.newPriceFormula.currencyCode,
-            $scope.newPriceFormula.customerGroupId
+            $scope.newPriceFormula.customerGroupId,
+            $scope.newPriceFormula.productConditionId
         ).then(() => {
             $scope.newPriceFormula = {
                 formula: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: ''
             };
             $scope.fetchPriceFormulas(elementId);
         });
