@@ -26,7 +26,7 @@
         <field name="value" column="value" type="string" nullable="true" />
 
         <embedded name="id" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false"/>
-        <embedded name="operator" class="Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator" use-column-prefix="false"/>
+        <embedded name="operator" class="Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator" use-column-prefix="false"/>
 
         <many-to-one field="rule" target-entity="Apto\Catalog\Domain\Core\Model\Product\Rule\Rule" inversed-by="implications">
             <join-column name="rule_id" referenced-column-name="surrogate_id" />

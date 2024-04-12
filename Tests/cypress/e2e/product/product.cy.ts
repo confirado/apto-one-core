@@ -14,6 +14,7 @@ import { TranslatedValue } from '../../classes/common/elements/custom/translated
 import { MediaSelect } from '../../classes/common/elements/custom/media-select';
 import { TableActionTypes } from '../../classes/enums/table-action-types';
 import { Tabs } from '../../classes/common/elements/tabs';
+import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
 
 
 // todo maybe each component must have it's within it's folder as classes and we can call them within our test
@@ -44,7 +45,7 @@ describe('Product', () => {
     Login.login()
       .then((data) => {
         RequestHandler.registerInterceptions(Product.initialRequests);
-        Product.visit(true);
+        Product.visitBackend(true);
     });
   });
 
@@ -337,6 +338,9 @@ describe('Product', () => {
                 .hasError()
                 .select(dummies.defaultPriceCalculator);
 
+              Select.getByAttr('product-configuration-modes')
+                .select(ProductModes.STEP_BY_STEP);
+
               RequestHandler.registerInterceptions(Product.saveProductRequests);
 
               // save button click
@@ -357,14 +361,15 @@ describe('Product', () => {
 
   it('Checks if product exist in product list page right after making it', () => {
 
-    // var productName1 = 'product-YgBii7tZ';
+    // var productName1 = 'product-UGAQFVNQ';
 
     // goto product list page and search for newly created product in previous step
     ProductList.visit();
     ProductList.searchNotFindProduct(productName1);
 
+    Product.visitBackend();
+
     RequestHandler.registerInterceptions(Product.editProductQueryList);
-    Product.visit();
 
     // click on edit product button in product list page in backend
     Table.getByAttr('product-list').action(TableActionTypes.EDIT, productName1);
@@ -388,15 +393,16 @@ describe('Product', () => {
           Input.getByAttr('product-url').writeValue(productIdentifier);
         });
 
-        MediaSelect.getByAttr('product-preview-picture').select('logo.png');
+        MediaSelect.getByAttr('product-preview-picture')
+          .select('logo.png', 1)
+          .isImageSelected('logo.png');
 
         // save product
-        // Product.saveEditButton().click({ force: true });
         Product.saveAndCloseButton().click({ force: true });
 
         const selector = `.product-wrapper[data-id="${productId}"]`;
 
-        // check that newly updated product has all updates we made
+        // check that newly updated product has all updates we made in frontend
         ProductList.visit();
         ProductList.hasProduct(selector);
         ProductList.hasProductPreviewImage(selector);
@@ -407,8 +413,20 @@ describe('Product', () => {
     });
   });
 
-  it('Checks delete product', () => {
+  it('Checks product page in frontend', () => {
+    // now select the product in frontend
+    Product.visitFrontend(productId);
 
+    cy.get('apto-sbs-steps').should('exist');
+    cy.get('mat-expansion-panel-header mat-panel-title')
+      .find('h1')
+      .invoke('text').then(($text) => {
+        expect($text.trim()).to.include(productName1);
+      });
+  });
+
+
+  it('Checks delete product', () => {
     Product.createEmptyProduct(Product.generateName());
 
     // get the last product name in the list and delete it
@@ -426,28 +444,7 @@ describe('Product', () => {
       cy.get('md-dialog-actions').should('not.exist');
 
       // check delete
-      Table.getByAttr('product-list').action(TableActionTypes.DELETE, productName);
-
-      RequestHandler.registerInterceptions(Product.removeProductRequests);
-
-      cy.get('md-dialog-actions').find('button.md-confirm-button')
-        .should('exist').should('contain.text', 'Löschen')
-        .click();
-
-      cy.get('md-dialog-actions').should('not.exist');
-
-      // wait until delete requests are made
-      cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
-
-        Core.checkResponsesForError($responses);
-
-        // the last item in table should not contain the product name
-        cy.dataCy('product-list').within(() => {
-          cy.get('table tbody').within(() => {
-            cy.get('tr:last-child td:nth-child(4)').should('not.contain.text', productName);
-          });
-        });
-      });
+      Product.deleteProductByName(productName);
     });
   });
 
@@ -456,27 +453,8 @@ describe('Product', () => {
     Product.createEmptyProduct(Product.generateName());
 
     cy.dataCy('product-list').find('table tbody tr:last-child td:nth-child(4)').invoke('text').then((productName) => {
-
-      RequestHandler.registerInterceptions(Product.copyProductRequests);
-
-      Table.getByAttr('product-list')
-        .action(TableActionTypes.COPY, productName);
-
-      cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
-
-        Core.checkResponsesForError($responses);
-
-        // the last item in table should contain the product name
-        cy.dataCy('product-list').within(() => {
-          cy.get('table tbody').within(() => {
-            cy.get('tr:last-child td:nth-child(4)').should('contain.text', productName);
-
-            Product.deleteProductByName(productName);
-          });
-        });
-      });
+      Product.copyProductByName(productName);
     });
   });
-
 
 });

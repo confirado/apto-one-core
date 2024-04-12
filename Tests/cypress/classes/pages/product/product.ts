@@ -11,10 +11,13 @@ import { Core } from '../../common/core';
 import { Table } from '../../common/elements/table';
 import { Select } from '../../common/elements/form/select';
 import { TableActionTypes } from '../../enums/table-action-types';
+import { ProductModes } from '@apto-catalog-frontend/store/product/product.model';
+import { Checkbox } from '../../common/elements/form/checkbox';
+import { Frontend } from '../../common/frontend';
 
 export class Product implements IPage {
 
-  public static visit(visitByClick = false): void {
+  public static visitBackend(visitByClick = false): void {
 
     if (visitByClick) {
       const parent = 'sidebar-left_' + SIDEBAR_LEFT_ITEMS?.katalog.labal;
@@ -25,6 +28,15 @@ export class Product implements IPage {
     else {
       Backend.visit('product');
     }
+  }
+
+  /**
+   * Visit the given product in frontend
+   *
+   * @param productId
+   */
+  public static visitFrontend(productId: string) {
+    Frontend.visit('product/' + productId);
   }
 
   public static isCorrectPage(): void {
@@ -75,8 +87,9 @@ export class Product implements IPage {
    * Creates empty product without making a lot o tests
    *
    * @param productName
+   * @param mode
    */
-  public static createEmptyProduct(productName?: string|null) {
+  public static createEmptyProduct(productName?: string|null, mode: ProductModes = ProductModes.STEP_BY_STEP) {
 
     const name = productName ?? Product.generateName();
 
@@ -92,11 +105,20 @@ export class Product implements IPage {
         .then(() => {
           cy.get('md-dialog-actions').should('exist').then(() => {
 
+            Checkbox.getByAttr('product-active').check();
+
             // after typing value error should dissapear
             cy.dataCy('product-name').type(name);
             cy.get('.product-title h3').find('span.title-headline').should('contain.text', name);
 
             Select.getByAttr('product-price-calculator').select(dummies.defaultPriceCalculator);
+
+            if (mode === ProductModes.STEP_BY_STEP) {
+              Select.getByAttr('product-configuration-modes').select(ProductModes.STEP_BY_STEP);
+            } else if (ProductModes.ONE_PAGE) {
+              Select.getByAttr('product-configuration-modes').select(ProductModes.ONE_PAGE);
+            }
+
             RequestHandler.registerInterceptions(Product.saveProductRequests);
             Product.saveNewButton().click();
           });
@@ -127,6 +149,8 @@ export class Product implements IPage {
 
     // wait until delete requests are made
     cy.wait(RequestHandler.getAliasesFromRequests(Product.removeProductRequests)).then(($responses: Interception[]) => {
+      Core.checkResponsesForError($responses);
+
       // the last item in table should not contain the product name
       cy.dataCy('product-list').within(() => {
         cy.get('table tbody').within(() => {
@@ -137,9 +161,12 @@ export class Product implements IPage {
   }
 
   public static copyProductByName(productName: string) {
+    RequestHandler.registerInterceptions(Product.copyProductRequests);
+
     Table.getByAttr('product-list').action(TableActionTypes.COPY, productName);
 
     cy.wait(RequestHandler.getAliasesFromRequests(Product.copyProductRequests)).then(($responses: Interception[]) => {
+      Core.checkResponsesForError($responses);
 
       // the last item in table should contain the product name
       cy.dataCy('product-list').within(() => {

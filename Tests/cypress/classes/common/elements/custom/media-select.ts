@@ -3,21 +3,38 @@ import { TableActionTypes } from '../../../enums/table-action-types';
 import { RequestHandler } from '../../../requestHandler';
 import { Queries } from '../../../message-bus/queries';
 import { ElementInterface } from '../../../interfaces/element-interface';
+import Chainable = Cypress.Chainable;
 
 export class MediaSelect implements ElementInterface {
 
-  private static initialSelector: string;
-
   public static getByAttr(selector: string): typeof MediaSelect {
-    MediaSelect.initialSelector = `[data-cy="${selector}"]`;
-    cy.get(MediaSelect.initialSelector).should('exist');
+    cy.get(`[data-cy="${selector}"]`).as('MediaSelectElm');
+    cy.get('@MediaSelectElm').should('exist');
 
     return MediaSelect;
   }
 
   public static get(selector: string): typeof MediaSelect {
-    MediaSelect.initialSelector = selector;
-    cy.get(MediaSelect.initialSelector).should('exist');
+    cy.get(selector).as('MediaSelectElm');
+    cy.get('@MediaSelectElm').should('exist');
+
+    return MediaSelect;
+  }
+
+  /**
+   * Sets a custom cypress element for testing
+   *
+   * makes sense in cases when we don't select our element but rather we get it from search or so, then we can with this method make it as
+   * testing object and apply all our methods to it
+   *
+   *  Checkbox.set(cy.dataCy('product-active'))
+   *          .hasLabel('Aktiv')
+   *          .isUnChecked();
+   *
+   * @param elem
+   */
+  public static set(elem: Chainable<JQuery<HTMLElement>>): typeof MediaSelect {
+    elem.as('MediaSelectElm');
 
     return MediaSelect;
   }
@@ -34,7 +51,7 @@ export class MediaSelect implements ElementInterface {
     RequestHandler.registerInterceptions([Queries.ListMediaFiles]);
 
     // click on select media
-    cy.get(MediaSelect.initialSelector).find('input').click();
+    cy.get('@MediaSelectElm').find('input').click();
 
     cy.wait(RequestHandler.getAliasesFromRequests([Queries.ListMediaFiles])).then(() => {
       cy.get('.md-dialog-container').should('exist').then(() => {
@@ -45,18 +62,31 @@ export class MediaSelect implements ElementInterface {
     return MediaSelect;
   }
 
+  public static isImageSelected(imageName: string): typeof MediaSelect {
+    cy.get('@MediaSelectElm')
+      .find('apto-media-icon')
+      .find('[data-cy="media-icon"]')
+      .find('img')
+      .should('exist')
+      .and(($img) => {
+        expect($img.attr('src')).to.include(imageName);
+      });
+
+      return MediaSelect;
+  }
 
   public static select(selector: string, cell: number | null = 1 ): typeof MediaSelect {
     RequestHandler.registerInterceptions([Queries.ListMediaFiles]);
 
     // click on select media
-    cy.get(MediaSelect.initialSelector).find('input').click();
+    cy.get('@MediaSelectElm').find('input').click();
 
     cy.wait(RequestHandler.getAliasesFromRequests([Queries.ListMediaFiles])).then(() => {
       cy.get('.md-dialog-container').should('exist').then(() => {
-        Table.get('apto-media-list').selectCell(selector, cell);
+        cy.get('.md-dialog-container').find('apto-media-list').should('exist');
+          Table.get('apto-media-list').selectCell(selector, cell);
+        });
       });
-    });
 
     return MediaSelect;
   }

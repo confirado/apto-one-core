@@ -54,8 +54,8 @@
     </md-input-container>
     <div flex="5"></div>
     <md-input-container class="md-block" flex>
-        <label>Druckbereich:</label>
-        <input type="text" ng-model="newTextBox.area">
+        <label>Perspective:</label>
+        <input type="text" ng-model="newTextBox.perspective">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
@@ -98,22 +98,16 @@
     </md-input-container>
 </div>
 
-<div layout="row" layout-align="start" flex>
-    <md-input-container flex>
-        <label>Perspective: </label>
-        <input required type="text" ng-model="newTextBox.perspective">
-    </md-input-container>
-</div>
 
 <div layout="row" layout-align="start" flex style="justify-content: space-between;">
     <md-input-container>
         <md-button ng-if="newTextBoxEditMode" style="margin: 0;" class="md-raised md-cornered" ng-click="cancelEditTextBox()">Neue Textbox</md-button>
     </md-input-container>
     <md-input-container ng-if="!newTextBoxEditMode">
-        <md-button ng-disabled="!newTextBox.fill || !newTextBox.area" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewTextBox()">Hinzufügen</md-button>
+        <md-button ng-disabled="!newTextBox.fill" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewTextBox()">Hinzufügen</md-button>
     </md-input-container>
     <md-input-container ng-if="newTextBoxEditMode">
-        <md-button ng-disabled="!newTextBox.fill || !newTextBox.area" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewTextBox()">Speichern</md-button>
+        <md-button ng-disabled="!newTextBox.fill" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addNewTextBox()">Speichern</md-button>
     </md-input-container>
 </div>
 
@@ -123,7 +117,6 @@
         <thead md-head>
         <tr md-row>
             <th md-column style="width: 10%;">Name</th>
-            <th md-column style="width: 10%;">Druckbereich</th>
             <th md-column style="width: 10%;">Text</th>
             <th md-column style="width: 10%;">Schriftgröße</th>
             <th md-column style="width: 10%;">Farbe</th>
@@ -138,9 +131,6 @@
         <tr md-row ng-repeat="box in detail.textSettings.boxes">
             <td md-cell>
                 {{ box.name }}
-            </td>
-            <td md-cell>
-                {{ box.area }}
             </td>
             <td md-cell>
                 {{ box.default }}

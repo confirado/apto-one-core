@@ -4,6 +4,7 @@ import { Input } from '../common/elements/form/input';
 import { Textarea } from '../common/elements/form/textarea';
 import { MediaSelect } from '../common/elements/custom/media-select';
 import { TranslatedValue } from '../common/elements/custom/translated-value';
+import Chainable = Cypress.Chainable;
 
 export type ElementType = Checkbox | Input | Select | Textarea | MediaSelect | TranslatedValue;
 
@@ -14,6 +15,7 @@ export interface Attributes {
 export interface ElementInterface {
   get(selector: string): ElementType;
   getByAttr(selector: string): ElementType;
+  set(selector: Chainable<JQuery<HTMLElement>>): ElementType;
 
   hasLabel?(label: string): ElementType;
   hasNotLabel?(label: string): ElementType;

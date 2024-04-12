@@ -938,6 +938,64 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
+    function fetchConditions(productId) {
+        return {
+            type: getType('FETCH_CONDITIONS'),
+            payload: MessageBusFactory.query('FindConditions', [productId])
+        }
+    }
+
+    function addCondition(productId, condition) {
+        return {
+            type: getType('ADD_CONDITION'),
+            payload: MessageBusFactory.command('AddCondition', [
+                productId,
+                condition.identifier,
+                condition.type,
+                condition.operator,
+                condition.value,
+                condition.sectionId,
+                condition.elementId,
+                condition.property,
+                condition.computedValue,
+            ])
+        }
+    }
+
+    function updateCondition(productId, condition) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(condition.id);
+        commandArguments.push(condition.identifier);
+        commandArguments.push(condition.typeId);
+        commandArguments.push(condition.operatorId);
+        commandArguments.push(condition.value);
+        commandArguments.push(condition.sectionId);
+        commandArguments.push(condition.elementId);
+        commandArguments.push(condition.property);
+        commandArguments.push(condition.computedProductValueId);
+
+        return {
+            type: getType('UPDATE_CONDITION'),
+            payload: MessageBusFactory.command('UpdateCondition', commandArguments)
+        }
+    }
+
+    function copyCondition(productId, conditionId) {
+        return {
+            type: getType('COPY_CONDITION'),
+            payload: MessageBusFactory.command('CopyCondition', [productId, conditionId])
+        }
+    }
+
+    function removeCondition(productId, conditionId) {
+        return {
+            type: getType('REMOVE_CONDITION'),
+            payload: MessageBusFactory.command('RemoveCondition', [productId, conditionId])
+        }
+    }
+
     return {
         setSearchString: PageHeaderActions.setSearchString(TYPE_NS),
         setListTemplate: PageHeaderActions.setListTemplate(TYPE_NS),
@@ -1026,7 +1084,13 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         fetchComputedProductValues: fetchComputedProductValues,
         fetchComputedValueDetail: fetchComputedValueDetail,
         removeComputedProductValueAlias: removeComputedProductValueAlias,
-        removeComputedProductValue: removeComputedProductValue
+        removeComputedProductValue: removeComputedProductValue,
+
+        fetchConditions: fetchConditions,
+        addCondition: addCondition,
+        updateCondition: updateCondition,
+        copyCondition: copyCondition,
+        removeCondition: removeCondition,
     };
 };
 
