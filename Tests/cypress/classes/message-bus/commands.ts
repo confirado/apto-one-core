@@ -71,4 +71,14 @@ export class Commands {
       },
     };
   }
+
+  public static get AddProductSection(): IRequestData {
+    return {
+      alias: 'AddProductSection',
+      payload: {
+        command: 'AddProductSection',
+        arguments: { }
+      },
+    };
+  }
 }

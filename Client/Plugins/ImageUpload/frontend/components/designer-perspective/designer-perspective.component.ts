@@ -70,21 +70,21 @@ export class DesignerPerspectiveComponent implements OnInit {
     ]).pipe(take(1)).subscribe((result: [string, CanvasState, string[], string, Product]) => {
       this.locale = result[0] || environment.defaultLocale;
       this.canvas = result[1];
-      this.perspectives = result[2];
-      this.currentPerspective = result[3];
+      this.perspectives = [...new Set(this.canvas.element.staticValues.area.map((e) => e.perspective))].sort() as string[];
       this.product = result[4];
+
+      if (this.perspectives.includes(result[3])) {
+        this.currentPerspective = result[3];
+      } else {
+        this.changePerspective(this.perspectives[0])
+      }
+
       this.createDesigners();
     });
   }
 
-  public perspectiveChange($event: MatButtonToggleChange): void {
-    this.currentPerspective = $event.value;
-
-    this.store.dispatch(setPerspective({ perspective: this.currentPerspective }));
-
-    for (const designer of this.designers) {
-      designer.component.instance.visible = this.currentPerspective === designer.id;
-    }
+  public clickOnPerspectiveChange($event: MatButtonToggleChange): void {
+    this.changePerspective($event.value);
   }
 
   public async save() {
@@ -226,6 +226,15 @@ export class DesignerPerspectiveComponent implements OnInit {
       componentRef.instance.canvas = this.canvas;
       componentRef.instance.product = this.product;
       this.designers.push({ id: perspective, component: componentRef });
+    }
+  }
+
+  private changePerspective(perspective: string): void {
+    this.currentPerspective = perspective;
+    this.store.dispatch(setPerspective({ perspective: this.currentPerspective }));
+
+    for (const designer of this.designers) {
+      designer.component.instance.visible = this.currentPerspective === designer.id;
     }
   }
 }

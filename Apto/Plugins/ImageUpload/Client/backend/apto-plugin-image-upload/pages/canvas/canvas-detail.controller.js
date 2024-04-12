@@ -92,7 +92,6 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
 
     function initNewTextBox() {
         $scope.newTextBox = {
-            area: null,
             name: '',
             identifier: '',
             default: 'Mein Text!',

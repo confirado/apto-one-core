@@ -236,6 +236,15 @@ class ProductQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindProductConditions $query
+     * @return array|null
+     */
+    public function handleFindProductConditions(FindProductConditions $query)
+    {
+        return $this->productFinder->findProductConditions($query->getId());
+    }
+
+    /**
      * @param FindProductComputedValues $query
      * @return array|null
      */
@@ -398,6 +407,11 @@ class ProductQueryHandler implements QueryHandlerInterface
 
         yield FindProductRules::class => [
             'method' => 'handleFindProductRules',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindProductConditions::class => [
+            'method' => 'handleFindProductConditions',
             'bus' => 'query_bus'
         ];
 

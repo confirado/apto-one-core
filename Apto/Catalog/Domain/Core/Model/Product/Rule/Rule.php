@@ -7,6 +7,11 @@ use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Criterion;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidTypeException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -176,12 +181,12 @@ class Rule extends AptoEntity
     /**
      * @param int $operator
      * @return Rule
-     * @throws RuleCriterionInvalidOperatorException
+     * @throws CriterionInvalidOperatorException
      */
     public function setConditionsOperator(int $operator): Rule
     {
         if (!in_array($operator, self::$validOperators)) {
-            throw new RuleCriterionInvalidOperatorException('The operator \'' . $operator . '\' is invalid.');
+            throw new CriterionInvalidOperatorException('The operator \'' . $operator . '\' is invalid.');
         }
         $this->conditionsOperator = $operator;
         return $this;
@@ -196,7 +201,7 @@ class Rule extends AptoEntity
     }
 
     /**
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
@@ -204,19 +209,19 @@ class Rule extends AptoEntity
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function addCondition(
-        RuleCriterionOperator $operator,
-        ?int $type = Criterion::TYPE,
-        ?AptoUuid $sectionId = null,
-        ?AptoUuid $elementId = null,
-        ?string $property = null,
+        CriterionOperator     $operator,
+        ?int                  $type = Criterion::TYPE,
+        ?AptoUuid             $sectionId = null,
+        ?AptoUuid             $elementId = null,
+        ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string               $value = null
     ): Rule {
         $conditionId = $this->nextConditionId();
         $this->conditions->set(
@@ -333,12 +338,11 @@ class Rule extends AptoEntity
     }
 
     /**
-     * @param AptoUuid              $conditionId
-     * @param RuleCriterionOperator $ruleCriterionOperator
-     *
+     * @param AptoUuid $conditionId
+     * @param CriterionOperator $ruleCriterionOperator
      * @return $this
      */
-    public function setConditionOperator(AptoUuid $conditionId, RuleCriterionOperator $ruleCriterionOperator): Rule
+    public function setConditionOperator(AptoUuid $conditionId, CriterionOperator $ruleCriterionOperator): Rule
     {
         $condition = $this->getCondition($conditionId);
 
@@ -451,7 +455,7 @@ class Rule extends AptoEntity
     }
 
     /**
-     * @param RuleCriterionOperator $operator
+     * @param CriterionOperator $operator
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
@@ -459,19 +463,19 @@ class Rule extends AptoEntity
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
      * @return $this
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function addImplication(
-        RuleCriterionOperator $operator,
-        ?int $type = Criterion::TYPE,
-        ?AptoUuid $sectionId = null,
-        ?AptoUuid $elementId = null,
-        ?string $property = null,
+        CriterionOperator     $operator,
+        ?int                  $type = Criterion::TYPE,
+        ?AptoUuid             $sectionId = null,
+        ?AptoUuid             $elementId = null,
+        ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string               $value = null
     ): Rule
     {
         $implicationId = $this->nextImplicationId();
@@ -589,11 +593,11 @@ class Rule extends AptoEntity
 
     /**
      * @param AptoUuid              $implicationId
-     * @param RuleCriterionOperator $ruleCriterionOperator
+     * @param CriterionOperator $ruleCriterionOperator
      *
      * @return $this
      */
-    public function setImplicationOperator(AptoUuid $implicationId, RuleCriterionOperator $ruleCriterionOperator): Rule
+    public function setImplicationOperator(AptoUuid $implicationId, CriterionOperator $ruleCriterionOperator): Rule
     {
         $implication = $this->getImplication($implicationId);
 
@@ -660,10 +664,10 @@ class Rule extends AptoEntity
      * @param AptoUuid $id
      * @param Collection $entityMapping
      * @return Rule
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copy(AptoUuid $id, Collection &$entityMapping): Rule
     {
@@ -706,10 +710,10 @@ class Rule extends AptoEntity
      * @param Collection $entityMapping
      *
      * @return AptoUuid|null
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copyCondition(AptoUuid $conditionId, Collection &$entityMapping): ?AptoUuid
     {
@@ -724,10 +728,10 @@ class Rule extends AptoEntity
     /**
      * @param Collection $entityMapping
      * @return Collection
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     private function copyConditions(Collection &$entityMapping): Collection
     {
@@ -754,10 +758,10 @@ class Rule extends AptoEntity
     /**
      * @param Collection $entityMapping
      * @return Collection
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     private function copyImplications(Collection &$entityMapping): Collection
     {
@@ -786,10 +790,10 @@ class Rule extends AptoEntity
      * @param Collection $entityMapping
      *
      * @return AptoUuid|null
-     * @throws RuleCriterionInvalidOperatorException
-     * @throws RuleCriterionInvalidPropertyException
-     * @throws RuleCriterionInvalidTypeException
-     * @throws RuleCriterionInvalidValueException
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
     public function copyImplication(AptoUuid $implicationId, Collection &$entityMapping): ?AptoUuid
     {

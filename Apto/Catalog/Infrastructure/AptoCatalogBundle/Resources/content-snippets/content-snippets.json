@@ -137,6 +137,9 @@
       },
       "nextMultiple": {
         "de_DE": "Weiter"
+      },
+      "incorrectValuesInRange": {
+        "de_DE": "Die Werte liegen nicht innerhalb des definierten Bereichs"
       }
     }
   },

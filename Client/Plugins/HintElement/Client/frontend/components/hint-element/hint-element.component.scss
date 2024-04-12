@@ -55,6 +55,10 @@
 
         .element {
             .container {
+                @include element-input-grid('tablet');
+                grid-template-columns: 0 1fr 0;
+                width: 100%;
+
                 .input {}
                 .hint {}
                 .prefix {}
