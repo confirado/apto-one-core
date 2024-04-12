@@ -5,6 +5,7 @@
      [class.open-in-dialog]="isDialog"
      [class.with-circle]="section.allowMultiple || element.state.active"
      [class.disabled]="element.state.disabled"
+     [class.no-element-preview-image]="!element.element.previewImage && product.useStepByStep"
 >
     <apto-slot-outlet identifier="start-element-container" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
 

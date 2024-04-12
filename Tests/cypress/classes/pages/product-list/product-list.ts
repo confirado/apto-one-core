@@ -82,6 +82,37 @@ export class ProductList implements IPage {
     });
   }
 
+  /**
+   * select the product by name from the product list page
+   *
+   * @param productName
+   */
+  public static selectProduct(productName: string): Cypress.Chainable<any> {
+    cy.get('apto-product-list').should('exist');
+
+    RequestHandler.registerInterceptions([Queries.FindProductsByFilter]);
+
+    cy.get('apto-search').find('.search-field input').clear().type(productName);
+
+    cy.wait(RequestHandler.getAliasesFromRequests([Queries.FindProductsByFilter])).then(() => {
+      cy.get('.product-wrapper').should('have.length.gte', 1);
+
+      // let's find the product and click on it
+      cy.get('.product-list').find('product-wrapper').each(($productWrapper) => {
+        cy.wrap($productWrapper)
+          .find('.product-description h3')
+          .invoke( 'text')
+          .then(($title) => {
+            const cellValue = $title.trim();
+
+            if (cellValue.includes(productName)) {
+              cy.wrap($productWrapper).find('.product-description button').click();
+            }
+          });
+      })
+    });
+  }
+
   public static hasProduct(selector: string) {
     cy.get(selector).should('exist');
   }

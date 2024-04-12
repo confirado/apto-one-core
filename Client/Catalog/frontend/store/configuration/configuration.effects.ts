@@ -8,7 +8,7 @@ import {
   addGuestConfiguration, addGuestConfigurationSuccess, addOfferConfiguration, addOfferConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
   fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess, getElementComputableValues, getElementComputableValuesSuccess,
   getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
-  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState,
+  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState
 }
   from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
@@ -330,12 +330,14 @@ export class ConfigurationEffects {
           let showDefault = true;
           let finalMessage = '';
 
-          for (const singleErrorPayload of message.errorPayload) {
+          if (Array.isArray(message.errorPayload)) {
+            for (const singleErrorPayload of message.errorPayload) {
               const errorMessage = translate(singleErrorPayload.errorMessage, locale);
               if (errorMessage) {
                 showDefault = false;
                 finalMessage += `${errorMessage} <br />`;
               }
+            }
           }
 
           if (showDefault) {

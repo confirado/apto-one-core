@@ -1,0 +1,15 @@
+<div class="absolute-designer-container">
+    <template #designer></template>
+</div>
+<div class="designer-areas" *ngIf="perspectives.length > 1">
+    <mat-button-toggle-group name="perspective" (change)="clickOnPerspectiveChange($event)">
+        <mat-button-toggle [checked]="currentPerspective === perspective" [value]="perspective" *ngFor="let perspective of perspectives; let index=index;">{{ perspective }}</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+<div class="designer-actions">
+    <div class="designer-actions-left">
+        <button color="accent" mat-flat-button (click)="reset()">{{ contentSnippet$ | async | contentSnippet: 'upload.reset' }}</button>
+        <button color="accent" mat-flat-button (click)="cancel()">{{ contentSnippet$ | async | contentSnippet: 'upload.cancel' }}</button>
+    </div>
+    <button color="primary" mat-flat-button (click)="save()">{{ contentSnippet$ | async | contentSnippet: 'upload.save' }}</button>
+</div>

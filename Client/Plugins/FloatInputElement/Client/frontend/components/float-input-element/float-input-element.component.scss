@@ -92,7 +92,13 @@
             @include element('tablet');
 
             .container {
+                @include element-input-grid('tablet');
+                grid-template-columns: 0 1fr 0;
+                width: 100%;
 
+                .input {
+                    min-width: var(--input-tablet-width);
+                }
                 .input {}
                 .hint {}
                 .prefix {}

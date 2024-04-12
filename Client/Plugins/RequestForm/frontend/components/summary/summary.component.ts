@@ -7,13 +7,21 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ViewportScroller } from '@angular/common';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { addToBasket, addToBasketSuccess, onError } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectConfiguration, selectRenderImage, selectSumPrice } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import {
+  selectConfiguration,
+  selectCurrentPerspective,
+  selectPerspectives,
+  selectRenderImage,
+  selectSumPrice,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { HumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { environment } from '@apto-frontend/src/environments/environment';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'apto-summary',
   templateUrl: './summary.component.html',
@@ -25,6 +33,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
   public readonly requestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
   public product$ = this.store.select(selectProduct);
+  public readonly perspectives$ = this.store.select(selectPerspectives);
   public configuration$ = this.store.select(selectConfiguration);
   public readonly sumPrice$ = this.store.select(selectSumPrice);
   private humanReadableState: any;
@@ -54,12 +63,14 @@ export class SummaryComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.renderImageService.init();
-    this.subscriptions.push(
-      this.renderImageService.outputSrcSubject.subscribe((next) => {
-        this.renderImage = next;
-      })
-    );
+    // this.renderImageService.init();
+    // this.subscriptions.push(
+    //   this.renderImageService.outputSrcSubject.subscribe((next) => {
+    //     this.renderImage = next;
+    //   })
+    // );
+
+
 
     this.store.select(selectHumanReadableState).subscribe((result) => {
       this.humanReadableState = result;
@@ -67,6 +78,10 @@ export class SummaryComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit():void {
+    this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
+      this.renderImage = await this.renderImageService.drawImageForPerspective(result);
+    });
+
     this.actions$.pipe(ofType(onError)).subscribe((result) => {
       if (result.message.messageName === 'AddBasketConfiguration') {
         this.requestState.sending = false;

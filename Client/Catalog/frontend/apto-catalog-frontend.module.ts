@@ -135,6 +135,7 @@ RouterRegistry.registerRoutes(Routes);
     AptoSearchComponent,
     AptoCatalogFrontendCustomModule,
     ElementAttachmentComponent,
+    OPFullScreenComponent
   ],
 	imports: [
 		RouterModule,

@@ -64,17 +64,37 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
 
         // set static values from global canvas settings
         $staticValues['image'] = $canvas['imageSettings'];
-        $staticValues['motive'] = $canvas['motiveSettings'];
-        $staticValues['motive']['files'] = $this->getMotiveFiles($staticValues['motive']);
-        $staticValues['text'] = $canvas['textSettings'];
+        $motives = [];
+
+        foreach ($canvas['motiveSettings'] as $singleMotive) {
+            $singleMotive['files'] = $this->getMotiveFiles($singleMotive);
+            $motives[$singleMotive['perspective'] ?? 'persp1'] = $singleMotive;
+        }
+
+        $staticValues['motive'] = $motives;
+        $textData = $canvas['textSettings'];
+        $textData['boxes'] = [];
+
+        if (isset($canvas['textSettings']['boxes'])) {
+            foreach ($canvas['textSettings']['boxes'] as $box) {
+                $box['perspective'] = $box['perspective'] ?? 'persp1';
+                $textData['boxes'][] = $box;
+            }
+        }
+
+        $staticValues['text'] = $textData;
         $staticValues['area'] = $canvas['areaSettings'];
         $staticValues['price'] = $canvas['priceSettings'];
-
+        $imagesConverted = [];
         // add mime types
         $mimeTypeExtensionConverter = new MimeTypeExtensionConverter();
-        $staticValues['image']['allowedMimeTypes'] = $mimeTypeExtensionConverter->extensionsToMimeTypes(
-            $staticValues['image']['allowedFileTypes']
-        );
+        foreach ($staticValues['image'] as $singleImageSettings) {
+            $singleImageSettings['allowedMimeTypes'] = $mimeTypeExtensionConverter->extensionsToMimeTypes(
+                $singleImageSettings['allowedFileTypes']
+            );
+            $imagesConverted[$singleImageSettings['perspective'] ?? 'persp1'] = $singleImageSettings;
+        }
+        $staticValues['image'] = $imagesConverted;
 
         return $staticValues;
     }
