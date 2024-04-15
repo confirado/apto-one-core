@@ -64,6 +64,12 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   public fabricCanvas: any = null;
   public fabricSelectedObject: any = null;
   public fabricTextBoxes: any[] = [];
+  public multipleFabricTextBoxes: {
+    selectedIndex: number,
+    groupId: string,
+    name: string,
+    textBoxes: any[],
+  }[] = [];
   public controlOptionsLocked = {
     selectable: false,
     editable: false,
@@ -207,6 +213,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
   private initTextBoxes(): void {
     this.fabricTextBoxes = [];
+    this.multipleFabricTextBoxes = [];
     if (!this.canvas.element.staticValues.text.active) {
       return;
     }
@@ -215,7 +222,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       if (box.perspective !== this.currentPerspective) {
         return;
       }
-
+      const groupId = Math.random().toString();
       const textOptions = {
         identifier: box.identifier,
         fontSize: box.fontSize,
@@ -227,7 +234,10 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         originX: "center",
         originY: "center",
         payload: {
-          box: box,
+          box: {
+            ...box,
+            groupId
+          },
           type: 'text'
         }
       }
@@ -243,7 +253,16 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       }
 
       this.fabricCanvas.add(fabricText);
-      this.fabricTextBoxes.push(fabricText);
+      if (box.allowMultiple) {
+        this.multipleFabricTextBoxes.push({
+          name: box.name,
+          selectedIndex: 0,
+          groupId,
+          textBoxes: [fabricText]
+        });
+      } else {
+        this.fabricTextBoxes.push(fabricText);
+      }
     });
   }
 
@@ -254,7 +273,21 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
         if (payload.type === 'text') {
           object.setOptions(this.getTextBoxControlOptions(payload.box));
-          this.fabricTextBoxes.push(object);
+          if (object.payload.box.allowMultiple) {
+            const group = this.multipleFabricTextBoxes.find((g) => g.groupId === object.payload.box.groupId);
+            if (group) {
+              group.textBoxes.push(object);
+            } else {
+              this.multipleFabricTextBoxes.push({
+                name: object.payload.box.name,
+                selectedIndex: 0,
+                groupId: object.payload.box.groupId,
+                textBoxes: [object]
+              });
+            }
+          } else {
+            this.fabricTextBoxes.push(object);
+          }
         }
 
         if (payload.type === 'motive') {
@@ -441,6 +474,14 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     if (event.selected.length > 0) {
       this.fabricSelectedObject = event.selected[0];
     }
+
+    if (this.fabricSelectedObject.payload.box.allowMultiple) {
+      const group = this.multipleFabricTextBoxes.find((g) => g.groupId === this.fabricSelectedObject.payload.box.groupId);
+
+      if (group) {
+        group.selectedIndex = group.textBoxes.findIndex((b) => b.identifier === this.fabricSelectedObject.identifier);
+      }
+    }
   }
 
   public selectionCleared(event): void {
@@ -464,9 +505,9 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     this.updateTextPropery(identifier, 'text', event.target.value);
   }
 
-  public removeDefaultText(box): void {
+  public removeDefaultText(box, id): void {
     if (box.get('text') === box.payload.box.default) {
-      this.updateTextPropery(box.payload.box.identifier, 'text', '');
+      this.updateTextPropery(id, 'text', '');
     }
   }
 
@@ -538,6 +579,42 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
   public getNameFromFileName(fileName): string {
     return fileName.replace('.' + this.getExtensionFromFileName(fileName), '');
+  }
+
+  public addNewTextBox(originBox: any, group): void {
+    const originBoxClone = Object.assign({}, originBox);
+    const newId = originBoxClone.identifier + Math.random();
+    originBoxClone.identifier = newId;
+    const textOptions = {
+      groupId: group.groupId,
+      identifier: newId,
+      fontSize: originBoxClone.fontSize,
+      fill: originBoxClone.fill,
+      textAlign: originBoxClone.textAlign,
+      left: originBoxClone.left + 10,
+      top: originBoxClone.top + 10,
+      fontFamily: this.selectedFont ? this.selectedFont.family : 'Montserrat',
+      originX: "center",
+      originY: "center",
+      payload: {
+        box: originBoxClone,
+        type: 'text'
+      }
+    }
+
+    const fabricText = new fabric.Text(originBoxClone.default, {
+      ...textOptions,
+      ...this.getTextBoxControlOptions(originBoxClone)
+    }).setControlsVisibility(this.controlVisibility);
+
+    if (originBoxClone.radius > 0) {
+      this.fabricCanvasService.updateTextElementForBending(fabricText, originBoxClone.radius);
+    }
+
+    this.fabricCanvas.add(fabricText);
+    group.textBoxes.push(fabricText);
+    this.fabricSelectedObject = fabricText;
+    this.fabricCanvas.setActiveObject(fabricText);
   }
 
   private getImageScale(maxWidth, dimensions): number {

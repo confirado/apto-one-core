@@ -103,6 +103,7 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             top: 0,
             radius: 0,
             locked: true,
+            allowMultiple: false,
             colorPicker: true,
             maxlength: 20,
             perspective: 'persp1'
