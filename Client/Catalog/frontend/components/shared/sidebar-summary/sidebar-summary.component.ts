@@ -28,13 +28,13 @@ import {
 	styleUrls: ['./sidebar-summary.component.scss'],
 })
 export class SidebarSummaryComponent implements OnInit {
-	public readonly perspectives$ = this.store.select(selectPerspectives);
-	public readonly sumPrice$ = this.store.select(selectSumPrice);
-	public readonly progress$ = this.store.select(selectProgress);
-	public readonly product$ = this.store.select(selectProduct);
-	public readonly sumPseudoPrice$ = this.store.select(selectSumPseudoPrice);
-	public readonly configuration$ = this.store.select(selectConfiguration);
-	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
+  public readonly perspectives$ = this.store.select(selectPerspectives);
+  public readonly sumPrice$ = this.store.select(selectSumPrice);
+  public readonly progress$ = this.store.select(selectProgress);
+  public readonly product$ = this.store.select(selectProduct);
+  public readonly sumPseudoPrice$ = this.store.select(selectSumPseudoPrice);
+  public readonly configuration$ = this.store.select(selectConfiguration);
+  public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
 
   protected readonly AptoOfferConfigurationDialog$ = this.store.select(selectContentSnippet('AptoOfferConfigurationDialog'));
   protected readonly locale$ = this.store.select(selectLocale);
@@ -42,16 +42,21 @@ export class SidebarSummaryComponent implements OnInit {
   protected isOfferConfigurationEnabled = false;
   public renderImage = null;
 
-	public constructor(private store: Store, private renderImageService: RenderImageService) {
+  public constructor(private store: Store, private renderImageService: RenderImageService) {
     combineLatest([
       this.store.select(selectCurrentPerspective),
       this.store.select(selectCurrentRenderImages)
     ]).pipe(untilDestroyed(this)).subscribe(async (result: [string, RenderImageData[]]) => {
-        this.store.dispatch(createLoadingFlagAction());
-        // is it necessary to reset renderImage to null? reset to null causes a unpleasant flickering
-        //this.renderImage = null;
-        this.renderImage = await this.renderImageService.drawImageForPerspective(result[0]);
-        this.store.dispatch(hideLoadingFlagAction());
+      // why is step-by-step not working when dispatch loading flag action/actions
+      //this.store.dispatch(createLoadingFlagAction());
+
+      // is it necessary to reset renderImage to null? reset to null causes a unpleasant flickering
+      //this.renderImage = null;
+
+      this.renderImage = await this.renderImageService.drawImageForPerspective(result[0]);
+
+      // why is step-by-step not working when dispatch loading flag action/actions
+      //this.store.dispatch(hideLoadingFlagAction());
     });
   }
 
