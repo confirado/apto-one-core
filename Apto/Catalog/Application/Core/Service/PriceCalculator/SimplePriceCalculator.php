@@ -1107,7 +1107,9 @@ class SimplePriceCalculator implements PriceCalculator
         if ($rawStatePrices['priceModifier'] === null || $rawStatePrices['priceModifier'] === '') {
             $rawStatePrices['priceModifier'] = 100;
         }
-        $rawStatePrices['prices'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state);
+
+        $rawStatePrices['prices'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state, 'prices');
+        $rawStatePrices['priceFormulas'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state, 'priceFormulas');
 
         $statePrices = [
             'prices' => $this->mapProperties($rawStatePrices['prices'], $keyMapping, true),
@@ -1150,9 +1152,9 @@ class SimplePriceCalculator implements PriceCalculator
         return $this->priceTable;
     }
 
-    private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state): array
+    private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state, string $key): array
     {
-        $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices);
+        $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices, $key);
         $productConditionsResult = $this->productConditionFinder->findByIds($productConditionIds);
         $productConditions = [];
         foreach ($productConditionsResult['data'] as $element) {
@@ -1162,7 +1164,7 @@ class SimplePriceCalculator implements PriceCalculator
         $newRawStatePrices = ['products' => [], 'sections' => [], 'elements' => []];
 
         foreach (['products', 'sections', 'elements'] as $type) {
-            foreach ($rawStatePrices['prices'][$type] as $price) {
+            foreach ($rawStatePrices[$key][$type] as $price) {
                 if (empty($price['productConditionId'])) {
                     unset($price['productConditionId']);
                     $newRawStatePrices[$type][] = $price;
@@ -1190,12 +1192,12 @@ class SimplePriceCalculator implements PriceCalculator
         return $newRawStatePrices;
     }
 
-    private function collectAllProductConditionIdsFromRawStatement(array $rawStatePrices): array
+    private function collectAllProductConditionIdsFromRawStatement(array $rawStatePrices, string $key): array
     {
         $ids = [];
 
         foreach (['products', 'sections', 'elements'] as $category) {
-            foreach ($rawStatePrices['prices'][$category] as $price) {
+            foreach ($rawStatePrices[$key][$category] as $price) {
                 if (!empty($price['productConditionId'])) {
                     $ids[] = $price['productConditionId'];
                 }

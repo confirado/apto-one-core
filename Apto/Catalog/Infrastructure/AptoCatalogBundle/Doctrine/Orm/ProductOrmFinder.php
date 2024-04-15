@@ -1802,7 +1802,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                   e.id.id as elementId,
                   ef.formula as formula,
                   ef.currency.code as currencyCode,
-                  ef.customerGroupId.id as customerGroupId
+                  ef.customerGroupId.id as customerGroupId,
+                  ef.productConditionId as productConditionId
               FROM
                   ' . $this->entityClass . ' p
               JOIN
