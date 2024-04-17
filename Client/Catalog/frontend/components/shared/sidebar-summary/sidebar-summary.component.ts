@@ -47,7 +47,7 @@ export class SidebarSummaryComponent implements OnInit {
       this.store.select(selectCurrentPerspective),
       this.store.select(selectCurrentRenderImages)
     ]).pipe(untilDestroyed(this)).subscribe(async (result: [string, RenderImageData[]]) => {
-      // why is step-by-step not working when dispatch loading flag action/actions
+      // @todo why is step-by-step not working when dispatch loading flag action/actions
       //this.store.dispatch(createLoadingFlagAction());
 
       // is it necessary to reset renderImage to null? reset to null causes a unpleasant flickering
@@ -55,7 +55,7 @@ export class SidebarSummaryComponent implements OnInit {
 
       this.renderImage = await this.renderImageService.drawImageForPerspective(result[0]);
 
-      // why is step-by-step not working when dispatch loading flag action/actions
+      // @todo why is step-by-step not working when dispatch loading flag action/actions
       //this.store.dispatch(hideLoadingFlagAction());
     });
   }

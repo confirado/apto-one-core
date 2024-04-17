@@ -50,10 +50,14 @@ export class OnePageComponent implements TemplateSlotInterface {
 
       //render only for not designer view
       if (!result[0]) {
+        // @todo why is one-page not working sometimes when dispatch loading flag action/actions
         //this.store.dispatch(createLoadingFlagAction());
+
         // is it necessary to reset renderImage to null? reset to null causes a unpleasant flickering
         //this.renderImage = null;
         this.renderImage = await this.renderImageService.drawImageForPerspective(result[1]);
+
+        // @todo why is one-page not working sometimes when dispatch loading flag action/actions
         //this.store.dispatch(hideLoadingFlagAction());
       }
     });
