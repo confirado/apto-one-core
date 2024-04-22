@@ -1,0 +1,17 @@
+{
+	"id": "apto-parts-list-element-frontend",
+	"app": "frontend",
+	"priority": 450,
+	"imports": [
+		{
+			"class": "AptoPartsListElementFrontendModule",
+			"file": "apto-parts-list-element-frontend.module.ts"
+		}
+	],
+  "aliases": [
+    {
+      "alias": "@element-definition-parts-list-element",
+      "path": "components/parts-list-element/parts-list-element.component.ts"
+    }
+  ]
+}
