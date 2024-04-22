@@ -89,9 +89,7 @@ class PartsListElementDefinition implements ElementDefinition
     {
         return [
             'class' => get_class($this),
-            'json' => [
-
-            ]
+            'json' => []
         ];
     }
 
@@ -102,7 +100,7 @@ class PartsListElementDefinition implements ElementDefinition
     public static function jsonDecode(array $json): ElementDefinition
     {
         if (self::class !==  $json['class']) {
-            throw new \InvalidArgumentException('Cannot convert json value to Type \'CustomTextDefinition\' due to wrong class namespace.');
+            throw new \InvalidArgumentException('Cannot convert json value to Type \'PartsListElementDefinition\' due to wrong class namespace.');
         }
 
         return new self();
