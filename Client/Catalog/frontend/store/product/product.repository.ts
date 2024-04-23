@@ -140,8 +140,11 @@ export class ProductRepository {
 					customProperties: element.customProperties,
           attachments: element.attachments,
           zoomFunction: element.zoomFunction,
-          sectionRepetition: 0
+          sectionRepetition: 0,
+          gallery: element.gallery,
 				});
+        console.error('gallery: element.gallery,')
+        console.log(element.gallery)
 			});
 		});
 
