@@ -54,7 +54,7 @@
                     <div class="name">Motive:</div>
                 </div>
                 <div class="motive-container">
-                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive[currentPerspective]?.files">
+                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive[currentPerspective]?.files" [class.selected]="selectedMotive === file.name">
                         <img [src]="mediaUrl + file.path" (click)="addMotive(file)" />
                         <div class="motive-item-name">{{ getNameFromFileName(file.name) }}</div>
                     </div>
