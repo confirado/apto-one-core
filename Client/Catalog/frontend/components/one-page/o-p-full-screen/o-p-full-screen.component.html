@@ -5,7 +5,7 @@
             <div *ngIf="perspectives && perspectives.length > 1" class="arrows left">
                 <mat-icon (click)="prevRenderImage()">arrow_back_ios</mat-icon>
             </div>
-            <div class="image-wrapper">
+            <div class="image-wrapper" [style]="{background: imageWrapperBgColor}">
                 <img (click)="isOpen = !isOpen" [src]="renderImage.src" />
                 <apto-close-button [mat-dialog-close]="true" (clicked)="isOpen = !isOpen"></apto-close-button>
             </div>

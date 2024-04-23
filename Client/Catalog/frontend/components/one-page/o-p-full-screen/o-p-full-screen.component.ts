@@ -18,6 +18,9 @@ export class OPFullScreenComponent {
   @Input()
   public renderImage = null;
 
+  @Input()
+  public imageWrapperBgColor = 'transparent';
+
 	public isOpen = false;
 
 	public constructor(private store: Store) {
