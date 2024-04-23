@@ -115,6 +115,26 @@ class JavascriptStateCreatorService
         return $sections;
     }
 
+    public function getAvailableRepeatableSectionInfo(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    {
+        $state = $enrichedState->getState();
+        $sections = [];
+        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
+
+        foreach ($product->getSections() as $section) {
+            $sectionId = new AptoUuid($section['id']);
+
+            if ($product->isSectionRepeatable($sectionId)) {
+                $sections[$sectionId->getId()] = [
+                    'sectionId' => $sectionId->getId(),
+                    'maxRepetitionValue' => $product->getSectionRepetitionCount($sectionId, $calculatedValueName) - 1
+                ];
+            }
+        }
+
+        return $sections;
+    }
+
     /**
      * @param ConfigurableProduct $product
      * @param EnrichedState       $enrichedState

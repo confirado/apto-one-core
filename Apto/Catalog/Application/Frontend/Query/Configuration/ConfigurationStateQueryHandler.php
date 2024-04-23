@@ -151,6 +151,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             throw InvalidConfigurationStateChangeException::fromInvalidConfigurationStateException($e);
         }
 
+        $this->filterOutNotAvailableRepeatableSections($product, $enrichedState);
+
         // repair rules
         $validationResult = $this->ruleRepairService->repairState(
             $product,
@@ -194,6 +196,17 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
 
         // return js state object
         return $this->javaScriptStateCreatorService->createState($product, $enrichedState, $validationResult, $query->getIntention());
+    }
+
+    private function filterOutNotAvailableRepeatableSections(ConfigurableProduct $product, EnrichedState $enrichedState)
+    {
+        $sectionsRepeatable = $this->javaScriptStateCreatorService->getAvailableRepeatableSectionInfo($product, $enrichedState);
+
+        foreach ($enrichedState->getState()->getStateWithoutParameters() as $singleStateSection) {
+            if ($singleStateSection['repetition'] > 0 && $singleStateSection['repetition'] > $sectionsRepeatable[$singleStateSection['sectionId']]['maxRepetitionValue']) {
+                $enrichedState->getState()->removeSection(new AptoUuid($singleStateSection['sectionId']), $singleStateSection['repetition']);
+            }
+        }
     }
 
     /**
