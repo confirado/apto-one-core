@@ -312,6 +312,17 @@ class ConfigurableProduct implements \JsonSerializable
     }
 
     /**
+     * @param AptoUuid $sectionId
+     * @param AptoUuid $elementId
+     * @return array|null
+     */
+    public function getElementErrorMessage(AptoUuid $sectionId, AptoUuid $elementId): ?array
+    {
+        $element = $this->getElement($sectionId, $elementId);
+        return $element ? $element['errorMessage'] : null;
+    }
+
+    /**
      * Returns element definition set from backend
      *
      * @param AptoUuid $sectionId

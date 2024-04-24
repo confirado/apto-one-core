@@ -16,7 +16,7 @@ export interface MessageBusResponseMessage {
 	duration: number;
 	error: true;
 	errorType: MessageBusErrorTypeEnum;
-	errorPayload: SingleErrorPayload[];
+	errorPayload: SingleErrorPayload[] | any;
 	uuid: string;
 	url: string;
 }
