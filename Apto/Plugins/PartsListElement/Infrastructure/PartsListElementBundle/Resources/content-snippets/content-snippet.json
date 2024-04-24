@@ -1,6 +1,6 @@
 {
   "plugins": {
-    "customText": {
+    "partsListElement": {
       "buttons": {
         "select-continue": {
           "de_DE": "Auswählen & Weiter"

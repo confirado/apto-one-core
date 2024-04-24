@@ -3,7 +3,7 @@
 namespace Apto\Plugins\PartsListElement\Infrastructure\PartsListElementBundle;
 
 use Apto\Base\Infrastructure\AptoBaseBundle\AbstractAptoBundle;
-use Apto\Plugins\CustomText\Infrastructure\CustomTextBundle\DependencyInjection\CustomTextExtension;
+use Apto\Plugins\PartsListElement\Infrastructure\PartsListElementBundle\DependencyInjection\PartsListElementExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -23,6 +23,6 @@ class PartsListElementBundle extends AbstractAptoBundle
      */
     public function getExtension(): Extension
     {
-        return new CustomTextExtension();
+        return new PartsListElementExtension();
     }
 }
