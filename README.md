@@ -18,6 +18,7 @@ add the following lines to your config/bundles.php file
     Apto\Catalog\Infrastructure\AptoCatalogBundle\AptoCatalogBundle::class => ['all' => true],
     Apto\Plugins\AreaElement\Infrastructure\AreaElementBundle\AreaElementBundle::class => ['all' => true],
     Apto\Plugins\CustomText\Infrastructure\CustomTextBundle\CustomTextBundle::class => ['all' => true],
+    Apto\Plugins\PartsListElement\Infrastructure\PartsListElementBundle\PartsListElementBundle::class => ['all' => true],
     Apto\Plugins\FileUpload\Infrastructure\FileUploadBundle\FileUploadBundle::class => ['all' => true],
     Apto\Plugins\FloatInputElement\Infrastructure\FloatInputElementBundle\FloatInputElementBundle::class => ['all' => true],
     Apto\Plugins\MaterialPickerElement\Infrastructure\MaterialPickerElementBundle\MaterialPickerElementBundle::class => ['all' => true],

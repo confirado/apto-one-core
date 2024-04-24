@@ -1,0 +1,20 @@
+{
+  "plugins": {
+    "partsListElement": {
+      "buttons": {
+        "select-continue": {
+          "de_DE": "Auswählen & Weiter"
+        },
+        "select": {
+          "de_DE": "Auswählen"
+        },
+        "update": {
+          "de_DE": "Aktualisieren"
+        },
+        "remove": {
+          "de_DE": "Abwählen"
+        }
+      }
+    }
+  }
+}
