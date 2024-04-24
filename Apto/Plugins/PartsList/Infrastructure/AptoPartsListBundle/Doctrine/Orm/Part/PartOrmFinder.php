@@ -115,12 +115,16 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 'ap'=> [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier']
-                ]
+                ],
+                'c' => [
+                    ['id.id', 'id'],
+                ],
             ])
             ->setJoins([
                 'p' => [
                     ['unit', 'u', 'id'],
-                    ['associatedProducts', 'a', 'id']
+                    ['associatedProducts', 'a', 'id'],
+                    ['category', 'c', 'id']
                 ],
                 'a' => [
                     ['product', 'ap', 'id']
@@ -142,6 +146,8 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
         } else {
             $result['unit'] = null;
         }
+
+        $result['category'] = empty($result['category']) ? null : $result['category'][0]['id'];
 
         return $result;
     }
@@ -169,11 +175,15 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 'ap'=> [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier']
-                ]
+                ],
+                'c' => [
+                    ['id.id', 'id'],
+                ],
             ])
             ->setJoins([
                'p' => [
-                   ['associatedProducts', 'a', 'id']
+                   ['associatedProducts', 'a', 'id'],
+                   ['category', 'c', 'id']
                ],
                'a' => [
                    ['product', 'ap', 'id']
@@ -203,7 +213,9 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                    $data['products'][] = $associatedProduct['product'][0]['identifier'];
                }
             $data['products'] = implode(', ', $data['products']);
+            $data['category'] = empty($data['category']) ? null : $data['category'][0]['id'];
         }
+
         return $result;
     }
 

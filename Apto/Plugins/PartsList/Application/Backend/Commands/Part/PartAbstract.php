@@ -42,6 +42,11 @@ abstract class PartAbstract implements CommandInterface
     private $currencyCode;
 
     /**
+     * @var string|null
+     */
+    private ?string $category;
+
+    /**
      * @param bool $active
      * @param string $partNumber
      * @param string|null $unitId
@@ -50,7 +55,7 @@ abstract class PartAbstract implements CommandInterface
      * @param int|null $amount
      * @param string|null $currencyCode
      */
-    public function __construct(bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode)
+    public function __construct(bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode, ?string $category)
     {
         $this->active = $active;
         $this->partNumber = $partNumber;
@@ -59,6 +64,7 @@ abstract class PartAbstract implements CommandInterface
         $this->description = $description;
         $this->amount = $amount;
         $this->currencyCode = $currencyCode;
+        $this->category = $category;
     }
 
     /**
@@ -115,5 +121,13 @@ abstract class PartAbstract implements CommandInterface
     public function getCurrencyCode(): ?string
     {
         return $this->currencyCode;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCategoryId(): ?string
+    {
+        return $this->category;
     }
 }

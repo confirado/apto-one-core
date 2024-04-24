@@ -8,6 +8,7 @@ use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Model\Category\Category;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
@@ -90,6 +91,11 @@ class Part extends AptoAggregate
     protected $associatedProducts;
 
     /**
+     * @var Category|null
+     */
+    protected ?Category $category;
+
+    /**
      * Part constructor.
      * @param AptoUuid $id
      * @param bool $active
@@ -113,6 +119,7 @@ class Part extends AptoAggregate
         $this->ruleUsages = new ArrayCollection();
         $this->rules = new ArrayCollection();
         $this->associatedProducts = new ArrayCollection();
+        $this->category = null;
     }
 
     /**
@@ -658,5 +665,15 @@ class Part extends AptoAggregate
             }
         }
         return false;
+    }
+
+    /**
+     * @param Category $category
+     * @return Part
+     */
+    public function setCategory(Category $category): Part
+    {
+        $this->category = $category;
+        return $this;
     }
 }

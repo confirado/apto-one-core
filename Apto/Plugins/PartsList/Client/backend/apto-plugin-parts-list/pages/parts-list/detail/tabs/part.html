@@ -20,6 +20,13 @@
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
+        <label>Category:</label>
+        <md-select ng-model="details.category">
+            <md-option ng-value="category.id" ng-repeat="category in categories">{{ translate(category.name) }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+    <md-input-container flex>
         <label>Einheit:</label>
         <md-select ng-model="$parent.selectedUnitId"
                    md-on-close="clearUnitSearchTerm()"

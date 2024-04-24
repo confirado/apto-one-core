@@ -32,6 +32,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             ruleUsages: state.aptoPartsListPart.ruleUsages,
             prices: state.aptoPartsListPart.prices,
             availableCustomerGroups: state.aptoPartsListPart.availableCustomerGroups,
+            categories: state.aptoPartsListPart.categories,
         }
     };
 
@@ -334,6 +335,8 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function save(detailsForm, close) {
+        console.log('---------1111111111')
+        console.log($scope.details)
         if (detailsForm.$valid) {
             $scope.saveDetails($scope.details, $scope.selectedUnitId).then(function () {
                 if (typeof close !== 'undefined') {

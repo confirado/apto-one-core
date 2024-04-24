@@ -18,6 +18,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, AptoPartsListPartAction
         fetchDetails: AptoPartsListPartActions.fetchDetails,
         removeDetails: AptoPartsListPartActions.removeDetails,
         availableCustomerGroupsFetch: AptoPartsListPartActions.availableCustomerGroupsFetch,
+        categoriesFetch: AptoPartsListPartActions.categoriesFetch,
     })($scope);
 
     $scope.pageHeaderActions = {
@@ -76,6 +77,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, AptoPartsListPartAction
     function showDetailsDialog($event, id) {
         const parentEl = angular.element(document.body);
         $scope.availableCustomerGroupsFetch();
+        $scope.categoriesFetch();
         $mdDialog.show({
             parent: parentEl,
             targetEvent: $event,

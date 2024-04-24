@@ -120,6 +120,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
             commandArguments.push(details.description);
             commandArguments.push(details.amount);
             commandArguments.push(details.currencyCode);
+            commandArguments.push(details.category);
 
             if (typeof details.id !== 'undefined') {
                 commandArguments.unshift(details.id);
@@ -229,6 +230,13 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
+    function categoriesFetch() {
+        return {
+            type: getType('CATEGORIES_FETCH'),
+            payload: MessageBusFactory.query('FindCategories', [''])
+        }
+    }
+
     function addProductUsage(partId, usageForUuid, quantity) {
         return {
             type: getType('ADD_PRODUCT_USAGE'),
@@ -298,7 +306,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
             payload: MessageBusFactory.command('AptoPartsListUpdateElementUsage', [partId, usageId, quantity, quantityCalculation])
         }
     }
-    
+
     function updateRuleUsage(partId, usageId, quantity, active, name, operator) {
         return {
             type: getType('UPDATE_RULE_USAGE'),
@@ -326,7 +334,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
             payload: MessageBusFactory.command('AptoPartsListRemoveElementUsage', [partId, usageId])
         }
     }
-    
+
     function removeRuleUsage(partId, usageId) {
         return {
             type: getType('REMOVE_RULE_USAGE'),
@@ -387,6 +395,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         removeRuleUsageCondition: removeRuleUsageCondition,
         updateRuleUsageCondition: updateRuleUsageCondition,
         availableCustomerGroupsFetch: availableCustomerGroupsFetch,
+        categoriesFetch: categoriesFetch,
         addPartPrice: addPartPrice,
         removePartPrice: removePartPrice
     };
