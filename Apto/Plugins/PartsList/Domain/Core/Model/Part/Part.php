@@ -668,10 +668,10 @@ class Part extends AptoAggregate
     }
 
     /**
-     * @param Category $category
+     * @param Category|null $category
      * @return Part
      */
-    public function setCategory(Category $category): Part
+    public function setCategory(?Category $category): Part
     {
         $this->category = $category;
         return $this;

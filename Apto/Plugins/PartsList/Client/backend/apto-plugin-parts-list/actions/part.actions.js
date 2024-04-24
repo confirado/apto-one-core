@@ -120,7 +120,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
             commandArguments.push(details.description);
             commandArguments.push(details.amount);
             commandArguments.push(details.currencyCode);
-            commandArguments.push(details.category);
+            commandArguments.push(details.category ? details.category.id : null);
 
             if (typeof details.id !== 'undefined') {
                 commandArguments.unshift(details.id);

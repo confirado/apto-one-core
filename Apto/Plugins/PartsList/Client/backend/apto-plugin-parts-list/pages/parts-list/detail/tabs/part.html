@@ -21,7 +21,8 @@
     <div flex="5"></div>
     <md-input-container flex>
         <label>Category:</label>
-        <md-select ng-model="details.category">
+        <md-select ng-model="details.category.id">
+            <md-option ng-value="null">No category</md-option>
             <md-option ng-value="category.id" ng-repeat="category in categories">{{ translate(category.name) }}</md-option>
         </md-select>
     </md-input-container>
