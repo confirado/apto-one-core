@@ -162,7 +162,8 @@ const Reducer = function(AptoReducersProvider) {
         elementUsages: [],
         ruleUsages: [],
         prices: [],
-        availableCustomerGroups: []
+        availableCustomerGroups: [],
+        categories: []
     };
 
     function getType(type) {
@@ -361,7 +362,13 @@ const Reducer = function(AptoReducersProvider) {
                     }
                 });
                 return newState;
-
+            case getType('CATEGORIES_FETCH_FULFILLED'):
+                newState = update(state, {
+                    categories: {
+                        $set: action.payload.data.result.data
+                    }
+                });
+                return newState;
             case getType('FETCH_PRICES_FULFILLED'):
                 newState = update(state, {
                     prices: {

@@ -11,6 +11,20 @@ use Apto\Catalog\Domain\Core\Model\Category\Category;
 class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
 {
     const ENTITY_CLASS = Category::class;
+    const MODEL_VALUES = [
+        ['id.id', 'id'],
+        'name',
+        'description',
+        'created',
+        'position',
+        'parentId'
+    ];
+
+    const MODEL_POST_PROCESSES = [
+        'name' => [DqlQueryBuilder::class, 'decodeJson'],
+        'description' => [DqlQueryBuilder::class, 'decodeJson'],
+        'position' => [DqlQueryBuilder::class, 'decodeInteger']
+    ];
 
     /**
      * @param string $id
@@ -23,13 +37,7 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
         $builder
             ->findById($id)
             ->setValues([
-                'c' => [
-                    ['id.id', 'id'],
-                    'name',
-                    'description',
-                    'created',
-                    'position'
-                ],
+                'c' => self::MODEL_VALUES,
                 'cp' => [
                     ['id.id', 'id']
                 ],
@@ -47,10 +55,7 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
                 ]
             ])
             ->setPostProcess([
-                'c' => [
-                    'name' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'description' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'position' => [DqlQueryBuilder::class, 'decodeInteger']                ]
+                'c' => self::MODEL_POST_PROCESSES
             ]);
 
         $result = $builder->getSingleResultOrNull($this->entityManager);
@@ -81,13 +86,7 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
             ->setValues([
-                'c' => [
-                    ['id.id', 'id'],
-                    'name',
-                    'description',
-                    'created',
-                    'position'
-                ],
+                'c' => self::MODEL_VALUES,
                 'm' => [
                     ['id.id', 'id'],
                     ['file.directory.path', 'path'],
@@ -110,11 +109,7 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
                 ['c.created', 'DESC']
             ])
             ->setPostProcess([
-                'c' => [
-                    'name' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'description' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'position' => [DqlQueryBuilder::class, 'decodeInteger']
-                ]
+                'c' => self::MODEL_POST_PROCESSES
             ]);
 
         $results = $builder->getResult($this->entityManager);
@@ -142,21 +137,10 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
             ->setValues([
-                'c' => [
-                    ['id.id', 'id'],
-                    'name',
-                    'description',
-                    'created',
-                    'parentId',
-                    'position'
-                ]
+                'c' => self::MODEL_VALUES,
             ])
             ->setPostProcess([
-                'c' => [
-                    'name' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'description' => [DqlQueryBuilder::class, 'decodeJson'],
-                    'position' => [DqlQueryBuilder::class, 'decodeInteger']
-                ]
+                'c' => self::MODEL_POST_PROCESSES
             ])
             /* @todo convertFlatToTree cant handle root entries with parent id, if you search for a child and no root entry matches result will be empty
             ->setSearch([

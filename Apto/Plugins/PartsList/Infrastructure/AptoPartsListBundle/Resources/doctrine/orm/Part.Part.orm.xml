@@ -79,5 +79,9 @@
                 <cascade-remove/>
             </cascade>
         </one-to-many>
+
+        <many-to-one field="category" target-entity="Apto\Catalog\Domain\Core\Model\Category\Category">
+            <join-column name="category_id" referenced-column-name="surrogate_id" nullable="true"/>
+        </many-to-one>
     </entity>
 </doctrine-mapping>

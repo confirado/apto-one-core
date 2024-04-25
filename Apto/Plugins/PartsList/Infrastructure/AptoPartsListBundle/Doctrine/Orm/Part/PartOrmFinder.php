@@ -9,6 +9,7 @@ use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlQueryBuilder;
 use Apto\Catalog\Application\Core\Query\Product\Element\ProductElementFinder;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
+use Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm\CategoryOrmFinder;
 use Apto\Plugins\PartsList\Application\Core\Query\Part\PartFinder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
@@ -115,19 +116,22 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 'ap'=> [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier']
-                ]
+                ],
+                'c' => CategoryOrmFinder::MODEL_VALUES
             ])
             ->setJoins([
                 'p' => [
                     ['unit', 'u', 'id'],
-                    ['associatedProducts', 'a', 'id']
+                    ['associatedProducts', 'a', 'id'],
+                    ['category', 'c', 'id']
                 ],
                 'a' => [
                     ['product', 'ap', 'id']
                 ]
             ])
             ->setPostProcess([
-                'p' => self::MODEL_POST_PROCESSES
+                'p' => self::MODEL_POST_PROCESSES,
+                'c' => CategoryOrmFinder::MODEL_POST_PROCESSES
             ]);
 
         $result = $builder->getSingleResultOrNull($this->entityManager);
@@ -142,6 +146,8 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
         } else {
             $result['unit'] = null;
         }
+
+        $result['category'] = empty($result['category']) ? null : $result['category'][0];
 
         return $result;
     }
@@ -169,11 +175,13 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 'ap'=> [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier']
-                ]
+                ],
+                'c' => CategoryOrmFinder::MODEL_VALUES,
             ])
             ->setJoins([
                'p' => [
-                   ['associatedProducts', 'a', 'id']
+                   ['associatedProducts', 'a', 'id'],
+                   ['category', 'c', 'id']
                ],
                'a' => [
                    ['product', 'ap', 'id']
@@ -190,7 +198,8 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 ]
             ], $searchString)
             ->setPostProcess([
-                'p' => self::MODEL_POST_PROCESSES
+                'p' => self::MODEL_POST_PROCESSES,
+                'c' => CategoryOrmFinder::MODEL_POST_PROCESSES
             ])
             ->setOrderBy([
                 ['p.created', 'DESC']
@@ -203,7 +212,9 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                    $data['products'][] = $associatedProduct['product'][0]['identifier'];
                }
             $data['products'] = implode(', ', $data['products']);
+            $data['category'] = empty($data['category']) ? null : $data['category'][0];
         }
+
         return $result;
     }
 

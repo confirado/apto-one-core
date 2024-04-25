@@ -7,6 +7,8 @@ use Apto\Base\Domain\Core\Model\AptoPrice\AptoPriceDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Model\Category\Category;
+use Apto\Catalog\Domain\Core\Model\Category\CategoryRepository;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
@@ -40,16 +42,22 @@ class PartCommandHandler extends AbstractCommandHandler
     private $productRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    private CategoryRepository $categoryRepository;
+
+    /**
      * PartCommandHandler constructor.
      * @param PartRepository $partRepository
      * @param UnitRepository $unitRepository
      * @param ProductRepository $productRepository
      */
-    public function __construct(PartRepository $partRepository, UnitRepository $unitRepository, ProductRepository $productRepository)
+    public function __construct(PartRepository $partRepository, UnitRepository $unitRepository, ProductRepository $productRepository, CategoryRepository $categoryRepository)
     {
         $this->partRepository = $partRepository;
         $this->unitRepository = $unitRepository;
         $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -78,7 +86,8 @@ class PartCommandHandler extends AbstractCommandHandler
             )
             ->setDescription(
                 $this->getTranslatedValue($command->getDescription())
-            );
+            )
+            ->setCategory($this->getCategory($command->getCategoryId()));
 
         // add part and publish fired events
         $this->partRepository->add($part);
@@ -114,7 +123,8 @@ class PartCommandHandler extends AbstractCommandHandler
             )
             ->setDescription(
                 $this->getTranslatedValue($command->getDescription())
-            );
+            )
+            ->setCategory($this->getCategory($command->getCategoryId()));
 
         // update part and publish fired events
         $this->partRepository->update($part);
@@ -682,6 +692,15 @@ class PartCommandHandler extends AbstractCommandHandler
             $unit = $this->unitRepository->findById($unitId);
         }
         return $unit;
+    }
+
+    /**
+     * @param string|null $categoryId
+     * @return Category|null
+     */
+    protected function getCategory(?string $categoryId): ?Category
+    {
+        return $categoryId ? $this->categoryRepository->findById($categoryId) : null;
     }
 
     /**

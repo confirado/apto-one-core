@@ -32,6 +32,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             ruleUsages: state.aptoPartsListPart.ruleUsages,
             prices: state.aptoPartsListPart.prices,
             availableCustomerGroups: state.aptoPartsListPart.availableCustomerGroups,
+            categories: state.aptoPartsListPart.categories,
         }
     };
 
