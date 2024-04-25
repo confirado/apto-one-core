@@ -11,6 +11,6 @@ class PartsListElementContentSnippetProvider extends AbstractContentSnippetProvi
      */
     protected function getContentSnippetFilePath(): string
     {
-        return __DIR__ . '/../../../../Infrastructure/PartsListElementBundle/Resources/content-snippets/content-snippets.json';
+        return __DIR__ . '/../../../../Infrastructure/PartsListElementBundle/Resources/content-snippets/content-snippet.json';
     }
 }
