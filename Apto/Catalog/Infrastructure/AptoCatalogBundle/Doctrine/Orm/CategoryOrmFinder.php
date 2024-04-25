@@ -37,9 +37,7 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
         $builder
             ->findById($id)
             ->setValues([
-                'c' => [
-                   self::MODEL_VALUES
-                ],
+                'c' => self::MODEL_VALUES,
                 'cp' => [
                     ['id.id', 'id']
                 ],
