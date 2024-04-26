@@ -11,23 +11,39 @@ use Apto\Catalog\Domain\Core\Model\Product\Element\InvalidSelectablePropertyExce
 class PartsListElementDefinition implements ElementDefinition
 {
     const NAME = 'Parts List Element';
-    const BACKEND_COMPONENT = '<parts-list-element definition-validation="setDefinitionValidation(definitionValidation)"></parts-list-element>';
+    const BACKEND_COMPONENT = '<parts-list-element-definition definition-validation="setDefinitionValidation(definitionValidation)"></parts-list-element-definition>';
     const FRONTEND_COMPONENT = '';
 
     /**
+     * @var string|null
+     */
+    protected ?string $category;
+
+    /**
+     * @var bool
+     */
+    protected bool $active;
+
+    /**
+     * PartsListElementDefinition constructor.
+     */
+    public function __construct(?string $category, bool $active)
+    {
+        $this->category = $category;
+        $this->active = $active;
+    }
+
+    /**
      * @return array
-     * @throws InvalidSelectablePropertyException
      */
     public function getSelectableValues(): array
     {
-        return [
-            'aptoElementDefinitionId' => new ElementValueCollection([new ElementSingleTextValue('apto-parts-list-element')]),
-        ];
+        return [];
     }
 
     /**
      * @param array $selectedValues
-     * @return array
+     * @return mixed|null
      */
     public function getComputableValues(array $selectedValues): array
     {
@@ -41,6 +57,8 @@ class PartsListElementDefinition implements ElementDefinition
     {
         return [
             'aptoElementDefinitionId' => 'apto-parts-list-element',
+            'category' => $this->category,
+            'active' => $this->active,
         ];
     }
 
@@ -50,12 +68,7 @@ class PartsListElementDefinition implements ElementDefinition
      */
     public function getHumanReadableValues(array $selectedValues): array
     {
-        return [
-            'text' => AptoTranslatedValue::fromArray([
-                'de_DE' => $selectedValues['text'],
-                'en_EN' => $selectedValues['text']
-            ])
-        ];
+        return [];
     }
 
     /**
@@ -89,7 +102,10 @@ class PartsListElementDefinition implements ElementDefinition
     {
         return [
             'class' => get_class($this),
-            'json' => []
+            'json' => [
+                'category' => $this->category,
+                'active' => $this->active,
+            ]
         ];
     }
 
@@ -103,6 +119,17 @@ class PartsListElementDefinition implements ElementDefinition
             throw new \InvalidArgumentException('Cannot convert json value to Type \'PartsListElementDefinition\' due to wrong class namespace.');
         }
 
-        return new self();
+        if (!array_key_exists('category', $json['json'])) {
+            $json['json']['category'] = null;
+        }
+
+        if (!array_key_exists('active', $json['json'])) {
+            $json['json']['active'] = false;
+        }
+
+        return new self(
+            $json['json']['category'],
+            $json['json']['active']
+        );
     }
 }
