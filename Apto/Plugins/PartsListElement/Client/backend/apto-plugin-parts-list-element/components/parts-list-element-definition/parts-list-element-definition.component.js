@@ -7,7 +7,7 @@ class PartsListElementDefinitionController extends Presentational {
         super(LanguageFactory);
         this.values = {
             category: null,
-            multiple: false
+            allowMultiple: false
         };
         this.categories = [];
 
@@ -33,8 +33,8 @@ class PartsListElementDefinitionController extends Presentational {
                 this.values.category = this.detailDefinition.json.category;
             }
 
-            if (this.detailDefinition.json.hasOwnProperty('multiple')) {
-                this.values.multiple = this.detailDefinition.json.multiple;
+            if (this.detailDefinition.json.hasOwnProperty('allowMultiple')) {
+                this.values.allowMultiple = this.detailDefinition.json.allowMultiple;
             }
 
             this.setDefinitionValues(this.values);
@@ -47,7 +47,7 @@ class PartsListElementDefinitionController extends Presentational {
                         return false;
                     }
 
-                    if (this.values.hasOwnProperty('multiple') && typeof this.values.multiple !== 'boolean') {
+                    if (this.values.hasOwnProperty('allowMultiple') && typeof this.values.allowMultiple !== 'boolean') {
                         return false;
                     }
 

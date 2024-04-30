@@ -22,15 +22,15 @@ class PartsListElementDefinition implements ElementDefinition
     /**
      * @var bool
      */
-    protected bool $multiple;
+    protected bool $allowMultiple;
 
     /**
      * PartsListElementDefinition constructor.
      */
-    public function __construct(?string $category, bool $multiple)
+    public function __construct(?string $category, bool $allowMultiple)
     {
         $this->category = $category;
-        $this->multiple = $multiple;
+        $this->allowMultiple = $allowMultiple;
     }
 
     /**
@@ -58,7 +58,7 @@ class PartsListElementDefinition implements ElementDefinition
         return [
             'aptoElementDefinitionId' => 'apto-parts-list-element',
             'category' => $this->category,
-            'multiple' => $this->multiple,
+            'allowMultiple' => $this->allowMultiple,
         ];
     }
 
@@ -104,7 +104,7 @@ class PartsListElementDefinition implements ElementDefinition
             'class' => get_class($this),
             'json' => [
                 'category' => $this->category,
-                'multiple' => $this->multiple,
+                'allowMultiple' => $this->allowMultiple,
             ]
         ];
     }
@@ -123,13 +123,13 @@ class PartsListElementDefinition implements ElementDefinition
             $json['json']['category'] = null;
         }
 
-        if (!array_key_exists('multiple', $json['json'])) {
-            $json['json']['multiple'] = false;
+        if (!array_key_exists('allowMultiple', $json['json'])) {
+            $json['json']['allowMultiple'] = false;
         }
 
         return new self(
             $json['json']['category'],
-            $json['json']['multiple']
+            $json['json']['allowMultiple']
         );
     }
 }
