@@ -46,6 +46,9 @@ class RegisteredPartsListElementDefinition implements RegisteredElementDefinitio
      */
     public function getElementDefinition(array $definitionValues): ElementDefinition
     {
-        return new PartsListElementDefinition();
+        return new PartsListElementDefinition(
+            $definitionValues['category'],
+            $definitionValues['allowMultiple'],
+        );
     }
 }
