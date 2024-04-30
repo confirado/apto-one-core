@@ -247,7 +247,8 @@ class PartQueryHandler implements QueryHandlerInterface
             new State($query->getState()),
             new Currency($query->getCurrency()),
             $shop['id'],
-            $query->getCustomerGroupExternalId()
+            $query->getCustomerGroupExternalId(),
+            $query->getCategoryId()
         );
     }
 

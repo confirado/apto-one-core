@@ -1,1 +1,11 @@
-<p>parts-list-element works!</p>
+<div class="parts-list">
+    <div class="part" *ngFor="let part of partsList" (click)="toggleSelect(part)">
+        <div>
+            <h4>{{part.partName}}</h4>
+            <p>{{part.partNumber}}</p>
+        </div>
+        <div class="circle finished" *ngIf="isSelected(part)">
+            <mat-icon>done</mat-icon>
+        </div>
+    </div>
+</div>

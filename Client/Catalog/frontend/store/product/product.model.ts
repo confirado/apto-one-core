@@ -140,6 +140,7 @@ export interface StaticValues {
   area: any;
   renderingType: string;
   elementValueRefs: ElementValueRefs[];
+  category?: string;
 }
 
 export interface RangeField {

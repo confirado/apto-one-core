@@ -223,9 +223,11 @@ export interface FetchPartsListArguments {
   compressedState: any;
   currency: string;
   customerGroupExternalId: string;
+  categoryId?: string;
 }
 
 export interface PartsListPart {
+  id: string
   baseQuantity: number
   itemPrice: string
   itemPriceTotal: string

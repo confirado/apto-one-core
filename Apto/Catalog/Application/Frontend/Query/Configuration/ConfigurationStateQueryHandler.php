@@ -169,6 +169,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             );
         }
 
+
         // throw exception on failed rules
         if ($validationResult->getFailed()) {
             // create failed rules as array representation

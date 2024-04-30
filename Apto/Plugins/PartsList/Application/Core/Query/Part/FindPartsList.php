@@ -27,6 +27,11 @@ class FindPartsList implements PublicQueryInterface
     private string $customerGroupExternalId;
 
     /**
+     * @var string|null
+     */
+    private ?string $categoryId;
+
+    /**
      * @param string $productId
      * @param array $state
      * @param string $currency
@@ -36,12 +41,14 @@ class FindPartsList implements PublicQueryInterface
         string $productId,
         array $state,
         string $currency,
-        string $customerGroupExternalId
+        string $customerGroupExternalId,
+        ?string $categoryId,
     ) {
         $this->productId = $productId;
         $this->state = $state;
         $this->currency = $currency;
         $this->customerGroupExternalId = $customerGroupExternalId;
+        $this->categoryId = $categoryId;
     }
 
     /**
@@ -74,6 +81,14 @@ class FindPartsList implements PublicQueryInterface
     public function getCustomerGroupExternalId(): string
     {
         return $this->customerGroupExternalId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCategoryId(): ?string
+    {
+        return $this->categoryId;
     }
 }
 

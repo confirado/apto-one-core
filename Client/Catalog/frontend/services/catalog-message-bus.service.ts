@@ -180,9 +180,20 @@ export class CatalogMessageBusService {
     productId: string,
     compressedState: any,
     currency: string,
-    customerGroupExternalId: string
+    customerGroupExternalId: string,
+    categoryId?: string
   ): Observable<PartsListPart[]> {
-    return this.query('AptoPartsListFindPartsList', [productId, compressedState, currency, customerGroupExternalId]);
+    return this.query('AptoPartsListFindPartsList', [productId, compressedState, currency, customerGroupExternalId, categoryId]);
+  }
+
+  public fetchPartsListForCategory(
+    productId: string,
+    compressedState: any,
+    currency: string,
+    customerGroupExternalId: string,
+    categoryId: string
+  ): Observable<PartsListPart[]> {
+    return this.query('AptoPartsListFindPartsListForCategory', [productId, compressedState, currency, customerGroupExternalId, categoryId]);
   }
 
   public addOfferConfiguration(

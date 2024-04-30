@@ -1,0 +1,12 @@
+.parts-list {
+    padding: var(--element-gap);
+    display: flex;
+    flex-direction: column;
+
+    .part {
+        border-bottom: 1px solid lightgray;
+        padding: 5px 0;
+        display: flex;
+        justify-content: space-between;
+    }
+}

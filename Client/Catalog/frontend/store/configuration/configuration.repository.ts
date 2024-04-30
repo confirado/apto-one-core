@@ -3,7 +3,7 @@ import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
   AddBasketConfigurationArguments,
-  AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
+  AddGuestConfigurationArguments, AddOfferConfigurationArguments,
   ComputedValues,
   Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
   RenderImage, StatePrice, UpdateBasketConfigurationArguments,
@@ -96,6 +96,7 @@ export class ConfigurationRepository {
       params.compressedState,
       params.currency,
       params.customerGroupExternalId,
+      params.categoryId
     );
   }
 

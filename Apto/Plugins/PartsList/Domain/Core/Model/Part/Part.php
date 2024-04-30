@@ -676,4 +676,12 @@ class Part extends AptoAggregate
         $this->category = $category;
         return $this;
     }
+
+    /**
+     * @return Category|null
+     */
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
 }
