@@ -22,15 +22,15 @@ class PartsListElementDefinition implements ElementDefinition
     /**
      * @var bool
      */
-    protected bool $active;
+    protected bool $multiple;
 
     /**
      * PartsListElementDefinition constructor.
      */
-    public function __construct(?string $category, bool $active)
+    public function __construct(?string $category, bool $multiple)
     {
         $this->category = $category;
-        $this->active = $active;
+        $this->multiple = $multiple;
     }
 
     /**
@@ -58,7 +58,7 @@ class PartsListElementDefinition implements ElementDefinition
         return [
             'aptoElementDefinitionId' => 'apto-parts-list-element',
             'category' => $this->category,
-            'active' => $this->active,
+            'multiple' => $this->multiple,
         ];
     }
 
@@ -104,7 +104,7 @@ class PartsListElementDefinition implements ElementDefinition
             'class' => get_class($this),
             'json' => [
                 'category' => $this->category,
-                'active' => $this->active,
+                'multiple' => $this->multiple,
             ]
         ];
     }
@@ -123,13 +123,13 @@ class PartsListElementDefinition implements ElementDefinition
             $json['json']['category'] = null;
         }
 
-        if (!array_key_exists('active', $json['json'])) {
-            $json['json']['active'] = false;
+        if (!array_key_exists('multiple', $json['json'])) {
+            $json['json']['multiple'] = false;
         }
 
         return new self(
             $json['json']['category'],
-            $json['json']['active']
+            $json['json']['multiple']
         );
     }
 }
