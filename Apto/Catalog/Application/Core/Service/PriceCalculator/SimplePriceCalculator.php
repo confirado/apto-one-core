@@ -2,15 +2,23 @@
 
 namespace Apto\Catalog\Application\Core\Service\PriceCalculator;
 
+use Money\Currency;
+use Money\Money;
+use Money\Converter;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\FixedExchange;
 use Apto\Base\Application\Core\Query\CustomerGroup\CustomerGroupFinder;
 use Apto\Base\Application\Core\Service\RequestStore;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
+use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
 use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\Hooks\StatePricesHook;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\AdditionalPriceInformationProvider;
@@ -26,136 +34,128 @@ use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaParser;
-use Money\Currency;
-use Money\Money;
-use Money\Converter;
-use Money\Currencies\ISOCurrencies;
-use Money\Exchange\FixedExchange;
-
-use Apto\Base\Domain\Core\Model\InvalidUuidException;
-use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 
 class SimplePriceCalculator implements PriceCalculator
 {
     /**
      * @var PriceCalculatorRegistry
      */
-    protected $priceCalculatorRegistry;
+    protected PriceCalculatorRegistry $priceCalculatorRegistry;
 
     /**
      * @var ProductFinder
      */
-    protected $productFinder;
+    protected ProductFinder $productFinder;
 
     /**
      * @var CustomerGroupFinder
      */
-    protected $customerGroupFinder;
+    protected CustomerGroupFinder $customerGroupFinder;
 
     /**
      * @var PriceMatrixFinder
      */
-    protected $priceMatrixFinder;
+    protected PriceMatrixFinder $priceMatrixFinder;
 
     /**
      * @var AptoJsonSerializer
      */
-    protected $aptoJsonSerializer;
+    protected AptoJsonSerializer $aptoJsonSerializer;
 
     /**
      * @var array
      */
-    protected $priceTable;
+    protected array $priceTable;
 
     /**
      * @var AptoUuid
      */
-    protected $productId;
+    protected AptoUuid $productId;
 
     /**
      * @var State
      */
-    protected $state;
+    protected State $state;
 
     /**
      * @var Currency|null
      */
-    protected $currency;
+    protected ?Currency $currency;
 
     /**
      * @var array
      */
-    protected $customerGroup;
+    protected array $customerGroup;
 
     /**
      * @var array|null
      */
-    protected $fallbackCustomerGroupOrNull;
+    protected ?array $fallbackCustomerGroupOrNull;
 
     /**
      * @var array|null
      */
-    protected $user;
+    protected ?array $user;
 
     /**
      * @var TaxCalculator|null
      */
-    protected $taxCalculator;
+    protected ?TaxCalculator $taxCalculator;
 
     /**
      * @var bool
      */
-    protected $displayPrices;
+    protected bool $displayPrices;
 
     /**
      * @var Currency
      */
-    protected $fallbackCurrency;
+    protected Currency $fallbackCurrency;
 
     /**
      * @var float
      */
-    protected $currencyFactor;
+    protected float $currencyFactor;
 
     /**
      * @var ISOCurrencies
      */
-    private $currencies;
+    private ISOCurrencies $currencies;
 
     /**
      * @var array
      */
-    private $elementIdIdentifierMapping;
+    private array $elementIdIdentifierMapping;
 
     /**
      * @var ComputedProductValueCalculator
      */
-    protected $computedProductValueCalculator;
+    protected ComputedProductValueCalculator $computedProductValueCalculator;
 
     /**
      * @var array
      */
-    private $computedValues;
+    private array $computedValues;
 
     /**
      * @var MediaFileSystemConnector
      */
-    private $mediaFileSystem;
+    private MediaFileSystemConnector $mediaFileSystem;
 
     /**
      * @var ShopFinder
      */
-    private $shopFinder;
+    private ShopFinder $shopFinder;
 
     /**
      * @var RequestStore
      */
-    private $requestStore;
+    private RequestStore $requestStore;
 
     /**
      * @var float
      */
-    private $priceModifier;
+    private float $priceModifier;
 
     /**
      * @var StatePricesHook
@@ -175,6 +175,10 @@ class SimplePriceCalculator implements PriceCalculator
      * @param AptoJsonSerializer $aptoJsonSerializer
      * @param ComputedProductValueCalculator $computedProductValueCalculator
      * @param MediaFileSystemConnector $mediaFileSystem
+     * @param ShopFinder $shopFinder
+     * @param RequestStore $requestStore
+     * @param StatePricesHook $statePricesHook
+     * @param ProductConditionFinder $productConditionFinder
      */
     public function __construct(
         PriceCalculatorRegistry $priceCalculatorRegistry,
@@ -282,7 +286,7 @@ class SimplePriceCalculator implements PriceCalculator
      */
     public function getUser(): ?array
     {
-       return $this->user;
+        return $this->user;
     }
 
     /**
@@ -336,7 +340,6 @@ class SimplePriceCalculator implements PriceCalculator
         }
 
         // lookup customer group id and fallback currency
-        $customerGroupId = $this->customerGroup['id'];
         foreach ($prices as $price) {
             if ($price['customerGroupId'] === $customerGroupId && $price['currencyCode'] === $this->fallbackCurrency->getCode()) {
                 // convert price from fallback currency to currency
@@ -379,6 +382,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
+     * @throws CircularReferenceException
      * @throws InvalidUuidException
      */
     public function getRawPrices(
@@ -415,6 +419,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
+     * @throws CircularReferenceException
      * @throws InvalidUuidException
      */
     public function getDisplayPrices(
@@ -540,7 +545,6 @@ class SimplePriceCalculator implements PriceCalculator
         }
 
         // lookup customer group id and fallback currency
-        $customerGroupId = $this->customerGroup['id'];
         foreach ($priceFormulas as $priceFormula) {
             if ($priceFormula['customerGroupId'] === $customerGroupId && $priceFormula['currencyCode'] === $this->fallbackCurrency->getCode()) {
                 // convert price from fallback currency to currency
@@ -688,7 +692,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param array $statePrices
      * @param array $types
      */
-    protected function calculateBasePriceSurcharge(array $statePrices, array $types)
+    protected function calculateBasePriceSurcharge(array $statePrices, array $types): void
     {
         $surcharge = 1;
 
@@ -702,6 +706,10 @@ class SimplePriceCalculator implements PriceCalculator
         $this->priceTable['base']['surcharge'] = $surcharge;
     }
 
+    /**
+     * @param string $fieldName
+     * @return array
+     */
     private function getSectionListGroupedBy(string $fieldName): array
     {
         $sectionList = [];
@@ -734,28 +742,31 @@ class SimplePriceCalculator implements PriceCalculator
 
         // for all sections
         $productSum = new Money(0, $this->currency);
-
         foreach ($sections as $key => $section) {
-            // yes we can take sectionId of the item with 0 index, as all items in the group have the same section id
+            if (count($section) < 1) {
+                continue;
+            }
+
+            // yes we can take sectionId and repetition of the item with 0 index, as all items in the group have the same section id and repetition value
             $sectionId = $section[0]['sectionId'];
+            $repetition = $section[0]['repetition'];
             $sectionUuid = new AptoUuid($sectionId);
+
+            // create section subarray, if not existing
+            if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                $this->priceTable['sections'][$sectionId][$repetition] = [
+                    'elements' => [],
+                    'own' => [],
+                    'sum' => []
+                ];
+            }
 
             // for all elements
             $sectionSum = new Money(0, $this->currency);
-
             foreach ($section as $element) {
                 $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
                 $repetition = $element['repetition'];
-
-                // create section subarray, if not existing
-                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
-                    $this->priceTable['sections'][$sectionId][$repetition] = [
-                        'elements' => [],
-                        'own' => [],
-                        'sum' => []
-                    ];
-                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -771,7 +782,6 @@ class SimplePriceCalculator implements PriceCalculator
                 }
 
                 // get element pseudo price
-                /** @var BasePriceProvider $elementPriceProvider */
                 $elementPseudoPrice = $elementPriceProvider->getPrice(
                     $this,
                     $sectionUuid,
@@ -847,30 +857,29 @@ class SimplePriceCalculator implements PriceCalculator
         $productSum = new Money(0, $this->currency);
 
         foreach ($sections as $section) {
+            if (count($section) < 1) {
+                continue;
+            }
 
+            // yes we can take sectionId and repetition of the item with 0 index, as all items in the group have the same section id and repetition value
             $sectionId = $section[0]['sectionId'];
+            $repetition = $section[0]['repetition'];
             $sectionUuid = new AptoUuid($sectionId);
 
-            $isBasePriceAdded = false;
+            // create section subarray, if not existing
+            if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                $this->priceTable['sections'][$sectionId][$repetition] = [
+                    'elements' => [],
+                    'own' => [],
+                    'sum' => []
+                ];
+            }
 
+            // for all elements
+            $sectionSum = $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] ?? new Money(0, $this->currency);
             foreach ($section as $element) {
                 $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
-                $repetition = $element['repetition'];
-
-                // create section subarray, if not existing
-                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
-                    $this->priceTable['sections'][$sectionId][$repetition] = [
-                        'elements' => [],
-                        'own' => [],
-                        'sum' => []
-                    ];
-                }
-
-                if (!$isBasePriceAdded) {
-                    $sectionSum = $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] ?? new Money(0, $this->currency);
-                    $isBasePriceAdded = true;
-                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -900,7 +909,6 @@ class SimplePriceCalculator implements PriceCalculator
                 }
 
                 // get element pseudo price
-                /** @var ElementPriceProvider $elementPriceProvider */
                 $elementOwnPseudoPrice = $elementPriceProvider->getPrice(
                     $this,
                     $sectionUuid,
@@ -1056,6 +1064,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @return array
      * @throws AptoJsonSerializerException
      * @throws InvalidUuidException
+     * @throws CircularReferenceException
      */
     protected function getCalculatedPrice(
         State $state,
@@ -1152,6 +1161,13 @@ class SimplePriceCalculator implements PriceCalculator
         return $this->priceTable;
     }
 
+    /**
+     * @param array $rawStatePrices
+     * @param State $state
+     * @param string $key
+     * @return array|array[]
+     * @throws InvalidUuidException
+     */
     private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state, string $key): array
     {
         $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices, $key);
@@ -1192,6 +1208,11 @@ class SimplePriceCalculator implements PriceCalculator
         return $newRawStatePrices;
     }
 
+    /**
+     * @param array $rawStatePrices
+     * @param string $key
+     * @return array
+     */
     private function collectAllProductConditionIdsFromRawStatement(array $rawStatePrices, string $key): array
     {
         $ids = [];
@@ -1236,7 +1257,7 @@ class SimplePriceCalculator implements PriceCalculator
     /**
      * set fallback customer group by using the appropriate finder method
      */
-    protected function setFallbackCustomerGroup()
+    protected function setFallbackCustomerGroup(): void
     {
         $this->fallbackCustomerGroupOrNull = $this->customerGroup['fallback'] ? null : $this->customerGroupFinder->findFallbackCustomerGroup();
     }
@@ -1247,7 +1268,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param float $factor
      * @return Money
      */
-    protected function convertCurrency(Money $price, Currency $currency, float $factor)
+    protected function convertCurrency(Money $price, Currency $currency, float $factor): Money
     {
         $pair = [
             $price->getCurrency()->getCode() => [
@@ -1265,7 +1286,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param $price
      * @return void
      */
-    protected function addDomainPriceModifier(&$price)
+    protected function addDomainPriceModifier(&$price): void
     {
         if (is_a($price, Money::class)) {
             $price = $price->multiply($this->priceModifier);
