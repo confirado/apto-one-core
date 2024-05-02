@@ -19,16 +19,22 @@ class AptoPrice extends AptoEntity
     protected $customerGroupId;
 
     /**
+     * @var AptoUuid|null
+     */
+    protected ?AptoUuid $productConditionId;
+
+    /**
      * AptoPrice constructor.
      * @param AptoUuid $id
      * @param Money $price
      * @param AptoUuid $customerGroupId
      */
-    public function __construct(AptoUuid $id, Money $price, AptoUuid $customerGroupId)
+    public function __construct(AptoUuid $id, Money $price, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null)
     {
         parent::__construct($id);
         $this->price = $price;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -92,5 +98,21 @@ class AptoPrice extends AptoEntity
 
         // return copy
         return $price;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getProductConditionId(): ?AptoUuid
+    {
+        return $this->productConditionId;
+    }
+
+    /**
+     * @param AptoUuid|null $productConditionId
+     */
+    public function setProductConditionId(?AptoUuid $productConditionId): void
+    {
+        $this->productConditionId = $productConditionId;
     }
 }

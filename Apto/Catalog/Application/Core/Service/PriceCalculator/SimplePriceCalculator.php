@@ -2,14 +2,23 @@
 
 namespace Apto\Catalog\Application\Core\Service\PriceCalculator;
 
+use Money\Currency;
+use Money\Money;
+use Money\Converter;
+use Money\Currencies\ISOCurrencies;
+use Money\Exchange\FixedExchange;
 use Apto\Base\Application\Core\Query\CustomerGroup\CustomerGroupFinder;
 use Apto\Base\Application\Core\Service\RequestStore;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
+use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\Hooks\StatePricesHook;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\AdditionalPriceInformationProvider;
@@ -18,145 +27,145 @@ use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ElementP
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductPriceProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductSurchargeProvider;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\TaxCalculator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaParser;
-use Money\Currency;
-use Money\Money;
-use Money\Converter;
-use Money\Currencies\ISOCurrencies;
-use Money\Exchange\FixedExchange;
-
-use Apto\Base\Domain\Core\Model\InvalidUuidException;
-use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 
 class SimplePriceCalculator implements PriceCalculator
 {
     /**
      * @var PriceCalculatorRegistry
      */
-    protected $priceCalculatorRegistry;
+    protected PriceCalculatorRegistry $priceCalculatorRegistry;
 
     /**
      * @var ProductFinder
      */
-    protected $productFinder;
+    protected ProductFinder $productFinder;
 
     /**
      * @var CustomerGroupFinder
      */
-    protected $customerGroupFinder;
+    protected CustomerGroupFinder $customerGroupFinder;
 
     /**
      * @var PriceMatrixFinder
      */
-    protected $priceMatrixFinder;
+    protected PriceMatrixFinder $priceMatrixFinder;
 
     /**
      * @var AptoJsonSerializer
      */
-    protected $aptoJsonSerializer;
+    protected AptoJsonSerializer $aptoJsonSerializer;
 
     /**
      * @var array
      */
-    protected $priceTable;
+    protected array $priceTable;
 
     /**
      * @var AptoUuid
      */
-    protected $productId;
+    protected AptoUuid $productId;
 
     /**
      * @var State
      */
-    protected $state;
+    protected State $state;
 
     /**
      * @var Currency|null
      */
-    protected $currency;
+    protected ?Currency $currency;
 
     /**
      * @var array
      */
-    protected $customerGroup;
+    protected array $customerGroup;
 
     /**
      * @var array|null
      */
-    protected $fallbackCustomerGroupOrNull;
+    protected ?array $fallbackCustomerGroupOrNull;
 
     /**
      * @var array|null
      */
-    protected $user;
+    protected ?array $user;
 
     /**
      * @var TaxCalculator|null
      */
-    protected $taxCalculator;
+    protected ?TaxCalculator $taxCalculator;
 
     /**
      * @var bool
      */
-    protected $displayPrices;
+    protected bool $displayPrices;
 
     /**
      * @var Currency
      */
-    protected $fallbackCurrency;
+    protected Currency $fallbackCurrency;
 
     /**
      * @var float
      */
-    protected $currencyFactor;
+    protected float $currencyFactor;
 
     /**
      * @var ISOCurrencies
      */
-    private $currencies;
+    private ISOCurrencies $currencies;
 
     /**
      * @var array
      */
-    private $elementIdIdentifierMapping;
+    private array $elementIdIdentifierMapping;
 
     /**
      * @var ComputedProductValueCalculator
      */
-    protected $computedProductValueCalculator;
+    protected ComputedProductValueCalculator $computedProductValueCalculator;
 
     /**
      * @var array
      */
-    private $computedValues;
+    private array $computedValues;
 
     /**
      * @var MediaFileSystemConnector
      */
-    private $mediaFileSystem;
+    private MediaFileSystemConnector $mediaFileSystem;
 
     /**
      * @var ShopFinder
      */
-    private $shopFinder;
+    private ShopFinder $shopFinder;
 
     /**
      * @var RequestStore
      */
-    private $requestStore;
+    private RequestStore $requestStore;
 
     /**
      * @var float
      */
-    private $priceModifier;
+    private float $priceModifier;
 
     /**
      * @var StatePricesHook
      */
     private StatePricesHook $statePricesHook;
+
+    /**
+     * @var ProductConditionFinder
+     */
+    private ProductConditionFinder $productConditionFinder;
 
     /**
      * @param PriceCalculatorRegistry $priceCalculatorRegistry
@@ -166,6 +175,10 @@ class SimplePriceCalculator implements PriceCalculator
      * @param AptoJsonSerializer $aptoJsonSerializer
      * @param ComputedProductValueCalculator $computedProductValueCalculator
      * @param MediaFileSystemConnector $mediaFileSystem
+     * @param ShopFinder $shopFinder
+     * @param RequestStore $requestStore
+     * @param StatePricesHook $statePricesHook
+     * @param ProductConditionFinder $productConditionFinder
      */
     public function __construct(
         PriceCalculatorRegistry $priceCalculatorRegistry,
@@ -177,7 +190,8 @@ class SimplePriceCalculator implements PriceCalculator
         MediaFileSystemConnector $mediaFileSystem,
         ShopFinder $shopFinder,
         RequestStore $requestStore,
-        StatePricesHook $statePricesHook
+        StatePricesHook $statePricesHook,
+        ProductConditionFinder $productConditionFinder
     ) {
         $this->priceCalculatorRegistry = $priceCalculatorRegistry;
         $this->productFinder = $productFinder;
@@ -200,161 +214,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->requestStore = $requestStore;
         $this->priceModifier = 1;
         $this->statePricesHook = $statePricesHook;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return static::class;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return 'SimplePriceCalculator';
-    }
-
-    /**
-     * @return AptoUuid
-     */
-    public function getProductId(): AptoUuid
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return State
-     */
-    public function getState(): State
-    {
-        return $this->state;
-    }
-
-    /**
-     * @return Currency
-     */
-    public function getCurrency(): Currency
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @return Currency
-     */
-    public function getFallbackCurrency(): Currency
-    {
-        return $this->fallbackCurrency;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCustomerGroup(): array
-    {
-        return $this->customerGroup;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getFallbackCustomerGroupOrNull(): ?array
-    {
-        return $this->fallbackCustomerGroupOrNull;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getUser(): ?array
-    {
-       return $this->user;
-    }
-
-    /**
-     * @return TaxCalculator|null
-     */
-    public function getTaxCalculator(): ?TaxCalculator
-    {
-        return $this->taxCalculator;
-    }
-
-    /**
-     * @return array
-     */
-    public function getElementIdIdentifierMapping(): array
-    {
-        return $this->elementIdIdentifierMapping;
-    }
-
-    /**
-     * @return array
-     */
-    public function getComputedValues(): array
-    {
-        return $this->computedValues;
-    }
-
-    /**
-     * @param array $prices
-     * @return Money
-     */
-    public function getTaxAdaptedPriceByPreferredCustomerGroup(array $prices): Money
-    {
-        // lookup customer group id and currency
-        $customerGroupId = $this->customerGroup['id'];
-        foreach ($prices as $price) {
-            if ($price['customerGroupId'] === $customerGroupId && $price['currencyCode'] === $this->currency->getCode()) {
-                return new Money($price['amount'], new Currency($price['currencyCode']));
-            }
-        }
-
-        // lookup fallback customer group id (if defined) and currency
-        if (null !== $this->fallbackCustomerGroupOrNull) {
-            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
-            foreach ($prices as $price) {
-                if ($price['customerGroupId'] === $fallbackCustomerGroupId && $price['currencyCode'] === $this->currency->getCode()) {
-                    return $this->getTaxAdaptedPrice(
-                        new Money($price['amount'], new Currency($price['currencyCode']))
-                    );
-                }
-            }
-        }
-
-        // lookup customer group id and fallback currency
-        $customerGroupId = $this->customerGroup['id'];
-        foreach ($prices as $price) {
-            if ($price['customerGroupId'] === $customerGroupId && $price['currencyCode'] === $this->fallbackCurrency->getCode()) {
-                // convert price from fallback currency to currency
-                return $this->convertCurrency(
-                    new Money($price['amount'], new Currency($price['currencyCode'])),
-                    $this->getCurrency(),
-                    $this->currencyFactor
-                );
-            }
-        }
-
-        // lookup fallback customer group id (if defined) and fallback currency
-        if (null !== $this->fallbackCustomerGroupOrNull) {
-            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
-            foreach ($prices as $price) {
-                if ($price['customerGroupId'] === $fallbackCustomerGroupId && $price['currencyCode'] === $this->fallbackCurrency->getCode()) {
-                    // convert price from fallback currency to currency
-                    return $this->convertCurrency(
-                        $this->getTaxAdaptedPrice(
-                            new Money($price['amount'], new Currency($price['currencyCode']))
-                        ),
-                        $this->getCurrency(),
-                        $this->currencyFactor
-                    );
-                }
-            }
-        }
-
-        return new Money(0, $this->getCurrency());
+        $this->productConditionFinder = $productConditionFinder;
     }
 
     /**
@@ -368,6 +228,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
+     * @throws CircularReferenceException
      * @throws InvalidUuidException
      */
     public function getRawPrices(
@@ -404,6 +265,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param array|null $user
      * @return array
      * @throws AptoJsonSerializerException
+     * @throws CircularReferenceException
      * @throws InvalidUuidException
      */
     public function getDisplayPrices(
@@ -430,254 +292,118 @@ class SimplePriceCalculator implements PriceCalculator
     }
 
     /**
-     * @param Money $fallBackCustomerGroupPrice
-     * @return Money
+     * @param State $state
+     * @param Currency $currency
+     * @param TaxCalculator $taxCalculator
+     * @param array $customerGroup
+     * @param AptoUuid $productId
+     * @param Currency|null $fallbackCurrency
+     * @param float $currencyFactor
+     * @return array
+     * @throws AptoJsonSerializerException
+     * @throws InvalidUuidException
+     * @throws CircularReferenceException
      */
-    protected function getTaxAdaptedPrice(Money $fallBackCustomerGroupPrice): Money
-    {
-        if (null === $this->fallbackCustomerGroupOrNull) {
-            throw new \InvalidArgumentException('This method must only be used with a fallbackCustomerGroup set.');
-        }
+    protected function getCalculatedPrice(
+        State $state,
+        Currency $currency,
+        TaxCalculator $taxCalculator,
+        array $customerGroup,
+        AptoUuid $productId,
+        Currency $fallbackCurrency = null,
+        float $currencyFactor = 1.0
+    ): array {
+        // set properties
+        $this->state = $state;
+        $this->currency = $currency;
+        $this->taxCalculator = $taxCalculator;
+        $this->customerGroup = $customerGroup;
+        $this->productId = $productId;
+        $this->fallbackCurrency = $fallbackCurrency !== null ? $fallbackCurrency : $currency;
+        $this->currencyFactor = $currencyFactor;
+        $this->elementIdIdentifierMapping = $this->getElementIdIdentifierMappingByProductId($productId);
+        $this->computedValues = $this->computedProductValueCalculator->calculateComputedValues($productId->getId(), $state);
 
-        $cGross = $this->customerGroup['inputGross'];
-        $fcGross = $this->fallbackCustomerGroupOrNull['inputGross'];
+        // find and set fallback customer group
+        $this->setFallbackCustomerGroup();
 
-        if ($cGross && !$fcGross) {
-            return $this->taxCalculator->addTax($fallBackCustomerGroupPrice);
-        }
+        // define types and key mapping
+        $keyMapping = [
+            'products' => 'productId',
+            'sections' => 'sectionId',
+            'elements' => 'elementId'
+        ];
+        $types = array_keys($keyMapping);
 
-        if (!$cGross && $fcGross) {
-            return $this->taxCalculator->subTax($fallBackCustomerGroupPrice);
-        }
+        // create customer group id
+        $customerGroupId = new AptoUuid($customerGroup['id']);
 
-        // $cGross === $fcGross, no conversion needed due to same tax settings on both customer groups
-        return $fallBackCustomerGroupPrice;
-    }
+        $shop = $this->shopFinder->findByDomain($this->requestStore->getHttpHost());
 
-    /**
-     * @param Money $taxAdaptedElementPrice
-     * @param array $priceMatrix
-     * @return Money
-     */
-    protected function applyPriceMatrix(Money $taxAdaptedElementPrice, array $priceMatrix): Money
-    {
-        // assert activated price matrix
-        if (count($priceMatrix) === 0 || !$priceMatrix['priceMatrixActive']) {
-            return $taxAdaptedElementPrice;
-        }
-
-        // try to calculate row and column
-        $values = array_merge($this->computedValues, [
-            '_anzahl_' => $this->state->getParameter(State::QUANTITY)
-        ]);
-        try {
-            $row = FormulaParser::parse($priceMatrix['priceMatrixRow'], $values, $this->mediaFileSystem);
-            $column = FormulaParser::parse($priceMatrix['priceMatrixColumn'], $values, $this->mediaFileSystem);
-        }
-        catch (FormulaParserException $e) {
-            return $taxAdaptedElementPrice;
-        }
-
-        // get price data
-        $priceMatrixElementPrices = $this->priceMatrixFinder->findNextHigherPriceByColumnRowValue(
-            $priceMatrix['priceMatrixId'],
-            floatval($row),
-            floatval($column),
-            $this->customerGroup['id'],
-            $this->fallbackCustomerGroupOrNull ? $this->fallbackCustomerGroupOrNull['id'] : null,
-            $this->currency->getCode(),
-            $this->fallbackCurrency->getCode()
+        // get prices/discounts/definitions by state
+        $rawStatePrices = $this->productFinder->findPricesByState(
+            $productId->getId(),
+            $state,
+            $currency->getCode(),
+            $this->fallbackCurrency->getCode(),
+            $customerGroupId->getId(),
+            null === $this->fallbackCustomerGroupOrNull ? null : $this->fallbackCustomerGroupOrNull['id'],
+            $shop['id']
         );
 
-        // add preferred price
-        return $taxAdaptedElementPrice->add(
-            $this->getTaxAdaptedPriceByPreferredCustomerGroup($priceMatrixElementPrices)
-        );
-    }
-
-    /**
-     * @param Money $taxAdaptedElementPrice
-     * @param array $priceFormulas
-     * @return Money
-     */
-    protected function applyPriceFormulaByPreferredCustomerGroup(Money $taxAdaptedElementPrice, array $priceFormulas): Money
-    {
-        // lookup customer group id and currency
-        $customerGroupId = $this->customerGroup['id'];
-        foreach ($priceFormulas as $priceFormula) {
-            if ($priceFormula['customerGroupId'] === $customerGroupId && $priceFormula['currencyCode'] === $this->currency->getCode()) {
-                return (new Money(
-                    $this->parsePriceFormula($priceFormula['formula']),
-                    new Currency($priceFormula['currencyCode'])
-                ))->add($taxAdaptedElementPrice);
-            }
+        if ($rawStatePrices['priceModifier'] === null || $rawStatePrices['priceModifier'] === '') {
+            $rawStatePrices['priceModifier'] = 100;
         }
 
-        // lookup fallback customer group id (if defined) and currency
-        if (null !== $this->fallbackCustomerGroupOrNull) {
-            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
-            foreach ($priceFormulas as $priceFormula) {
-                if ($priceFormula['customerGroupId'] === $fallbackCustomerGroupId && $priceFormula['currencyCode'] === $this->currency->getCode()) {
-                    return $this->getTaxAdaptedPrice(
-                        new Money(
-                            $this->parsePriceFormula($priceFormula['formula']),
-                            new Currency($priceFormula['currencyCode'])
-                        )
-                    )->add($taxAdaptedElementPrice);
-                }
-            }
-        }
+        $rawStatePrices['prices'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state, 'prices');
+        $rawStatePrices['priceFormulas'] = $this->filterOutPricesWithNotMatchingConditions($rawStatePrices, $state, 'priceFormulas');
 
-        // lookup customer group id and fallback currency
-        $customerGroupId = $this->customerGroup['id'];
-        foreach ($priceFormulas as $priceFormula) {
-            if ($priceFormula['customerGroupId'] === $customerGroupId && $priceFormula['currencyCode'] === $this->fallbackCurrency->getCode()) {
-                // convert price from fallback currency to currency
-                return $this->convertCurrency(
-                    new Money(
-                        $this->parsePriceFormula($priceFormula['formula']),
-                        new Currency($priceFormula['currencyCode'])
-                    ),
-                    $this->getCurrency(),
-                    $this->currencyFactor
-                )->add($taxAdaptedElementPrice);
-            }
-        }
+        $statePrices = [
+            'prices' => $this->mapProperties($rawStatePrices['prices'], $keyMapping, true),
+            'priceMatrices' => $this->mapProperties($rawStatePrices['priceMatrices'], $keyMapping),
+            'priceFormulas' => $this->mapProperties($rawStatePrices['priceFormulas'], $keyMapping, true),
+            'discounts' => $this->mapProperties($rawStatePrices['discounts'], $keyMapping),
+            'definitions' => $this->mapPropertyToKey($rawStatePrices['definitions'], 'elementId'),
+            'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
+        ];
 
-        // lookup fallback customer group id (if defined) and fallback currency
-        if (null !== $this->fallbackCustomerGroupOrNull) {
-            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
-            foreach ($priceFormulas as $priceFormula) {
-                if ($priceFormula['customerGroupId'] === $fallbackCustomerGroupId && $priceFormula['currencyCode'] === $this->fallbackCurrency->getCode()) {
-                    // convert price from fallback currency to currency
-                    return $this->convertCurrency(
-                        $this->getTaxAdaptedPrice(
-                            new Money(
-                                $this->parsePriceFormula($priceFormula['formula']),
-                                new Currency($priceFormula['currencyCode'])
-                            )
-                        ),
-                        $this->getCurrency(),
-                        $this->currencyFactor
-                    )->add($taxAdaptedElementPrice);
-                }
-            }
-        }
+        $statePrices = $this->statePricesHook->getStatePrices($this, $statePrices);
 
-        return $taxAdaptedElementPrice;
-    }
+        // init price table
+        $this->priceTable = [
+            'base' => [
+                'surcharge' => 0.0,
+                'price' => null
+            ],
+            'sections' => [],
+            'discount' => 0.0,
+            'own' => [
+                'pseudoPrice' => null,
+                'price' => null
+            ],
+            'sum' => [
+                'pseudoPrice' => null,
+                'price' => null,
+                'netPrice' => null,
+                'grossPrice' => null
+            ]
+        ];
 
+        $this->priceModifier = floatval($rawStatePrices['priceModifier'] / 100 );
 
-    /**
-     * @param string $formula
-     * @return string
-     */
-    protected function parsePriceFormula(string $formula): string
-    {
-        $values = array_merge($this->computedValues, [
-            '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
-            '_anzahl_' => $this->state->getParameter(State::QUANTITY)
-        ]);
-        try {
-            return FormulaParser::parse(
-                $formula,
-                $values,
-                $this->mediaFileSystem
-            );
-        }
-        catch (FormulaParserException $e) {
-            return '0';
-        }
-    }
+        $this->calculateBasePriceSurcharge($statePrices, $types);
+        $this->calculateBasePrice($statePrices);
+        $this->calculateElementPrices($statePrices);
+        array_walk_recursive($this->priceTable, array($this, 'addDomainPriceModifier'));
 
-    /**
-     * @param Money $taxAdaptedElementPrice
-     * @param array $prices
-     * @return Money
-     */
-    protected function applyExtendedPriceCalculationFormula(Money $taxAdaptedElementPrice, array $prices): Money
-    {
-        // calculate price by formula
-        if (
-            count($prices) > 0 &&
-            array_key_exists('extendedPriceCalculationActive', $prices[0]) &&
-            array_key_exists('extendedPriceCalculationFormula', $prices[0]) &&
-            $prices[0]['extendedPriceCalculationActive']
-        ) {
-            $values = array_merge($this->computedValues, [
-                '_preis_' => $taxAdaptedElementPrice->getAmount(),
-                '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
-                '_anzahl_' => $this->state->getParameter(State::QUANTITY)
-            ]);
-            try {
-                $result = FormulaParser::parse(
-                    $prices[0]['extendedPriceCalculationFormula'],
-                    $values,
-                    $this->mediaFileSystem
-                );
-
-                return new Money(
-                    (string) round(floatval($result)),
-                    $taxAdaptedElementPrice->getCurrency()
-                );
-            }
-            catch (FormulaParserException $e) {
-                return $taxAdaptedElementPrice;
-            }
-        }
-
-        // return default price
-        return $taxAdaptedElementPrice;
-    }
-
-    /**
-     * @param array $array
-     * @param string $key
-     * @param bool $multiple
-     * @return array
-     */
-    protected function mapPropertyToKey(array $array, string $key, bool $multiple = false): array
-    {
-        $result = [];
-        foreach ($array as $item) {
-            if (true === $multiple) {
-                $result[$item[$key]][] = $item;
-            } else {
-                $result[$item[$key]] = $item;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @param array $array
-     * @param array $properties
-     * @param bool $multiple
-     * @return array
-     */
-    protected function mapProperties(array $array, array $properties, bool $multiple = false): array
-    {
-        $result = [];
-        foreach ($properties as $subArray => $key) {
-            if (isset($array[$subArray])) {
-                $result[$subArray] = $this->mapPropertyToKey($array[$subArray], $key, $multiple);
-            } else {
-                if (true === $multiple) {
-                    $result[$subArray][] = $array[$subArray];
-                } else {
-                    $result[$subArray] = $array[$subArray];
-                }
-            }
-        }
-
-        return $result;
+        return $this->priceTable;
     }
 
     /**
      * @param array $statePrices
      * @param array $types
      */
-    protected function calculateBasePriceSurcharge(array $statePrices, array $types)
+    protected function calculateBasePriceSurcharge(array $statePrices, array $types): void
     {
         $surcharge = 1;
 
@@ -689,19 +415,6 @@ class SimplePriceCalculator implements PriceCalculator
 
         // set result
         $this->priceTable['base']['surcharge'] = $surcharge;
-    }
-
-    private function getSectionListGroupedBy(string $fieldName): array
-    {
-        $sectionList = [];
-        foreach ($this->state->getStateWithoutParameters() as $state) {
-            if (!isset($sectionList[$state['sectionId'].$state[$fieldName]] )) {
-                $sectionList[$state['sectionId'].$state[$fieldName]] = [];
-            }
-
-            $sectionList[$state['sectionId'].$state[$fieldName]][] = $state;
-        }
-        return array_values($sectionList);
     }
 
     /**
@@ -723,28 +436,31 @@ class SimplePriceCalculator implements PriceCalculator
 
         // for all sections
         $productSum = new Money(0, $this->currency);
-
         foreach ($sections as $key => $section) {
-            // yes we can take sectionId of the item with 0 index, as all items in the group have the same section id
+            if (count($section) < 1) {
+                continue;
+            }
+
+            // yes we can take sectionId and repetition of the item with 0 index, as all items in the group have the same section id and repetition value
             $sectionId = $section[0]['sectionId'];
+            $repetition = $section[0]['repetition'];
             $sectionUuid = new AptoUuid($sectionId);
+
+            // create section subarray, if not existing
+            if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                $this->priceTable['sections'][$sectionId][$repetition] = [
+                    'elements' => [],
+                    'own' => [],
+                    'sum' => []
+                ];
+            }
 
             // for all elements
             $sectionSum = new Money(0, $this->currency);
-
             foreach ($section as $element) {
                 $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
                 $repetition = $element['repetition'];
-
-                // create section subarray, if not existing
-                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
-                    $this->priceTable['sections'][$sectionId][$repetition] = [
-                        'elements' => [],
-                        'own' => [],
-                        'sum' => []
-                    ];
-                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -760,7 +476,6 @@ class SimplePriceCalculator implements PriceCalculator
                 }
 
                 // get element pseudo price
-                /** @var BasePriceProvider $elementPriceProvider */
                 $elementPseudoPrice = $elementPriceProvider->getPrice(
                     $this,
                     $sectionUuid,
@@ -836,30 +551,29 @@ class SimplePriceCalculator implements PriceCalculator
         $productSum = new Money(0, $this->currency);
 
         foreach ($sections as $section) {
+            if (count($section) < 1) {
+                continue;
+            }
 
+            // yes we can take sectionId and repetition of the item with 0 index, as all items in the group have the same section id and repetition value
             $sectionId = $section[0]['sectionId'];
+            $repetition = $section[0]['repetition'];
             $sectionUuid = new AptoUuid($sectionId);
 
-            $isBasePriceAdded = false;
+            // create section subarray, if not existing
+            if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
+                $this->priceTable['sections'][$sectionId][$repetition] = [
+                    'elements' => [],
+                    'own' => [],
+                    'sum' => []
+                ];
+            }
 
+            // for all elements
+            $sectionSum = $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] ?? new Money(0, $this->currency);
             foreach ($section as $element) {
                 $elementId = $element['elementId'];
                 $elementUuid = new AptoUuid($elementId);
-                $repetition = $element['repetition'];
-
-                // create section subarray, if not existing
-                if (!isset($this->priceTable['sections'][$sectionId][$repetition])) {
-                    $this->priceTable['sections'][$sectionId][$repetition] = [
-                        'elements' => [],
-                        'own' => [],
-                        'sum' => []
-                    ];
-                }
-
-                if (!$isBasePriceAdded) {
-                    $sectionSum = $this->priceTable['sections'][$sectionId][$repetition]['sum']['price'] ?? new Money(0, $this->currency);
-                    $isBasePriceAdded = true;
-                }
 
                 /** @var ElementDefinition $elementDefinition */
                 $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize($definitions[$elementId]['definition']);
@@ -889,7 +603,6 @@ class SimplePriceCalculator implements PriceCalculator
                 }
 
                 // get element pseudo price
-                /** @var ElementPriceProvider $elementPriceProvider */
                 $elementOwnPseudoPrice = $elementPriceProvider->getPrice(
                     $this,
                     $sectionUuid,
@@ -1035,107 +748,491 @@ class SimplePriceCalculator implements PriceCalculator
     }
 
     /**
-     * @param State $state
-     * @param Currency $currency
-     * @param TaxCalculator $taxCalculator
-     * @param array $customerGroup
-     * @param AptoUuid $productId
-     * @param Currency|null $fallbackCurrency
-     * @param float $currencyFactor
-     * @return array
-     * @throws AptoJsonSerializerException
-     * @throws InvalidUuidException
+     * @return string
      */
-    protected function getCalculatedPrice(
-        State $state,
-        Currency $currency,
-        TaxCalculator $taxCalculator,
-        array $customerGroup,
-        AptoUuid $productId,
-        Currency $fallbackCurrency = null,
-        float $currencyFactor = 1.0
-    ): array {
-        // set properties
-        $this->state = $state;
-        $this->currency = $currency;
-        $this->taxCalculator = $taxCalculator;
-        $this->customerGroup = $customerGroup;
-        $this->productId = $productId;
-        $this->fallbackCurrency = $fallbackCurrency !== null ? $fallbackCurrency : $currency;
-        $this->currencyFactor = $currencyFactor;
-        $this->elementIdIdentifierMapping = $this->getElementIdIdentifierMappingByProductId($productId);
-        $this->computedValues = $this->computedProductValueCalculator->calculateComputedValues($productId->getId(), $state);
+    public function getId(): string
+    {
+        return static::class;
+    }
 
-        // find and set fallback customer group
-        $this->setFallbackCustomerGroup();
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'SimplePriceCalculator';
+    }
 
-        // define types and key mapping
-        $keyMapping = [
-            'products' => 'productId',
-            'sections' => 'sectionId',
-            'elements' => 'elementId'
-        ];
-        $types = array_keys($keyMapping);
+    /**
+     * @return AptoUuid
+     */
+    public function getProductId(): AptoUuid
+    {
+        return $this->productId;
+    }
 
-        // create customer group id
-        $customerGroupId = new AptoUuid($customerGroup['id']);
+    /**
+     * @return State
+     */
+    public function getState(): State
+    {
+        return $this->state;
+    }
 
-        $shop = $this->shopFinder->findByDomain($this->requestStore->getHttpHost());
+    /**
+     * @return Currency
+     */
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
+    }
 
-        // get prices/discounts/definitions by state
-        $rawStatePrices = $this->productFinder->findPricesByState(
-            $productId->getId(),
-            $state,
-            $currency->getCode(),
-            $this->fallbackCurrency->getCode(),
-            $customerGroupId->getId(),
-            null === $this->fallbackCustomerGroupOrNull ? null : $this->fallbackCustomerGroupOrNull['id'],
-            $shop['id']
-        );
+    /**
+     * @return Currency
+     */
+    public function getFallbackCurrency(): Currency
+    {
+        return $this->fallbackCurrency;
+    }
 
-        if ($rawStatePrices['priceModifier'] === null || $rawStatePrices['priceModifier'] === '') {
-            $rawStatePrices['priceModifier'] = 100;
+    /**
+     * @return array
+     */
+    public function getCustomerGroup(): array
+    {
+        return $this->customerGroup;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getFallbackCustomerGroupOrNull(): ?array
+    {
+        return $this->fallbackCustomerGroupOrNull;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getUser(): ?array
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return TaxCalculator|null
+     */
+    public function getTaxCalculator(): ?TaxCalculator
+    {
+        return $this->taxCalculator;
+    }
+
+    /**
+     * @return array
+     */
+    public function getElementIdIdentifierMapping(): array
+    {
+        return $this->elementIdIdentifierMapping;
+    }
+
+    /**
+     * @return array
+     */
+    public function getComputedValues(): array
+    {
+        return $this->computedValues;
+    }
+
+    /**
+     * @param array $prices
+     * @return Money
+     */
+    public function getTaxAdaptedPriceByPreferredCustomerGroup(array $prices): Money
+    {
+        // lookup customer group id and currency
+        $customerGroupId = $this->customerGroup['id'];
+        foreach ($prices as $price) {
+            if ($price['customerGroupId'] === $customerGroupId && $price['currencyCode'] === $this->currency->getCode()) {
+                return new Money($price['amount'], new Currency($price['currencyCode']));
+            }
         }
 
-        $statePrices = [
-            'prices' => $this->mapProperties($rawStatePrices['prices'], $keyMapping, true),
-            'priceMatrices' => $this->mapProperties($rawStatePrices['priceMatrices'], $keyMapping),
-            'priceFormulas' => $this->mapProperties($rawStatePrices['priceFormulas'], $keyMapping, true),
-            'discounts' => $this->mapProperties($rawStatePrices['discounts'], $keyMapping),
-            'definitions' => $this->mapPropertyToKey($rawStatePrices['definitions'], 'elementId'),
-            'percentageSurcharges' => $this->mapProperties($rawStatePrices['percentageSurcharges'], $keyMapping)
-        ];
+        // lookup fallback customer group id (if defined) and currency
+        if (null !== $this->fallbackCustomerGroupOrNull) {
+            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
+            foreach ($prices as $price) {
+                if ($price['customerGroupId'] === $fallbackCustomerGroupId && $price['currencyCode'] === $this->currency->getCode()) {
+                    return $this->getTaxAdaptedPrice(
+                        new Money($price['amount'], new Currency($price['currencyCode']))
+                    );
+                }
+            }
+        }
 
-        $statePrices = $this->statePricesHook->getStatePrices($this, $statePrices);
+        // lookup customer group id and fallback currency
+        foreach ($prices as $price) {
+            if ($price['customerGroupId'] === $customerGroupId && $price['currencyCode'] === $this->fallbackCurrency->getCode()) {
+                // convert price from fallback currency to currency
+                return $this->convertCurrency(
+                    new Money($price['amount'], new Currency($price['currencyCode'])),
+                    $this->getCurrency(),
+                    $this->currencyFactor
+                );
+            }
+        }
 
-        // init price table
-        $this->priceTable = [
-            'base' => [
-                'surcharge' => 0.0,
-                'price' => null
-            ],
-            'sections' => [],
-            'discount' => 0.0,
-            'own' => [
-                'pseudoPrice' => null,
-                'price' => null
-            ],
-            'sum' => [
-                'pseudoPrice' => null,
-                'price' => null,
-                'netPrice' => null,
-                'grossPrice' => null
-            ]
-        ];
+        // lookup fallback customer group id (if defined) and fallback currency
+        if (null !== $this->fallbackCustomerGroupOrNull) {
+            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
+            foreach ($prices as $price) {
+                if ($price['customerGroupId'] === $fallbackCustomerGroupId && $price['currencyCode'] === $this->fallbackCurrency->getCode()) {
+                    // convert price from fallback currency to currency
+                    return $this->convertCurrency(
+                        $this->getTaxAdaptedPrice(
+                            new Money($price['amount'], new Currency($price['currencyCode']))
+                        ),
+                        $this->getCurrency(),
+                        $this->currencyFactor
+                    );
+                }
+            }
+        }
 
-        $this->priceModifier = floatval($rawStatePrices['priceModifier'] / 100 );
+        return new Money(0, $this->getCurrency());
+    }
 
-        $this->calculateBasePriceSurcharge($statePrices, $types);
-        $this->calculateBasePrice($statePrices);
-        $this->calculateElementPrices($statePrices);
-        array_walk_recursive($this->priceTable, array($this, 'addDomainPriceModifier'));
+    /**
+     * @param Money $fallBackCustomerGroupPrice
+     * @return Money
+     */
+    protected function getTaxAdaptedPrice(Money $fallBackCustomerGroupPrice): Money
+    {
+        if (null === $this->fallbackCustomerGroupOrNull) {
+            throw new \InvalidArgumentException('This method must only be used with a fallbackCustomerGroup set.');
+        }
 
-        return $this->priceTable;
+        $cGross = $this->customerGroup['inputGross'];
+        $fcGross = $this->fallbackCustomerGroupOrNull['inputGross'];
+
+        if ($cGross && !$fcGross) {
+            return $this->taxCalculator->addTax($fallBackCustomerGroupPrice);
+        }
+
+        if (!$cGross && $fcGross) {
+            return $this->taxCalculator->subTax($fallBackCustomerGroupPrice);
+        }
+
+        // $cGross === $fcGross, no conversion needed due to same tax settings on both customer groups
+        return $fallBackCustomerGroupPrice;
+    }
+
+    /**
+     * @param Money $taxAdaptedElementPrice
+     * @param array $priceMatrix
+     * @return Money
+     */
+    protected function applyPriceMatrix(Money $taxAdaptedElementPrice, array $priceMatrix): Money
+    {
+        // assert activated price matrix
+        if (count($priceMatrix) === 0 || !$priceMatrix['priceMatrixActive']) {
+            return $taxAdaptedElementPrice;
+        }
+
+        // try to calculate row and column
+        $values = array_merge($this->computedValues, [
+            '_anzahl_' => $this->state->getParameter(State::QUANTITY)
+        ]);
+        try {
+            $row = FormulaParser::parse($priceMatrix['priceMatrixRow'], $values, $this->mediaFileSystem);
+            $column = FormulaParser::parse($priceMatrix['priceMatrixColumn'], $values, $this->mediaFileSystem);
+        }
+        catch (FormulaParserException $e) {
+            return $taxAdaptedElementPrice;
+        }
+
+        // get price data
+        $priceMatrixElementPrices = $this->priceMatrixFinder->findNextHigherPriceByColumnRowValue(
+            $priceMatrix['priceMatrixId'],
+            floatval($row),
+            floatval($column),
+            $this->customerGroup['id'],
+            $this->fallbackCustomerGroupOrNull ? $this->fallbackCustomerGroupOrNull['id'] : null,
+            $this->currency->getCode(),
+            $this->fallbackCurrency->getCode()
+        );
+
+        // add preferred price
+        return $taxAdaptedElementPrice->add(
+            $this->getTaxAdaptedPriceByPreferredCustomerGroup($priceMatrixElementPrices)
+        );
+    }
+
+    /**
+     * @param Money $taxAdaptedElementPrice
+     * @param array $priceFormulas
+     * @return Money
+     */
+    protected function applyPriceFormulaByPreferredCustomerGroup(Money $taxAdaptedElementPrice, array $priceFormulas): Money
+    {
+        // lookup customer group id and currency
+        $customerGroupId = $this->customerGroup['id'];
+        foreach ($priceFormulas as $priceFormula) {
+            if ($priceFormula['customerGroupId'] === $customerGroupId && $priceFormula['currencyCode'] === $this->currency->getCode()) {
+                return (new Money(
+                    $this->parsePriceFormula($priceFormula['formula']),
+                    new Currency($priceFormula['currencyCode'])
+                ))->add($taxAdaptedElementPrice);
+            }
+        }
+
+        // lookup fallback customer group id (if defined) and currency
+        if (null !== $this->fallbackCustomerGroupOrNull) {
+            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
+            foreach ($priceFormulas as $priceFormula) {
+                if ($priceFormula['customerGroupId'] === $fallbackCustomerGroupId && $priceFormula['currencyCode'] === $this->currency->getCode()) {
+                    return $this->getTaxAdaptedPrice(
+                        new Money(
+                            $this->parsePriceFormula($priceFormula['formula']),
+                            new Currency($priceFormula['currencyCode'])
+                        )
+                    )->add($taxAdaptedElementPrice);
+                }
+            }
+        }
+
+        // lookup customer group id and fallback currency
+        foreach ($priceFormulas as $priceFormula) {
+            if ($priceFormula['customerGroupId'] === $customerGroupId && $priceFormula['currencyCode'] === $this->fallbackCurrency->getCode()) {
+                // convert price from fallback currency to currency
+                return $this->convertCurrency(
+                    new Money(
+                        $this->parsePriceFormula($priceFormula['formula']),
+                        new Currency($priceFormula['currencyCode'])
+                    ),
+                    $this->getCurrency(),
+                    $this->currencyFactor
+                )->add($taxAdaptedElementPrice);
+            }
+        }
+
+        // lookup fallback customer group id (if defined) and fallback currency
+        if (null !== $this->fallbackCustomerGroupOrNull) {
+            $fallbackCustomerGroupId = $this->fallbackCustomerGroupOrNull['id'];
+            foreach ($priceFormulas as $priceFormula) {
+                if ($priceFormula['customerGroupId'] === $fallbackCustomerGroupId && $priceFormula['currencyCode'] === $this->fallbackCurrency->getCode()) {
+                    // convert price from fallback currency to currency
+                    return $this->convertCurrency(
+                        $this->getTaxAdaptedPrice(
+                            new Money(
+                                $this->parsePriceFormula($priceFormula['formula']),
+                                new Currency($priceFormula['currencyCode'])
+                            )
+                        ),
+                        $this->getCurrency(),
+                        $this->currencyFactor
+                    )->add($taxAdaptedElementPrice);
+                }
+            }
+        }
+
+        return $taxAdaptedElementPrice;
+    }
+
+
+    /**
+     * @param string $formula
+     * @return string
+     */
+    protected function parsePriceFormula(string $formula): string
+    {
+        $values = array_merge($this->computedValues, [
+            '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
+            '_anzahl_' => $this->state->getParameter(State::QUANTITY)
+        ]);
+        try {
+            return FormulaParser::parse(
+                $formula,
+                $values,
+                $this->mediaFileSystem
+            );
+        }
+        catch (FormulaParserException $e) {
+            return '0';
+        }
+    }
+
+    /**
+     * @param Money $taxAdaptedElementPrice
+     * @param array $prices
+     * @return Money
+     */
+    protected function applyExtendedPriceCalculationFormula(Money $taxAdaptedElementPrice, array $prices): Money
+    {
+        // calculate price by formula
+        if (
+            count($prices) > 0 &&
+            array_key_exists('extendedPriceCalculationActive', $prices[0]) &&
+            array_key_exists('extendedPriceCalculationFormula', $prices[0]) &&
+            $prices[0]['extendedPriceCalculationActive']
+        ) {
+            $values = array_merge($this->computedValues, [
+                '_preis_' => $taxAdaptedElementPrice->getAmount(),
+                '_waehrung_' => $this->currency ? $this->currency->getCode() : $this->fallbackCurrency->getCode(),
+                '_anzahl_' => $this->state->getParameter(State::QUANTITY)
+            ]);
+            try {
+                $result = FormulaParser::parse(
+                    $prices[0]['extendedPriceCalculationFormula'],
+                    $values,
+                    $this->mediaFileSystem
+                );
+
+                return new Money(
+                    (string) round(floatval($result)),
+                    $taxAdaptedElementPrice->getCurrency()
+                );
+            }
+            catch (FormulaParserException $e) {
+                return $taxAdaptedElementPrice;
+            }
+        }
+
+        // return default price
+        return $taxAdaptedElementPrice;
+    }
+
+    /**
+     * @param array $array
+     * @param string $key
+     * @param bool $multiple
+     * @return array
+     */
+    protected function mapPropertyToKey(array $array, string $key, bool $multiple = false): array
+    {
+        $result = [];
+        foreach ($array as $item) {
+            if (true === $multiple) {
+                $result[$item[$key]][] = $item;
+            } else {
+                $result[$item[$key]] = $item;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param array $array
+     * @param array $properties
+     * @param bool $multiple
+     * @return array
+     */
+    protected function mapProperties(array $array, array $properties, bool $multiple = false): array
+    {
+        $result = [];
+        foreach ($properties as $subArray => $key) {
+            if (isset($array[$subArray])) {
+                $result[$subArray] = $this->mapPropertyToKey($array[$subArray], $key, $multiple);
+            } else {
+                if (true === $multiple) {
+                    $result[$subArray][] = $array[$subArray];
+                } else {
+                    $result[$subArray] = $array[$subArray];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $fieldName
+     * @return array
+     */
+    private function getSectionListGroupedBy(string $fieldName): array
+    {
+        $sectionList = [];
+        foreach ($this->state->getStateWithoutParameters() as $state) {
+            if (!isset($sectionList[$state['sectionId'].$state[$fieldName]] )) {
+                $sectionList[$state['sectionId'].$state[$fieldName]] = [];
+            }
+
+            $sectionList[$state['sectionId'].$state[$fieldName]][] = $state;
+        }
+        return array_values($sectionList);
+    }
+
+    /**
+     * @param array $rawStatePrices
+     * @param State $state
+     * @param string $key
+     * @return array|array[]
+     * @throws InvalidUuidException
+     */
+    private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state, string $key): array
+    {
+        $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices, $key);
+        $productConditionsResult = $this->productConditionFinder->findByIds($productConditionIds);
+        $productConditions = [];
+        foreach ($productConditionsResult['data'] as $element) {
+            $productConditions[$element['id']] = $element;
+        }
+
+        $newRawStatePrices = ['products' => [], 'sections' => [], 'elements' => []];
+
+        foreach (['products', 'sections', 'elements'] as $type) {
+            foreach ($rawStatePrices[$key][$type] as $price) {
+                $uniqueKey = $price['customerGroupId'] . $price['currencyCode'];
+                if (empty($price['productConditionId'])) {
+                    // if price is already set, a condition was already true so price must not be overwritten!
+                    if (!array_key_exists($uniqueKey, $newRawStatePrices[$type])) {
+                        unset($price['productConditionId']);
+                        $newRawStatePrices[$type][$uniqueKey] = $price;
+                    }
+                    continue;
+                }
+                $productCondition = $productConditions[$price['productConditionId']];
+
+                // @TODO: take care about repetition in DefaultCriterion
+                $criterion = new DefaultCriterion(
+                    true,
+                    new CompareOperator($productCondition['operator']),
+                    $productCondition['value'],
+                    new AptoUuid($productCondition['sectionId']),
+                    new AptoUuid($productCondition['elementId']),
+                    $productCondition['property']
+                );
+
+                if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                    unset($price['productConditionId']);
+                    $newRawStatePrices[$type][$uniqueKey] = $price;
+                }
+            }
+
+            // remove temp unique key
+            $newRawStatePrices[$type] = array_values($newRawStatePrices[$type]);
+        }
+
+        return $newRawStatePrices;
+    }
+
+    /**
+     * @param array $rawStatePrices
+     * @param string $key
+     * @return array
+     */
+    private function collectAllProductConditionIdsFromRawStatement(array $rawStatePrices, string $key): array
+    {
+        $ids = [];
+
+        foreach (['products', 'sections', 'elements'] as $category) {
+            foreach ($rawStatePrices[$key][$category] as $price) {
+                if (!empty($price['productConditionId'])) {
+                    $ids[] = $price['productConditionId'];
+                }
+            }
+        }
+
+        return $ids;
     }
 
     /**
@@ -1167,7 +1264,7 @@ class SimplePriceCalculator implements PriceCalculator
     /**
      * set fallback customer group by using the appropriate finder method
      */
-    protected function setFallbackCustomerGroup()
+    protected function setFallbackCustomerGroup(): void
     {
         $this->fallbackCustomerGroupOrNull = $this->customerGroup['fallback'] ? null : $this->customerGroupFinder->findFallbackCustomerGroup();
     }
@@ -1178,7 +1275,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param float $factor
      * @return Money
      */
-    protected function convertCurrency(Money $price, Currency $currency, float $factor)
+    protected function convertCurrency(Money $price, Currency $currency, float $factor): Money
     {
         $pair = [
             $price->getCurrency()->getCode() => [
@@ -1196,7 +1293,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param $price
      * @return void
      */
-    protected function addDomainPriceModifier(&$price)
+    protected function addDomainPriceModifier(&$price): void
     {
         if (is_a($price, Money::class)) {
             $price = $price->multiply($this->priceModifier);

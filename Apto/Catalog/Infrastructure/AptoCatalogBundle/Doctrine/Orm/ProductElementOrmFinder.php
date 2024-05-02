@@ -197,7 +197,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
                     ['id.id', 'id'],
                     ['price.amount', 'amount'],
                     ['price.currency.code', 'currencyCode'],
-                    ['customerGroupId.id', 'customerGroupId']
+                    ['customerGroupId.id', 'customerGroupId'],
+                    ['productConditionId', 'productConditionId'],
                 ]
             ])
             ->setJoins([
@@ -230,7 +231,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
                     ['id.id', 'id'],
                     ['formula', 'formula'],
                     ['currency.code', 'currencyCode'],
-                    ['customerGroupId.id', 'customerGroupId']
+                    ['customerGroupId.id', 'customerGroupId'],
+                    ['productConditionId', 'productConditionId'],
                 ]
             ])
             ->setJoins([

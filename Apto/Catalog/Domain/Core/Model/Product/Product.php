@@ -888,11 +888,12 @@ class Product extends AptoAggregate
      * @param AptoUuid $sectionId
      * @param Money $aptoPrice
      * @param AptoUuid $customerGroupId
+     * @param AptoUuid|null $productConditionId
      * @return Product
      * @throws AptoPriceDuplicateException
      * @throws InvalidUuidException
      */
-    public function addSectionPrice(AptoUuid $sectionId, Money $aptoPrice, AptoUuid $customerGroupId): Product
+    public function addSectionPrice(AptoUuid $sectionId, Money $aptoPrice, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null): Product
     {
         // if section does not exists anymore we have nothing to do
         $section = $this->getSection($sectionId);
@@ -901,7 +902,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to section
-        $section->addAptoPrice($aptoPrice, $customerGroupId);
+        $section->addAptoPrice($aptoPrice, $customerGroupId, $productConditionId);
 
         return $this;
     }
@@ -2108,7 +2109,7 @@ class Product extends AptoAggregate
      * @throws AptoPriceDuplicateException
      * @throws InvalidUuidException
      */
-    public function addElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Money $aptoPrice, AptoUuid $customerGroupId): Product
+    public function addElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Money $aptoPrice, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null): Product
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2117,7 +2118,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to element
-        $element->addAptoPrice($aptoPrice, $customerGroupId);
+        $element->addAptoPrice($aptoPrice, $customerGroupId, $productConditionId);
 
         return $this;
     }
@@ -2132,7 +2133,7 @@ class Product extends AptoAggregate
      * @throws AptoPriceFormulaDuplicateException
      * @throws InvalidUuidException
      */
-    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId): Product
+    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId): Product
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2141,7 +2142,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to element
-        $element->addAptoPriceFormula($formula, $currency, $customerGroupId);
+        $element->addAptoPriceFormula($formula, $currency, $customerGroupId, $productConditionId);
 
         return $this;
     }

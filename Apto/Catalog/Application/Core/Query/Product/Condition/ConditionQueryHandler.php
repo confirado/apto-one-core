@@ -3,20 +3,19 @@
 namespace Apto\Catalog\Application\Core\Query\Product\Condition;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
+use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 
 class ConditionQueryHandler implements QueryHandlerInterface
 {
-    /**
-     * @var
-     */
-    private $productConditionFinder;
 
     /**
-     * @param ProductConditionFinder $productConditionFinder
+     * @var ProductFinder
      */
-    public function __construct(ProductConditionFinder $productConditionFinder)
+    private ProductFinder $productFinder;
+
+    public function __construct(ProductFinder $productFinder)
     {
-        $this->productConditionFinder = $productConditionFinder;
+        $this->productFinder = $productFinder;
     }
 
     /**
@@ -25,7 +24,7 @@ class ConditionQueryHandler implements QueryHandlerInterface
      */
     public function handleFindConditions(FindConditions $query)
     {
-        return $this->productConditionFinder->findConditions($query->getProductId());
+        return $this->productFinder->findProductConditions($query->getProductId());
     }
 
     /**
