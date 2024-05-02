@@ -1181,9 +1181,13 @@ class SimplePriceCalculator implements PriceCalculator
 
         foreach (['products', 'sections', 'elements'] as $type) {
             foreach ($rawStatePrices[$key][$type] as $price) {
+                $uniqueKey = $price['customerGroupId'] . $price['currencyCode'];
                 if (empty($price['productConditionId'])) {
-                    unset($price['productConditionId']);
-                    $newRawStatePrices[$type][] = $price;
+                    // if price is already set, a condition was already true so price must not be overwritten!
+                    if (!array_key_exists($uniqueKey, $newRawStatePrices[$type])) {
+                        unset($price['productConditionId']);
+                        $newRawStatePrices[$type][$uniqueKey] = $price;
+                    }
                     continue;
                 }
                 $productCondition = $productConditions[$price['productConditionId']];
@@ -1200,9 +1204,12 @@ class SimplePriceCalculator implements PriceCalculator
 
                 if ($criterion->isFulfilled($state, new RulePayload([]))) {
                     unset($price['productConditionId']);
-                    $newRawStatePrices[$type][] = $price;
+                    $newRawStatePrices[$type][$uniqueKey] = $price;
                 }
             }
+
+            // remove temp unique key
+            $newRawStatePrices[$type] = array_values($newRawStatePrices[$type]);
         }
 
         return $newRawStatePrices;
