@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Apto\Catalog\Domain\Core\Model\Product\Condition\Condition" table="apto_product_condition">
+    <entity name="Apto\Catalog\Domain\Core\Model\Product\Condition\Condition" table="apto_product_condition_set_condition">
         <indexes>
             <index name="AptoSurrogateId" columns="surrogate_id"/>
             <index name="AptoCreated" columns="created"/>
@@ -15,7 +15,6 @@
         </id>
 
         <field name="created" column="created" type="datetime"/>
-        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Identifier" name="identifier"/>
 
         <embedded name="id" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false"/>
         <embedded name="operator" class="Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator" use-column-prefix="false"/>
@@ -35,8 +34,8 @@
 
         <field name="value" column="value" type="string" nullable="true"/>
 
-        <many-to-one field="product" target-entity="Apto\Catalog\Domain\Core\Model\Product\Product" inversed-by="conditions">
-            <join-column name="product_id" referenced-column-name="surrogate_id" />
+        <many-to-one field="conditionSet" target-entity="Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet" inversed-by="conditions">
+            <join-column name="condition_set_id" referenced-column-name="surrogate_id" />
         </many-to-one>
     </entity>
 </doctrine-mapping>

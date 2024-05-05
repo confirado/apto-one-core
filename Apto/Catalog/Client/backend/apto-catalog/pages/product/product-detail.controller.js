@@ -120,7 +120,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             $scope.fetchSectionsElements(productId);
             $scope.fetchRules(productId);
             $scope.fetchConditionSets(productId);
-            $scope.fetchConditions(productId);
+            //$scope.fetchConditions(productId);
             $scope.fetchComputedProductValues(productId);
             $scope.fetchPrices(productId);
             $scope.fetchDiscounts(productId);

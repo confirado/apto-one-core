@@ -2,6 +2,7 @@
 
 namespace Apto\Catalog\Domain\Core\Model\Product\Condition;
 
+use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Apto\Base\Domain\Core\Model\AptoEntity;
@@ -60,6 +61,14 @@ class ConditionSet extends AptoEntity
     }
 
     /**
+     * @return Product
+     */
+    public function getProduct(): Product
+    {
+        return $this->product;
+    }
+
+    /**
      * @return Identifier
      */
     public function getIdentifier(): Identifier
@@ -97,5 +106,108 @@ class ConditionSet extends AptoEntity
         }
         $this->conditionsOperator = $operator;
         return $this;
+    }
+
+    /**
+     * @param CriterionOperator $operator
+     * @param int $type
+     * @param AptoUuid|null $sectionId
+     * @param AptoUuid|null $elementId
+     * @param string|null $property
+     * @param ComputedProductValue|null $computedProductValue
+     * @param string|null $value
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function addCondition(
+        CriterionOperator $operator,
+        int $type = 0,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
+    ): ConditionSet {
+        $conditionId = $this->nextConditionId();
+        $this->conditions->set(
+            $conditionId->getId(),
+            new Condition(
+                $this,
+                $conditionId,
+                $operator,
+                $type,
+                $sectionId,
+                $elementId,
+                $property,
+                $computedProductValue,
+                $value,
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return $this
+     */
+    public function removeCondition(AptoUuid $conditionId): ConditionSet
+    {
+        if ($this->hasCondition($conditionId)) {
+            $this->conditions->remove($conditionId->getId());
+        }
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return Condition|null
+     */
+    public function getCondition(AptoUuid $conditionId): ?Condition
+    {
+        if ($this->hasCondition($conditionId)) {
+            return $this->conditions->get($conditionId->getId());
+        }
+
+        return null;
+    }
+
+    /**
+     * @param AptoUuid $conditionId
+     * @param Collection $entityMapping
+     * @return AptoUuid|null
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function copyCondition(AptoUuid $conditionId, Collection &$entityMapping): ?AptoUuid
+    {
+        $newConditionId = $this->nextConditionId();
+        $ordCondition = $this->getCondition($conditionId);
+        $copiedCondition = $ordCondition->copy($newConditionId, $entityMapping);
+        $this->conditions->set($newConditionId->getId(), $copiedCondition);
+
+        return $copiedCondition->getId();
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @return bool
+     */
+    private function hasCondition(AptoUuid $id): bool
+    {
+        return $this->conditions->containsKey($id->getId());
+    }
+
+    /**
+     * @return AptoUuid
+     */
+    private function nextConditionId(): AptoUuid
+    {
+        return new AptoUuid();
     }
 }

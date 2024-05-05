@@ -42,9 +42,45 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
     /**
      * @param string $id
      * @return array|null
+     * @throws DqlBuilderException
      */
     public function findConditions(string $id): ?array
     {
-        return [];
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($id)
+            ->setValues([
+                'c' => [
+                ],
+                'csc' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'c' => [
+                    ['conditions', 'csc', 'id']
+                ],
+                'csc' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'csc' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
+        return $builder->getSingleResultOrNull($this->entityManager);
     }
 }

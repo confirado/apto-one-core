@@ -85,6 +85,111 @@ class ProductConditionHandler extends ProductChildHandler
     }
 
     /**
+     * @param AddConditionSetCondition $command
+     * @return void
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     * @throws InvalidUuidException
+     */
+    public function handleAddConditionSetCondition(AddConditionSetCondition $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+        $computedProductValue = null;
+        if ($command->getComputedValueId() !== null) {
+            /** @var ComputedProductValue $value */
+            foreach ($product->getComputedProductValues() as $value) {
+                if ($value->getId()->getId() === $command->getComputedValueId()) {
+                    $computedProductValue = $value;
+                }
+            }
+        }
+
+        if (null !== $product) {
+            $product->addConditionSetCondition(
+                new AptoUuid($command->getConditionSetId()),
+                new CriterionOperator($command->getOperator()),
+                $command->getType(),
+                null !== $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null,
+                null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
+                $command->getProperty(),
+                $computedProductValue,
+                $command->getValue()
+            );
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
+     * @param UpdateConditionSetCondition $command
+     * @return void
+     * @throws CriterionInvalidOperatorException
+     * @throws InvalidUuidException
+     */
+    public function handleUpdateConditionSetCondition(UpdateConditionSetCondition $command): void
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+
+        if (null !== $product) {
+            $conditionSetId = new AptoUuid($command->getConditionSetId());
+            $conditionId = new AptoUuid($command->getConditionId());
+            $type = $command->getType();
+            $operator = new CriterionOperator($command->getOperator());
+            $value = $command->getValue();
+            $computedValueId = $command->getComputedValueId() ? new AptoUuid($command->getComputedValueId()) : null;
+            $sectionId = $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null;
+            $elementId = $command->getElementId() ? new AptoUuid($command->getElementId()) : null;
+            $property = $command->getProperty();
+
+            $product->setConditionSetCondition($conditionSetId, $conditionId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);
+
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
+     * @param CopyConditionSetCondition $command
+     * @return void
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     * @throws InvalidUuidException
+     */
+    public function handleCopyConditionSetCondition(CopyConditionSetCondition $command): void
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+
+        if (null !== $product) {
+            $product->copyConditionSetCondition(
+                new AptoUuid($command->getConditionSetId()),
+                new AptoUuid($command->getConditionId())
+            );
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
+     * @param RemoveConditionSetCondition $command
+     * @return void
+     * @throws InvalidUuidException
+     */
+    public function handleRemoveConditionSetCondition(RemoveConditionSetCondition $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+
+        if (null !== $product) {
+            $product->removeConditionSetCondition(
+                new AptoUuid($command->getConditionSetId()),
+                new AptoUuid($command->getConditionId())
+            );
+
+            $this->productRepository->update($product);
+        }
+    }
+
+    /**
      * @param AddCondition $command
      * @return void
      * @throws CriterionInvalidOperatorException
@@ -204,6 +309,26 @@ class ProductConditionHandler extends ProductChildHandler
 
         yield RemoveConditionSet::class => [
             'method' => 'handleRemoveConditionSet',
+            'bus' => 'command_bus'
+        ];
+
+        yield AddConditionSetCondition::class => [
+            'method' => 'handleAddConditionSetCondition',
+            'bus' => 'command_bus'
+        ];
+
+        yield UpdateConditionSetCondition::class => [
+            'method' => 'handleUpdateConditionSetCondition',
+            'bus' => 'command_bus'
+        ];
+
+        yield CopyConditionSetCondition::class => [
+            'method' => 'handleCopyConditionSetCondition',
+            'bus' => 'command_bus'
+        ];
+
+        yield RemoveConditionSetCondition::class => [
+            'method' => 'handleRemoveConditionSetCondition',
             'bus' => 'command_bus'
         ];
 

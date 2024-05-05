@@ -87,12 +87,6 @@
                 <cascade-remove/>
             </cascade>
         </one-to-many>
-        <one-to-many field="conditions" target-entity="Apto\Catalog\Domain\Core\Model\Product\Condition\Condition" mapped-by="product" index-by="id.id" orphan-removal="true">
-            <cascade>
-                <cascade-persist/>
-                <cascade-remove/>
-            </cascade>
-        </one-to-many>
         <one-to-many field="conditionSets" target-entity="Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet" mapped-by="product" index-by="id.id" orphan-removal="true">
             <cascade>
                 <cascade-persist/>

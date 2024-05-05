@@ -22,5 +22,12 @@
         <many-to-one field="product" target-entity="Apto\Catalog\Domain\Core\Model\Product\Product" inversed-by="conditionSets">
             <join-column name="product_id" referenced-column-name="surrogate_id" />
         </many-to-one>
+
+        <one-to-many field="conditions" target-entity="Apto\Catalog\Domain\Core\Model\Product\Condition\Condition" mapped-by="conditionSet" index-by="id.id" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

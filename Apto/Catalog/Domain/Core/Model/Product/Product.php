@@ -18,7 +18,6 @@ use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
 use Apto\Catalog\Domain\Core\Model\Group\Group;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
-use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\Criterion;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
@@ -208,11 +207,6 @@ class Product extends AptoAggregate
     /**
      * @var Collection
      */
-    protected $conditions;
-
-    /**
-     * @var Collection
-     */
     protected $conditionSets;
 
     /**
@@ -247,7 +241,6 @@ class Product extends AptoAggregate
         $this->previewImage = null;
         $this->filterProperties = new ArrayCollection();
         $this->domainProperties = new ArrayCollection();
-        $this->conditions = new ArrayCollection();
         $this->conditionSets = new ArrayCollection();
         $this->keepSectionOrder = true;
     }
@@ -3691,6 +3684,9 @@ class Product extends AptoAggregate
         // set rules
         $product->rules = $this->copyRules($entityMapping);
 
+        // @todo copy conditionSets
+        //$product->conditionSets = $this->copyConditionSets($entityMapping);
+
         // set properties
         $product
             ->setDescription($this->getDescription())
@@ -3950,6 +3946,9 @@ class Product extends AptoAggregate
         }
 
         $condition = $rule->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
 
         $sectionId = $condition->getSectionId();
         $elementId = $condition->getElementId();
@@ -4018,6 +4017,52 @@ class Product extends AptoAggregate
         }
 
         $rule->copyImplication($implicationId, $entityMapping);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param AptoUuid $conditionId
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function copyConditionSetCondition(AptoUuid $conditionSetId, AptoUuid $conditionId): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+        if ($conditionSet === null) {
+            return $this;
+        }
+
+        $condition = $conditionSet->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
+
+        $sectionId = $condition->getSectionId();
+        $elementId = $condition->getElementId();
+        $computedProductValue = $condition->getComputedProductValue();
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($conditionSet->getId()->getId(), $conditionSet);
+
+        if ($sectionId !== null) {
+            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
+        }
+
+        if ($elementId !== null) {
+            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
+        }
+
+        if ($computedProductValue !== null) {
+            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+        }
+
+        $conditionSet->copyCondition($conditionId, $entityMapping);
 
         return $this;
     }
@@ -4115,190 +4160,9 @@ class Product extends AptoAggregate
         }
     }
 
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function copyCondition(AptoUuid $conditionId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
+    /* @todo needs to be reimplemented
 
-        if ($condition === null) {
-            return $this;
-        }
-
-        $entityMapping = new ArrayCollection();
-        $entityMapping->set($this->getId()->getId(), $this);
-
-        $sectionId = $condition->getSectionId();
-        $elementId = $condition->getElementId();
-        $computedProductValue = $condition->getComputedProductValue();
-
-        if ($sectionId !== null) {
-            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
-        }
-
-        if ($elementId !== null) {
-            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
-        }
-
-        if ($computedProductValue !== null) {
-            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
-        }
-
-        $newConditionId = $this->nextConditionId();
-
-        $copiedCondition = $condition->copy($newConditionId, $entityMapping);
-        $this->conditions->set($newConditionId->getId(), $copiedCondition);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return Condition|null
-     */
-    private function getProductCondition(AptoUuid $conditionId): ?Condition
-    {
-        if ($this->hasProductCondition($conditionId)) {
-            return $this->conditions->get($conditionId->getId());
-        }
-
-        return null;
-    }
-
-    /**
-     * @return AptoUuid
-     */
-    public function nextConditionId(): AptoUuid
-    {
-        return new AptoUuid();
-    }
-
-    /**
-     * @param AptoUuid $id
-     * @return bool
-     */
-    public function hasProductCondition(AptoUuid $id): bool
-    {
-        return $this->conditions->containsKey($id->getId());
-    }
-
-    /**
-     * @param Identifier $identifier
-     * @param CriterionOperator $operator
-     * @param int $type
-     * @param AptoUuid|null $sectionId
-     * @param AptoUuid|null $elementId
-     * @param string|null $property
-     * @param ComputedProductValue|null $computedProductValue
-     * @param string|null $value
-     * @return $this
-     * @throws CriterionInvalidOperatorException
-     * @throws CriterionInvalidPropertyException
-     * @throws CriterionInvalidTypeException
-     * @throws CriterionInvalidValueException
-     */
-    public function addProductCondition(
-        Identifier            $identifier,
-        CriterionOperator     $operator,
-        int                   $type = 0,
-        ?AptoUuid             $sectionId = null,
-        ?AptoUuid             $elementId = null,
-        ?string               $property = null,
-        ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
-    ): Product {
-        $conditionId = $this->nextConditionId();
-        $this->conditions->set(
-            $conditionId->getId(),
-            new Condition(
-                $this,
-                $conditionId,
-                $identifier,
-                $operator,
-                $type,
-                $sectionId,
-                $elementId,
-                $property,
-                $computedProductValue,
-                $value,
-            )
-        );
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param Identifier $identifier
-     * @param int $type
-     * @param CriterionOperator $operator
-     * @param string $value
-     * @param AptoUuid|null $computedValueId
-     * @param AptoUuid|null $sectionId
-     * @param AptoUuid|null $elementId
-     * @param string|null $property
-     * @return $this
-     */
-    public function setProductCondition(
-        AptoUuid          $conditionId,
-        Identifier        $identifier,
-        int               $type,
-        AptoUuid          $computedValueId = null,
-        AptoUuid          $sectionId = null,
-        AptoUuid          $elementId = null,
-        string            $property = null,
-        CriterionOperator $operator,
-        string            $value,
-    ): Product {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
-            return $this;
-        }
-
-        // identifier is required in both cases, so we don't check if it is there or not
-        $condition->setIdentifier($identifier);
-
-        // type is required in both cases, so we don't check if it is there or not
-        $condition->setType($type);
-
-        if ($type === Criterion::STANDARD_TYPE) {
-            $condition->setSectionId($sectionId);
-            $condition->setElementId($elementId);
-            $condition->setProperty($property);
-
-            $condition->setComputedProductValue(null);
-        }
-        else if ($type === Criterion::COMPUTED_VALUE_TYPE) {
-            $condition->setComputedProductValue($this->getComputedProductValue($computedValueId));
-
-            $condition->setSectionId(null);
-            $condition->setElementId(null);
-            $condition->setProperty(null);
-        }
-
-        // operator is required in both cases
-        $condition->setOperator($operator);
-
-        // value can be null, we might want to unset the value
-        $condition->setValue($value);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function removeCondition(AptoUuid $conditionId): Product
-    {
-        if ($this->conditions->containsKey($conditionId->getId())) {
-            $this->conditions->remove($conditionId->getId());
-        }
-        return $this;
-    }
+    */
 
     /**
      * @return AptoUuid
@@ -4415,5 +4279,117 @@ class Product extends AptoAggregate
         }
 
         return null;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param CriterionOperator $operator
+     * @param int $type
+     * @param AptoUuid|null $sectionId
+     * @param AptoUuid|null $elementId
+     * @param string|null $property
+     * @param ComputedProductValue|null $computedProductValue
+     * @param string|null $value
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function addConditionSetCondition(
+        AptoUuid $conditionSetId,
+        CriterionOperator $operator,
+        int $type = 0,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
+        ?ComputedProductValue $computedProductValue = null,
+        ?string $value = null
+    ): Product {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            $conditionSet->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param AptoUuid $conditionId
+     * @param int $type
+     * @param CriterionOperator $operator
+     * @param string $value
+     * @param AptoUuid|null $computedValueId
+     * @param AptoUuid|null $sectionId
+     * @param AptoUuid|null $elementId
+     * @param string|null $property
+     * @return $this
+     */
+    public function setConditionSetCondition(
+        AptoUuid          $conditionSetId,
+        AptoUuid          $conditionId,
+        int               $type,
+        CriterionOperator $operator,
+        string            $value,
+        AptoUuid          $computedValueId = null,
+        AptoUuid          $sectionId = null,
+        AptoUuid          $elementId = null,
+        string            $property = null,
+    ): Product {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+        if ($conditionSet === null) {
+            return $this;
+        }
+
+        $condition = $conditionSet->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
+
+        // type is required in both cases, so we don't check if it is there or not
+        $condition->setType($type);
+
+        if ($type === Criterion::STANDARD_TYPE) {
+            $condition->setSectionId($sectionId);
+            $condition->setElementId($elementId);
+            $condition->setProperty($property);
+
+            $condition->setComputedProductValue(null);
+        }
+        else if ($type === Criterion::COMPUTED_VALUE_TYPE) {
+            $condition->setComputedProductValue($this->getComputedProductValue($computedValueId));
+
+            $condition->setSectionId(null);
+            $condition->setElementId(null);
+            $condition->setProperty(null);
+        }
+
+        // operator is required in both cases
+        $condition->setOperator($operator);
+
+        // value can be null, we might want to unset the value
+        $condition->setValue($value);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param AptoUuid $conditionId
+     * @return $this
+     */
+    public function removeConditionSetCondition(
+        AptoUuid $conditionSetId,
+        AptoUuid $conditionId,
+    ): Product {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            $conditionSet->removeCondition($conditionId);
+        }
+
+        return $this;
     }
 }
