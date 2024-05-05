@@ -1,0 +1,42 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex data-cy="condition-set-identifier">
+        <label>Kennung:</label>
+        <input ng-model="newConditionSetIdentifier.value">
+    </md-input-container>
+    <div flex="5"></div>
+
+    <md-input-container data-cy="condition-set-insert-button">
+        <md-button ng-disabled="!newConditionSetIdentifier.value" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addConditionSet()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+<md-table-container class="md-whiteframe-2dp" data-cy="condition-set-table">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Kennung</th>
+            <th md-column style="width:170px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="conditionSet in conditionSets">
+            <td md-cell>{{ conditionSet.identifier }}</td>
+            <td md-cell>
+                <md-button
+                    title="Bearbeiten"
+                    class="md-icon-button md-primary"
+                    ng-click="editConditionSet($event, conditionSet.id)">
+                    <md-icon md-font-set="fa">&#xf044</md-icon>
+                </md-button>
+
+                <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    apto-confirm-remove="removeConditionSet(conditionSet.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

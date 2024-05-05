@@ -19,6 +19,7 @@ use Apto\Catalog\Domain\Core\Model\Group\Group;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\Criterion;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
@@ -210,6 +211,11 @@ class Product extends AptoAggregate
     protected $conditions;
 
     /**
+     * @var Collection
+     */
+    protected $conditionSets;
+
+    /**
      * Product constructor.
      * @param AptoUuid $id
      * @param Identifier $identifier
@@ -242,6 +248,7 @@ class Product extends AptoAggregate
         $this->filterProperties = new ArrayCollection();
         $this->domainProperties = new ArrayCollection();
         $this->conditions = new ArrayCollection();
+        $this->conditionSets = new ArrayCollection();
         $this->keepSectionOrder = true;
     }
 
@@ -4170,7 +4177,6 @@ class Product extends AptoAggregate
         return null;
     }
 
-
     /**
      * @return AptoUuid
      */
@@ -4473,5 +4479,122 @@ class Product extends AptoAggregate
             }
         }
         return $conditionIds;
+    }
+
+    /**
+     * @return AptoUuid
+     */
+    public function nextConditionSetId(): AptoUuid
+    {
+        return new AptoUuid();
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @return bool
+     */
+    private function conditionSetIdentifierExists(Identifier $identifier): bool
+    {
+        /** @var ConditionSet $conditionSet */
+        foreach ($this->conditionSets as $conditionSet) {
+            if ($conditionSet->getIdentifier()->equals($identifier)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @return $this
+     * @throws IdentifierUniqueException
+     */
+    public function addConditionSet(Identifier $identifier): Product
+    {
+        if ($this->conditionSetIdentifierExists($identifier)) {
+            throw new IdentifierUniqueException('ConditionSet Identifier must be unique within a collection!');
+        }
+
+        $conditionSetId = $this->nextConditionSetId();
+
+        $this->conditionSets->set(
+            $conditionSetId->getId(),
+            new ConditionSet($conditionSetId, $this, $identifier)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param Identifier $newIdentifier
+     * @return $this
+     * @throws IdentifierUniqueException
+     */
+    public function setConditionSetIdentifier(AptoUuid $conditionSetId, Identifier $newIdentifier): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            if (!$conditionSet->getIdentifier()->equals($newIdentifier) && $this->conditionSetIdentifierExists($newIdentifier)) {
+                throw new IdentifierUniqueException('ConditionSet Identifier must be unique within a collection!');
+            }
+
+            $conditionSet->setIdentifier($newIdentifier);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param int $operator
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     */
+    public function setConditionSetConditionsOperator(AptoUuid $conditionSetId, int $operator): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            $conditionSet->setConditionsOperator($operator);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @return $this
+     */
+    public function removeConditionSet(AptoUuid $conditionSetId): Product
+    {
+        if ($this->hasConditionSet($conditionSetId)) {
+            $this->conditionSets->remove($conditionSetId->getId());
+        }
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @return bool
+     */
+    public function hasConditionSet(AptoUuid $id): bool
+    {
+        return $this->conditionSets->containsKey($id->getId());
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @return ConditionSet|null
+     */
+    private function getConditionSet(AptoUuid $id): ?ConditionSet
+    {
+        if ($this->hasConditionSet($id)) {
+            return $this->conditionSets->get($id->getId());
+        }
+
+        return null;
     }
 }

@@ -8,13 +8,17 @@ import ComputedValuesTab from './computed-values-tab.html';
 import DiscountTab from './discount-tab.html';
 import CustomPropertiesTab from './custom-properties-tab.html';
 import FilterPropertyTab from './filter-properties-tab.html';
-import ConditionTab from './condition-tab.html'
+import ConditionTab from './condition-tab.html';
+import ConditionSetTab from './condition-set-tab.html';
 
 import SectionDetailTemplate from './section/section-detail.controller.html';
 import SectionDetailController from './section/section-detail.controller';
 
 import RuleDetailTemplate from './rule/rule-detail.controller.html';
 import RuleDetailController from './rule/rule-detail.controller';
+
+import ConditionSetDetailTemplate from './condition-set/condition-set-detail.controller.html';
+import ConditionSetDetailController from './condition-set/condition-set-detail.controller';
 
 import ComputedValueDetailTemplate from './computedValue/computed-value-detail.controller.html';
 import ComputedValueDetailController from './computedValue/computed-value-detail.controller';
@@ -32,6 +36,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $templateCache.put('catalog/pages/product/custom-properties-tab.html', CustomPropertiesTab);
     $templateCache.put('catalog/pages/product/filter-properties-tab.html', FilterPropertyTab);
     $templateCache.put('catalog/pages/product/condition-tab.html', ConditionTab);
+    $templateCache.put('catalog/pages/product/condition-set-tab.html', ConditionSetTab);
 
     const subscribedActions = $ngRedux.connect(mapState, {
         productsFetch: ProductActions.productsFetch,
@@ -62,6 +67,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         addProductRule: ProductActions.addProductRule,
         updateProductRule: ProductActions.updateProductRule,
         removeProductRule: ProductActions.removeProductRule,
+        fetchConditionSets: ProductActions.fetchConditionSets,
+        addProductConditionSet: ProductActions.addProductConditionSet,
+        removeProductConditionSet: ProductActions.removeProductConditionSet,
         copyProductRule: ProductActions.copyProductRule,
         setDetailValue: ProductActions.setDetailValue,
         availableShopsFetch: ProductActions.availableShopsFetch,
@@ -88,6 +96,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             sections: state.product.sections,
             sectionsElements: state.product.sectionsElements,
             rules: state.product.rules,
+            conditionSets: state.product.conditionSets,
             conditions: state.product.conditions,
             operatorsActive: state.rule.operatorsActive,
             operatorsEqual: state.rule.operatorsEqual,
@@ -110,6 +119,7 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
             $scope.fetchSections(productId);
             $scope.fetchSectionsElements(productId);
             $scope.fetchRules(productId);
+            $scope.fetchConditionSets(productId);
             $scope.fetchConditions(productId);
             $scope.fetchComputedProductValues(productId);
             $scope.fetchPrices(productId);
@@ -489,6 +499,37 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         return Object.keys(definitionClass.properties);
     }
 
+    function addConditionSet() {
+        $scope.addProductConditionSet(productId, $scope.newConditionSetIdentifier.value).then(() => {
+            $scope.newConditionSetIdentifier = {value: ''};
+            $scope.fetchConditionSets(productId);
+        });
+    }
+
+    function editConditionSet($event, conditionSetId) {
+        const parentEl = angular.element(document.body);
+        $mdDialog.show({
+            multiple: true,
+            parent: parentEl,
+            targetEvent: $event,
+            template: ConditionSetDetailTemplate,
+            clickOutsideToClose: true,
+            fullscreen: true,
+            locals: {
+                targetEvent: $event,
+                productId: productId,
+                conditionSetId: conditionSetId
+            },
+            controller: ConditionSetDetailController
+        });
+    }
+
+    function removeConditionSet(conditionSetId) {
+        $scope.removeProductConditionSet(productId, conditionSetId).then(() => {
+            $scope.fetchConditionSets(productId);
+        });
+    }
+
     function addCondition() {
         const conditions = getValidConditions();
 
@@ -860,6 +901,9 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.newRuleName = {
         value: ''
     };
+    $scope.newConditionSetIdentifier = {
+        value: ''
+    };
     $scope.newConditionIdentifier = {
         value: ''
     }
@@ -925,6 +969,10 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
     $scope.onChangeSelectedConditionElement = onChangeSelectedConditionElement;
     $scope.onChangeSelectedConditionProperty = onChangeSelectedConditionProperty;
     $scope.onChangeSelectedConditionOperator = onChangeSelectedConditionOperator;
+
+    $scope.addConditionSet = addConditionSet;
+    $scope.editConditionSet = editConditionSet;
+    $scope.removeConditionSet = removeConditionSet;
 
     $scope.addCondition = addCondition;
     $scope.copyCondition = copyCondition;

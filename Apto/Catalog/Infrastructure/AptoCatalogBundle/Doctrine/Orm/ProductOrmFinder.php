@@ -834,6 +834,40 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      * @return array|null
      * @throws DqlBuilderException
      */
+    public function findProductConditionSets(string $id)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($id)
+            ->setValues([
+                'p' => [
+                ],
+                'pcs' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                    'conditionsOperator',
+                ]
+            ])
+            ->setJoins([
+                'p' => [
+                    ['conditionSets', 'pcs', 'id']
+                ]
+            ])
+            ->setPostProcess([
+                'c' => [
+                    'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                ]
+            ])
+        ;
+
+        return $builder->getSingleResultOrNull($this->entityManager);
+    }
+
+    /**
+     * @param string $id
+     * @return array|null
+     * @throws DqlBuilderException
+     */
     public function findProductConditions(string $id)
     {
         $builder = new DqlQueryBuilder($this->entityClass);

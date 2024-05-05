@@ -1,0 +1,20 @@
+<div layout="row" layout-align="start" flex data-cy="condition-set-active">
+    <md-input-container flex>
+        <label>Kennung:</label>
+        <input ng-model="detail.identifier">
+    </md-input-container>
+
+    <div flex="5"></div>
+
+    <md-input-container flex data-cy="condition-set-conditions-operator">
+        <label>Verknüpfung Bedingungen:</label>
+        <md-select multiple="false" ng-model="detail.conditionsOperator">
+            <md-option ng-value="0">
+                UND
+            </md-option>
+            <md-option ng-value="1">
+                ODER
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>

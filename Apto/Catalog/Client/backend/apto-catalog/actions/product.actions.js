@@ -822,7 +822,6 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-
     function updateProductRuleImplication(productId, ruleId, implication) {
         let commandArguments = [];
 
@@ -930,11 +929,46 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
             payload: MessageBusFactory.query('FindNextAvailablePosition', [])
         }
     }
-
     function productDetailAssignProperties(filterProperties) {
         return {
             type: getType('PRODUCT_DETAIL_ASSIGN_PROPERTIES'),
             payload: filterProperties
+        }
+    }
+
+    function fetchConditionSets(productId) {
+        return {
+            type: getType('FETCH_CONDITION_SETS'),
+            payload: MessageBusFactory.query('FindConditionSets', [productId])
+        }
+    }
+
+    function addProductConditionSet(productId, identifier) {
+        return {
+            type: getType('ADD_CONDITION_SET'),
+            payload: MessageBusFactory.command('AddConditionSet', [productId, identifier])
+        }
+    }
+
+
+    function updateProductConditionSet(productId, conditionSetId, identifier, conditionsOperator) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(conditionSetId);
+        commandArguments.push(identifier);
+        commandArguments.push(conditionsOperator);
+
+        return {
+            type: getType('UPDATE_CONDITION_SET'),
+            payload: MessageBusFactory.command('UpdateConditionSet', commandArguments)
+        }
+    }
+
+    function removeProductConditionSet(productId, conditionSetId) {
+        return {
+            type: getType('REMOVE_CONDITION_SET'),
+            payload: MessageBusFactory.command('RemoveConditionSet', [productId, conditionSetId])
         }
     }
 
@@ -1085,6 +1119,11 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         fetchComputedValueDetail: fetchComputedValueDetail,
         removeComputedProductValueAlias: removeComputedProductValueAlias,
         removeComputedProductValue: removeComputedProductValue,
+
+        fetchConditionSets: fetchConditionSets,
+        addProductConditionSet: addProductConditionSet,
+        updateProductConditionSet: updateProductConditionSet,
+        removeProductConditionSet: removeProductConditionSet,
 
         fetchConditions: fetchConditions,
         addCondition: addCondition,

@@ -12,9 +12,78 @@ use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidTypeExcepti
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidValueException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Apto\Catalog\Domain\Core\Model\Product\Identifier;
+use Apto\Catalog\Domain\Core\Model\Product\IdentifierUniqueException;
 
 class ProductConditionHandler extends ProductChildHandler
 {
+    /**
+     * @param AddConditionSet $command
+     * @return void
+     * @throws IdentifierUniqueException
+     */
+    public function handleAddConditionSet(AddConditionSet $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+        if (null === $product) {
+            return;
+        }
+
+        $product->addConditionSet(
+            new Identifier($command->getIdentifier())
+        );
+        $this->productRepository->update($product);
+        $product->publishEvents();
+    }
+
+    /**
+     * @param UpdateConditionSet $command
+     * @return void
+     * @throws CriterionInvalidOperatorException
+     * @throws IdentifierUniqueException
+     * @throws InvalidUuidException
+     */
+    public function handleUpdateConditionSet(UpdateConditionSet $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+        if (null === $product) {
+            return;
+        }
+
+        $conditionSetId = new AptoUuid($command->getConditionSetId());
+        $product
+            ->setConditionSetIdentifier(
+                $conditionSetId,
+                new Identifier($command->getIdentifier())
+            )
+            ->setConditionSetConditionsOperator(
+                $conditionSetId,
+                $command->getConditionsOperator()
+            )
+        ;
+
+        $this->productRepository->update($product);
+        $product->publishEvents();
+    }
+
+    /**
+     * @param RemoveConditionSet $command
+     * @return void
+     * @throws InvalidUuidException
+     */
+    public function handleRemoveConditionSet(RemoveConditionSet $command)
+    {
+        $product = $this->productRepository->findById($command->getProductId());
+        if (null === $product) {
+            return;
+        }
+
+        $product->removeConditionSet(
+            new AptoUuid($command->getConditionSetId())
+        );
+        $this->productRepository->update($product);
+        $product->publishEvents();
+    }
+
     /**
      * @param AddCondition $command
      * @return void
@@ -123,6 +192,21 @@ class ProductConditionHandler extends ProductChildHandler
      */
     public static function getHandledMessages(): iterable
     {
+        yield AddConditionSet::class => [
+            'method' => 'handleAddConditionSet',
+            'bus' => 'command_bus'
+        ];
+
+        yield UpdateConditionSet::class => [
+            'method' => 'handleUpdateConditionSet',
+            'bus' => 'command_bus'
+        ];
+
+        yield RemoveConditionSet::class => [
+            'method' => 'handleRemoveConditionSet',
+            'bus' => 'command_bus'
+        ];
+
         yield AddCondition::class => [
             'method' => 'handleAddProductCondition',
             'bus' => 'command_bus'

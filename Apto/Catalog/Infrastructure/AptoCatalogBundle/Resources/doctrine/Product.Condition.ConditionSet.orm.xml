@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet" table="apto_product_condition_set">
+        <indexes>
+            <index name="AptoSurrogateId" columns="surrogate_id"/>
+            <index name="AptoCreated" columns="created"/>
+        </indexes>
+
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="created" column="created" type="datetime"/>
+        <field name="conditionsOperator" column="conditions_operator" type="integer"/>
+        <embedded class="Apto\Catalog\Domain\Core\Model\Product\Identifier" name="identifier"/>
+        <embedded name="id" class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false"/>
+
+        <many-to-one field="product" target-entity="Apto\Catalog\Domain\Core\Model\Product\Product" inversed-by="conditionSets">
+            <join-column name="product_id" referenced-column-name="surrogate_id" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
