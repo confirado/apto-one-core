@@ -3977,47 +3977,6 @@ class Product extends AptoAggregate
         return $this;
     }
 
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function copyCondition(AptoUuid $conditionId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
-            return $this;
-        }
-
-        $entityMapping = new ArrayCollection();
-        $entityMapping->set($this->getId()->getId(), $this);
-
-        $sectionId = $condition->getSectionId();
-        $elementId = $condition->getElementId();
-        $computedProductValue = $condition->getComputedProductValue();
-
-        if ($sectionId !== null) {
-            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
-        }
-
-        if ($elementId !== null) {
-            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
-        }
-
-        if ($computedProductValue !== null) {
-            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
-        }
-
-        $newConditionId = $this->nextConditionId();
-
-        $copiedCondition = $condition->copy($newConditionId, $entityMapping);
-        $this->conditions->set($newConditionId->getId(), $copiedCondition);
-
-        return $this;
-    }
-
-
     /**
      * @param AptoUuid $ruleId
      * @param AptoUuid $implicationId
@@ -4154,6 +4113,46 @@ class Product extends AptoAggregate
                 throw new InvalidComputedValueNameException('ComputedProductValue with name ' . $computedProductValue->getName() . ' already exists in current Product');
             }
         }
+    }
+
+
+    /**
+     * @param AptoUuid $conditionId
+     * @return $this
+     */
+    public function copyCondition(AptoUuid $conditionId): Product
+    {
+        $condition = $this->getProductCondition($conditionId);
+
+        if ($condition === null) {
+            return $this;
+        }
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+
+        $sectionId = $condition->getSectionId();
+        $elementId = $condition->getElementId();
+        $computedProductValue = $condition->getComputedProductValue();
+
+        if ($sectionId !== null) {
+            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
+        }
+
+        if ($elementId !== null) {
+            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
+        }
+
+        if ($computedProductValue !== null) {
+            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+        }
+
+        $newConditionId = $this->nextConditionId();
+
+        $copiedCondition = $condition->copy($newConditionId, $entityMapping);
+        $this->conditions->set($newConditionId->getId(), $copiedCondition);
+
+        return $this;
     }
 
     /**
