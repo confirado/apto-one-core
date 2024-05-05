@@ -4115,7 +4115,6 @@ class Product extends AptoAggregate
         }
     }
 
-
     /**
      * @param AptoUuid $conditionId
      * @return $this
@@ -4153,14 +4152,6 @@ class Product extends AptoAggregate
         $this->conditions->set($newConditionId->getId(), $copiedCondition);
 
         return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getProductConditions(): Collection
-    {
-        return $this->conditions;
     }
 
     /**
@@ -4238,7 +4229,6 @@ class Product extends AptoAggregate
         return $this;
     }
 
-
     /**
      * @param AptoUuid $conditionId
      * @param Identifier $identifier
@@ -4308,176 +4298,6 @@ class Product extends AptoAggregate
             $this->conditions->remove($conditionId->getId());
         }
         return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param Identifier $identifier
-     * @return $this
-     */
-    public function setProductConditionIdentifier(AptoUuid $conditionId, Identifier $identifier): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null !== $condition) {
-            $condition->setIdentifier($identifier);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param int $type
-     * @return $this
-     */
-    public function setProductConditionType(AptoUuid $conditionId, int $type): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setType($type);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param ComputedProductValue|null $computedValue
-     * @return $this
-     */
-    public function setProductConditionComputedValue(AptoUuid $conditionId, ?ComputedProductValue $computedValue): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setComputedProductValue($computedValue);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param AptoUuid|null $sectionId
-     * @return $this
-     */
-    public function setProductConditionSectionId(AptoUuid $conditionId, ?AptoUuid $sectionId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
-            return $this;
-        }
-
-        $condition->setSectionId($sectionId);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param AptoUuid|null $elementId
-     * @return $this
-     */
-    public function setProductConditionElementId(AptoUuid $conditionId, ?AptoUuid $elementId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setElementId($elementId);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param string|null $property
-     * @return $this
-     */
-    public function setProductConditionProperty(AptoUuid $conditionId, ?string $property): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setProperty($property);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param CriterionOperator $CriterionOperator
-     * @return $this
-     */
-    public function setProductConditionOperator(AptoUuid $conditionId, CriterionOperator $CriterionOperator): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setOperator($CriterionOperator);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $id
-     * @param string $value
-     * @return $this
-     */
-    public function setProductConditionValue(AptoUuid $id, string $value): Product
-    {
-        $condition = $this->getProductCondition($id);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setValue($value);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function removeProductCondition(AptoUuid $conditionId): Product
-    {
-        if ($this->conditions->containsKey($conditionId->getId())) {
-            $this->conditions->remove($conditionId->getId());
-        }
-        return $this;
-    }
-
-    /**
-     * @param Identifier $identifier
-     * @return array
-     */
-    public function getProductConditionIdsByIdentifier(Identifier $identifier): array
-    {
-        $conditionIds = [];
-
-        foreach ($this->conditions as $condition) {
-            if ($condition->getIdentifier() === $identifier) {
-                $conditionIds[] = $condition->getId();
-            }
-        }
-        return $conditionIds;
     }
 
     /**
