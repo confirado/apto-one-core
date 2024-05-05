@@ -23,7 +23,7 @@
                 <md-input-container flex>
                     <label>Condition:</label>
                     <md-select ng-model="newPrice.productConditionId">
-                        <md-option ng-value="condition.id" ng-repeat="condition in conditions">{{ condition.identifier }}</md-option>
+                        <md-option ng-value="conditionSet.id" ng-repeat="conditionSet in conditionSets">{{ conditionSet.identifier }}</md-option>
                     </md-select>
                 </md-input-container>
                 <div flex="5"></div>
@@ -138,7 +138,7 @@
                 <md-input-container flex>
                     <label>Condition:</label>
                     <md-select ng-model="newPriceFormula.productConditionId">
-                        <md-option ng-value="condition.id" ng-repeat="condition in conditions">{{ condition.identifier }}</md-option>
+                        <md-option ng-value="conditionSet.id" ng-repeat="conditionSet in conditionSets">{{ conditionSet.identifier }}</md-option>
                     </md-select>
                 </md-input-container>
                 <div flex="5"></div>

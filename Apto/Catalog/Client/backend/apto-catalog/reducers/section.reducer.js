@@ -13,7 +13,6 @@ const SectionReducer = function(AptoReducersProvider) {
         discounts: [],
         groups: [],
         customProperties: [],
-        conditions: [],
     };
 
     function getType(type) {
@@ -59,13 +58,6 @@ const SectionReducer = function(AptoReducersProvider) {
                 newState = update(state, {
                     groups: {
                         $set: action.payload.data.result.data
-                    }
-                });
-                return newState;
-            case getType('FETCH_CONDITIONS_FULFILLED'):
-                newState = update(state, {
-                    conditions: {
-                        $set: action.payload.data.result.conditions
                     }
                 });
                 return newState;

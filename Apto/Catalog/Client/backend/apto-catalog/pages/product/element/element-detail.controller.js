@@ -39,7 +39,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             sectionIdentifiers: state.element.sectionIdentifiers,
             elementIdentifiers: state.element.elementIdentifiers,
             customProperties: state.element.customProperties,
-            conditions: state.product.conditions,
+            conditionSets: state.product.conditionSets,
         }
     };
 
@@ -80,7 +80,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         resetDefinitionValues: ElementActions.resetDefinitionValues,
         resetStore: ElementActions.reset,
         fetchSections: ElementActions.fetchSections,
-        fetchConditions: ProductActions.fetchConditions,
+        fetchConditions: ProductActions.fetchConditionSets,
     })($scope);
 
     function init() {
@@ -135,7 +135,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
     }
 
     $scope.getConditionName = function (id) {
-        const condition = $scope.conditions.find((c) => c.id === id);
+        const condition = $scope.conditionSets.find((c) => c.id === id);
 
         return condition ? condition.identifier : null;
     }
