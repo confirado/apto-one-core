@@ -15,7 +15,7 @@ use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
-use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
@@ -163,9 +163,9 @@ class SimplePriceCalculator implements PriceCalculator
     private StatePricesHook $statePricesHook;
 
     /**
-     * @var ProductConditionFinder
+     * @var ProductConditionSetFinder
      */
-    private ProductConditionFinder $productConditionFinder;
+    private ProductConditionSetFinder $productConditionSetFinder;
 
     /**
      * @param PriceCalculatorRegistry $priceCalculatorRegistry
@@ -178,7 +178,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param ShopFinder $shopFinder
      * @param RequestStore $requestStore
      * @param StatePricesHook $statePricesHook
-     * @param ProductConditionFinder $productConditionFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
      */
     public function __construct(
         PriceCalculatorRegistry $priceCalculatorRegistry,
@@ -191,7 +191,7 @@ class SimplePriceCalculator implements PriceCalculator
         ShopFinder $shopFinder,
         RequestStore $requestStore,
         StatePricesHook $statePricesHook,
-        ProductConditionFinder $productConditionFinder
+        ProductConditionSetFinder $productConditionSetFinder
     ) {
         $this->priceCalculatorRegistry = $priceCalculatorRegistry;
         $this->productFinder = $productFinder;
@@ -214,7 +214,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->requestStore = $requestStore;
         $this->priceModifier = 1;
         $this->statePricesHook = $statePricesHook;
-        $this->productConditionFinder = $productConditionFinder;
+        $this->productConditionSetFinder = $productConditionSetFinder;
     }
 
     /**
@@ -1171,7 +1171,7 @@ class SimplePriceCalculator implements PriceCalculator
     private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state, string $key): array
     {
         $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices, $key);
-        $productConditionsResult = $this->productConditionFinder->findByIds($productConditionIds);
+        $productConditionsResult = $this->productConditionSetFinder->findByIds($productConditionIds);
         $productConditions = [];
         foreach ($productConditionsResult['data'] as $element) {
             $productConditions[$element['id']] = $element;

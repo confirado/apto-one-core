@@ -55,15 +55,6 @@ class ConditionQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * @param FindConditions $query
-     * @return array|null
-     */
-    public function handleFindConditions(FindConditions $query): ?array
-    {
-        return $this->productFinder->findProductConditions($query->getProductId());
-    }
-
-    /**
      * @return iterable
      */
     public static function getHandledMessages(): iterable
@@ -80,11 +71,6 @@ class ConditionQueryHandler implements QueryHandlerInterface
 
         yield FindConditionSetConditions::class => [
             'method' => 'handleFindConditionSetConditions',
-            'bus' => 'query_bus'
-        ];
-
-        yield FindConditions::class => [
-            'method' => 'handleFindConditions',
             'bus' => 'query_bus'
         ];
     }

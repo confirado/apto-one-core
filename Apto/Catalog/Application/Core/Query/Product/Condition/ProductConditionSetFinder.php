@@ -13,6 +13,12 @@ interface ProductConditionSetFinder extends AptoFinder
     public function findById(string $id);
 
     /**
+     * @param array $ids
+     * @return mixed
+     */
+    public function findByIds(array $ids);
+
+    /**
      * @param string $id
      * @return array|null
      */
