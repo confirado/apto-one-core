@@ -9,7 +9,9 @@ import { combineLatest } from 'rxjs';
 import { PartsListPart, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'apto-parts-list-element',
   templateUrl: './parts-list-element.component.html',
@@ -33,7 +35,9 @@ export class PartsListElementComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.selectedElements = this.element.state.values.selectedItems || [];
+    this.store$.select(selectConfiguration).pipe(untilDestroyed(this)).subscribe(() => {
+      this.selectedElements = this.element.state.values.selectedItems || [];
+    });
     combineLatest([
       this.store$.select(selectConfiguration),
       this.store$.select(selectConnector)
@@ -42,7 +46,7 @@ export class PartsListElementComponent implements OnInit {
         productId: data[0].productId as string,
         compressedState: data[0].state.compressedState,
         currency: data[1]?.displayCurrency.currency,
-        customerGroupExternalId: data[1]?.customerGroup    .id,
+        customerGroupExternalId: data[1]?.customerGroup.id,
         categoryId: this.element.element.definition.staticValues.category
       }).subscribe((response) => {
         this.partsList = response;

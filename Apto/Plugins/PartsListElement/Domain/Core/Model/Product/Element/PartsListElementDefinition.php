@@ -7,7 +7,6 @@ use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementJsonValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementSingleTextValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
-use Apto\Catalog\Domain\Core\Model\Product\Element\InvalidSelectablePropertyException;
 
 class PartsListElementDefinition implements ElementDefinition
 {
@@ -72,7 +71,15 @@ class PartsListElementDefinition implements ElementDefinition
      */
     public function getHumanReadableValues(array $selectedValues): array
     {
-        return [];
+        $humanReadableValues = [];
+
+        foreach ($selectedValues['selectedItems'] as $item) {
+            $humanReadableValues[$item['id']] = AptoTranslatedValue::fromArray([
+                'de_DE' => $item['partName'],
+            ]);
+        }
+
+        return $humanReadableValues;
     }
 
     /**

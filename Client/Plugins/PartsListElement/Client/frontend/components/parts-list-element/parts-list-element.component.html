@@ -1,4 +1,5 @@
 <div class="parts-list">
+    <h4>{{element.element.name | translate}}</h4>
     <div class="part" *ngFor="let part of partsList" (click)="toggleSelect(part)">
         <div>
             <h4>{{part.partName}}</h4>
