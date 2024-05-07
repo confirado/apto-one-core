@@ -233,6 +233,7 @@ export interface PartsListPart {
   itemPriceTotal: string
   partName: string
   partNumber: string
+  description: TranslatedValue
   quantity: string
   unit: string
 }

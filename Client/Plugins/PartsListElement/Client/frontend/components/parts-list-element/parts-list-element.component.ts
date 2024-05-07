@@ -57,7 +57,7 @@ export class PartsListElementComponent implements OnInit {
   public toggleSelect(part: PartsListPart): void {
     if (this.isSelected(part)) {
       this.selectedElements = this.selectedElements.filter((e) => e.id !== part.id);
-      this.saveInformation();
+      this.saveInformation(this.selectedElements.length ? 'set' : 'remove');
       return;
     }
 
@@ -74,18 +74,18 @@ export class PartsListElementComponent implements OnInit {
       this.selectedElements = [element];
     }
 
-    this.saveInformation();
+    this.saveInformation(this.selectedElements.length ? 'set' : 'remove');
   }
 
   public isSelected(part: PartsListPart): boolean {
     return !!this.selectedElements.find((e) => e.id === part.id);
   }
 
-  private saveInformation(): void {
+  private saveInformation(action: string): void {
     this.store$.dispatch(
       updateConfigurationState({
         updates: {
-          set: [
+          [action]: [
             {
               sectionId: this.element.element.sectionId,
               elementId: this.element.element.id,
