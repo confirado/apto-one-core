@@ -143,8 +143,6 @@ export class ProductRepository {
           sectionRepetition: 0,
           gallery: element.gallery,
 				});
-        console.error('gallery: element.gallery,')
-        console.log(element.gallery)
 			});
 		});
 

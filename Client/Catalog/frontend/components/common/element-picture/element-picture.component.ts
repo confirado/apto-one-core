@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
+import {environment} from "@apto-frontend/src/environments/environment";
 
 @Component({
   selector: 'apto-element-picture',
@@ -26,7 +27,9 @@ export class ElementPictureComponent implements OnInit {
 
   public currentImageIndex = 0;
 
-  constructor() { }
+  protected mediaUrl = environment.api.media;
+
+  public constructor() { }
 
   public ngOnInit(): void {
     if (this.previewImage && this.gallery.length > 0) {
@@ -63,7 +66,8 @@ export class ElementPictureComponent implements OnInit {
   }
 
   public isZoomEnabled(): boolean {
-    return this.zoomFunction == ElementZoomFunctionEnum.IMAGE_PREVIEW;
+    return this.zoomFunction === ElementZoomFunctionEnum.IMAGE_PREVIEW ||
+      this.zoomFunction === ElementZoomFunctionEnum.GALLERY;
   }
 
   public nextImage(event: Event): void {
@@ -81,20 +85,19 @@ export class ElementPictureComponent implements OnInit {
   }
 
   private updatePreviewImage(): string {
-    const baseUrl = 'http://grobi.projektversion.de/apto-one-template/web/public/media/';
     const item = this.gallery[this.currentImageIndex];
     let imageUrl = item.path || '';
-    const baseIncluded = imageUrl.startsWith(baseUrl);
+    const baseIncluded = imageUrl.startsWith(this.mediaUrl);
     if (item.mediaFile && item.mediaFile.length > 0) {
       const media = item.mediaFile[0];
       if (media.filename && media.extension) {
         imageUrl = baseIncluded ? `${media.path}/${media.filename}.${media.extension}`
-          : `${baseUrl}${media.path}/${media.filename}.${media.extension}`;
+          : `${this.mediaUrl}${media.path}/${media.filename}.${media.extension}`;
       } else {
-        imageUrl = baseIncluded ? imageUrl : baseUrl + imageUrl;
+        imageUrl = baseIncluded ? imageUrl : this.mediaUrl + imageUrl;
       }
     } else {
-      imageUrl = baseIncluded ? imageUrl : baseUrl + imageUrl;
+      imageUrl = baseIncluded ? imageUrl : this.mediaUrl + imageUrl;
     }
     return imageUrl;
   }
