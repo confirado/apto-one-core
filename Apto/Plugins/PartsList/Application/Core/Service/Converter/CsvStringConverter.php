@@ -136,7 +136,8 @@ class CsvStringConverter
         State $state,
         Currency $currency,
         string $shopId,
-        string $customerGroupExternalId
+        string $customerGroupExternalId,
+        ?string $categoryId
     ): array {
         $customerGroupId = $this->getCustomerGroupIdByExternalId($shopId, $customerGroupExternalId);
         $fallBackCustomerGroupId = $this->getFallbackCustomerGroupId($customerGroupId);
@@ -149,7 +150,8 @@ class CsvStringConverter
             $customerGroupId,
             $fallBackCustomerGroupId,
             $this->locale,
-            $computedValues
+            $computedValues,
+            $categoryId
         );
     }
 

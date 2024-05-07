@@ -1,0 +1,38 @@
+@import "elements";
+
+.parts-list {
+    padding: var(--element-gap);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius-card);
+    border: 3px solid transparent;
+
+    &.selected {
+        border-color: var(--color-border-dimensions);
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    .part {
+        border-bottom: 1px solid lightgray;
+        padding: 15px 0;
+        display: flex;
+        cursor: pointer;
+        position: relative;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .circle {
+            @include circle-checkbox(25px, 'inner');
+            border: 2px solid var(--color-border-selected);
+        }
+    }
+}

@@ -4,9 +4,9 @@ namespace Apto\Plugins\PartsListElement\Domain\Core\Model\Product\Element;
 
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
+use Apto\Catalog\Domain\Core\Model\Product\Element\ElementJsonValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementSingleTextValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
-use Apto\Catalog\Domain\Core\Model\Product\Element\InvalidSelectablePropertyException;
 
 class PartsListElementDefinition implements ElementDefinition
 {
@@ -38,7 +38,10 @@ class PartsListElementDefinition implements ElementDefinition
      */
     public function getSelectableValues(): array
     {
-        return [];
+        return [
+            'aptoElementDefinitionId' => new ElementValueCollection([new ElementSingleTextValue('apto-parts-list-element')]),
+            'selectedItems' => new ElementValueCollection([new ElementJsonValue()])
+        ];
     }
 
     /**
@@ -68,7 +71,15 @@ class PartsListElementDefinition implements ElementDefinition
      */
     public function getHumanReadableValues(array $selectedValues): array
     {
-        return [];
+        $humanReadableValues = [];
+
+        foreach ($selectedValues['selectedItems'] as $item) {
+            $humanReadableValues[$item['id']] = AptoTranslatedValue::fromArray([
+                'de_DE' => $item['partName'],
+            ]);
+        }
+
+        return $humanReadableValues;
     }
 
     /**

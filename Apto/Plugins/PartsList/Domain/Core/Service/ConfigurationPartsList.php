@@ -132,12 +132,13 @@ class ConfigurationPartsList
      * @param $fallbackCustomerGroupId
      * @param AptoLocale $locale
      * @param array $computedValues
+     * @param string|null $categoryId
      * @return array
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
      */
-    public function getBasicList(AptoUuid $productId, State $state, Currency $currency, string $customerGroupId, $fallbackCustomerGroupId, AptoLocale $locale, $computedValues = [])
+    public function getBasicList(AptoUuid $productId, State $state, Currency $currency, string $customerGroupId, $fallbackCustomerGroupId, AptoLocale $locale, $computedValues = [], ?string $categoryId = null)
     {
         $this->formulaParser->setState($state);
         $this->formulaParser->setProductId($productId);
@@ -146,6 +147,10 @@ class ConfigurationPartsList
         $list = [];
         /** @var Usage $usage */
         foreach ($usages as $usage) {
+            if ($categoryId && $categoryId !== $usage->getPart()->getCategory()->getId()->getId()) {
+                continue;
+            }
+
             $list[] = $this->makeListItem($usage->getPart(), $usage, $currency, $customerGroupId, $fallbackCustomerGroupId, $locale);
         }
         return $list;
@@ -170,7 +175,9 @@ class ConfigurationPartsList
         $formattedBasePartPrice = $moneyFormatter->format($this->getPartPrice($part, $usage, $currency, $customerGroupId, $fallbackCustomerGroupId, false));
         $formattedPartPrice = $moneyFormatter->format($this->getPartPrice($part, $usage, $currency, $customerGroupId, $fallbackCustomerGroupId));
         return [
+            'id' => $part->getId(),
             'partNumber' => $part->getPartNumber(),
+            'description' => $part->getDescription()->getTranslation($locale)->getValue(),
             'partName' => $part->getName()->getTranslation($locale)->getValue(),
             'quantity' => str_replace('.', ',', $this->getQuantity($usage, 2)),
             'unit' => $part->getUnit() ? $part->getUnit()->getUnit() : '',

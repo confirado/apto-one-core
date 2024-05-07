@@ -1,1 +1,19 @@
-<p>parts-list-element works!</p>
+<div class="parts-list" [class.selected]="element.state.active">
+    <h2>{{element.element.name | translate}}</h2>
+    <div class="part" *ngFor="let part of partsList" (click)="toggleSelect(part)">
+        <div class="picture">
+            <apto-element-picture *ngIf="element.element.previewImage"
+                                  [previewImage]="element.element.previewImage" [zoomFunction]="element.element.zoomFunction"
+            ></apto-element-picture>
+        </div>
+        <div>
+            <h4>{{part.partName}}</h4>
+            <p>{{part.partNumber}}</p>
+            <div  *ngIf="part.description"
+                   [innerHTML]="part.description | safeHtml"></div>
+        </div>
+        <div class="circle selected" *ngIf="isSelected(part)">
+            <mat-icon>done</mat-icon>
+        </div>
+    </div>
+</div>
