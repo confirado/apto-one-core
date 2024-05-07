@@ -9,8 +9,8 @@
         <div>
             <h4>{{part.partName}}</h4>
             <p>{{part.partNumber}}</p>
-            <div  *ngIf="(part.description | translate) !== ''"
-                   [innerHTML]="part.description | translate | safeHtml"></div>
+            <div  *ngIf="part.description"
+                   [innerHTML]="part.description | safeHtml"></div>
         </div>
         <div class="circle selected" *ngIf="isSelected(part)">
             <mat-icon>done</mat-icon>

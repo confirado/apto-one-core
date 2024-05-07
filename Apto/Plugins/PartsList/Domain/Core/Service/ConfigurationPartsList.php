@@ -177,7 +177,7 @@ class ConfigurationPartsList
         return [
             'id' => $part->getId(),
             'partNumber' => $part->getPartNumber(),
-            'description' => $part->getDescription(),
+            'description' => $part->getDescription()->getTranslation($locale)->getValue(),
             'partName' => $part->getName()->getTranslation($locale)->getValue(),
             'quantity' => str_replace('.', ',', $this->getQuantity($usage, 2)),
             'unit' => $part->getUnit() ? $part->getUnit()->getUnit() : '',
