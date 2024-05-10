@@ -3,7 +3,6 @@
 import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import {GalleryImages} from "@apto-catalog-frontend/models/material-picker";
 
 export interface Product {
 	id: string;

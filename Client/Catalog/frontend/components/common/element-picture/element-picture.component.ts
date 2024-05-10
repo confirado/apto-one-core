@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
-import {environment} from "@apto-frontend/src/environments/environment";
+import { Component, Input, OnInit } from '@angular/core';
+import { ElementZoomFunctionEnum } from "@apto-catalog-frontend/store/product/product.model";
+import { environment } from "@apto-frontend/src/environments/environment";
 
 @Component({
   selector: 'apto-element-picture',
