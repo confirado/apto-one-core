@@ -2,6 +2,9 @@
 
 namespace Apto\Catalog\Application\Core\Service\PriceCalculator;
 
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 use Money\Currency;
 use Money\Money;
 use Money\Converter;
@@ -27,8 +30,6 @@ use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ElementP
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductPriceProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductSurchargeProvider;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\TaxCalculator;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
@@ -1193,15 +1194,21 @@ class SimplePriceCalculator implements PriceCalculator
                 $productCondition = $productConditions[$price['productConditionId']];
 
                 // @TODO: take care about repetition in DefaultCriterion
-                $criterion = new DefaultCriterion(
-                    true,
-                    new CompareOperator($productCondition['operator']),
-                    $productCondition['value'],
-                    new AptoUuid($productCondition['sectionId']),
-                    new AptoUuid($productCondition['elementId']),
-                    $productCondition['property']
+                $criterion = new Condition(
+                    new LinkOperator($productCondition['conditionsOperator']),
+                    RuleFactory::criteriaFromArray($productCondition)
                 );
 
+//                $criterion = new DefaultCriterion(
+//                    true,
+//                    new CompareOperator($productCondition['operator']),
+//                    $productCondition['value'],
+//                    new AptoUuid($productCondition['sectionId']),
+//                    new AptoUuid($productCondition['elementId']),
+//                    $productCondition['property']
+//                );
+
+                // @TODO: take care about computedValues must be given to RulePayload for ComputedProductValueCriterion
                 if ($criterion->isFulfilled($state, new RulePayload([]))) {
                     unset($price['productConditionId']);
                     $newRawStatePrices[$type][$uniqueKey] = $price;
