@@ -2,9 +2,6 @@
 
 namespace Apto\Catalog\Application\Core\Service\PriceCalculator;
 
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 use Money\Currency;
 use Money\Money;
 use Money\Converter;
@@ -35,6 +32,9 @@ use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaParser;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 
 class SimplePriceCalculator implements PriceCalculator
 {
@@ -139,6 +139,11 @@ class SimplePriceCalculator implements PriceCalculator
     private array $computedValues;
 
     /**
+     * @var array
+     */
+    private array $computedValuesIndexedById;
+
+    /**
      * @var MediaFileSystemConnector
      */
     private MediaFileSystemConnector $mediaFileSystem;
@@ -210,6 +215,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->elementIdIdentifierMapping = [];
         $this->computedProductValueCalculator = $computedProductValueCalculator;
         $this->computedValues = [];
+        $this->computedValuesIndexedById = [];
         $this->mediaFileSystem = $mediaFileSystem;
         $this->shopFinder = $shopFinder;
         $this->requestStore = $requestStore;
@@ -324,6 +330,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->currencyFactor = $currencyFactor;
         $this->elementIdIdentifierMapping = $this->getElementIdIdentifierMappingByProductId($productId);
         $this->computedValues = $this->computedProductValueCalculator->calculateComputedValues($productId->getId(), $state);
+        $this->computedValuesIndexedById = $this->computedProductValueCalculator->calculateComputedValues($this->productId->getId(), $state, true);
 
         // find and set fallback customer group
         $this->setFallbackCustomerGroup();
@@ -1196,20 +1203,10 @@ class SimplePriceCalculator implements PriceCalculator
                 // @TODO: take care about repetition in DefaultCriterion
                 $criterion = new Condition(
                     new LinkOperator($productCondition['conditionsOperator']),
-                    RuleFactory::criteriaFromArray($productCondition)
+                    RuleFactory::criteriaFromArray($productCondition['conditions'])
                 );
 
-//                $criterion = new DefaultCriterion(
-//                    true,
-//                    new CompareOperator($productCondition['operator']),
-//                    $productCondition['value'],
-//                    new AptoUuid($productCondition['sectionId']),
-//                    new AptoUuid($productCondition['elementId']),
-//                    $productCondition['property']
-//                );
-
-                // @TODO: take care about computedValues must be given to RulePayload for ComputedProductValueCriterion
-                if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                if ($criterion->isFulfilled($state, new RulePayload($this->computedValuesIndexedById))) {
                     unset($price['productConditionId']);
                     $newRawStatePrices[$type][$uniqueKey] = $price;
                 }

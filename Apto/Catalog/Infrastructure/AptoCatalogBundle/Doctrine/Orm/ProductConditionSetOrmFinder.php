@@ -57,7 +57,6 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
                 ],
                 'csc' => [
                     ['id.id', 'id'],
-                    ['identifier.value', 'identifier'],
                     'sectionId',
                     'elementId',
                     'property',
