@@ -5,27 +5,19 @@ namespace Apto\Catalog\Domain\Core\Model\Product\Condition;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
 use Apto\Catalog\Domain\Core\Model\Product\Element\Element;
-use Apto\Catalog\Domain\Core\Model\Product\Identifier;
-use Apto\Catalog\Domain\Core\Model\Product\Product;
 use Apto\Catalog\Domain\Core\Model\Product\Section\Section;
 use Doctrine\Common\Collections\Collection;
 
 class Condition extends Criterion
 {
     /**
-     * @var Product
+     * @var ConditionSet
      */
-    protected $product;
-
-    /**
-     * @var Identifier
-     */
-    protected $identifier;
+    protected $conditionSet;
 
     /**
      * @param AptoUuid $id
-     * @param Product $product
-     * @param Identifier $identifier
+     * @param ConditionSet $conditionSet
      * @param CriterionOperator $operator
      * @param int|null $type
      * @param AptoUuid|null $sectionId
@@ -39,18 +31,16 @@ class Condition extends Criterion
      * @throws CriterionInvalidValueException
      */
     final public function __construct(
-        Product               $product,
-        AptoUuid              $id,
-        Identifier            $identifier,
-        CriterionOperator     $operator,
-        ?int                  $type,
-        ?AptoUuid             $sectionId,
-        ?AptoUuid             $elementId,
-        string                $property = null,
+        ConditionSet $conditionSet,
+        AptoUuid $id,
+        CriterionOperator $operator,
+        ?int $type,
+        ?AptoUuid $sectionId,
+        ?AptoUuid $elementId,
+        string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
-    )
-    {
+        ?string $value = null
+    ) {
         parent::__construct(
             $id,
             $operator,
@@ -62,35 +52,25 @@ class Condition extends Criterion
             $value
         );
 
-        if (null !== $elementId && null !== $property && !array_key_exists($property, $product->getElementSelectableValues($sectionId, $elementId))) {
+        if (null !== $elementId && null !== $property && !array_key_exists($property, $conditionSet->getProduct()->getElementSelectableValues($sectionId, $elementId))) {
             throw new CriterionInvalidPropertyException('The given property \'' . $property . '\' is not defined in the given element\'s definition.');
         }
 
-        $this->product = $product;
-        $this->identifier = $identifier;
+        $this->conditionSet = $conditionSet;
     }
 
     /**
-     * @return Identifier
+     * @param AptoUuid $id
+     * @param Collection $entityMapping
+     * @return Condition
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
      */
-    public function getIdentifier(): Identifier
+    public function copy(AptoUuid $id, Collection &$entityMapping): Condition
     {
-        return $this->identifier;
-    }
-
-    /**
-     * @param Identifier $identifier
-     * @return $this
-     */
-    public function setIdentifier(Identifier $identifier): Condition
-    {
-        $this->identifier = $identifier;
-        return $this;
-    }
-
-    public function copy(AptoUuid $id, Collection &$entityMapping): ?Condition
-    {
-        $product = $entityMapping->get($this->product->getId()->getId());
+        $conditionSet = $entityMapping->get($this->conditionSet->getId()->getId());
 
         // set section id
         $orgSectionId = $this->getSectionId();
@@ -109,9 +89,8 @@ class Condition extends Criterion
 
         // return new ruleCriterion
         return new static(
-            $product,
+            $conditionSet,
             $id,
-            $this->getIdentifier(),
             $this->getOperator(),
             $this->getType(),
             $sectionId,

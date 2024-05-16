@@ -15,7 +15,7 @@ use Apto\Base\Domain\Core\Service\AptoJsonSerializer;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Query\PriceMatrix\PriceMatrixFinder;
-use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
 use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 use Apto\Catalog\Application\Core\Query\Shop\ShopFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
@@ -27,13 +27,14 @@ use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ElementP
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductPriceProvider;
 use Apto\Catalog\Application\Core\Service\PriceCalculator\PriceProvider\ProductSurchargeProvider;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\TaxCalculator;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\CompareOperator;
-use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 use Apto\Catalog\Domain\Core\Service\Formula\FormulaParser;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 
 class SimplePriceCalculator implements PriceCalculator
 {
@@ -138,6 +139,11 @@ class SimplePriceCalculator implements PriceCalculator
     private array $computedValues;
 
     /**
+     * @var array
+     */
+    private array $computedValuesIndexedById;
+
+    /**
      * @var MediaFileSystemConnector
      */
     private MediaFileSystemConnector $mediaFileSystem;
@@ -163,9 +169,9 @@ class SimplePriceCalculator implements PriceCalculator
     private StatePricesHook $statePricesHook;
 
     /**
-     * @var ProductConditionFinder
+     * @var ProductConditionSetFinder
      */
-    private ProductConditionFinder $productConditionFinder;
+    private ProductConditionSetFinder $productConditionSetFinder;
 
     /**
      * @param PriceCalculatorRegistry $priceCalculatorRegistry
@@ -178,7 +184,7 @@ class SimplePriceCalculator implements PriceCalculator
      * @param ShopFinder $shopFinder
      * @param RequestStore $requestStore
      * @param StatePricesHook $statePricesHook
-     * @param ProductConditionFinder $productConditionFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
      */
     public function __construct(
         PriceCalculatorRegistry $priceCalculatorRegistry,
@@ -191,7 +197,7 @@ class SimplePriceCalculator implements PriceCalculator
         ShopFinder $shopFinder,
         RequestStore $requestStore,
         StatePricesHook $statePricesHook,
-        ProductConditionFinder $productConditionFinder
+        ProductConditionSetFinder $productConditionSetFinder
     ) {
         $this->priceCalculatorRegistry = $priceCalculatorRegistry;
         $this->productFinder = $productFinder;
@@ -209,12 +215,13 @@ class SimplePriceCalculator implements PriceCalculator
         $this->elementIdIdentifierMapping = [];
         $this->computedProductValueCalculator = $computedProductValueCalculator;
         $this->computedValues = [];
+        $this->computedValuesIndexedById = [];
         $this->mediaFileSystem = $mediaFileSystem;
         $this->shopFinder = $shopFinder;
         $this->requestStore = $requestStore;
         $this->priceModifier = 1;
         $this->statePricesHook = $statePricesHook;
-        $this->productConditionFinder = $productConditionFinder;
+        $this->productConditionSetFinder = $productConditionSetFinder;
     }
 
     /**
@@ -323,6 +330,7 @@ class SimplePriceCalculator implements PriceCalculator
         $this->currencyFactor = $currencyFactor;
         $this->elementIdIdentifierMapping = $this->getElementIdIdentifierMappingByProductId($productId);
         $this->computedValues = $this->computedProductValueCalculator->calculateComputedValues($productId->getId(), $state);
+        $this->computedValuesIndexedById = $this->computedProductValueCalculator->calculateComputedValues($this->productId->getId(), $state, true);
 
         // find and set fallback customer group
         $this->setFallbackCustomerGroup();
@@ -1171,7 +1179,7 @@ class SimplePriceCalculator implements PriceCalculator
     private function filterOutPricesWithNotMatchingConditions(array $rawStatePrices, State $state, string $key): array
     {
         $productConditionIds = $this->collectAllProductConditionIdsFromRawStatement($rawStatePrices, $key);
-        $productConditionsResult = $this->productConditionFinder->findByIds($productConditionIds);
+        $productConditionsResult = $this->productConditionSetFinder->findByIds($productConditionIds);
         $productConditions = [];
         foreach ($productConditionsResult['data'] as $element) {
             $productConditions[$element['id']] = $element;
@@ -1193,16 +1201,12 @@ class SimplePriceCalculator implements PriceCalculator
                 $productCondition = $productConditions[$price['productConditionId']];
 
                 // @TODO: take care about repetition in DefaultCriterion
-                $criterion = new DefaultCriterion(
-                    true,
-                    new CompareOperator($productCondition['operator']),
-                    $productCondition['value'],
-                    new AptoUuid($productCondition['sectionId']),
-                    new AptoUuid($productCondition['elementId']),
-                    $productCondition['property']
+                $criterion = new Condition(
+                    new LinkOperator($productCondition['conditionsOperator']),
+                    RuleFactory::criteriaFromArray($productCondition['conditions'])
                 );
 
-                if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                if ($criterion->isFulfilled($state, new RulePayload($this->computedValuesIndexedById))) {
                     unset($price['productConditionId']);
                     $newRawStatePrices[$type][$uniqueKey] = $price;
                 }

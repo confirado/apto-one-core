@@ -3,15 +3,21 @@
 namespace Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm;
 
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AptoOrmFinder;
+use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlQueryBuilder;
-use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionFinder;
-use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
 
-class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditionFinder
+class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductConditionSetFinder
 {
-    const ENTITY_CLASS = Condition::class;
+    const ENTITY_CLASS = ConditionSet::class;
 
-    public function findById(string $id)
+    /**
+     * @param string $id
+     * @return array|null
+     * @throws DqlBuilderException
+     */
+    public function findById(string $id): ?array
     {
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
@@ -20,38 +26,23 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
                 'c' => [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier'],
-                    'sectionId',
-                    'elementId',
-                    'property',
-                    ['operator.operator', 'operator'],
-                    'value',
-                    'type'
-                ],
-                'cpv' => [
-                    'surrogateId',
-                    ['id.id', 'id'],
-                    'name'
-                ]
-            ])
-            ->setJoins([
-                'c' => [
-                    ['computedProductValue', 'cpv', 'surrogateId']
+                    'conditionsOperator',
                 ]
             ])
             ->setPostProcess([
                 'c' => [
-                    'operator' => [DqlQueryBuilder::class, 'decodeInteger'],
-                    'value' => [DqlQueryBuilder::class, 'castString'],
-                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                    'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
                 ]
-            ]);
+            ])
+        ;
 
         return $builder->getSingleResultOrNull($this->entityManager);
     }
 
     /**
      * @param array $ids
-     * @return mixed
+     * @return array|mixed
+     * @throws DqlBuilderException
      */
     public function findByIds(array $ids)
     {
@@ -62,6 +53,10 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
                 'c' => [
                     ['id.id', 'id'],
                     ['identifier.value', 'identifier'],
+                    'conditionsOperator',
+                ],
+                'csc' => [
+                    ['id.id', 'id'],
                     'sectionId',
                     'elementId',
                     'property',
@@ -77,11 +72,17 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
             ])
             ->setJoins([
                 'c' => [
+                    ['conditions', 'csc', 'id']
+                ],
+                'csc' => [
                     ['computedProductValue', 'cpv', 'surrogateId']
                 ]
             ])
             ->setPostProcess([
                 'c' => [
+                    'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                ],
+                'csc' => [
                     'operator' => [DqlQueryBuilder::class, 'decodeInteger'],
                     'value' => [DqlQueryBuilder::class, 'castString'],
                     'type' => [DqlQueryBuilder::class, 'decodeInteger']
@@ -89,5 +90,50 @@ class ProductConditionOrmFinder extends AptoOrmFinder implements ProductConditio
             ]);
 
         return $builder->getResult($this->entityManager);
+    }
+
+    /**
+     * @param string $id
+     * @return array|null
+     * @throws DqlBuilderException
+     */
+    public function findConditions(string $id): ?array
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($id)
+            ->setValues([
+                'c' => [
+                ],
+                'csc' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'c' => [
+                    ['conditions', 'csc', 'id']
+                ],
+                'csc' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'csc' => [
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
+        return $builder->getSingleResultOrNull($this->entityManager);
     }
 }

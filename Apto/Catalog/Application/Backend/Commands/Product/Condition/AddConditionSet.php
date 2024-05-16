@@ -4,28 +4,28 @@ namespace Apto\Catalog\Application\Backend\Commands\Product\Condition;
 
 use Apto\Catalog\Application\Backend\Commands\Product\ProductChildCommand;
 
-abstract class ProductConditionCommand extends ProductChildCommand
+class AddConditionSet extends ProductChildCommand
 {
     /**
      * @var string
      */
-    private $conditionId;
+    private string $identifier;
 
     /**
      * @param string $productId
-     * @param string $conditionId
+     * @param string $identifier
      */
-    public function __construct(string $productId, string $conditionId)
+    public function __construct(string $productId, string $identifier)
     {
         parent::__construct($productId);
-        $this->conditionId = $conditionId;
+        $this->identifier = $identifier;
     }
 
     /**
      * @return string
      */
-    public function getConditionId(): string
+    public function getIdentifier(): string
     {
-        return $this->conditionId;
+        return $this->identifier;
     }
 }

@@ -53,7 +53,7 @@ interface ProductFinder extends AptoFinder
      * @param string $id
      * @return array|null
      */
-    public function findProductConditions(string $id);
+    public function findProductConditionSets(string $id);
 
     /**
      * @param string $id

@@ -39,7 +39,7 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         removeProductSectionCustomProperty: ProductActions.removeProductSectionCustomProperty,
         fetchCustomProperties: SectionActions.fetchCustomProperties,
         setDetailValue: SectionActions.setDetailValue,
-        fetchConditions: ProductActions.fetchConditions,
+        fetchConditions: ProductActions.fetchConditionSets,
     })($scope);
 
     function mapState(state) {
@@ -54,7 +54,7 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
             discounts: state.section.discounts,
             groups: state.section.groups,
             customProperties: state.section.customProperties,
-            conditions: state.product.conditions,
+            conditionSets: state.product.conditionSets,
         }
     }
 
@@ -77,7 +77,7 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
     }
 
     $scope.getConditionName = function (id) {
-        const condition = $scope.conditions.find((c) => c.id === id);
+        const condition = $scope.conditionSets.find((c) => c.id === id);
 
         return condition ? condition.identifier : null;
     }

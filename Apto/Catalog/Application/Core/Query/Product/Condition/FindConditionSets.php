@@ -4,7 +4,7 @@ namespace Apto\Catalog\Application\Core\Query\Product\Condition;
 
 use Apto\Base\Application\Core\PublicQueryInterface;
 
-class FindConditions implements PublicQueryInterface
+class FindConditionSets implements PublicQueryInterface
 {
     /**
      * @var string

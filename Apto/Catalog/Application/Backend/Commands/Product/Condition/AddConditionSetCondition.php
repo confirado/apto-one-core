@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Application\Backend\Commands\Product\Condition;
 
-class CopyCondition extends ProductConditionCommand
+class AddConditionSetCondition extends AddConditionSetCriterion
 {
 
 }

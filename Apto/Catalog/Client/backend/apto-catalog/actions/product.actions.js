@@ -822,7 +822,6 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-
     function updateProductRuleImplication(productId, ruleId, implication) {
         let commandArguments = [];
 
@@ -930,7 +929,6 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
             payload: MessageBusFactory.query('FindNextAvailablePosition', [])
         }
     }
-
     function productDetailAssignProperties(filterProperties) {
         return {
             type: getType('PRODUCT_DETAIL_ASSIGN_PROPERTIES'),
@@ -938,61 +936,90 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function fetchConditions(productId) {
+    function fetchConditionSets(productId) {
         return {
-            type: getType('FETCH_CONDITIONS'),
-            payload: MessageBusFactory.query('FindConditions', [productId])
+            type: getType('FETCH_CONDITION_SETS'),
+            payload: MessageBusFactory.query('FindConditionSets', [productId])
         }
     }
 
-    function addCondition(productId, condition) {
+    function addProductConditionSet(productId, identifier) {
         return {
-            type: getType('ADD_CONDITION'),
-            payload: MessageBusFactory.command('AddCondition', [
+            type: getType('ADD_CONDITION_SET'),
+            payload: MessageBusFactory.command('AddConditionSet', [productId, identifier])
+        }
+    }
+
+
+    function updateProductConditionSet(productId, conditionSetId, identifier, conditionsOperator) {
+        let commandArguments = [];
+
+        commandArguments.push(productId);
+        commandArguments.push(conditionSetId);
+        commandArguments.push(identifier);
+        commandArguments.push(conditionsOperator);
+
+        return {
+            type: getType('UPDATE_CONDITION_SET'),
+            payload: MessageBusFactory.command('UpdateConditionSet', commandArguments)
+        }
+    }
+
+    function removeProductConditionSet(productId, conditionSetId) {
+        return {
+            type: getType('REMOVE_CONDITION_SET'),
+            payload: MessageBusFactory.command('RemoveConditionSet', [productId, conditionSetId])
+        }
+    }
+
+    function addProductConditionSetCondition(productId, condition) {
+        return {
+            type: getType('ADD_CONDITION_SET_CONDITION'),
+            payload: MessageBusFactory.command('AddConditionSetCondition', [
                 productId,
-                condition.identifier,
+                condition.conditionSetId,
                 condition.type,
-                condition.operator,
-                condition.value,
                 condition.sectionId,
                 condition.elementId,
                 condition.property,
                 condition.computedValue,
+                condition.operator,
+                condition.value
             ])
         }
     }
 
-    function updateCondition(productId, condition) {
+    function updateProductConditionSetCondition(productId, conditionSetId, condition) {
         let commandArguments = [];
 
         commandArguments.push(productId);
+        commandArguments.push(conditionSetId);
         commandArguments.push(condition.id);
-        commandArguments.push(condition.identifier);
         commandArguments.push(condition.typeId);
         commandArguments.push(condition.operatorId);
         commandArguments.push(condition.value);
+        commandArguments.push(condition.computedProductValueId);
         commandArguments.push(condition.sectionId);
         commandArguments.push(condition.elementId);
         commandArguments.push(condition.property);
-        commandArguments.push(condition.computedProductValueId);
 
         return {
-            type: getType('UPDATE_CONDITION'),
-            payload: MessageBusFactory.command('UpdateCondition', commandArguments)
+            type: getType('UPDATE_CONDITION_SET_CONDITION'),
+            payload: MessageBusFactory.command('UpdateConditionSetCondition', commandArguments)
         }
     }
 
-    function copyCondition(productId, conditionId) {
+    function copyProductConditionSetCondition(productId, conditionSetId, conditionId) {
         return {
-            type: getType('COPY_CONDITION'),
-            payload: MessageBusFactory.command('CopyCondition', [productId, conditionId])
+            type: getType('COPY_CONDITION_SET_CONDITION'),
+            payload: MessageBusFactory.command('CopyConditionSetCondition', [productId, conditionSetId, conditionId])
         }
     }
 
-    function removeCondition(productId, conditionId) {
+    function removeProductConditionSetCondition(productId, conditionSetId, conditionId) {
         return {
-            type: getType('REMOVE_CONDITION'),
-            payload: MessageBusFactory.command('RemoveCondition', [productId, conditionId])
+            type: getType('REMOVE_CONDITION_SET_CONDITION'),
+            payload: MessageBusFactory.command('RemoveConditionSetCondition', [productId, conditionSetId, conditionId])
         }
     }
 
@@ -1086,11 +1113,14 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         removeComputedProductValueAlias: removeComputedProductValueAlias,
         removeComputedProductValue: removeComputedProductValue,
 
-        fetchConditions: fetchConditions,
-        addCondition: addCondition,
-        updateCondition: updateCondition,
-        copyCondition: copyCondition,
-        removeCondition: removeCondition,
+        fetchConditionSets: fetchConditionSets,
+        addProductConditionSet: addProductConditionSet,
+        updateProductConditionSet: updateProductConditionSet,
+        removeProductConditionSet: removeProductConditionSet,
+        addProductConditionSetCondition: addProductConditionSetCondition,
+        updateProductConditionSetCondition: updateProductConditionSetCondition,
+        copyProductConditionSetCondition: copyProductConditionSetCondition,
+        removeProductConditionSetCondition: removeProductConditionSetCondition,
     };
 };
 
