@@ -93,13 +93,14 @@ class AptoCustomProperty extends AptoEntity implements \JsonSerializable
     }
 
     /**
+     * @param AptoUuid $id
      * @return AptoCustomProperty
      * @throws AptoCustomPropertyException
      */
-    public function copy(): AptoCustomProperty
+    public function copy(AptoUuid $id): AptoCustomProperty
     {
         return new AptoCustomProperty(
-            $this->getId(),
+            $id,
             $this->getKey(),
             $this->getValue(),
             $this->getTranslatable()

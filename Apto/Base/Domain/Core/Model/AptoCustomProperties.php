@@ -106,11 +106,11 @@ trait AptoCustomProperties
 
         /** @var AptoCustomProperty $customProperty */
         foreach ($this->customProperties as $customProperty) {
-            $property = $customProperty->copy();
+            $id = $this->nextAptoCustomPropertyId();
 
             $collection->set(
-                $property->getId()->getId(),
-                $property
+                $id->getId(),
+                $customProperty->copy($id)
             );
         }
 
