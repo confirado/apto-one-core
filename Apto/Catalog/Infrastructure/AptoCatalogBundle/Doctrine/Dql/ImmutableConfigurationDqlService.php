@@ -83,6 +83,7 @@ class ImmutableConfigurationDqlService extends AbstractDqlService
                     ['id.id', 'id']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',

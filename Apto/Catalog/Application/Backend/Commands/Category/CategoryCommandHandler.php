@@ -3,6 +3,7 @@ namespace Apto\Catalog\Application\Backend\Commands\Category;
 
 use Apto\Base\Application\Core\Commands\AbstractCommandHandler;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
+use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\DomainEvent\DomainEventPublisher;
 use Apto\Base\Domain\Core\Model\FileSystem\File\File;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
@@ -106,7 +107,7 @@ class CategoryCommandHandler extends AbstractCommandHandler
         }
 
         $category->removeCustomProperty(
-            $command->getKey()
+            new AptoUuid($command->getId())
         );
 
         $this->categoryRepository->update($category);

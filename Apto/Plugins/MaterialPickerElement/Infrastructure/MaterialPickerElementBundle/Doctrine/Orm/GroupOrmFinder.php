@@ -197,9 +197,17 @@ class GroupOrmFinder extends AptoOrmFinder implements GroupFinder
                 'p' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
+                    'surrogateId',
                     'key',
                     'value',
-                    'surrogateId'
+                    'translatable'
+                ]
+            ])
+            ->setPostProcess([
+                'cp' => [
+                    'value' => [DqlQueryBuilder::class, 'decodeCustomPropertyValue'],
+                    'translatable' => [DqlQueryBuilder::class, 'decodeBool']
                 ]
             ])
             ->setJoins([

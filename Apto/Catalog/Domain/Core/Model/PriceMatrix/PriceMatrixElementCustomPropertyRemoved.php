@@ -10,23 +10,23 @@ class PriceMatrixElementCustomPropertyRemoved extends AbstractDomainEvent
     /**
      * @var string
      */
-    private $key;
+    private $customPropertyId;
 
     /**
      * @param AptoUuid $id
-     * @param string $key
+     * @param string $customPropertyId
      */
-    public function __construct(AptoUuid $id, string $key)
+    public function __construct(AptoUuid $id, string $customPropertyId)
     {
         parent::__construct($id);
-        $this->key = $key;
+        $this->customPropertyId = $customPropertyId;
     }
 
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getCustomPropertyId(): string
     {
-        return $this->key;
+        return $this->customPropertyId;
     }
 }

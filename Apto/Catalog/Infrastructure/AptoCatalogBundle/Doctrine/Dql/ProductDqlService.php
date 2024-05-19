@@ -43,12 +43,14 @@ class ProductDqlService extends AbstractDqlService
                     'errorMessage'
                 ],
                 'pscp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
                     'translatable'
                 ],
                 'pecp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -164,6 +166,7 @@ class ProductDqlService extends AbstractDqlService
                     ['identifier.value', 'identifier']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -202,6 +205,7 @@ class ProductDqlService extends AbstractDqlService
                     ['identifier.value', 'identifier']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -248,6 +252,7 @@ class ProductDqlService extends AbstractDqlService
                     ['identifier.value', 'identifier']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',

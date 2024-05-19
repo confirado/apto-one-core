@@ -441,7 +441,9 @@ class ProductSectionHandler extends ProductChildHandler
             new AptoUuid(
                 $command->getSectionId()
             ),
-            $command->getKey()
+            new AptoUuid(
+                $command->getId()
+            )
         );
 
         $this->productRepository->update($product);

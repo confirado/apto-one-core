@@ -20,7 +20,7 @@
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
 
-        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="key" orphan-removal="true">
+        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="id.id" orphan-removal="true">
             <cascade>
                 <cascade-persist/>
                 <cascade-remove/>

@@ -2,14 +2,8 @@
 
 namespace Apto\Base\Domain\Core\Model;
 
-class AptoCustomProperty implements \JsonSerializable
+class AptoCustomProperty extends AptoEntity implements \JsonSerializable
 {
-
-    /**
-     * @var int
-     */
-    protected $surrogateId;
-
     /**
      * @var string
      */
@@ -26,28 +20,20 @@ class AptoCustomProperty implements \JsonSerializable
     protected $translatable;
 
     /**
-     * AptoCustomProperty constructor.
      * @param string $key
      * @param string $value
      * @param bool $translatable
      * @throws AptoCustomPropertyException
      */
-    public function __construct(string $key, string $value, bool $translatable = false)
+    public function __construct(AptoUuid $id, string $key, string $value, bool $translatable = false)
     {
         if (null == trim($key)) {
             throw new AptoCustomPropertyException('An empty key is not allowed.');
         }
+        parent::__construct($id);
         $this->key = $key;
         $this->value = $value;
         $this->translatable = $translatable;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSurrogateId(): int
-    {
-        return $this->surrogateId;
     }
 
     /**
@@ -113,6 +99,7 @@ class AptoCustomProperty implements \JsonSerializable
     public function copy(): AptoCustomProperty
     {
         return new AptoCustomProperty(
+            $this->getId(),
             $this->getKey(),
             $this->getValue(),
             $this->getTranslatable()

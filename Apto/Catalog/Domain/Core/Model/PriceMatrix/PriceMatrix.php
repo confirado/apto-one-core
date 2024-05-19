@@ -243,10 +243,10 @@ class PriceMatrix extends AptoAggregate
 
     /**
      * @param AptoUuid $elementId
-     * @param string $key
+     * @param AptoUuid $id
      * @return PriceMatrix
      */
-    public function removePriceMatrixElementCustomProperty(AptoUuid $elementId, string $key): PriceMatrix
+    public function removePriceMatrixElementCustomProperty(AptoUuid $elementId, AptoUuid $id): PriceMatrix
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($elementId);
@@ -255,38 +255,16 @@ class PriceMatrix extends AptoAggregate
         }
 
         // remove price from element
-        $element->removeCustomProperty($key);
+        $element->removeCustomProperty($id);
 
         $this->publish(
             new PriceMatrixElementCustomPropertyRemoved(
                 $this->getId(),
-                $key
+                $id->getId()
             )
         );
 
         return $this;
-    }
-
-    /**
-     * @param AptoUuid $elementId
-     * @param string $key
-     * @return null|string
-     */
-    public function getPriceMatrixElementCustomProperty(AptoUuid $elementId, string $key)
-    {
-        $element = $this->getElement($elementId);
-        return null === $element ? null : $element->getCustomProperty($key);
-    }
-
-    /**
-     * @param AptoUuid $elementId
-     * @param string $key
-     * @return bool
-     */
-    public function hasPriceMatrixElementCustomProperty(AptoUuid $elementId, string $key): bool
-    {
-        $element = $this->getElement($elementId);
-        return null === $element ? false : $element->hasCustomProperty($key);
     }
 
     /**

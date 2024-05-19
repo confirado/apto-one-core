@@ -19,19 +19,19 @@ class RemovePriceMatrixElementCustomProperty implements CommandInterface
     /**
      * @var string
      */
-    private $key;
+    private $id;
 
     /**
      * RemovePriceMatrixElementCustomProperty constructor.
      * @param string $priceMatrixId
      * @param string $priceMatrixElementId
-     * @param string $key
+     * @param string $id
      */
-    public function __construct(string $priceMatrixId, string $priceMatrixElementId, string $key)
+    public function __construct(string $priceMatrixId, string $priceMatrixElementId, string $id)
     {
         $this->priceMatrixId = $priceMatrixId;
         $this->priceMatrixElementId = $priceMatrixElementId;
-        $this->key = $key;
+        $this->id = $id;
     }
 
     /**
@@ -53,8 +53,8 @@ class RemovePriceMatrixElementCustomProperty implements CommandInterface
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getId(): string
     {
-        return $this->key;
+        return $this->id;
     }
 }

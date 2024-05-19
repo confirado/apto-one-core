@@ -505,8 +505,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         });
     }
 
-    function removeElementCustomProperty(key) {
-        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, key).then(() => {
+    function removeElementCustomProperty(id) {
+        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, id).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }

@@ -22,5 +22,11 @@ interface AptoCustomPropertyRepository extends AptoRepository
      * @param $id
      * @return AptoCustomProperty|null
      */
-    public function findById($id);
+    public function findById($id): ?AptoCustomProperty;
+
+    /**
+     * @param $id
+     * @return AptoCustomProperty|null
+     */
+    public function findBySurrogateId($id): ?AptoCustomProperty;
 }

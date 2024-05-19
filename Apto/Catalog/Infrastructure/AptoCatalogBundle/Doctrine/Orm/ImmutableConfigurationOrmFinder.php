@@ -35,6 +35,7 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                     ['id.id', 'id']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -69,6 +70,7 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                         ['id.id', 'id']
                     ],
                     'cp' => [
+                        ['id.id', 'id'],
                         'surrogateId',
                         'key',
                         'value',

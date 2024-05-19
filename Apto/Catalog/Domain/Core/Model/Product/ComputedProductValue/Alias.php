@@ -189,7 +189,7 @@ class Alias extends AptoEntity
                 if (!$state->isElementActive($sectionId, $elementId, $repetition)) {
                     continue;
                 }
-                return floatval(str_replace(',', '.', $product->getElement($sectionId, $elementId)->getCustomProperty($this->property)));
+                return floatval(str_replace(',', '.', $product->getElement($sectionId, $elementId)->getCustomPropertyValueByKey($this->property)));
             }
             return floatval(0);
         }
@@ -203,7 +203,7 @@ class Alias extends AptoEntity
                 return 0;
             }
 
-            return floatval(str_replace(',', '.', $product->getElement($sectionId, $elementId)->getCustomProperty($this->property)));
+            return floatval(str_replace(',', '.', $product->getElement($sectionId, $elementId)->getCustomPropertyValueByKey($this->property)));
         }
 
         // case: element selectable value is given

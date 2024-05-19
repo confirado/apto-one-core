@@ -41,8 +41,8 @@ const CategoryDetailController = function($scope, $mdDialog, $ngRedux, CategoryA
         });
     }
 
-    function removeCustomProperty(key) {
-        $scope.removeCategoryCustomProperty(categoryId, key).then(() => {
+    function removeCustomProperty(id) {
+        $scope.removeCategoryCustomProperty(categoryId, id).then(() => {
             $scope.fetchCustomProperties(categoryId);
         });
     }

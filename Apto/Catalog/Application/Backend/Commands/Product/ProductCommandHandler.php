@@ -538,7 +538,7 @@ class ProductCommandHandler extends ProductChildHandler
         }
 
         $product->removeCustomProperty(
-            $command->getKey()
+            new AptoUuid($command->getId())
         );
 
         $this->productRepository->update($product);

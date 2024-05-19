@@ -345,6 +345,7 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
                 'e' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',

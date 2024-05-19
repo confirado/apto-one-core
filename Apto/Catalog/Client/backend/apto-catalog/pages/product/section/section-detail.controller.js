@@ -226,8 +226,8 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         });
     }
 
-    function removeSectionCustomProperty(key) {
-        $scope.removeProductSectionCustomProperty(productId, sectionId, key).then(() => {
+    function removeSectionCustomProperty(id) {
+        $scope.removeProductSectionCustomProperty(productId, sectionId, id).then(() => {
             $scope.fetchCustomProperties(sectionId);
         });
     }

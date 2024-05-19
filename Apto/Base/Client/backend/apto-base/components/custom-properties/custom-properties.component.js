@@ -11,6 +11,7 @@ class CustomPropertiesController extends ContainerController {
 
         this.properties = [];
         this.property = {
+            id: null,
             key: null,
             value: null,
             translatable: false
@@ -64,15 +65,16 @@ class CustomPropertiesController extends ContainerController {
     editProperty (property) {
         this.keys.item = property.key;
         this.property = {
+            id: property.id,
             key: property.key,
             value: property.value,
             translatable: property.translatable
         };
     }
 
-    removeProperty (key) {
+    removeProperty (id) {
         this.onRemoveProperty({
-            key: key
+            id: id
         });
     }
 

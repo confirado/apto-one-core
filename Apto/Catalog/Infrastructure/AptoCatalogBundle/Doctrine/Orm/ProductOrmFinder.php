@@ -261,6 +261,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -316,12 +317,14 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     ['file.extension', 'extension']
                 ],
                 'scp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
                     'translatable'
                 ],
                 'ecp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -1098,6 +1101,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -1252,6 +1256,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
@@ -1534,6 +1539,7 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                 'p' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',

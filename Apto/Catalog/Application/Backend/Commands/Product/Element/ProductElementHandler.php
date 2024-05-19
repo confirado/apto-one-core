@@ -429,7 +429,9 @@ class ProductElementHandler extends ProductChildHandler
             new AptoUuid(
                 $command->getElementId()
             ),
-            $command->getKey()
+            new AptoUuid(
+                $command->getId()
+            ),
         );
 
         $this->productRepository->update($product);
