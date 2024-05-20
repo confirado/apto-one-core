@@ -123,6 +123,10 @@ const ComputedValueDetailController = function($scope, $templateCache, $mdDialog
         $scope.inheritPorpertiesLength = properties.length;
 
         for (let i = 0; i < customProperties.length; i++) {
+            // only custom properties without condition are supported
+            if (customProperties[i].productConditionId !== null) {
+                continue;
+            }
             properties.push(customProperties[i].key);
         }
         return properties;
@@ -140,7 +144,9 @@ const ComputedValueDetailController = function($scope, $templateCache, $mdDialog
 
             for(let j = 0; j < element.customProperties.length; j++) {
                 let key = element.customProperties[j].key;
-                if (customProperties.includes(key)) {
+
+                // only custom properties without condition are supported
+                if (customProperties.includes(key) || element.customProperties[j].productConditionId !== null) {
                     continue;
                 }
 
