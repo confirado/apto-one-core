@@ -22,37 +22,24 @@ trait AptoCustomProperties
      */
     public function setCustomProperty(string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): self
     {
-        //@todo always make a new instance of an domain model also if it already exists is evil, keyword: doctrine entity manager(maybe persists this instance even if its not a new one in 'setAptoCustomProperty'), domain events
-        $this->setAptoCustomProperty(
-            new AptoCustomProperty(
+        // property exists?
+        $property = $this->getCustomPropertyByKeyAndConditionId($key, $productConditionId ? $productConditionId->getId() : $productConditionId);
+
+        // update property or create property
+        if (null === $property) {
+            $property = new AptoCustomProperty(
                 $this->nextAptoCustomPropertyId(),
                 $key,
                 $value,
                 $translatable,
                 $productConditionId
-            )
-        );
-        return $this;
-    }
-
-    /**
-     * @param AptoCustomProperty $property
-     * @return self
-     */
-    protected function setAptoCustomProperty(AptoCustomProperty $property): self
-    {
-        $key = $property->getId()->getId();
-        if ($this->customProperties->containsKey($key)) {
-            /** @var AptoCustomProperty $existingProperty */
-            // if property already exists, change value of this instance
-            $existingProperty = $this->customProperties->get($key);
-            $existingProperty->setValue($property->getValue());
-            $existingProperty->setTranslatable($property->getTranslatable());
-            $existingProperty->setProductConditionId($property->getProductConditionId());
+            );
+            $this->customProperties->set($property->getId()->getId(), $property);
         } else {
-            // create a new instance
-            $this->customProperties->set($key, $property);
+            $property->setValue($value);
+            $property->setTranslatable($translatable);
         }
+
         return $this;
     }
 
@@ -122,9 +109,26 @@ trait AptoCustomProperties
     }
 
     /**
+     * @param string $key
+     * @param string|null $conditionId
+     * @return AptoCustomProperty|null
+     */
+    private function getCustomPropertyByKeyAndConditionId(string $key, ?string $conditionId): ?AptoCustomProperty
+    {
+        /** @var AptoCustomProperty $customProperty */
+        foreach ($this->customProperties as $customProperty) {
+            $productConditionId = $customProperty->getProductConditionId() ? $customProperty->getProductConditionId()->getId() : $customProperty->getProductConditionId();
+            if ($customProperty->getKey() === $key && $productConditionId === $conditionId) {
+                return $customProperty;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return AptoUuid
      */
-    protected function nextAptoCustomPropertyId(): AptoUuid
+    private function nextAptoCustomPropertyId(): AptoUuid
     {
         return new AptoUuid();
     }
