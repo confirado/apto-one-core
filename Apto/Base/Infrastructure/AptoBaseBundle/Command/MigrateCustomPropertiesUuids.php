@@ -74,6 +74,7 @@ class MigrateCustomPropertiesUuids extends Command
             }
 
             /** @var QueryBuilder $queryBuilder */
+            $output->writeln(['Update CustomProperty ' . $customProperty['key'] . '|' . $customProperty['surrogateId']]);
             $queryBuilder = $entityManager->createQueryBuilder();
             $queryBuilder
                 ->update(AptoCustomProperty::class, 'AptoCustomProperty')
