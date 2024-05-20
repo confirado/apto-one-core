@@ -1989,7 +1989,7 @@ class Product extends AptoAggregate
      * @param AptoUuid $id
      * @return string|null
      */
-    public function getSectionCustomProperty(AptoUuid $sectionId, AptoUuid $id): ?string
+    public function getSectionCustomPropertyValue(AptoUuid $sectionId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -2052,7 +2052,7 @@ class Product extends AptoAggregate
      * @param AptoUuid $id
      * @return string|null
      */
-    public function getElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): ?string
+    public function getElementCustomPropertyValue(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do

@@ -55,13 +55,17 @@ trait AptoCustomProperties
 
     /**
      * @param string $key
+     * @param AptoUuid|null $productConditionId
      * @return string|null
      */
-    public function getCustomPropertyValueByKey(string $key): ?string
+    public function getCustomPropertyValueByKey(string $key, ?AptoUuid $productConditionId = null): ?string
     {
+        $pConditionId = $productConditionId?->getId();
+
         /** @var AptoCustomProperty $customProperty */
         foreach ($this->customProperties as $customProperty) {
-            if ($customProperty->getKey() === $key) {
+            $cpConditionId = $customProperty->getProductConditionId()?->getId();
+            if ($customProperty->getKey() === $key && $cpConditionId === $pConditionId) {
                 return $customProperty->getValue();
             }
         }
