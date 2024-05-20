@@ -47,6 +47,7 @@ class AptoCustomPropertyOrmFinder extends AptoOrmFinder implements AptoCustomPro
                     'key',
                     'value',
                     'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

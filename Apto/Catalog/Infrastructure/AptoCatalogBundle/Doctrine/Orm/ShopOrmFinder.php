@@ -112,7 +112,8 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -173,7 +174,8 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -286,7 +288,8 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

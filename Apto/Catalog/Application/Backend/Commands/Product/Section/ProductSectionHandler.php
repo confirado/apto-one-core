@@ -412,13 +412,19 @@ class ProductSectionHandler extends ProductChildHandler
             return;
         }
 
+        $productConditionId = $command->getProductConditionId();
+        if (null !== $productConditionId) {
+            $productConditionId = new AptoUuid($productConditionId);
+        }
+
         $product->addSectionCustomProperty(
             new AptoUuid(
                 $command->getSectionId()
             ),
             $command->getKey(),
             $command->getValue(),
-            $command->getTranslatable()
+            $command->getTranslatable(),
+            $productConditionId
         );
 
         $this->productRepository->update($product);

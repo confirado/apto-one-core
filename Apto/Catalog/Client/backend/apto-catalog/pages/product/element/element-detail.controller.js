@@ -499,8 +499,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         $scope.setDetailValue('priceMatrix', $scope.priceMatrix.priceMatrix);
     }
 
-    function addElementCustomProperty(key, value, translatable) {
-        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable).then(() => {
+    function addElementCustomProperty(key, value, translatable, productConditionId) {
+        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable, productConditionId).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }

@@ -279,7 +279,8 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([
@@ -373,7 +374,8 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setWhere('p.id.id = :id AND pe.id.id = :elementId',

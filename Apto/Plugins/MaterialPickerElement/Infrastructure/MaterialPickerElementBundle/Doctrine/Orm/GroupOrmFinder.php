@@ -201,7 +201,8 @@ class GroupOrmFinder extends AptoOrmFinder implements GroupFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

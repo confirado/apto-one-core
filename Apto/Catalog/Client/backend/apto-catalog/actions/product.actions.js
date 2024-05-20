@@ -138,10 +138,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductCustomProperty(productId, key, value, translatable) {
+    function addProductCustomProperty(productId, key, value, translatable, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductCustomProperty', [productId, key, value, translatable])
+            payload: MessageBusFactory.command('AddProductCustomProperty', [productId, key, value, translatable, productConditionId])
         }
     }
 
@@ -402,10 +402,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductSectionCustomProperty(productId, sectionId, key, value, translatable) {
+    function addProductSectionCustomProperty(productId, sectionId, key, value, translatable, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_SECTION_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductSectionCustomProperty', [productId, sectionId, key, value, translatable])
+            payload: MessageBusFactory.command('AddProductSectionCustomProperty', [productId, sectionId, key, value, translatable, productConditionId])
         }
     }
 
@@ -465,10 +465,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable) {
+    function addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_ELEMENT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductElementCustomProperty', [productId, sectionId, elementId, key, value, translatable])
+            payload: MessageBusFactory.command('AddProductElementCustomProperty', [productId, sectionId, elementId, key, value, translatable, productConditionId])
         }
     }
 

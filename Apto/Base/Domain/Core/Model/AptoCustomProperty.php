@@ -20,12 +20,19 @@ class AptoCustomProperty extends AptoEntity implements \JsonSerializable
     protected $translatable;
 
     /**
+     * @var AptoUuid|null
+     */
+    protected ?AptoUuid $productConditionId;
+
+    /**
+     * @param AptoUuid $id
      * @param string $key
      * @param string $value
      * @param bool $translatable
+     * @param AptoUuid|null $productConditionId
      * @throws AptoCustomPropertyException
      */
-    public function __construct(AptoUuid $id, string $key, string $value, bool $translatable = false)
+    public function __construct(AptoUuid $id, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null)
     {
         if (null == trim($key)) {
             throw new AptoCustomPropertyException('An empty key is not allowed.');
@@ -34,6 +41,7 @@ class AptoCustomProperty extends AptoEntity implements \JsonSerializable
         $this->key = $key;
         $this->value = $value;
         $this->translatable = $translatable;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -81,14 +89,34 @@ class AptoCustomProperty extends AptoEntity implements \JsonSerializable
     }
 
     /**
+     * @return AptoUuid|null
+     */
+    public function getProductConditionId(): ?AptoUuid
+    {
+        return $this->productConditionId;
+    }
+
+    /**
+     * @param AptoUuid|null $productConditionId
+     * @return $this
+     */
+    public function setProductConditionId(?AptoUuid $productConditionId): AptoCustomProperty
+    {
+        $this->productConditionId = $productConditionId;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function jsonSerialize(): array
     {
         return [
+            'id' => $this->id->jsonSerialize(),
             'key' => $this->key,
             'value' => $this->value,
-            'translatable' => $this->translatable
+            'translatable' => $this->translatable,
+            'productConditionId' => $this->productConditionId->jsonSerialize()
         ];
     }
 
@@ -103,7 +131,8 @@ class AptoCustomProperty extends AptoEntity implements \JsonSerializable
             $id,
             $this->getKey(),
             $this->getValue(),
-            $this->getTranslatable()
+            $this->getTranslatable(),
+            $this->getProductConditionId()
         );
     }
 }

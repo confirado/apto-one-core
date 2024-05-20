@@ -349,7 +349,8 @@ class ProductElementOrmFinder extends AptoOrmFinder implements ProductElementFin
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

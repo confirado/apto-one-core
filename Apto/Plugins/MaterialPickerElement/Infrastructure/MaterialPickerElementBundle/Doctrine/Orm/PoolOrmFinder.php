@@ -388,7 +388,8 @@ class PoolOrmFinder extends AptoOrmFinder implements PoolFinder
                     ['id.id', 'id'],
                     'surrogateId',
                     'key',
-                    'value'
+                    'value',
+                    'productConditionId'
                 ],
                 'mpg' => [
                     ['id.id', 'id'],

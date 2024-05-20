@@ -217,7 +217,8 @@ class ProductSectionOrmFinder extends AptoOrmFinder implements ProductSectionFin
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

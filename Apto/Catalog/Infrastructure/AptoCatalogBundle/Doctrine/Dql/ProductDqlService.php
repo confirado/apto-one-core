@@ -47,14 +47,16 @@ class ProductDqlService extends AbstractDqlService
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'pecp' => [
                     ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -170,7 +172,8 @@ class ProductDqlService extends AbstractDqlService
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -209,7 +212,8 @@ class ProductDqlService extends AbstractDqlService
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -256,7 +260,8 @@ class ProductDqlService extends AbstractDqlService
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([

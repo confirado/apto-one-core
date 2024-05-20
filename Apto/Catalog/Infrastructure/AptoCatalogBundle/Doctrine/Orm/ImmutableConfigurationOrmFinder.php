@@ -39,7 +39,8 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
             ])->setJoins([
                 'i' => [
@@ -74,7 +75,8 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                         'surrogateId',
                         'key',
                         'value',
-                        'translatable'
+                        'translatable',
+                        'productConditionId'
                     ],
                 ]
             )->setJoins(

@@ -224,7 +224,8 @@ class CategoryOrmFinder extends AptoOrmFinder implements CategoryFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([

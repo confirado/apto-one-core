@@ -21,6 +21,7 @@
                 <option name="default">0</option>
             </options>
         </field>
+        <field name="productConditionId" column="product_condition_id" type="AptoPropertyUuid" nullable="true"/>
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
     </entity>

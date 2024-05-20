@@ -1965,10 +1965,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false): Product
+    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -1978,7 +1979,7 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to section
-        $section->setCustomProperty($key, $value, $translatable);
+        $section->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }
@@ -2026,10 +2027,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false): Product
+    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do
@@ -2039,7 +2041,7 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to element
-        $element->setCustomProperty($key, $value, $translatable);
+        $element->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }

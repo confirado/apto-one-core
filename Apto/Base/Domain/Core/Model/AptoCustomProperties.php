@@ -16,10 +16,11 @@ trait AptoCustomProperties
      * @param string $key
      * @param string $value
      * @param bool $translatable
+     * @param AptoUuid|null $productConditionId
      * @return self
      * @throws AptoCustomPropertyException
      */
-    public function setCustomProperty(string $key, string $value, bool $translatable = false): self
+    public function setCustomProperty(string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): self
     {
         //@todo always make a new instance of an domain model also if it already exists is evil, keyword: doctrine entity manager(maybe persists this instance even if its not a new one in 'setAptoCustomProperty'), domain events
         $this->setAptoCustomProperty(
@@ -27,7 +28,8 @@ trait AptoCustomProperties
                 $this->nextAptoCustomPropertyId(),
                 $key,
                 $value,
-                $translatable
+                $translatable,
+                $productConditionId
             )
         );
         return $this;
@@ -41,10 +43,12 @@ trait AptoCustomProperties
     {
         $key = $property->getId()->getId();
         if ($this->customProperties->containsKey($key)) {
+            /** @var AptoCustomProperty $existingProperty */
             // if property already exists, change value of this instance
             $existingProperty = $this->customProperties->get($key);
             $existingProperty->setValue($property->getValue());
             $existingProperty->setTranslatable($property->getTranslatable());
+            $existingProperty->setProductConditionId($property->getProductConditionId());
         } else {
             // create a new instance
             $this->customProperties->set($key, $property);

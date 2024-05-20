@@ -87,7 +87,8 @@ class ImmutableConfigurationDqlService extends AbstractDqlService
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
             ])->setJoins([
                 'i' => [

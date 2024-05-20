@@ -265,7 +265,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 //section
                 's' => [
@@ -321,14 +322,16 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'ecp' => [
                     ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -1105,7 +1108,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -1260,7 +1264,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -1543,7 +1548,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([
