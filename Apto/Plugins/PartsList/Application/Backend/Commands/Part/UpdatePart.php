@@ -18,10 +18,12 @@ class UpdatePart extends PartAbstract
      * @param array $description
      * @param int|null $amount
      * @param string|null $currencyCode
+     * @param string|null $category
+     * @param array $customProperties
      */
-    public function __construct(string $id, bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode, ?string $category)
+    public function __construct(string $id, bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode, ?string $category, array $customProperties)
     {
-        parent::__construct($active, $partNumber, $unitId, $name, $description, $amount, $currencyCode, $category);
+        parent::__construct($active, $partNumber, $unitId, $name, $description, $amount, $currencyCode, $category, $customProperties);
         $this->id = $id;
     }
 

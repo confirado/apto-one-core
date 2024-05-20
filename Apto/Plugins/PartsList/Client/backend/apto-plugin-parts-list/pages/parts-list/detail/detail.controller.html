@@ -30,6 +30,9 @@
                     <md-tab label="Regeln" ng-click="closeEditDialog()" ng-if="details.id">
                         <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/rules.html'"></div>
                     </md-tab>
+                    <md-tab label="Benutzerdefinierte Eigenschaften" ng-if="details.id">
+                        <div class="apto-tab-content" ng-include="'apto-plugin-parts-list/pages/parts-list/detail/tabs/custom-properties.html'"></div>
+                    </md-tab>
                 </md-tabs>
             </div>
         </md-dialog-content>

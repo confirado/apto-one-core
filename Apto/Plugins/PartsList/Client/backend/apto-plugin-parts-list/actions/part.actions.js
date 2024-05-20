@@ -71,6 +71,14 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
+    function fetchCustomProperties(partId) {
+        return {
+            type: getType('FETCH_CUSTOM_PROPERTIES'),
+            payload: MessageBusFactory.query('AptoPartsListFindCustomProperties', [partId])
+        }
+    }
+
+
     function resetDetails() {
         return {
             type: getType('RESET_DETAILS')
@@ -272,6 +280,13 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
+    function addCustomProperty(partId, key, value, translatable) {
+        return {
+            type: getType('ADD_CUSTOM_PROPERTY'),
+            payload: MessageBusFactory.command('AptoPartsListAddPartCustomProperty', [partId, key, value, translatable])
+        }
+    }
+
     function removeRuleUsageCondition(partId, usageId, conditionId) {
         return {
             type: getType('ADD_RULE_USAGE_CONDITION'),
@@ -342,6 +357,13 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
+    function removeCustomProperty(partId, key) {
+        return {
+            type: getType('REMOVE_CUSTOM_PROPERTY'),
+            payload: MessageBusFactory.command('AptoPartsListRemoveCustomProperty', [partId, key])
+        }
+    }
+
     function addPartPrice(partId, amount, currencyCode, customerGroupId) {
         return {
             type: getType('ADD_PART_PRICE'),
@@ -375,11 +397,13 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         fetchSectionUsages: fetchSectionUsages,
         fetchElementUsages: fetchElementUsages,
         fetchRuleUsages: fetchRuleUsages,
+        fetchCustomProperties: fetchCustomProperties,
         fetchPrices: fetchPrices,
         addProductUsage: addProductUsage,
         addSectionUsage: addSectionUsage,
         addElementUsage: addElementUsage,
         addRuleUsage: addRuleUsage,
+        addCustomProperty: addCustomProperty,
         updateProductUsageQuantity: updateProductUsageQuantity,
         updateSectionUsageQuantity: updateSectionUsageQuantity,
         updateElementUsage: updateElementUsage,
@@ -388,6 +412,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         removeSectionUsage: removeSectionUsage,
         removeElementUsage: removeElementUsage,
         removeRuleUsage: removeRuleUsage,
+        removeCustomProperty: removeCustomProperty,
         resetElementUsageDetails: resetElementUsageDetails,
         resetRuleUsageDetails: resetRuleUsageDetails,
         fetchProductsSectionsElements: fetchProductsSectionsElements,

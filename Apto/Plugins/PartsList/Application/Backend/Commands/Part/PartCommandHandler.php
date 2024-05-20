@@ -3,6 +3,7 @@
 namespace Apto\Plugins\PartsList\Application\Backend\Commands\Part;
 
 use Apto\Base\Application\Core\Commands\AbstractCommandHandler;
+use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPriceDuplicateException;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
@@ -124,7 +125,9 @@ class PartCommandHandler extends AbstractCommandHandler
             ->setDescription(
                 $this->getTranslatedValue($command->getDescription())
             )
-            ->setCategory($this->getCategory($command->getCategoryId()));
+            ->setCategory(
+                $this->getCategory($command->getCategoryId())
+            );
 
         // update part and publish fired events
         $this->partRepository->update($part);
@@ -680,6 +683,44 @@ class PartCommandHandler extends AbstractCommandHandler
         }
     }
 
+    /**
+     * @param AddPartCustomProperty $command
+     * @throws AptoCustomPropertyException
+     */
+    public function handleAddPartCustomProperty(AddPartCustomProperty $command)
+    {
+        $part = $this->partRepository->findById($command->getId());
+
+        if (null === $part) {
+            return;
+        }
+
+        $part->setCustomProperty(
+            $command->getKey(),
+            $command->getValue(),
+            $command->getTranslatable()
+        );
+
+        $this->partRepository->update($part);
+        $part->publishEvents();
+    }
+
+    /**
+     * @param RemovePartCustomProperty $command
+     */
+    public function handleRemovePartCustomProperty(RemovePartCustomProperty $command)
+    {
+        $part = $this->partRepository->findById($command->getId());
+
+        if (null === $part) {
+            return;
+        }
+
+        $part->removeCustomProperty($command->getKey());
+
+        $this->partRepository->update($part);
+        $part->publishEvents();
+    }
 
     /**
      * @param string|null $unitId
@@ -716,6 +757,7 @@ class PartCommandHandler extends AbstractCommandHandler
 
         return new Money($amount, new Currency($currencyCode));
     }
+
 
     /**
      * @return iterable
@@ -844,6 +886,18 @@ class PartCommandHandler extends AbstractCommandHandler
 
         yield RemovePartPrice::class => [
             'method' => 'handleRemovePartPrice',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'command_bus'
+        ];
+
+        yield AddPartCustomProperty ::class => [
+            'method' => 'handleAddPartCustomProperty',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'command_bus'
+        ];
+
+        yield RemovePartCustomProperty ::class => [
+            'method' => 'handleRemovePartCustomProperty',
             'aptoMessagePrefix' => 'AptoPartsList',
             'bus' => 'command_bus'
         ];

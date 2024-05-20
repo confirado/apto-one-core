@@ -78,6 +78,12 @@ interface PartFinder
     public function findElements(string $searchString): array;
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function findCustomProperties(array $ids);
+
+    /**
      * @param string $id
      * @return array|null
      */
