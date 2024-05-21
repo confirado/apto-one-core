@@ -138,10 +138,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductCustomProperty(productId, key, value, translatable, productConditionId) {
+    function addProductCustomProperty(productId, key, value, translatable) {
         return {
             type: getType('ADD_PRODUCT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductCustomProperty', [productId, key, value, translatable, productConditionId])
+            payload: MessageBusFactory.command('AddProductCustomProperty', [productId, key, value, translatable])
         }
     }
 

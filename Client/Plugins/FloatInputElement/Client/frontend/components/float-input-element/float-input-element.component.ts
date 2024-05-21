@@ -160,10 +160,10 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   }
 
   private initIncreaseDecreaseStep() {
-    let increaseStep = this.element.element.customProperties.find((customProperty) => {
+    let increaseStep = this.element.state.customProperties.find((customProperty) => {
       return customProperty.key === 'increaseStep';
     });
-    let decreaseStep = this.element.element.customProperties.find((customProperty) => {
+    let decreaseStep = this.element.state.customProperties.find((customProperty) => {
       return customProperty.key === 'decreaseStep';
     });
 

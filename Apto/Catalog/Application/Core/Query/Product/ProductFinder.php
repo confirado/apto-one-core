@@ -77,17 +77,19 @@ interface ProductFinder extends AptoFinder
      * @param string $id
      * @param bool $withRules
      * @param bool $withComputedValues
+     * @param bool $withConditionSets
      * @return mixed
      */
-    public function findConfigurableProductById(string $id, bool $withRules = true, bool $withComputedValues = true);
+    public function findConfigurableProductById(string $id, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true);
 
     /**
      * @param string $seoUrl
      * @param bool $withRules
      * @param bool $withComputedValues
+     * @param bool $withConditionSets
      * @return mixed
      */
-    public function findConfigurableProductBySeoUrl(string $seoUrl, bool $withRules = true, bool $withComputedValues = true);
+    public function findConfigurableProductBySeoUrl(string $seoUrl, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true);
 
     /**
      * @param int $pageNumber

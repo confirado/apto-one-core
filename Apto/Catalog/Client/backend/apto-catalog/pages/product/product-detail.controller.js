@@ -325,8 +325,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         });
     }
 
-    function addCustomProperty(key, value, translatable, productConditionId) {
-        $scope.addProductCustomProperty(productId, key, value, translatable, productConditionId).then(() => {
+    function addCustomProperty(key, value, translatable) {
+        $scope.addProductCustomProperty(productId, key, value, translatable).then(() => {
             $scope.fetchCustomProperties(productId);
         });
     }

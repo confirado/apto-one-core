@@ -100,7 +100,7 @@ class ProductQueryHandler implements QueryHandlerInterface
     public function handleFindConfigurableProduct(FindConfigurableProduct $query)
     {
         $productId = $query->getProductId() ? $query->getProductId() : $this->defaultProduct;
-        return $this->configurableProductBuilder->createConfigurableProduct($productId, false, false);
+        return $this->configurableProductBuilder->createConfigurableProduct($productId, false, false, false, false);
     }
 
     /**
@@ -115,14 +115,14 @@ class ProductQueryHandler implements QueryHandlerInterface
         // get configurable product if no configuration type is set
         if (null === $query->getType()) {
             $productId = $query->getId() ?: $this->defaultProduct;
-            $product = $this->configurableProductBuilder->createConfigurableProduct($productId, false, false);
+            $product = $this->configurableProductBuilder->createConfigurableProduct($productId, false, false, false, false);
 
             if (null === $product) {
                 return null;
             }
 
             return [
-                'product' => $this->configurableProductBuilder->createConfigurableProduct($productId, false, false),
+                'product' => $this->configurableProductBuilder->createConfigurableProduct($productId, false, false, false, false),
                 'configuration' => null
             ];
         }
@@ -163,7 +163,7 @@ class ProductQueryHandler implements QueryHandlerInterface
         $configuration['type'] = $query->getType();
 
         // get product
-        $product = $this->configurableProductBuilder->createConfigurableProduct($configuration['productId'], false, false);
+        $product = $this->configurableProductBuilder->createConfigurableProduct($configuration['productId'], false, false, false, false);
 
         // set product immutable for immutable configurations
         if ($query->getType() === 'immutable') {
@@ -187,7 +187,7 @@ class ProductQueryHandler implements QueryHandlerInterface
     {
         $configurationId = $query->getConfigurationId();
         $productId = $query->getProductId() ? $query->getProductId() : $this->defaultProduct;
-        $product = $this->configurableProductBuilder->createConfigurableProduct($productId, false, false);
+        $product = $this->configurableProductBuilder->createConfigurableProduct($productId, false, false, false, false);
 
         if (!$product) {
             return null;
