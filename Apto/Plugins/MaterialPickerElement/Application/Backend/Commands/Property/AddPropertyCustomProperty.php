@@ -22,16 +22,22 @@ class AddPropertyCustomProperty implements CommandInterface
     private $value;
 
     /**
-     * AddPropertyCustomProperty constructor.
+     * @var bool
+     */
+    private $translatable;
+
+    /**
      * @param string $id
      * @param string $key
-     * @param string $value
+     * @param $value
+     * @param bool $translatable
      */
-    public function __construct(string $id, string $key, string $value)
+    public function __construct(string $id, string $key, $value, bool $translatable = false)
     {
         $this->id = $id;
         $this->key = $key;
-        $this->value = $value;
+        $this->value = $translatable ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+        $this->translatable = $translatable;
     }
 
     /**
@@ -56,5 +62,13 @@ class AddPropertyCustomProperty implements CommandInterface
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTranslatable(): bool
+    {
+        return $this->translatable;
     }
 }

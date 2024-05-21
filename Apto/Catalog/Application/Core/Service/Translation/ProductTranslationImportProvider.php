@@ -128,7 +128,7 @@ class ProductTranslationImportProvider implements TranslationImportProvider
             // CustomProperty
             if ($fieldArray[3] === 'customProperty') {
                 $customPropertyKey = $this->getCustomPropertyKey($fieldArray, 3);
-                $currentSectionCustomProperty = json_decode($product->getSectionCustomProperty($sectionId, $customPropertyKey), true);
+                $currentSectionCustomProperty = json_decode($product->getSectionCustomPropertyValue($sectionId, $customPropertyKey), true);
 
                 $product->removeSectionCustomProperty($sectionId, $customPropertyKey);
                 if (null === $currentSectionCustomProperty) {
@@ -212,7 +212,7 @@ class ProductTranslationImportProvider implements TranslationImportProvider
             // CustomProperty
             if ($fieldArray[4] === 'customProperty') {
                 $customPropertyKey = $this->getCustomPropertyKey($fieldArray, 4);
-                $currentElementCustomProperty = json_decode($product->getElementCustomProperty($sectionId, $elementId, $customPropertyKey), true);
+                $currentElementCustomProperty = json_decode($product->getElementCustomPropertyValue($sectionId, $elementId, $customPropertyKey), true);
 
                 $product->removeElementCustomProperty($sectionId, $elementId, $customPropertyKey);
                 if (null === $currentElementCustomProperty) {

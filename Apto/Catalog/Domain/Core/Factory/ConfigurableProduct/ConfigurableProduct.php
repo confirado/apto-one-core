@@ -5,6 +5,7 @@ namespace Apto\Catalog\Domain\Core\Factory\ConfigurableProduct;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\ConditionSet;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\OrderedComputedProductValues;
@@ -43,6 +44,11 @@ class ConfigurableProduct implements \JsonSerializable
      * @var Rule[]
      */
     protected $rules;
+
+    /**
+     * @var ConditionSet[]
+     */
+    protected $conditionSets;
 
     /**
      * @var OrderedComputedProductValues
@@ -115,6 +121,20 @@ class ConfigurableProduct implements \JsonSerializable
         if (isset($configurableProduct['rules'])) {
             foreach ($configurableProduct['rules'] as $rawRule) {
                 $this->rules[] = RuleFactory::fromArray($rawRule);
+            }
+        }
+
+        // parse condition sets
+        unset($this->data['conditionSets']);
+        $this->conditionSets = [];
+        if (isset($configurableProduct['conditionSets'])) {
+            foreach ($configurableProduct['conditionSets'] as $rawConditionSet) {
+                $this->conditionSets[] = new ConditionSet(
+                    $rawConditionSet['id'],
+                    $rawConditionSet['identifier'],
+                    $rawConditionSet['conditionsOperator'],
+                    $rawConditionSet['conditions']
+                );
             }
         }
 
@@ -420,6 +440,20 @@ class ConfigurableProduct implements \JsonSerializable
     public function getRules(): array
     {
         return $this->rules;
+    }
+
+    /**
+     * @param string $id
+     * @return ConditionSet|null
+     */
+    public function getConditionSetById(string $id): ?ConditionSet
+    {
+        foreach ($this->conditionSets as $conditionSet) {
+            if ($conditionSet->getId() === $id) {
+                return $conditionSet;
+            }
+        }
+        return null;
     }
 
     /**

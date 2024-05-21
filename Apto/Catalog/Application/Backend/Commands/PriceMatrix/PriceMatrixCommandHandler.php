@@ -173,7 +173,7 @@ class PriceMatrixCommandHandler extends AbstractCommandHandler
         if (null !== $priceMatrix) {
             $priceMatrix->removePriceMatrixElementCustomProperty(
                 new AptoUuid($command->getPriceMatrixElementId()),
-                $command->getKey()
+                new AptoUuid($command->getId())
             );
             $priceMatrix->publishEvents();
         }

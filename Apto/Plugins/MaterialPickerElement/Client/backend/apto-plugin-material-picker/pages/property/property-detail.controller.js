@@ -38,15 +38,15 @@ const PropertyDetailController = function($scope, $templateCache, $mdDialog, $ng
         };
     }
 
-    function addCustomProperty(key, value) {
-        $scope.addPropertyCustomProperty(propertyId, key, value).then(() => {
+    function addCustomProperty(key, value, translatable) {
+        $scope.addPropertyCustomProperty(propertyId, key, value, translatable).then(() => {
             $scope.fetchPropertyCustomProperties(propertyId);
         });
         initNewProperty();
     }
 
-    function removeCustomProperty(key) {
-        $scope.removePropertyCustomProperty(propertyId, key).then(() => {
+    function removeCustomProperty(id) {
+        $scope.removePropertyCustomProperty(propertyId, id).then(() => {
             $scope.fetchPropertyCustomProperties(propertyId);
         });
     }

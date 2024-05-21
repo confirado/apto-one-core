@@ -909,23 +909,6 @@ class Product extends AptoAggregate
 
     /**
      * @param AptoUuid $sectionId
-     * @param Currency $currency
-     * @param AptoUuid $customerGroupId
-     * @return Money|null
-     */
-    public function getSectionPrice(AptoUuid $sectionId, Currency $currency, AptoUuid $customerGroupId)
-    {
-        // if element does not exists anymore we have nothing to do
-        $section = $this->getSection($sectionId);
-        if (null === $section) {
-            return null;
-        }
-
-        return $section->getAptoPrice($currency, $customerGroupId);
-    }
-
-    /**
-     * @param AptoUuid $sectionId
      * @param AptoUuid $priceId
      * @return Product
      */
@@ -1982,10 +1965,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false): Product
+    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -1995,17 +1979,17 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to section
-        $section->setCustomProperty($key, $value, $translatable);
+        $section->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }
 
     /**
      * @param AptoUuid $sectionId
-     * @param string $key
+     * @param AptoUuid $id
      * @return string|null
      */
-    public function getSectionCustomProperty(AptoUuid $sectionId, string $key): ?string
+    public function getSectionCustomPropertyValue(AptoUuid $sectionId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -2015,15 +1999,15 @@ class Product extends AptoAggregate
         }
 
         // return custom property from section
-        return $section->getCustomProperty($key);
+        return $section->getCustomPropertyValue($id);
     }
 
     /**
      * @param AptoUuid $sectionId
-     * @param string $key
+     * @param AptoUuid $id
      * @return Product
      */
-    public function removeSectionCustomProperty(AptoUuid $sectionId, string $key): Product
+    public function removeSectionCustomProperty(AptoUuid $sectionId, AptoUuid $id): Product
     {
         // if section does not exists anymore we have nothing to do
         $section = $this->getSection($sectionId);
@@ -2032,7 +2016,7 @@ class Product extends AptoAggregate
         }
 
         // remove custom property from section
-        $section->removeCustomProperty($key);
+        $section->removeCustomProperty($id);
 
         return $this;
     }
@@ -2043,10 +2027,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false): Product
+    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do
@@ -2056,7 +2041,7 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to element
-        $element->setCustomProperty($key, $value, $translatable);
+        $element->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }
@@ -2064,10 +2049,10 @@ class Product extends AptoAggregate
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $key
+     * @param AptoUuid $id
      * @return string|null
      */
-    public function getElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key): ?string
+    public function getElementCustomPropertyValue(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do
@@ -2077,16 +2062,16 @@ class Product extends AptoAggregate
         }
 
         // return custom property from element
-        return $element->getCustomProperty($key);
+        return $element->getCustomPropertyValue($id);
     }
 
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $key
+     * @param AptoUuid $id
      * @return Product
      */
-    public function removeElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key): Product
+    public function removeElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): Product
     {
         // if element does not exists anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2095,7 +2080,7 @@ class Product extends AptoAggregate
         }
 
         // remove custom property from element
-        $element->removeCustomProperty($key);
+        $element->removeCustomProperty($id);
 
         return $this;
     }
@@ -2247,24 +2232,6 @@ class Product extends AptoAggregate
         }
 
         return $element->getPosition();
-    }
-
-    /**
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
-     * @param Currency $currency
-     * @param AptoUuid $customerGroupId
-     * @return Money|null
-     */
-    public function getElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Currency $currency, AptoUuid $customerGroupId)
-    {
-        // if element does not exists anymore we have nothing to do
-        $element = $this->getElement($sectionId, $elementId);
-        if (null === $element) {
-            return null;
-        }
-
-        return $element->getAptoPrice($currency, $customerGroupId);
     }
 
     /**

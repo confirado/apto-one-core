@@ -499,14 +499,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         $scope.setDetailValue('priceMatrix', $scope.priceMatrix.priceMatrix);
     }
 
-    function addElementCustomProperty(key, value, translatable) {
-        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable).then(() => {
+    function addElementCustomProperty(key, value, translatable, productConditionId) {
+        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable, productConditionId).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }
 
-    function removeElementCustomProperty(key) {
-        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, key).then(() => {
+    function removeElementCustomProperty(id) {
+        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, id).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }

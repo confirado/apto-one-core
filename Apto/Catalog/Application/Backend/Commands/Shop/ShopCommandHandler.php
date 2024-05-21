@@ -4,6 +4,7 @@ namespace Apto\Catalog\Application\Backend\Commands\Shop;
 
 use Apto\Base\Application\Core\Commands\AbstractCommandHandler;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
+use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\DomainEvent\DomainEventPublisher;
 use Apto\Base\Domain\Core\Model\EmailOptional;
 use Apto\Base\Domain\Core\Model\Language\LanguageRepository;
@@ -201,7 +202,7 @@ class ShopCommandHandler extends AbstractCommandHandler
         }
 
         $shop->removeCustomProperty(
-            $command->getKey()
+            new AptoUuid($command->getId())
         );
 
         $this->shopRepository->update($shop);

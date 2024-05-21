@@ -225,24 +225,26 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      * @param string $seoUrl
      * @param bool $withRules
      * @param bool $withComputedValues
-     * @return mixed|null
+     * @param bool $withConditionSets
+     * @return array|null
      * @throws DqlBuilderException
      */
-    public function findConfigurableProductBySeoUrl(string $seoUrl, bool $withRules = true, bool $withComputedValues = true)
+    public function findConfigurableProductBySeoUrl(string $seoUrl, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true)
     {
-        return $this->findConfigurableProduct('seoUrl', $seoUrl, $withRules, $withComputedValues);
+        return $this->findConfigurableProduct('seoUrl', $seoUrl, $withRules, $withComputedValues, $withConditionSets);
     }
 
     /**
      * @param string $id
      * @param bool $withRules
      * @param bool $withComputedValues
-     * @return mixed|null
+     * @param bool $withConditionSets
+     * @return array|null
      * @throws DqlBuilderException
      */
-    public function findConfigurableProductById(string $id, bool $withRules = true, bool $withComputedValues = true)
+    public function findConfigurableProductById(string $id, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true)
     {
-        return $this->findConfigurableProduct('id.id', $id, $withRules, $withComputedValues);
+        return $this->findConfigurableProduct('id.id', $id, $withRules, $withComputedValues, $withConditionSets);
     }
 
     /**
@@ -250,10 +252,11 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      * @param string $value
      * @param bool $withRules
      * @param bool $withComputedValues
+     * @param bool $withConditionSets
      * @return array|null
      * @throws DqlBuilderException
      */
-    protected function findConfigurableProduct(string $field, string $value, bool $withRules = true, bool $withComputedValues = true)
+    protected function findConfigurableProduct(string $field, string $value, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true)
     {
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
@@ -261,10 +264,12 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 //section
                 's' => [
@@ -316,16 +321,20 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     ['file.extension', 'extension']
                 ],
                 'scp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'ecp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -510,6 +519,10 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             $result['computedValues'] = $this->getComputedValues($field, $value);
         }
 
+        if ($withConditionSets) {
+            $result['conditionSets'] = $this->getProductConditionSets($field, $value);
+        }
+
         return $result;
     }
 
@@ -609,55 +622,6 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
      * @return array
      * @throws DqlBuilderException
      */
-    protected function getProductConditions(string $field, string $value): array
-    {
-        $conditionBuilder = new DqlQueryBuilder($this->entityClass);
-        $conditionBuilder
-            ->setWhere('p.' . $field . ' = :configurableProductSearchParam', ['configurableProductSearchParam' => $value])
-            ->setValues([
-                'p' => [],
-                'pc' => [
-                    ['id.id', 'id'],
-                    ['identifier.value', 'identifier'],
-                    'type',
-                    'sectionId',
-                    'elementId',
-                    'property',
-                    'operator',
-                    'value'
-                ],
-                'ccpv' => [
-                    ['id.id', 'id']
-                ],
-                'icpv' => [
-                    ['id.id', 'id']
-                ]
-            ])
-            ->setJoins([
-                'p' => [
-                    ['conditions', 'pc', 'id']
-                ],
-                'pc' => [
-                    ['computedProductValue', 'ccpv', 'id']
-                ]
-            ])
-            ->setPostProcess([
-                'pc' => [
-                    'value' => [DqlQueryBuilder::class, 'castString'],
-                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
-                ]
-            ]);
-
-        $result = $conditionBuilder->getSingleResultOrNull($this->entityManager);
-        return $result ? $result['conditions'] : [];
-    }
-
-    /**
-     * @param string $field
-     * @param string $value
-     * @return array
-     * @throws DqlBuilderException
-     */
     protected function getComputedValues(string $field, string $value): array
     {
         $ruleBuilder = new DqlQueryBuilder($this->entityClass);
@@ -689,6 +653,65 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
 
         $result = $ruleBuilder->getSingleResultOrNull($this->entityManager);
         return $result ? $result['computedProductValues'] : [];
+    }
+
+    /**
+     * @param string $field
+     * @param string $value
+     * @return array
+     * @throws DqlBuilderException
+     */
+    protected function getProductConditionSets(string $field, string $value)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->setWhere('p.' . $field . ' = :configurableProductSearchParam', ['configurableProductSearchParam' => $value])
+            ->setValues([
+                'p' => [],
+                'cs' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                    'conditionsOperator',
+                ],
+                'csc' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'p' => [
+                    ['conditionSets', 'cs', 'id']
+                ],
+                'cs' => [
+                    ['conditions', 'csc', 'id']
+                ],
+                'csc' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'cs' => [
+                    'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                ],
+                'csc' => [
+                    'operator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
+
+        $result = $builder->getSingleResultOrNull($this->entityManager);
+        return $result ? $result['conditionSets'] : [];
     }
 
     /**
@@ -1098,10 +1121,12 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -1252,10 +1277,12 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
             ->setValues([
                 'p' => self::PRODUCT_ALL_VALUES,
                 'pcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
                 'cat' => [
                     ['id.id', 'id'],
@@ -1534,10 +1561,12 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                 'p' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { ElementState, RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
+  selectElementState,
   selectRenderImagesForPerspective,
   selectStateActiveElements,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
@@ -128,29 +129,26 @@ export class RenderImageService {
    */
   private findAllCustomPropertiesValues(key: string): Promise<ReplaceColorData[]> {
     return new Promise((resolve) => {
-      this.store.select(selectStateActiveElements).subscribe((result: ElementState[]) => {
+      this.store.select(selectStateActiveElements).pipe(take(1)).subscribe((result: ElementState[]) => {
         const data: ReplaceColorData[] = [];
-        const elementIds = result.map((e: ElementState) => e.id);
-        this.store.select(selectElements(elementIds)).subscribe((elements) => {
-          for (const singleElement of elements) {
-            const customPropertyColor: CustomProperty = singleElement.customProperties.find((e) => e.key === key);
-            if (customPropertyColor) {
-              // value in the format e.g.	#E7E7E7,#800080
-              const colors = (customPropertyColor.value as string).split(',');
-              const colorData = data.find((c) => c.search === colors[0]);
-              if (colorData) {
-                colorData.replace = colors[1];
-              } else {
-                data.push({
-                  search: colors[0],
-                  replace: colors[1],
-                });
-              }
+        for (const singleElement of result) {
+          const customPropertyColor: CustomProperty = singleElement.customProperties.find((e) => e.key === key);
+          if (customPropertyColor) {
+            // value in the format e.g.	#E7E7E7,#800080
+            const colors = (customPropertyColor.value as string).split(',');
+            const colorData = data.find((c) => c.search === colors[0]);
+            if (colorData) {
+              colorData.replace = colors[1];
+            } else {
+              data.push({
+                search: colors[0],
+                replace: colors[1],
+              });
             }
           }
+        }
 
-          return resolve(data);
-        });
+        return resolve(data);
       });
     });
   }
@@ -204,7 +202,7 @@ export class RenderImageService {
    * @private
    */
   private drawImageByRepeating(imageHtml: HTMLImageElement, imgObj: RenderImageData, colorsToReplace: ReplaceColorData[]): void {
-    this.store.select(selectElement(imgObj.elementId)).subscribe((storeElement) => {
+    this.store.select(selectElementState(imgObj.elementId)).pipe(take(1)).subscribe((storeElement) => {
       let tempCanvas = null;
       const imageWidth = imageHtml.width;
       const imageHeight = imageHtml.height;

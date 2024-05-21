@@ -331,8 +331,8 @@ const ProductDetailController = function($scope, $document, $mdDialog, $mdEditDi
         });
     }
 
-    function removeCustomProperty(key) {
-        $scope.removeProductCustomProperty(productId, key).then(() => {
+    function removeCustomProperty(id) {
+        $scope.removeProductCustomProperty(productId, id).then(() => {
             $scope.fetchCustomProperties(productId);
         });
     }

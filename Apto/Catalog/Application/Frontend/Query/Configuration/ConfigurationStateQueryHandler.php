@@ -108,7 +108,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
      */
     public function handleGetConfigurationState(GetConfigurationState $query): array
     {
-        $product = $this->configurableProductFactory->fromProductId($query->getProductId(), true, true);
+        $product = $this->configurableProductFactory->fromProductId($query->getProductId());
         if ($product === null) {
             return [];
         }
@@ -200,13 +200,33 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
 
     private function filterOutNotAvailableRepeatableSections(ConfigurableProduct $product, EnrichedState $enrichedState)
     {
-        $sectionsRepeatable = $this->javaScriptStateCreatorService->getAvailableRepeatableSectionInfo($product, $enrichedState);
+        $sectionsRepeatable = $this->getAvailableRepeatableSectionInfo($product, $enrichedState);
 
         foreach ($enrichedState->getState()->getStateWithoutParameters() as $singleStateSection) {
             if ($singleStateSection['repetition'] > 0 && $singleStateSection['repetition'] > $sectionsRepeatable[$singleStateSection['sectionId']]['maxRepetitionValue']) {
                 $enrichedState->getState()->removeSection(new AptoUuid($singleStateSection['sectionId']), $singleStateSection['repetition']);
             }
         }
+    }
+
+    public function getAvailableRepeatableSectionInfo(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    {
+        $state = $enrichedState->getState();
+        $sections = [];
+        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
+
+        foreach ($product->getSections() as $section) {
+            $sectionId = new AptoUuid($section['id']);
+
+            if ($product->isSectionRepeatable($sectionId)) {
+                $sections[$sectionId->getId()] = [
+                    'sectionId' => $sectionId->getId(),
+                    'maxRepetitionValue' => $product->getSectionRepetitionCount($sectionId, $calculatedValueName) - 1
+                ];
+            }
+        }
+
+        return $sections;
     }
 
     /**
