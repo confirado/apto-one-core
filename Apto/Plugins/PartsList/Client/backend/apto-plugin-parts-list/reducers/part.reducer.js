@@ -423,10 +423,10 @@ const Reducer = function(AptoReducersProvider) {
 
                 return newState;
 
-            case getType('FETCH_CUSTOM_PROPERTY_FULFILLED'):
+            case getType('FETCH_CUSTOM_PROPERTIES_FULFILLED'):
                 newState = update(state, {
                     customProperties: {
-                        $set: action.payload.data.result
+                        $set: action.payload.data.result.customProperties
                     }
                 });
 

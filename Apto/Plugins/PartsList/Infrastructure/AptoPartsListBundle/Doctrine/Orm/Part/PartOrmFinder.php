@@ -722,18 +722,17 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
     }
 
     /**
-     * @param array $ids
-     * @return array
+     * @param string $id
+     * @return array|null
      * @throws DqlBuilderException
      */
-    public function findCustomProperties(array $ids): array
+    public function findCustomProperties(string $id): ?array
     {
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
-            ->setWhere('p.id.id IN (:ids)', ['ids' => $ids])
+            ->findById($id)
             ->setValues([
                 'p' => [
-                    ['id.id', 'id'],
                 ],
                 'cp' => [
                     'surrogateId',
@@ -754,6 +753,6 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                 ]
             ]);
 
-        return $builder->getResult($this->entityManager);
+        return $builder->getSingleResultOrNull($this->entityManager);
     }
 }

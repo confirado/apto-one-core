@@ -12,7 +12,6 @@ abstract class PartChildCommand implements CommandInterface
     private $partId;
 
     /**
-     * ProductSectionCommand constructor.
      * @param string $partId
      */
     public function __construct(string $partId)

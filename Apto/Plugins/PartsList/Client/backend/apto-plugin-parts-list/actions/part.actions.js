@@ -360,7 +360,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
     function removeCustomProperty(partId, key) {
         return {
             type: getType('REMOVE_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AptoPartsListRemoveCustomProperty', [partId, key])
+            payload: MessageBusFactory.command('AptoPartsListRemovePartCustomProperty', [partId, key])
         }
     }
 

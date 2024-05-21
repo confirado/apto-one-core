@@ -4,6 +4,7 @@ namespace Apto\Plugins\PartsList\Domain\Core\Model\Part;
 
 use Apto\Base\Domain\Core\Model\AptoAggregate;
 use Apto\Base\Domain\Core\Model\AptoCustomProperties;
+use Apto\Base\Domain\Core\Model\AptoCustomProperty;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPrices;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
@@ -694,15 +695,23 @@ class Part extends AptoAggregate
         return $this->category;
     }
 
+
     /**
-     * @param string $key
-     * @param string $value
-     * @param bool $translatable
-     * @return Part
-     * @throws AptoCustomPropertyException
+     * @param $customProperties
+     * @return $this
      */
-    public function addPartCustomProperty(string $key, string $value, bool $translatable = false): Part
+    public function setCustomProperties($customProperties): Part
     {
-        return $this->setCustomProperty($key, $value, $translatable);
+        $this->customProperties = $customProperties;
+        return $this;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getCustomProperties(): Collection
+    {
+        return $this->customProperties;
+    }
+
 }

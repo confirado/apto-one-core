@@ -7,13 +7,13 @@ class RemovePartCustomProperty extends PartChildCommand
     /**
      * @var string
      */
-    private $key;
+    private string $key;
 
     /**
      * @param string $partId
      * @param string $key
      */
-    public function construct(string $partId, string $key)
+    public function __construct(string $partId, string $key)
     {
         parent::__construct($partId);
         $this->key = $key;

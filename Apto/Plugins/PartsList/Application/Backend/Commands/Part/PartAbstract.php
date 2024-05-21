@@ -60,9 +60,9 @@ abstract class PartAbstract implements CommandInterface
      * @param int|null $amount
      * @param string|null $currencyCode
      * @param string|null $category
-     * @param array $customProperties
+     * @param array|null $customProperties
      */
-    public function __construct(bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode, ?string $category, array $customProperties)
+    public function __construct(bool $active, string $partNumber, ?string $unitId, array $name, array $description, ?int $amount, ?string $currencyCode, ?string $category, ?array $customProperties)
     {
         $this->active = $active;
         $this->partNumber = $partNumber;

@@ -213,7 +213,7 @@ class PartQueryHandler implements QueryHandlerInterface
     public function handleFindCustomProperties(FindCustomProperties $query): array
     {
         return $this->partFinder->findCustomProperties(
-            [$query->getId()]
+            $query->getId()
         );
     }
 

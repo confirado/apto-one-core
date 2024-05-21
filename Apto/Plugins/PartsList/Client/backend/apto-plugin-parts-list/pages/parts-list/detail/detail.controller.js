@@ -189,7 +189,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function removeCustomProperty(key) {
-        $scope.addPartCustomProperty(id, key).then(() => {
+        $scope.removePartCustomProperty(id, key).then(() => {
             $scope.fetchCustomProperties(id);
         });
     }

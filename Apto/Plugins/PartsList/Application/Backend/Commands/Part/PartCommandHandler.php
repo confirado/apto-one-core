@@ -88,7 +88,8 @@ class PartCommandHandler extends AbstractCommandHandler
             ->setDescription(
                 $this->getTranslatedValue($command->getDescription())
             )
-            ->setCategory($this->getCategory($command->getCategoryId()));
+            ->setCategory($this->getCategory($command->getCategoryId()))
+            ->setCustomProperties($command->getCustomProperties());
 
         // add part and publish fired events
         $this->partRepository->add($part);
@@ -127,7 +128,8 @@ class PartCommandHandler extends AbstractCommandHandler
             )
             ->setCategory(
                 $this->getCategory($command->getCategoryId())
-            );
+            )
+            ->setCustomProperties($command->getCustomProperties());
 
         // update part and publish fired events
         $this->partRepository->update($part);
