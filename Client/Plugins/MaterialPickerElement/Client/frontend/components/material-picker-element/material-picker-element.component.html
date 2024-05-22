@@ -7,6 +7,7 @@
                         <div class="title">
                             <h4>{{ contentSnippet$ | async | contentSnippet: 'colorMixture' }}</h4>
                         </div>
+                        <apto-slot-outlet identifier="header-end" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
                     </div>
                     <div class="picture">
                         <img *ngIf="!multiColor.value && element.element.definition.staticValues.monochromeImage"
