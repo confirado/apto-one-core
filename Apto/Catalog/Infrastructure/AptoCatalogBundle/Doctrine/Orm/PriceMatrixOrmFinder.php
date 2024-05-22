@@ -77,9 +77,9 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
             LEFT JOIN
                 pe.aptoPrices ep
             WHERE
-                p.id.id = :id AND 
+                p.id.id = :id AND
                 pe.position.rowValue >= :rowValue AND
-                pe.position.columnValue >= :columnValue AND 
+                pe.position.columnValue >= :columnValue AND
                 ep.price.currency.code = :currencyCode AND
                 ep.customerGroupId.id = :customerGroupId
             ORDER BY
@@ -158,8 +158,8 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
                 JOIN
                     pe.customProperties cp
                 WHERE
-                    p.id.id = :id AND 
-                    pe.position.columnValue = :columnValue AND 
+                    p.id.id = :id AND
+                    pe.position.columnValue = :columnValue AND
                     pe.position.rowValue = :rowValue
             ';
 
@@ -275,10 +275,12 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
                     ['customerGroupId.id', 'customerGroupId']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([
@@ -368,10 +370,12 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
                     ['position.rowValue', 'rowValue']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setWhere('p.id.id = :id AND pe.id.id = :elementId',
@@ -426,7 +430,7 @@ class PriceMatrixOrmFinder extends AptoOrmFinder implements PriceMatrixFinder
             LEFT JOIN
                 pe.aptoPrices ep
             WHERE
-                p.id.id = :id AND 
+                p.id.id = :id AND
                 ep.price.currency.code = :currencyCode AND
                 ep.customerGroupId.id = :customerGroupId
             ORDER BY

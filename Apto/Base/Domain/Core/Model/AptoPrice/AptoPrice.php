@@ -2,9 +2,9 @@
 
 namespace Apto\Base\Domain\Core\Model\AptoPrice;
 
+use Money\Money;
 use Apto\Base\Domain\Core\Model\AptoEntity;
 use Apto\Base\Domain\Core\Model\AptoUuid;
-use Money\Money;
 
 class AptoPrice extends AptoEntity
 {
@@ -24,10 +24,10 @@ class AptoPrice extends AptoEntity
     protected ?AptoUuid $productConditionId;
 
     /**
-     * AptoPrice constructor.
      * @param AptoUuid $id
      * @param Money $price
      * @param AptoUuid $customerGroupId
+     * @param AptoUuid|null $productConditionId
      */
     public function __construct(AptoUuid $id, Money $price, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null)
     {
@@ -84,23 +84,6 @@ class AptoPrice extends AptoEntity
     }
 
     /**
-     * @param AptoUuid $id
-     * @return AptoPrice
-     */
-    public function copy(AptoUuid $id): AptoPrice
-    {
-        //create new price
-        $price = new AptoPrice(
-            $id,
-            $this->getPrice(),
-            $this->getCustomerGroupId()
-        );
-
-        // return copy
-        return $price;
-    }
-
-    /**
      * @return AptoUuid|null
      */
     public function getProductConditionId(): ?AptoUuid
@@ -114,5 +97,23 @@ class AptoPrice extends AptoEntity
     public function setProductConditionId(?AptoUuid $productConditionId): void
     {
         $this->productConditionId = $productConditionId;
+    }
+
+    /**
+     * @param AptoUuid $id
+     * @return AptoPrice
+     */
+    public function copy(AptoUuid $id): AptoPrice
+    {
+        //create new price
+        $price = new AptoPrice(
+            $id,
+            $this->getPrice(),
+            $this->getCustomerGroupId(),
+            $this->getProductConditionId()
+        );
+
+        // return copy
+        return $price;
     }
 }

@@ -15,7 +15,7 @@ class AptoCustomPropertyOrmFinder extends AptoOrmFinder implements AptoCustomPro
     public function findUsedKeys()
     {
         $dql = '
-            SELECT 
+            SELECT
                 cp.key
             FROM
                   ' . $this->entityClass . ' cp
@@ -31,5 +31,34 @@ class AptoCustomPropertyOrmFinder extends AptoOrmFinder implements AptoCustomPro
         }
 
         return $results;
+    }
+
+    /**
+     * @return array
+     * @throws DqlBuilderException
+     */
+    public function findCustomProperties(): array
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->setValues([
+                'a' => [
+                    ['id.id', 'id'],
+                    'key',
+                    'value',
+                    'translatable',
+                    'productConditionId'
+                ]
+            ])
+            ->setPostProcess([
+                'a' => [
+                    'translatable' => [DqlQueryBuilder::class, 'decodeBool']
+                ]
+            ])
+            ->setOrderBy([
+                ['a.key', 'ASC']
+            ]);
+
+        return $builder->getResult($this->entityManager);
     }
 }

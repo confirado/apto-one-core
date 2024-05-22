@@ -9,7 +9,9 @@ use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\EnrichedState\EnrichedState;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayloadFactory;
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 use Apto\Catalog\Domain\Core\Service\EnrichedStateValidation\RuleValidationResult;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule;
@@ -42,45 +44,48 @@ class JavascriptStateCreatorService
      * @param RuleValidationResult $ruleValidationResult
      * @param array $intention
      * @return array
-     * @throws InvalidUuidException
      * @throws CircularReferenceException
+     * @throws InvalidUuidException
+     * @throws RepeatableValidationException
      */
     public function createState(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $ruleValidationResult, array $intention): array
     {
+        $rulePayloadById = $this->rulePayloadFactory->getPayload($product, $state->getState());
+        $rulePayloadByName = $this->rulePayloadFactory->getPayload($product, $state->getState(), false);
+
         $appEnv = $_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? 'prod';
         $result = [
             'configurationState' => [
-                'sections' => $this->createSections($product, $state),
-                'elements' => $this->createElements($product, $state)
+                'sections' => $this->createSections($product, $state, $rulePayloadById, $rulePayloadByName),
+                'elements' => $this->createElements($product, $state, $rulePayloadById, $rulePayloadByName)
             ],
             'compressedState' => $state->getState()->jsonSerialize(),
-            'failedRules' => $this->createFailedRules($product, $state, $ruleValidationResult),
-            'ignoredRules' => $this->createIgnoredRules($product, $state, $ruleValidationResult),
+            'failedRules' => $this->createFailedRules($product, $state, $ruleValidationResult, $rulePayloadById),
+            'ignoredRules' => $this->createIgnoredRules($product, $state, $ruleValidationResult, $rulePayloadById),
             'cachedProduct' => $product->isCached(),
             'intention' => $intention,
             'renderImages' => $this->renderImageFactory->getRenderImagesByImageList($state->getState(), $product->getId()->getId())
         ];
 
         if ($appEnv === 'dev') {
-            $result['allRules'] = $this->createAllRules($product, $state, $ruleValidationResult);
+            $result['allRules'] = $this->createAllRules($product, $state, $ruleValidationResult, $rulePayloadById);
         }
         return $result;
     }
 
     /**
      * @param ConfigurableProduct $product
-     * @param EnrichedState       $enrichedState
-     *
+     * @param EnrichedState $enrichedState
+     * @param RulePayload $rulePayloadById
+     * @param RulePayload $rulePayloadByName
      * @return array
-     * @throws CircularReferenceException
      * @throws InvalidUuidException
      * @throws RepeatableValidationException
      */
-    protected function createSections(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    private function createSections(ConfigurableProduct $product, EnrichedState $enrichedState, RulePayload $rulePayloadById, RulePayload $rulePayloadByName): array
     {
         $state = $enrichedState->getState();
         $sections = [];
-        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
 
         foreach ($product->getSections() as $section) {
             $sectionId = new AptoUuid($section['id']);
@@ -88,7 +93,7 @@ class JavascriptStateCreatorService
 
             $sectionCount = 1;
             if ($product->isSectionRepeatable($sectionId)) {
-                $sectionCount = $product->getSectionRepetitionCount($sectionId, $calculatedValueName);
+                $sectionCount = $product->getSectionRepetitionCount($sectionId, $rulePayloadByName);
             }
 
             for($repetition = 0; $repetition < $sectionCount; $repetition++) {
@@ -107,27 +112,8 @@ class JavascriptStateCreatorService
                         'active' => $state->isSectionActive($sectionId, $repetition),
                         'complete' => $enrichedState->isSectionComplete($sectionId, $elementIds, $section['allowMultiple'], $section['isMandatory'], $repetition),
                         'disabled' => $enrichedState->isSectionDisabled($sectionId, $elementIds, $repetition)
-                    ]
-                ];
-            }
-        }
-
-        return $sections;
-    }
-
-    public function getAvailableRepeatableSectionInfo(ConfigurableProduct $product, EnrichedState $enrichedState): array
-    {
-        $state = $enrichedState->getState();
-        $sections = [];
-        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
-
-        foreach ($product->getSections() as $section) {
-            $sectionId = new AptoUuid($section['id']);
-
-            if ($product->isSectionRepeatable($sectionId)) {
-                $sections[$sectionId->getId()] = [
-                    'sectionId' => $sectionId->getId(),
-                    'maxRepetitionValue' => $product->getSectionRepetitionCount($sectionId, $calculatedValueName) - 1
+                    ],
+                    'customProperties' => $this->filterCustomPropertiesByConditionSet($product, $state, $rulePayloadById, $section['customProperties'])
                 ];
             }
         }
@@ -137,25 +123,24 @@ class JavascriptStateCreatorService
 
     /**
      * @param ConfigurableProduct $product
-     * @param EnrichedState       $enrichedState
-     *
+     * @param EnrichedState $enrichedState
+     * @param RulePayload $rulePayloadById
+     * @param RulePayload $rulePayloadByName
      * @return array
-     * @throws CircularReferenceException
      * @throws InvalidUuidException
      * @throws RepeatableValidationException
      */
-    protected function createElements(ConfigurableProduct $product, EnrichedState $enrichedState): array
+    private function createElements(ConfigurableProduct $product, EnrichedState $enrichedState, RulePayload $rulePayloadById, RulePayload $rulePayloadByName): array
     {
         $state = $enrichedState->getState();
         $elements = [];
-        $calculatedValueName = $this->rulePayloadFactory->getPayload($product, $state, false);
 
         foreach ($product->getSections() as $section) {
             $sectionId = new AptoUuid($section['id']);
 
             $sectionCount = 1;
             if ($product->isSectionRepeatable($sectionId)) {
-                $sectionCount = $product->getSectionRepetitionCount($sectionId, $calculatedValueName);
+                $sectionCount = $product->getSectionRepetitionCount($sectionId, $rulePayloadByName);
             }
 
             for($repetition = 0; $repetition < $sectionCount; $repetition++) {
@@ -189,7 +174,8 @@ class JavascriptStateCreatorService
                             'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId, $repetition),
                             'values' => $selectedValues
                         ],
-                        'staticValues' => $element['definition']['staticValues'] ?? []
+                        'staticValues' => $element['definition']['staticValues'] ?? [],
+                        'customProperties' => $this->filterCustomPropertiesByConditionSet($product, $state, $rulePayloadById, $element['customProperties'])
                     ];
                 }
             }
@@ -202,15 +188,15 @@ class JavascriptStateCreatorService
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
      * @param RuleValidationResult $validationResult
+     * @param RulePayload $rulePayloadById
      * @return array
-     * @throws InvalidUuidException
-     * @throws CircularReferenceException
      */
-    protected function createFailedRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult): array
+    private function createFailedRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult, RulePayload $rulePayloadById): array
     {
         return $this->convertRulesToArray(
             $product,
             $state,
+            $rulePayloadById,
             $validationResult->getFailed()
         );
     }
@@ -219,15 +205,15 @@ class JavascriptStateCreatorService
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
      * @param RuleValidationResult $validationResult
+     * @param RulePayload $rulePayloadById
      * @return array
-     * @throws InvalidUuidException
-     * @throws CircularReferenceException
      */
-    protected function createIgnoredRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult): array
+    private function createIgnoredRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult, RulePayload $rulePayloadById): array
     {
         return $this->convertRulesToArray(
             $product,
             $state,
+            $rulePayloadById,
             $validationResult->getIgnored()
         );
     }
@@ -236,15 +222,15 @@ class JavascriptStateCreatorService
      * @param ConfigurableProduct $product
      * @param EnrichedState $state
      * @param RuleValidationResult $validationResult
+     * @param RulePayload $rulePayloadById
      * @return array
-     * @throws InvalidUuidException
-     * @throws CircularReferenceException
      */
-    protected function createAllRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult): array
+    private function createAllRules(ConfigurableProduct $product, EnrichedState $state, RuleValidationResult $validationResult, RulePayload $rulePayloadById): array
     {
         return $this->convertRulesToArray(
             $product,
             $state,
+            $rulePayloadById,
             array_merge($validationResult->getAffected(), $validationResult->getInactive())
         );
     }
@@ -252,22 +238,49 @@ class JavascriptStateCreatorService
     /**
      * @param ConfigurableProduct $product
      * @param EnrichedState $enrichedState
-     * @param Rule[] $rules
+     * @param RulePayload $rulePayloadById
+     * @param array $rules
      * @return array
-     * @throws InvalidUuidException
-     * @throws CircularReferenceException
      */
-    private function convertRulesToArray(ConfigurableProduct $product, EnrichedState $enrichedState, array $rules): array
+    private function convertRulesToArray(ConfigurableProduct $product, EnrichedState $enrichedState, RulePayload $rulePayloadById, array $rules): array
     {
         $state = $enrichedState->getState();
-        $rulePayload = $this->rulePayloadFactory->getPayload($product, $enrichedState->getState());
 
         return array_map(
-            function(Rule $rule) use ($product, $state, $rulePayload) {
-                return $rule->toArray($product, $state, $rulePayload);
+            function(Rule $rule) use ($product, $state, $rulePayloadById) {
+                return $rule->toArray($product, $state, $rulePayloadById);
             },
             $rules
         );
     }
 
+    /**
+     * @param ConfigurableProduct $product
+     * @param State $state
+     * @param RulePayload $rulePayloadById
+     * @param array $customProperties
+     * @return array
+     */
+    private function filterCustomPropertiesByConditionSet(ConfigurableProduct $product, State $state, RulePayload $rulePayloadById, array $customProperties): array
+    {
+        $filtered = [];
+
+        foreach ($customProperties as $customProperty) {
+            $key = $customProperty['key'];
+            if (empty($customProperty['productConditionId'])) {
+                // if custom property is already set, a condition was already true so custom property must not be overwritten!
+                if (!array_key_exists($key, $filtered)) {
+                    $filtered[$key] = $customProperty;
+                }
+                continue;
+            }
+
+            $conditionSet = $product->getConditionSetById($customProperty['productConditionId']);
+            if ($conditionSet?->isFulfilled($state, $rulePayloadById)) {
+                $filtered[$key] = $customProperty;
+            }
+        }
+
+        return array_values($filtered);
+    }
 }

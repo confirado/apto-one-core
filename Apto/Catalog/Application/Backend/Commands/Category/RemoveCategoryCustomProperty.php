@@ -7,23 +7,24 @@ class RemoveCategoryCustomProperty extends CategoryChildCommand
     /**
      * @var string
      */
-    private $key;
+    private $id;
 
     /**
      * RemoveCategoryPrice constructor.
      * @param string $categoryId
      * @param string $key
      */
-    public function __construct(string $categoryId,  string $key)
+    public function __construct(string $categoryId,  string $id)
     {
         parent::__construct($categoryId);
-        $this->key = $key;
+        $this->id = $id;
     }
+
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getId(): string
     {
-        return $this->key;
+        return $this->id;
     }
 }

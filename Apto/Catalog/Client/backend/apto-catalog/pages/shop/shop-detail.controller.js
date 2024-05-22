@@ -77,8 +77,8 @@ const ShopDetailController = function($scope, $mdDialog, $ngRedux, $templateCach
         });
     }
 
-    function removeCustomProperty(key) {
-        $scope.removeShopCustomProperty(shopId, key).then(() => {
+    function removeCustomProperty(id) {
+        $scope.removeShopCustomProperty(shopId, id).then(() => {
             $scope.fetchShopCustomProperties(shopId);
         });
     }

@@ -516,10 +516,16 @@ class ProductCommandHandler extends ProductChildHandler
             return;
         }
 
+        $productConditionId = $command->getProductConditionId();
+        if (null !== $productConditionId) {
+            $productConditionId = new AptoUuid($productConditionId);
+        }
+
         $product->setCustomProperty(
             $command->getKey(),
             $command->getValue(),
-            $command->getTranslatable()
+            $command->getTranslatable(),
+            $productConditionId
         );
 
         $this->productRepository->update($product);
@@ -538,7 +544,7 @@ class ProductCommandHandler extends ProductChildHandler
         }
 
         $product->removeCustomProperty(
-            $command->getKey()
+            new AptoUuid($command->getId())
         );
 
         $this->productRepository->update($product);

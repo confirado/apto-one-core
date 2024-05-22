@@ -39,9 +39,9 @@ class ConfigurableProductFactory
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Symfony\Component\Cache\Exception\CacheException
      */
-    public function fromProductId(string $productIdOrSeoUrl, bool $keepDefinitions = true, bool $withRules = true, bool $withComputedValues = true): ?ConfigurableProduct
+    public function fromProductId(string $productIdOrSeoUrl, bool $keepDefinitions = true, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true): ?ConfigurableProduct
     {
-        $configurableProduct = $this->configurableProductBuilder->createConfigurableProduct($productIdOrSeoUrl, $keepDefinitions, $withRules, $withComputedValues);
+        $configurableProduct = $this->configurableProductBuilder->createConfigurableProduct($productIdOrSeoUrl, $keepDefinitions, $withRules, $withComputedValues, $withConditionSets);
 
         if ($configurableProduct === null || !array_key_exists('id', $configurableProduct)) {
             return null;

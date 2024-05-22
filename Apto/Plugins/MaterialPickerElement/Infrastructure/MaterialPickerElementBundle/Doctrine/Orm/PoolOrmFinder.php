@@ -385,9 +385,11 @@ class PoolOrmFinder extends AptoOrmFinder implements PoolFinder
                     'rating'
                 ],
                 'mpcp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
-                    'value'
+                    'value',
+                    'productConditionId'
                 ],
                 'mpg' => [
                     ['id.id', 'id'],

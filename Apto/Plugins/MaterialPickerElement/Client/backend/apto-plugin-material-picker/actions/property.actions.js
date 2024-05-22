@@ -135,17 +135,17 @@ const PropertyActions = function (MessageBusFactory, PageHeaderActions) {
         }
     }
 
-    function addPropertyCustomProperty(propertyId, key, value) {
+    function addPropertyCustomProperty(propertyId, key, value, translatable) {
         return {
             type: getType('ADD_PROPERTY_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddMaterialPickerPropertyCustomProperty', [propertyId, key, value])
+            payload: MessageBusFactory.command('AddMaterialPickerPropertyCustomProperty', [propertyId, key, value, translatable])
         }
     }
 
-    function removePropertyCustomProperty(propertyId, key) {
+    function removePropertyCustomProperty(propertyId, id) {
         return {
             type: getType('REMOVE_PROPERTY_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveMaterialPickerPropertyCustomProperty', [propertyId, key])
+            payload: MessageBusFactory.command('RemoveMaterialPickerPropertyCustomProperty', [propertyId, id])
         }
     }
 

@@ -145,10 +145,10 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function removeProductCustomProperty(productId, key) {
+    function removeProductCustomProperty(productId, id) {
         return {
             type: getType('REMOVE_PRODUCT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveProductCustomProperty', [productId, key])
+            payload: MessageBusFactory.command('RemoveProductCustomProperty', [productId, id])
         }
     }
 
@@ -402,17 +402,17 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductSectionCustomProperty(productId, sectionId, key, value, translatable) {
+    function addProductSectionCustomProperty(productId, sectionId, key, value, translatable, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_SECTION_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductSectionCustomProperty', [productId, sectionId, key, value, translatable])
+            payload: MessageBusFactory.command('AddProductSectionCustomProperty', [productId, sectionId, key, value, translatable, productConditionId])
         }
     }
 
-    function removeProductSectionCustomProperty(productId, sectionId, key) {
+    function removeProductSectionCustomProperty(productId, sectionId, id) {
         return {
             type: getType('REMOVE_PRODUCT_SECTION_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveProductSectionCustomProperty', [productId, sectionId, key])
+            payload: MessageBusFactory.command('RemoveProductSectionCustomProperty', [productId, sectionId, id])
         }
     }
 
@@ -465,17 +465,17 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         }
     }
 
-    function addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable) {
+    function addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable, productConditionId) {
         return {
             type: getType('ADD_PRODUCT_ELEMENT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('AddProductElementCustomProperty', [productId, sectionId, elementId, key, value, translatable])
+            payload: MessageBusFactory.command('AddProductElementCustomProperty', [productId, sectionId, elementId, key, value, translatable, productConditionId])
         }
     }
 
-    function removeProductElementCustomProperty(productId, sectionId, elementId, key) {
+    function removeProductElementCustomProperty(productId, sectionId, elementId, id) {
         return {
             type: getType('REMOVE_PRODUCT_ELEMENT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveProductElementCustomProperty', [productId, sectionId, elementId, key])
+            payload: MessageBusFactory.command('RemoveProductElementCustomProperty', [productId, sectionId, elementId, id])
         }
     }
 

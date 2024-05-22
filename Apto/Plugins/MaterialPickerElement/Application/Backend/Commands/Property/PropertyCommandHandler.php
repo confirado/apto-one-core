@@ -166,7 +166,11 @@ class PropertyCommandHandler extends AbstractCommandHandler
         $property = $this->propertyRepository->findById($command->getId());
 
         if (null !== $property) {
-            $property->setCustomProperty($command->getKey(), $command->getValue());
+            $property->setCustomProperty(
+                $command->getKey(),
+                $command->getValue(),
+                $command->getTranslatable()
+            );
 
             $this->propertyRepository->update($property);
             $property->publishEvents();
@@ -179,10 +183,12 @@ class PropertyCommandHandler extends AbstractCommandHandler
      */
     public function handleRemovePropertyCustomProperty(RemovePropertyCustomProperty $command)
     {
-        $property = $this->propertyRepository->findById($command->getId());
+        $property = $this->propertyRepository->findById($command->getPropertyId());
 
         if (null !== $property) {
-            $property->removeCustomProperty($command->getKey());
+            $property->removeCustomProperty(
+                new AptoUuid($command->getId())
+            );
 
             $this->propertyRepository->update($property);
             $property->publishEvents();
