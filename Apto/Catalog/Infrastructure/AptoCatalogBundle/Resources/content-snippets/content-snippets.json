@@ -1,4 +1,9 @@
 {
+  "aptoFavicon": {
+    "iconMediaLink": {
+      "de_DE": "/favicon.ico"
+    }
+  },
   "aptoSliderAction": {
     "shareLinks": {
       "twitter": {
