@@ -1775,7 +1775,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                   s.id.id as sectionId,
                   sp.price.amount as amount,
                   sp.price.currency.code as currencyCode,
-                  sp.customerGroupId.id as customerGroupId
+                  sp.customerGroupId.id as customerGroupId,
+                  sp.productConditionId as productConditionId
               FROM
                   ' . $this->entityClass . ' p
               JOIN
@@ -1792,7 +1793,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                   e.extendedPriceCalculationFormula as extendedPriceCalculationFormula,
                   ep.price.amount as amount,
                   ep.price.currency.code as currencyCode,
-                  ep.customerGroupId.id as customerGroupId
+                  ep.customerGroupId.id as customerGroupId,
+                  ep.productConditionId as productConditionId
               FROM
                   ' . $this->entityClass . ' p
               JOIN
