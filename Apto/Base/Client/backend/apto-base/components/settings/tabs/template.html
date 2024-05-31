@@ -11,7 +11,7 @@
                     Primärfarbe:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.primaryColor"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -24,20 +24,7 @@
                     Sekundärfarbe:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
-                     type="0"
-                     default="#FFFFFF"
-                     md-color-clear-button="false"
-                ></div>
-            </div>
-        </md-card-content>
-        <md-card-content flex="33">
-            <div layout="column" flex>
-                <label>
-                    Schriftfarbe:
-                </label>
-                <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.secondaryColor"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -50,7 +37,7 @@
                     Hintergrundfarbe Header:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.backgroundColorHeader"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -63,7 +50,7 @@
                     Schriftfarbe Header:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.fontColorHeader"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -76,7 +63,7 @@
                     Hintergrundfarbe Footer:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.backgroundColorFooter"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -89,7 +76,7 @@
                     Schriftfarbe Footer:
                 </label>
                 <div md-color-picker flex
-                     ng-model="materialDetail.properties.color"
+                     ng-model="$ctrl.state.settingsDetail.fontColorFooter"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -97,50 +84,76 @@
             </div>
         </md-card-content>
     </div>
+    <md-dialog-actions layout="row" layout-align="end center" class="layout-row">
+        <md-button class="md-raised md-primary md-cornered" ng-click="$ctrl.saveSettings()">Speichern</md-button>
+    </md-dialog-actions>
 </md-card>
 
-<md-card>
-    <md-card-title>
-        <md-card-title-text>
-            <div class="md-headline">Logoanpassungen und Favicons</div>
-        </md-card-title-text>
-    </md-card-title>
+<!--<md-card>-->
+<!--    <md-card-title>-->
+<!--        <md-card-title-text>-->
+<!--            <div class="md-headline">Logoanpassungen und Favicons</div>-->
+<!--        </md-card-title-text>-->
+<!--    </md-card-title>-->
 
-    <md-card-content>
-        <div class="md-content color-">Hauptlogo</div>
-    </md-card-content>
-    <div layout="row" layout-wrap>
-        <md-card-content flex="50">
-            <md-input-container class="md-block" flex>
-                <label>Höhe:</label>
-                <input type="text">
-            </md-input-container>
-        </md-card-content>
-        <md-card-content flex="50">
-            <md-input-container class="md-block" flex>
-                <label>Breite:</label>
-                <input type="text">
-            </md-input-container>
-        </md-card-content>
-    </div>
-    <md-card-content>
-        <div class="md-content color-">Mobillogo</div>
-    </md-card-content>
-    <div layout="row" layout-wrap>
-        <md-card-content flex="50">
-            <md-input-container class="md-block" flex>
-                <label>Höhe:</label>
-                <input type="text">
-            </md-input-container>
-        </md-card-content>
-        <md-card-content flex="50">
-            <md-input-container class="md-block" flex>
-                <label>Breite:</label>
-                <input type="text">
-            </md-input-container>
-        </md-card-content>
-    </div>
-    <md-card-content>
-        <div class="md-content color-">Favicon</div>
-    </md-card-content>
-</md-card>
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Hauptlogo</div>-->
+<!--    </md-card-content>-->
+<!--    <div layout="row" layout-wrap>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Höhe:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Breite:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--    </div>-->
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Mobillogo</div>-->
+<!--    </md-card-content>-->
+<!--    <div layout="row" layout-wrap>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Höhe:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Breite:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--    </div>-->
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Favicon</div>-->
+<!--    </md-card-content>-->
+<!--</md-card>-->
+
+<!--<div data-cy="product-preview-picture-text">-->
+<!--    <p>Vorschaubild:</p>-->
+<!--</div>-->
+<!--<div layout="row" layout-align="start" flex data-cy="product-preview-picture">-->
+<!--    <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">-->
+<!--        <apto-media-icon-->
+<!--            ng-if="productDetail.previewImage"-->
+<!--            style="display: block;"-->
+<!--            file="{path: productDetail.previewImage, extension: productDetail.previewImageMediaFile.extension}"-->
+<!--            size="128x128"-->
+<!--        ></apto-media-icon>-->
+<!--    </div>-->
+<!--    <div flex="5"></div>-->
+
+<!--    <apto-media-select-->
+<!--        on-select-file="onSelectPreviewImage(path)"-->
+<!--        label="'Pfad'"-->
+<!--        path="settingsDetail.previewImage"-->
+<!--        required="false"-->
+<!--        flex-->
+<!--    ></apto-media-select>-->
+<!--</div>-->

@@ -1,10 +1,11 @@
 import Template from './settings.component.html';
 import TemplateTab from './tabs/template.html';
-const ControllerInject = ['$ngRedux', 'SettingsActions', '$templateCache'];
 
+const ControllerInject = ['$ngRedux', 'SettingsActions', '$templateCache'];
 class Controller {
     constructor ($ngRedux, SettingsActions, $templateCache) {
         $templateCache.put('base/components/settings/tabs/template.html', TemplateTab);
+
         // set services
         this.ngRedux = $ngRedux;
         this.settingsActions = SettingsActions;
@@ -21,7 +22,7 @@ class Controller {
         return (state) => {
             // state mapping object
             return {
-
+                settingsDetail: state.settings.settingsDetail
             }
         }
     }
@@ -29,7 +30,10 @@ class Controller {
     connectActions() {
         // actions mapping object
         return {
-            resetSettings: this.settingsActions.reset
+            resetSettings: this.settingsActions.resetSettings,
+            fetchSettings: this.settingsActions.fetchSettings,
+            addSettings: this.settingsActions.addSettings,
+            updateSettings: this.settingsActions.updateSettings
         }
     }
 
@@ -52,6 +56,19 @@ class Controller {
     $onInit() {
         this.connectRedux();
         this.actions.resetSettings();
+        this.actions.fetchSettings();
+    }
+
+    saveSettings() {
+        if (null === this.state.settingsDetail.id) {
+            this.actions.addSettings(this.state.settingsDetail).then(()=>{
+                this.actions.fetchSettings();
+            });
+        } else {
+            this.actions.updateSettings(this.state.settingsDetail).then(()=>{
+                this.actions.fetchSettings();
+            });
+        }
     }
 
     $onDestroy() {
@@ -61,15 +78,12 @@ class Controller {
         }
     };
 }
-
 Controller.$inject = ControllerInject;
 
 const Component = {
-    bindings: {
-    },
+    bindings: {},
     template: Template,
     controller: Controller,
 };
-
 
 export default ['aptoSettings', Component];

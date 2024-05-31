@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Apto\Base\Domain\Core\Model\Settings\Settings" table="apto_settings"
+            repository-class="Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\SettingsOrmRepository">
+        <id name="surrogateId" type="integer" column="surrogate_id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="created" column="created" type="datetime"/>
+
+        <field name="primaryColor" column="primary_color"/>
+        <field name="secondaryColor" column="secondary_color"/>
+        <field name="backgroundColorHeader" column="background_color_header"/>
+        <field name="fontColorHeader" column="font_color_header"/>
+        <field name="backgroundColorFooter" column="background_color_footer"/>
+        <field name="fontColorFooter" column="font_color_footer"/>
+
+        <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
+    </entity>
+</doctrine-mapping>
