@@ -111,17 +111,17 @@ class FileUploadDefinition implements ElementDefinition
         $values = [
             'file' => AptoTranslatedValue::fromArray([
                 'de_DE' => 'Datei: ' . $selectedValues['file']['fileName'],
-                'en_EN' => 'File: ' .$selectedValues['file']['fileName'],
+                'en_GB' => 'File: ' .$selectedValues['file']['fileName'],
             ])
         ];
 
 		$de_DE = new AptoLocale('de_DE');
-		$en_EN = new AptoLocale('en_EN');
+		$en_GB = new AptoLocale('en_GB');
 
 		if ($this->needsValue && array_key_exists('value', $selectedValues)){
 			$values['value'] = AptoTranslatedValue::fromArray([
 				'de_DE' => $this->valuePrefix->getTranslation($de_DE, null, true)->getValue() . ' ' . $selectedValues['value'] . $this->valueSuffix->getTranslation($de_DE, null, true)->getValue(),
-				'en_EN' => $this->valuePrefix->getTranslation($en_EN, null, true)->getValue() . ' ' . $selectedValues['value'] . $this->valueSuffix->getTranslation($en_EN, null, true)->getValue(),
+				'en_GB' => $this->valuePrefix->getTranslation($en_GB, null, true)->getValue() . ' ' . $selectedValues['value'] . $this->valueSuffix->getTranslation($en_GB, null, true)->getValue(),
 			]);
 		}
 

@@ -164,7 +164,7 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
 
         // set locales
         $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
+        $en_GB = new AptoLocale('en_GB');
 
         foreach ($selectedValues as $property => $value) {
             if($property === 'sumOfFieldValue') {
@@ -183,7 +183,7 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
             // set human readable value
             $humanReadableValues[$property] = AptoTranslatedValue::fromArray([
                 'de_DE' => $prefix->getTranslation($de_DE, null, true)->getValue() . ' ' . $value . $suffix->getTranslation($de_DE, null, true)->getValue(),
-                'en_EN' => $prefix->getTranslation($en_EN, null, true)->getValue() . ' ' . $value . $suffix->getTranslation($en_EN, null, true)->getValue()
+                'en_GB' => $prefix->getTranslation($en_GB, null, true)->getValue() . ' ' . $value . $suffix->getTranslation($en_GB, null, true)->getValue()
             ]);
         }
 

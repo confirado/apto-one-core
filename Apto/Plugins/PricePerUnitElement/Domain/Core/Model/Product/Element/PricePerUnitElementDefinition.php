@@ -184,7 +184,7 @@ class PricePerUnitElementDefinition implements ElementDefinition, ElementDefinit
     public function getHumanReadableValues(array $selectedValues): array
     {
         $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
+        $en_GB = new AptoLocale('en_GB');
 
         $humanReadableValues = [];
 
@@ -193,7 +193,7 @@ class PricePerUnitElementDefinition implements ElementDefinition, ElementDefinit
                 case 'text':
                     $humanReadableValues[$property] = AptoTranslatedValue::fromArray([
                         'de_DE' => $this->textBoxPrefix->getTranslation($de_DE, null, true)->getValue() . ' ' . $value . $this->textBoxSuffix->getTranslation($de_DE, null, true)->getValue(),
-                        'en_EN' => $this->textBoxPrefix->getTranslation($en_EN, null, true)->getValue() . ' ' . $value . $this->textBoxSuffix->getTranslation($en_EN, null, true)->getValue()
+                        'en_GB' => $this->textBoxPrefix->getTranslation($en_GB, null, true)->getValue() . ' ' . $value . $this->textBoxSuffix->getTranslation($en_GB, null, true)->getValue()
                     ]);
                     break;
             }
