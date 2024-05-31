@@ -126,6 +126,9 @@ export class AreaElementComponent implements OnInit {
     // todo add logic for not allowing go further when the sum is too big
     this.formElement.valueChanges.subscribe(x => {
       this.sumOfFieldValues = <number>Object.values(x).reduce((a: any, b: any) => Number(a) + Number(b), 0);
+      if (this.hasOnlySelectInputFields()) {
+        this.saveInput();
+      }
     });
   }
 
@@ -196,6 +199,16 @@ export class AreaElementComponent implements OnInit {
 
   public closeModal(): void {
     this.dialogRef.close();
+  }
+
+  public hasOnlySelectInputFields(): boolean {
+    const fields = this.element.element.definition.staticValues.fields;
+    for (let i = 0; i < fields.length; i++) {
+      if (fields[i].rendering !== 'select') {
+        return false;
+      }
+    }
+    return true;
   }
 
   private initIncreaseDecreaseStep() {

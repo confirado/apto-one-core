@@ -89,7 +89,7 @@
 
         <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 
-        <div class="apply-button">
+        <div class="apply-button" *ngIf="!hasOnlySelectInputFields()">
             <button
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                 mat-flat-button

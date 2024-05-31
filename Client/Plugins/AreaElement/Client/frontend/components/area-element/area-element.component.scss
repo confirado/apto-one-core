@@ -30,6 +30,10 @@
 
             .input {
                 grid-area: input;
+
+                apto-select-field {
+                    margin-bottom: var(--element-gap);
+                }
             }
 
             .hint {
