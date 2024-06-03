@@ -32,7 +32,11 @@
                     [width]="'100px'"
                 ></apto-quantity-input-editable>
 
-                <button class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
+                <button *ngIf="!isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
+                   {{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+               </button>
+
+                <button *ngIf="isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" (click)="openShopware6Cart()" mat-flat-button>
 					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
 				</button>
 			</div>
