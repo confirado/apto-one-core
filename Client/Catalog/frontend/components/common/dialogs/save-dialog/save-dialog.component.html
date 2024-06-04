@@ -1,7 +1,7 @@
 <div class="save-dialog" [attr.type]="'custom'">
     <apto-close-button [mat-dialog-close]="true" [inner]="true"></apto-close-button>
 
-    <h1 mat-dialog-title>Konfiguration abspeichern</h1>
+    <h1 mat-dialog-title>{{ contentSnippets$ | async | contentSnippet: 'beforeSave.header' }}</h1>
 
     <mat-divider></mat-divider>
 
@@ -12,8 +12,8 @@
         </mat-dialog-content>
 
         <mat-dialog-actions>
-            <button mat-flat-button color="accent" [mat-dialog-close]="true" type="button">Abbrechen</button>
-            <button mat-flat-button color="primary" type="submit">Speichern</button>
+            <button mat-flat-button color="accent" [mat-dialog-close]="true" type="button">{{ contentSnippets$ | async | contentSnippet: 'form.cancel' }}</button>
+            <button mat-flat-button color="primary" type="submit">{{ contentSnippets$ | async | contentSnippet: 'form.submit' }}</button>
         </mat-dialog-actions>
     </form>
 </div>

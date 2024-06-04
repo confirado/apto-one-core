@@ -123,20 +123,17 @@
       "configure": {
         "de_DE": "Konfigurieren Sie Ihr Produkt"
       },
-      "stepBack": {
-        "de_DE": "Schritt zurück"
-      },
-      "stepForward": {
-        "de_DE": "Schritt vor"
+      "prevStep" : {
+        "de_DE": "Zurück"
       },
       "nextStep": {
-        "de_DE": "Weiter"
+        "de_DE": "Nächster Schritt"
+      },
+      "finishSteps": {
+        "de_DE": "Konfiguartion abschließen"
       },
       "filter": {
         "de_DE": "Nach Eigenschaft filtern"
-      },
-      "nextMultiple": {
-        "de_DE": "Weiter"
       },
       "incorrectValuesInRange": {
         "de_DE": "Die Werte liegen nicht innerhalb des definierten Bereichs"
@@ -300,6 +297,9 @@
       },
       "submit": {
         "de_DE": "Speichern"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
       },
       "name": {
         "de_DE": "Name"

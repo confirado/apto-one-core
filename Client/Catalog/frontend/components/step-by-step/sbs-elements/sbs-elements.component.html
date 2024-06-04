@@ -35,7 +35,7 @@
             <!--Obviously we want to hide the back button on the first step-->
 			<button *ngIf="currentPosition !== minStepPosition" (click)="prevStep(progressState)" color="accent" mat-flat-button>
 				<mat-icon>undo</mat-icon>
-				<span>Zurück</span>
+				<span>{{ contentSnippets$ | async | contentSnippet: 'prevStep' }}</span>
 			</button>
 
 			<button
@@ -46,7 +46,7 @@
 				mat-flat-button
 			>
 				<mat-icon>done</mat-icon>
-				<span>Nächster Schritt</span>
+				<span>{{ contentSnippets$ | async | contentSnippet: 'nextStep' }}</span>
 			</button>
 
 			<button
@@ -57,7 +57,7 @@
 				mat-flat-button
 			>
 				<mat-icon>done</mat-icon>
-				<span>Konfiguartion abschließen</span>
+				<span>{{ contentSnippets$ | async | contentSnippet: 'finishSteps' }}</span>
 			</button>
 
             <apto-slot-outlet identifier="sbs-elements-step-navigation-container-bottom"></apto-slot-outlet>
