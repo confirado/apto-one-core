@@ -293,7 +293,7 @@
     },
     "form": {
       "mail": {
-        "de_DE": "Ihre E-Mail Adresse"
+        "de_DE": "E-mail"
       },
       "submit": {
         "de_DE": "Speichern"
