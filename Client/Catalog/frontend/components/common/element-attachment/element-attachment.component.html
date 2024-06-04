@@ -3,7 +3,7 @@
        class="element-attachment-download"
        (click)="$event.stopPropagation()"
        [href]="mediaUrl + attachment.fileUrl"
-       [download]="attachment.mediaFile.filename | translate"
+       [download]="attachment.mediaFile.filename"
     >
         {{ attachment.name | translate }}
     </a>
