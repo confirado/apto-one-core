@@ -33,6 +33,12 @@
         {% endfor %}
     {% endblock %}
 
+    {% block settingsFilesCss %}
+        {% for stylesheet in templateLoaderData.settingsFiles.css %}
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+        {% endfor %}
+    {% endblock %}
+
     {% block customFilesCss %}
         {% for stylesheet in templateLoaderData.customFiles.css %}
             <link rel="stylesheet" href="{{ asset(stylesheet) }}">
@@ -75,6 +81,12 @@
 
     {% block webpackFilesJs %}
         {% for javascript in templateLoaderData.webpackFiles.js %}
+            <script src="{{ asset(javascript) }}"></script>
+        {% endfor %}
+    {% endblock %}
+
+    {% block settingsFilesJs %}
+        {% for javascript in templateLoaderData.settingsFiles.js %}
             <script src="{{ asset(javascript) }}"></script>
         {% endfor %}
     {% endblock %}
