@@ -11,29 +11,32 @@ class UpdateSettings extends AbstractAddSettings
 
     /**
      * @param string $id
-     * @param string $primaryColor
-     * @param string $secondaryColor
-     * @param string $backgroundColorHeader
-     * @param string $fontColorHeader
-     * @param string $backgroundColorFooter
-     * @param string $fontColorFooter
+     * @param string $colorPrimary
+     * @param string $colorPrimaryHover
+     * @param string $colorAccent
+     * @param string $colorBackgroundHeader
+     * @param string $colorBackgroundFooter
+     * @param string $colorTitle
+     * @param string $colorText
      */
     public function __construct(
         string $id,
-        string $primaryColor,
-        string $secondaryColor,
-        string $backgroundColorHeader,
-        string $fontColorHeader,
-        string $backgroundColorFooter,
-        string $fontColorFooter
+        string $colorPrimary,
+        string $colorPrimaryHover,
+        string $colorAccent,
+        string $colorBackgroundHeader,
+        string $colorBackgroundFooter,
+        string $colorTitle,
+        string $colorText
     ) {
         parent::__construct(
-            $primaryColor,
-            $secondaryColor,
-            $backgroundColorHeader,
-            $fontColorHeader,
-            $backgroundColorFooter,
-            $fontColorFooter
+            $colorPrimary,
+            $colorPrimaryHover,
+            $colorAccent,
+            $colorBackgroundHeader,
+            $colorBackgroundFooter,
+            $colorTitle,
+            $colorText
         );
         $this->id = $id;
     }

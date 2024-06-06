@@ -10,165 +10,191 @@ class Settings extends AptoAggregate
     /**
      * @var string
      */
-    private string $primaryColor;
+    private string $colorPrimary;
 
     /**
      * @var string
      */
-    private string $secondaryColor;
+    private string $colorPrimaryHover;
 
     /**
      * @var string
      */
-    private string $backgroundColorHeader;
+    private string $colorAccent;
 
     /**
      * @var string
      */
-    private string $fontColorHeader;
+    private string $colorBackgroundHeader;
 
     /**
      * @var string
      */
-    private string $backgroundColorFooter;
+    private string $colorBackgroundFooter;
 
     /**
      * @var string
      */
-    private string $fontColorFooter;
+    private string $colorTitle;
+
+    /**
+     * @var string
+     */
+    private string $colorText;
 
     /**
      * @param AptoUuid $id
-     * @param string $primaryColor
-     * @param string $secondaryColor
-     * @param string $backgroundColorHeader
-     * @param string $fontColorHeader
-     * @param string $backgroundColorFooter
-     * @param string $fontColorFooter
+     * @param string $colorPrimary
+     * @param string $colorPrimaryHover
+     * @param string $colorAccent
+     * @param string $colorBackgroundHeader
+     * @param string $colorBackgroundFooter
+     * @param string $colorTitle
+     * @param string $colorText
      */
     public function __construct(
         AptoUuid $id,
-        string $primaryColor,
-        string $secondaryColor,
-        string $backgroundColorHeader,
-        string $fontColorHeader,
-        string $backgroundColorFooter,
-        string $fontColorFooter
+        string $colorPrimary,
+        string $colorPrimaryHover,
+        string $colorAccent,
+        string $colorBackgroundHeader,
+        string $colorBackgroundFooter,
+        string $colorTitle,
+        string $colorText
     ) {
         parent::__construct($id);
-        $this->primaryColor = $primaryColor;
-        $this->secondaryColor = $secondaryColor;
-        $this->backgroundColorHeader = $backgroundColorHeader;
-        $this->fontColorHeader = $fontColorHeader;
-        $this->backgroundColorFooter = $backgroundColorFooter;
-        $this->fontColorFooter = $fontColorFooter;
+        $this->colorPrimary = $colorPrimary;
+        $this->colorPrimaryHover = $colorPrimaryHover;
+        $this->colorAccent = $colorAccent;
+        $this->colorBackgroundHeader = $colorBackgroundHeader;
+        $this->colorBackgroundFooter = $colorBackgroundFooter;
+        $this->colorTitle = $colorTitle;
+        $this->colorText = $colorText;
     }
 
     /**
      * @return string
      */
-    public function getPrimaryColor(): string
+    public function getColorPrimary(): string
     {
-        return $this->primaryColor;
+        return $this->colorPrimary;
     }
 
     /**
-     * @param $primaryColor
+     * @param $colorPrimary
      * @return $this
      */
-    public function setPrimaryColor($primaryColor): Settings
+    public function setColorPrimary($colorPrimary): Settings
     {
-        $this->primaryColor = $primaryColor;
+        $this->colorPrimary = $colorPrimary;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getSecondaryColor(): string
+    public function getColorPrimaryHover(): string
     {
-        return $this->secondaryColor;
+        return $this->colorPrimaryHover;
     }
 
     /**
-     * @param $secondaryColor
+     * @param $colorPrimaryHover
      * @return $this
      */
-    public function setSecondaryColor($secondaryColor): Settings
+    public function setColorPrimaryHover($colorPrimaryHover): Settings
     {
-        $this->secondaryColor = $secondaryColor;
+        $this->colorPrimaryHover = $colorPrimaryHover;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getBackgroundColorHeader(): string
+    public function getColorAccent(): string
     {
-        return $this->backgroundColorHeader;
+        return $this->colorAccent;
     }
 
     /**
-     * @param $backgroundColorHeader
+     * @param $colorAccent
      * @return $this
      */
-    public function setBackgroundColorHeader($backgroundColorHeader): Settings
+    public function setColorAccent($colorAccent): Settings
     {
-        $this->backgroundColorHeader = $backgroundColorHeader;
+        $this->colorAccent = $colorAccent;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getFontColorHeader(): string
+    public function getColorBackgroundHeader(): string
     {
-        return $this->fontColorHeader;
+        return $this->colorBackgroundHeader;
     }
 
     /**
-     * @param $fontColorHeader
+     * @param $colorBackgroundHeader
      * @return $this
      */
-    public function setFontColorHeader($fontColorHeader): Settings
+    public function setColorBackgroundHeader($colorBackgroundHeader): Settings
     {
-        $this->fontColorHeader = $fontColorHeader;
+        $this->colorBackgroundHeader = $colorBackgroundHeader;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getBackgroundColorFooter(): string
+    public function getColorBackgroundFooter(): string
     {
-        return $this->backgroundColorFooter;
+        return $this->colorBackgroundFooter;
     }
 
     /**
-     * @param $backgroundColorFooter
+     * @param $colorBackgroundFooter
      * @return $this
      */
-    public function setBackgroundColorFooter($backgroundColorFooter): Settings
+    public function setColorBackgroundFooter($colorBackgroundFooter): Settings
     {
-        $this->backgroundColorFooter = $backgroundColorFooter;
+        $this->colorBackgroundFooter = $colorBackgroundFooter;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getFontColorFooter(): string
+    public function getColorTitle(): string
     {
-        return $this->fontColorFooter;
+        return $this->colorTitle;
     }
 
     /**
-     * @param $fontColorFooter
+     * @param $colorTitle
      * @return $this
      */
-    public function setFontColorFooter($fontColorFooter): Settings
+    public function setColorTitle($colorTitle): Settings
     {
-        $this->fontColorFooter = $fontColorFooter;
+        $this->colorTitle = $colorTitle;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColorText(): string
+    {
+        return $this->colorText;
+    }
+
+    /**
+     * @param $colorText
+     * @return $this
+     */
+    public function setColorText($colorText): Settings
+    {
+        $this->colorText = $colorText;
         return $this;
     }
 }

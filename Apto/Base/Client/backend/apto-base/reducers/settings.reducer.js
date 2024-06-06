@@ -36,12 +36,13 @@ const SettingsReducer = function(AptoReducersProvider) {
         },
         settingsDetail: {
             id: null,
-            primaryColor: '',
-            secondaryColor: '',
-            backgroundColorHeader: '',
-            fontColorHeader: '',
-            backgroundColorFooter: '',
-            fontColorFooter: ''
+            colorPrimary: '',
+            colorPrimaryHover: '',
+            colorAccent: '',
+            colorBackgroundHeader: '',
+            colorBackgroundFooter: '',
+            colorTitle: '',
+            colorText: ''
         }
     };
 

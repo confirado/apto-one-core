@@ -35,13 +35,13 @@
 
     {% block settingsFilesCss %}
         {% for stylesheet in templateLoaderData.settingsFiles.css %}
-            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}?v={{ date().timestamp }}">
         {% endfor %}
     {% endblock %}
 
     {% block customFilesCss %}
         {% for stylesheet in templateLoaderData.customFiles.css %}
-            <link rel="stylesheet" href="{{ asset(stylesheet) }}">
+            <link rel="stylesheet" href="{{ asset(stylesheet) }}?v={{ date().timestamp }}">
         {% endfor %}
     {% endblock %}
 

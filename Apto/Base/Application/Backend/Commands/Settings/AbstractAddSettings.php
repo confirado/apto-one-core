@@ -9,102 +9,118 @@ abstract class AbstractAddSettings implements CommandInterface
     /**
      * @var string
      */
-    private string $primaryColor;
+    private string $colorPrimary;
 
     /**
      * @var string
      */
-    private string $secondaryColor;
+    private string $colorPrimaryHover;
 
     /**
      * @var string
      */
-    private string $backgroundColorHeader;
+    private string $colorAccent;
 
     /**
      * @var string
      */
-    private string $fontColorHeader;
+    private string $colorBackgroundHeader;
 
     /**
      * @var string
      */
-    private string $backgroundColorFooter;
+    private string $colorBackgroundFooter;
 
     /**
      * @var string
      */
-    private string $fontColorFooter;
+    private string $colorTitle;
 
     /**
-     * @param string $primaryColor
-     * @param string $secondaryColor
-     * @param string $backgroundColorHeader
-     * @param string $fontColorHeader
-     * @param string $backgroundColorFooter
-     * @param string $fontColorFooter
+     * @var string
+     */
+    private string $colorText;
+
+    /**
+     * @param string $colorPrimary
+     * @param string $colorPrimaryHover
+     * @param string $colorAccent
+     * @param string $colorBackgroundHeader
+     * @param string $colorBackgroundFooter
+     * @param string $colorTitle
+     * @param string $colorText
      */
     public function __construct(
-        string $primaryColor,
-        string $secondaryColor,
-        string $backgroundColorHeader,
-        string $fontColorHeader,
-        string $backgroundColorFooter,
-        string $fontColorFooter
+        string $colorPrimary,
+        string $colorPrimaryHover,
+        string $colorAccent,
+        string $colorBackgroundHeader,
+        string $colorBackgroundFooter,
+        string $colorTitle,
+        string $colorText
     ) {
-        $this->primaryColor = $primaryColor;
-        $this->secondaryColor = $secondaryColor;
-        $this->backgroundColorHeader = $backgroundColorHeader;
-        $this->fontColorHeader = $fontColorHeader;
-        $this->backgroundColorFooter = $backgroundColorFooter;
-        $this->fontColorFooter = $fontColorFooter;
+        $this->colorPrimary = $colorPrimary;
+        $this->colorPrimaryHover = $colorPrimaryHover;
+        $this->colorAccent = $colorAccent;
+        $this->colorBackgroundHeader = $colorBackgroundHeader;
+        $this->colorBackgroundFooter = $colorBackgroundFooter;
+        $this->colorTitle = $colorTitle;
+        $this->colorText = $colorText;
     }
 
     /**
      * @return string
      */
-    public function getPrimaryColor(): string
+    public function getColorPrimary(): string
     {
-        return $this->primaryColor;
+        return $this->colorPrimary;
     }
 
     /**
      * @return string
      */
-    public function getSecondaryColor(): string
+    public function getColorPrimaryHover(): string
     {
-        return $this->secondaryColor;
+        return $this->colorPrimaryHover;
     }
 
     /**
      * @return string
      */
-    public function getBackgroundColorHeader(): string
+    public function getColorAccent(): string
     {
-        return $this->backgroundColorHeader;
+        return $this->colorAccent;
     }
 
     /**
      * @return string
      */
-    public function getFontColorHeader(): string
+    public function getColorBackgroundHeader(): string
     {
-        return $this->fontColorHeader;
+        return $this->colorBackgroundHeader;
     }
 
     /**
      * @return string
      */
-    public function getBackgroundColorFooter(): string
+    public function getColorBackgroundFooter(): string
     {
-        return $this->backgroundColorFooter;
+        return $this->colorBackgroundFooter;
     }
 
     /**
      * @return string
      */
-    public function getFontColorFooter(): string
+    public function getColorTitle(): string
     {
-        return $this->fontColorFooter;
+        return $this->colorTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColorText(): string
+    {
+        return $this->colorText;
     }
 }

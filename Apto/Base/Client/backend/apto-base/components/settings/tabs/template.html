@@ -11,7 +11,20 @@
                     Primärfarbe:
                 </label>
                 <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.primaryColor"
+                     ng-model="$ctrl.state.settingsDetail.colorPrimary"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column">
+                <label>
+                    Primärfarbe Hover:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorPrimaryHover"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -24,7 +37,7 @@
                     Sekundärfarbe:
                 </label>
                 <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.secondaryColor"
+                     ng-model="$ctrl.state.settingsDetail.colorAccent"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -37,20 +50,7 @@
                     Hintergrundfarbe Header:
                 </label>
                 <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.backgroundColorHeader"
-                     type="0"
-                     default="#FFFFFF"
-                     md-color-clear-button="false"
-                ></div>
-            </div>
-        </md-card-content>
-        <md-card-content flex="33">
-            <div layout="column" flex>
-                <label>
-                    Schriftfarbe Header:
-                </label>
-                <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.fontColorHeader"
+                     ng-model="$ctrl.state.settingsDetail.colorBackgroundHeader"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -63,7 +63,7 @@
                     Hintergrundfarbe Footer:
                 </label>
                 <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.backgroundColorFooter"
+                     ng-model="$ctrl.state.settingsDetail.colorBackgroundFooter"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"
@@ -73,10 +73,23 @@
         <md-card-content flex="33">
             <div layout="column" flex>
                 <label>
-                    Schriftfarbe Footer:
+                    Schriftfarbe Titel:
                 </label>
                 <div md-color-picker flex
-                     ng-model="$ctrl.state.settingsDetail.fontColorFooter"
+                     ng-model="$ctrl.state.settingsDetail.colorTitle"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column" flex>
+                <label>
+                    Schriftfarbe Text:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorText"
                      type="0"
                      default="#FFFFFF"
                      md-color-clear-button="false"

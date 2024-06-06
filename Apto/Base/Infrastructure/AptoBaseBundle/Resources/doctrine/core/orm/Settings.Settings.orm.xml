@@ -11,12 +11,13 @@
         </id>
         <field name="created" column="created" type="datetime"/>
 
-        <field name="primaryColor" column="primary_color"/>
-        <field name="secondaryColor" column="secondary_color"/>
-        <field name="backgroundColorHeader" column="background_color_header"/>
-        <field name="fontColorHeader" column="font_color_header"/>
-        <field name="backgroundColorFooter" column="background_color_footer"/>
-        <field name="fontColorFooter" column="font_color_footer"/>
+        <field name="colorPrimary" column="color_primary"/>
+        <field name="colorPrimaryHover" column="color_primary_hover"/>
+        <field name="colorAccent" column="color_accent"/>
+        <field name="colorBackgroundHeader" column="color_background_header"/>
+        <field name="colorBackgroundFooter" column="color_background_footer"/>
+        <field name="colorTitle" column="color_title"/>
+        <field name="colorText" column="color_text"/>
 
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
     </entity>

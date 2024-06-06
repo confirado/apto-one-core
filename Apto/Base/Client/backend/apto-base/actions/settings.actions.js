@@ -17,12 +17,13 @@ const Actions = function(MessageBusFactory) {
         return {
             type: getType('ADD_SETTINGS'),
             payload: MessageBusFactory.command('AddSettings', [
-                settingsDetail.primaryColor,
-                settingsDetail.secondaryColor,
-                settingsDetail.backgroundColorHeader,
-                settingsDetail.fontColorHeader,
-                settingsDetail.backgroundColorFooter,
-                settingsDetail.fontColorFooter
+                settingsDetail.colorPrimary,
+                settingsDetail.colorPrimaryHover,
+                settingsDetail.colorAccent,
+                settingsDetail.colorBackgroundHeader,
+                settingsDetail.colorBackgroundFooter,
+                settingsDetail.colorTitle,
+                settingsDetail.colorText
             ])
         };
     }
@@ -32,12 +33,13 @@ const Actions = function(MessageBusFactory) {
             type: getType('UPDATE_SETTINGS'),
             payload: MessageBusFactory.command('UpdateSettings', [
                 settingsDetail.id,
-                settingsDetail.primaryColor,
-                settingsDetail.secondaryColor,
-                settingsDetail.backgroundColorHeader,
-                settingsDetail.fontColorHeader,
-                settingsDetail.backgroundColorFooter,
-                settingsDetail.fontColorFooter
+                settingsDetail.colorPrimary,
+                settingsDetail.colorPrimaryHover,
+                settingsDetail.colorAccent,
+                settingsDetail.colorBackgroundHeader,
+                settingsDetail.colorBackgroundFooter,
+                settingsDetail.colorTitle,
+                settingsDetail.colorText
             ])
         };
     }
