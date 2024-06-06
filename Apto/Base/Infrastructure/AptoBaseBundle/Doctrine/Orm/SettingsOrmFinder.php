@@ -25,12 +25,13 @@ class SettingsOrmFinder extends AptoOrmFinder implements SettingsFinder
                 's' => [
                     ['id.id', 'id'],
                     'created',
-                    'primaryColor',
-                    'secondaryColor',
-                    'backgroundColorHeader',
-                    'fontColorHeader',
-                    'backgroundColorFooter',
-                    'fontColorFooter'
+                    'colorPrimary',
+                    'colorPrimaryHover',
+                    'colorAccent',
+                    'colorBackgroundHeader',
+                    'colorBackgroundFooter',
+                    'colorTitle',
+                    'colorText'
                 ]
             ])
             ->setOrderBy([
