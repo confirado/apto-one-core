@@ -112,6 +112,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
 
   public fonts: Font[] = [];
   public selectedFont: Font | null = null;
+  public selectedMotive: string;
 
   public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, public renderImageService: RenderImageService) {
   }
@@ -170,6 +171,15 @@ export class DesignerComponent implements OnInit, AfterViewInit {
         } else {
           this.initState(() => {
             this.fabricCanvas.requestRenderAll();
+
+            for (const canvasObjects of this.fabricCanvas.getObjects()) {
+              if (canvasObjects.payload.type !== 'motive') {
+                continue;
+              }
+
+              this.selectedMotive = canvasObjects.payload.file.name;
+              break;
+            }
           });
         }
       });
@@ -387,6 +397,7 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   }
 
   public addMotive(file): void {
+    this.selectedMotive = file.name === this.selectedMotive ? null: file.name;
     let fileIsAlreadySelected: boolean = false;
     const url = this.mediaUrl + file.path;
     const canvasObjects = this.fabricCanvas.getObjects();

@@ -12,6 +12,7 @@ import { selectProduct } from '@apto-catalog-frontend/store/product/product.sele
 import { Store } from '@ngrx/store';
 import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
 import { distinctUntilChanged } from 'rxjs';
+import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 
 @Component({
 	selector: 'apto-sbs-elements',
@@ -24,6 +25,7 @@ export class SbsElementsComponent implements OnInit{
   public readonly currentProductElements$ = this.store.select(selectCurrentProductElements);
   public readonly currentStateElements$ = this.store.select(selectCurrentStateElements);
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
+  public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer'));
   private currentStateElements: ElementState[] = null;
 	private progressState: ProgressState = null;
   protected stepPositions: number[] = [];

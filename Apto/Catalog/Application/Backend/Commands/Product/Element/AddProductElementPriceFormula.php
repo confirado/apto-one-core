@@ -31,6 +31,11 @@ class AddProductElementPriceFormula extends ProductChildCommand
     private $customerGroupId;
 
     /**
+     * @var string|null
+     */
+    private ?string $productConditionId;
+
+    /**
      * AddProductPriceFormula constructor.
      * @param string $productId
      * @param string $sectionId
@@ -39,7 +44,7 @@ class AddProductElementPriceFormula extends ProductChildCommand
      * @param string $currency
      * @param string $customerGroupId
      */
-    public function __construct(string $productId, string $sectionId, string $elementId, string $formula, string $currency, string $customerGroupId)
+    public function __construct(string $productId, string $sectionId, string $elementId, string $formula, string $currency, string $customerGroupId, ?string $productConditionId)
     {
         parent::__construct($productId);
         $this->sectionId = $sectionId;
@@ -47,6 +52,7 @@ class AddProductElementPriceFormula extends ProductChildCommand
         $this->formula = $formula;
         $this->currency = $currency;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -87,5 +93,13 @@ class AddProductElementPriceFormula extends ProductChildCommand
     public function getCustomerGroupId(): string
     {
         return $this->customerGroupId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductConditionId(): ?string
+    {
+        return $this->productConditionId;
     }
 }

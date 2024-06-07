@@ -1,19 +1,23 @@
 import ContainerController from '../apto-container.controller';
 import CustomPropertiesTemplate from './custom-properties.component.html';
 
-const CustomPropertiesControllerInject = ['$ngRedux', 'LanguageFactory', 'CustomPropertyActions'];
+const CustomPropertiesControllerInject = ['$ngRedux', 'LanguageFactory', 'CustomPropertyActions', 'MessageBusFactory'];
 class CustomPropertiesController extends ContainerController {
-    constructor ($ngRedux, LanguageFactory, CustomPropertyActions) {
+    constructor ($ngRedux, LanguageFactory, CustomPropertyActions, MessageBusFactory) {
         super($ngRedux);
 
         this.languageFactory = LanguageFactory;
         this.customPropertyActions = CustomPropertyActions;
+        this.messageBusFactory = MessageBusFactory;
 
+        this.conditionSets = [];
         this.properties = [];
         this.property = {
+            id: null,
             key: null,
             value: null,
-            translatable: false
+            translatable: false,
+            productConditionId: null
         };
         this.keys = {
             text: '',
@@ -40,6 +44,12 @@ class CustomPropertiesController extends ContainerController {
     $onInit() {
         super.$onInit();
         this.actions.fetchUsedCustomPropertyKeys();
+
+        if (this.productId) {
+            this.messageBusFactory.query('FindConditionSets', [this.productId]).then((result) => {
+                this.conditionSets = result.data.result.conditionSets;
+            });
+        }
     }
 
     keysSearchTextChanges(searchText) {
@@ -57,22 +67,25 @@ class CustomPropertiesController extends ContainerController {
         this.onAddProperty({
             key: this.property.key,
             value: this.property.value,
-            translatable: this.property.translatable
+            translatable: this.property.translatable,
+            productConditionId: this.property.productConditionId
         });
     }
 
     editProperty (property) {
         this.keys.item = property.key;
         this.property = {
+            id: property.id,
             key: property.key,
             value: property.value,
-            translatable: property.translatable
+            translatable: property.translatable,
+            productConditionId: property.productConditionId
         };
     }
 
-    removeProperty (key) {
+    removeProperty (id) {
         this.onRemoveProperty({
-            key: key
+            id: id
         });
     }
 
@@ -99,6 +112,12 @@ class CustomPropertiesController extends ContainerController {
         return translatedValue;
     }
 
+    getConditionName = function (id) {
+        const condition = this.conditionSets.find((c) => c.id === id);
+
+        return condition ? condition.identifier : null;
+    }
+
     $onChanges = function (changes) {
         if (changes.properties) {
             this.properties = changes.properties.currentValue;
@@ -111,6 +130,7 @@ CustomPropertiesController.$inject = CustomPropertiesControllerInject;
 const CustomPropertiesComponent = {
     bindings: {
         properties: '<',
+        productId: '<',
         onAddProperty: '&',
         onRemoveProperty: '&'
     },

@@ -38,7 +38,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             availableSections: state.element.sections,
             sectionIdentifiers: state.element.sectionIdentifiers,
             elementIdentifiers: state.element.elementIdentifiers,
-            customProperties: state.element.customProperties
+            customProperties: state.element.customProperties,
+            conditionSets: state.product.conditionSets,
         }
     };
 
@@ -78,7 +79,8 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         setDetailValue: ElementActions.setDetailValue,
         resetDefinitionValues: ElementActions.resetDefinitionValues,
         resetStore: ElementActions.reset,
-        fetchSections: ElementActions.fetchSections
+        fetchSections: ElementActions.fetchSections,
+        fetchConditions: ProductActions.fetchConditionSets,
     })($scope);
 
     function init() {
@@ -119,6 +121,7 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         $scope.elementListOpen = false;
 
         $scope.productId = productId;
+        $scope.fetchConditions(productId);
         $scope.sectionId = sectionId;
 
         $scope.fetchSections(productId).then(() => {
@@ -129,6 +132,12 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             updateAvailableComputableValues(false, 'renderImageOptions');
             updateAvailableComputableValues(false, 'offsetOptions');
         });
+    }
+
+    $scope.getConditionName = function (id) {
+        const condition = $scope.conditionSets.find((c) => c.id === id);
+
+        return condition ? condition.identifier : null;
     }
 
     function initOptions(renderImage, copy = false) {
@@ -266,12 +275,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             elementId,
             $scope.newPrice.amount,
             $scope.newPrice.currencyCode,
-            $scope.newPrice.customerGroupId
+            $scope.newPrice.customerGroupId,
+            $scope.newPrice.productConditionId
         ).then(() => {
             $scope.newPrice = {
                 amount: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: null
             };
             $scope.fetchPrices(elementId);
         });
@@ -295,12 +306,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
             elementId,
             $scope.newPriceFormula.formula,
             $scope.newPriceFormula.currencyCode,
-            $scope.newPriceFormula.customerGroupId
+            $scope.newPriceFormula.customerGroupId,
+            $scope.newPriceFormula.productConditionId
         ).then(() => {
             $scope.newPriceFormula = {
                 formula: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: ''
             };
             $scope.fetchPriceFormulas(elementId);
         });
@@ -486,14 +499,14 @@ const ElementDetailController = function($scope, $document, $templateCache, $mdD
         $scope.setDetailValue('priceMatrix', $scope.priceMatrix.priceMatrix);
     }
 
-    function addElementCustomProperty(key, value, translatable) {
-        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable).then(() => {
+    function addElementCustomProperty(key, value, translatable, productConditionId) {
+        $scope.addProductElementCustomProperty(productId, sectionId, elementId, key, value, translatable, productConditionId).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }
 
-    function removeElementCustomProperty(key) {
-        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, key).then(() => {
+    function removeElementCustomProperty(id) {
+        $scope.removeProductElementCustomProperty(productId, sectionId, elementId, id).then(() => {
             $scope.fetchCustomProperties(elementId);
         });
     }

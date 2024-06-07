@@ -39,7 +39,6 @@ export interface Section {
 	isHidden: boolean;
 	isMandatory: boolean;
 	position: number;
-	customProperties: CustomProperty[];
   previewImage: string | null;
   isZoomable: boolean;
   repetition?: number;
@@ -174,18 +173,17 @@ export interface Attachments {
 }
 
 export interface Element<DefinitionProperties = unknown> {
-	id: string;
-	identifier: string;
-	sectionId: string;
-	sectionIdentifier: string;
-	name: TranslatedValue;
-	description: TranslatedValue;
-	definition: Definition<DefinitionProperties>;
-	errorMessage: TranslatedValue;
-	previewImage: string | null;
-	isMandatory: boolean;
-	position: number;
-	customProperties: CustomProperty[];
+  id: string;
+  identifier: string;
+  sectionId: string;
+  sectionIdentifier: string;
+  name: TranslatedValue;
+  description: TranslatedValue;
+  definition: Definition<DefinitionProperties>;
+  errorMessage: TranslatedValue;
+  previewImage: string | null;
+  isMandatory: boolean;
+  position: number;
   attachments: Attachments[];
   zoomFunction: ElementZoomFunctionEnum;
   sectionRepetition?: number;

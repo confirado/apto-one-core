@@ -2,9 +2,7 @@
 
 namespace Apto\Catalog\Application\Backend\Commands\Product\Condition;
 
-use Apto\Catalog\Application\Backend\Commands\Product\ProductChildCommand;
-
-abstract class AddProductCriterion extends ProductChildCommand
+abstract class AddConditionSetCriterion extends ConditionSetCommand
 {
     /**
      * @var int
@@ -43,24 +41,25 @@ abstract class AddProductCriterion extends ProductChildCommand
 
     /**
      * @param string $productId
-     * @param int|null $type
-     * @param int $operator
-     * @param string $value
+     * @param string $conditionSetId
      * @param string|null $sectionId
      * @param string|null $elementId
      * @param string|null $property
+     * @param int $operator
+     * @param string $value
+     * @param int|null $type
      * @param string|null $computedValueId
      */
-    public function __construct(string $productId, ?int $type, int $operator, string $value, string $sectionId = null, string $elementId = null, string $property = null, string $computedValueId = null)
+    public function __construct(string $productId, string $conditionSetId, ?int $type, string $sectionId = null, string $elementId = null, string $property = null, string $computedValueId = null, int $operator, string $value)
     {
-        parent::__construct($productId);
+        parent::__construct($productId, $conditionSetId);
         $this->type = $type === null ? 0 : $type;
-        $this->operator = $operator;
-        $this->value = $value;
         $this->sectionId = '' !== $sectionId ? $sectionId : null;
         $this->elementId = '' !== $elementId ? $elementId : null;
         $this->property = '' !== $property ? $property : null;
         $this->computedValueId = '' !== $computedValueId ? $computedValueId : null;
+        $this->operator = $operator;
+        $this->value = $value;
     }
 
     /**

@@ -10,4 +10,9 @@ interface AptoCustomPropertyFinder extends AptoFinder
      * @return array
      */
     public function findUsedKeys();
+
+    /**
+     * @return array
+     */
+    public function findCustomProperties(): array;
 }

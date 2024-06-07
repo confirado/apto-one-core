@@ -20,6 +20,13 @@
                     </md-select>
                 </md-input-container>
                 <div flex="5"></div>
+                <md-input-container flex>
+                    <label>Condition:</label>
+                    <md-select ng-model="newPrice.productConditionId">
+                        <md-option ng-value="conditionSet.id" ng-repeat="conditionSet in conditionSets">{{ conditionSet.identifier }}</md-option>
+                    </md-select>
+                </md-input-container>
+                <div flex="5"></div>
                 <md-input-container>
                     <md-button ng-disabled="!newPrice.amount || !newPrice.currencyCode || !newPrice.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addPrice()">Hinzufügen</md-button>
                 </md-input-container>
@@ -29,9 +36,10 @@
                 <table md-table>
                     <thead md-head>
                     <tr md-row>
-                        <th md-column style="width:30%;">Preis</th>
-                        <th md-column style="width:30%;">Währung</th>
-                        <th md-column style="width:40%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Preis</th>
+                        <th md-column style="width:25%;">Währung</th>
+                        <th md-column style="width:25%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Condition</th>
                         <th md-column style="width:60px;">Aktionen</th>
                     </tr>
                     </thead>
@@ -43,6 +51,7 @@
                         <td md-cell>
                             <apto-customer-group-name customer-group-id="price.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
                         </td>
+                        <td md-cell>{{getConditionName(price.productConditionId)}}</td>
                         <td md-cell>
                             <md-button
                                     title="Löschen"
@@ -108,36 +117,60 @@
 
     <md-tab label="Preisformeln">
         <div class="apto-tab-content">
+            <div class="md-whiteframe-2dp" style="padding-top: 24px; padding-left: 24px; padding-right: 24px; margin-bottom: 24px; margin-top: 18px;">
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Formel:</label>
+                        <input ng-model="newPriceFormula.formula">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="start" flex>
+                    <md-input-container flex>
+                        <label>Währung:</label>
+                        <input ng-model="newPriceFormula.currencyCode">
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Kundengruppe:</label>
+                        <md-select ng-model="newPriceFormula.customerGroupId">
+                            <md-option ng-value="group.id" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container flex>
+                        <label>Condition:</label>
+                        <md-select ng-model="newPriceFormula.productConditionId">
+                            <md-option ng-value="conditionSet.id" ng-repeat="conditionSet in conditionSets">{{ conditionSet.identifier }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex="5"></div>
+                    <md-input-container>
+                        <md-button ng-disabled="!newPriceFormula.formula || !newPriceFormula.currencyCode || !newPriceFormula.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addPriceFormula()">Hinzufügen</md-button>
+                    </md-input-container>
+                </div>
+                <div style="padding-bottom: 8px;">
+                    <p style="margin-top: 0;">
+                        <strong>Funktionsweise:</strong> Das Ergebnis der Formel wird als Preis hinterlegt.
+                    </p>
 
-            <div layout="row" layout-align="start" flex>
-                <md-input-container flex>
-                    <input ng-model="newPriceFormula.formula">
-                </md-input-container>
-                <div flex="5"></div>
-                <md-input-container flex>
-                    <label>Währung:</label>
-                    <input ng-model="newPriceFormula.currencyCode">
-                </md-input-container>
-                <div flex="5"></div>
-                <md-input-container flex>
-                    <label>Kundengruppe:</label>
-                    <md-select ng-model="newPriceFormula.customerGroupId">
-                        <md-option ng-value="group.id" ng-repeat="group in availableCustomerGroups">{{ group.name }}</md-option>
-                    </md-select>
-                </md-input-container>
-                <div flex="5"></div>
-                <md-input-container>
-                    <md-button ng-disabled="!newPriceFormula.formula || !newPriceFormula.currencyCode || !newPriceFormula.customerGroupId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addPriceFormula()">Hinzufügen</md-button>
-                </md-input-container>
+                    <p>
+                        <strong>Erlaubte Variablen in Formel:</strong> In der Formel kann auf die berechneten Werte des aktuellen Produktes und der Bestellmenge zugegriffen werden.
+                    </p>
+
+                    <p>
+                        <strong>Variablen in Formel:</strong> "{_anzahl_}, {name-berechneter-wert}"
+                    </p>
+                </div>
             </div>
 
             <md-table-container class="md-whiteframe-2dp">
                 <table md-table>
                     <thead md-head>
                     <tr md-row>
-                        <th md-column style="width:30%;">Formel</th>
-                        <th md-column style="width:30%;">Währung</th>
-                        <th md-column style="width:40%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Formel</th>
+                        <th md-column style="width:25%;">Währung</th>
+                        <th md-column style="width:25%;">Kundengruppe</th>
+                        <th md-column style="width:25%;">Condition</th>
                         <th md-column style="width:60px;">Aktionen</th>
                     </tr>
                     </thead>
@@ -148,6 +181,7 @@
                         <td md-cell>
                             <apto-customer-group-name customer-group-id="priceFormula.customerGroupId" available-customer-groups="availableCustomerGroups"></apto-customer-group-name>
                         </td>
+                        <td md-cell>{{getConditionName(priceFormula.productConditionId)}}</td>
                         <td md-cell>
                             <md-button
                                     title="Löschen"
@@ -163,6 +197,8 @@
         </div>
     </md-tab>
 
+    <!--
+    @deprecated will be removed soon
     <md-tab label="Erweiterte Preiskalkulation">
         <div class="apto-tab-content">
             <div layout="row" layout-align="start" flex>
@@ -195,5 +231,6 @@
             </div>
         </div>
     </md-tab>
+    -->
 
 </md-tabs>

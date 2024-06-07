@@ -4,6 +4,7 @@ namespace Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm;
 
 use Apto\Base\Domain\Core\Model\AptoCustomProperty;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyRepository;
+use Doctrine\ORM\NonUniqueResultException as NonUniqueResultExceptionAlias;
 
 class AptoCustomPropertyOrmRepository extends AptoOrmRepository implements AptoCustomPropertyRepository
 {
@@ -35,14 +36,30 @@ class AptoCustomPropertyOrmRepository extends AptoOrmRepository implements AptoC
     }
 
     /**
-     * @param int $surrogateId
+     * @param $surrogateId
      * @return AptoCustomProperty|null
+     * @throws NonUniqueResultExceptionAlias
      */
-    public function findById($surrogateId)
+    public function findBySurrogateId($surrogateId): ?AptoCustomProperty
     {
         $builder = $this->createQueryBuilder('AptoCustomProperty')
-            ->where('AptoCustomProperty.surrogate_id = :surrogateId')
+            ->where('AptoCustomProperty.surrogateId = :surrogateId')
             ->setParameter('surrogateId', $surrogateId);
+
+        return $builder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param $id
+     * @return AptoCustomProperty|null
+     * @throws NonUniqueResultExceptionAlias
+     */
+    public function findById($id): ?AptoCustomProperty
+    {
+
+        $builder = $this->createQueryBuilder('AptoCustomProperty')
+            ->where('AptoCustomProperty.id.id = :id')
+            ->setParameter('id', $id);
 
         return $builder->getQuery()->getOneOrNullResult();
     }

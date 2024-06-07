@@ -15,18 +15,28 @@
             <span md-highlight-text="$ctrl.keys.text">{{key}}</span>
         </md-item-template>
     </md-autocomplete>
-    <div flex="5"></div>
-    <md-input-container flex ng-if="!$ctrl.property.translatable">
-        <label>Wert:</label>
-        <input ng-model="$ctrl.property.value">
+    <div flex="5" ng-if="$ctrl.conditionSets.length > 0"></div>
+    <md-input-container flex ng-if="$ctrl.conditionSets.length > 0">
+        <label>Bedingung:</label>
+        <md-select ng-model="$ctrl.property.productConditionId">
+            <md-option ng-value="null">keine</md-option>
+            <md-option ng-value="conditionSet.id" ng-repeat="conditionSet in $ctrl.conditionSets">{{ conditionSet.identifier }}</md-option>
+        </md-select>
     </md-input-container>
-    <apto-translated-value ng-if="$ctrl.property.translatable" label="'Value'" type="'trumbowyg'" translated-value="$ctrl.property.value" flex></apto-translated-value>
     <div flex="5"></div>
     <md-input-container>
         <md-checkbox ng-model="$ctrl.property.translatable" aria-label="Übersetzbar" ng-change="$ctrl.onChangeTranslatable()">
             Übersetzbar
         </md-checkbox>
     </md-input-container>
+</div>
+
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex ng-if="!$ctrl.property.translatable">
+        <label>Wert:</label>
+        <input ng-model="$ctrl.property.value">
+    </md-input-container>
+    <apto-translated-value ng-if="$ctrl.property.translatable" label="'Value'" type="'trumbowyg'" translated-value="$ctrl.property.value" flex></apto-translated-value>
     <div flex="5"></div>
     <md-input-container>
         <md-button ng-disabled="!$ctrl.property.key || !$ctrl.property.value" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="$ctrl.addProperty()">Speichern</md-button>
@@ -37,8 +47,9 @@
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column style="width:30%;">Schlüssel</th>
-            <th md-column style="width:50%;">Wert</th>
+            <th md-column style="width:20%;">Schlüssel</th>
+            <th md-column style="width:40%;">Wert</th>
+            <th md-column style="width:20%;" ng-if="$ctrl.conditionSets.length > 0">Bedingung</th>
             <th md-column style="width:10%;">Übersetzbar</th>
             <th md-column style="width:10%; text-align: center;">Aktionen</th>
         </tr>
@@ -47,6 +58,7 @@
         <tr md-row ng-repeat="property in $ctrl.properties">
             <td md-cell>{{property.key}}</td>
             <td md-cell>{{property.value}}</td>
+            <td md-cell ng-if="$ctrl.conditionSets.length > 0">{{$ctrl.getConditionName(property.productConditionId)}}</td>
             <td md-cell>{{property.translatable}}</td>
             <td md-cell style="text-align: center;">
                 <md-button
@@ -58,7 +70,7 @@
                 <md-button
                         title="Löschen"
                         class="md-icon-button md-warn"
-                        apto-confirm-remove="$ctrl.removeProperty(property.key)">
+                        apto-confirm-remove="$ctrl.removeProperty(property.id)">
                     <md-icon md-font-set="fa">&#xf014</md-icon>
                 </md-button>
             </td>

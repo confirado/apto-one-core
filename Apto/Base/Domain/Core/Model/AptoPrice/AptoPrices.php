@@ -29,21 +29,22 @@ trait AptoPrices
      * @throws AptoPriceDuplicateException
      * @throws InvalidUuidException
      */
-    public function addAptoPrice(Money $price, AptoUuid $customerGroupId): self
+    public function addAptoPrice(Money $price, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null): self
     {
         $priceId = $this->nextAptoPriceId();
         if ($this->containsAptoPriceId($priceId)) {
             return $this;
         }
 
-        $this->assertNoAptoPriceDuplicates($price->getCurrency(), $customerGroupId, $priceId);
+        $this->assertNoAptoPriceDuplicates($price->getCurrency(), $customerGroupId, $productConditionId, $priceId);
 
         $this->aptoPrices->set(
             $priceId->getId(),
             new AptoPrice(
                 $priceId,
                 $price,
-                $customerGroupId
+                $customerGroupId,
+                $productConditionId
             )
         );
 
@@ -52,7 +53,8 @@ trait AptoPrices
                 $priceId,
                 $this->getId(),
                 $price,
-                $customerGroupId
+                $customerGroupId,
+                $productConditionId
             )
         );
 
@@ -96,7 +98,7 @@ trait AptoPrices
         $aptoPrice = $this->aptoPrices->get($priceId->getId());
 
         if (!$aptoPrice->getPrice()->equals($price)) {
-            $this->assertNoAptoPriceDuplicates($price->getCurrency(), $aptoPrice->getCustomerGroupId(), $priceId);
+            $this->assertNoAptoPriceDuplicates($price->getCurrency(), $aptoPrice->getCustomerGroupId(), $aptoPrice->getProductConditionId(), $priceId);
 
             $aptoPrice->setPrice($price);
             $this->publishAptoPriceEventIfCapable(
@@ -127,7 +129,7 @@ trait AptoPrices
         $aptoPrice = $this->aptoPrices->get($priceId->getId());
 
         if ($aptoPrice->getCustomerGroupId()->getId() !== $customerGroupId->getId()) {
-            $this->assertNoAptoPriceDuplicates($aptoPrice->getPrice()->getCurrency(), $customerGroupId, $priceId);
+            $this->assertNoAptoPriceDuplicates($aptoPrice->getPrice()->getCurrency(), $customerGroupId, $aptoPrice->getProductConditionId(), $priceId);
 
             $aptoPrice->setCustomerGroupId($customerGroupId);
 
@@ -208,7 +210,7 @@ trait AptoPrices
      * @return bool
      * @throws AptoPriceDuplicateException
      */
-    protected function assertNoAptoPriceDuplicates(Currency $currency, AptoUuid $customerGroupId, AptoUuid $exceptForPriceId): bool
+    protected function assertNoAptoPriceDuplicates(Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId, AptoUuid $exceptForPriceId): bool
     {
         /** @var AptoPrice $aptoPrice */
         foreach ($this->aptoPrices as $aptoPrice) {
@@ -216,9 +218,13 @@ trait AptoPrices
                 continue;
             }
 
+            $productConditionSame = (!$productConditionId && !$aptoPrice->getProductConditionId()) ||
+                ($productConditionId && $aptoPrice->getProductConditionId() && $productConditionId->getId() === $aptoPrice->getProductConditionId()->getId());
+
             if (
                 $aptoPrice->getPrice()->getCurrency()->equals($currency) &&
-                $aptoPrice->getCustomerGroupId()->getId() === $customerGroupId->getId()
+                $aptoPrice->getCustomerGroupId()->getId() === $customerGroupId->getId() &&
+                $productConditionSame
             ) {
                 throw New AptoPriceDuplicateException('You cannot add a Price with the same Currency(' . $currency->getCode() . ') and the same CustomerGroup(' . $customerGroupId->getId() . ') twice.');
             }

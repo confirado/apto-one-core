@@ -92,10 +92,10 @@ const CategoryActions = function($ngRedux, MessageBusFactory, PageHeaderActions,
         }
     }
 
-    function removeCategoryCustomProperty(categoryId, key) {
+    function removeCategoryCustomProperty(categoryId, id) {
         return {
             type: getType('REMOVE_CATEGORY_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveCategoryCustomProperty', [categoryId, key])
+            payload: MessageBusFactory.command('RemoveCategoryCustomProperty', [categoryId, id])
         }
     }
 

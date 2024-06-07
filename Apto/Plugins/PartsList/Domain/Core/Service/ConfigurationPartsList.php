@@ -2,16 +2,20 @@
 
 namespace Apto\Plugins\PartsList\Domain\Core\Service;
 
+use Money\Currency;
+use Money\Money;
+use Money\Currencies\ISOCurrencies;
+use Money\Formatter\DecimalMoneyFormatter;
+
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\Formula\FormulaParser;
 use Apto\Catalog\Application\Core\Service\Formula\NoProductIdGivenException;
 use Apto\Catalog\Application\Core\Service\Formula\NoStateGivenException;
-use Apto\Catalog\Application\Core\Service\StatePrice\StatePriceService;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
-use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
-use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
+use Apto\Catalog\Domain\Core\Service\Formula\Exception\FormulaParserException;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Part;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\PartRepository;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ElementUsage;
@@ -22,45 +26,26 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleCondition;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\SectionUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Usage;
-use Money\Currencies\ISOCurrencies;
-use Money\Currency;
-use Money\Formatter\DecimalMoneyFormatter;
-use Money\Money;
 
 class ConfigurationPartsList
 {
     /**
      * @var PartRepository
      */
-    private $partRepository;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @var StatePriceService
-     */
-    private $statePriceService;
+    private PartRepository $partRepository;
 
     /**
      * @var FormulaParser
      */
-    private $formulaParser;
+    private FormulaParser $formulaParser;
 
     /**
-     * ConfigurationPartsList constructor.
      * @param PartRepository $partRepository
-     * @param ProductRepository $productRepository
-     * @param StatePriceService $statePriceService
      * @param FormulaParser $formulaParser
      */
-    public function __construct(PartRepository $partRepository, ProductRepository $productRepository, StatePriceService $statePriceService, FormulaParser $formulaParser)
+    public function __construct(PartRepository $partRepository, FormulaParser $formulaParser)
     {
         $this->partRepository = $partRepository;
-        $this->productRepository = $productRepository;
-        $this->statePriceService = $statePriceService;
         $this->formulaParser = $formulaParser;
     }
 
@@ -72,6 +57,8 @@ class ConfigurationPartsList
      * @param $fallbackCustomerGroupId
      * @param array $computedValues
      * @return Money
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
@@ -98,6 +85,8 @@ class ConfigurationPartsList
      * @param $fallbackCustomerGroupId
      * @param bool $multiplied
      * @return Money
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
@@ -131,9 +120,11 @@ class ConfigurationPartsList
      * @param string $customerGroupId
      * @param $fallbackCustomerGroupId
      * @param AptoLocale $locale
-     * @param array $computedValues
+     * @param $computedValues
      * @param string|null $categoryId
      * @return array
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
@@ -143,7 +134,6 @@ class ConfigurationPartsList
         $this->formulaParser->setState($state);
         $this->formulaParser->setProductId($productId);
         $usages = $this->getUsages($productId, $state, $computedValues);
-
         $list = [];
         /** @var Usage $usage */
         foreach ($usages as $usage) {
@@ -164,6 +154,8 @@ class ConfigurationPartsList
      * @param $fallbackCustomerGroupId
      * @param AptoLocale $locale
      * @return array
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
@@ -179,7 +171,7 @@ class ConfigurationPartsList
             'partNumber' => $part->getPartNumber(),
             'description' => $part->getDescription()->getTranslation($locale)->getValue(),
             'partName' => $part->getName()->getTranslation($locale)->getValue(),
-            'quantity' => str_replace('.', ',', $this->getQuantity($usage, 2)),
+            'quantity' => str_replace('.', ',', (string) $this->getQuantity($usage, 2)),
             'unit' => $part->getUnit() ? $part->getUnit()->getUnit() : '',
             'baseQuantity' => $part->getBaseQuantity(),
             'itemPrice' => str_replace('.', ',', $formattedBasePartPrice),
@@ -194,6 +186,8 @@ class ConfigurationPartsList
      * @throws InvalidUuidException
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
+     * @throws CircularReferenceException
+     * @throws FormulaParserException
      */
     private function getQuantity(Usage $usage, int $precision) :float
     {
@@ -207,13 +201,11 @@ class ConfigurationPartsList
      * @return array
      * @throws InvalidUuidException
      */
-    private function getUsages(AptoUuid $productId, State $state, array $computedValues = [])
+    private function getUsages(AptoUuid $productId, State $state, array $computedValues = []): array
     {
         $sections = $state->getSectionIds();
         $elements = $state->getElementList();
         $elementIds = $state->getElementIds();
-
-        $elementSections = $this->getElementSections($state, $elements);
 
         $parts = $this->partRepository->findByUsages(
             [$productId->getId()],
@@ -249,7 +241,7 @@ class ConfigurationPartsList
             }
             /** @var ElementUsage $elementUsage */
             foreach ($part->getElementUsages() as $elementUsage) {
-                if (array_key_exists($elementUsage->getUsageForUuid()->getId(), $elementSections)) {
+                if (in_array($elementUsage->getUsageForUuid()->getId(), $elementIds)) {
                     $usages[] = $elementUsage;
                 }
             }
@@ -284,7 +276,7 @@ class ConfigurationPartsList
      * @return bool
      * @throws InvalidUuidException
      */
-    private function isRuleActive(RuleUsage $ruleUsage, AptoUuid $productId, State $state, array $computedValues = [])
+    private function isRuleActive(RuleUsage $ruleUsage, AptoUuid $productId, State $state, array $computedValues = []): bool
     {
         $operator = $ruleUsage->getConditionsOperator();
         $fulfilled = false;
@@ -303,56 +295,5 @@ class ConfigurationPartsList
             }
         }
         return $fulfilled;
-    }
-
-    /**
-     * Return array in form:
-     * array [
-     *  elementId => sectionId
-     * ]
-     *
-     * @param State $state
-     * @param array $elements
-     *
-     * @return array
-     */
-    private function getElementSections(State $state, array $elements): array
-    {
-        $elementSections = [];
-        foreach ($elements as $element) {
-            foreach ($state->getStateWithoutParameters() as $section) {
-                // @todo handle the case when we have multiple elements with the same elementId
-                if (array_key_exists($element['elementId'], $section)) {
-                    $elementSections[$element['elementId']] = $section['sectionId'];
-                }
-            }
-        }
-
-        return $elementSections;
-    }
-
-    /**
-     * @param ElementDefinition $elementDefinition
-     * @param State $state
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
-     * @return array
-     */
-    private function getSelectedValues(ElementDefinition $elementDefinition, State $state, AptoUuid $sectionId, AptoUuid $elementId): array
-    {
-        $selectedValues = [];
-        foreach (array_keys($elementDefinition->getSelectableValues()) as $selectableValue) {
-            $selectedValues[$selectableValue] = $state->getValue($sectionId, $elementId, $selectableValue);
-        }
-        return $selectedValues;
-    }
-
-    /**
-     * @param $value
-     * @return mixed
-     */
-    private function removeTagsAndLineBreaks($value)
-    {
-        return str_replace(['\r\n', '\r', '\n'], ' ', strip_tags($value));
     }
 }

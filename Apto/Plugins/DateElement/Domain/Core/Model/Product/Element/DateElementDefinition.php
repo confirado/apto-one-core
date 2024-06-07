@@ -182,11 +182,11 @@ class DateElementDefinition implements ElementDefinition
         }
 
         $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
+        $en_GB = new AptoLocale('en_GB');
 
         $values['date'] = AptoTranslatedValue::fromArray([
             'de_DE' => $date->format($format),
-            'en_EN' => $date->format($format)
+            'en_GB' => $date->format($format)
         ]);
 
         if (array_key_exists('duration', $selectedValues)){
@@ -196,10 +196,10 @@ class DateElementDefinition implements ElementDefinition
                     ' ' . $selectedValues['duration'] . ' ' .
                     $this->valueSuffix->getTranslation($de_DE, null, true)->getValue(),
 
-                'en_EN' =>
-                    $this->valuePrefix->getTranslation($en_EN, null, true)->getValue() .
+                'en_GB' =>
+                    $this->valuePrefix->getTranslation($en_GB, null, true)->getValue() .
                     ' ' . $selectedValues['duration'] . ' ' .
-                    $this->valueSuffix->getTranslation($en_EN, null, true)->getValue(),
+                    $this->valueSuffix->getTranslation($en_GB, null, true)->getValue(),
             ]);
         }
 

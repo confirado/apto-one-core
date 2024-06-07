@@ -20,7 +20,8 @@ class InvalidConfigurationStateChangeException extends InvalidStateException
             $payload['section'],
             $payload['element'] ?? null,
             $payload['property'] ?? null,
-            $payload['value'] ?? null
+            $payload['value'] ?? null,
+            $payload['errorMessage'] ?? null
         );
     }
 }

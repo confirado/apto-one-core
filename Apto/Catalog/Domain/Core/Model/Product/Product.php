@@ -18,7 +18,7 @@ use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
 use Apto\Catalog\Domain\Core\Model\Group\Group;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
-use Apto\Catalog\Domain\Core\Model\Product\Condition\Condition;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\Criterion;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidPropertyException;
@@ -207,7 +207,7 @@ class Product extends AptoAggregate
     /**
      * @var Collection
      */
-    protected $conditions;
+    protected $conditionSets;
 
     /**
      * Product constructor.
@@ -241,7 +241,7 @@ class Product extends AptoAggregate
         $this->previewImage = null;
         $this->filterProperties = new ArrayCollection();
         $this->domainProperties = new ArrayCollection();
-        $this->conditions = new ArrayCollection();
+        $this->conditionSets = new ArrayCollection();
         $this->keepSectionOrder = true;
     }
 
@@ -888,11 +888,12 @@ class Product extends AptoAggregate
      * @param AptoUuid $sectionId
      * @param Money $aptoPrice
      * @param AptoUuid $customerGroupId
+     * @param AptoUuid|null $productConditionId
      * @return Product
      * @throws AptoPriceDuplicateException
      * @throws InvalidUuidException
      */
-    public function addSectionPrice(AptoUuid $sectionId, Money $aptoPrice, AptoUuid $customerGroupId): Product
+    public function addSectionPrice(AptoUuid $sectionId, Money $aptoPrice, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null): Product
     {
         // if section does not exists anymore we have nothing to do
         $section = $this->getSection($sectionId);
@@ -901,26 +902,9 @@ class Product extends AptoAggregate
         }
 
         // add new price to section
-        $section->addAptoPrice($aptoPrice, $customerGroupId);
+        $section->addAptoPrice($aptoPrice, $customerGroupId, $productConditionId);
 
         return $this;
-    }
-
-    /**
-     * @param AptoUuid $sectionId
-     * @param Currency $currency
-     * @param AptoUuid $customerGroupId
-     * @return Money|null
-     */
-    public function getSectionPrice(AptoUuid $sectionId, Currency $currency, AptoUuid $customerGroupId)
-    {
-        // if element does not exists anymore we have nothing to do
-        $section = $this->getSection($sectionId);
-        if (null === $section) {
-            return null;
-        }
-
-        return $section->getAptoPrice($currency, $customerGroupId);
     }
 
     /**
@@ -1981,10 +1965,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false): Product
+    public function addSectionCustomProperty(AptoUuid $sectionId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -1994,17 +1979,17 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to section
-        $section->setCustomProperty($key, $value, $translatable);
+        $section->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }
 
     /**
      * @param AptoUuid $sectionId
-     * @param string $key
+     * @param AptoUuid $id
      * @return string|null
      */
-    public function getSectionCustomProperty(AptoUuid $sectionId, string $key): ?string
+    public function getSectionCustomPropertyValue(AptoUuid $sectionId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if section does not exists anymore we have nothing to do
@@ -2014,15 +1999,15 @@ class Product extends AptoAggregate
         }
 
         // return custom property from section
-        return $section->getCustomProperty($key);
+        return $section->getCustomPropertyValue($id);
     }
 
     /**
      * @param AptoUuid $sectionId
-     * @param string $key
+     * @param AptoUuid $id
      * @return Product
      */
-    public function removeSectionCustomProperty(AptoUuid $sectionId, string $key): Product
+    public function removeSectionCustomProperty(AptoUuid $sectionId, AptoUuid $id): Product
     {
         // if section does not exists anymore we have nothing to do
         $section = $this->getSection($sectionId);
@@ -2031,7 +2016,7 @@ class Product extends AptoAggregate
         }
 
         // remove custom property from section
-        $section->removeCustomProperty($key);
+        $section->removeCustomProperty($id);
 
         return $this;
     }
@@ -2042,10 +2027,11 @@ class Product extends AptoAggregate
      * @param string $key
      * @param string $value
      * @param bool $translatable
-     * @return Product
+     * @param AptoUuid|null $productConditionId
+     * @return $this
      * @throws AptoCustomPropertyException
      */
-    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false): Product
+    public function addElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): Product
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do
@@ -2055,7 +2041,7 @@ class Product extends AptoAggregate
         }
 
         // add new custom property to element
-        $element->setCustomProperty($key, $value, $translatable);
+        $element->setCustomProperty($key, $value, $translatable, $productConditionId);
 
         return $this;
     }
@@ -2063,10 +2049,10 @@ class Product extends AptoAggregate
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $key
+     * @param AptoUuid $id
      * @return string|null
      */
-    public function getElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key): ?string
+    public function getElementCustomPropertyValue(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): ?string
     {
         // @todo we should use a value object for $key|$value pair
         // if element does not exists anymore we have nothing to do
@@ -2076,16 +2062,16 @@ class Product extends AptoAggregate
         }
 
         // return custom property from element
-        return $element->getCustomProperty($key);
+        return $element->getCustomPropertyValue($id);
     }
 
     /**
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
-     * @param string $key
+     * @param AptoUuid $id
      * @return Product
      */
-    public function removeElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, string $key): Product
+    public function removeElementCustomProperty(AptoUuid $sectionId, AptoUuid $elementId, AptoUuid $id): Product
     {
         // if element does not exists anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2094,7 +2080,7 @@ class Product extends AptoAggregate
         }
 
         // remove custom property from element
-        $element->removeCustomProperty($key);
+        $element->removeCustomProperty($id);
 
         return $this;
     }
@@ -2108,7 +2094,7 @@ class Product extends AptoAggregate
      * @throws AptoPriceDuplicateException
      * @throws InvalidUuidException
      */
-    public function addElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Money $aptoPrice, AptoUuid $customerGroupId): Product
+    public function addElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Money $aptoPrice, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null): Product
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2117,7 +2103,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to element
-        $element->addAptoPrice($aptoPrice, $customerGroupId);
+        $element->addAptoPrice($aptoPrice, $customerGroupId, $productConditionId);
 
         return $this;
     }
@@ -2132,7 +2118,7 @@ class Product extends AptoAggregate
      * @throws AptoPriceFormulaDuplicateException
      * @throws InvalidUuidException
      */
-    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId): Product
+    public function addElementPriceFormula(AptoUuid $sectionId, AptoUuid $elementId, string $formula, Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId): Product
     {
         // if element does not exist anymore we have nothing to do
         $element = $this->getElement($sectionId, $elementId);
@@ -2141,7 +2127,7 @@ class Product extends AptoAggregate
         }
 
         // add new price to element
-        $element->addAptoPriceFormula($formula, $currency, $customerGroupId);
+        $element->addAptoPriceFormula($formula, $currency, $customerGroupId, $productConditionId);
 
         return $this;
     }
@@ -2246,24 +2232,6 @@ class Product extends AptoAggregate
         }
 
         return $element->getPosition();
-    }
-
-    /**
-     * @param AptoUuid $sectionId
-     * @param AptoUuid $elementId
-     * @param Currency $currency
-     * @param AptoUuid $customerGroupId
-     * @return Money|null
-     */
-    public function getElementPrice(AptoUuid $sectionId, AptoUuid $elementId, Currency $currency, AptoUuid $customerGroupId)
-    {
-        // if element does not exists anymore we have nothing to do
-        $element = $this->getElement($sectionId, $elementId);
-        if (null === $element) {
-            return null;
-        }
-
-        return $element->getAptoPrice($currency, $customerGroupId);
     }
 
     /**
@@ -3683,6 +3651,9 @@ class Product extends AptoAggregate
         // set rules
         $product->rules = $this->copyRules($entityMapping);
 
+        // @todo copy conditionSets
+        //$product->conditionSets = $this->copyConditionSets($entityMapping);
+
         // set properties
         $product
             ->setDescription($this->getDescription())
@@ -3942,6 +3913,9 @@ class Product extends AptoAggregate
         }
 
         $condition = $rule->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
 
         $sectionId = $condition->getSectionId();
         $elementId = $condition->getElementId();
@@ -3968,47 +3942,6 @@ class Product extends AptoAggregate
 
         return $this;
     }
-
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function copyCondition(AptoUuid $conditionId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
-            return $this;
-        }
-
-        $entityMapping = new ArrayCollection();
-        $entityMapping->set($this->getId()->getId(), $this);
-
-        $sectionId = $condition->getSectionId();
-        $elementId = $condition->getElementId();
-        $computedProductValue = $condition->getComputedProductValue();
-
-        if ($sectionId !== null) {
-            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
-        }
-
-        if ($elementId !== null) {
-            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
-        }
-
-        if ($computedProductValue !== null) {
-            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
-        }
-
-        $newConditionId = $this->nextConditionId();
-
-        $copiedCondition = $condition->copy($newConditionId, $entityMapping);
-        $this->conditions->set($newConditionId->getId(), $copiedCondition);
-
-        return $this;
-    }
-
 
     /**
      * @param AptoUuid $ruleId
@@ -4051,6 +3984,52 @@ class Product extends AptoAggregate
         }
 
         $rule->copyImplication($implicationId, $entityMapping);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param AptoUuid $conditionId
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function copyConditionSetCondition(AptoUuid $conditionSetId, AptoUuid $conditionId): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+        if ($conditionSet === null) {
+            return $this;
+        }
+
+        $condition = $conditionSet->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
+
+        $sectionId = $condition->getSectionId();
+        $elementId = $condition->getElementId();
+        $computedProductValue = $condition->getComputedProductValue();
+
+        $entityMapping = new ArrayCollection();
+        $entityMapping->set($this->getId()->getId(), $this);
+        $entityMapping->set($conditionSet->getId()->getId(), $conditionSet);
+
+        if ($sectionId !== null) {
+            $entityMapping->set($sectionId->getId(), $this->getSection($condition->getSectionId()));
+        }
+
+        if ($elementId !== null) {
+            $entityMapping->set($elementId->getId(), $this->getElement($condition->getSectionId(), $condition->getElementId()));
+        }
+
+        if ($computedProductValue !== null) {
+            $entityMapping->set($computedProductValue->getId()->getId(), $computedProductValue);
+        }
+
+        $conditionSet->copyCondition($conditionId, $entityMapping);
 
         return $this;
     }
@@ -4148,47 +4127,129 @@ class Product extends AptoAggregate
         }
     }
 
-    /**
-     * @return Collection
-     */
-    public function getProductConditions(): Collection
-    {
-        return $this->conditions;
-    }
+    /* @todo needs to be reimplemented
 
-    /**
-     * @param AptoUuid $conditionId
-     * @return Condition|null
-     */
-    private function getProductCondition(AptoUuid $conditionId): ?Condition
-    {
-        if ($this->hasProductCondition($conditionId)) {
-            return $this->conditions->get($conditionId->getId());
-        }
-
-        return null;
-    }
-
+    */
 
     /**
      * @return AptoUuid
      */
-    public function nextConditionId(): AptoUuid
+    public function nextConditionSetId(): AptoUuid
     {
         return new AptoUuid();
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @return bool
+     */
+    private function conditionSetIdentifierExists(Identifier $identifier): bool
+    {
+        /** @var ConditionSet $conditionSet */
+        foreach ($this->conditionSets as $conditionSet) {
+            if ($conditionSet->getIdentifier()->equals($identifier)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Identifier $identifier
+     * @return $this
+     * @throws IdentifierUniqueException
+     */
+    public function addConditionSet(Identifier $identifier): Product
+    {
+        if ($this->conditionSetIdentifierExists($identifier)) {
+            throw new IdentifierUniqueException('ConditionSet Identifier must be unique within a collection!');
+        }
+
+        $conditionSetId = $this->nextConditionSetId();
+
+        $this->conditionSets->set(
+            $conditionSetId->getId(),
+            new ConditionSet($conditionSetId, $this, $identifier)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param Identifier $newIdentifier
+     * @return $this
+     * @throws IdentifierUniqueException
+     */
+    public function setConditionSetIdentifier(AptoUuid $conditionSetId, Identifier $newIdentifier): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            if (!$conditionSet->getIdentifier()->equals($newIdentifier) && $this->conditionSetIdentifierExists($newIdentifier)) {
+                throw new IdentifierUniqueException('ConditionSet Identifier must be unique within a collection!');
+            }
+
+            $conditionSet->setIdentifier($newIdentifier);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @param int $operator
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     */
+    public function setConditionSetConditionsOperator(AptoUuid $conditionSetId, int $operator): Product
+    {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            $conditionSet->setConditionsOperator($operator);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     * @return $this
+     */
+    public function removeConditionSet(AptoUuid $conditionSetId): Product
+    {
+        if ($this->hasConditionSet($conditionSetId)) {
+            $this->conditionSets->remove($conditionSetId->getId());
+        }
+        return $this;
     }
 
     /**
      * @param AptoUuid $id
      * @return bool
      */
-    public function hasProductCondition(AptoUuid $id): bool
+    public function hasConditionSet(AptoUuid $id): bool
     {
-        return $this->conditions->containsKey($id->getId());
+        return $this->conditionSets->containsKey($id->getId());
     }
 
     /**
-     * @param Identifier $identifier
+     * @param AptoUuid $id
+     * @return ConditionSet|null
+     */
+    private function getConditionSet(AptoUuid $id): ?ConditionSet
+    {
+        if ($this->hasConditionSet($id)) {
+            return $this->conditionSets->get($id->getId());
+        }
+
+        return null;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
      * @param CriterionOperator $operator
      * @param int $type
      * @param AptoUuid|null $sectionId
@@ -4202,40 +4263,28 @@ class Product extends AptoAggregate
      * @throws CriterionInvalidTypeException
      * @throws CriterionInvalidValueException
      */
-    public function addProductCondition(
-        Identifier            $identifier,
-        CriterionOperator     $operator,
-        int                   $type = 0,
-        ?AptoUuid             $sectionId = null,
-        ?AptoUuid             $elementId = null,
-        ?string               $property = null,
+    public function addConditionSetCondition(
+        AptoUuid $conditionSetId,
+        CriterionOperator $operator,
+        int $type = 0,
+        ?AptoUuid $sectionId = null,
+        ?AptoUuid $elementId = null,
+        ?string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
+        ?string $value = null
     ): Product {
-        $conditionId = $this->nextConditionId();
-        $this->conditions->set(
-            $conditionId->getId(),
-            new Condition(
-                $this,
-                $conditionId,
-                $identifier,
-                $operator,
-                $type,
-                $sectionId,
-                $elementId,
-                $property,
-                $computedProductValue,
-                $value,
-            )
-        );
+        $conditionSet = $this->getConditionSet($conditionSetId);
+
+        if (null !== $conditionSet) {
+            $conditionSet->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
+        }
 
         return $this;
     }
 
-
     /**
+     * @param AptoUuid $conditionSetId
      * @param AptoUuid $conditionId
-     * @param Identifier $identifier
      * @param int $type
      * @param CriterionOperator $operator
      * @param string $value
@@ -4245,25 +4294,26 @@ class Product extends AptoAggregate
      * @param string|null $property
      * @return $this
      */
-    public function setProductCondition(
+    public function setConditionSetCondition(
+        AptoUuid          $conditionSetId,
         AptoUuid          $conditionId,
-        Identifier        $identifier,
         int               $type,
+        CriterionOperator $operator,
+        string            $value,
         AptoUuid          $computedValueId = null,
         AptoUuid          $sectionId = null,
         AptoUuid          $elementId = null,
         string            $property = null,
-        CriterionOperator $operator,
-        string            $value,
     ): Product {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
+        $conditionSet = $this->getConditionSet($conditionSetId);
+        if ($conditionSet === null) {
             return $this;
         }
 
-        // identifier is required in both cases, so we don't check if it is there or not
-        $condition->setIdentifier($identifier);
+        $condition = $conditionSet->getCondition($conditionId);
+        if ($condition === null) {
+            return $this;
+        }
 
         // type is required in both cases, so we don't check if it is there or not
         $condition->setType($type);
@@ -4293,184 +4343,20 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @param AptoUuid $conditionSetId
      * @param AptoUuid $conditionId
      * @return $this
      */
-    public function removeCondition(AptoUuid $conditionId): Product
-    {
-        if ($this->conditions->containsKey($conditionId->getId())) {
-            $this->conditions->remove($conditionId->getId());
-        }
-        return $this;
-    }
+    public function removeConditionSetCondition(
+        AptoUuid $conditionSetId,
+        AptoUuid $conditionId,
+    ): Product {
+        $conditionSet = $this->getConditionSet($conditionSetId);
 
-    /**
-     * @param AptoUuid $conditionId
-     * @param Identifier $identifier
-     * @return $this
-     */
-    public function setProductConditionIdentifier(AptoUuid $conditionId, Identifier $identifier): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null !== $condition) {
-            $condition->setIdentifier($identifier);
+        if (null !== $conditionSet) {
+            $conditionSet->removeCondition($conditionId);
         }
 
         return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param int $type
-     * @return $this
-     */
-    public function setProductConditionType(AptoUuid $conditionId, int $type): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setType($type);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param ComputedProductValue|null $computedValue
-     * @return $this
-     */
-    public function setProductConditionComputedValue(AptoUuid $conditionId, ?ComputedProductValue $computedValue): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setComputedProductValue($computedValue);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param AptoUuid|null $sectionId
-     * @return $this
-     */
-    public function setProductConditionSectionId(AptoUuid $conditionId, ?AptoUuid $sectionId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if ($condition === null) {
-            return $this;
-        }
-
-        $condition->setSectionId($sectionId);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param AptoUuid|null $elementId
-     * @return $this
-     */
-    public function setProductConditionElementId(AptoUuid $conditionId, ?AptoUuid $elementId): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setElementId($elementId);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param string|null $property
-     * @return $this
-     */
-    public function setProductConditionProperty(AptoUuid $conditionId, ?string $property): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setProperty($property);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @param CriterionOperator $CriterionOperator
-     * @return $this
-     */
-    public function setProductConditionOperator(AptoUuid $conditionId, CriterionOperator $CriterionOperator): Product
-    {
-        $condition = $this->getProductCondition($conditionId);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setOperator($CriterionOperator);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $id
-     * @param string $value
-     * @return $this
-     */
-    public function setProductConditionValue(AptoUuid $id, string $value): Product
-    {
-        $condition = $this->getProductCondition($id);
-
-        if (null === $condition) {
-            return $this;
-        }
-
-        $condition->setValue($value);
-
-        return $this;
-    }
-
-    /**
-     * @param AptoUuid $conditionId
-     * @return $this
-     */
-    public function removeProductCondition(AptoUuid $conditionId): Product
-    {
-        if ($this->conditions->containsKey($conditionId->getId())) {
-            $this->conditions->remove($conditionId->getId());
-        }
-        return $this;
-    }
-
-    /**
-     * @param Identifier $identifier
-     * @return array
-     */
-    public function getProductConditionIdsByIdentifier(Identifier $identifier): array
-    {
-        $conditionIds = [];
-
-        foreach ($this->conditions as $condition) {
-            if ($condition->getIdentifier() === $identifier) {
-                $conditionIds[] = $condition->getId();
-            }
-        }
-        return $conditionIds;
     }
 }

@@ -38,7 +38,8 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         addProductSectionCustomProperty: ProductActions.addProductSectionCustomProperty,
         removeProductSectionCustomProperty: ProductActions.removeProductSectionCustomProperty,
         fetchCustomProperties: SectionActions.fetchCustomProperties,
-        setDetailValue: SectionActions.setDetailValue
+        setDetailValue: SectionActions.setDetailValue,
+        fetchConditions: ProductActions.fetchConditionSets,
     })($scope);
 
     function mapState(state) {
@@ -52,7 +53,8 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
             prices: state.section.prices,
             discounts: state.section.discounts,
             groups: state.section.groups,
-            customProperties: state.section.customProperties
+            customProperties: state.section.customProperties,
+            conditionSets: state.product.conditionSets,
         }
     }
 
@@ -68,9 +70,16 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         $scope.fetchPrices(sectionId);
         $scope.fetchDiscounts(sectionId);
         $scope.fetchCustomProperties(sectionId);
+        $scope.fetchConditions(productId);
         $scope.sectionListOpen = false;
 
         $scope.productId = productId;
+    }
+
+    $scope.getConditionName = function (id) {
+        const condition = $scope.conditionSets.find((c) => c.id === id);
+
+        return condition ? condition.identifier : null;
     }
 
     function addElement() {
@@ -140,12 +149,14 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
             sectionId,
             $scope.newPrice.amount,
             $scope.newPrice.currencyCode,
-            $scope.newPrice.customerGroupId
+            $scope.newPrice.customerGroupId,
+            $scope.newPrice.productConditionId
         ).then(() => {
             $scope.newPrice = {
                 amount: '',
                 currencyCode: 'EUR',
-                customerGroupId: ''
+                customerGroupId: '',
+                productConditionId: null
             };
             $scope.fetchPrices(sectionId);
         });
@@ -209,14 +220,14 @@ const SectionDetailController = function($scope, $document, $templateCache, $mdD
         $scope.groupSearchTerm = '';
     }
 
-    function addSectionCustomProperty(key, value, translatable) {
-        $scope.addProductSectionCustomProperty(productId, sectionId, key, value, translatable).then(() => {
+    function addSectionCustomProperty(key, value, translatable, productConditionId) {
+        $scope.addProductSectionCustomProperty(productId, sectionId, key, value, translatable, productConditionId).then(() => {
             $scope.fetchCustomProperties(sectionId);
         });
     }
 
-    function removeSectionCustomProperty(key) {
-        $scope.removeProductSectionCustomProperty(productId, sectionId, key).then(() => {
+    function removeSectionCustomProperty(id) {
+        $scope.removeProductSectionCustomProperty(productId, sectionId, id).then(() => {
             $scope.fetchCustomProperties(sectionId);
         });
     }

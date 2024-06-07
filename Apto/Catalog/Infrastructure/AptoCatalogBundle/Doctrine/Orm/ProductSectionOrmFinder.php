@@ -99,7 +99,8 @@ class ProductSectionOrmFinder extends AptoOrmFinder implements ProductSectionFin
                     ['id.id', 'id'],
                     ['price.amount', 'amount'],
                     ['price.currency.code', 'currencyCode'],
-                    ['customerGroupId.id', 'customerGroupId']
+                    ['customerGroupId.id', 'customerGroupId'],
+                    ['productConditionId', 'productConditionId'],
                 ]
             ])
             ->setJoins([
@@ -212,10 +213,12 @@ class ProductSectionOrmFinder extends AptoOrmFinder implements ProductSectionFin
                 's' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

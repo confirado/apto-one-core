@@ -108,10 +108,12 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                     'created'
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -168,10 +170,12 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                     'created'
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setJoins([
@@ -280,10 +284,12 @@ class ShopOrmFinder extends AptoOrmFinder implements ShopFinder
                 's' => [
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ]
             ])
             ->setPostProcess([

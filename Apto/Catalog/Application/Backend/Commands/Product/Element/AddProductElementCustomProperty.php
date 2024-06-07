@@ -32,15 +32,20 @@ class AddProductElementCustomProperty extends ProductChildCommand
     private $translatable;
 
     /**
-     * AddProductElementCustomProperty constructor.
+     * @var string|null
+     */
+    private $productConditionId;
+
+    /**
      * @param string $productId
      * @param string $sectionId
      * @param string $elementId
      * @param string $key
-     * @param array|string $value
+     * @param $value
      * @param bool $translatable
+     * @param string|null $productConditionId
      */
-    public function __construct(string $productId, string $sectionId, string $elementId, string $key, $value, bool $translatable = false)
+    public function __construct(string $productId, string $sectionId, string $elementId, string $key, $value, bool $translatable = false, ?string $productConditionId = null)
     {
         parent::__construct($productId);
         $this->sectionId = $sectionId;
@@ -48,6 +53,7 @@ class AddProductElementCustomProperty extends ProductChildCommand
         $this->key = $key;
         $this->value = $translatable ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
         $this->translatable = $translatable;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -88,5 +94,13 @@ class AddProductElementCustomProperty extends ProductChildCommand
     public function getTranslatable(): bool
     {
         return $this->translatable;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductConditionId(): ?string
+    {
+        return $this->productConditionId;
     }
 }

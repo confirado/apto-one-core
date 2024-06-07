@@ -82,7 +82,7 @@
         background: var(--color-primary);
     }
 
-    &:hover {
+    &:hover, &.selected {
         img {
             background: var(--color-primary-hover);
         }

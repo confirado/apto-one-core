@@ -317,7 +317,8 @@ class ProductSectionHandler extends ProductChildHandler
             ),
             new AptoUuid(
                 $command->getCustomerGroupId()
-            )
+            ),
+            $command->getProductConditionId() ? new AptoUuid($command->getProductConditionId()) : null
         );
 
         $this->productRepository->update($product);
@@ -411,13 +412,19 @@ class ProductSectionHandler extends ProductChildHandler
             return;
         }
 
+        $productConditionId = $command->getProductConditionId();
+        if (null !== $productConditionId) {
+            $productConditionId = new AptoUuid($productConditionId);
+        }
+
         $product->addSectionCustomProperty(
             new AptoUuid(
                 $command->getSectionId()
             ),
             $command->getKey(),
             $command->getValue(),
-            $command->getTranslatable()
+            $command->getTranslatable(),
+            $productConditionId
         );
 
         $this->productRepository->update($product);
@@ -440,7 +447,9 @@ class ProductSectionHandler extends ProductChildHandler
             new AptoUuid(
                 $command->getSectionId()
             ),
-            $command->getKey()
+            new AptoUuid(
+                $command->getId()
+            )
         );
 
         $this->productRepository->update($product);

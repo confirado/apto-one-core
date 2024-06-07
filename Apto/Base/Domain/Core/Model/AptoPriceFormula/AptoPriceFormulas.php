@@ -6,6 +6,7 @@ use Apto\Base\Domain\Core\Model\AptoEventCapableEntity;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\DomainEvent\DomainEvent;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Catalog\Domain\Core\Model\Product\Element\Element;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Money\Currency;
@@ -25,18 +26,19 @@ trait AptoPriceFormulas
      * @param string $formula
      * @param Currency $currency
      * @param AptoUuid $customerGroupId
-     * @return self
-     * @throws InvalidUuidException
+     * @param AptoUuid|null $productConditionId
+     * @return AptoPriceFormulas|Element
      * @throws AptoPriceFormulaDuplicateException
+     * @throws InvalidUuidException
      */
-    public function addAptoPriceFormula(string $formula, Currency $currency, AptoUuid $customerGroupId): self
+    public function addAptoPriceFormula(string $formula, Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId): self
     {
         $priceFormulaId = $this->nextAptoPriceFormulaId();
         if ($this->containsAptoPriceFormulaId($priceFormulaId)) {
             return $this;
         }
 
-        $this->assertNoAptoPriceFormulaDuplicates($currency, $customerGroupId, $priceFormulaId);
+        $this->assertNoAptoPriceFormulaDuplicates($currency, $customerGroupId, $productConditionId, $priceFormulaId);
 
         $this->aptoPriceFormulas->set(
             $priceFormulaId->getId(),
@@ -44,7 +46,8 @@ trait AptoPriceFormulas
                 $priceFormulaId,
                 $formula,
                 $currency,
-                $customerGroupId
+                $customerGroupId,
+                $productConditionId
             )
         );
 
@@ -98,7 +101,7 @@ trait AptoPriceFormulas
         $aptoPriceFormula = $this->aptoPriceFormulas->get($priceFormulaId->getId());
 
         if (!$aptoPriceFormula->getCurrency()->equals($currency)) {
-            $this->assertNoAptoPriceFormulaDuplicates($currency, $aptoPriceFormula->getCustomerGroupId(), $priceFormulaId);
+            $this->assertNoAptoPriceFormulaDuplicates($currency, $aptoPriceFormula->getCustomerGroupId(), $aptoPriceFormula->getProductConditionId(), $priceFormulaId);
 
             $aptoPriceFormula->setCurrency($currency);
             $this->publishAptoPriceFormulaEventIfCapable(
@@ -129,7 +132,7 @@ trait AptoPriceFormulas
         $aptoPriceFormula = $this->aptoPriceFormulas->get($priceFormulaId->getId());
 
         if ($aptoPriceFormula->getCustomerGroupId()->getId() !== $customerGroupId->getId()) {
-            $this->assertNoAptoPriceFormulaDuplicates($aptoPriceFormula->getCurrency(), $customerGroupId, $priceFormulaId);
+            $this->assertNoAptoPriceFormulaDuplicates($aptoPriceFormula->getCurrency(), $customerGroupId, $aptoPriceFormula->getProductConditionId(), $priceFormulaId);
 
             $aptoPriceFormula->setCustomerGroupId($customerGroupId);
 
@@ -210,7 +213,7 @@ trait AptoPriceFormulas
      * @return bool
      * @throws AptoPriceFormulaDuplicateException
      */
-    protected function assertNoAptoPriceFormulaDuplicates(Currency $currency, AptoUuid $customerGroupId, AptoUuid $exceptForPriceFormulaId): bool
+    protected function assertNoAptoPriceFormulaDuplicates(Currency $currency, AptoUuid $customerGroupId, ?AptoUuid $productConditionId, AptoUuid $exceptForPriceFormulaId): bool
     {
         /** @var AptoPriceFormula $aptoPriceFormula */
         foreach ($this->aptoPriceFormulas as $aptoPriceFormula) {
@@ -218,9 +221,13 @@ trait AptoPriceFormulas
                 continue;
             }
 
+            $productConditionSame = (!$productConditionId && !$aptoPriceFormula->getProductConditionId()) ||
+                ($productConditionId && $aptoPriceFormula->getProductConditionId() && $productConditionId->getId() === $aptoPriceFormula->getProductConditionId()->getId());
+
             if (
                 $aptoPriceFormula->getCurrency()->equals($currency) &&
-                $aptoPriceFormula->getCustomerGroupId()->getId() === $customerGroupId->getId()
+                $aptoPriceFormula->getCustomerGroupId()->getId() === $customerGroupId->getId() &&
+                $productConditionSame
             ) {
                 throw New AptoPriceFormulaDuplicateException(sprintf(
                     'You cannot add a PriceFormula with the same Currency(%s) and the same CustomerGroup(%s) twice.',

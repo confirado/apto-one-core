@@ -12,7 +12,7 @@ const SectionReducer = function(AptoReducersProvider) {
         prices: [],
         discounts: [],
         groups: [],
-        customProperties: []
+        customProperties: [],
     };
 
     function getType(type) {

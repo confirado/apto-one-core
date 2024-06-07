@@ -1,5 +1,6 @@
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { Element, Section } from '@apto-catalog-frontend/store/product/product.model';
+import {CustomProperty} from "@apto-base-core/store/custom-property/custom-property.model";
 
 export enum ProgressStatuses {
   CURRENT = 'CURRENT',
@@ -76,6 +77,7 @@ export interface SectionState {
   repetition?: number;
   repeatableCalculatedValueName: null | string;
   repeatableType: SectionTypes;
+  customProperties: CustomProperty[];
 }
 
 export interface ElementState {
@@ -87,8 +89,8 @@ export interface ElementState {
 	disabled: boolean;
 	mandatory: boolean;
 	values: any;
-  attachments: any;
   sectionRepetition?: number;
+  customProperties: CustomProperty[];
 }
 
 export interface Configuration {

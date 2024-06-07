@@ -95,7 +95,7 @@ class CustomTextDefinition implements ElementDefinition
         return [
             'text' => AptoTranslatedValue::fromArray([
                 'de_DE' => $selectedValues['text'],
-                'en_EN' => $selectedValues['text']
+                'en_GB' => $selectedValues['text']
             ])
         ];
     }

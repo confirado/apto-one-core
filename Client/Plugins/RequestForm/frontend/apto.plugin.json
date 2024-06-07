@@ -7,5 +7,15 @@
 			"class": "AptoRequestFormFrontendModule",
 			"file": "apto-request-form-frontend.module.ts"
 		}
-	]
+	],
+  "aliases": [
+    {
+      "alias": "@apto-request-form-frontend-custom-module",
+      "path": "apto-request-form-frontend-custom.module.ts"
+    },
+    {
+      "alias": "@apto-request-form-frontend-request-form",
+      "path": "components/request-form/request-form.component.ts"
+    }
+  ]
 }

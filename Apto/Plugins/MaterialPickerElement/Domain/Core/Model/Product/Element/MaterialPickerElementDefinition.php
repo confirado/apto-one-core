@@ -238,7 +238,7 @@ class MaterialPickerElementDefinition implements ElementDefinition
             'materialName' => AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Stoff: ' . $materialName,
-                    'en_EN' => 'Material: ' . $materialName
+                    'en_GB' => 'Material: ' . $materialName
                 ]
             )
         ];
@@ -251,7 +251,7 @@ class MaterialPickerElementDefinition implements ElementDefinition
             $humanReadableValues['materialColorMixing'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Farbmischung: einfarbig',
-                    'en_EN' => 'Color mixing: monochrome'
+                    'en_GB' => 'Color mixing: monochrome'
                 ]
             );
         }
@@ -260,14 +260,14 @@ class MaterialPickerElementDefinition implements ElementDefinition
             $humanReadableValues['materialColorMixing'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Farbmischung: mehrfarbig',
-                    'en_EN' => 'Color mixing: multicolored'
+                    'en_GB' => 'Color mixing: multicolored'
                 ]
             );
 
             $humanReadableValues['materialNameSecondary'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Zweiter Stoff: ' . $materialNameSecondary,
-                    'en_EN' => 'Secondary material: ' . $materialNameSecondary
+                    'en_GB' => 'Secondary material: ' . $materialNameSecondary
                 ]
             );
         }
@@ -276,7 +276,7 @@ class MaterialPickerElementDefinition implements ElementDefinition
             $humanReadableValues['materialColorArrangement'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Anordnung: jede zweite Paneele/Lamelle in zweiter Farbe',
-                    'en_EN' => 'Arrangement: every second panel/lamella in secondary color '
+                    'en_GB' => 'Arrangement: every second panel/lamella in secondary color '
                 ]
             );
         }
@@ -285,14 +285,14 @@ class MaterialPickerElementDefinition implements ElementDefinition
             $humanReadableValues['materialColorArrangement'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Anordnung: freie Eingabe für zweite Paneel- / Lamellenfarbe',
-                    'en_EN' => 'Arrangement: free input for secondary panel/lamella color'
+                    'en_GB' => 'Arrangement: free input for secondary panel/lamella color'
                 ]
             );
 
             $humanReadableValues['materialColorQuantity'] = AptoTranslatedValue::fromArray(
                 [
                     'de_DE' => 'Anzahl: ' . $selectedValues['materialColorQuantity'],
-                    'en_EN' => 'Quantity: ' . $selectedValues['materialColorQuantity']
+                    'en_GB' => 'Quantity: ' . $selectedValues['materialColorQuantity']
                 ]
             );
         }

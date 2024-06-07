@@ -20,18 +20,24 @@ class AddProductCustomProperty extends ProductChildCommand
     private $translatable;
 
     /**
-     * AddProductCustomProperty constructor.
+     * @var string|null
+     */
+    private $productConditionId;
+
+    /**
      * @param string $productId
      * @param string $key
-     * @param string|array $value
+     * @param $value
      * @param bool $translatable
+     * @param string|null $productConditionId
      */
-    public function __construct(string $productId,string $key, $value, bool $translatable = false)
+    public function __construct(string $productId,string $key, $value, bool $translatable = false, ?string $productConditionId = null)
     {
         parent::__construct($productId);
         $this->key = $key;
         $this->value = $translatable ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
         $this->translatable = $translatable;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -56,5 +62,13 @@ class AddProductCustomProperty extends ProductChildCommand
     public function getTranslatable(): bool
     {
         return $this->translatable;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductConditionId(): ?string
+    {
+        return $this->productConditionId;
     }
 }

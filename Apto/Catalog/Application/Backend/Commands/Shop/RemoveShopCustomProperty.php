@@ -14,16 +14,16 @@ class RemoveShopCustomProperty implements CommandInterface
     /**
      * @var string
      */
-    private $key;
+    private $id;
 
     /**
      * @param string $shopId
-     * @param string $key
+     * @param string $id
      */
-    public function __construct(string $shopId,  string $key)
+    public function __construct(string $shopId,  string $id)
     {
         $this->shopId = $shopId;
-        $this->key = $key;
+        $this->id = $id;
     }
 
     /**
@@ -37,8 +37,8 @@ class RemoveShopCustomProperty implements CommandInterface
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getId(): string
     {
-        return $this->key;
+        return $this->id;
     }
 }

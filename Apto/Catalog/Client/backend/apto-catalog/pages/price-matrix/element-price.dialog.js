@@ -59,8 +59,8 @@ const ElementPriceDialog = function($scope, $templateCache, $ngRedux, $mdDialog,
         });
     }
 
-    function removeCustomProperty(key) {
-        $scope.removePriceMatrixElementCustomProperty(priceMatrixId, element.cellId, key).then(() => {
+    function removeCustomProperty(id) {
+        $scope.removePriceMatrixElementCustomProperty(priceMatrixId, element.cellId, id).then(() => {
             $scope.fetchPriceMatrixElementCustomProperties(priceMatrixId, element.cellId);
         });
     }
