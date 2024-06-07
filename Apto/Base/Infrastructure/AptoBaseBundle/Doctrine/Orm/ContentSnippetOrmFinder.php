@@ -33,16 +33,6 @@ class ContentSnippetOrmFinder extends AptoOrmFinder implements ContentSnippetFin
     private ContentSnippetRegistry $contentSnippetRegistry;
 
     /**
-     * decode a given value from decimal string by removing trailing zeros
-     * @param $value
-     * @return mixed
-     */
-    public static function decodeSerialized($value)
-    {
-        return unserialize($value);
-    }
-
-    /**
      * @param EntityManagerInterface $entityManager
      * @param ContentSnippetRegistry $contentSnippetRegistry
      */

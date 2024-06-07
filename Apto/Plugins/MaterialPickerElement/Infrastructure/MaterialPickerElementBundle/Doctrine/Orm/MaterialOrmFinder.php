@@ -32,7 +32,8 @@ class MaterialOrmFinder extends AptoOrmFinder implements MaterialFinder
         'transmission',
         'absorption',
         'created',
-        'position'
+        'position',
+        'conditionSets',
     ];
 
     const MATERIAL_ALL_POST_PROCESSES = [
@@ -44,7 +45,8 @@ class MaterialOrmFinder extends AptoOrmFinder implements MaterialFinder
         'reflection' => [DqlQueryBuilder::class, 'decodeIntegerOrNull'],
         'transmission' => [DqlQueryBuilder::class, 'decodeIntegerOrNull'],
         'absorption' => [DqlQueryBuilder::class, 'decodeIntegerOrNull'],
-        'position' => [DqlQueryBuilder::class, 'decodeInteger']
+        'position' => [DqlQueryBuilder::class, 'decodeInteger'],
+        'conditionSets' => [DqlQueryBuilder::class, 'decodeSerialized'],
     ];
 
     /**

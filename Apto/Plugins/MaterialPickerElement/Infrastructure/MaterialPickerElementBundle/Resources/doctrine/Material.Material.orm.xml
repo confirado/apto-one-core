@@ -32,6 +32,8 @@
             </options>
         </field>
 
+        <field name="conditionSets" column="condition_sets" type="array" nullable="true"/>
+
         <embedded class="Apto\Base\Domain\Core\Model\AptoUuid" use-column-prefix="false" name="id"/>
 
         <one-to-many field="poolItems" target-entity="Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\PoolItem" mapped-by="material" index-by="id.id" orphan-removal="true">

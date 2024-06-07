@@ -99,6 +99,11 @@ class Material extends AptoAggregate
     private $position;
 
     /**
+     * @var array|null
+     */
+    protected $conditionSets;
+
+    /**
      * Material constructor.
      * @param AptoUuid $id
      * @param AptoTranslatedValue $name
@@ -124,6 +129,7 @@ class Material extends AptoAggregate
         $this->transmission = null;
         $this->absorption = null;
         $this->position = 0;
+        $this->conditionSets = [];
 
         $this->publish(
             new MaterialAdded(
@@ -131,6 +137,43 @@ class Material extends AptoAggregate
                 $name
             )
         );
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     *
+     * @return $this
+     */
+    public function addConditionSet(AptoUuid $conditionSetId): Material
+    {
+        if (is_null($this->conditionSets)) {
+            $this->conditionSets[] = [];
+        }
+
+        if (!in_array($conditionSetId->getId(), $this->conditionSets)) {
+            $this->conditionSets[] = $conditionSetId->getId();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $conditionSetId
+     *
+     * @return $this
+     */
+    public function removeConditionSet(AptoUuid $conditionSetId): Material
+    {
+        if (is_null($this->conditionSets)) {
+            $this->conditionSets[] = [];
+        }
+
+        if (in_array($conditionSetId->getId(), $this->conditionSets)) {
+            $key = array_search($conditionSetId->getId(), $this->conditionSets);
+            unset($this->conditionSets[$key]);
+        }
+
+        return $this;
     }
 
     /**
