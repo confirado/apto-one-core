@@ -175,7 +175,8 @@ const Reducer = function(AptoReducersProvider) {
         ruleUsages: [],
         prices: [],
         availableCustomerGroups: [],
-        categories: []
+        categories: [],
+        customProperties: []
     };
 
     function getType(type) {
@@ -429,6 +430,15 @@ const Reducer = function(AptoReducersProvider) {
                 newState = update(state, {
                     ruleUsages: {
                         $set: action.payload.data.result
+                    }
+                });
+
+                return newState;
+
+            case getType('FETCH_CUSTOM_PROPERTIES_FULFILLED'):
+                newState = update(state, {
+                    customProperties: {
+                        $set: action.payload.data.result.customProperties
                     }
                 });
 

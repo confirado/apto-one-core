@@ -720,4 +720,39 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
         // return element
         return $element;
     }
+
+    /**
+     * @param string $id
+     * @return array|null
+     * @throws DqlBuilderException
+     */
+    public function findCustomProperties(string $id): ?array
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->findById($id)
+            ->setValues([
+                'p' => [
+                ],
+                'cp' => [
+                    'surrogateId',
+                    'key',
+                    'value',
+                    'translatable'
+                ]
+            ])
+            ->setJoins([
+                'p' => [
+                    ['customProperties', 'cp', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'cp' => [
+                    'value' => [DqlQueryBuilder::class, 'decodeCustomPropertyValue'],
+                    'translatable' => [DqlQueryBuilder::class, 'decodeBool']
+                ]
+            ]);
+
+        return $builder->getSingleResultOrNull($this->entityManager);
+    }
 }

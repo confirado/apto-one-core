@@ -83,5 +83,20 @@
         <many-to-one field="category" target-entity="Apto\Catalog\Domain\Core\Model\Category\Category">
             <join-column name="category_id" referenced-column-name="surrogate_id" nullable="true"/>
         </many-to-one>
+
+        <many-to-many field="customProperties" target-entity="Apto\Base\Domain\Core\Model\AptoCustomProperty" index-by="key" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-table name="apto_part_to_custom_property">
+                <join-columns>
+                    <join-column name="part_surrogate_id" referenced-column-name="surrogate_id" on-delete="CASCADE"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="custom_property_surrogate_id" referenced-column-name="surrogate_id" unique="true" on-delete="CASCADE"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
     </entity>
 </doctrine-mapping>

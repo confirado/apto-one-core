@@ -2,6 +2,8 @@
 
 namespace Apto\Plugins\PartsList\Infrastructure\AptoPartsListBundle\Doctrine\Orm\Part;
 
+use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
+use Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Dql\ProductDqlService;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Part;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\PartRepository;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AptoOrmRepository;
@@ -79,6 +81,25 @@ class PartOrmRepository extends AptoOrmRepository implements PartRepository
             ->setParameter('partNumber', $partNumber);
 
         return $builder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param array $ids
+     * @return array
+     * @throws NonUniqueResultException
+     */
+    public function findPartCustomProperties(array $ids): array
+    {
+        $customProperties = [];
+
+        foreach ($ids as $id) {
+            $part = $this->findById($id);
+            if ($part) {
+                $customProperties[$id] = $part->getCustomProperties();
+            }
+        }
+
+        return $customProperties;
     }
 
     /**

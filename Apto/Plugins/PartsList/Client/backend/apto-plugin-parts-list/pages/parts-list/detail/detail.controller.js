@@ -4,6 +4,7 @@ import SectionsTab from './tabs/sections.html';
 import ElementsTab from './tabs/elements.html';
 import RulesTab from './tabs/rules.html';
 import PriceTab from './tabs/price.html';
+import CustomPropertiesTab from './tabs/custom-properties.html';
 
 import ElementUsageDetailTemplate from './element-usage/element-usage-detail.html';
 import ElementUsageDetailController from './element-usage/element-usage-detail';
@@ -18,6 +19,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/elements.html', ElementsTab);
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/rules.html', RulesTab);
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/price.html', PriceTab);
+    $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/custom-properties.html', CustomPropertiesTab);
 
     $scope.mapStateToThis = function(state) {
         return {
@@ -30,6 +32,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             sectionUsages: state.aptoPartsListPart.sectionUsages,
             elementUsages: state.aptoPartsListPart.elementUsages,
             ruleUsages: state.aptoPartsListPart.ruleUsages,
+            customProperties: state.aptoPartsListPart.customProperties,
             prices: state.aptoPartsListPart.prices,
             availableCustomerGroups: state.aptoPartsListPart.availableCustomerGroups,
             categories: state.aptoPartsListPart.categories,
@@ -58,6 +61,9 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         fetchSectionUsages: AptoPartsListPartActions.fetchSectionUsages,
         fetchElementUsages: AptoPartsListPartActions.fetchElementUsages,
         fetchRuleUsages: AptoPartsListPartActions.fetchRuleUsages,
+        fetchCustomProperties: AptoPartsListPartActions.fetchCustomProperties,
+        addPartCustomProperty: AptoPartsListPartActions.addCustomProperty,
+        removePartCustomProperty: AptoPartsListPartActions.removeCustomProperty,
         fetchPrices: AptoPartsListPartActions.fetchPrices,
         addPartPrice: AptoPartsListPartActions.addPartPrice,
         removePartPrice: AptoPartsListPartActions.removePartPrice
@@ -80,7 +86,8 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             $scope.fetchProductUsages(id);
             $scope.fetchSectionUsages(id);
             $scope.fetchElementUsages(id);
-            $scope.fetchRuleUsages(id)
+            $scope.fetchRuleUsages(id);
+            $scope.fetchCustomProperties(id)
         }
         $scope.fetchAvailableUnits();
         $scope.fetchAvailableProducts();
@@ -169,6 +176,21 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.addPartRuleUsage(id, $scope.newRuleUsage.name, $scope.newRuleUsage.quantity).then(() => {
             initNewRuleUsage();
             $scope.fetchRuleUsages(id);
+        });
+    }
+
+    function addCustomProperty(key, value, translatable) {
+        if (translatable === null || translatable === undefined) {
+            translatable = false;
+        }
+        $scope.addPartCustomProperty(id, key, value, translatable).then(() => {
+            $scope.fetchCustomProperties(id);
+        });
+    }
+
+    function removeCustomProperty(key) {
+        $scope.removePartCustomProperty(id, key).then(() => {
+            $scope.fetchCustomProperties(id);
         });
     }
 
@@ -370,6 +392,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.addSectionUsage = addSectionUsage;
     $scope.addElementUsage = addElementUsage;
     $scope.addRuleUsage = addRuleUsage;
+    $scope.addCustomProperty = addCustomProperty;
 
     $scope.updateProductUsageQuantity = updateProductUsageQuantity;
     $scope.updateSectionUsageQuantity = updateSectionUsageQuantity;
@@ -380,6 +403,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.removeSectionUsage = removeSectionUsage;
     $scope.removeElementUsage = removeElementUsage;
     $scope.removeRuleUsage = removeRuleUsage;
+    $scope.removeCustomProperty = removeCustomProperty;
 
     $scope.addPrice = addPrice;
     $scope.removePrice = removePrice;

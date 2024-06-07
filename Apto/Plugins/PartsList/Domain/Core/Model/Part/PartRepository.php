@@ -40,6 +40,12 @@ interface PartRepository extends AptoRepository
     public function findByPartNumber(string $name);
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function findPartCustomProperties(array $ids) : array;
+
+    /**
      * @param array $productUsageIds
      * @param array $sectionUsageIds
      * @param array $elementUsageIds
