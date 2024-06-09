@@ -49,6 +49,8 @@ export class ProductRepository {
       active: response.active,
       minPurchase: response.minPurchase,
       maxPurchase: response.maxPurchase,
+      metaDescription: response.metaDescription,
+      metaTitle: response.metaTitle,
 		};
 	}
 

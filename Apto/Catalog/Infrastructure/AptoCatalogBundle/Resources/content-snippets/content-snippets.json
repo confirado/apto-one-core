@@ -547,5 +547,13 @@
     "defaultErrorMessage": {
       "de_DE": "Option konnte nicht hinzugefügt werden!"
     }
+  },
+  "AptoProductPage": {
+    "defaultPageMetaTitle": {
+      "de_DE": "Produktseite"
+    },
+    "defaultPageMetaDescription": {
+      "de_DE": "Produktbeschreibung"
+    }
   }
 }
