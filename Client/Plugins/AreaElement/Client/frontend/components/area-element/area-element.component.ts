@@ -52,8 +52,9 @@ export class AreaElementComponent implements OnInit {
   public sumOfFieldValues = 0;
   public increaseStep: number | undefined;
   public decreaseStep: number | undefined;
+  private lastValidValues: { [key: string]: any } = {};
 
-	public constructor(
+  public constructor(
     private store: Store,
     private dialogRef: MatDialogRef<AreaElementComponent>,
     private dialogService: DialogService,
@@ -106,6 +107,8 @@ export class AreaElementComponent implements OnInit {
 				)
 			);
 
+      this.lastValidValues[`field_${i}`] = this.element.state.values[`field_${i}`] || this.element.element.definition.staticValues.fields?.[i]?.default || 0;
+
 			if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'select') {
 				for (let index = 0; index < Object.entries(this.element.element.definition.properties[`field_${i}`]).length; index += 1) {
 					let itemField: SelectItem[] = [];
@@ -156,11 +159,23 @@ export class AreaElementComponent implements OnInit {
           type: DialogTypesEnum.ERROR,
           hideIcon: true,
           descriptionText: translate(result[1].content, result[0]),
+        }).afterClosed().subscribe(() => {
+          Object.keys(this.formElement.controls).forEach((key) => {
+            if (this.formElement.get(key).invalid) {
+              this.formElement.get(key).setValue(this.lastValidValues[key], { emitEvent: false });
+            } else {
+              this.lastValidValues[key] = this.formElement.get(key).value;
+            }
+          });
         });
       });
 
       return;
     }
+
+    Object.keys(this.formElement.controls).forEach((key) => {
+      this.lastValidValues[key] = this.formElement.get(key).value;
+    });
 
     this.closeModalOnSuccess();
 		this.store.dispatch(

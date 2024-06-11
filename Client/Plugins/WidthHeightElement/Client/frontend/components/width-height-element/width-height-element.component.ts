@@ -65,8 +65,10 @@ export class WidthHeightElementComponent implements OnInit {
 	public itemsWidth: SelectItem[] = [];
   public increaseStep: number | undefined;
   public decreaseStep: number | undefined;
+  private lastValidWidth: number | string | undefined;
+  private lastValidHeight: number | string | undefined;
 
-	public getSelectValues(min: number, max: number, step: number): SelectItem[] {
+  public getSelectValues(min: number, max: number, step: number): SelectItem[] {
 		const items: SelectItem[] = [];
 		for (let i = min; i <= max; i += step) {
 			items.push({
@@ -92,6 +94,9 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.lastValidWidth = this.formElement.get('width')?.value;
+    this.lastValidHeight = this.formElement.get('height')?.value;
 
     this.initIncreaseDecreaseStep();
 
@@ -136,7 +141,12 @@ export class WidthHeightElementComponent implements OnInit {
 	}
 
 	public saveInput(): void {
-		if (!this.element) {
+    const widthControl = this.formElement.get('width');
+    const heightControl = this.formElement.get('height');
+    const newWidth = parseFloat(widthControl?.value);
+    const newHeight = parseFloat(heightControl?.value);
+
+    if (!this.element) {
 			return;
 		}
 
@@ -152,6 +162,21 @@ export class WidthHeightElementComponent implements OnInit {
           hideIcon: true,
           descriptionText: translate(result[1].content, result[0]),
         });
+
+        // Nach dem Dialog zurücksetzen
+        if (isNaN(newWidth) || (this.element.element.definition.properties.width?.[0]?.minimum !== undefined && newWidth < this.element.element.definition.properties.width?.[0]?.minimum) ||
+          (this.element.element.definition.properties.width?.[0]?.maximum !== undefined && newWidth > this.element.element.definition.properties.width?.[0]?.maximum)) {
+          widthControl?.setValue(this.lastValidWidth, { emitEvent: false });
+        } else {
+          this.lastValidWidth = newWidth;
+        }
+
+        if (isNaN(newHeight) || (this.element.element.definition.properties.height?.[0]?.minimum !== undefined && newHeight < this.element.element.definition.properties.height?.[0]?.minimum) ||
+          (this.element.element.definition.properties.height?.[0]?.maximum !== undefined && newHeight > this.element.element.definition.properties.height?.[0]?.maximum)) {
+          heightControl?.setValue(this.lastValidHeight, { emitEvent: false });
+        } else {
+          this.lastValidHeight = newHeight;
+        }
       });
 
       return;

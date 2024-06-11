@@ -70,6 +70,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   private stateElements: ElementState[];
   private saveDelay = 500;
   private mathjsParser: Parser;
+  private lastValidValue: string | undefined;
 
   public constructor(private store: Store, private dialogService: DialogService) {}
 
@@ -85,6 +86,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     this.inputType = this.element?.element.definition.staticValues.renderingType;
     this.formElementInput.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
     this.formElementSlider.setValue(this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1');
+    this.lastValidValue = this.element?.state.values.value || this.element?.element.definition.staticValues.defaultValue || '1';
 
     if (this.element?.element.definition.properties.value && this.element.element.definition.properties.value[0]) {
       this.stepValue = this.element.element.definition.properties.value?.[0]?.step;
@@ -312,6 +314,9 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
           type: DialogTypesEnum.ERROR,
           hideIcon: true,
           descriptionText: translate(result[1].content, result[0]),
+        }).afterClosed().subscribe(() => {
+          this.formElementInput.setValue(this.lastValidValue, { emitEvent: false });
+          this.formElementSlider.setValue(this.lastValidValue, { emitEvent: false });
         });
       });
 
