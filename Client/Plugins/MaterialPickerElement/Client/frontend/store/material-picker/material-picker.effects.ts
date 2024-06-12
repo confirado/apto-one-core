@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { forkJoin } from "rxjs";
 import { Store } from "@ngrx/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
@@ -10,6 +10,7 @@ import {
   initMaterialPicker,
   initMaterialPickerSuccess
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.actions";
+import { selectConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Injectable()
 export class MaterialPickerEffects {
@@ -19,10 +20,14 @@ export class MaterialPickerEffects {
   public initMaterialPicker$ = createEffect(() =>
     this.actions$.pipe(
       ofType(initMaterialPicker),
-      switchMap(action => forkJoin([
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+      ),
+      switchMap(([action, store]) => forkJoin([
         this.catalogMessageBusService.findMaterialPickerPoolItemsFiltered(
           action.payload.poolId,
           action.payload.filter,
+          store.state.compressedState
         ),
         this.catalogMessageBusService.findMaterialPickerPoolColors(
           action.payload.poolId,
@@ -52,10 +57,14 @@ export class MaterialPickerEffects {
   public findPoolItems$ = createEffect(() =>
     this.actions$.pipe(
       ofType(findPoolItems),
-      switchMap(action => forkJoin([
+      withLatestFrom(
+        this.store$.select(selectConfiguration),
+      ),
+      switchMap(([action, store]) => forkJoin([
         this.catalogMessageBusService.findMaterialPickerPoolItemsFiltered(
           action.payload.poolId,
           action.payload.filter,
+          store.state.compressedState
         ),
         this.catalogMessageBusService.findMaterialPickerPoolColors(
           action.payload.poolId,

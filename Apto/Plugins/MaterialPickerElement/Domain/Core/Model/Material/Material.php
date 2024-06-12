@@ -147,7 +147,7 @@ class Material extends AptoAggregate
     public function addConditionSet(AptoUuid $conditionSetId): Material
     {
         if (is_null($this->conditionSets)) {
-            $this->conditionSets[] = [];
+            $this->conditionSets = [];
         }
 
         if (!in_array($conditionSetId->getId(), $this->conditionSets)) {
