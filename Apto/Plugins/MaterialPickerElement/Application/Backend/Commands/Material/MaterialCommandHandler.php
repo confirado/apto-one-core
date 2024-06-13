@@ -211,6 +211,45 @@ class MaterialCommandHandler extends AbstractCommandHandler
     }
 
     /**
+     * @param AddMaterialCondition $command
+     *
+     * @return void
+     * @throws AptoPriceDuplicateException
+     * @throws InvalidUuidException
+     */
+    public function handleAddMaterialPickerMaterialConditionSet(AddMaterialCondition $command): void
+    {
+        $material = $this->materialRepository->findById($command->getId());
+
+        if (null === $material) {
+            return;
+        }
+
+        $material->addConditionSet(new AptoUuid($command->getConditionId()));
+        $this->materialRepository->update($material);
+        $material->publishEvents();
+    }
+
+    /**
+     * @param RemoveMaterialCondition $command
+     *
+     * @return void
+     * @throws InvalidUuidException
+     */
+    public function handleRemoveMaterialPickerMaterialConditionSet(RemoveMaterialCondition $command): void
+    {
+        $material = $this->materialRepository->findById($command->getId());
+
+        if (null === $material) {
+            return;
+        }
+
+        $material->removeConditionSet(new AptoUuid($command->getConditionId()));
+        $this->materialRepository->update($material);
+        $material->publishEvents();
+    }
+
+    /**
      * @param AddMaterialProperty $command
      * @return void
      */
@@ -427,6 +466,18 @@ class MaterialCommandHandler extends AbstractCommandHandler
             'method' => 'handleRemoveMaterialPrice',
             'bus' => 'command_bus',
             'aptoMessageName' => 'RemoveMaterialPickerMaterialPrice'
+        ];
+
+        yield AddMaterialCondition::class => [
+            'method' => 'handleAddMaterialPickerMaterialConditionSet',
+            'bus' => 'command_bus',
+            'aptoMessageName' => 'AddMaterialPickerMaterialConditionSet'
+        ];
+
+        yield RemoveMaterialCondition::class => [
+            'method' => 'handleRemoveMaterialPickerMaterialConditionSet',
+            'bus' => 'command_bus',
+            'aptoMessageName' => 'RemoveMaterialPickerMaterialConditionSet'
         ];
 
         yield AddMaterialProperty::class => [

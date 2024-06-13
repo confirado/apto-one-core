@@ -42,9 +42,9 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
                 'c' => [
                     'imageSettings' => [self::class, 'decodeAndTransferToNewFormat'],
                     'motiveSettings' => [self::class, 'decodeAndTransferToNewFormat'],
-                    'textSettings' => [self::class, 'decodeSerialized'],
-                    'areaSettings' => [self::class, 'decodeSerialized'],
-                    'priceSettings' => [self::class, 'decodeSerialized']
+                    'textSettings' => [DqlQueryBuilder::class, 'decodeSerialized'],
+                    'areaSettings' => [DqlQueryBuilder::class, 'decodeSerialized'],
+                    'priceSettings' => [DqlQueryBuilder::class, 'decodeSerialized']
                 ]
             ])
         ;
@@ -89,9 +89,9 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
                 'c' => [
                     'imageSettings' => [self::class, 'decodeAndTransferToNewFormat'],
                     'motiveSettings' => [self::class, 'decodeAndTransferToNewFormat'],
-                    'textSettings' => [self::class, 'decodeSerialized'],
-                    'areaSettings' => [self::class, 'decodeSerialized'],
-                    'priceSettings' => [self::class, 'decodeSerialized']
+                    'textSettings' => [DqlQueryBuilder::class, 'decodeSerialized'],
+                    'areaSettings' => [DqlQueryBuilder::class, 'decodeSerialized'],
+                    'priceSettings' => [DqlQueryBuilder::class, 'decodeSerialized']
                 ]
             ])
             ->setOrderBy([
@@ -120,15 +120,6 @@ class CanvasOrmFinder extends AptoOrmFinder implements CanvasFinder
             ]);
 
         return $builder->getResult($this->entityManager);
-    }
-
-    /**
-     * @param $value
-     * @return mixed
-     */
-    public static function decodeSerialized($value)
-    {
-        return unserialize(trim($value));
     }
 
     /**

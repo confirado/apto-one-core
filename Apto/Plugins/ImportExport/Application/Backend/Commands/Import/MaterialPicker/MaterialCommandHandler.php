@@ -17,6 +17,7 @@ use Apto\Base\Domain\Core\Service\StringSanitizer;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrix as PriceMatrixEntity;
 use Apto\Catalog\Domain\Core\Model\PriceMatrix\PriceMatrixRepository;
 use Apto\Catalog\Domain\Core\Model\Product\Identifier;
+use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
 use Apto\Catalog\Domain\Core\Model\Shop\ShopRepository;
 use Apto\Plugins\ImportExport\Infrastructure\ImportExportBundle\Service\Sanitizer\NameSanitizer;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\Material;
@@ -75,16 +76,21 @@ class MaterialCommandHandler extends AbstractCommandHandler
     protected $sanitizer;
 
     /**
-     * ImportMaterialDataType constructor.
-     * @param LanguageRepository $languageRepository
-     * @param ShopRepository $shopRepository
-     * @param PoolRepository $poolRepository
-     * @param PriceGroupRepository $priceGroupRepository
-     * @param MaterialRepository $materialRepository
-     * @param MediaFileRepository $mediaFileRepository
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param LanguageRepository       $languageRepository
+     * @param ShopRepository           $shopRepository
+     * @param PoolRepository           $poolRepository
+     * @param PriceGroupRepository     $priceGroupRepository
+     * @param MaterialRepository       $materialRepository
+     * @param MediaFileRepository      $mediaFileRepository
      * @param MediaFileSystemConnector $mediaFileSystemConnector
-     * @param PriceMatrixRepository $priceMatrixRepository
-     * @param StringSanitizer $sanitizer
+     * @param PriceMatrixRepository    $priceMatrixRepository
+     * @param StringSanitizer          $sanitizer
+     * @param ProductRepository        $productRepository
      */
     public function __construct(
         LanguageRepository $languageRepository,
@@ -95,7 +101,8 @@ class MaterialCommandHandler extends AbstractCommandHandler
         MediaFileRepository $mediaFileRepository,
         MediaFileSystemConnector $mediaFileSystemConnector,
         PriceMatrixRepository $priceMatrixRepository,
-        StringSanitizer $sanitizer
+        StringSanitizer $sanitizer,
+        ProductRepository $productRepository,
     ) {
         $this->languageRepository = $languageRepository;
         $this->shopRepository = $shopRepository;
@@ -106,6 +113,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
         $this->priceMatrixRepository = $priceMatrixRepository;
         $this->sanitizer = $sanitizer;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -195,6 +203,24 @@ class MaterialCommandHandler extends AbstractCommandHandler
                     $this->mediaFileSystemConnector
                 )
             );
+        }
+
+        foreach ($fields as $key => $value) {
+            if (preg_match('/^condition_\d+$/', $key)) {
+
+                $productIdentifier = new Identifier(preg_split("/\|/", $value)[0]);
+                $conditionIdentifier = new Identifier(preg_split("/\|/", $value)[1]);
+
+                $product = $this->productRepository->findByIdentifier($productIdentifier);
+
+                foreach($product->getConditionSets() as $conditionSet) {
+                    if($conditionSet->getIdentifier()->getValue() === $conditionIdentifier->getValue()) {
+                        $material->addConditionSet(new AptoUuid($conditionSet->getId()));
+                    }
+
+                    // @todo maybe later create new condition when condition with the given identifier is not found.
+                }
+            }
         }
 
         // add material to pool

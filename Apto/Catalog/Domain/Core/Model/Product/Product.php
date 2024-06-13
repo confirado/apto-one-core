@@ -4249,6 +4249,14 @@ class Product extends AptoAggregate
     }
 
     /**
+     * @return ArrayCollection|Collection
+     */
+    public function getConditionSets(): Collection
+    {
+        return $this->conditionSets;
+    }
+
+    /**
      * @param AptoUuid $conditionSetId
      * @param CriterionOperator $operator
      * @param int $type

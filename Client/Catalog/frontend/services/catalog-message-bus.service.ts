@@ -98,8 +98,8 @@ export class CatalogMessageBusService {
 		return this.query('FindHumanReadableState', [productId, compressedState]);
 	}
 
-	public findMaterialPickerPoolItemsFiltered(poolId: string, filter: MaterialPickerFilter): Observable<Page<MaterialPickerItem>> {
-		return this.query('FindMaterialPickerPoolItemsFiltered', [poolId, filter]);
+	public findMaterialPickerPoolItemsFiltered(poolId: string, filter: MaterialPickerFilter, compressedState: any): Observable<Page<any>> {
+		return this.query('FindMaterialPickerPoolItemsFiltered', [poolId, filter, compressedState]);
 	}
 
 	public findMaterialPickerPoolPriceGroups(poolId: string): Observable<MaterialPickerPriceGroup[]> {

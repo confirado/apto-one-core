@@ -3,6 +3,7 @@
 namespace Apto\Plugins\MaterialPickerElement\Application\Core\Query\Material;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
 
 class MaterialQueryHandler implements QueryHandlerInterface
 {
@@ -12,12 +13,13 @@ class MaterialQueryHandler implements QueryHandlerInterface
     protected $materialFinder;
 
     /**
-     * MaterialQueryHandler constructor.
-     * @param MaterialFinder $materialFinder
+     * @param MaterialFinder            $materialFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
      */
-    public function __construct(MaterialFinder $materialFinder)
+    public function __construct(MaterialFinder $materialFinder, ProductConditionSetFinder $productConditionSetFinder)
     {
         $this->materialFinder = $materialFinder;
+        $this->productConditionSetFinder = $productConditionSetFinder;
     }
 
     /**
@@ -102,13 +104,29 @@ class MaterialQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindMaterialConditionSets $query
+     *
+     * @return array
+     */
+    public function handleFindMaterialConditionSets(FindMaterialConditionSets $query): array
+    {
+        $material = $this->materialFinder->findById($query->getId());
+
+        if (is_null($material)) {
+            return [];
+        }
+
+        return $this->productConditionSetFinder->findByIds($material['conditionSets']);
+    }
+
+    /**
      * @return iterable
      */
     public static function getHandledMessages(): iterable
     {
-        yield FindMaterials::class => [
-            'method' => 'handleFindMaterials',
-            'aptoMessageName' => 'FindMaterialPickerMaterials',
+        yield FindMaterialConditionSets::class => [
+            'method' => 'handleFindMaterialConditionSets',
+            'aptoMessageName' => 'FindMaterialConditionSets',
             'bus' => 'query_bus'
         ];
 

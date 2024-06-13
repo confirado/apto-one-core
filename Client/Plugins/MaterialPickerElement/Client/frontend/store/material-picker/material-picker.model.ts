@@ -1,6 +1,7 @@
 export interface ItemsUpdatePayload {
   poolId: string,
-  filter: ItemsUpdateFilter
+  filter: ItemsUpdateFilter,
+  compressedState?: any,
 }
 
 export interface ItemsUpdateFilter {

@@ -249,6 +249,35 @@ const MaterialActions = function (MessageBusFactory, PageHeaderActions) {
         }
     }
 
+    function fetchProductsSectionsElements() {
+        return {
+            type: getType('FETCH_PRODUCTS_SECTIONS_ELEMENTS'),
+            payload: MessageBusFactory.query('AptoPartsListFindProductsSectionsElements', [])
+        }
+    }
+
+    function addConditionSet(materialId, conditionId) {
+        return {
+            type: getType('ADD_MATERIAL_CONDITION_SET'),
+            payload: MessageBusFactory.command('AddMaterialPickerMaterialConditionSet', [materialId, conditionId])
+        }
+    }
+
+    function removeConditionSet(materialId, conditionId) {
+        return {
+            type: getType('REMOVE_MATERIAL_CONDITION_SET'),
+            payload: MessageBusFactory.command('RemoveMaterialPickerMaterialConditionSet', [materialId, conditionId])
+        }
+    }
+
+    function fetchConditionSets(materialId) {
+        return {
+            type: getType('FETCH_MATERIAL_CONDITION_SETS'),
+            payload: MessageBusFactory.query('FindMaterialConditionSets', [materialId])
+        }
+    }
+
+
     return {
         setPageNumber: PageHeaderActions.setPageNumber(TYPE_NS),
         setSearchString: PageHeaderActions.setSearchString(TYPE_NS),
@@ -277,7 +306,12 @@ const MaterialActions = function (MessageBusFactory, PageHeaderActions) {
         availableCustomerGroupsFetch: availableCustomerGroupsFetch,
         fetchPrices: fetchPrices,
         addPrice: addPrice,
-        removePrice: removePrice
+        removePrice: removePrice,
+        fetchProductsSectionsElements: fetchProductsSectionsElements,
+
+        addConditionSet: addConditionSet,
+        removeConditionSet: removeConditionSet,
+        fetchConditionSets: fetchConditionSets,
     };
 };
 
