@@ -80,7 +80,9 @@
                     >
                     </apto-select-field>
                 </div>
-<!--                <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>-->
+
+                <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>
+
                 <div class="hint" *ngIf="element.element.definition.staticValues.renderingHeight !== 'select'">
                     {{element.element.definition.properties.height?.[0]?.minimum + ' - ' + element.element.definition.properties.height?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixHeight | translate)}}
                 </div>
@@ -129,7 +131,9 @@
                     >
                     </apto-select-field>
                 </div>
-<!--                <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>-->
+
+                <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>
+
                 <div class="hint" *ngIf="element.element.definition.staticValues.renderingWidth !== 'select'">
                     {{element.element.definition.properties.width?.[0]?.minimum  + ' - ' + element.element.definition.properties.width?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate)}}
                 </div>

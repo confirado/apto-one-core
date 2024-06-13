@@ -1,7 +1,8 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, Output, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 
 @Component({
 	selector: 'apto-select-field',
@@ -61,7 +62,23 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
   @Output()
   public inputCleared = new EventEmitter();
 
+  @ViewChild('origin') origin: CdkOverlayOrigin;
+  @ViewChild('overlay', { static: false }) overlay: ElementRef;
+  overlayWidth: number;
+
 	public isOverlayOpen = false;
+
+
+  setOverlayWidth() {
+    if (this.origin && this.overlay) {
+      const originRectWidth = this.origin.elementRef.nativeElement.getBoundingClientRect().width;
+      const overlayRectWidth = this.overlay.nativeElement.getBoundingClientRect().width;
+
+      if (Math.ceil(overlayRectWidth) < Math.ceil(originRectWidth)) {
+        this.overlayWidth = originRectWidth + 2;  // + 2 for existing left: -1px style
+      }
+    }
+  }
 
   public writeValue(value: string | null): void {
 		this.value = value;
@@ -78,6 +95,12 @@ export class SelectFieldComponent<T extends { id: string; name: TranslatedValue 
 
 	public toggleOverlay(): void {
     this.isOverlayOpen = !this.isOverlayOpen;
+
+    if (this.isOverlayOpen) {
+      setTimeout(() => {
+        this.setOverlayWidth();
+      });
+    }
   }
 
 	public updateValue(): void {

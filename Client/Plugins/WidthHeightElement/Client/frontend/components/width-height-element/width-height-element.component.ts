@@ -7,7 +7,7 @@ import {
   updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { HeightWidthProperties, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
+import { HeightWidthProperties, Product, RangeField, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Actions, ofType } from '@ngrx/effects';
@@ -66,17 +66,20 @@ export class WidthHeightElementComponent implements OnInit {
   public increaseStep: number | undefined;
   public decreaseStep: number | undefined;
 
-	public getSelectValues(min: number, max: number, step: number): SelectItem[] {
-		const items: SelectItem[] = [];
-		for (let i = min; i <= max; i += step) {
-			items.push({
-				surrogateId: '',
-				id: `${i}`,
-				name: { de_DE: `${i}` },
-				isDefault: false,
-				aptoPrices: [],
-			});
-		}
+  public getSelectValues(properties: RangeField[]): SelectItem[] {
+    const items: SelectItem[] = [];
+
+    properties.map((property: RangeField) => {
+      for (let i = property.minimum; i <= property.maximum; i += property.step) {
+        items.push({
+          surrogateId: '',
+          id: `${i}`,
+          name: { de_DE: `${i}` },
+          isDefault: false,
+          aptoPrices: [],
+        });
+      }
+    });
 
 		return items;
 	}
@@ -116,22 +119,14 @@ export class WidthHeightElementComponent implements OnInit {
 
 		if (this.element.element.definition.staticValues.renderingHeight === 'select') {
 			if (this.element.element.definition.properties.height?.[0]?.maximum) {
-				this.itemsHeight = this.getSelectValues(
-					this.element.element.definition.properties.height[0]?.minimum,
-					this.element.element.definition.properties.height[0]?.maximum,
-					this.element.element.definition.properties.height[0]?.step
-				);
-			}
+        this.itemsHeight = this.getSelectValues(this.element.element.definition.properties.height);
+      }
 		}
 
 		if (this.element.element.definition.staticValues.renderingWidth === 'select') {
 			if (this.element.element.definition.properties.width?.[0]?.maximum) {
-				this.itemsWidth = this.getSelectValues(
-					this.element.element.definition.properties.width?.[0]?.minimum,
-					this.element.element.definition.properties.width?.[0]?.maximum,
-					this.element.element.definition.properties.width?.[0]?.step
-				);
-			}
+        this.itemsWidth = this.getSelectValues(this.element.element.definition.properties.width);
+      }
 		}
 	}
 
