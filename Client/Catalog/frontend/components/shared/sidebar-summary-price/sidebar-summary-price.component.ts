@@ -11,10 +11,10 @@ import {
 import { environment } from '@apto-frontend/src/environments/environment';
 import { addToBasket } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import {UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-sidebar-summary-price',
 	templateUrl: './sidebar-summary-price.component.html',
@@ -33,7 +33,6 @@ export class SidebarSummaryPriceComponent {
 	public discount: number | undefined;
 
   public renderImage = null;
-  public specialCase = false;
 
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
