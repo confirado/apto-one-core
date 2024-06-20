@@ -77,7 +77,7 @@
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
                 <button class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
-					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+					{{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
 			</div>
 		</div>
