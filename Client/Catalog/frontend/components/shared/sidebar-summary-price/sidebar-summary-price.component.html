@@ -33,7 +33,7 @@
                 ></apto-quantity-input-editable>
 
                 <button class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
-					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+					{{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
 			</div>
 			<div *ngIf="sidebarSummary$ | async | contentSnippet: 'basketNotification' " class="info">

@@ -28,7 +28,7 @@ export class SidebarSummaryPriceComponent {
   });
 
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
-  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
 	public constructor(private store: Store) {}
 

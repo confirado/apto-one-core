@@ -111,6 +111,12 @@
       "offerNotification": {
         "de_DE": "Wenn Sie Fragen haben, oder ein individuelles Angebot wünschen, können Sie dies hier anfordern."
       },
+      "basketNotification": {
+        "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
+      },
+      "shippingCosts": {
+        "de_DE": "zzgl. Versandkosten"
+      },
       "basketNotificationTitle": {
         "de_DE": "Hinweis"
       },
@@ -496,14 +502,6 @@
   "aptoFooterInfo": {
     "copyright": {
       "de_DE": "- alle Rechte vorbehalten"
-    }
-  },
-  "sidebarSummary": {
-    "basketNotification": {
-      "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
-    },
-    "shippingCosts": {
-      "de_DE": "zzgl. Versandkosten"
     }
   },
   "summaryProgress": {
