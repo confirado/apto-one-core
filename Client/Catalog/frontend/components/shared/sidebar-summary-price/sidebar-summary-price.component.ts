@@ -1,18 +1,14 @@
 import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { select, Store } from '@ngrx/store';
-import { FormControl, FormGroup } from '@angular/forms';
-import {
-  configurationIsValid,
-  selectConfiguration,
-  selectCurrentPerspective
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { environment } from '@apto-frontend/src/environments/environment';
+import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { addToBasket } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import {UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -38,8 +34,6 @@ export class SidebarSummaryPriceComponent {
     quantityInput: new FormControl<number>(1),
   });
 
-  public configuration$ = this.store.select(selectConfiguration);
-
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
@@ -48,15 +42,8 @@ export class SidebarSummaryPriceComponent {
 	public constructor(
     private store: Store,
     private renderImageService: RenderImageService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute)
-  {
-    this.configuration$.subscribe((c) => {
-      if (!c.loading && c.state.sections.length === 0) {
-        router.navigate(['..'], { relativeTo: activatedRoute });
-      }
-    });
-
+    private activatedRoute: ActivatedRoute
+  ) {
     this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
     });
