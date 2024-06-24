@@ -1,24 +1,21 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { take } from "rxjs";
+import { environment } from '@apto-frontend/src/environments/environment';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { MessageBusService } from "@apto-base-core/services/message-bus.service";
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { setLocale } from '@apto-base-frontend/store/language/language.actions';
 import { selectLanguages, selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { environment } from '@apto-frontend/src/environments/environment';
-import { Store } from '@ngrx/store';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { selectArticleQuantity, selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { selectIsLoggedIn } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 import { logout } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
-import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
-import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
-import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
-import {
-  FrontendUsersLoginComponent
-} from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
+import { FrontendUsersLoginComponent } from '@apto-base-frontend/components/frontend-users-login/frontend-users-login.component';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
-import {
-  ForgotPasswordComponent
-} from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
-import { ActivatedRoute } from '@angular/router';
+import { ForgotPasswordComponent } from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 
 @Component({
 	selector: 'apto-header',
@@ -42,7 +39,7 @@ export class HeaderComponent {
     private store: Store,
     private dialogService: DialogService,
     private basketService: BasketService,
-    private route: ActivatedRoute
+    private messageBusService: MessageBusService
   ) {
     this.store.select(selectLocale).subscribe((locale) => {
       if (locale !== null) {
@@ -72,7 +69,11 @@ export class HeaderComponent {
   }
 
   public onChangeLanguage(locale: string): void {
-		this.store.dispatch(setLocale({ payload: locale }));
+    this.messageBusService.setLocale(locale).pipe(take(1)).subscribe((next) => {
+      if (next.currentLocale) {
+        this.store.dispatch(setLocale({ payload: next.currentLocale }));
+      }
+    });
 	}
 
   public showLoginButton(): boolean {

@@ -37,6 +37,12 @@ export class MessageBusService {
 		});
 	}
 
+  public setLocale(locale: string): Observable<any> {
+    return this.post('setLocale', {
+      _locale: locale
+    });
+  }
+
 	public post(type: string, body: any): Observable<any> {
 
     switch (type) {
@@ -45,6 +51,9 @@ export class MessageBusService {
       }
       case 'command': {
         return this.http.post(this.api.command, body);
+      }
+      case 'setLocale': {
+        return this.http.post(this.api.setLocale, body);
       }
       default: {
         throw new MessageTypeNotFoundError(type);

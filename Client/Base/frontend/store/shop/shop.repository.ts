@@ -83,6 +83,10 @@ export class ShopRepository {
       })
     });
 
+    if (window.AptoFrontendLocale) {
+      locale = window.AptoFrontendLocale;
+    }
+
 		return {
 			shop: {
 				id: result.id,
