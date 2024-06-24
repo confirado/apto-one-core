@@ -11,7 +11,7 @@ class AptoTranslatedValue implements \JsonSerializable
     protected $translations;
 
     /**
-     * @param array $translations like ['de_DE' => 'Deutsche Beschreibung', 'en_EN' => 'English description']
+     * @param array $translations like ['de_DE' => 'Deutsche Beschreibung', 'en_GB' => 'English description']
      * @return AptoTranslatedValue
      */
     public static function fromArray(array $translations): self

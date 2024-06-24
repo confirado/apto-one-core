@@ -112,30 +112,30 @@ class ImageUploadDefinition implements ElementDefinition, ElementDefinitionDefau
             $result['renderImage'] =
                 AptoTranslatedValue::fromArray([
                     'de_DE' => 'Render Bild: ' . $payload['renderImageURL'],
-                    'en_EN' => 'Render image: ' . $payload['renderImageURL'],
+                    'en_GB' => 'Render image: ' . $payload['renderImageURL'],
                 ]);
         }
 
         $humanReadableImages = [
             'de_DE' => 'Bild: Nein',
-            'en_EN' => 'Image: No'
+            'en_GB' => 'Image: No'
         ];
         $human2DReadableText = [
             'de_DE' => 'Text: Nein',
-            'en_EN' => 'Text: No'
+            'en_GB' => 'Text: No'
         ];
 
         if ($this->hasStickAreaItemsOnCanvas($fabricItemsOnCanvas, 'image')) {
             $humanReadableImages = [
                 'de_DE' => 'Bild: Ja',
-                'en_EN' => 'image: Yes'
+                'en_GB' => 'image: Yes'
             ];
         }
 
         if ($this->hasStickAreaItemsOnCanvas($fabricItemsOnCanvas, 'text')) {
             $human2DReadableText = [
                 'de_DE' => 'Text: Ja',
-                'en_EN' => 'Text: Yes'
+                'en_GB' => 'Text: Yes'
             ];
         }
 

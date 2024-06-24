@@ -3,8 +3,11 @@
             class="save-button" color="accent" mat-flat-button>
         <mat-icon>bookmark</mat-icon><span>{{ aptoSliderAction$ | async | contentSnippet: 'save' }}</span>
     </button>
+    <!--
+    @todo share functionality must add a guest configuration before share on social network
 	<button *ngIf="(aptoSliderAction$ | async | contentSnippet: 'share') && socialLinksCount > 0" (click)="share()"
             class="share-button" color="accent" mat-flat-button>
         <mat-icon>ios_share</mat-icon><span>{{ aptoSliderAction$ | async | contentSnippet: 'share' }}</span>
     </button>
+    -->
 </div>

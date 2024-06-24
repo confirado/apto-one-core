@@ -19,6 +19,8 @@ export interface Product {
   active: boolean;
   minPurchase: number;
   maxPurchase: number;
+  metaTitle: TranslatedValue;
+  metaDescription: TranslatedValue;
 }
 
 export interface Group {

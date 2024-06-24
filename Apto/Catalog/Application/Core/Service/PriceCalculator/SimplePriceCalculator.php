@@ -1189,7 +1189,21 @@ class SimplePriceCalculator implements PriceCalculator
 
         foreach (['products', 'sections', 'elements'] as $type) {
             foreach ($rawStatePrices[$key][$type] as $price) {
-                $uniqueKey = $price['customerGroupId'] . $price['currencyCode'];
+                switch ($type) {
+                    case 'products': {
+                        $uniqueKey = $price['productId'] . $price['customerGroupId'] . $price['currencyCode'];
+                        break;
+                    }
+                    case 'sections': {
+                        $uniqueKey = $price['sectionId'] . $price['customerGroupId'] . $price['currencyCode'];
+                        break;
+                    }
+                    default: {
+                        $uniqueKey = $price['elementId'] . $price['customerGroupId'] . $price['currencyCode'];
+                        break;
+                    }
+                }
+
                 if (empty($price['productConditionId'])) {
                     // if price is already set, a condition was already true so price must not be overwritten!
                     if (!array_key_exists($uniqueKey, $newRawStatePrices[$type])) {

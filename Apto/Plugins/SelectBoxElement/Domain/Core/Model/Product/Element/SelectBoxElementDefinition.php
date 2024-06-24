@@ -134,7 +134,7 @@ class SelectBoxElementDefinition implements ElementDefinition, ElementDefinition
 
         try {
             $de_DE = new AptoLocale('de_DE');
-            $en_EN = new AptoLocale('en_EN');
+            $en_GB = new AptoLocale('en_GB');
             $humanReadableBoxes = [];
 
             foreach ($selectedValues['boxes'] as $box) {
@@ -143,12 +143,12 @@ class SelectBoxElementDefinition implements ElementDefinition, ElementDefinition
                                 ' ' . $box['multi'] . ' ' .
                                 $this->multiplierSuffix->getTranslation($de_DE, null, true)->getValue() .
                                 ' - ';
-                $multiplier_en = $this->multiplierPrefix->getTranslation($en_EN, null, true)->getValue() .
+                $multiplier_en = $this->multiplierPrefix->getTranslation($en_GB, null, true)->getValue() .
                                 ' ' . $box['multi'] . ' ' .
-                                $this->multiplierSuffix->getTranslation($en_EN, null, true)->getValue() .
+                                $this->multiplierSuffix->getTranslation($en_GB, null, true)->getValue() .
                                 ' - ';
                 $name_de = $name->getTranslation($de_DE, null, true)->getValue();
-                $name_en = $name->getTranslation($en_EN, null, true)->getValue();
+                $name_en = $name->getTranslation($en_GB, null, true)->getValue();
                 if ($this->enableMultiplier) {
                     $box_de = $multiplier_de . $name_de;
                     $box_en = $multiplier_en . $name_en;
@@ -160,7 +160,7 @@ class SelectBoxElementDefinition implements ElementDefinition, ElementDefinition
                 $humanReadableBoxes[] = AptoTranslatedValue::fromArray([
                     'de_DE' =>
                         $box_de,
-                    'en_EN' =>
+                    'en_GB' =>
                         $box_en
                 ]);
             }
@@ -171,7 +171,7 @@ class SelectBoxElementDefinition implements ElementDefinition, ElementDefinition
             return [
                 'id' => AptoTranslatedValue::fromArray([
                     'de_DE' => 'Id: ' . $selectedValues['id'],
-                    'en_EN' => 'Id: ' . $selectedValues['id']
+                    'en_GB' => 'Id: ' . $selectedValues['id']
                 ])
             ];
         }

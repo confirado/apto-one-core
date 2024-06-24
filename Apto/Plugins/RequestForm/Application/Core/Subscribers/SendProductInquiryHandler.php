@@ -779,6 +779,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             'customerGroup' => $customerGroup,
             'showPrices' => $this->config['showPrices'],
             'partsList' => $partsList,
+            'prices' => $prices
         ]);
 
         // create pdf and set options

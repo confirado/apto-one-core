@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { addGuestConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { Store } from '@ngrx/store';
+import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 
 @Component({
 	selector: 'apto-save-dialog',
@@ -14,6 +15,7 @@ export class SaveDialogComponent {
 		email: new FormControl<string>('', { nonNullable: true }),
 		name: new FormControl<string>('', { nonNullable: true }),
 	});
+  public readonly contentSnippets$ = this.store.select(selectContentSnippet('AptoGuestConfigurationDialog'));
 
 	public constructor(private dialogRef: MatDialogRef<SaveDialogComponent>, private store: Store) {}
 

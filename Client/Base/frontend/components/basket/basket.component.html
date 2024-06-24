@@ -48,7 +48,7 @@
         </a>
 
         <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
-            Warenkorb leeren
+            {{ csAptoBasket$ | async | contentSnippet: 'clear' }}
         </button>
     </div>
 </div>

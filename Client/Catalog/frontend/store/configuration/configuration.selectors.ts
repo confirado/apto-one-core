@@ -311,7 +311,7 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
     const pElement = state.product.elements.find(e => e.id === elementId);
 
     // we do not want to add elements without a surcharge
-    if (elementPrice.own.price.amount <= 0) {
+    if (elementPrice.own.price.amount === 0) {
       return;
     }
 

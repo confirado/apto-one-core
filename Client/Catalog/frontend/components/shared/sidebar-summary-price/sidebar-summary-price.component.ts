@@ -41,7 +41,7 @@ export class SidebarSummaryPriceComponent {
   public configuration$ = this.store.select(selectConfiguration);
 
 	public readonly contentSnippets$ = this.store.select(selectContentSnippet('aptoSummary'));
-  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   public readonly configurationIsValid$ = this.store.select(configurationIsValid);
   public readonly isInline = !!environment.aptoInline;
 

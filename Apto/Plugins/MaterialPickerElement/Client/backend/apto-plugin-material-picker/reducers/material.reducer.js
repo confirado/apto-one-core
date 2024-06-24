@@ -125,6 +125,13 @@ const MaterialReducer = function(AptoReducersProvider) {
                     }
                 });
                 break;
+            case getType('FETCH_PRODUCTS_SECTIONS_ELEMENTS_FULFILLED'):
+                state = update(state, {
+                    productsSectionsElements: {
+                        $set: action.payload.data.result.data
+                    }
+                });
+                break;
             case getType('RESET_MATERIAL'):
                 state = update(state, {
                     material: {

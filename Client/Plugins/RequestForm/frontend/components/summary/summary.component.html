@@ -60,7 +60,7 @@
                             formControlName="quantityInput"
                         ></apto-quantity-input-editable>
                         <button color="primary" [disabled]="requestForm === null || requestForm.invalid" (click)="onSendRequestForm()" mat-flat-button>
-                            Anfrage senden
+                            {{ requestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
                         </button>
                     </div>
                 </div>

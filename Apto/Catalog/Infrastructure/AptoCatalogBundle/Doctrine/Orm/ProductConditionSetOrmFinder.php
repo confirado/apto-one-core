@@ -55,6 +55,10 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
                     ['identifier.value', 'identifier'],
                     'conditionsOperator',
                 ],
+                'p' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                ],
                 'csc' => [
                     ['id.id', 'id'],
                     'sectionId',
@@ -72,7 +76,8 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
             ])
             ->setJoins([
                 'c' => [
-                    ['conditions', 'csc', 'id']
+                    ['conditions', 'csc', 'id'],
+                    ['product', 'p', 'id']
                 ],
                 'csc' => [
                     ['computedProductValue', 'cpv', 'surrogateId']
@@ -89,7 +94,17 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
                 ]
             ]);
 
-        return $builder->getResult($this->entityManager);
+        $result = $builder->getResult($this->entityManager);
+
+        foreach ($result['data'] as &$conditionSet) {
+            if (count($conditionSet['product']) === 0) {
+                $conditionSet['product'] = null;
+            } else {
+                $conditionSet['product'] = $conditionSet['product'][0];
+            }
+        }
+
+        return $result;
     }
 
     /**

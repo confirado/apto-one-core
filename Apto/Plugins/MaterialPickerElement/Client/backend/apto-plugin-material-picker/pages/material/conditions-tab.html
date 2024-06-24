@@ -1,0 +1,51 @@
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
+        <label>Produkt:</label>
+        <md-select
+            ng-model="material.selectedProduct"
+            ng-change="onChangeProduct()"
+        >
+            <md-option ng-value="product" ng-repeat="product in products">{{ product.identifier }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <md-input-container flex>
+        <label>Bedinung:</label>
+        <md-select ng-model="material.selectedCondition" ng-disabled="!material.selectedProduct || !productConditionSets.length">
+            <md-option ng-value="productConditionSet" ng-repeat="productConditionSet in productConditionSets">{{ productConditionSet.identifier }}</md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <md-input-container data-cy="material-insert-condition-button">
+        <md-button ng-disabled="!material.selectedProduct || !material.selectedCondition" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddCondition()">Hinzufügen</md-button>
+    </md-input-container>
+</div>
+
+
+<md-table-container class="md-whiteframe-2dp" data-cy="material-condition-table">
+    <table md-table>
+        <thead md-head>
+        <tr md-row>
+            <th md-column>Product</th>
+            <th md-column>Bedinung</th>
+            <th md-column style="width:60px;">Aktionen</th>
+        </tr>
+        </thead>
+        <tbody md-body>
+        <tr md-row ng-repeat="materialConditionSet in materialConditionSets">
+            <td md-cell>{{ materialConditionSet.product.identifier }}</td>
+            <td md-cell>{{ materialConditionSet.identifier }}</td>
+            <td md-cell>
+                <md-button
+                    title="Löschen"
+                    class="md-icon-button md-warn"
+                    apto-confirm-remove="onRemoveCondition(materialConditionSet.id)">
+                    <md-icon md-font-set="fa">&#xf014</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-table-container>

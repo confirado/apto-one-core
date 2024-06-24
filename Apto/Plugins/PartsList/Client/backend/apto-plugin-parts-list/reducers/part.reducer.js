@@ -29,6 +29,12 @@ const Reducer = function(AptoReducersProvider) {
         }, {
             id: 6,
             name: 'größer gleich'
+        }, {
+            id: 8,
+            name: 'enthält'
+        }, {
+            id: 9,
+            name: 'enthält nicht'
         }],
         operatorsFull: [{
             id: 1,
@@ -54,6 +60,12 @@ const Reducer = function(AptoReducersProvider) {
         }, {
             id: 6,
             name: 'größer gleich'
+        }, {
+            id: 8,
+            name: 'enthält'
+        }, {
+            id: 9,
+            name: 'enthält nicht'
         }],
         pageHeaderConfig: {
             title: 'Teile',

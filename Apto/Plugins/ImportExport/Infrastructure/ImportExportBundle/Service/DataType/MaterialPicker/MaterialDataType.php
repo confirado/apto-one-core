@@ -19,6 +19,7 @@ class MaterialDataType extends AbstractDataType
         'reflexion',
         'transmission',
         'absorption',
-        'vorschau-bild'
+        'vorschau-bild',
+        'condition_',
     ];
 }

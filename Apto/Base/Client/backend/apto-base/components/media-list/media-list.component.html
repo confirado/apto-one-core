@@ -39,8 +39,9 @@
                 <td md-cell><apto-media-icon file="{isDir: true}"></apto-media-icon></td>
                 <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)">..</td>
                 <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)"></td>
-                <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)">-</td>
+                <td md-cell ng-click="$ctrl.changeDirectoryUp($ctrl.state.currentDirectory)"></td>
                 <td md-cell>-</td>
+                <td md-cell></td>
             </tr>
             <tr md-row ng-click="mediaFile.isDir ? $ctrl.changeDirectory(mediaFile.path) : $ctrl.onSelectMediaFile(mediaFile.path)" ng-repeat="mediaFile in $ctrl.state.mediaFiles | orderBy: name | limitTo: $ctrl.mediaListPagination.recordsPerPage: ($ctrl.mediaListPagination.currentPage - 1) * $ctrl.mediaListPagination.recordsPerPage" ng-class="{'is-directory': mediaFile.isDir}" class="media-list-pointer">
                 <td md-cell>{{$index + 1}}</td>

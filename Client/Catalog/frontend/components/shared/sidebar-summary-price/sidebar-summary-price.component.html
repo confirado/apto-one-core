@@ -33,11 +33,11 @@
                 ></apto-quantity-input-editable>
 
                 <button *ngIf="!isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
-                   {{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+                    {{ sidebarSummary$ | async | contentSnippet: 'cart' }}
                </button>
 
                 <button *ngIf="isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" (click)="openShopware6Cart()" mat-flat-button>
-					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+                    {{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
 			</div>
 			<div *ngIf="sidebarSummary$ | async | contentSnippet: 'basketNotification' " class="info">
@@ -81,7 +81,7 @@
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
                 <button class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
-					{{ contentSnippets$ | async | contentSnippet: 'addToBasket' }}
+					{{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
 			</div>
 		</div>

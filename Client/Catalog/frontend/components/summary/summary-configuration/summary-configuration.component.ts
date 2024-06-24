@@ -149,7 +149,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     $event.preventDefault();
     $event.stopPropagation();
 
-    if (sectionPriceTable.length <= 1) {
+    if (sectionPriceTable.length <= 0) {
       return;
     }
 

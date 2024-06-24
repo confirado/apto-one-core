@@ -7,13 +7,13 @@ use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValueItem;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionOperator;
 use Exception;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Model\Product\Identifier;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
 use Apto\Catalog\Domain\Core\Model\Product\ProductRepository;
 use Apto\Catalog\Domain\Core\Model\Product\Rule\Rule;
-use Apto\Catalog\Domain\Core\Model\Product\Rule\RuleCriterionOperator;
 
 class RuleCommandHandler extends AbstractCommandHandler
 {
@@ -380,34 +380,34 @@ class RuleCommandHandler extends AbstractCommandHandler
      * nichtgleich:   ne
      * active:        active
      * nichtactive:   inactive
-     * @return RuleCriterionOperator
+     * @return CriterionOperator
      */
-    private function getCriterionOperator(string $operator):RuleCriterionOperator
+    private function getCriterionOperator(string $operator): CriterionOperator
     {
         switch ($operator) {
             case 'eq': {
-                return new RuleCriterionOperator(RuleCriterionOperator::EQUAL);
+                return new CriterionOperator(CriterionOperator::EQUAL);
             }
             case 'lt': {
-                return new RuleCriterionOperator(RuleCriterionOperator::LOWER);
+                return new CriterionOperator(CriterionOperator::LOWER);
             }
             case 'gt': {
-                return new RuleCriterionOperator(RuleCriterionOperator::GREATER);
+                return new CriterionOperator(CriterionOperator::GREATER);
             }
             case 'le': {
-                return new RuleCriterionOperator(RuleCriterionOperator::LOWER_OR_EQUAL);
+                return new CriterionOperator(CriterionOperator::LOWER_OR_EQUAL);
             }
             case 'ge': {
-                return new RuleCriterionOperator(RuleCriterionOperator::GREATER_OR_EQUAL);
+                return new CriterionOperator(CriterionOperator::GREATER_OR_EQUAL);
             }
             case 'ne': {
-                return new RuleCriterionOperator(RuleCriterionOperator::NOT_EQUAL);
+                return new CriterionOperator(CriterionOperator::NOT_EQUAL);
             }
             case 'active': {
-                return new RuleCriterionOperator(RuleCriterionOperator::ACTIVE);
+                return new CriterionOperator(CriterionOperator::ACTIVE);
             }
             case 'inactive': {
-                return new RuleCriterionOperator(RuleCriterionOperator::NOT_ACTIVE);
+                return new CriterionOperator(CriterionOperator::NOT_ACTIVE);
             }
         }
 

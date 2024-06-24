@@ -587,4 +587,13 @@ abstract class DqlBuilder
 
         return json_decode($value, true);
     }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public static function decodeSerialized($value)
+    {
+        return unserialize(trim($value));
+    }
 }
