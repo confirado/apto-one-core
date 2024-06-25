@@ -36,7 +36,7 @@
                     {{ sidebarSummary$ | async | contentSnippet: 'cart' }}
                </button>
 
-                <button *ngIf="isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" (click)="openShopware6Cart()" mat-flat-button>
+                <button *ngIf="isInline" class="sbs-button add-to-basket" [disabled]="!(configurationIsValid$ | async) || sw6CartButtonDisabled" color="primary" (click)="openShopware6Cart()" mat-flat-button>
                     {{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
 			</div>
@@ -80,9 +80,14 @@
                     [size]="'middle'"
                     [width]="'120px'"
                 ></apto-quantity-input-editable>
-                <button class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
+
+                <button *ngIf="!isInline" class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async)" color="primary" routerLink="summary" mat-flat-button>
 					{{ sidebarSummary$ | async | contentSnippet: 'cart' }}
 				</button>
+
+                <button *ngIf="isInline" class="one-page-button add-to-basket" [disabled]="!(configurationIsValid$ | async) || sw6CartButtonDisabled" color="primary" (click)="openShopware6Cart()" mat-flat-button>
+                    {{ sidebarSummary$ | async | contentSnippet: 'cart' }}
+                </button>
 			</div>
 		</div>
         </form>

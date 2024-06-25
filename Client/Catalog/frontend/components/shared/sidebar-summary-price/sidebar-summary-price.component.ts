@@ -2,12 +2,14 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Actions, ofType } from "@ngrx/effects";
+import { take } from "rxjs";
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { addToBasket } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import {addToBasket, addToBasketSuccess} from '@apto-catalog-frontend/store/configuration/configuration.actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 
 @UntilDestroy()
@@ -29,6 +31,7 @@ export class SidebarSummaryPriceComponent {
 	public discount: number | undefined;
 
   public renderImage = null;
+  public sw6CartButtonDisabled: boolean = false;
 
   public quantityInputGroup = new FormGroup({
     quantityInput: new FormControl<number>(1),
@@ -42,7 +45,8 @@ export class SidebarSummaryPriceComponent {
 	public constructor(
     private store: Store,
     private renderImageService: RenderImageService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private readonly actions$: Actions
   ) {
     this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
@@ -62,6 +66,19 @@ export class SidebarSummaryPriceComponent {
   }
 
   public openShopware6Cart() {
+    this.sw6CartButtonDisabled = true;
+    this.actions$.pipe(
+      ofType(addToBasketSuccess),
+      untilDestroyed(this),
+      take(1)
+    ).subscribe((next) => {
+      const offCanvasCartInstances: any = window.PluginManager.getPluginInstances('OffCanvasCart');
+      for (let i = 0; i < offCanvasCartInstances.length; i++) {
+        offCanvasCartInstances[i].openOffCanvas(window.router['frontend.cart.offcanvas'], false);
+      }
+      this.sw6CartButtonDisabled = false;
+    });
+
     if (this.renderImage) {
       this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
         this.store.dispatch(
@@ -86,11 +103,6 @@ export class SidebarSummaryPriceComponent {
           },
         })
       );
-    }
-
-    const offCanvasCartInstances: any = window.PluginManager.getPluginInstances('OffCanvasCart');
-    for (let i = 0; i < offCanvasCartInstances.length; i++) {
-      offCanvasCartInstances[i].openOffCanvas(window.router['frontend.cart.offcanvas'], false);
     }
   }
 }
