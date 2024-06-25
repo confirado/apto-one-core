@@ -13,104 +13,73 @@ trait AptoCustomProperties
     protected $customProperties;
 
     /**
-     * @param AptoCustomProperty $property
-     * @return self
-     */
-    protected function setAptoCustomProperty(AptoCustomProperty $property): self
-    {
-        $key = $property->getKey();
-        if ($this->customProperties->containsKey($key)) {
-            // if property already exists, change value of this instance
-            $existingProperty = $this->customProperties->get($key);
-            $existingProperty->setValue($property->getValue());
-            $existingProperty->setTranslatable($property->getTranslatable());
-        } else {
-            // create a new instance
-            $this->customProperties->set($property->getKey(), $property);
-        }
-        return $this;
-    }
-
-    /**
-     * @param AptoCustomProperty $property
-     * @return self
-     */
-    protected function removeAptoCustomProperty(AptoCustomProperty $property): self
-    {
-        $this->customProperties->remove($property->getKey());
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @return AptoCustomProperty|null
-     */
-    protected function getAptoCustomProperty(string $key)
-    {
-        return $this->customProperties->get($key);
-    }
-
-    /**
-     * @param AptoCustomProperty $property
-     * @return bool
-     */
-    protected function hasAptoCustomProperty(AptoCustomProperty $property): bool
-    {
-        return $this->customProperties->containsKey($property->getKey());
-    }
-
-    /**
      * @param string $key
      * @param string $value
      * @param bool $translatable
+     * @param AptoUuid|null $productConditionId
      * @return self
      * @throws AptoCustomPropertyException
      */
-    public function setCustomProperty(string $key, string $value, bool $translatable = false): self
+    public function setCustomProperty(string $key, string $value, bool $translatable = false, ?AptoUuid $productConditionId = null): self
     {
-        //@todo always make a new instance of an domain model also if it already exists is evil, keyword: doctrine entity manager(maybe persists this instance even if its not a new one in 'setAptoCustomProperty'), domain events
-        $this->setAptoCustomProperty(
-            new AptoCustomProperty($key, $value, $translatable)
-        );
+        // property exists?
+        $property = $this->getCustomPropertyByKeyAndConditionId($key, $productConditionId ? $productConditionId->getId() : $productConditionId);
+
+        // update property or create property
+        if (null === $property) {
+            $property = new AptoCustomProperty(
+                $this->nextAptoCustomPropertyId(),
+                $key,
+                $value,
+                $translatable,
+                $productConditionId
+            );
+            $this->customProperties->set($property->getId()->getId(), $property);
+        } else {
+            $property->setValue($value);
+            $property->setTranslatable($translatable);
+        }
+
         return $this;
     }
 
     /**
-     * @param string $key
-     * @return self
-     */
-    public function removeCustomProperty(string $key): self
-    {
-        $this->customProperties->remove($key);
-        return $this;
-    }
-
-    /**
-     * @param string $key
+     * @param AptoUuid $id
      * @return string|null
      */
-    public function getCustomProperty(string $key)
+    public function getCustomPropertyValue(AptoUuid $id): ?string
     {
-        $property = $this->getAptoCustomProperty($key);
+        $property = $this->customProperties->get($id->getId());
         return null === $property ? null : $property->getValue();
     }
 
     /**
-     * Attention: this method matches by key only
      * @param string $key
-     * @return bool
+     * @param AptoUuid|null $productConditionId
+     * @return string|null
      */
-    public function hasCustomProperty(string $key): bool
+    public function getCustomPropertyValueByKey(string $key, ?AptoUuid $productConditionId = null): ?string
     {
-        return $this->customProperties->containsKey($key);
+        $pConditionId = $productConditionId?->getId();
+
+        /** @var AptoCustomProperty $customProperty */
+        foreach ($this->customProperties as $customProperty) {
+            $cpConditionId = $customProperty->getProductConditionId()?->getId();
+            if ($customProperty->getKey() === $key && $cpConditionId === $pConditionId) {
+                return $customProperty->getValue();
+            }
+        }
+        return null;
     }
 
     /**
-     * @return bool
+     * @param AptoUuid $id
+     * @return self
      */
-    public function hasCustomProperties(): bool
+    public function removeCustomProperty(AptoUuid $id): self
     {
-        return !$this->customProperties->isEmpty();
+        $this->customProperties->remove($id->getId());
+        return $this;
     }
 
     /**
@@ -132,14 +101,39 @@ trait AptoCustomProperties
 
         /** @var AptoCustomProperty $customProperty */
         foreach ($this->customProperties as $customProperty) {
-            $property = $customProperty->copy();
+            $id = $this->nextAptoCustomPropertyId();
 
             $collection->set(
-                $property->getKey(),
-                $property
+                $id->getId(),
+                $customProperty->copy($id)
             );
         }
 
         return $collection;
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $conditionId
+     * @return AptoCustomProperty|null
+     */
+    private function getCustomPropertyByKeyAndConditionId(string $key, ?string $conditionId): ?AptoCustomProperty
+    {
+        /** @var AptoCustomProperty $customProperty */
+        foreach ($this->customProperties as $customProperty) {
+            $productConditionId = $customProperty->getProductConditionId() ? $customProperty->getProductConditionId()->getId() : $customProperty->getProductConditionId();
+            if ($customProperty->getKey() === $key && $productConditionId === $conditionId) {
+                return $customProperty;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return AptoUuid
+     */
+    private function nextAptoCustomPropertyId(): AptoUuid
+    {
+        return new AptoUuid();
     }
 }

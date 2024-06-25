@@ -49,6 +49,8 @@ export class ProductRepository {
       active: response.active,
       minPurchase: response.minPurchase,
       maxPurchase: response.maxPurchase,
+      metaDescription: response.metaDescription,
+      metaTitle: response.metaTitle,
 		};
 	}
 
@@ -97,25 +99,23 @@ export class ProductRepository {
       if (section.previewImage) {
         previewImage = this.mediaFileToMediaPath(section.previewImage.mediaFile);
       }
-
-			// map section
-			sections.push({
-				id: section.id,
-				identifier: section.identifier,
-				groupId: group ? group.id : null,
-				groupIdentifier: group ? group.identifier : null,
-				name: section.name,
-				description: section.description,
-				allowMultiple: section.allowMultiple,
-				isHidden: section.isHidden,
-				isMandatory: section.isMandatory,
-				position: section.position,
-				customProperties: section.customProperties,
-        previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
-        isZoomable: section.isZoomable,
-        repeatableType: section.repeatableType,
-        repeatableCalculatedValueName: section.repeatableCalculatedValueName
-			});
+		// map section
+		sections.push({
+			id: section.id,
+			identifier: section.identifier,
+			groupId: group ? group.id : null,
+			groupIdentifier: group ? group.identifier : null,
+			name: section.name,
+			description: section.description,
+			allowMultiple: section.allowMultiple,
+			isHidden: section.isHidden,
+			isMandatory: section.isMandatory,
+			position: section.position,
+			previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
+			isZoomable: section.isZoomable,
+			repeatableType: section.repeatableType,
+			repeatableCalculatedValueName: section.repeatableCalculatedValueName
+		});
 
 			section.elements.forEach((element: any) => {
 				// get element preview image
@@ -137,11 +137,10 @@ export class ProductRepository {
 					previewImage: previewImage ? this.mediaUrl + previewImage : null,
 					isMandatory: element.isMandatory,
 					position: element.position,
-					customProperties: element.customProperties,
           attachments: element.attachments,
-          zoomFunction: element.zoomFunction,
-          sectionRepetition: 0,
-          gallery: element.gallery,
+				  zoomFunction: element.zoomFunction,
+				  sectionRepetition: 0,
+          gallery: element.gallery
 				});
 			});
 		});

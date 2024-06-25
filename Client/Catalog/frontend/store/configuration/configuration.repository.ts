@@ -121,6 +121,7 @@ export class ConfigurationRepository {
         repetition: section.repetition,
         repeatableCalculatedValueName: section.repeatableCalculatedValueName,
         repeatableType: section.repeatableType,
+        customProperties: section.customProperties
       });
     }
 
@@ -135,7 +136,7 @@ export class ConfigurationRepository {
         disabled: element.state.disabled,
         mandatory: element.isMandatory,
         values: element.state.values,
-        attachments: element.attachments,
+        customProperties: element.customProperties
       });
     }
 

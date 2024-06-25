@@ -30,7 +30,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class SummaryComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
-  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   public readonly requestForm$ = this.store.select(selectContentSnippet('plugins.requestForm'));
   public product$ = this.store.select(selectProduct);
   public readonly perspectives$ = this.store.select(selectPerspectives);

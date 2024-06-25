@@ -11,8 +11,9 @@ class InvalidStateException extends StateException
      * @param string|null $element
      * @param string|null $property
      * @param mixed|null $value
+     * @param array|null $errorMessage
      */
-    public function __construct(string $message, string $product, string $section, ?string $element = null, ?string $property = null, $value = null)
+    public function __construct(string $message, string $product, string $section, ?string $element = null, ?string $property = null, $value = null, ?array $errorMessage = null)
     {
         parent::__construct($message);
 
@@ -31,6 +32,10 @@ class InvalidStateException extends StateException
 
         if (null !== $value) {
             $this->payload['value'] = $value;
+        }
+
+        if (null !== $errorMessage) {
+            $this->payload['errorMessage'] = $errorMessage;
         }
     }
 }

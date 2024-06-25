@@ -394,6 +394,11 @@ class ProductElementHandler extends ProductChildHandler
             return;
         }
 
+        $productConditionId = $command->getProductConditionId();
+        if (null !== $productConditionId) {
+            $productConditionId = new AptoUuid($productConditionId);
+        }
+
         $product->addElementCustomProperty(
             new AptoUuid(
                 $command->getSectionId()
@@ -403,7 +408,8 @@ class ProductElementHandler extends ProductChildHandler
             ),
             $command->getKey(),
             $command->getValue(),
-            $command->getTranslatable()
+            $command->getTranslatable(),
+            $productConditionId
         );
 
         $this->productRepository->update($product);
@@ -429,7 +435,9 @@ class ProductElementHandler extends ProductChildHandler
             new AptoUuid(
                 $command->getElementId()
             ),
-            $command->getKey()
+            new AptoUuid(
+                $command->getId()
+            ),
         );
 
         $this->productRepository->update($product);
@@ -542,7 +550,8 @@ class ProductElementHandler extends ProductChildHandler
             ),
             new AptoUuid(
                 $command->getCustomerGroupId()
-            )
+            ),
+            $command->getProductConditionId() ? new AptoUuid($command->getProductConditionId()) : null
         );
 
         $this->productRepository->update($product);
@@ -599,7 +608,8 @@ class ProductElementHandler extends ProductChildHandler
             ),
             new AptoUuid(
                 $command->getCustomerGroupId()
-            )
+            ),
+            $command->getProductConditionId() ? new AptoUuid($command->getProductConditionId()) : null
         );
 
         $this->productRepository->update($product);

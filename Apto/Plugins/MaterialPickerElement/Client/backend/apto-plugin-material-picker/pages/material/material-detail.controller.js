@@ -5,9 +5,10 @@ import PropertiesTab from './properties-tab.html';
 import ColorRatingsTab from './color-ratings-tab.html';
 import PoolsTab from './pools-tab.html';
 import RenderImageTab from './render-images-tab.html';
+import ConditionsTab from './conditions-tab.html';
 
-const MaterialDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'materialId', 'LanguageFactory', 'MaterialPickerMaterialActions', 'MaterialPickerPoolActions'];
-const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, materialId, LanguageFactory, MaterialPickerMaterialActions, MaterialPickerPoolActions) {
+const MaterialDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'materialId', 'LanguageFactory', 'MaterialPickerMaterialActions', 'MaterialPickerPoolActions', 'ProductActions'];
+const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, materialId, LanguageFactory, MaterialPickerMaterialActions, MaterialPickerPoolActions, ProductActions) {
     $templateCache.put('plugins/material-picker/pages/material/material-tab.html', MaterialTab);
     $templateCache.put('plugins/material-picker/pages/material/price-tab.html', PricesTab);
     $templateCache.put('plugins/material-picker/pages/material/gallery-images-tab.html', GalleryImagesTab);
@@ -15,9 +16,11 @@ const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ng
     $templateCache.put('plugins/material-picker/pages/material/color-ratings-tab.html', ColorRatingsTab);
     $templateCache.put('plugins/material-picker/pages/material/pools-tab.html', PoolsTab);
     $templateCache.put('plugins/material-picker/pages/material/render-images-tab.html', RenderImageTab);
+    $templateCache.put('plugins/material-picker/pages/material/conditions-tab.html', ConditionsTab);
 
     $scope.mapStateToThis = function(state) {
         return {
+            products: state.products,
             material: state.pluginMaterialPickerMaterial.material,
             galleryImages: state.pluginMaterialPickerMaterial.galleryImages,
             properties: state.pluginMaterialPickerMaterial.properties,
@@ -59,6 +62,12 @@ const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ng
         fetchPrices: MaterialPickerMaterialActions.fetchPrices,
         addPrice: MaterialPickerMaterialActions.addPrice,
         removePrice: MaterialPickerMaterialActions.removePrice,
+        fetchProductConditionSets: ProductActions.fetchConditionSets,
+        fetchProductsSectionsElements: MaterialPickerMaterialActions.fetchProductsSectionsElements,
+
+        addConditionSet: MaterialPickerMaterialActions.addConditionSet,
+        removeConditionSet: MaterialPickerMaterialActions.removeConditionSet,
+        fetchMaterialConditionSets: MaterialPickerMaterialActions.fetchConditionSets,
     })($scope);
 
     function init() {
@@ -120,6 +129,49 @@ const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ng
             name: 'Violett',
             hex: '#8800ff'
         }];
+
+        $scope.materialConditionSets = [];
+        $scope.productConditionSets = [];
+
+        $scope.material.selectedProduct = null;
+        $scope.material.selectedCondition = null;
+
+        getProducts();
+        getMaterialConditionSets();
+    }
+
+    function getProducts() {
+        $scope.fetchProductsSectionsElements().then(data => {
+            $scope.products = data.value.data.result.data;
+        });
+    }
+
+    function getMaterialConditionSets() {
+        $scope.fetchMaterialConditionSets($scope.materialId).then(data => {
+            $scope.materialConditionSets = data.value.data.result.data;
+        });
+    }
+
+    function getProductConditionSets() {
+        $scope.fetchProductConditionSets($scope.material.selectedProduct.id).then(data => {
+            $scope.productConditionSets = data.value.data.result.conditionSets;
+        });
+    }
+
+    function onChangeProduct() {
+        getProductConditionSets();
+    }
+
+    function onAddCondition() {
+        $scope.addConditionSet($scope.material.id, $scope.material.selectedCondition.id).then(data => {
+            getMaterialConditionSets();
+        });
+    }
+
+    function onRemoveCondition(conditionSetId) {
+        $scope.removeConditionSet($scope.material.id, conditionSetId).then(data => {
+            getMaterialConditionSets();
+        });
     }
 
     function initNewPrice() {
@@ -326,6 +378,14 @@ const MaterialDetailController = function($scope, $templateCache, $mdDialog, $ng
     $scope.onSelectRenderImageFile = onSelectRenderImageFile;
     $scope.getColorName = getColorName;
     $scope.close = close;
+
+    $scope.onChangeProduct = onChangeProduct;
+    $scope.onAddCondition = onAddCondition;
+    $scope.onRemoveCondition = onRemoveCondition;
+    $scope.getProducts = getProducts;
+    $scope.getMaterialConditionSets = getMaterialConditionSets;
+    $scope.getProductConditionSets = getProductConditionSets;
+
     $scope.$on('$destroy', subscribedActions);
 };
 

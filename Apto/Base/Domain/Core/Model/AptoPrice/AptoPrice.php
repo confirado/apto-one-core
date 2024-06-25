@@ -2,9 +2,9 @@
 
 namespace Apto\Base\Domain\Core\Model\AptoPrice;
 
+use Money\Money;
 use Apto\Base\Domain\Core\Model\AptoEntity;
 use Apto\Base\Domain\Core\Model\AptoUuid;
-use Money\Money;
 
 class AptoPrice extends AptoEntity
 {
@@ -19,16 +19,22 @@ class AptoPrice extends AptoEntity
     protected $customerGroupId;
 
     /**
-     * AptoPrice constructor.
+     * @var AptoUuid|null
+     */
+    protected ?AptoUuid $productConditionId;
+
+    /**
      * @param AptoUuid $id
      * @param Money $price
      * @param AptoUuid $customerGroupId
+     * @param AptoUuid|null $productConditionId
      */
-    public function __construct(AptoUuid $id, Money $price, AptoUuid $customerGroupId)
+    public function __construct(AptoUuid $id, Money $price, AptoUuid $customerGroupId, ?AptoUuid $productConditionId = null)
     {
         parent::__construct($id);
         $this->price = $price;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -78,6 +84,22 @@ class AptoPrice extends AptoEntity
     }
 
     /**
+     * @return AptoUuid|null
+     */
+    public function getProductConditionId(): ?AptoUuid
+    {
+        return $this->productConditionId;
+    }
+
+    /**
+     * @param AptoUuid|null $productConditionId
+     */
+    public function setProductConditionId(?AptoUuid $productConditionId): void
+    {
+        $this->productConditionId = $productConditionId;
+    }
+
+    /**
      * @param AptoUuid $id
      * @return AptoPrice
      */
@@ -87,7 +109,8 @@ class AptoPrice extends AptoEntity
         $price = new AptoPrice(
             $id,
             $this->getPrice(),
-            $this->getCustomerGroupId()
+            $this->getCustomerGroupId(),
+            $this->getProductConditionId()
         );
 
         // return copy

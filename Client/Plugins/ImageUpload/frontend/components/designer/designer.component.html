@@ -54,7 +54,7 @@
                     <div class="name">Motive:</div>
                 </div>
                 <div class="motive-container">
-                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive[currentPerspective]?.files">
+                    <div class="motive-item" *ngFor="let file of canvas.element.staticValues.motive[currentPerspective]?.files" [class.selected]="selectedMotive === file.name">
                         <img [src]="mediaUrl + file.path" (click)="addMotive(file)" />
                         <div class="motive-item-name">{{ getNameFromFileName(file.name) }}</div>
                     </div>
@@ -85,11 +85,34 @@
                         <div class="name">{{ getTextBoxProperty(box.identifier, 'name') }}</div>
                         <div class="container-elem">
                             <input *ngIf="box.payload.box.colorPicker" class="color-picker-input" [ngxMatColorPicker]="picker" [value]="getColorFromHex(getObjectValue('text', box.identifier, 'fill'))" (colorChange)="updateTextColor($event, box.identifier)"  >
-                            <input class="text-input" [maxLength]="box.payload.box.maxlength ? box.payload.box.maxlength : 20" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)" (focusin)="removeDefaultText(box)">
+                            <input class="text-input" [maxLength]="box.payload.box.maxlength ? box.payload.box.maxlength : 20" type="text" [value]="box.text" (keyup)="updateText($event, box.identifier)"
+                                   (focusin)="removeDefaultText(box, box.payload.box.identifier)">
                             <span  class="color-picker-select">
                                 <ngx-mat-color-toggle *ngIf="box.payload.box.colorPicker" matSuffix [for]="picker" ></ngx-mat-color-toggle>
                                 <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
                             </span>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngFor="let mutlipleBox of multipleFabricTextBoxes">
+                    <div class="input-field" *ngIf="mutlipleBox.textBoxes[mutlipleBox.selectedIndex] as currentTextBox">
+                        <div class="name" >{{ mutlipleBox.name }}</div>
+                        <div class="container-with-plus">
+                            <div class="container-elem">
+                                <input *ngIf="currentTextBox.payload.box.colorPicker" class="color-picker-input" [ngxMatColorPicker]="picker"
+                                       [value]="getColorFromHex(getObjectValue('text', currentTextBox.identifier, 'fill'))"
+                                       (colorChange)="updateTextColor($event, currentTextBox.identifier)"  >
+                                <input class="text-input" [maxLength]="currentTextBox.payload.box.maxlength ? currentTextBox.payload.box.maxlength : 20" type="text"
+                                       [value]="currentTextBox.text" (keyup)="updateText($event, currentTextBox.identifier)" (focusin)="removeDefaultText(currentTextBox, currentTextBox.identifier)"
+                                      >
+                                <span  class="color-picker-select">
+                                <ngx-mat-color-toggle *ngIf="currentTextBox.payload.box.colorPicker" matSuffix [for]="picker" ></ngx-mat-color-toggle>
+                                <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
+                                </span>
+                            </div>
+                            <div class="add-next container-elem" (click)="addNewTextBox(mutlipleBox.textBoxes[mutlipleBox.selectedIndex].payload.box, mutlipleBox)">
+                                <mat-icon>add</mat-icon>
+                            </div>
                         </div>
                     </div>
                 </ng-container>

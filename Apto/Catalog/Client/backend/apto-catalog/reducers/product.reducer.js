@@ -120,7 +120,7 @@ const ProductReducer = function(AptoReducersProvider) {
         sections: [],
         sectionsElements: [],
         rules: [],
-        conditions: [],
+        conditionSets: [],
         prices: [],
         discounts: [],
         customProperties: [],
@@ -345,10 +345,10 @@ const ProductReducer = function(AptoReducersProvider) {
                     }
                 });
                 return newState;
-            case getType('FETCH_CONDITIONS_FULFILLED'):
+            case getType('FETCH_CONDITION_SETS_FULFILLED'):
                 newState = update(state, {
-                    conditions: {
-                        $set: action.payload.data.result.conditions
+                    conditionSets: {
+                        $set: action.payload.data.result.conditionSets
                     }
                 });
                 return newState;

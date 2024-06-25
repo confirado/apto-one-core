@@ -35,10 +35,12 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                     ['id.id', 'id']
                 ],
                 'cp' => [
+                    ['id.id', 'id'],
                     'surrogateId',
                     'key',
                     'value',
-                    'translatable'
+                    'translatable',
+                    'productConditionId'
                 ],
             ])->setJoins([
                 'i' => [
@@ -69,10 +71,12 @@ class ImmutableConfigurationOrmFinder extends AptoOrmFinder implements Immutable
                         ['id.id', 'id']
                     ],
                     'cp' => [
+                        ['id.id', 'id'],
                         'surrogateId',
                         'key',
                         'value',
-                        'translatable'
+                        'translatable',
+                        'productConditionId'
                     ],
                 ]
             )->setJoins(

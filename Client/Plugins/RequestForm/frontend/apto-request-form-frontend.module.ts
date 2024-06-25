@@ -17,15 +17,18 @@ import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { SummaryComponent } from './components/summary/summary.component';
-import { RequestFormComponent } from './components/request-form/request-form.component';
+import { RequestFormComponent } from '@apto-request-form-frontend-request-form';
 import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AptoRequestFormFrontendCustomModule } from "@apto-request-form-frontend-custom-module";
 
 @NgModule({
 	declarations: [
     RequestFormComponent, SummaryComponent, RequestMessageStateComponent
   ],
-	exports: [],
+	exports: [
+    AptoRequestFormFrontendCustomModule,
+  ],
 	imports: [
 		RouterModule,
 		CommonModule,
@@ -40,6 +43,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 		MatButtonModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    AptoRequestFormFrontendCustomModule,
 	],
 	providers: [],
 })

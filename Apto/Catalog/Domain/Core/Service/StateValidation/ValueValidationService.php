@@ -201,7 +201,8 @@ class ValueValidationService
                 $sectionId->getId(),
                 $elementId->getId(),
                 $property,
-                $value
+                $value,
+                $product->getElementErrorMessage($sectionId, $elementId)
             );
         }
     }

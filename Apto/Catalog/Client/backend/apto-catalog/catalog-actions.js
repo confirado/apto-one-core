@@ -5,6 +5,7 @@ import ProductActions from './actions/product.actions';
 import SectionActions from './actions/section.actions';
 import ElementActions from './actions/element.actions';
 import RuleActions from './actions/rule.actions';
+import ConditionSetActions from './actions/condition-set.actions';
 import PriceMatrixActions from './actions/price-matrix.actions';
 import BatchManipulationActions from './actions/batch-manipulation.actions';
 import FilterPropertyActions from './actions/filter-property.actions';
@@ -19,6 +20,7 @@ const AptoCatalogActions = [
     SectionActions,
     ElementActions,
     RuleActions,
+    ConditionSetActions,
     PriceMatrixActions,
     BatchManipulationActions,
     FilterPropertyActions,

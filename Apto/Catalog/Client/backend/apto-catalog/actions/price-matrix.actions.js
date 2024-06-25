@@ -120,10 +120,10 @@ const PriceMatrixActions = function($ngRedux, MessageBusFactory, PageHeaderActio
         }
     }
 
-    function removePriceMatrixElementCustomProperty(id, elementId, key) {
+    function removePriceMatrixElementCustomProperty(priceMatrixId, elementId, id) {
         return {
             type: getType('REMOVE_PRICE_MATRIX_ELEMENT_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemovePriceMatrixElementCustomProperty', [id, elementId, key])
+            payload: MessageBusFactory.command('RemovePriceMatrixElementCustomProperty', [priceMatrixId, elementId, id])
         }
     }
 

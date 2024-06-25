@@ -50,7 +50,7 @@ class RuleFactory
      * @return Criterion[]
      * @throws InvalidUuidException
      */
-    protected static function criteriaFromArray(array $rawCriteria): array
+    public static function criteriaFromArray(array $rawCriteria): array
     {
         $criteria = [];
 

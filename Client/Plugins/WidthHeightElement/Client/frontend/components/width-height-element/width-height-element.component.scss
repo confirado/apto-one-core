@@ -102,6 +102,7 @@
             .suffix {
                 grid-area: suffix;
                 @include suffix();
+                margin-top: 30px;
             }
         }
 

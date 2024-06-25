@@ -146,7 +146,7 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
     public function getHumanReadableValues(array $selectedValues): array
     {
         $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
+        $en_GB = new AptoLocale('en_GB');
 
         return [
             'value' => AptoTranslatedValue::fromArray([
@@ -154,10 +154,10 @@ class FloatInputElementDefinition implements ElementDefinition, ElementDefinitio
                     $this->prefix->getTranslation($de_DE, null, true)->getValue() .
                     ' ' . $selectedValues['value'] . ' ' .
                     $this->suffix->getTranslation($de_DE, null, true)->getValue(),
-                'en_EN' =>
-                    $this->prefix->getTranslation($en_EN, null, true)->getValue() .
+                'en_GB' =>
+                    $this->prefix->getTranslation($en_GB, null, true)->getValue() .
                     ' ' . $selectedValues['value'] . ' ' .
-                    $this->suffix->getTranslation($en_EN, null, true)->getValue()
+                    $this->suffix->getTranslation($en_GB, null, true)->getValue()
             ])
         ];
     }

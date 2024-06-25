@@ -3,29 +3,55 @@
 namespace Apto\Catalog\Application\Core\Query\Product\Condition;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
+use Apto\Catalog\Application\Core\Query\Product\ProductFinder;
 
 class ConditionQueryHandler implements QueryHandlerInterface
 {
     /**
-     * @var
+     * @var ProductFinder
      */
-    private $productConditionFinder;
+    private ProductFinder $productFinder;
 
     /**
-     * @param ProductConditionFinder $productConditionFinder
+     * @var ProductConditionSetFinder
      */
-    public function __construct(ProductConditionFinder $productConditionFinder)
+    private ProductConditionSetFinder $productConditionSetFinder;
+
+    /**
+     * @param ProductFinder $productFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
+     */
+    public function __construct(ProductFinder $productFinder, ProductConditionSetFinder $productConditionSetFinder)
     {
-        $this->productConditionFinder = $productConditionFinder;
+        $this->productFinder = $productFinder;
+        $this->productConditionSetFinder = $productConditionSetFinder;
     }
 
     /**
-     * @param FindConditions $query
+     * @param FindConditionSets $query
      * @return array|null
      */
-    public function handleFindConditions(FindConditions $query)
+    public function handleFindConditionSets(FindConditionSets $query): ?array
     {
-        return $this->productConditionFinder->findConditions($query->getProductId());
+        return $this->productFinder->findProductConditionSets($query->getProductId());
+    }
+
+    /**
+     * @param FindConditionSet $query
+     * @return array|null
+     */
+    public function handleFindConditionSet(FindConditionSet $query): ?array
+    {
+        return $this->productConditionSetFinder->findById($query->getConditionSetId());
+    }
+
+    /**
+     * @param FindConditionSetConditions $query
+     * @return array|null
+     */
+    public function handleFindConditionSetConditions(FindConditionSetConditions $query)
+    {
+        return $this->productConditionSetFinder->findConditions($query->getConditionSetId());
     }
 
     /**
@@ -33,8 +59,18 @@ class ConditionQueryHandler implements QueryHandlerInterface
      */
     public static function getHandledMessages(): iterable
     {
-        yield FindConditions::class => [
-            'method' => 'handleFindConditions',
+        yield FindConditionSets::class => [
+            'method' => 'handleFindConditionSets',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindConditionSet::class => [
+            'method' => 'handleFindConditionSet',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindConditionSetConditions::class => [
+            'method' => 'handleFindConditionSetConditions',
             'bus' => 'query_bus'
         ];
     }

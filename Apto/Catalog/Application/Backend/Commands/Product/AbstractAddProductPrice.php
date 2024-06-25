@@ -27,6 +27,11 @@ abstract class AbstractAddProductPrice implements CommandInterface
     private $customerGroupId;
 
     /**
+     * @var string|null
+     */
+    private ?string $productConditionId;
+
+    /**
      * @ todo define accepted type for amount
      * AddProductPrice constructor.
      * @param string $id
@@ -34,12 +39,13 @@ abstract class AbstractAddProductPrice implements CommandInterface
      * @param string $currency
      * @param string $customerGroupId
      */
-    public function __construct(string $id, $amount, string $currency, string $customerGroupId)
+    public function __construct(string $id, $amount, string $currency, string $customerGroupId, ?string $productConditionId)
     {
         $this->id = $id;
         $this->amount = $amount;
         $this->currency = $currency;
         $this->customerGroupId = $customerGroupId;
+        $this->productConditionId = $productConditionId;
     }
 
     /**
@@ -72,5 +78,13 @@ abstract class AbstractAddProductPrice implements CommandInterface
     public function getCustomerGroupId(): string
     {
         return $this->customerGroupId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getProductConditionId(): ?string
+    {
+        return $this->productConditionId;
     }
 }

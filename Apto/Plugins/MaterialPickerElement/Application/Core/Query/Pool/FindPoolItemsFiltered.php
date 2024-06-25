@@ -27,17 +27,24 @@ class FindPoolItemsFiltered implements PublicQueryInterface
     private $orderBy;
 
     /**
+     * @var array
+     */
+    private $state;
+
+    /**
      * @param string $poolId
-     * @param array $filter
+     * @param array  $filter
+     * @param array  $state
      * @param string $sortBy
      * @param string $orderBy
      */
-    public function __construct(string $poolId, array $filter, string $sortBy = 'clicks', string $orderBy = 'asc')
+    public function __construct(string $poolId, array $filter, array $state, string $sortBy = 'clicks', string $orderBy = 'asc')
     {
         $this->poolId = $poolId;
         $this->filter = $filter;
         $this->sortBy = $sortBy;
         $this->orderBy = $orderBy;
+        $this->state = $state;
     }
 
     /**
@@ -70,5 +77,13 @@ class FindPoolItemsFiltered implements PublicQueryInterface
     public function getOrderBy(): string
     {
         return $this->orderBy;
+    }
+
+    /**
+     * @return array
+     */
+    public function getState(): array
+    {
+        return $this->state;
     }
 }

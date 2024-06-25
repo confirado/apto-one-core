@@ -3,6 +3,7 @@ import ProductReducer from './reducers/product.reducer';
 import SectionReducer from './reducers/section.reducer';
 import ElementReducer from './reducers/element.reducer';
 import RuleReducer from './reducers/rule.reducer';
+import ConditionSetReducer from './reducers/condition-set.reducer';
 import CategoryReducer from './reducers/category.reducer';
 import GroupReducer from './reducers/group.reducer';
 import PriceMatrixReducer from './reducers/price-matrix.reducer';
@@ -17,6 +18,7 @@ const AptoCatalogReducers = [
     SectionReducer,
     ElementReducer,
     RuleReducer,
+    ConditionSetReducer,
     CategoryReducer,
     GroupReducer,
     PriceMatrixReducer,

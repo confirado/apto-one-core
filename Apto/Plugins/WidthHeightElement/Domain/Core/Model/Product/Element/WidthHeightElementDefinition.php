@@ -241,7 +241,7 @@ class WidthHeightElementDefinition implements ElementDefinition, ElementDefiniti
     public function getHumanReadableValues(array $selectedValues): array
     {
         $de_DE = new AptoLocale('de_DE');
-        $en_EN = new AptoLocale('en_EN');
+        $en_GB = new AptoLocale('en_GB');
 
         $humanReadableValues = [];
 
@@ -250,13 +250,13 @@ class WidthHeightElementDefinition implements ElementDefinition, ElementDefiniti
                 case 'width':
                     $humanReadableValues[$property] = AptoTranslatedValue::fromArray([
                         'de_DE' => $this->prefixWidth->getTranslation($de_DE, null, true)->getValue() . ' ' . $value . $this->suffixWidth->getTranslation($de_DE, null, true)->getValue(),
-                        'en_EN' => $this->prefixWidth->getTranslation($en_EN, null, true)->getValue() . ' ' . $value . $this->suffixWidth->getTranslation($en_EN, null, true)->getValue()
+                        'en_GB' => $this->prefixWidth->getTranslation($en_GB, null, true)->getValue() . ' ' . $value . $this->suffixWidth->getTranslation($en_GB, null, true)->getValue()
                     ]);
                     break;
                 case 'height':
                     $humanReadableValues[$property] = AptoTranslatedValue::fromArray([
                         'de_DE' => $this->prefixHeight->getTranslation($de_DE, null, true)->getValue() . ' ' . $value . $this->suffixHeight->getTranslation($de_DE, null, true)->getValue(),
-                        'en_EN' => $this->prefixHeight->getTranslation($en_EN, null, true)->getValue() . ' ' . $value . $this->suffixHeight->getTranslation($en_EN, null, true)->getValue()
+                        'en_GB' => $this->prefixHeight->getTranslation($en_GB, null, true)->getValue() . ' ' . $value . $this->suffixHeight->getTranslation($en_GB, null, true)->getValue()
                     ]);
                     break;
             }

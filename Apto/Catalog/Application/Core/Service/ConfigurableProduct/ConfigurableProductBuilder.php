@@ -81,7 +81,7 @@ class ConfigurableProductBuilder
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \Symfony\Component\Cache\Exception\CacheException
      */
-    public function createConfigurableProduct(string $productId, bool $keepDefinitions = false, bool $withRules = true, bool $withComputedValues = true)
+    public function createConfigurableProduct(string $productId, bool $keepDefinitions = false, bool $withRules = true, bool $withComputedValues = true, bool $withConditionSets = true)
     {
         $host = $this->requestStore->getHttpHost();
         $shop = $this->shopFinder->findByDomain($host);
@@ -97,9 +97,9 @@ class ConfigurableProductBuilder
             return $product;
         }
 
-        $product = $this->productFinder->findConfigurableProductById($productId, $withRules, $withComputedValues);
+        $product = $this->productFinder->findConfigurableProductById($productId, $withRules, $withComputedValues, $withConditionSets);
         if (null === $product) {
-            $product = $this->productFinder->findConfigurableProductBySeoUrl($productId, $withRules, $withComputedValues);
+            $product = $this->productFinder->findConfigurableProductBySeoUrl($productId, $withRules, $withComputedValues, $withConditionSets);
         }
 
         if (!$this->hasProductShop($product, $shop)) {

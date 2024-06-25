@@ -15,19 +15,19 @@ class RemoveProductSectionCustomProperty extends ProductChildCommand
     /**
      * @var string
      */
-    private $key;
+    private $id;
 
     /**
      * RemoveProductPrice constructor.
      * @param string $productId
      * @param string $sectionId
-     * @param string $key
+     * @param string $id
      */
-    public function __construct(string $productId, string $sectionId, string $key)
+    public function __construct(string $productId, string $sectionId, string $id)
     {
         parent::__construct($productId);
         $this->sectionId = $sectionId;
-        $this->key = $key;
+        $this->id = $id;
     }
 
     /**
@@ -41,8 +41,8 @@ class RemoveProductSectionCustomProperty extends ProductChildCommand
     /**
      * @return string
      */
-    public function getKey(): string
+    public function getId(): string
     {
-        return $this->key;
+        return $this->id;
     }
 }

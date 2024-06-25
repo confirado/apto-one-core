@@ -2,9 +2,7 @@
 
 namespace Apto\Catalog\Application\Backend\Commands\Product\Condition;
 
-use Apto\Catalog\Domain\Core\Model\Product\Identifier;
-
-class UpdateCondition extends AddProductCriterion
+class UpdateConditionSetCondition extends AddConditionSetCriterion
 {
     /**
      * @var string
@@ -12,39 +10,32 @@ class UpdateCondition extends AddProductCriterion
     private string $conditionId;
 
     /**
-     * @var string
-     */
-    private string $identifier;
-
-    /**
      * @param string $productId
+     * @param string $conditionSetId
      * @param string $conditionId
-     * @param string $identifier
      * @param int $type
      * @param int $operator
      * @param string $value
+     * @param string|null $computedValueId
      * @param string|null $sectionId
      * @param string|null $elementId
      * @param string|null $property
-     * @param string|null $computedValueId
      */
     public function __construct(
         string $productId,
+        string $conditionSetId,
         string $conditionId,
-        string $identifier,
         int $type,
         int $operator,
         string $value,
+        string $computedValueId = null,
         string $sectionId = null,
         string $elementId = null,
         string $property = null,
-        string $computedValueId = null,
-    )
-    {
-        parent::__construct($productId, $type, $operator, $value, $sectionId, $elementId, $property, $computedValueId);
+    ) {
+        parent::__construct($productId, $conditionSetId, $type, $sectionId, $elementId, $property, $computedValueId, $operator, $value);
 
         $this->conditionId = $conditionId;
-        $this->identifier = $identifier;
     }
 
     /**
@@ -53,13 +44,5 @@ class UpdateCondition extends AddProductCriterion
     public function getConditionId(): string
     {
         return $this->conditionId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
     }
 }

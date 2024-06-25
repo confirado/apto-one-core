@@ -9,22 +9,30 @@ class RemovePropertyCustomProperty implements CommandInterface
     /**
      * @var string
      */
-    private $id;
+    private $propertyId;
 
     /**
      * @var string
      */
-    private $key;
+    private $id;
 
     /**
      * RemovePropertyCustomProperty constructor.
+     * @param string $propertyId
      * @param string $id
-     * @param string $key
      */
-    public function __construct(string $id, string $key)
+    public function __construct(string $propertyId, string $id)
     {
+        $this->propertyId = $propertyId;
         $this->id = $id;
-        $this->key = $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPropertyId(): string
+    {
+        return $this->propertyId;
     }
 
     /**
@@ -33,13 +41,5 @@ class RemovePropertyCustomProperty implements CommandInterface
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey(): string
-    {
-        return $this->key;
     }
 }

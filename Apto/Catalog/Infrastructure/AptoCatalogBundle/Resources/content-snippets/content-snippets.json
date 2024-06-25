@@ -1,4 +1,9 @@
 {
+  "aptoFavicon": {
+    "iconMediaLink": {
+      "de_DE": "/favicon.ico"
+    }
+  },
   "aptoSliderAction": {
     "shareLinks": {
       "twitter": {
@@ -106,6 +111,12 @@
       "offerNotification": {
         "de_DE": "Wenn Sie Fragen haben, oder ein individuelles Angebot wünschen, können Sie dies hier anfordern."
       },
+      "basketNotification": {
+        "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
+      },
+      "shippingCosts": {
+        "de_DE": "zzgl. Versandkosten"
+      },
       "basketNotificationTitle": {
         "de_DE": "Hinweis"
       },
@@ -123,20 +134,17 @@
       "configure": {
         "de_DE": "Konfigurieren Sie Ihr Produkt"
       },
-      "stepBack": {
-        "de_DE": "Schritt zurück"
-      },
-      "stepForward": {
-        "de_DE": "Schritt vor"
+      "prevStep" : {
+        "de_DE": "Zurück"
       },
       "nextStep": {
-        "de_DE": "Weiter"
+        "de_DE": "Nächster Schritt"
+      },
+      "finishSteps": {
+        "de_DE": "Konfiguartion abschließen"
       },
       "filter": {
         "de_DE": "Nach Eigenschaft filtern"
-      },
-      "nextMultiple": {
-        "de_DE": "Weiter"
       },
       "incorrectValuesInRange": {
         "de_DE": "Die Werte liegen nicht innerhalb des definierten Bereichs"
@@ -240,6 +248,9 @@
     "back": {
       "de_DE": "Jetzt weiter konfigurieren"
     },
+    "clear": {
+      "de_DE": "Warenkorb leeren"
+    },
     "pricePrefix": {
       "de_DE": "je"
     },
@@ -296,10 +307,13 @@
     },
     "form": {
       "mail": {
-        "de_DE": "Ihre E-Mail Adresse"
+        "de_DE": "E-mail"
       },
       "submit": {
         "de_DE": "Speichern"
+      },
+      "cancel": {
+        "de_DE": "Abbrechen"
       },
       "name": {
         "de_DE": "Name"
@@ -491,14 +505,6 @@
   "aptoFooterInfo": {
     "copyright": {
       "de_DE": "- alle Rechte vorbehalten"
-    }
-  },
-  "sidebarSummary": {
-    "basketNotification": {
-      "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
-    },
-    "shippingCosts": {
-      "de_DE": "zzgl. Versandkosten"
     }
   },
   "summaryProgress": {

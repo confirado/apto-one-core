@@ -12,6 +12,7 @@
             <div class="title">
                 <h4>{{ element.element.name | translate }}</h4>
             </div>
+            <apto-slot-outlet identifier="header-end" [product]="product" [section]="section" [element]="element"></apto-slot-outlet>
         </div>
 
         <div class="picture">

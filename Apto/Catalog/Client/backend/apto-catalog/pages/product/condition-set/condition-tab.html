@@ -1,39 +1,30 @@
-<!-- Product condition identifier -->
 <div layout="row" layout-align="start" flex>
-    <!-- identifier text field -->
-    <md-input-container flex data-cy="condition-name">
-        <label>Identifier:</label>
-        <input ng-model="$parent.$parent.selectedConditionIdentifier">
-    </md-input-container>
-    <div flex="5"></div>
-
-    <!-- Type selection -->
-    <md-input-container flex data-cy="condition-type">
+    <md-input-container flex data-cy="condition-criterion-type">
         <label>Type:</label>
         <md-select
             multiple="false"
-            ng-model="$parent.$parent.conditionType"
+            ng-model="$parent.conditionCriterionType"
             ng-model-options="{trackBy: '$value.id'}"
-            ng-change="onChangeConditionType()"
+            ng-change="onChangeConditionCriterionType()"
         >
-            <md-option ng-repeat="type in conditionTypes" ng-value="type">
+            <md-option ng-repeat="type in $parent.criterionTypes" ng-value="type">
                 {{type.name}}
             </md-option>
         </md-select>
     </md-input-container>
     <div flex="5"></div>
-    <!-- Had to use ng-hide, because ng-if resulted in some weird behaviour -->
 
     <!-- section select box -->
-    <md-input-container flex ng-hide="conditionType.id !== 0" data-cy="condition-section">
+    <!-- Had to use ng-hide, because ng-if resulted in some weird behaviour -->
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-section">
         <label>Sektion:</label>
         <md-select
             multiple="true"
-            ng-model="$parent.$parent.selectedConditionSection"
+            ng-model="$parent.selectedConditionSection"
             ng-model-options="{trackBy: '$value.id'}"
             ng-change="onChangeSelectedConditionSection()"
         >
-            <md-option ng-repeat="section in sectionsElements" ng-value="section">
+            <md-option ng-repeat="section in sections" ng-value="section">
                 {{section.identifier}}
             </md-option>
         </md-select>
@@ -41,16 +32,16 @@
     <div flex="5"></div>
 
     <!-- element select box -->
-    <md-input-container flex ng-hide="conditionType.id !== 0" data-cy="condition-element">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-element">
         <label>Element:</label>
         <md-select
             multiple="true"
-            ng-disabled="selectedConditionSection === null || selectedConditionSection[0].elements.length <= 0 || areMultipleSectionsSelected()"
-            ng-model="$parent.$parent.selectedConditionElement"
+            ng-disabled="$parent.selectedConditionSection === null || $parent.selectedConditionSection[0].elements.length <= 0 || $parent.selectedConditionSection.length !== 1"
+            ng-model="$parent.selectedConditionElement"
             ng-model-options="{trackBy: '$value.id'}"
             ng-change="onChangeSelectedConditionElement()"
         >
-            <md-option ng-if="selectedConditionSection[0]" ng-repeat="element in selectedConditionSection[0].elements" ng-value="element">
+            <md-option ng-if="$parent.selectedConditionSection[0]" ng-repeat="element in $parent.selectedConditionSection[0].elements" ng-value="element">
                 {{element.identifier}}
             </md-option>
         </md-select>
@@ -58,12 +49,12 @@
     <div flex="5"></div>
 
     <!-- properties select box -->
-    <md-input-container flex ng-hide="conditionType.id !== 0" data-cy="condition-properties">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
         <label>Feld:</label>
         <md-select
             multiple="true"
-            ng-disabled="selectableConditionProperties === null || selectedConditionElement.length !== 1"
-            ng-model="$parent.$parent.selectedConditionProperty"
+            ng-disabled="$parent.selectableConditionProperties === null || $parent.selectedConditionElement.length !== 1"
+            ng-model="$parent.selectedConditionProperty"
             ng-change="onChangeSelectedConditionProperty()"
         >
             <md-option ng-repeat="property in selectableConditionProperties" ng-value="property">
@@ -74,14 +65,14 @@
     <div flex="5"></div>
 
     <!-- computedValues select box -->
-    <md-input-container flex ng-hide="conditionType.id !== 1" data-cy="condition-computed-value">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 1" data-cy="condition-computed-value">
         <label>Berechneter Wert:</label>
         <md-select
             multiple="false"
-            ng-model="$parent.$parent.selectedConditionComputedValue"
+            ng-model="$parent.selectedConditionComputedValue"
             ng-model-options="{trackBy: '$value.id'}"
         >
-            <md-option ng-repeat="value in computedValues" ng-value="value">
+            <md-option ng-repeat="value in $parent.computedValues" ng-value="value">
                 {{value.name}}
             </md-option>
         </md-select>
@@ -93,7 +84,7 @@
         <label>Operator:</label>
         <md-select
             multiple="false"
-            ng-model="$parent.$parent.selectedConditionOperator"
+            ng-model="$parent.selectedConditionOperator"
             ng-model-options="{trackBy: '$value.id'}"
             ng-change="onChangeSelectedConditionOperator()"
         >
@@ -107,15 +98,14 @@
     <!-- value text field -->
     <md-input-container flex data-cy="condition-value">
         <label>Wert:</label>
-        <input ng-disabled="selectedConditionOperator === null || selectedConditionOperator.id === 0 || selectedConditionOperator.id === 1"
-               ng-model="$parent.$parent.selectedConditionValue">
+        <input ng-disabled="$parent.selectedConditionOperator === null || $parent.selectedConditionOperator.id === 0 || $parent.selectedConditionOperator.id === 1" ng-model="$parent.selectedConditionValue">
     </md-input-container>
     <div flex="5"></div>
 
     <!-- add button -->
     <md-input-container>
         <md-button ng-disabled="!isValidCondition()" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addCondition()" data-cy="condition-add-button">Hinzufügen</md-button>
-        <md-button ng-disabled="!isValidCondition() || (areMultipleSectionsSelected() && conditionType.id === 0)" ng-if="currentConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
+        <md-button ng-disabled="!isValidCondition()" ng-if="currentConditionId" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="saveCondition()" data-cy="condition-save-button">Speichern</md-button>
         <md-button ng-disabled="!currentConditionId" title="Zurücksetzen" class="md-raised md-warn" style="width: 38px; min-width: 0;margin: 0;" ng-click="resetConditionForm()" data-cy="condition-reset-button">
             <md-icon md-font-set="fa" style="font-size: 17px;line-height: 21px;">&#xf00d;</md-icon>
         </md-button>
@@ -126,7 +116,6 @@
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column>Identifier</th>
             <th md-column>Sektion/Type</th>
             <th md-column>Element</th>
             <th md-column>Feld</th>
@@ -137,7 +126,6 @@
         </thead>
         <tbody md-body>
         <tr md-row ng-repeat="condition in conditions">
-            <td md-cell>{{ condition.identifier }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>

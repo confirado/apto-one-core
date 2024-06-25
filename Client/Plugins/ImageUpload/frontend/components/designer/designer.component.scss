@@ -82,7 +82,7 @@
         background: var(--color-primary);
     }
 
-    &:hover {
+    &:hover, &.selected {
         img {
             background: var(--color-primary-hover);
         }
@@ -97,8 +97,11 @@
 }
 
 .input-field {
-    margin-bottom: 20px;
     @include input-grid();
+
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 
     .name {
         grid-area: name;
@@ -119,6 +122,18 @@
 
     &.image-upload-header {
         margin-bottom: 0;
+    }
+
+    .container-with-plus {
+       display: flex;
+        .add-next {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
     }
 }
 

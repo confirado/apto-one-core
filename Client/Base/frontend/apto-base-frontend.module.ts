@@ -33,7 +33,7 @@ import { FrontendUserRepository } from '@apto-base-frontend/store/frontend-user/
 import { ContentSnippetRepository } from '@apto-base-frontend/store/content-snippets/content-snippet.repository';
 import { ContentSnippetPipe } from '@apto-base-frontend/pipes/content-snippet.pipe';
 
-import { BasketComponent } from '@apto-base-frontend/components/basket/basket.component';
+import { BasketComponent } from '@apto-base-frontend-basket';
 import { FooterComponent } from '@apto-base-frontend/components/footer/footer.component';
 import { FrontendComponent } from '@apto-base-frontend/components/frontend/frontend.component';
 import { HeaderComponent } from '@apto-base-frontend/components/header/header.component';

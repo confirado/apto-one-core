@@ -4,6 +4,12 @@ namespace Apto\Plugins\MaterialPickerElement\Application\Core\Query\Pool;
 
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Application\Core\Service\AptoCache\AptoCacheService;
+use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
+use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 
 class PoolQueryHandler implements QueryHandlerInterface
 {
@@ -13,12 +19,18 @@ class PoolQueryHandler implements QueryHandlerInterface
     protected $poolFinder;
 
     /**
-     * PoolQueryHandler constructor.
-     * @param PoolFinder $poolFinder
+     * @var ProductConditionSetFinder
      */
-    public function __construct(PoolFinder $poolFinder)
+    private ProductConditionSetFinder $productConditionSetFinder;
+
+    /**
+     * @param PoolFinder                $poolFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
+     */
+    public function __construct(PoolFinder $poolFinder, ProductConditionSetFinder $productConditionSetFinder)
     {
         $this->poolFinder = $poolFinder;
+        $this->productConditionSetFinder = $productConditionSetFinder;
     }
 
     /**
@@ -98,8 +110,42 @@ class PoolQueryHandler implements QueryHandlerInterface
             return $items;
         }
         $items = $this->poolFinder->findPoolItemsFiltered($query->getPoolId(), $query->getFilter(), $query->getSortBy(), $query->getOrderBy());
-        AptoCacheService::setItem($poolCacheKey, $items);
-        return $items;
+
+        $state = new State($query->getState());
+
+        $itemsMatchingCondition = [];
+
+        foreach ($items['data'] as $item) {
+
+            if ($item['material']['conditionSets'] && !empty($item['material']['conditionSets'])) {
+
+                $productConditionsResult = $this->productConditionSetFinder->findByIds($item['material']['conditionSets']);
+
+                $counter = 0;
+                foreach ($productConditionsResult['data'] as $key => $productCondition) {
+
+                    $criterion = new Condition(
+                        new LinkOperator($productCondition['conditionsOperator']),
+                        RuleFactory::criteriaFromArray($productCondition['conditions'])
+                    );
+
+                    if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                        $counter++;
+                    }
+                }
+
+                if ($counter >= count($productConditionsResult['data'])) {
+                    $itemsMatchingCondition[] = $item;
+                }
+
+            } else {
+                $itemsMatchingCondition[] = $item;
+            }
+        }
+
+        AptoCacheService::setItem($poolCacheKey, $itemsMatchingCondition);
+
+        return ['data' => $itemsMatchingCondition];
     }
 
     /**

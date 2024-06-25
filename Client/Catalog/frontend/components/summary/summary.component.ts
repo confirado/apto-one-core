@@ -25,7 +25,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class SummaryComponent {
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
-  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('sidebarSummary'));
+  public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   protected readonly AptoOfferConfigurationDialog$ = this.store.select(selectContentSnippet('AptoOfferConfigurationDialog'));
   protected readonly locale$ = this.store.select(selectLocale);
   public readonly perspectives$ = this.store.select(selectPerspectives);

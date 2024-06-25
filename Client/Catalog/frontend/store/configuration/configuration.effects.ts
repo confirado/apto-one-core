@@ -330,6 +330,7 @@ export class ConfigurationEffects {
           let showDefault = true;
           let finalMessage = '';
 
+          // case rule errors
           if (Array.isArray(message.errorPayload)) {
             for (const singleErrorPayload of message.errorPayload) {
               const errorMessage = translate(singleErrorPayload.errorMessage, locale);
@@ -337,6 +338,15 @@ export class ConfigurationEffects {
                 showDefault = false;
                 finalMessage += `${errorMessage} <br />`;
               }
+            }
+          }
+
+          // case validation errors
+          if (message.errorPayload && message.errorPayload.errorMessage) {
+            const errorMessage = translate(message.errorPayload.errorMessage, locale);
+            if (errorMessage) {
+              showDefault = false;
+              finalMessage += `${errorMessage} <br />`;
             }
           }
 

@@ -158,10 +158,10 @@ const ShopActions = function($ngRedux, MessageBusFactory, PageHeaderActions, Dat
         }
     }
 
-    function removeShopCustomProperty(shopId, key) {
+    function removeShopCustomProperty(shopId, id) {
         return {
             type: getType('REMOVE_CUSTOM_PROPERTY'),
-            payload: MessageBusFactory.command('RemoveShopCustomProperty', [shopId, key])
+            payload: MessageBusFactory.command('RemoveShopCustomProperty', [shopId, id])
         }
     }
 
