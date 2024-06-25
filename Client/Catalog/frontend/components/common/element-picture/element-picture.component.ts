@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ElementZoomFunctionEnum} from "@apto-catalog-frontend/store/product/product.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { ElementZoomFunctionEnum } from "@apto-catalog-frontend/store/product/product.model";
+import { environment } from "@apto-frontend/src/environments/environment";
 
 @Component({
   selector: 'apto-element-picture',
@@ -17,19 +18,40 @@ export class ElementPictureComponent implements OnInit {
   @Input()
   public zoomFunction: ElementZoomFunctionEnum;
 
+  @Input()
+  public gallery: any[] = [];
+
   public imgStyles: string = '';
 
   public isOpen = false;
 
-  constructor() { }
+  public currentImageIndex = 0;
 
-  ngOnInit(): void {
+  protected mediaUrl = environment.api.media;
+
+  public constructor() { }
+
+  public ngOnInit(): void {
+    if (this.previewImage && this.gallery.length > 0) {
+      this.initializeGallery();
+    }
     if (this.width) {
       this.calculateImgStyle();
     }
   }
 
-  calculateImgStyle() {
+  public get currentImagePath(): string {
+    return this.updatePreviewImage();
+  }
+
+  public initializeGallery(): void {
+    if (this.previewImage && this.gallery) {
+      this.gallery = [{ path: this.previewImage }, ...this.gallery];
+    }
+  }
+
+
+  public calculateImgStyle() {
     this.imgStyles = [
       'min-width: calc(' + this.width + '/4)',
       'min-height: calc(' + this.width + '/4)',
@@ -38,12 +60,45 @@ export class ElementPictureComponent implements OnInit {
     ].join(';');
   }
 
-  zoom(event: Event) {
+  public zoom(event: Event) {
     this.isOpen = !this.isOpen;
     event.stopPropagation();
   }
 
-  isZoomEnabled(): boolean {
-    return this.zoomFunction == ElementZoomFunctionEnum.IMAGE_PREVIEW;
+  public isZoomEnabled(): boolean {
+    return this.zoomFunction === ElementZoomFunctionEnum.IMAGE_PREVIEW ||
+      this.zoomFunction === ElementZoomFunctionEnum.GALLERY;
+  }
+
+  public nextImage(event: Event): void {
+    event.stopPropagation();
+    if (this.gallery.length === 0) return;
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.gallery.length;
+    this.previewImage = this.updatePreviewImage();
+  }
+
+  public previousImage(event: Event): void {
+    event.stopPropagation();
+    if (this.gallery.length === 0) return;
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.gallery.length) % this.gallery.length;
+    this.previewImage = this.updatePreviewImage();
+  }
+
+  private updatePreviewImage(): string {
+    const item = this.gallery[this.currentImageIndex];
+    let imageUrl = item.path || '';
+    const baseIncluded = imageUrl.startsWith(this.mediaUrl);
+    if (item.mediaFile && item.mediaFile.length > 0) {
+      const media = item.mediaFile[0];
+      if (media.filename && media.extension) {
+        imageUrl = baseIncluded ? `${media.path}/${media.filename}.${media.extension}`
+          : `${this.mediaUrl}${media.path}/${media.filename}.${media.extension}`;
+      } else {
+        imageUrl = baseIncluded ? imageUrl : this.mediaUrl + imageUrl;
+      }
+    } else {
+      imageUrl = baseIncluded ? imageUrl : this.mediaUrl + imageUrl;
+    }
+    return imageUrl;
   }
 }

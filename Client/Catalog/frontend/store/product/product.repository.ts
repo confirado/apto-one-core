@@ -137,9 +137,10 @@ export class ProductRepository {
 					previewImage: previewImage ? this.mediaUrl + previewImage : null,
 					isMandatory: element.isMandatory,
 					position: element.position,
-				    attachments: element.attachments,
-				    zoomFunction: element.zoomFunction,
-				    sectionRepetition: 0
+          attachments: element.attachments,
+				  zoomFunction: element.zoomFunction,
+				  sectionRepetition: 0,
+          gallery: element.gallery
 				});
 			});
 		});

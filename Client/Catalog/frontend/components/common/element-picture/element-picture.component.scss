@@ -3,7 +3,39 @@
 
 .element-picture {
     display: flex;
+    align-items: center;
+    position: relative;
     margin-right: 10px;
+
+    .arrows {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--color-text);
+        border: none;
+        padding: 10px;
+        box-sizing: border-box;
+
+        mat-icon {
+            font-size: 2vh;
+        }
+
+        &.left {
+            left: -2.5vh;
+        }
+
+        &.right {
+            right: -3.5vh;
+        }
+
+        mat-icon:hover {
+            cursor: pointer;
+        }
+    }
 
     &.is-zoomable {
         img {
@@ -13,11 +45,13 @@
 
     img {
         width: 100%;
+        object-fit: cover;
     }
 
     .zoom-icon {
-        top: -2px;
-        right: 10px;
+        position: absolute;
+        top: 2px;
+        right: 2px;
         cursor: pointer;
 
         mat-icon {
@@ -37,6 +71,42 @@
         img {
             max-width: calc(100vw - 100px);
             max-height: calc(100vh - 100px);
+        }
+    }
+
+    .arrows {
+        mat-icon {
+            font-size: 32px;
+            color: var(--color-accent);
+            cursor: pointer;
+            height: 32px;
+            width: 32px;
+            padding: 3px;
+        }
+    }
+}
+
+@media only screen and (max-width: $mobile-max-width) {
+    .element-picture {
+        .arrows {
+            &.left, &.right {
+                position: absolute;
+                top: 50%;
+            }
+
+            mat-icon {
+                font-size: 5.5vh;
+                height: auto;
+                width: auto;
+            }
+
+            &.left {
+                left: -8.75vh;
+            }
+
+            &.right {
+                right: -10vh;
+            }
         }
     }
 }

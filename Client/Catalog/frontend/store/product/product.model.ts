@@ -188,6 +188,7 @@ export interface Element<DefinitionProperties = unknown> {
   attachments: Attachments[];
   zoomFunction: ElementZoomFunctionEnum;
   sectionRepetition?: number;
+  gallery?: any[];
 }
 
 export enum ElementZoomFunctionEnum {

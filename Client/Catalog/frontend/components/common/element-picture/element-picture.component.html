@@ -1,17 +1,33 @@
-<div class="element-picture" *ngIf="previewImage" [class.is-zoomable]="isZoomEnabled()">
-    <img [src]="previewImage" [style]="imgStyles"/>
-    <div class="zoom-icon" (click)="zoom($event)" *ngIf="isZoomEnabled()">
-        <mat-icon>zoom_in</mat-icon>
+<div class="element-picture">
+    <div *ngIf="gallery.length > 1 && zoomFunction === 'gallery'" class="arrows left" (click)="previousImage($event)">
+        <mat-icon>arrow_back_ios</mat-icon>
+    </div>
+
+    <div class="image-container">
+        <img [src]="previewImage" [style]="imgStyles" />
+        <div class="zoom-icon" (click)="zoom($event)" *ngIf="isZoomEnabled()">
+            <mat-icon>zoom_in</mat-icon>
+        </div>
+    </div>
+
+    <div *ngIf="gallery.length > 1 && zoomFunction === 'gallery'" class="arrows right" (click)="nextImage($event)">
+        <mat-icon>arrow_forward_ios</mat-icon>
     </div>
 </div>
 
-<ng-template cdkConnectedOverlay
-             [cdkConnectedOverlayOpen]="isOpen"
->
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOpen]="isOpen">
     <div class="zoomed-in">
+        <div *ngIf="gallery.length > 1 && zoomFunction === 'gallery'" class="arrows left" (click)="previousImage($event)">
+            <mat-icon>arrow_back_ios</mat-icon>
+        </div>
+
         <div class="image-wrapper">
             <img (click)="isOpen = !isOpen" [src]="previewImage" />
             <apto-close-button [mat-dialog-close]="true" (clicked)="isOpen = !isOpen"></apto-close-button>
+        </div>
+
+        <div *ngIf="gallery.length > 1 && zoomFunction === 'gallery'" class="arrows right" (click)="nextImage($event)">
+            <mat-icon>arrow_forward_ios</mat-icon>
         </div>
     </div>
 </ng-template>
