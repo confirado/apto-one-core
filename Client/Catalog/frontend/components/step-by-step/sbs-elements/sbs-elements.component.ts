@@ -1,19 +1,36 @@
 import { Component, OnInit } from '@angular/core';
-import { setSectionTouched, setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { ActivatedRoute } from "@angular/router";
+import { distinctUntilChanged, take } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from "@ngrx/effects";
+import { environment } from "@apto-frontend/src/environments/environment";
+import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import { RenderImageService } from "@apto-catalog-frontend/services/render-image.service";
+import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
 import {
   ElementState,
   ProgressElement,
   ProgressState, SectionTypes,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import {
-  configurationIsValid, selectCurrentProductElements, selectCurrentStateElements, selectProgressState,
+  selectProduct
+} from '@apto-catalog-frontend/store/product/product.selectors';
+import {
+  configurationIsValid,
+  selectCurrentPerspective,
+  selectCurrentProductElements,
+  selectCurrentStateElements,
+  selectProgressState,
 } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
-import { Store } from '@ngrx/store';
-import { ElementZoomFunctionEnum } from '@apto-catalog-frontend/store/product/product.model';
-import { distinctUntilChanged } from 'rxjs';
-import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
+import {
+  addToBasket,
+  addToBasketSuccess,
+  setSectionTouched,
+  setStep
+} from '@apto-catalog-frontend/store/configuration/configuration.actions';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-sbs-elements',
 	templateUrl: './sbs-elements.component.html',
@@ -30,7 +47,20 @@ export class SbsElementsComponent implements OnInit{
 	private progressState: ProgressState = null;
   protected stepPositions: number[] = [];
 
-	public constructor(private store: Store) {}
+  public readonly isInline = !!environment.aptoInline;
+  public renderImage = null;
+  public sw6CartButtonDisabled: boolean = false;
+
+	public constructor(
+    private store: Store,
+    private renderImageService: RenderImageService,
+    private activatedRoute: ActivatedRoute,
+    private readonly actions$: Actions
+  ) {
+    this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
+      this.renderImage = await this.renderImageService.drawImageForPerspective(result);
+    });
+  }
 
   public ngOnInit(): void {
     this.currentStateElements$.subscribe((next: ElementState[]) => {
@@ -127,8 +157,57 @@ export class SbsElementsComponent implements OnInit{
     )
 	}
 
+  public openShopware6Cart() {
+    this.sw6CartButtonDisabled = true;
+    this.actions$.pipe(
+      ofType(addToBasketSuccess),
+      untilDestroyed(this),
+      take(1)
+    ).subscribe((next) => {
+      const offCanvasCartInstances: any = window.PluginManager.getPluginInstances('OffCanvasCart');
+      for (let i = 0; i < offCanvasCartInstances.length; i++) {
+        offCanvasCartInstances[i].openOffCanvas(window.router['frontend.cart.offcanvas'], false);
+      }
+      this.sw6CartButtonDisabled = false;
+    });
+
+    if (this.renderImage) {
+      this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
+        this.store.dispatch(
+          addToBasket({
+            payload: {
+              type: 'ADD_TO_BASKET',
+              productImage: image.src,
+              configurationId: this.configurationId,
+              configurationType: this.configurationType,
+            },
+          })
+        );
+      });
+    } else {
+      this.store.dispatch(
+        addToBasket({
+          payload: {
+            type: 'ADD_TO_BASKET',
+            productImage: null,
+            configurationId: this.configurationId,
+            configurationType: this.configurationType,
+          },
+        })
+      );
+    }
+  }
+
   protected get sectionIndex(): string {
     return this.progressState.currentStep.section.repeatableType === SectionTypes.WIEDERHOLBAR ? `${this.progressState.currentStep.section.repetition + 1}` : '';
+  }
+
+  private get configurationId(): string {
+    return this.activatedRoute.snapshot.params['configurationId'];
+  }
+
+  private get configurationType(): string {
+    return this.activatedRoute.snapshot.params['configurationType'];
   }
 
   // todo do we need this?
