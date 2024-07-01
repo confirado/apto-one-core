@@ -25,6 +25,7 @@ export class MaterialPickerEffects {
       ),
       switchMap(([action, store]) => forkJoin([
         this.catalogMessageBusService.findMaterialPickerPoolItemsFiltered(
+          store.productId,
           action.payload.poolId,
           action.payload.filter,
           store.state.compressedState
@@ -62,6 +63,7 @@ export class MaterialPickerEffects {
       ),
       switchMap(([action, store]) => forkJoin([
         this.catalogMessageBusService.findMaterialPickerPoolItemsFiltered(
+          store.productId,
           action.payload.poolId,
           action.payload.filter,
           store.state.compressedState

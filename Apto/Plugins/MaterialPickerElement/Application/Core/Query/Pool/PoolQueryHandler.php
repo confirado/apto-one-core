@@ -2,9 +2,14 @@
 
 namespace Apto\Plugins\MaterialPickerElement\Application\Core\Query\Pool;
 
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Exception\CacheException;
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Application\Core\Service\AptoCache\AptoCacheService;
+use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
@@ -16,7 +21,7 @@ class PoolQueryHandler implements QueryHandlerInterface
     /**
      * @var PoolFinder
      */
-    protected $poolFinder;
+    protected PoolFinder $poolFinder;
 
     /**
      * @var ProductConditionSetFinder
@@ -24,13 +29,23 @@ class PoolQueryHandler implements QueryHandlerInterface
     private ProductConditionSetFinder $productConditionSetFinder;
 
     /**
-     * @param PoolFinder                $poolFinder
-     * @param ProductConditionSetFinder $productConditionSetFinder
+     * @var ComputedProductValueCalculator
      */
-    public function __construct(PoolFinder $poolFinder, ProductConditionSetFinder $productConditionSetFinder)
-    {
+    protected ComputedProductValueCalculator $computedProductValueCalculator;
+
+    /**
+     * @param PoolFinder $poolFinder
+     * @param ProductConditionSetFinder $productConditionSetFinder
+     * @param ComputedProductValueCalculator $computedProductValueCalculator
+     */
+    public function __construct(
+        PoolFinder $poolFinder,
+        ProductConditionSetFinder $productConditionSetFinder,
+        ComputedProductValueCalculator $computedProductValueCalculator
+    ) {
         $this->poolFinder = $poolFinder;
         $this->productConditionSetFinder = $productConditionSetFinder;
+        $this->computedProductValueCalculator = $computedProductValueCalculator;
     }
 
     /**
@@ -98,9 +113,11 @@ class PoolQueryHandler implements QueryHandlerInterface
 
     /**
      * @param FindPoolItemsFiltered $query
-     * @return array
-     * @throws \Psr\Cache\InvalidArgumentException
-     * @throws \Symfony\Component\Cache\Exception\CacheException
+     * @return array[]|mixed
+     * @throws InvalidUuidException
+     * @throws CircularReferenceException
+     * @throws InvalidArgumentException
+     * @throws CacheException
      */
     public function handleFindPoolItemsFiltered(FindPoolItemsFiltered $query)
     {
@@ -112,14 +129,14 @@ class PoolQueryHandler implements QueryHandlerInterface
         $items = $this->poolFinder->findPoolItemsFiltered($query->getPoolId(), $query->getFilter(), $query->getSortBy(), $query->getOrderBy());
 
         $state = new State($query->getState());
-
+        $computedValuesIndexedById = $this->computedProductValueCalculator->calculateComputedValues($query->getProductId(), $state, true);
         $itemsMatchingCondition = [];
 
         foreach ($items['data'] as $item) {
 
             if ($item['material']['conditionSets'] && !empty($item['material']['conditionSets'])) {
 
-                $productConditionsResult = $this->productConditionSetFinder->findByIds($item['material']['conditionSets']);
+                $productConditionsResult = $this->productConditionSetFinder->findByIdsForProduct($query->getProductId(), $item['material']['conditionSets']);
 
                 $counter = 0;
                 foreach ($productConditionsResult['data'] as $key => $productCondition) {
@@ -129,7 +146,7 @@ class PoolQueryHandler implements QueryHandlerInterface
                         RuleFactory::criteriaFromArray($productCondition['conditions'])
                     );
 
-                    if ($criterion->isFulfilled($state, new RulePayload([]))) {
+                    if ($criterion->isFulfilled($state, new RulePayload($computedValuesIndexedById))) {
                         $counter++;
                     }
                 }
@@ -168,7 +185,9 @@ class PoolQueryHandler implements QueryHandlerInterface
 
     /**
      * @param FindPoolColors $query
-     * @return mixed
+     * @return array|mixed
+     * @throws CacheException
+     * @throws InvalidArgumentException
      */
     public function handleFindPoolColors(FindPoolColors $query)
     {

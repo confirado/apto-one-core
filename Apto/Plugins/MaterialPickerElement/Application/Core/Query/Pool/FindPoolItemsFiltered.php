@@ -9,6 +9,11 @@ class FindPoolItemsFiltered implements PublicQueryInterface
     /**
      * @var string
      */
+    private $productId;
+
+    /**
+     * @var string
+     */
     private $poolId;
 
     /**
@@ -32,19 +37,29 @@ class FindPoolItemsFiltered implements PublicQueryInterface
     private $state;
 
     /**
+     * @param string $productId
      * @param string $poolId
-     * @param array  $filter
-     * @param array  $state
+     * @param array $filter
+     * @param array $state
      * @param string $sortBy
      * @param string $orderBy
      */
-    public function __construct(string $poolId, array $filter, array $state, string $sortBy = 'clicks', string $orderBy = 'asc')
+    public function __construct(string $productId, string $poolId, array $filter, array $state, string $sortBy = 'clicks', string $orderBy = 'asc')
     {
+        $this->productId = $productId;
         $this->poolId = $poolId;
         $this->filter = $filter;
         $this->sortBy = $sortBy;
         $this->orderBy = $orderBy;
         $this->state = $state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductId(): string
+    {
+        return $this->productId;
     }
 
     /**

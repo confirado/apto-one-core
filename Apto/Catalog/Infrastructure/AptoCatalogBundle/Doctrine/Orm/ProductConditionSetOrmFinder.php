@@ -108,6 +108,75 @@ class ProductConditionSetOrmFinder extends AptoOrmFinder implements ProductCondi
     }
 
     /**
+     * @param string $productId
+     * @param array $ids
+     * @return array
+     * @throws DqlBuilderException,
+     */
+    public function findByIdsForProduct(string $productId, array $ids)
+    {
+        $builder = new DqlQueryBuilder($this->entityClass);
+        $builder
+            ->setWhere('c.id.id in (:ids) AND p.id.id = :productId', ['ids' => $ids, 'productId' => $productId])
+            ->setValues([
+                'c' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                    'conditionsOperator',
+                ],
+                'p' => [
+                    ['id.id', 'id'],
+                    ['identifier.value', 'identifier'],
+                ],
+                'csc' => [
+                    ['id.id', 'id'],
+                    'sectionId',
+                    'elementId',
+                    'property',
+                    ['operator.operator', 'operator'],
+                    'value',
+                    'type'
+                ],
+                'cpv' => [
+                    'surrogateId',
+                    ['id.id', 'id'],
+                    'name'
+                ]
+            ])
+            ->setJoins([
+                'c' => [
+                    ['conditions', 'csc', 'id'],
+                    ['product', 'p', 'id']
+                ],
+                'csc' => [
+                    ['computedProductValue', 'cpv', 'surrogateId']
+                ]
+            ])
+            ->setPostProcess([
+                'c' => [
+                    'conditionsOperator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                ],
+                'csc' => [
+                    'operator' => [DqlQueryBuilder::class, 'decodeInteger'],
+                    'value' => [DqlQueryBuilder::class, 'castString'],
+                    'type' => [DqlQueryBuilder::class, 'decodeInteger']
+                ]
+            ]);
+
+        $result = $builder->getResult($this->entityManager);
+
+        foreach ($result['data'] as &$conditionSet) {
+            if (count($conditionSet['product']) === 0) {
+                $conditionSet['product'] = null;
+            } else {
+                $conditionSet['product'] = $conditionSet['product'][0];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $id
      * @return array|null
      * @throws DqlBuilderException

@@ -158,7 +158,7 @@ class ValueValidationService
 
                 if ($item['material']['conditionSets'] && !empty($item['material']['conditionSets'])) {
 
-                    $productConditionsResult = $this->productConditionSetFinder->findByIds($item['material']['conditionSets']);
+                    $productConditionsResult = $this->productConditionSetFinder->findByIdsForProduct($product->getId()->getId(), $item['material']['conditionSets']);
 
                     $counter = 0;
                     foreach ($productConditionsResult['data'] as $key => $productCondition) {
