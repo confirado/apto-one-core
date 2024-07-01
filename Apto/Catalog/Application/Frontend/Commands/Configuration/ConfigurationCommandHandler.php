@@ -176,6 +176,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         BasketConnector $basketConnector,
         BasketItemFactory $basketItemFactory,
         ConfigurableProductBuilder $configurableProductBuilder,
+        ValueValidationService $valueValidationService,
         RuleValidationService $ruleValidationService,
         EventBusInterface $eventBus
     ) {
@@ -195,7 +196,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         $this->basketConnector = $basketConnector;
         $this->basketItemFactory = $basketItemFactory;
         $this->configurableProductFactory = new ConfigurableProductFactory($configurableProductBuilder, $productRepository);
-        $this->valueValidationService = new ValueValidationService();
+        $this->valueValidationService = $valueValidationService;
         $this->ruleValidationService = $ruleValidationService;
 
         $this->eventBus = $eventBus;

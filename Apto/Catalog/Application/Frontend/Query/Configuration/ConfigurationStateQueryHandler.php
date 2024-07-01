@@ -2,8 +2,6 @@
 
 namespace Apto\Catalog\Application\Frontend\Query\Configuration;
 
-use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
-use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 use Psr\Cache;
 use Symfony\Component\Cache\Exception\CacheException;
 
@@ -25,6 +23,8 @@ use Apto\Catalog\Domain\Core\Service\JavascriptStateCreatorService\JavascriptSta
 use Apto\Catalog\Domain\Core\Service\StateValidation\InvalidStateException;
 use Apto\Catalog\Domain\Core\Service\StateValidation\ValueValidationService;
 use Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm\ProductOrmRepository;
+use Apto\Catalog\Application\Core\Query\Product\Element\RenderImageFactory;
+use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 
 class ConfigurationStateQueryHandler implements QueryHandlerInterface
 {
@@ -61,6 +61,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     /**
      * @param ConfigurableProductBuilder $configurableProductBuilder
      * @param ProductOrmRepository $productRepository
+     * @param ValueValidationService $valueValidationService
      * @param RuleValidationService $ruleValidationService
      * @param RulePayloadFactory $rulePayloadFactory
      * @param RenderImageFactory $renderImageFactory
@@ -68,12 +69,13 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
     public function __construct(
         ConfigurableProductBuilder $configurableProductBuilder,
         ProductOrmRepository $productRepository,
+        ValueValidationService $valueValidationService,
         RuleValidationService $ruleValidationService,
         RulePayloadFactory $rulePayloadFactory,
         RenderImageFactory $renderImageFactory
     ) {
         $this->configurableProductFactory = new ConfigurableProductFactory($configurableProductBuilder, $productRepository);
-        $this->valueValidationService = new ValueValidationService();
+        $this->valueValidationService = $valueValidationService;
         $this->ruleValidationService = $ruleValidationService;
         $this->ruleRepairService = new RuleRepairService($ruleValidationService, $rulePayloadFactory);
         $this->javaScriptStateCreatorService = new JavascriptStateCreatorService($rulePayloadFactory, $renderImageFactory);
@@ -98,13 +100,13 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
 
     /**
      * @param GetConfigurationState $query
-     *
      * @return array
      * @throws AptoJsonSerializerException
      * @throws CacheException
      * @throws Cache\InvalidArgumentException
      * @throws CircularReferenceException
      * @throws InvalidUuidException
+     * @throws RepeatableValidationException
      */
     public function handleGetConfigurationState(GetConfigurationState $query): array
     {
