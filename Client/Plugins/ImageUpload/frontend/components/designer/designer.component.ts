@@ -17,6 +17,7 @@ import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.red
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
 import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { RenderImageData } from "@apto-catalog-frontend/store/configuration/configuration.model";
 
 @UntilDestroy()
 @Component({
@@ -141,7 +142,9 @@ export class DesignerComponent implements OnInit, AfterViewInit {
   }
 
   public async ngAfterViewInit() {
-    this.renderImage = await this.renderImageService.drawImageForPerspective(this.currentPerspective, true);
+    this.renderImage = await this.renderImageService.drawImageForPerspective(this.currentPerspective, (renderImage: RenderImageData) => {
+      return !renderImage.path.startsWith('/apto-plugin-image-upload/render-images/');
+    });
 
     if (this.renderImage && this.initStarted === false) {
       this.initStarted = true;

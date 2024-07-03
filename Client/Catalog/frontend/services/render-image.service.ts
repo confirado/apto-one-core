@@ -31,10 +31,11 @@ export class RenderImageService {
 
   constructor(private store: Store) {}
 
-  public drawImageForPerspective(perspective: string, editMode = false): Promise<ImageFromCanvas | null> {
+  public drawImageForPerspective(perspective: string, renderImagesFilterFnc = undefined): Promise<ImageFromCanvas | null> {
     return new Promise((resolve) => {
       this.store.select(selectRenderImagesForPerspective(perspective)).pipe(take(1)).subscribe((data) => {
-        this.renderImages = data;
+        this.renderImages = renderImagesFilterFnc ? data.filter(renderImagesFilterFnc) : data;
+
         if (this.renderImages.length > 0 && this.firstImageWidth && this.firstImageHeight) {
           this.canvas = document.createElement('canvas');
           this.ctx = this.canvas.getContext('2d');
@@ -42,7 +43,7 @@ export class RenderImageService {
           this.adjustCanvasSize();
           this.loadImages()
             .then((loadedImages) => {
-              this.drawImagesOnCanvas(editMode ? [loadedImages[0]] : loadedImages);
+              this.drawImagesOnCanvas(loadedImages);
 
               // we need to give some time the canvas to finish drawing, and only then convert the image, without setTimeout not working
               setTimeout(() => {
