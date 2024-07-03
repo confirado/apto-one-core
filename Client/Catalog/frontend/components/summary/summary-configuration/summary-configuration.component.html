@@ -93,10 +93,12 @@
                                 </div>
                                 <div class="summary-section-divider"></div>
                                 <div class="section-right" [ngClass]="{'total-price': true, 'font-smaller': configuration.statePrice.sum.price.amount > 9999}">
-                                    <div class="basic-discount-price" *ngIf="configuration?.statePrice?.discount?.discount">
-                                        {{ sumPseudoPrice$ | async }}
-                                    </div>
-                                    {{ sumPrice }}
+                                    <ng-container *ngIf="sumPseudoPrice$ | async as sumPseudoPrice">
+                                        <div class="basic-discount-price" *ngIf="sumPrice != sumPseudoPrice">
+                                            {{ sumPseudoPrice }}
+                                        </div>
+                                        {{ sumPrice }}
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>

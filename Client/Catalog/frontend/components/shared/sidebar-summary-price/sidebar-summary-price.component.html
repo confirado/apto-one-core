@@ -5,7 +5,7 @@
         <div class="step-by-step-summary">
 			<div class="select-basket" *ngIf="showPrices">
                 <div class="basket-discount-price">
-                    <div *ngIf="discount && discount > 0" class="discount">
+                    <div *ngIf="sumPrice != sumPseudoPrice" class="discount">
                         <h4>{{ sumPseudoPrice }}</h4>
                     </div>
                     <h3 class="sum-amount">{{ sumPrice }}</h3>
@@ -55,7 +55,7 @@
 		<div class="one-page-summary">
 			<div class="select-basket" *ngIf="showPrices">
 				<div class="line-content" >
-                    <div *ngIf="discount && discount > 0" class="discount">
+                    <div *ngIf="sumPrice != sumPseudoPrice" class="discount">
 						<h4 class="discount-amount">{{ sumPseudoPrice }}</h4>
 					</div>
 					<h3 class="sum-amount">{{ sumPrice }}</h3>
