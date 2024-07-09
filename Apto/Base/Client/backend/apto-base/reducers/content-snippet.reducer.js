@@ -7,36 +7,36 @@ const ContentSnippetReducer = function(AptoReducersProvider) {
         pageHeaderConfig: {
             title: 'Textbausteine',
             pagination: {
-                show: false
+                show: false,
             },
             search: {
-                show: true,
-                searchString: ''
+                show: false,
+                searchString: '',
             },
             add: {
                 show: true,
                 aclMessagesRequired: {
                     commands: ['AddContentSnippet'],
-                    queries: ['FindContentSnippetTree']
-                }
+                    queries: ['FindContentSnippetTree'],
+                },
             },
             listStyle: {
-                show: false
+                show: false,
             },
             listSettings: {
-                show: false
+                show: false,
             },
             selectAll: {
-                show: false
+                show: false,
             },
             toggleSideBarRight: {
-                show: true
-            }
+                show: true,
+            },
         },
         contentSnippetTree: [],
         contentSnippetDetails: {
-            parent: null
-        }
+            parent: null,
+        },
     };
 
     function getType(type) {
@@ -55,10 +55,10 @@ const ContentSnippetReducer = function(AptoReducersProvider) {
                     pageHeaderConfig: {
                         search: {
                             searchString: {
-                                $set: action.payload
-                            }
-                        }
-                    }
+                                $set: action.payload,
+                            },
+                        },
+                    },
                 });
 
                 return newState;
@@ -66,24 +66,24 @@ const ContentSnippetReducer = function(AptoReducersProvider) {
             case getType('TREE_FETCH_FULFILLED'):
                 newState = update(state, {
                     contentSnippetTree: {
-                        $set: action.payload.data.result
-                    }
+                        $set: action.payload.data.result,
+                    },
                 });
 
                 return newState;
             case getType('DETAIL_FETCH_FULFILLED'):
                 newState = update(state, {
                     contentSnippetDetails: {
-                        $set: action.payload.data.result
-                    }
+                        $set: action.payload.data.result,
+                    },
                 });
 
                 return newState;
             case getType('DETAIL_RESET'):
                 newState = update(state, {
                     contentSnippetDetails: {
-                        $set: angular.copy(initialState.contentSnippetDetails)
-                    }
+                        $set: angular.copy(initialState.contentSnippetDetails),
+                    },
                 });
 
                 return newState;
