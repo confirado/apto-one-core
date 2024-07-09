@@ -46,7 +46,7 @@
                 </ng-container>
             </div>
 
-            <div class="item-details-description">{{ data.poolItem.material.description | translate }}</div>
+            <div class="item-details-description" [innerHTML]="data.poolItem.material.description | translate | safeHtml"></div>
 
             <div class="item-details-gallery-images" *ngIf="data.poolItem.material.galleryImages.length > 0">
                 <div class="item-details-gallery-image"
