@@ -28,7 +28,9 @@ export class MaterialPickerEffects {
           store.productId,
           action.payload.poolId,
           action.payload.filter,
-          store.state.compressedState
+          store.state.compressedState,
+          action.payload.sortBy,
+          action.payload.orderBy,
         ),
         this.catalogMessageBusService.findMaterialPickerPoolColors(
           action.payload.poolId,
@@ -66,7 +68,9 @@ export class MaterialPickerEffects {
           store.productId,
           action.payload.poolId,
           action.payload.filter,
-          store.state.compressedState
+          store.state.compressedState,
+          action.payload.sortBy,
+          action.payload.orderBy,
         ),
         this.catalogMessageBusService.findMaterialPickerPoolColors(
           action.payload.poolId,

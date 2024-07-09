@@ -132,7 +132,11 @@ export interface StaticValues {
 	poolId: string;
 	placeholder: TranslatedValue;
 	allowMultiple: boolean;
+  colorSectionActive: boolean;
 	searchboxActive: boolean;
+  priceGroupActive: boolean;
+  showPriceGroupInMaterialName: boolean;
+  sortByPosition: string;
 	secondaryMaterialActive: boolean;
   monochromeImage: string;
   multicoloredImageAlternately: string;

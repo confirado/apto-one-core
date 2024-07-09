@@ -1,6 +1,8 @@
 export interface ItemsUpdatePayload {
   poolId: string,
   filter: ItemsUpdateFilter,
+  sortBy: string,
+  orderBy: string,
   compressedState?: any,
 }
 
@@ -9,5 +11,4 @@ export interface ItemsUpdateFilter {
   colorRating: string,
   priceGroup: string,
   properties: string[],
-  orderBy: string,
 }

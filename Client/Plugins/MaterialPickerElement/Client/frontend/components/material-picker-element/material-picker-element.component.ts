@@ -81,6 +81,7 @@ export class MaterialPickerElementComponent implements OnInit {
 	public constructor(private store: Store) {}
 
   public ngOnInit(): void {
+    console.error(this.element.element.definition.staticValues);
     this.store.dispatch(initMaterialPicker({
       payload: this.getPayload()
     }));
@@ -301,8 +302,9 @@ export class MaterialPickerElementComponent implements OnInit {
         colorRating: this.filter.controls.colorRating.value,
         priceGroup: this.filter.controls.priceGroup.value,
         properties: [],
-        orderBy: 'asc',
-      }
+      },
+      sortBy: this.element.element.definition.staticValues.sortByPosition,
+      orderBy: this.element.element.definition.staticValues.sortByPosition === 'clicks' ? 'desc' : 'asc',
     };
 
     Object.entries<string[]>(this.filter.controls.properties.value).forEach(([key, values]) => {
@@ -424,6 +426,9 @@ export class MaterialPickerElementComponent implements OnInit {
 
     if (type === 'search-box') {
       return this.element.element.definition.staticValues.searchboxActive;
+    }
+    if (type === 'price-group') {
+      return this.element.element.definition.staticValues.priceGroupActive;
     }
     if (type === 'multiple') {
       return this.element.element.definition.staticValues.allowMultiple;
