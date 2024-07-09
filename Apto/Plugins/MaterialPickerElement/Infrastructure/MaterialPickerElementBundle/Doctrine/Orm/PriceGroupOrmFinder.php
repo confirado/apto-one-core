@@ -100,7 +100,8 @@ class PriceGroupOrmFinder extends AptoOrmFinder implements PriceGroupFinder
             ->setSearch([
                 'p' => [
                     'id.id',
-                    'name'
+                    'name',
+                    'internalName'
                 ]
             ], $searchString)
             ->setPostProcess([
