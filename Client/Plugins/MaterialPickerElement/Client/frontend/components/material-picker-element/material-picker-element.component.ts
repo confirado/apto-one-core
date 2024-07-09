@@ -81,7 +81,6 @@ export class MaterialPickerElementComponent implements OnInit {
 	public constructor(private store: Store) {}
 
   public ngOnInit(): void {
-    console.error(this.element.element.definition.staticValues);
     this.store.dispatch(initMaterialPicker({
       payload: this.getPayload()
     }));
