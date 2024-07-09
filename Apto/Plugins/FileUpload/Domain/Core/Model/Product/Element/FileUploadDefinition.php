@@ -13,7 +13,8 @@ use Apto\Plugins\FileUpload\Domain\Core\Model\Service\Converter\MimeTypeExtensio
 class FileUploadDefinition implements ElementDefinition
 {
     const NAME = 'File Upload Element';
-    const BACKEND_COMPONENT = '<apto-file-upload-element definition-validation="setDefinitionValidation(definitionValidation)" product-id="productId" section-id="sectionId" element="detail"></apto-file-upload-element>';
+    //const BACKEND_COMPONENT = '<apto-file-upload-element definition-validation="setDefinitionValidation(definitionValidation)" product-id="productId" section-id="sectionId" element="detail"></apto-file-upload-element>';
+    const BACKEND_COMPONENT = 'hide';
     const FRONTEND_COMPONENT = '<apto-file-upload-element section-ctrl="$ctrl.section" section="section" element="element"></apto-file-upload-element>';
 
     /**

@@ -90,6 +90,9 @@ class ElementDefinitionRegistry implements \JsonSerializable
 
         foreach ($this->registeredElementDefinitions as $registeredElementDefinition) {
             /** @var RegisteredElementDefinition $registeredElementDefinition */
+            if ($registeredElementDefinition->getBackendComponent() === 'hide') {
+                continue;
+            }
             $definitions[] = [
                 'name' => $registeredElementDefinition->getElementDefinitionName(),
                 'className' => $registeredElementDefinition->getElementDefinitionClassName(),

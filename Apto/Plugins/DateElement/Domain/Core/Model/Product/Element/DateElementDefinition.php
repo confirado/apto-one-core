@@ -15,7 +15,8 @@ use Exception;
 class DateElementDefinition implements ElementDefinition
 {
     const NAME = 'Datum und Uhrzeit';
-    const BACKEND_COMPONENT = '<date-element definition-validation="setDefinitionValidation(definitionValidation)"></date-element>';
+    //const BACKEND_COMPONENT = '<date-element definition-validation="setDefinitionValidation(definitionValidation)"></date-element>';
+    const BACKEND_COMPONENT = 'hide';
     const FRONTEND_COMPONENT = '<date-element section-ctrl="$ctrl.section" section="section" element="element"></date-element>';
 
     /**
