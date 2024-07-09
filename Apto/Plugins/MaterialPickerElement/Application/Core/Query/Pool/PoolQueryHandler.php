@@ -7,6 +7,9 @@ use Symfony\Component\Cache\Exception\CacheException;
 use Apto\Base\Application\Core\QueryHandlerInterface;
 use Apto\Base\Application\Core\Service\AptoCache\AptoCacheService;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
+use Apto\Base\Application\Core\Service\RequestStore;
+use Apto\Base\Domain\Core\Model\AptoLocale;
+use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
@@ -34,18 +37,26 @@ class PoolQueryHandler implements QueryHandlerInterface
     protected ComputedProductValueCalculator $computedProductValueCalculator;
 
     /**
+     * @var RequestStore
+     */
+    protected RequestStore $requestStore;
+
+    /**
      * @param PoolFinder $poolFinder
      * @param ProductConditionSetFinder $productConditionSetFinder
      * @param ComputedProductValueCalculator $computedProductValueCalculator
+     * @param RequestStore $requestStore
      */
     public function __construct(
         PoolFinder $poolFinder,
         ProductConditionSetFinder $productConditionSetFinder,
-        ComputedProductValueCalculator $computedProductValueCalculator
+        ComputedProductValueCalculator $computedProductValueCalculator,
+        RequestStore $requestStore,
     ) {
         $this->poolFinder = $poolFinder;
         $this->productConditionSetFinder = $productConditionSetFinder;
         $this->computedProductValueCalculator = $computedProductValueCalculator;
+        $this->requestStore = $requestStore;
     }
 
     /**
@@ -171,7 +182,12 @@ class PoolQueryHandler implements QueryHandlerInterface
      */
     public function handleFindPoolPriceGroups(FindPoolPriceGroups $query)
     {
-        return $this->poolFinder->findPoolPriceGroups($query->getPoolId());
+        $result = $this->poolFinder->findPoolPriceGroups($query->getPoolId());
+
+        // sort pricegroups by name
+        $this->sortListByName($result);
+
+        return $result;
     }
 
     /**
@@ -180,7 +196,17 @@ class PoolQueryHandler implements QueryHandlerInterface
      */
     public function handleFindPoolPropertyGroups(FindPoolPropertyGroups $query)
     {
-        return $this->poolFinder->findPoolPropertyGroups($query->getPoolId());
+        $result = $this->poolFinder->findPoolPropertyGroups($query->getPoolId());
+
+        // sort groups by name
+        $this->sortListByName($result);
+
+        // sort properties by name
+        foreach ($result as &$propertyGroup) {
+            $this->sortListByName($propertyGroup['properties']);
+        }
+
+        return $result;
     }
 
     /**
@@ -199,6 +225,32 @@ class PoolQueryHandler implements QueryHandlerInterface
         $colors = $this->poolFinder->findPoolColors($query->getPoolId(), $query->getFilter());
         AptoCacheService::setItem($cacheId, $colors);
         return $colors;
+    }
+
+    /**
+     * @param array $list
+     * @return void
+     */
+    private function sortListByName(array &$list): void
+    {
+        $locale = new AptoLocale($this->requestStore->getLocale());
+        usort($list, function($val1, $val2) use ($locale) {
+            $val1Name = AptoTranslatedValue::fromArray($val1['name'])->getTranslation($locale, new AptoLocale('de_DE'), true)->getValue();
+            $val2Name = AptoTranslatedValue::fromArray($val2['name'])->getTranslation($locale, new AptoLocale('de_DE'), true)->getValue();
+
+            $values = [$val1Name, $val2Name];
+            sort($values, SORT_NATURAL);
+
+            if ($val1Name === $values[0]) {
+                return -1;
+            }
+
+            if ($val2Name === $values[0]) {
+                return 1;
+            }
+
+            return 0;
+        });
     }
 
     /**
