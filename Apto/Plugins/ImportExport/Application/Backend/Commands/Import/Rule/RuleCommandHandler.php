@@ -434,7 +434,7 @@ class RuleCommandHandler extends AbstractCommandHandler
     protected function parseBoolValue(string $value): bool
     {
         $value = strtolower(trim($value));
-        if ($value == 1 || $value == 'x' || $value == 'ja' || $value == 'wahr' || $value == 'true') {
+        if ($value == 1 || $value == 'x' || $value == 'ja' || $value == 'wahr' || $value == 'true' || $value == 'active') {
             return true;
         }
         return false;

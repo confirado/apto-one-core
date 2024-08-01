@@ -21,7 +21,7 @@ export class MaterialPickerDetailsPopupComponent implements OnInit {
   @Input() data: MaterialPickerDetailsPopupData;
 
   public mediaUrl = environment.api.media + '/';
-  public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoMaterialFilter'));
+  public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
   public readonly steps$ = this.store.select(selectProgressState);
   public poolItemImageSelected = '';
 

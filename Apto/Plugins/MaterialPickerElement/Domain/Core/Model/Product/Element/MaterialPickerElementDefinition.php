@@ -237,8 +237,8 @@ class MaterialPickerElementDefinition implements ElementDefinition
         $humanReadableValues = [
             'materialName' => AptoTranslatedValue::fromArray(
                 [
-                    'de_DE' => 'Stoff: ' . $materialName,
-                    'en_GB' => 'Material: ' . $materialName
+                    'de_DE' => 'Auswahl: ' . $materialName,
+                    'en_GB' => 'Selection: ' . $materialName
                 ]
             )
         ];
@@ -266,8 +266,8 @@ class MaterialPickerElementDefinition implements ElementDefinition
 
             $humanReadableValues['materialNameSecondary'] = AptoTranslatedValue::fromArray(
                 [
-                    'de_DE' => 'Zweiter Stoff: ' . $materialNameSecondary,
-                    'en_GB' => 'Secondary material: ' . $materialNameSecondary
+                    'de_DE' => 'Zweite Auswahl: ' . $materialNameSecondary,
+                    'en_GB' => 'Secondary selection: ' . $materialNameSecondary
                 ]
             );
         }

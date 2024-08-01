@@ -16,6 +16,9 @@
       "colorSection": {
         "de_DE": "Farbauswahl"
       },
+      "materialTitle": {
+        "de_DE": "Stoff / Farbe"
+      },
       "materialProperties": {
         "de_DE": "Eigenschaften"
       },

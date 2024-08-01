@@ -27,14 +27,14 @@
 
             <div class="item-details-name">
                 <div class="title">
-                    <h4>Stoff / Farbe</h4>
+                    <h4>{{ contentSnippet$ | async | contentSnippet: 'materialTitle' }}</h4>
                 </div>
                 <p>{{ data.poolItem.material.name | translate}}</p>
             </div>
 
             <div class="item-details-property-list" *ngIf="data.poolItem.material.properties.length > 0">
                 <div class="title">
-                    <h4>Eigenschaften</h4>
+                    <h4>{{ contentSnippet$ | async | contentSnippet: 'materialProperties' }}</h4>
                 </div>
 
                 <ng-container *ngFor="let value of data.poolItem.material.properties | groupBy: 'group.id' | pairs">
