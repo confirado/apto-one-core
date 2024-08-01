@@ -528,8 +528,8 @@ class ProductCommandHandler extends AbstractImportDataTypeCommandHandler
                 $sectionId,
                 $elementId,
                 trim($fields['alias']),
-                false,
-                $property
+                $property,
+                false
             );
         }
     }
