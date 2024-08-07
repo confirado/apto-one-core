@@ -247,8 +247,7 @@ class CopyProductEventSubscriber implements DomainEventSubscriber
 
                 /** @var SelectBoxItem $copiedSelectBoxItem */
                 $copiedSelectBoxItem = $itemMapping[$condition->getValue()];
-
-                $rule->updateConditionValue(
+                $rule->setConditionValue(
                     $condition->getId(),
                     $copiedSelectBoxItem->getId()->getId()
                 );
@@ -263,7 +262,7 @@ class CopyProductEventSubscriber implements DomainEventSubscriber
                 /** @var SelectBoxItem $copiedSelectBoxItem */
                 $copiedSelectBoxItem = $itemMapping[$implication->getValue()];
 
-                $rule->updateImplicationValue(
+                $rule->setConditionValue(
                     $implication->getId(),
                     $copiedSelectBoxItem->getId()->getId()
                 );

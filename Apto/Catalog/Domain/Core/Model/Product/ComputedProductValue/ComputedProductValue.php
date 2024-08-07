@@ -369,10 +369,21 @@ class ComputedProductValue extends AptoEntity
         $aliases = new ArrayCollection();
         /** @var Alias $alias */
         foreach ($this->getAliases() as $alias) {
+            // if someone deletes a section but not the alias reference, a copied section is not available and the alias can not be copied
+            if (null === $entityMapping->get($alias->getSectionId())) {
+                continue;
+            }
+
+            // if someone deletes a element but not the alias reference, a copied element is not available and the alias can not be copied
+            if (null === $entityMapping->get($alias->getElementId()) && $alias->isCustomProperty() === false) {
+                continue;
+            }
+
+            // add copied alias
             $newAlias = new Alias(
                 new AptoUuid(),
                 $entityMapping->get($alias->getSectionId())->getId()->getId(),
-                $entityMapping->get($alias->getElementId())->getId()->getId(),
+                $entityMapping->get($alias->getElementId())?->getId()->getId(),
                 $computedProductValue,
                 $alias->getName(),
                 $alias->getProperty(),

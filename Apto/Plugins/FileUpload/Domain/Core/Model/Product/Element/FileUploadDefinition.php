@@ -163,7 +163,7 @@ class FileUploadDefinition implements ElementDefinition
             'json' => [
                 'file' => $this->file,
                 'needsValue' => $this->needsValue,
-                'value' => $this->elementValues->jsonEncode(),
+                'value' => $this->elementValues?->jsonEncode(),
                 'valuePrefix' => $this->valuePrefix->jsonSerialize(),
                 'valueSuffix' => $this->valueSuffix->jsonSerialize(),
             ]
