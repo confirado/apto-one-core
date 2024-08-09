@@ -59,7 +59,6 @@ use Doctrine\Common\Collections\Collection;
 use Money\Currency;
 use Money\Money;
 
-
 class Product extends AptoAggregate
 {
     use AptoCustomProperties;
@@ -3651,8 +3650,11 @@ class Product extends AptoAggregate
         // set rules
         $product->rules = $this->copyRules($entityMapping);
 
-        // @todo copy conditionSets
-        //$product->conditionSets = $this->copyConditionSets($entityMapping);
+        // set conditionSets
+        $product->conditionSets = $this->copyConditionSets($entityMapping);
+
+        // fix relations to condition sets for price formulas and custom properties
+        $product->afterConditionSetsCopied($entityMapping);
 
         // set properties
         $product
@@ -3825,6 +3827,43 @@ class Product extends AptoAggregate
         }
 
         return $collection;
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return Collection
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    private function copyConditionSets(Collection &$entityMapping): Collection
+    {
+        $collection = new ArrayCollection();
+
+        /** @var ConditionSet $conditionSet */
+        foreach ($this->conditionSets as $conditionSet) {
+            $conditionSetId = $this->nextConditionSetId();
+
+            $collection->set(
+                $conditionSetId->getId(),
+                $conditionSet->copy($conditionSetId, $entityMapping)
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    private function afterConditionSetsCopied(Collection &$entityMapping): void
+    {
+        /** @var Section $section */
+        foreach ($this->sections as $section) {
+            $section->afterConditionSetsCopied($entityMapping);
+        }
     }
 
     /**

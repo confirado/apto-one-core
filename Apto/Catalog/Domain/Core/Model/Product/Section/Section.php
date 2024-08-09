@@ -1,6 +1,7 @@
 <?php
 namespace Apto\Catalog\Domain\Core\Model\Product\Section;
 
+use Apto\Base\Domain\Core\Model\AptoCustomProperty;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscounts;
 use Apto\Base\Domain\Core\Model\AptoEntity;
@@ -783,6 +784,27 @@ class Section extends AptoEntity
 
         // return new section
         return $section;
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    public function afterConditionSetsCopied(Collection &$entityMapping): void
+    {
+        /** @var AptoCustomProperty $customProperty */
+        foreach ($this->customProperties as $customProperty) {
+            if ($customProperty->getProductConditionId() === null) {
+                continue;
+            }
+
+            $customProperty->setProductConditionId($entityMapping->get($customProperty->getProductConditionId()->getId())->getId());
+        }
+
+        /** @var Element $element */
+        foreach ($this->elements as $element) {
+            $element->afterConditionSetsCopied($entityMapping);
+        }
     }
 
     /**

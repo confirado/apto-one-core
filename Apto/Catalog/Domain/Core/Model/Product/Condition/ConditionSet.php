@@ -176,6 +176,68 @@ class ConditionSet extends AptoEntity
     }
 
     /**
+     * @param AptoUuid $id
+     * @param Collection $entityMapping
+     * @return ConditionSet
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    public function copy(AptoUuid $id, Collection &$entityMapping): ConditionSet
+    {
+        // create new rule
+        $conditionSet = new ConditionSet(
+            $id,
+            $entityMapping->get($this->product->getId()->getId()),
+            $this->getIdentifier()
+        );
+
+        // add new rule to entityMapping
+        $entityMapping->set(
+            $this->getId()->getId(),
+            $conditionSet
+        );
+
+        // set conditions
+        $conditionSet->conditions = $this->copyConditions($entityMapping);
+
+        // set properties
+        $conditionSet
+            ->setIdentifier($this->getIdentifier())
+            ->setConditionsOperator($this->getConditionsOperator());
+
+        // return new rule
+        return $conditionSet;
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return Collection
+     * @throws CriterionInvalidOperatorException
+     * @throws CriterionInvalidPropertyException
+     * @throws CriterionInvalidTypeException
+     * @throws CriterionInvalidValueException
+     */
+    private function copyConditions(Collection &$entityMapping): Collection
+    {
+        $collection = new ArrayCollection();
+
+        /** @var Condition $condition */
+        foreach ($this->conditions as $condition) {
+            $conditionId = $this->nextConditionId();
+            $copiedCondition = $condition->copy($conditionId, $entityMapping);
+
+            $collection->set(
+                $conditionId->getId(),
+                $copiedCondition
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
      * @param AptoUuid $conditionId
      * @param Collection $entityMapping
      * @return AptoUuid|null

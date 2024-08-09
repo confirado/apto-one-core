@@ -2,10 +2,12 @@
 namespace Apto\Catalog\Domain\Core\Model\Product\Element;
 
 use Apto\Base\Domain\Core\Model\AptoCustomProperties;
+use Apto\Base\Domain\Core\Model\AptoCustomProperty;
 use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\AptoDiscount\AptoDiscounts;
 use Apto\Base\Domain\Core\Model\AptoEntity;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPrices;
+use Apto\Base\Domain\Core\Model\AptoPriceFormula\AptoPriceFormula;
 use Apto\Base\Domain\Core\Model\AptoPriceFormula\AptoPriceFormulas;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
@@ -647,7 +649,7 @@ class Element extends AptoEntity
     }
 
     /**
-     * @return PriceMatrix
+     * @return PriceMatrix|null
      */
     public function getPriceMatrix(): ?PriceMatrix
     {
@@ -819,6 +821,31 @@ class Element extends AptoEntity
 
         // return new element
         return $element;
+    }
+
+    /**
+     * @param Collection $entityMapping
+     * @return void
+     */
+    public function afterConditionSetsCopied(Collection &$entityMapping): void
+    {
+        /** @var AptoCustomProperty $customProperty */
+        foreach ($this->customProperties as $customProperty) {
+            if ($customProperty->getProductConditionId() === null) {
+                continue;
+            }
+
+            $customProperty->setProductConditionId($entityMapping->get($customProperty->getProductConditionId()->getId())->getId());
+        }
+
+        /** @var AptoPriceFormula $priceFormula */
+        foreach ($this->aptoPriceFormulas as $priceFormula) {
+            if ($priceFormula->getProductConditionId() === null) {
+                continue;
+            }
+
+            $priceFormula->setProductConditionId($entityMapping->get($priceFormula->getProductConditionId()->getId())->getId());
+        }
     }
 
     /**

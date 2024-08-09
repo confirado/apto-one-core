@@ -124,4 +124,14 @@ class AptoPriceFormula extends AptoEntity
     {
         return $this->productConditionId;
     }
+
+    /**
+     * @param AptoUuid|null $productConditionId
+     * @return AptoPriceFormula
+     */
+    public function setProductConditionId(?AptoUuid $productConditionId): AptoPriceFormula
+    {
+        $this->productConditionId = $productConditionId;
+        return $this;
+    }
 }
