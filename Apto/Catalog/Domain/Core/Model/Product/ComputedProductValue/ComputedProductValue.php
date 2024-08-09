@@ -375,15 +375,19 @@ class ComputedProductValue extends AptoEntity
             }
 
             // if someone deletes a element but not the alias reference, a copied element is not available and the alias can not be copied
-            if (null === $entityMapping->get($alias->getElementId()) && $alias->isCustomProperty() === false) {
+            if (null !== $alias->getElementId() && null === $entityMapping->get($alias->getElementId())) {
                 continue;
             }
+
+            // element id can be null if alias is a custom property alias
+            $elementId = $alias->getElementId();
+            $newElementId = $elementId === null ? null : $entityMapping->get($alias->getElementId())->getId()->getId();
 
             // add copied alias
             $newAlias = new Alias(
                 new AptoUuid(),
                 $entityMapping->get($alias->getSectionId())->getId()->getId(),
-                $entityMapping->get($alias->getElementId())?->getId()->getId(),
+                $newElementId,
                 $computedProductValue,
                 $alias->getName(),
                 $alias->getProperty(),
