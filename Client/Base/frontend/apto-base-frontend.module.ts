@@ -48,6 +48,7 @@ import { SliderComponent } from '@apto-base-frontend/components/slider/slider.co
 import { ForgotPasswordComponent } from './components/frontend-users-login/forgot-password/forgot-password.component';
 import { AuthMessageBusService } from '@apto-base-frontend/services/auth-message-bus.service';
 import { AptoBaseFrontendCustomModule } from '@apto-base-frontend-custom-module';
+import { FrontendShopLoginComponent } from '@apto-base-frontend/components/frontend-shop-login/frontend-shop-login.component';
 
 RouterRegistry.registerRoutes(Routes);
 
@@ -67,6 +68,7 @@ RouterRegistry.registerRoutes(Routes);
     LoginCloseButtonComponent,
     SliderComponent,
     ForgotPasswordComponent,
+    FrontendShopLoginComponent,
   ],
 	exports: [
 		FrontendComponent,
@@ -83,6 +85,7 @@ RouterRegistry.registerRoutes(Routes);
     SliderComponent,
     ForgotPasswordComponent,
     AptoBaseFrontendCustomModule,
+    FrontendShopLoginComponent,
   ],
   imports: [
     CommonModule,

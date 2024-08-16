@@ -42,6 +42,9 @@ export class FrontendComponent implements OnInit, AfterViewInit {
 
     this.store.select(selectConnector).subscribe((next) => {
       this.connector = next;
+      if (this.connector.configured) {
+        this.isLoggedIn = this.connector.loggedIn;
+      }
     });
 
     this.store.select(selectIsLoggedIn).subscribe((next) => {
@@ -84,11 +87,11 @@ export class FrontendComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    if (this.connector.configured || this.loginActive === false) {
+    if ((this.connector.configured && this.loginRequired === false) || (!this.connector.configured && this.loginActive === false)) {
       return true;
     }
 
-    if (this.loginRequired === true && this.isLoggedIn === false) {
+    if ((this.loginRequired === true && this.isLoggedIn === false) || (this.connector.configured && this.isLoggedIn === false)) {
       return false;
     }
 

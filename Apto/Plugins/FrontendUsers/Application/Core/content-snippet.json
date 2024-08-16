@@ -43,6 +43,9 @@
       "resetPasswordTitle": {
         "de_DE": "Geben Sie bitte Ihre hinterlegte E-Mail-Adresse an, um das Passwort für Ihren Login zurückzusetzen:"
       },
+      "register": {
+        "de_DE": "Registrieren"
+      },
       "email": {
         "de_DE": "E-Mail"
       },

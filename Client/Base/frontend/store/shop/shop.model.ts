@@ -63,6 +63,7 @@ export interface ConnectorUrl {
   cart: string;
   checkout: string;
   home: string;
+  register?: string;
 }
 
 export interface Connector {
@@ -88,5 +89,6 @@ export interface SelectConnector {
 	locale: string;
 	customerGroupExternalId: string | null;
   configured: boolean;
-  user: ConnectorUser | null
+  user: ConnectorUser | null,
+  loggedIn: boolean;
 }

@@ -3,6 +3,7 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { Store } from '@ngrx/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   selectIsLoggedIn,
   selectLoginError,
@@ -13,6 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 
+@UntilDestroy()
 @Component({
 	selector: 'apto-frontend-users-login',
 	templateUrl: './frontend-users-login.component.html',
@@ -30,19 +32,19 @@ export class FrontendUsersLoginComponent {
   private locale: string = environment.defaultLocale;
 
   constructor(private store: Store, private dialogRef: MatDialogRef<FrontendUsersLoginComponent>) {
-    this.store.select(selectLocale).subscribe((locale: string) => {
+    this.store.select(selectLocale).pipe(untilDestroyed(this)).subscribe((locale: string) => {
       if (locale !== null) {
         this.locale = locale;
       }
     });
 
-    this.store.select(selectIsLoggedIn).subscribe((isLogged: boolean) => {
+    this.store.select(selectIsLoggedIn).pipe(untilDestroyed(this)).subscribe((isLogged: boolean) => {
       if (isLogged) {
         this.dialogRef.close();
       }
     });
 
-    this.store.select(selectContentSnippet('plugins.frontendUsers.loginActive')).subscribe((snippet: ContentSnippet) => {
+    this.store.select(selectContentSnippet('plugins.frontendUsers.loginActive')).pipe(untilDestroyed(this)).subscribe((snippet: ContentSnippet) => {
       if (!snippet) {
         this.loginActive = false;
       } else {

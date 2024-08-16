@@ -1,0 +1,54 @@
+@import "globals";
+@import "dialogs";
+
+.save-dialog {
+    @include dialog-wrapper();
+    @include border-color();
+
+    h1.mat-dialog-title {
+        @include mat-dialog-title();
+    }
+
+    mat-dialog-content {
+        @include mat-dialog-content();
+        gap: var(--element-gap);
+
+        .forgot-password {
+            text-align: right;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    }
+
+    mat-dialog-actions {
+        @include mat-dialog-actions();
+
+        button {
+            @include button();
+        }
+    }
+}
+
+.error-message {
+    color: red;
+}
+
+@media only screen and (min-width: $mobile-max-width) {
+    .save-dialog {
+        @include dialog-wrapper('tablet');
+
+        .mat-dialog-title {}
+
+        mat-dialog-content {
+            @include mat-dialog-content('tablet');
+        }
+
+        mat-dialog-actions {
+            @include mat-dialog-actions('tablet');
+
+            button {
+                @include button('tablet');
+            }
+        }
+    }
+}
