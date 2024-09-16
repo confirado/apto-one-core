@@ -33,6 +33,11 @@
     color: red;
 }
 
+.account-links {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media only screen and (min-width: $mobile-max-width) {
     .save-dialog {
         @include dialog-wrapper('tablet');

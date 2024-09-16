@@ -37,6 +37,9 @@
       "forgotPassword": {
         "de_DE": "Passwort vergessen?"
       },
+      "forgotPasswordLink": {
+        "de_DE": "http://grobi.projektversion.de/shopware65/public/account/recover"
+      },
       "resetPassword": {
         "de_DE": "Passwort zurücksetzen"
       },
