@@ -467,20 +467,17 @@ class PartCommandHandler extends AbstractCommandHandler
         if (null === $part) {
             return;
         }
-        $ruleUsage = $part->getRuleUsage(new AptoUuid($command->getUsageId()));
-        $condition = $ruleUsage->getCondition(new AptoUuid($command->getConditionId()));
-        $oldProductId = $condition->getProductId()->getId();
-
-        $part
-            ->removeRuleUsageCondition(
-                new AptoUuid($command->getUsageId()),
-                new AptoUuid($command->getConditionId())
-            );
 
         $product = $this->productRepository->findById($command->getProductId());
         if (null === $product) {
             return;
         }
+
+        $part->removeRuleUsageCondition(
+            new AptoUuid($command->getUsageId()),
+            new AptoUuid($command->getConditionId())
+        );
+
         $part->addRuleUsageCondition(
             new AptoUuid($command->getUsageId()),
             $product,
@@ -493,10 +490,7 @@ class PartCommandHandler extends AbstractCommandHandler
             $command->getComputedValueId()
         );
 
-        if ($command->getProductId() !== $oldProductId) {
-            $part->removePartProductAssociation(new AptoUuid($oldProductId))->addPartProductAssociation($product);
-        }
-
+        $part->addPartProductAssociation($product);
         $this->partRepository->update($part);
         $part->publishEvents();
     }

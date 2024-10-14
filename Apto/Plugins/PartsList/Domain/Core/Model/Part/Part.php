@@ -318,7 +318,7 @@ class Part extends AptoAggregate
     {
         $assoc = $this->productAlreadyAssociated($productId);
         if (!$assoc) {
-            throw new Exception('Association to remove does not exist');
+            return $this;
         }
         /** @var $assoc PartProductAssociation */
         if ($assoc->removeAssoc()->getCount() === 0) {
