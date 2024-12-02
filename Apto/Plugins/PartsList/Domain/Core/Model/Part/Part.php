@@ -3,6 +3,9 @@
 namespace Apto\Plugins\PartsList\Domain\Core\Model\Part;
 
 use Apto\Base\Domain\Core\Model\AptoAggregate;
+use Apto\Base\Domain\Core\Model\AptoCustomProperties;
+use Apto\Base\Domain\Core\Model\AptoCustomProperty;
+use Apto\Base\Domain\Core\Model\AptoCustomPropertyException;
 use Apto\Base\Domain\Core\Model\AptoPrice\AptoPrices;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
@@ -29,6 +32,7 @@ use InvalidArgumentException;
 
 class Part extends AptoAggregate
 {
+    use AptoCustomProperties;
     use AptoPrices;
     /**
      * @var bool
@@ -96,6 +100,11 @@ class Part extends AptoAggregate
     protected ?Category $category;
 
     /**
+     * @var Collection
+     */
+    protected $customProperties;
+
+    /**
      * Part constructor.
      * @param AptoUuid $id
      * @param bool $active
@@ -120,6 +129,7 @@ class Part extends AptoAggregate
         $this->rules = new ArrayCollection();
         $this->associatedProducts = new ArrayCollection();
         $this->category = null;
+        $this->customProperties = new ArrayCollection();
     }
 
     /**
@@ -684,4 +694,24 @@ class Part extends AptoAggregate
     {
         return $this->category;
     }
+
+
+    /**
+     * @param $customProperties
+     * @return $this
+     */
+    public function setCustomProperties($customProperties): Part
+    {
+        $this->customProperties = $customProperties;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getCustomProperties(): Collection
+    {
+        return $this->customProperties;
+    }
+
 }

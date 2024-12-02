@@ -207,6 +207,17 @@ class PartQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindCustomProperties $query
+     * @return array
+     */
+    public function handleFindCustomProperties(FindCustomProperties $query): array
+    {
+        return $this->partFinder->findCustomProperties(
+            $query->getId()
+        );
+    }
+
+    /**
      * @param FindPartsListCsv $query
      * @return string
      * @throws FileNotCreatableException
@@ -331,6 +342,12 @@ class PartQueryHandler implements QueryHandlerInterface
 
         yield FindRuleUsages::class => [
             'method' => 'handleFindRuleUsages',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindCustomProperties::class => [
+            'method' => 'handleFindCustomProperties',
             'aptoMessagePrefix' => 'AptoPartsList',
             'bus' => 'query_bus'
         ];

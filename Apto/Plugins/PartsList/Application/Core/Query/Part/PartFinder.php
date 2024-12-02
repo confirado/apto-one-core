@@ -81,5 +81,11 @@ interface PartFinder
      * @param string $id
      * @return array|null
      */
+    public function findCustomProperties(string $id): ?array;
+
+    /**
+     * @param string $id
+     * @return array|null
+     */
     public function findPrices(string $id): array;
 }
