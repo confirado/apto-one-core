@@ -10,6 +10,7 @@ import MediaController from './pages/media/media.controller';
 import CustomerController from './pages/customer/customer.controller';
 import CustomerGroupController from './pages/customer-group/customer-group.controller';
 import ContentSnippetController from './pages/content-snippet/content-snippet.controller';
+import SettingsController from './pages/settings/settings.controller';
 
 const AptoBackendPages = [
     AptoLoginController,
@@ -23,7 +24,8 @@ const AptoBackendPages = [
     MediaController,
     CustomerController,
     CustomerGroupController,
-    ContentSnippetController
+    ContentSnippetController,
+    SettingsController
 ];
 
 export default AptoBackendPages;
