@@ -22,6 +22,10 @@
     {
       "alias": "@apto-catalog-frontend-sbs-step",
       "path": "components/step-by-step/sbs-step/sbs-step.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-product-list",
+      "path": "components/product-list/product-list.component.ts"
     }
   ]
 }

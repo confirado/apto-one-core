@@ -40,7 +40,7 @@ import { OPFullScreenComponent } from './components/one-page/o-p-full-screen/o-p
 import { OPStepComponent } from './components/one-page/o-p-step/o-p-step.component';
 import { OPStepsComponent } from './components/one-page/o-p-steps/o-p-steps.component';
 import { OnePageComponent } from './components/one-page/one-page.component';
-import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductListComponent } from '@apto-catalog-frontend-product-list';
 import { QuantityInputComponent } from './components/quantity-input/quantity-input.component';
 import { QuantityInputEditableComponent} from './components/common/quantity-input-editable/quantity-input-editable.component';
 import { SaveDialogComponent } from './components/common/dialogs/save-dialog/save-dialog.component';
