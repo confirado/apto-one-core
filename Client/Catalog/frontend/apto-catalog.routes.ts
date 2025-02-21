@@ -1,6 +1,6 @@
 import { RegisteredRoute } from '@apto-base-core/router/router-registry';
 import { ConfigurationComponent } from '@apto-catalog-frontend/components/configuration/configuration.component';
-import { ProductListComponent } from '@apto-catalog-frontend/components/product-list/product-list.component';
+import { ProductListComponent } from '@apto-catalog-frontend-product-list';
 import { UpdatePasswordComponent } from '@apto-catalog-frontend/components/update-password/update-password.component';
 import { SummaryWrapperComponent } from './components/summary-wrapper/summary-wrapper.component';
 

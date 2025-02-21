@@ -39,8 +39,8 @@ import { OPElementDialogComponent } from './components/one-page/o-p-element-dial
 import { OPFullScreenComponent } from './components/one-page/o-p-full-screen/o-p-full-screen.component';
 import { OPStepComponent } from './components/one-page/o-p-step/o-p-step.component';
 import { OPStepsComponent } from './components/one-page/o-p-steps/o-p-steps.component';
-import { OnePageComponent } from './components/one-page/one-page.component';
-import { ProductListComponent } from './components/product-list/product-list.component';
+import { OnePageComponent } from '@apto-catalog-frontend-one-page';
+import { ProductListComponent } from '@apto-catalog-frontend-product-list';
 import { QuantityInputComponent } from './components/quantity-input/quantity-input.component';
 import { QuantityInputEditableComponent} from './components/common/quantity-input-editable/quantity-input-editable.component';
 import { SaveDialogComponent } from './components/common/dialogs/save-dialog/save-dialog.component';
@@ -137,35 +137,35 @@ RouterRegistry.registerRoutes(Routes);
     ElementAttachmentComponent,
     OPFullScreenComponent
   ],
-	imports: [
-		RouterModule,
-		CommonModule,
-		HttpClientModule,
-		StoreModule.forFeature(featureKey, reducers),
-		AptoBaseCoreModule,
-		AptoBaseFrontendModule,
-		EffectsModule.forFeature([ProductEffects, ConfigurationEffects]),
-		MatStepperModule,
-		MatFormFieldModule,
-		FormsModule,
-		ReactiveFormsModule,
-		MatIconModule,
-		MatCardModule,
-		MatButtonModule,
-		MatProgressSpinnerModule,
-		MatDialogModule,
-		MatInputModule,
-		MatExpansionModule,
-		BrowserAnimationsModule,
-		MatSidenavModule,
-		MatSelectModule,
-		MatSnackBarModule,
-		MatDividerModule,
-		OverlayModule,
-		MatRippleModule,
-		MatCheckboxModule,
+  imports: [
+    RouterModule,
+    CommonModule,
+    HttpClientModule,
+    StoreModule.forFeature(featureKey, reducers),
+    AptoBaseCoreModule,
+    AptoBaseFrontendModule,
+    EffectsModule.forFeature([ProductEffects, ConfigurationEffects]),
+    MatStepperModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatCardModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatInputModule,
+    MatExpansionModule,
+    BrowserAnimationsModule,
+    MatSidenavModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    OverlayModule,
+    MatRippleModule,
+    MatCheckboxModule,
     AptoCatalogFrontendCustomModule,
-	],
+  ],
 	providers: [
     ProductRepository,
     ConfigurationRepository,
