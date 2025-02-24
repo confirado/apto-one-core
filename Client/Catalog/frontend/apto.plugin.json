@@ -30,6 +30,18 @@
     {
       "alias": "@apto-catalog-frontend-product-list",
       "path": "components/product-list/product-list.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-quantity-input-editable",
+      "path": "components/common/quantity-input-editable/quantity-input-editable.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sidebar-summary",
+      "path": "components/shared/sidebar-summary/sidebar-summary.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sidebar-summary-price",
+      "path": "components/shared/sidebar-summary-price/sidebar-summary-price.component.ts"
     }
   ]
 }
