@@ -41,6 +41,7 @@ export interface Section {
 	isHidden: boolean;
 	isMandatory: boolean;
 	position: number;
+  customProperties: CustomProperty[];
   previewImage: string | null;
   isZoomable: boolean;
   repetition?: number;

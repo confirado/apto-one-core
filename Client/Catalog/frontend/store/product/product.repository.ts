@@ -111,6 +111,7 @@ export class ProductRepository {
 			isHidden: section.isHidden,
 			isMandatory: section.isMandatory,
 			position: section.position,
+      customProperties: section.customProperties,
 			previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
 			isZoomable: section.isZoomable,
 			repeatableType: section.repeatableType,
