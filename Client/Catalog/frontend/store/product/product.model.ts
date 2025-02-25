@@ -190,6 +190,7 @@ export interface Element<DefinitionProperties = unknown> {
   previewImage: string | null;
   isMandatory: boolean;
   position: number;
+  customProperties: CustomProperty[];
   attachments: Attachments[];
   zoomFunction: ElementZoomFunctionEnum;
   sectionRepetition?: number;

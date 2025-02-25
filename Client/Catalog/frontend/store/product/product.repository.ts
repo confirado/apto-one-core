@@ -138,6 +138,7 @@ export class ProductRepository {
 					previewImage: previewImage ? this.mediaUrl + previewImage : null,
 					isMandatory: element.isMandatory,
 					position: element.position,
+          customProperties: element.customProperties,
           attachments: element.attachments,
 				  zoomFunction: element.zoomFunction,
 				  sectionRepetition: 0,
