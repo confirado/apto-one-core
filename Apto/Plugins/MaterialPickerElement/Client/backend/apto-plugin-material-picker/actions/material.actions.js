@@ -115,6 +115,7 @@ const MaterialActions = function (MessageBusFactory, PageHeaderActions) {
             commandArguments.push(material.active);
             commandArguments.push(material.isNotAvailable);
             commandArguments.push(material.position);
+            commandArguments.push(material.conditionsOperator);
 
             if(typeof material.id !== "undefined") {
                 commandArguments.unshift(material.id);

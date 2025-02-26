@@ -10,23 +10,23 @@ class UpdateMaterial extends AbstractAddMaterial
     private $id;
 
     /**
-     * UpdateMaterial constructor.
      * @param string $id
-     * @param string|null $identifier
+     * @param $identifier
      * @param array $name
      * @param array $description
      * @param int $clicks
-     * @param string|null $previewImage
-     * @param int|null $reflection
-     * @param int|null $transmission
-     * @param int|null $absorption
+     * @param $previewImage
+     * @param $reflection
+     * @param $transmission
+     * @param $absorption
      * @param bool $active
      * @param bool $isNotAvailable
      * @param int $position
+     * @param int $conditionsOperator
      */
-    public function __construct(string $id, $identifier, array $name, array $description, int $clicks, $previewImage, $reflection, $transmission, $absorption, bool $active, bool $isNotAvailable, int $position)
+    public function __construct(string $id, $identifier, array $name, array $description, int $clicks, $previewImage, $reflection, $transmission, $absorption, bool $active, bool $isNotAvailable, int $position, int $conditionsOperator)
     {
-        parent::__construct($identifier, $name, $description, $clicks, $previewImage, $reflection, $transmission, $absorption, $active, $isNotAvailable, $position);
+        parent::__construct($identifier, $name, $description, $clicks, $previewImage, $reflection, $transmission, $absorption, $active, $isNotAvailable, $position, $conditionsOperator);
         $this->id = $id;
     }
 
