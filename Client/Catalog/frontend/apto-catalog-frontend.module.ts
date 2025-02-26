@@ -48,7 +48,7 @@ import { ShareDialogComponent } from './components/common/dialogs/share-dialog/s
 import { SidebarSummaryButtonComponent } from './components/shared/sidebar-summary-button/sidebar-summary-button.component';
 import { SidebarSummaryPriceComponent } from '@apto-catalog-frontend-sidebar-summary-price';
 import { SidebarSummaryProgressComponent } from './components/shared/sidebar-summary-progress/sidebar-summary-progress.component';
-import { SidebarSummaryRenderImageComponent } from './components/shared/sidebar-summary-render-image/sidebar-summary-render-image.component';
+import { SidebarSummaryRenderImageComponent } from '@apto-catalog-frontend-sidebar-summary-render-image';
 import { SidebarSummaryComponent } from '@apto-catalog-frontend-sidebar-summary';
 import { StepByStepComponent } from './components/step-by-step/step-by-step.component';
 import { SummaryWrapperComponent } from './components/summary-wrapper/summary-wrapper.component';

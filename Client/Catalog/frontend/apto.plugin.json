@@ -42,6 +42,10 @@
     {
       "alias": "@apto-catalog-frontend-sidebar-summary-price",
       "path": "components/shared/sidebar-summary-price/sidebar-summary-price.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sidebar-summary-render-image",
+      "path": "components/shared/sidebar-summary-render-image/sidebar-summary-render-image.component.ts"
     }
   ]
 }
