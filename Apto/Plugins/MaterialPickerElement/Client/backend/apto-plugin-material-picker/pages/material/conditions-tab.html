@@ -1,5 +1,18 @@
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
+        <label>Verknüpfung Bedingungen:</label>
+        <md-select multiple="false" ng-model="material.conditionsOperator">
+            <md-option ng-value="0">
+                UND
+            </md-option>
+            <md-option ng-value="1">
+                ODER
+            </md-option>
+        </md-select>
+    </md-input-container>
+</div>
+<div layout="row" layout-align="start" flex>
+    <md-input-container flex>
         <label>Produkt:</label>
         <md-select
             ng-model="material.selectedProduct"
@@ -17,7 +30,6 @@
         </md-select>
     </md-input-container>
     <div flex="5"></div>
-
     <md-input-container data-cy="material-insert-condition-button">
         <md-button ng-disabled="!material.selectedProduct || !material.selectedCondition" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="onAddCondition()">Hinzufügen</md-button>
     </md-input-container>

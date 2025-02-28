@@ -8,6 +8,8 @@ use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\Color;
 use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\Pool;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\Property;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,6 +18,11 @@ use Doctrine\Common\Collections\Collection;
 class Material extends AptoAggregate
 {
     use AptoPrices;
+
+    protected static $validOperators = [
+        ConditionSet::OPERATOR_AND,
+        ConditionSet::OPERATOR_OR
+    ];
 
     /**
      * @phpstan-ignore-next-line
@@ -104,6 +111,11 @@ class Material extends AptoAggregate
     protected $conditionSets;
 
     /**
+     * @var int
+     */
+    private $conditionsOperator;
+
+    /**
      * Material constructor.
      * @param AptoUuid $id
      * @param AptoTranslatedValue $name
@@ -130,6 +142,7 @@ class Material extends AptoAggregate
         $this->absorption = null;
         $this->position = 0;
         $this->conditionSets = [];
+        $this->conditionsOperator = ConditionSet::OPERATOR_AND;
 
         $this->publish(
             new MaterialAdded(
@@ -173,6 +186,25 @@ class Material extends AptoAggregate
             unset($this->conditionSets[$key]);
         }
 
+        return $this;
+    }
+
+    public function getConditionsOperator(): int
+    {
+        return $this->conditionsOperator;
+    }
+
+    /**
+     * @param int $operator
+     * @return $this
+     * @throws CriterionInvalidOperatorException
+     */
+    public function setConditionsOperator(int $operator): Material
+    {
+        if (!in_array($operator, self::$validOperators)) {
+            throw new CriterionInvalidOperatorException('The operator \'' . $operator . '\' is invalid.');
+        }
+        $this->conditionsOperator = $operator;
         return $this;
     }
 

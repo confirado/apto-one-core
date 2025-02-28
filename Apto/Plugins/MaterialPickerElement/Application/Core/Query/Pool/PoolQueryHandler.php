@@ -2,6 +2,8 @@
 
 namespace Apto\Plugins\MaterialPickerElement\Application\Core\Query\Pool;
 
+use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Exception\LinkOperatorInvalidValueException;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\ConditionSet;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Cache\Exception\CacheException;
 use Apto\Base\Application\Core\QueryHandlerInterface;
@@ -145,24 +147,12 @@ class PoolQueryHandler implements QueryHandlerInterface
 
         foreach ($items['data'] as $item) {
 
-            if ($item['material']['conditionSets'] && !empty($item['material']['conditionSets'])) {
+            if (array_key_exists('conditionSets', $item['material']) && count($item['material']['conditionSets']) > 0) {
 
                 $productConditionsResult = $this->productConditionSetFinder->findByIdsForProduct($query->getProductId(), $item['material']['conditionSets']);
 
-                $counter = 0;
-                foreach ($productConditionsResult['data'] as $key => $productCondition) {
-
-                    $criterion = new Condition(
-                        new LinkOperator($productCondition['conditionsOperator']),
-                        RuleFactory::criteriaFromArray($productCondition['conditions'])
-                    );
-
-                    if ($criterion->isFulfilled($state, new RulePayload($computedValuesIndexedById))) {
-                        $counter++;
-                    }
-                }
-
-                if ($counter >= count($productConditionsResult['data'])) {
+                if ($this->conditionSetsFulfilled($productConditionsResult['data'],
+                    $item['material']['conditionsOperator'], $state, $computedValuesIndexedById)) {
                     $itemsMatchingCondition[] = $item;
                 }
 
@@ -174,6 +164,60 @@ class PoolQueryHandler implements QueryHandlerInterface
         AptoCacheService::setItem($poolCacheKey, $itemsMatchingCondition);
 
         return ['data' => $itemsMatchingCondition];
+    }
+
+    /**
+     * @param array $conditionSets
+     * @param int $operator
+     * @param State $state
+     * @param array $computedValuesIndexedById
+     * @return bool
+     * @throws InvalidUuidException
+     */
+    private function conditionSetsFulfilled(array $conditionSets, int $operator, State $state, array $computedValuesIndexedById): bool
+    {
+        switch ($operator) {
+
+            // all conditions must be fulfilled
+            case ConditionSet::OPERATOR_AND:
+            {
+                foreach ($conditionSets as $key => $productCondition) {
+                    $criteria = new Condition(
+                        new LinkOperator($productCondition['conditionsOperator']),
+                        RuleFactory::criteriaFromArray($productCondition['conditions'])
+                    );
+
+                    if (!$criteria->isFulfilled($state, new RulePayload($computedValuesIndexedById))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // any condition must be fulfilled
+            case ConditionSet::OPERATOR_OR:
+            {
+                foreach ($conditionSets as $key => $productCondition) {
+                    $criteria = new Condition(
+                        new LinkOperator($productCondition['conditionsOperator']),
+                        RuleFactory::criteriaFromArray($productCondition['conditions'])
+                    );
+
+                    if ($criteria->isFulfilled($state, new RulePayload($computedValuesIndexedById))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            // something went wrong, operator should be valid at this point
+            default:
+            {
+                throw new LinkOperatorInvalidValueException(sprintf(
+                    'The given value \'%s\' is not a valid LinkOperator.',
+                    $operator
+                ));
+            }
+        }
     }
 
     /**

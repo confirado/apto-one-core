@@ -472,7 +472,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
         // set sender mail
         $mailFrom = [
             'email' => $this->config['customer_mail']['mail_from'],
-            'name' => $this->config['customer_mail']['mail_from']
+            'name' => $this->config['customer_mail']['name_from']
         ];
 
         // get Template File

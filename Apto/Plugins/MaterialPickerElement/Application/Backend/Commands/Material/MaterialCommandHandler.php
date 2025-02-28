@@ -12,6 +12,7 @@ use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Base\Domain\Core\Model\MediaFile\MediaFile;
 use Apto\Base\Domain\Core\Model\MediaFile\MediaFileRepository;
+use Apto\Catalog\Domain\Core\Model\Product\Condition\CriterionInvalidOperatorException;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\Material;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\MaterialRemoved;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Material\MaterialRepository;
@@ -71,6 +72,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
     /**
      * @param AddMaterial $command
      * @return void
+     * @throws CriterionInvalidOperatorException
      * @throws InvalidUuidException
      */
     public function handleAddMaterial(AddMaterial $command)
@@ -89,7 +91,8 @@ class MaterialCommandHandler extends AbstractCommandHandler
             ->setReflection($command->getReflection())
             ->setTransmission($command->getTransmission())
             ->setAbsorption($command->getAbsorption())
-            ->setPosition($command->getPosition());
+            ->setPosition($command->getPosition())
+            ->setConditionsOperator($command->getConditionsOperator());
 
         if ($command->getPreviewImage()) {
             $mediaFile = $this->getMediaFile($command->getPreviewImage());
@@ -108,6 +111,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
      * @param UpdateMaterial $command
      * @return void
      * @throws InvalidUuidException
+     * @throws CriterionInvalidOperatorException
      */
     public function handleUpdateMaterial(UpdateMaterial $command)
     {
@@ -125,7 +129,8 @@ class MaterialCommandHandler extends AbstractCommandHandler
                 ->setReflection($command->getReflection())
                 ->setTransmission($command->getTransmission())
                 ->setAbsorption($command->getAbsorption())
-                ->setPosition($command->getPosition());
+                ->setPosition($command->getPosition())
+                ->setConditionsOperator($command->getConditionsOperator());
 
             if ($command->getPreviewImage()) {
                 $mediaFile = $this->getMediaFile($command->getPreviewImage());
