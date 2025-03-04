@@ -13,19 +13,24 @@ import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import {
   MisterpenPrintingTechnologyComponent
 } from '@apto-one-template-frontend/components/misterpen-printing-technology/misterpen-printing-technology.component';
+import {
+  MisterpenLogoTextComponent
+} from '@apto-one-template-frontend/components/misterpen-logo-text/misterpen-logo-text.component';
 
 @NgModule({
   declarations: [
     MisterpenHeaderComponent,
-    MisterpenToolbarBottomComponent,
     MisterpenColorElementsComponent,
-    MisterpenPrintingTechnologyComponent
+    MisterpenLogoTextComponent,
+    MisterpenPrintingTechnologyComponent,
+    MisterpenToolbarBottomComponent
   ],
   exports: [
     MisterpenHeaderComponent,
-    MisterpenToolbarBottomComponent,
     MisterpenColorElementsComponent,
-    MisterpenPrintingTechnologyComponent
+    MisterpenLogoTextComponent,
+    MisterpenPrintingTechnologyComponent,
+    MisterpenToolbarBottomComponent,
   ],
   imports: [
     AptoBaseCoreModule,
