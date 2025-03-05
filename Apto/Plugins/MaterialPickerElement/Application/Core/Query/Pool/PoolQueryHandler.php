@@ -147,8 +147,7 @@ class PoolQueryHandler implements QueryHandlerInterface
 
         foreach ($items['data'] as $item) {
 
-            if (array_key_exists('conditionSets', $item['material']) && count($item['material']['conditionSets']) > 0) {
-
+            if (array_key_exists('conditionSets', $item['material']) && !empty($item['material']['conditionSets'])) {
                 $productConditionsResult = $this->productConditionSetFinder->findByIdsForProduct($query->getProductId(), $item['material']['conditionSets']);
 
                 if ($this->conditionSetsFulfilled($productConditionsResult['data'],
