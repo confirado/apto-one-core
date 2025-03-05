@@ -9,7 +9,7 @@ import {
   MisterpenColorElementsComponent
 } from '@apto-one-template-frontend/components/misterpen-color-elements/misterpen-color-elements.component';
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
-import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
 import {
   MisterpenPrintingTechnologyComponent
 } from '@apto-one-template-frontend/components/misterpen-printing-technology/misterpen-printing-technology.component';
@@ -44,6 +44,7 @@ import { MisterpenTextComponent } from '@apto-one-template-frontend/components/m
     NgClass,
     NgIf,
     NgForOf,
+    NgStyle,
   ],
 })
 export class AptoBaseFrontendCustomModule { }
