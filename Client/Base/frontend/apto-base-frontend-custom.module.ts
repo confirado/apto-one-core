@@ -16,21 +16,27 @@ import {
 import {
   MisterpenLogoTextComponent
 } from '@apto-one-template-frontend/components/misterpen-logo-text/misterpen-logo-text.component';
+import { MisterpenLogoComponent } from '@apto-one-template-frontend/components/misterpen-logo/misterpen-logo.component';
+import { MisterpenTextComponent } from '@apto-one-template-frontend/components/misterpen-text/misterpen-text.component';
 
 @NgModule({
   declarations: [
     MisterpenHeaderComponent,
     MisterpenColorElementsComponent,
+    MisterpenLogoComponent,
     MisterpenLogoTextComponent,
     MisterpenPrintingTechnologyComponent,
+    MisterpenTextComponent,
     MisterpenToolbarBottomComponent
   ],
   exports: [
     MisterpenHeaderComponent,
     MisterpenColorElementsComponent,
+    MisterpenLogoComponent,
     MisterpenLogoTextComponent,
     MisterpenPrintingTechnologyComponent,
-    MisterpenToolbarBottomComponent,
+    MisterpenTextComponent,
+    MisterpenToolbarBottomComponent
   ],
   imports: [
     AptoBaseCoreModule,
