@@ -18,6 +18,7 @@ import {
 } from '@apto-one-template-frontend/components/misterpen-logo-text/misterpen-logo-text.component';
 import { MisterpenLogoComponent } from '@apto-one-template-frontend/components/misterpen-logo/misterpen-logo.component';
 import { MisterpenTextComponent } from '@apto-one-template-frontend/components/misterpen-text/misterpen-text.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MisterpenTextComponent } from '@apto-one-template-frontend/components/m
     NgIf,
     NgForOf,
     NgStyle,
+    FormsModule,
   ],
 })
 export class AptoBaseFrontendCustomModule { }
