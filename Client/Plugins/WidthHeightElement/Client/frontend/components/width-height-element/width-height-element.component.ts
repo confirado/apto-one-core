@@ -95,7 +95,6 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
-
     this.initIncreaseDecreaseStep();
 
 		// eslint-disable-next-line dot-notation
@@ -106,11 +105,11 @@ export class WidthHeightElementComponent implements OnInit {
 		this.formElement.controls['width'].setValue(
 			this.element?.state.values.width || this.element.element.definition.staticValues.defaultWidth || 0
 		);
-
+    // Always take the first step value to initialize the buttons properly
 		if (this.element.element.definition.properties.height && this.element.element.definition.properties.height[0]) {
 			this.stepHeight = this.element.element.definition.properties.height?.[0]?.step;
 		}
-
+    // Always take the first step value to initialize the buttons properly
 		if (this.element.element.definition.properties.width && this.element.element.definition.properties.width[0]) {
 			this.stepWidth = this.element.element.definition.properties.width?.[0]?.step;
 		}
@@ -219,16 +218,12 @@ export class WidthHeightElementComponent implements OnInit {
     if (this.element.element.definition.staticValues.renderingHeight === 'input') {
       this.formElement.controls['height'].setValidators([
         Validators.required,
-        Validators.min(this.element.element.definition.properties.height?.[0]?.minimum),
-        Validators.max(this.element.element.definition.properties.height?.[0]?.maximum),
       ]);
     }
 
     if (this.element.element.definition.staticValues.renderingWidth === 'input') {
       this.formElement.controls['width'].setValidators([
         Validators.required,
-        Validators.min(this.element.element.definition.properties.width?.[0]?.minimum),
-        Validators.max(this.element.element.definition.properties.width?.[0]?.maximum),
       ]);
     }
   }
