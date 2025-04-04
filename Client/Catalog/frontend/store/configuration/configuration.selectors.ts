@@ -17,6 +17,8 @@ import { getHumanReadableFullState } from '@apto-catalog-frontend/services/store
 
 export const selectConfiguration = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration);
 
+export const selectConfigurationError = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.configurationError);
+
 export const selectHideOnePage = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.hideOnePage);
 
 export const selectConfigurationLoading = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.loading);

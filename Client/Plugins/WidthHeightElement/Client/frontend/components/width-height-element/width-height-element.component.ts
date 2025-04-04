@@ -6,7 +6,7 @@ import {
   getConfigurationStateSuccess,
   updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ConfigurationError, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { HeightWidthProperties, Product, RangeField, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -23,6 +23,7 @@ import { map } from 'rxjs/operators';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @UntilDestroy()
 @Component({
@@ -44,6 +45,8 @@ export class WidthHeightElementComponent implements OnInit {
 	public isDialog = false;
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
+
+  public configurationError: ConfigurationError | null = null;
 
 	public formElement = new UntypedFormGroup({
 		height: new UntypedFormControl(0),
@@ -95,6 +98,11 @@ export class WidthHeightElementComponent implements OnInit {
 		if (!this.element) {
 			return;
 		}
+
+    this.store.select(selectConfigurationError).subscribe((next) => {
+      this.configurationError = next;
+    });
+
     this.initIncreaseDecreaseStep();
 
 		// eslint-disable-next-line dot-notation

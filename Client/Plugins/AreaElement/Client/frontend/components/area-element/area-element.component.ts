@@ -6,7 +6,11 @@ import {
   getConfigurationStateSuccess,
   updateConfigurationState,
 } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  AreaElementDefinitionProperties,
+  ConfigurationError,
+  ProgressElement,
+} from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -23,6 +27,7 @@ import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
+import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @UntilDestroy()
 @Component({
@@ -46,6 +51,8 @@ export class AreaElementComponent implements OnInit {
 	public formElement = new UntypedFormGroup({});
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
+
+  public configurationError: ConfigurationError | null = null;
 
 	public itemFieldList: SelectItem[][] = [];
 
@@ -80,6 +87,10 @@ export class AreaElementComponent implements OnInit {
 			return;
 		}
 
+    this.store.select(selectConfigurationError).subscribe((next) => {
+      this.configurationError = next;
+    });
+
     this.initIncreaseDecreaseStep();
 
 		for (
@@ -93,8 +104,6 @@ export class AreaElementComponent implements OnInit {
       if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'input') {
           validators = [
             Validators.required,
-            Validators.min(this.element.element.definition.properties[`field_${i}`][0].minimum),
-            Validators.max(this.element.element.definition.properties[`field_${i}`][0].maximum),
           ];
       }
 

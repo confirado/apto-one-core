@@ -2,7 +2,7 @@
     <div class="prefix" *ngIf="prefix">{{ prefix }}</div>
     <div class="name" *ngIf="name" [class.integer]="type === 'integer'">{{ name }}</div>
 
-    <div class="container-elem" [style.width]="width">
+    <div class="container-elem" [style.width]="width" [class]="{'input-error': inputError}">
         <input *ngIf="isNumeric()"
            type="number"
            (focus)="onInputFocus($event)"
