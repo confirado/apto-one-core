@@ -14,3 +14,6 @@ require('trumbowyg/dist/plugins/table/ui/trumbowyg.table.css');
 require('./assets/css/main.css');
 require('./assets/css/trumbowyg.css');
 require('./assets/css/tree-control.css');
+
+// apto color picker
+require('./libs/mdColorPicker/mdColorPicker.css');
