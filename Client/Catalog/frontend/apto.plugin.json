@@ -22,6 +22,10 @@
     {
       "alias": "@apto-catalog-frontend-sbs-step",
       "path": "components/step-by-step/sbs-step/sbs-step.component.ts"
+    },
+    {
+      "alias": "@apto-sidebar-summary-price",
+      "path": "components/shared/sidebar-summary-price/sidebar-summary-price.component.ts"
     }
   ]
 }

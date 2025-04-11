@@ -46,7 +46,7 @@ import { QuantityInputEditableComponent} from './components/common/quantity-inpu
 import { SaveDialogComponent } from './components/common/dialogs/save-dialog/save-dialog.component';
 import { ShareDialogComponent } from './components/common/dialogs/share-dialog/share-dialog.component';
 import { SidebarSummaryButtonComponent } from './components/shared/sidebar-summary-button/sidebar-summary-button.component';
-import { SidebarSummaryPriceComponent } from './components/shared/sidebar-summary-price/sidebar-summary-price.component';
+import { SidebarSummaryPriceComponent } from '@apto-sidebar-summary-price';
 import { SidebarSummaryProgressComponent } from './components/shared/sidebar-summary-progress/sidebar-summary-progress.component';
 import { SidebarSummaryRenderImageComponent } from './components/shared/sidebar-summary-render-image/sidebar-summary-render-image.component';
 import { SidebarSummaryComponent } from './components/shared/sidebar-summary/sidebar-summary.component';
