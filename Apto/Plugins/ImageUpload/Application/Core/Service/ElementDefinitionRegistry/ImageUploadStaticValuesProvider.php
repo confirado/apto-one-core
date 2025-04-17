@@ -129,6 +129,8 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
             unset($staticValues['user']);
         }
 
+        print_r($staticValues);
+
         return $staticValues;
     }
 

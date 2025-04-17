@@ -137,6 +137,10 @@ class ConfigurableProductBuilder
                         $definition['component'] = $elementDefinition::getFrontendComponent();
                         $definition['staticValues'] = $this->elementDefinitionRegistry->getStaticValuesProvider(get_class($elementDefinition))->getStaticValues($elementDefinition);
 
+                        if (isset($definition['staticValues']['aptoElementDefinitionId']) && $definition['staticValues']['aptoElementDefinitionId'] === 'apto-element-image-upload') {
+                            dd($element, $section);
+                        }
+
                         $selectableValues = $elementDefinition->getSelectableValues();
                         /** @var ElementValueCollection $selectableValue */
                         foreach ($selectableValues as $selectableProperty => $selectableValue) {
