@@ -63,8 +63,12 @@ export class FrontendUsersLoginComponent {
   }
 
   public openPasswordResetModal(): void {
-    this.dialogRef.close({
-      openForgotModal: true
-    });
+    if (this.dialogRef.close !== undefined) {
+      this.dialogRef.close({
+        openForgotModal: true
+      });
+    } else {
+      this.dialogService.openCustomDialog(ForgotPasswordComponent, DialogSizesEnum.md);
+    }
   }
 }
