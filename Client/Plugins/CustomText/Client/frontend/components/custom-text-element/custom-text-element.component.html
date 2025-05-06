@@ -34,19 +34,24 @@
                         [formControl]="formElement"
                         [type]="'text'"
                         [placeholder]="element.element.definition.staticValues.placeholder | translate"
-                        [hint]="'Text (' +  element.element.definition.properties.text[0].minLength + ' - ' + element.element.definition.properties.text[0].maxLength + ' Zeichen)'"
+                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'text'"
                     ></apto-input-field>
                 </ng-container>
                 <ng-container *ngIf="element.element.definition.staticValues.rendering === 'textarea'">
                     <apto-text-input-field
                         [formControl]="formElement"
                         [placeholder]="element.element.definition.staticValues.placeholder | translate"
-                        [hint]="'Text (' +  element.element.definition.properties.text[0].minLength + ' - ' + element.element.definition.properties.text[0].maxLength + ' Zeichen)'"
+                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'text'"
                     ></apto-text-input-field>
                 </ng-container>
             </div>
             <div class="suffix"></div>
-            <div class="hint"></div>
+            <div class="hint">
+                <div *ngFor="let textValues of element.element.definition.properties.text">
+                    {{'Text (' + textValues.minLength + ' - ' + textValues.maxLength + ' Zeichen)' }}
+                    <br />
+                </div>
+            </div>
         </div>
     </div>
 
