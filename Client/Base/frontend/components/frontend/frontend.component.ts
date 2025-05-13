@@ -87,7 +87,7 @@ export class FrontendComponent implements OnInit, AfterViewInit {
       return false;
     }
 
-    if ((this.connector.configured && this.loginRequired === false) || (!this.connector.configured && this.loginActive === false)) {
+    if ((this.connector.configured && this.loginRequired === false) || (!this.connector.configured && this.loginActive === false) || (window.location.hash.startsWith("#/auth/password/"))) {
       return true;
     }
 
