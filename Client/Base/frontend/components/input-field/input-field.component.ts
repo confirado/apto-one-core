@@ -35,6 +35,7 @@ export class InputFieldComponent implements ControlValueAccessor {
 
   @Input() public fullWidth: boolean = false;
   @Input() public width: string = '';
+  @Input() public inputError: boolean = false;
 
   public formElement = new FormControl();
   public disabled: boolean = false;

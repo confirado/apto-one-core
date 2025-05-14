@@ -45,10 +45,9 @@
                         [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
                         [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
                         [step]="element.element.definition.properties['field_' + i][0].step"
-                        [min]="element.element.definition.properties['field_'+i][0].minimum"
-                        [max]="element.element.definition.properties['field_'+i][0].maximum"
                         [increaseStep]="this.increaseStep"
                         [decreaseStep]="this.decreaseStep"
+                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'field_' + i"
                     ></apto-input-field>
 
                     <apto-select-field
@@ -66,12 +65,18 @@
                 </div>
 
                 <div class="hint" *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
-                    {{element.element.definition.properties['field_'+i][0].minimum + ' - ' + element.element.definition.properties['field_'+i][0].maximum + ' ' + (element.element.definition.staticValues.fields?.[i]?.suffix |translate)}}
+                    <div *ngFor="let fieldValues of element.element.definition.properties['field_'+i]">
+                        {{ fieldValues.minimum + ' - ' + fieldValues.maximum + ' ' + (element.element.definition.staticValues.fields?.[i]?.suffix |translate) }}
+                        <br />
+                    </div>
                 </div>
 
                 <div class="hint" *ngIf="field.key === 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
                     <div *ngIf="field.key === 'sumOfFieldValue'">{{sumOfFieldValues}}</div>
-                    {{element.element.definition.properties['sumOfFieldValue'][0].minimum + ' - ' + element.element.definition.properties['sumOfFieldValue'][0].maximum}}
+                    <div *ngFor="let sumFieldValues of element.element.definition.properties['sumOfFieldValue']">
+                        {{ sumFieldValues.minimum + ' - ' + sumFieldValues.maximum }}
+                        <br />
+                    </div>
                 </div>
 
 <!--                <div class="suffix">-->

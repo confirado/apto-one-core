@@ -106,7 +106,6 @@ export class ConfigurationRepository {
 			elements: [],
       failedRules: result.failedRules || [],
 		};
-
 		const responseState = result.configurationState;
 
     for (const section of responseState.sections) {
