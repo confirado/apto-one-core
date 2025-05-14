@@ -126,6 +126,7 @@ class ProductQueryHandler implements QueryHandlerInterface
         foreach ($list['data'] as $key => &$product) {
             if (!$this->hasProductShop($product, $shop)) {
                 unset($list['data'][$key]);
+                $list['numberOfRecords']--;
                 continue;
             }
 
@@ -137,6 +138,7 @@ class ProductQueryHandler implements QueryHandlerInterface
             }
         }
 
+        $list['data'] = array_values($list['data']);
         AptoCacheService::setItem('ProductList-' . $filterHash, $list);
         return $list;
     }
