@@ -15,9 +15,16 @@ import {
 } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectStateElements } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import {
+  selectConfigurationError,
+  selectStateElements,
+} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ElementState, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import {
+  ConfigurationError,
+  ElementState,
+  ProgressElement,
+} from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Product, FloatInputTypes, CompareValueTypes, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 import { number, Parser, parser } from 'mathjs';
@@ -63,6 +70,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
   public maxValue: number | null;
   public increaseStep: number | undefined;
   public decreaseStep: number | undefined;
+  public configurationError: ConfigurationError | null = null;
 
   public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
   private readonly destroy$ = new Subject<void>();
@@ -77,6 +85,10 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
     if (!this.element) {
       return;
     }
+
+    this.store.select(selectConfigurationError).subscribe((next) => {
+      this.configurationError = next;
+    });
 
     this.initIncreaseDecreaseStep();
 
@@ -96,15 +108,13 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       ).subscribe((stateElements) => {
         this.stateElements = stateElements;
-        this.minValue = this.calculateMinMaxValues().minValue;
-        this.maxValue = this.calculateMinMaxValues().maxValue;
+        this.minValue = this.element.element.definition.properties.value?.[0]?.minimum;
+        this.maxValue = this.element.element.definition.properties.value?.[0]?.maximum;
 
         this.formElementInput.setValidators([
-          Validators.min(this.minValue),
-          Validators.max(this.maxValue)
+          Validators.required,
         ]);
       });
-
     // we dont need form element subscriptions in that case, because save is triggered by save button
     if (this.inputType === FloatInputTypes.INPUT) {
       return;
@@ -301,7 +311,8 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 		if (!this.element) {
 			return;
 		}
-
+    /**
+    //Client side validation is unnecessary
     // do not save the value into the store if it is not in the allowed range
     if (number(value) < this.minValue || number(value) > this.maxValue) {
       combineLatest(
@@ -317,6 +328,7 @@ export class FloatInputElementComponent implements OnInit, OnDestroy {
 
       return;
     }
+     */
 
 		this.store.dispatch(
 			updateConfigurationState({
