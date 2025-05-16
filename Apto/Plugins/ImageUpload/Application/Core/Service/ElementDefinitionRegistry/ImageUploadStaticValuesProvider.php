@@ -53,6 +53,8 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
         $source = $staticValues['canvas']['source'];
         $canvasId = $staticValues['canvas']['canvasId'];
 
+        // if it's a legacy configuration it will be returned here, otherwise it will be
+        // treated and changed to new config afterwards and then returned
         if ($source === 'Element' || null === $canvasId) {
             return $staticValues;
         }
@@ -129,7 +131,52 @@ class ImageUploadStaticValuesProvider implements ElementStaticValuesProvider
             unset($staticValues['user']);
         }
 
-        print_r($staticValues);
+        if (array_key_exists('text', $staticValues)) {
+            $text = $staticValues['text'];
+
+            $text['boxes'] = [[
+                // default values because legacy config doesn't provide all of the needed
+                'name' => 'Textfeld',
+                'identifier' => 'Texteingabe',
+                'default' => '',
+                'colorPicker' => true,
+                'allowMultiple' => false,
+                'left' => 700,
+                'top' => 700,
+                'radius' => 0,
+                'locked' => false,
+                'maxlength' => 80,
+                // mapping of existing values
+                'fontSize' => $text['fontSize'],
+                'textAlign' => $text['textAlign'],
+                'fill' => $text['fill'],
+                'multiline' => $text['multiline'],
+                'perspective' => $staticValues['area'][0]['perspective']
+            ]];
+            unset($text['default']);
+            unset($text['fontSize']);
+            unset($text['textAlign']);
+            unset($text['fill']);
+            unset($text['multiline']);
+            unset($text['fontFamily']);
+
+            $staticValues['text'] = $text;
+        }
+
+        if (array_key_exists('image', $staticValues)) {
+            $image = $staticValues['image'];
+            unset($staticValues['image']);
+            $staticValues['image'][$staticValues['area'][0]['perspective']] = $image;
+        }
+
+        if (!array_key_exists('motive', $staticValues)) {
+            $staticValues['motive'] = [];
+        }
+
+        if (!array_key_exists('area', $staticValues)) {
+            $staticValues['area']['name'] = 'areaName';
+            $staticValues['area']['identifier'] = 'areaId';
+        }
 
         return $staticValues;
     }
