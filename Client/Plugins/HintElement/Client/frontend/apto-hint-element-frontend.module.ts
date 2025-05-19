@@ -17,7 +17,6 @@ import {MatIconModule} from "@angular/material/icon";
     HintElementComponent
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

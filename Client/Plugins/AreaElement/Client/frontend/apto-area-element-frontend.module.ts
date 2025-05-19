@@ -19,7 +19,6 @@ import { AreaElementComponent } from '@element-definition-area-element';
     AreaElementWrapperComponent,
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

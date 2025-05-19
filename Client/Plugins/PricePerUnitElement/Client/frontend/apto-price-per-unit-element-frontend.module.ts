@@ -21,7 +21,6 @@ import { DefaultElementOnePageComponent } from '@element-definition-price-per-un
     DefaultElementStepByStepComponent
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

@@ -11,7 +11,6 @@ import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.m
 @NgModule({
 	declarations: [],
 	exports: [],
-	entryComponents: [],
 	imports: [
 		RouterModule,
 		CommonModule,

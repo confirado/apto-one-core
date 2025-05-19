@@ -22,7 +22,6 @@ import { WidthHeightElementWrapperComponent } from '@element-definition-width-he
     WidthHeightElementWrapperComponent
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,
