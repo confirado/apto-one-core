@@ -6,8 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -19,7 +19,7 @@ import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-f
 import { SummaryComponent } from './components/summary/summary.component';
 import { RequestFormComponent } from '@apto-request-form-frontend-request-form';
 import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 import { AptoRequestFormFrontendCustomModule } from "@apto-request-form-frontend-custom-module";
 
 @NgModule({

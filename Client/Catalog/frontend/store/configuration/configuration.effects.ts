@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';

@@ -9,7 +9,7 @@ import {
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { HeightWidthProperties, Product, RangeField, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Actions, ofType } from '@ngrx/effects';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {

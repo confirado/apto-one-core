@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Store } from '@ngrx/store';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { translate, TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { HumanReadableFullState } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { DialogDataInterface } from '@apto-catalog-frontend/components/common/dialogs/dialog-data-interface';
