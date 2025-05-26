@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyDialogModule as MatDialogModule, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
@@ -19,7 +19,6 @@ import { AreaElementComponent } from '@element-definition-area-element';
     AreaElementWrapperComponent,
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

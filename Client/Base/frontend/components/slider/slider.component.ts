@@ -1,7 +1,6 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
-import { MatSliderChange } from '@angular/material/slider';
 
 /**
  * @link https://material.angular.io/components/slider/api
@@ -66,12 +65,12 @@ export class SliderComponent implements ControlValueAccessor {
 
   public onInputChange(value: number): void {}
 
-  public onSliderMove(value: MatSliderChange): void {
+  public onSliderMove(value: any): void {
     this.visibleValue = value.value;
     this.sliderInputChanged.emit(this.visibleValue);
   }
 
-  public onSliderChange(value: MatSliderChange): void {
+  public onSliderChange(value: any): void {
     this.sliderChanged.emit(value.value);
   }
 

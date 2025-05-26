@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { HeightWidthProperties, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { WidthHeightElementComponent } from '../width-height-element/width-height-element.component';

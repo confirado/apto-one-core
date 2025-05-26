@@ -7,7 +7,7 @@ import { TemplateSlotRegistry } from '@apto-base-core/template-slot/template-slo
 import { SlotOutletComponent } from './slot/slot-outlet.component';
 import { SafeHtmlPipe } from '@apto-base-core/pipes/save-html.pipe';
 import { LoadingIndicatorComponent } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 @NgModule({
   declarations: [

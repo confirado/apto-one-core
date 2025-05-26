@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ShareDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/share-dialog/share-dialog.component';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';

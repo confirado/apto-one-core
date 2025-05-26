@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA} from '@angular/material/legacy-dialog';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { DialogDataInterface } from '@apto-catalog-frontend/components/common/dialogs/dialog-data-interface';
 
