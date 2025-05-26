@@ -19,6 +19,9 @@ import {
 import { MisterpenLogoComponent } from '@apto-one-template-frontend/components/misterpen-logo/misterpen-logo.component';
 import { MisterpenTextComponent } from '@apto-one-template-frontend/components/misterpen-text/misterpen-text.component';
 import { FormsModule } from '@angular/forms';
+import {
+  MisterpenPrintSettingsComponent
+} from '@apto-one-template-frontend/components/misterpen-print-settings/misterpen-print-settings.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     MisterpenLogoComponent,
     MisterpenLogoTextComponent,
     MisterpenPrintingTechnologyComponent,
+    MisterpenPrintSettingsComponent,
     MisterpenTextComponent,
     MisterpenToolbarBottomComponent
   ],
@@ -36,6 +40,7 @@ import { FormsModule } from '@angular/forms';
     MisterpenLogoComponent,
     MisterpenLogoTextComponent,
     MisterpenPrintingTechnologyComponent,
+    MisterpenPrintSettingsComponent,
     MisterpenTextComponent,
     MisterpenToolbarBottomComponent
   ],
