@@ -257,6 +257,11 @@ export interface GetConfigurationResult {
   updates: any
 }
 
+export interface ConfigurationError {
+  errorType: string;
+  errorPayload: unknown;
+}
+
 export interface StatePrice {
 	discount: Discount;
 	own: Own;

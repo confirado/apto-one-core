@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ConfigurationError, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
+import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
 @Component({
 	selector: 'apto-custom-text-element',
@@ -28,10 +29,16 @@ export class CustomTextElementComponent implements OnInit {
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
 
+  public configurationError: ConfigurationError | null = null;
+
 	public constructor(private store: Store) {}
 
 	public ngOnInit(): void {
 		this.formElement.setValue(this.element?.state.values.text);
+
+    this.store.select(selectConfigurationError).subscribe((next) => {
+      this.configurationError = next;
+    });
 	}
 
   protected get hasAttachments(): boolean {

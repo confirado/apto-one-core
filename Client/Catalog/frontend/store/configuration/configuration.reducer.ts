@@ -6,7 +6,7 @@ import {
   getCurrentRenderImageSuccess, getElementComputableValuesSuccess,
   getRenderImagesSuccess, getStatePriceSuccess, hideLoadingFlagAction,
   humanReadableStateLoadSuccess,
-  initConfigurationSuccess,
+  initConfigurationSuccess, onError,
   resetLoadingFlagAction,
   setHideOnePage,
   setNextPerspective,
@@ -23,7 +23,9 @@ import {
   HumanReadableState,
   PartsListPart,
   RenderImage,
-  StatePrice, TempStateItem,
+  StatePrice,
+  TempStateItem,
+  ConfigurationError,
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Action, createReducer, on } from '@ngrx/store';
 
@@ -41,7 +43,8 @@ export interface ConfigurationState {
 	quantity: number;
   hideOnePage: boolean;
   partsList: PartsListPart[];
-  tempState: TempStateItem[]
+  tempState: TempStateItem[];
+  configurationError: ConfigurationError | null;
 }
 
 export const configurationInitialState: ConfigurationState = {
@@ -64,6 +67,7 @@ export const configurationInitialState: ConfigurationState = {
   hideOnePage: false,
   partsList: [],
   tempState: [],
+  configurationError: null,
 };
 
 const _configurationReducer = createReducer(
@@ -128,6 +132,7 @@ const _configurationReducer = createReducer(
       statePrice: action.payload.statePrice,
       loading: false,
       productId: action.payload.productId,
+      configurationError: null,
     }
   }),
   /*
@@ -146,6 +151,7 @@ const _configurationReducer = createReducer(
       currentPerspective: action.payload.currentPerspective,
       statePrice: action.payload.statePrice,
       loading: false,
+      configurationError: null,
     }
   }),
 	on(getCurrentRenderImageSuccess, (state, action) => ({
@@ -332,6 +338,17 @@ const _configurationReducer = createReducer(
     return {
       ...state,
       statePrice: action.payload,
+    }
+  }),
+  on(onError, (state, action) => {
+    const relevantErrors = ['InvalidConfigurationStateChangeException'];
+    let configurationError = null;
+    if (relevantErrors.includes(action.message.errorType)) {
+      configurationError = {errorType: action.message.errorType, errorPayload: action.message.errorPayload};
+    }
+    return {
+      ...state,
+      configurationError: configurationError,
     }
   })
 );

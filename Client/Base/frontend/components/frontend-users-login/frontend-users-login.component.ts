@@ -13,6 +13,9 @@ import { translate } from '@apto-base-core/store/translated-value/translated-val
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
+import { ForgotPasswordComponent } from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
+import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
+import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 
 @UntilDestroy()
 @Component({
@@ -31,7 +34,7 @@ export class FrontendUsersLoginComponent {
 
   private locale: string = environment.defaultLocale;
 
-  constructor(private store: Store, private dialogRef: MatDialogRef<FrontendUsersLoginComponent>) {
+  constructor(private store: Store, private dialogRef: MatDialogRef<FrontendUsersLoginComponent>, private dialogService: DialogService) {
     this.store.select(selectLocale).pipe(untilDestroyed(this)).subscribe((locale: string) => {
       if (locale !== null) {
         this.locale = locale;
@@ -63,8 +66,12 @@ export class FrontendUsersLoginComponent {
   }
 
   public openPasswordResetModal(): void {
-    this.dialogRef.close({
-      openForgotModal: true
-    });
+    if (this.dialogRef.close !== undefined) {
+      this.dialogRef.close({
+        openForgotModal: true
+      });
+    } else {
+      this.dialogService.openCustomDialog(ForgotPasswordComponent, DialogSizesEnum.md);
+    }
   }
 }

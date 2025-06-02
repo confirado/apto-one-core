@@ -54,10 +54,9 @@
                         [type]="'integer'"
                         [name]="element.element.definition.staticValues.prefixHeight | translate"
                         [step]="stepHeight"
-                        [min]="element.element.definition.properties.height?.[0]?.minimum"
-                        [max]="element.element.definition.properties.height?.[0]?.maximum"
                         [increaseStep]="this.increaseStep"
                         [decreaseStep]="this.decreaseStep"
+                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'height'"
                     >
                     </apto-input-field>
 
@@ -84,7 +83,10 @@
                 <div class="suffix">{{element.element.definition.staticValues.suffixHeight | translate}}</div>
 
                 <div class="hint" *ngIf="element.element.definition.staticValues.renderingHeight !== 'select'">
-                    {{element.element.definition.properties.height?.[0]?.minimum + ' - ' + element.element.definition.properties.height?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixHeight | translate)}}
+                    <div *ngFor="let heightValues of element.element.definition.properties.height">
+                        {{ heightValues.minimum + ' - ' + heightValues.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate) }}
+                        <br />
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,6 +111,7 @@
                         [max]="element.element.definition.properties.width?.[0]?.maximum"
                         [increaseStep]="this.increaseStep"
                         [decreaseStep]="this.decreaseStep"
+                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'width'"
                     >
                     </apto-input-field>
 
@@ -135,7 +138,10 @@
                 <div class="suffix">{{element.element.definition.staticValues.suffixWidth | translate}}</div>
 
                 <div class="hint" *ngIf="element.element.definition.staticValues.renderingWidth !== 'select'">
-                    {{element.element.definition.properties.width?.[0]?.minimum  + ' - ' + element.element.definition.properties.width?.[0]?.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate)}}
+                    <div *ngFor="let widthValues of element.element.definition.properties.width">
+                        {{ widthValues.minimum + ' - ' + widthValues.maximum + ' ' + (element.element.definition.staticValues.suffixWidth | translate) }}
+                        <br />
+                    </div>
                 </div>
             </div>
         </div>

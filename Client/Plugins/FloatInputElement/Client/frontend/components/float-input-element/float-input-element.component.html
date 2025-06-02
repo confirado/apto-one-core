@@ -38,12 +38,10 @@
                     [name]="prefix | translate"
                     [suffix]="suffix | translate"
                     [type]="'float'"
-                    [min]="minValue"
-                    [max]="maxValue"
                     [step]="stepValue"
-                    [hint]="minValue + ' ' + (hint | translate) + ' - ' + maxValue + ' ' + (hint | translate)"
                     [increaseStep]="this.increaseStep"
                     [decreaseStep]="this.decreaseStep"
+                    [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'value'"
                 >
                 </apto-input-field>
             </div>
@@ -74,6 +72,7 @@
                     [step]="stepValue"
                     [increaseStep]="this.increaseStep"
                     [decreaseStep]="this.decreaseStep"
+                    [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'value'"
                 >
                 </apto-input-field>
 
@@ -92,7 +91,12 @@
                 </apto-slider>
             </div>
 
-            <div class="hint"></div>
+            <div class="hint" *ngIf="inputType === floatInputTypes.INPUT">
+                <div *ngFor="let inputValues of element.element.definition.properties.value">
+                    {{inputValues.minimum + ' ' + (hint | translate) + ' - ' + inputValues.maximum + ' ' + (hint | translate) }}
+                    <br />
+                </div>
+            </div>
             <div class="suffix"></div>
         </div>
     </div>

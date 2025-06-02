@@ -29,6 +29,9 @@
         grid-area: container;
         @include container();
         @include clear-input();
+        &.input-error {
+            border: 1px solid var(--color-warn);
+        }
 
         input {
             @include input();

@@ -33,6 +33,9 @@ export class TextInputFieldComponent implements ControlValueAccessor, OnChanges 
   @Input()
   public rows: number = 4;
 
+  @Input()
+  public inputError: boolean = false;
+
 	public formElement = new FormControl();
 
 	public value: string | undefined;

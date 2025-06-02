@@ -37,6 +37,11 @@
                 grid-area: input;
             }
 
+            .hint {
+                grid-area: hint;
+                @include hint();
+            }
+
             .prefix {
                 grid-area: prefix;
                 @include prefix();
