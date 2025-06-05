@@ -36,7 +36,7 @@ import { ContentSnippetPipe } from '@apto-base-frontend/pipes/content-snippet.pi
 import { BasketComponent } from '@apto-base-frontend-basket';
 import { FooterComponent } from '@apto-base-frontend/components/footer/footer.component';
 import { FrontendComponent } from '@apto-base-frontend/components/frontend/frontend.component';
-import { HeaderComponent } from '@apto-base-frontend/components/header/header.component';
+import { HeaderComponent } from '@apto-base-frontend-header';
 import { HomeComponent } from '@apto-base-frontend/components/home/home.component';
 import { InputFieldComponent } from '@apto-base-frontend/components/input-field/input-field.component';
 import { SelectBoxFieldComponent } from '@apto-base-frontend/components/select-box-field/select-box-field.component';
