@@ -47,6 +47,8 @@ export class HeaderComponent {
       }
     });
 
+    console.log('hello from core header component');
+
     this.store.select(selectConnector).subscribe((next) => {
       this.connector = next;
     });

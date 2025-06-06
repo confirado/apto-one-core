@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { MessageBusService } from '@apto-base-core/services/message-bus.service';
 import { Language } from '@apto-base-frontend/store/language/language.model';
-import { Connector, Shop } from '@apto-base-frontend/store/shop/shop.model';
+import { Connector, Shop, ShopContext } from '@apto-base-frontend/store/shop/shop.model';
 import { CustomProperty } from '@apto-base-core/store/custom-property/custom-property.model';
 
 @Injectable()
@@ -23,10 +23,10 @@ export class ShopRepository {
 					encode: 'json',
 				},
 				{
-					withCredentials: true,
+					withCredentials: true
 				}
 			)
-			.pipe(map((response: any) => ({...response.result, configured: true})));
+			.pipe(map((response: any) => ({ ...response.result, configured: true })));
 	}
 
   public deleteBasketItem(url: string, basketItemId: string): Observable<Connector> {
@@ -36,12 +36,12 @@ export class ShopRepository {
         {
           data: {
             query: 'RemoveFromBasket',
-            arguments: [basketItemId],
+            arguments: [basketItemId]
           },
-          encode: 'json',
+          encode: 'json'
         },
         {
-          withCredentials: true,
+          withCredentials: true
         }
       )
       .pipe(
@@ -49,13 +49,13 @@ export class ShopRepository {
       );
   }
 
-	public findShopContext(): Observable<{ shop: Shop; languages: Language[]; locale: string }> {
+	public findShopContext(): Observable<ShopContext> {
 		return this.messageBus
 			.query('FindShopContext', [window.location.host])
 			.pipe(map((response) => this.responseToShop(response.result)));
 	}
 
-	private responseToShop(result: any): { shop: Shop; languages: Language[]; locale: string } {
+	private responseToShop(result: any): ShopContext {
 		let locale = environment.defaultLocale;
 		if (result.languages.length > 0) {
 			locale = result.languages[0].isocode;
@@ -70,17 +70,17 @@ export class ShopRepository {
 			languages.push({
 				id: language.id,
 				name: language.name,
-				locale: language.isocode,
+				locale: language.isocode
 			});
 		});
 
-    let customProperties: CustomProperty[] = [];
+    const customProperties: CustomProperty[] = [];
     result.customProperties.forEach((customProperty: CustomProperty) => {
       customProperties.push({
         key: customProperty.key,
         value: customProperty.value,
         translatable: customProperty.translatable
-      })
+      });
     });
 
     if (window.AptoFrontendLocale) {
@@ -95,10 +95,11 @@ export class ShopRepository {
 				name: result.name,
 				connectorUrl: result.connectorUrl,
 				description: result.description,
-        customProperties: customProperties
+        customProperties,
+        templateId: result.templateId
 			},
 			languages,
-			locale,
+			locale
 		};
 	}
 }

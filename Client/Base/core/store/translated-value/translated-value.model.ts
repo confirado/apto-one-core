@@ -5,7 +5,7 @@ export interface TranslatedValue {
 }
 
 export function translate(value: TranslatedValue | undefined, locale: string): string {
-  const defaultLocale: string = environment.defaultLocale;
+  const { defaultLocale } = environment;
 
   if (!value) {
     return '';
@@ -19,7 +19,7 @@ export function translate(value: TranslatedValue | undefined, locale: string): s
   }
 
   // return first translation
-  for (let key in value) {
+  for (const key in value) {
     if (value.hasOwnProperty(key)) {
       return value[key];
     }
