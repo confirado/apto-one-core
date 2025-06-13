@@ -1,0 +1,172 @@
+<md-card flex="100">
+    <md-card-title>
+        <md-card-title-text>
+            <div class="md-headline">Farbanpassungen</div>
+        </md-card-title-text>
+    </md-card-title>
+    <div layout="row" layout-wrap>
+        <md-card-content flex="33">
+            <div layout="column">
+                <label>
+                    Primärfarbe:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorPrimary"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column">
+                <label>
+                    Primärfarbe Hover:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorPrimaryHover"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33" >
+            <div layout="column">
+                <label>
+                    Sekundärfarbe:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorAccent"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column" flex>
+                <label>
+                    Hintergrundfarbe Header:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorBackgroundHeader"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column" flex>
+                <label>
+                    Hintergrundfarbe Footer:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorBackgroundFooter"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column" flex>
+                <label>
+                    Schriftfarbe Titel:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorTitle"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+        <md-card-content flex="33">
+            <div layout="column" flex>
+                <label>
+                    Schriftfarbe Text:
+                </label>
+                <div md-color-picker flex
+                     ng-model="$ctrl.state.settingsDetail.colorText"
+                     type="0"
+                     default="#FFFFFF"
+                     md-color-clear-button="false"
+                ></div>
+            </div>
+        </md-card-content>
+    </div>
+    <md-dialog-actions layout="row" layout-align="end center" class="layout-row">
+        <md-button class="md-raised md-primary md-cornered" ng-click="$ctrl.saveSettings()">Speichern</md-button>
+    </md-dialog-actions>
+</md-card>
+
+<!--<md-card>-->
+<!--    <md-card-title>-->
+<!--        <md-card-title-text>-->
+<!--            <div class="md-headline">Logoanpassungen und Favicons</div>-->
+<!--        </md-card-title-text>-->
+<!--    </md-card-title>-->
+
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Hauptlogo</div>-->
+<!--    </md-card-content>-->
+<!--    <div layout="row" layout-wrap>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Höhe:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Breite:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--    </div>-->
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Mobillogo</div>-->
+<!--    </md-card-content>-->
+<!--    <div layout="row" layout-wrap>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Höhe:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--        <md-card-content flex="50">-->
+<!--            <md-input-container class="md-block" flex>-->
+<!--                <label>Breite:</label>-->
+<!--                <input type="text">-->
+<!--            </md-input-container>-->
+<!--        </md-card-content>-->
+<!--    </div>-->
+<!--    <md-card-content>-->
+<!--        <div class="md-content color-">Favicon</div>-->
+<!--    </md-card-content>-->
+<!--</md-card>-->
+
+<!--<div data-cy="product-preview-picture-text">-->
+<!--    <p>Vorschaubild:</p>-->
+<!--</div>-->
+<!--<div layout="row" layout-align="start" flex data-cy="product-preview-picture">-->
+<!--    <div style="min-width: 128px; min-height: 128px; border: 1px solid #072540; padding: 6px;">-->
+<!--        <apto-media-icon-->
+<!--            ng-if="productDetail.previewImage"-->
+<!--            style="display: block;"-->
+<!--            file="{path: productDetail.previewImage, extension: productDetail.previewImageMediaFile.extension}"-->
+<!--            size="128x128"-->
+<!--        ></apto-media-icon>-->
+<!--    </div>-->
+<!--    <div flex="5"></div>-->
+
+<!--    <apto-media-select-->
+<!--        on-select-file="onSelectPreviewImage(path)"-->
+<!--        label="'Pfad'"-->
+<!--        path="settingsDetail.previewImage"-->
+<!--        required="false"-->
+<!--        flex-->
+<!--    ></apto-media-select>-->
+<!--</div>-->
