@@ -59,7 +59,7 @@ import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/
 import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { TooltipDirective } from './components/common/tooltip.directive';
 import { SummaryConfigurationComponent } from '@apto-catalog-frontend/components/summary/summary-configuration/summary-configuration.component';
-import { SummarySectionPriceComponent } from "@apto-catalog-frontend/components/summary/summary-section-price/summary-section-price.component";
+import { SummarySectionPriceComponent } from '@apto-catalog-frontent-summary-section-price';
 import { SummaryFinishMessageComponent } from '@apto-catalog-frontend/components/summary/summary-finish-message/summary-finish-message.component';
 import { SectionPictureComponent } from '@apto-catalog-frontend/components/common/section-picture/section-picture.component';
 import { SelectableValueRangeComponent } from '@apto-base-frontend/components/selectable-value-range/selectable-value-range.component';
