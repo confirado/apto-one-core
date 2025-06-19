@@ -259,7 +259,7 @@ export class ConfigurationEffects {
 					email: action.payload.email,
 					name: action.payload.name,
 					sendMail: true,
-					id: '',
+					id: action.payload.id,
 					payload: {},
 				})
 			),
