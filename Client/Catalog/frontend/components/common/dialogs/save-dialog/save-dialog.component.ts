@@ -22,7 +22,6 @@ export class SaveDialogComponent {
 	public constructor(private dialogRef: MatDialogRef<SaveDialogComponent>, private store: Store) {}
 
 	public onSubmit(): void {
-    console.log("submit!");
 		this.store.dispatch(addGuestConfiguration({ payload: this.formGroup.getRawValue() }));
 		this.dialogRef.close();
 	}
