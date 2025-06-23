@@ -46,6 +46,7 @@ export interface Section {
   repetition?: number;
   repeatableCalculatedValueName?: null | string;
   repeatableType?: SectionTypes;
+  customProperties: any;
 }
 
 export interface Conditions {
@@ -193,6 +194,7 @@ export interface Element<DefinitionProperties = unknown> {
   zoomFunction: ElementZoomFunctionEnum;
   sectionRepetition?: number;
   gallery?: any[];
+  customProperties: any;
 }
 
 export enum ElementZoomFunctionEnum {

@@ -2,7 +2,7 @@ import { AptoSearchComponent } from '@apto-catalog-frontend/components/common/ap
 import { ActionsSubject, StateObservable, Store, StoreModule } from '@ngrx/store';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ApplicationModule, forwardRef } from '@angular/core';
-import { ProductListComponent } from '@apto-catalog-frontend/components/product-list/product-list.component';
+import { ProductListComponent } from '@apto-catalog-frontend-product-list';
 import { mount } from 'cypress/angular';
 import { TestBed } from '@angular/core/testing';
 import { AptoFrontendModule } from '@apto-frontend/src/app/app.module';
