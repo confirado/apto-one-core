@@ -14,6 +14,7 @@ export class SaveDialogComponent {
 	public formGroup = new FormGroup({
 		email: new FormControl<string>('', { nonNullable: true }),
 		name: new FormControl<string>('', { nonNullable: true }),
+    id: new FormControl<string>('', { nonNullable: true })
 	});
   public readonly contentSnippets$ = this.store.select(selectContentSnippet('AptoGuestConfigurationDialog'));
 

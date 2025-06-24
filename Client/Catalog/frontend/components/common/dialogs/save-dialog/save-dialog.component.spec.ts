@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SaveDialogComponent } from './save-dialog.component';
+import { SaveDialogComponent } from '@apto-catalog-frontend-save-dialog';
 
 describe('SaveDialogComponent', () => {
   let component: SaveDialogComponent;

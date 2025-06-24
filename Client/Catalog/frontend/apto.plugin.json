@@ -12,6 +12,22 @@
       "path": "apto-catalog-frontend-custom.module.ts"
     },
     {
+      "alias": "@apto-catalog-frontend-one-page",
+      "path": "components/one-page/one-page.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-product-list",
+      "path": "components/product-list/product-list.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-quantity-input-editable",
+      "path": "components/common/quantity-input-editable/quantity-input-editable.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-save-dialog",
+      "path": "components/common/dialogs/save-dialog/save-dialog.component.ts"
+    },
+    {
       "alias": "@apto-catalog-frontend-sbs-elements",
       "path": "components/step-by-step/sbs-elements/sbs-elements.component.ts"
     },
@@ -24,8 +40,20 @@
       "path": "components/step-by-step/sbs-step/sbs-step.component.ts"
     },
     {
-      "alias": "@apto-sidebar-summary-price",
+      "alias": "@apto-catalog-frontend-sidebar-summary",
+      "path": "components/shared/sidebar-summary/sidebar-summary.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sidebar-summary-price",
       "path": "components/shared/sidebar-summary-price/sidebar-summary-price.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-sidebar-summary-render-image",
+      "path": "components/shared/sidebar-summary-render-image/sidebar-summary-render-image.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-summary-section-price",
+      "path": "components/summary/summary-section-price/summary-section-price.component.ts"
     }
   ]
 }

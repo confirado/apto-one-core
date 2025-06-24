@@ -196,6 +196,7 @@ export const addGuestConfiguration = createAction(
 		payload: {
 			email: string;
 			name: string;
+      id: string;
 		};
 	}>()
 );

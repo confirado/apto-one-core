@@ -114,7 +114,8 @@ export class ProductRepository {
 			previewImage: previewImage ? this.mediaUrl + previewImage.substring(1) : null,
 			isZoomable: section.isZoomable,
 			repeatableType: section.repeatableType,
-			repeatableCalculatedValueName: section.repeatableCalculatedValueName
+			repeatableCalculatedValueName: section.repeatableCalculatedValueName,
+      customProperties: section.customProperties
 		});
 
 			section.elements.forEach((element: any) => {
@@ -140,7 +141,8 @@ export class ProductRepository {
           attachments: element.attachments,
 				  zoomFunction: element.zoomFunction,
 				  sectionRepetition: 0,
-          gallery: element.gallery
+          gallery: element.gallery,
+          customProperties: element.customProperties
 				});
 			});
 		});
