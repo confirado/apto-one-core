@@ -13,6 +13,9 @@ use Apto\Base\Domain\Core\Model\FileSystem\FileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\MediaFileSystemConnector;
 use Apto\Base\Domain\Core\Model\FileSystem\RootFileSystemConnector;
 use Apto\Base\Domain\Core\Service\StringSanitizer;
+use Imagick;
+use ImagickException;
+use RuntimeException;
 
 class UploadUserImageFileHandler implements CommandHandlerInterface
 {
@@ -85,6 +88,11 @@ class UploadUserImageFileHandler implements CommandHandlerInterface
             // exclude forbidden extensions
             $dstFile->assertHasNotExtension(self::FORBIDDEN_EXTENSIONS);
 
+            if ($dstFile->hasExtension(["eps"])) {
+                $srcFile = $this->handleSpecialFileTypes($srcPath);
+                $dstFile = new File($dstDirectory, $this->sanitizer->sanitizeFilename($aptoUuid . '.png'));
+            }
+
             // create directory if not already exists
             if (!$this->mediaConnector->existsDirectory($dstDirectory)) {
                 $this->mediaConnector->createDirectory($dstDirectory, true);
@@ -95,6 +103,21 @@ class UploadUserImageFileHandler implements CommandHandlerInterface
 
             // return after one file because only one file per upload is allowed
             return;
+        }
+    }
+
+    private function handleSpecialFileTypes(string $epsPath): File
+    {
+        try {
+            $imagick = new Imagick();
+            $imagick->readImage($epsPath);
+            $imagick = $imagick->mergeImageLayers(Imagick::LAYERMETHOD_FLATTEN);
+            $imagick->setImageFormat('png');
+            $tempPngPath = sys_get_temp_dir() . '/' . uniqid('tmpImgFile_', true) . '.png';
+            $imagick->writeImage($tempPngPath);
+            return File::createFromPath($tempPngPath);
+        } catch (ImagickException $e) {
+            throw new RuntimeException('Error converting EPS to PNG: ' . $e->getMessage(), 0, $e);
         }
     }
 
