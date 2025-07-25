@@ -14,12 +14,10 @@ import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { Store } from '@ngrx/store';
-import {
-  ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 
 @Injectable()
 export class FrontendUserEffects {

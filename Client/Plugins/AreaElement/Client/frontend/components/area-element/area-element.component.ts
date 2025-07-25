@@ -20,14 +20,12 @@ import { combineLatest, take } from 'rxjs';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { map } from 'rxjs/operators';
 import { environment } from '@apto-frontend/src/environments/environment';
-import {
-  ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 
 @UntilDestroy()
 @Component({

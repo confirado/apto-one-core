@@ -12,9 +12,6 @@ import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Actions, ofType } from '@ngrx/effects';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
@@ -24,6 +21,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { environment } from '@apto-frontend/src/environments/environment';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 
 @UntilDestroy()
 @Component({

@@ -29,15 +29,8 @@ import { Product, FloatInputTypes, CompareValueTypes, Section } from '@apto-cata
 
 import { number, Parser, parser } from 'mathjs';
 import { BigNumber } from 'bignumber.js';
-import { translate, TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
+import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
-import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { environment } from '@apto-frontend/src/environments/environment';
-import {
-  ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
-import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
-import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 
 @Component({
 	selector: 'apto-float-input-element',

@@ -56,7 +56,6 @@ import { SummaryComponent } from './components/summary/summary.component';
 import { ElementPictureComponent } from '@apto-catalog-frontend/components/common/element-picture/element-picture.component';
 import { CloseButtonComponent } from './components/common/close-button/close-button.component';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
-import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { TooltipDirective } from './components/common/tooltip.directive';
 import { SummaryConfigurationComponent } from '@apto-catalog-frontend/components/summary/summary-configuration/summary-configuration.component';
 import { SummarySectionPriceComponent } from '@apto-catalog-frontend-summary-section-price';
@@ -74,6 +73,7 @@ import { AptoCatalogFrontendCustomModule } from '@apto-catalog-frontend-custom-m
 import { ElementAttachmentComponent } from '@apto-catalog-frontend/components/common/element-attachment/element-attachment.component';
 import { OfferConfigurationButtonComponent } from '@apto-catalog-frontend/components/shared/offer-configuration-button/offer-configuration-button.component';
 import { OfferConfigurationDialogComponent } from "@apto-catalog-frontend/components/common/dialogs/offer-configuration-dialog/offer-configuration-dialog.component";
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 
 RouterRegistry.registerRoutes(Routes);
 
