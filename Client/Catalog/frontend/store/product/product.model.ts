@@ -33,6 +33,7 @@ export interface Group {
 export interface Section {
 	id: string;
 	identifier: string;
+    group: Group,
 	groupId: string | null;
 	groupIdentifier: string | null;
 	name: TranslatedValue;
