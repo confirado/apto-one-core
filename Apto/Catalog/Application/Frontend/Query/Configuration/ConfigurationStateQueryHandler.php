@@ -119,7 +119,7 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             new State($query->getState())
         );
 
-        $maxTries = $query->getIntention()['repair']['maxTries'] ?? 0;
+        $maxTries = $query->getIntention()['repair']['maxTries'] ?? 10;
         $operatorsToFulfill = $query->getIntention()['repair']['operators'] ?? null;
         $selectEmptySections = $query->getIntention()['repair']['selectEmptySections'] ?? null;
 
