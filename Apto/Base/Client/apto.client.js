@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
     getPackage: function () {
         return 'apto/base';
@@ -31,7 +33,8 @@ module.exports = {
                     'angular-loading-bar',
                     'ng-file-upload',
                     'apto-base/libs/angular-tree-control/context-menu',
-                    'apto-base/libs/angular-tree-control/angular-tree-control'
+                    'apto-base/libs/angular-tree-control/angular-tree-control',
+                    'apto-base/libs/mdColorPicker/mdColorPicker.js'
                 ],
                 modules: [
                     'ngRoute',
@@ -43,7 +46,15 @@ module.exports = {
                     'md.data.table',
                     'angular-loading-bar',
                     'ngFileUpload',
-                    'treeControl'
+                    'treeControl',
+                    'mdColorPicker'
+                ]
+            },
+            webpackConfig: {
+                plugins: [
+                    new webpack.ProvidePlugin({
+                        'tinycolor': 'tinycolor2'
+                    })
                 ]
             }
         };
