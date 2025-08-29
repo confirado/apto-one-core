@@ -22,6 +22,7 @@ import { ImageUploadComponent } from '@apto-image-upload-frontend/components/ima
 import { DesignerComponent } from '@apto-image-upload-frontend/components/designer/designer.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { NgxFileDropModule } from 'ngx-file-drop';
 import { DesignerPerspectiveComponent } from './components/designer-perspective/designer-perspective.component';
 
 @NgModule({
@@ -47,7 +48,8 @@ import { DesignerPerspectiveComponent } from './components/designer-perspective/
 		NgOptimizedImage,
     NgxMatColorPickerModule,
     NgxMatFileInputModule,
-    MatSelectModule
+    MatSelectModule,
+        NgxFileDropModule
 	],
   providers: [
     { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS }
