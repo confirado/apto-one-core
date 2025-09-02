@@ -4,7 +4,7 @@
                [(ngModel)]="inputValue"
                (keyup)="onKeyUp($event)"
                (keydown)="onKeyDown($event)"
-        >
+               (blur)="onBlur()">
         <span class="quantity-text">St.</span>
         <div class="ripple-controls">
 			<div class="control" mat-ripple (click)="setQuantity(quantity + step)">
