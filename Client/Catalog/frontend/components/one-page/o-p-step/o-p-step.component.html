@@ -3,6 +3,7 @@
         <mat-expansion-panel-header [class.divider-line]="panelOpenState">
             <div>
                 <mat-panel-title>
+                    <img *ngIf="previewImageLink" [src]="previewImageLink" class="preview-img mr-2" />
                     {{ section.section.name | translate }}
                     <div *ngIf="section.fulfilled && section.active" [class.selected]="section.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
                 </mat-panel-title>
@@ -16,8 +17,8 @@
                         [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
                         [product]="product"
                         [section]="section.section"
-                        [element]="pElement"
-                    ></apto-slot-outlet>
+                        [element]="pElement">
+                    </apto-slot-outlet>
                 </ng-container>
             </div>
         </div>
