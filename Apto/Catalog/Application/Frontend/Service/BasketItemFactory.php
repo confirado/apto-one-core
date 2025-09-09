@@ -155,7 +155,10 @@ class BasketItemFactory
             'deliveryTime' => $product->getDeliveryTime(),
             'locale' => $locale->getName(),
             'position' => $product->getPosition(),
-            'customProperties' => $this->getCustomPropertiesOfSelectedElements($basketConfiguration),
+            'customProperties' => [
+                'productProperties' => $this->getCustomPropertiesOfProduct($basketConfiguration),
+                'elementProperties' => $this->getCustomPropertiesOfSelectedElements($basketConfiguration),
+            ],
             'translations' => [
                 'root' => [
                     'title' => $product->getName()->jsonSerialize()
@@ -672,4 +675,18 @@ class BasketItemFactory
         return $customPropertiesArray;
     }
 
+    protected function getCustomPropertiesOfProduct(BasketConfiguration $basketConfiguration): array
+    {
+        $customPropertiesArray = [];
+        $productID = $basketConfiguration->getProduct()->getId()->getId();
+        //We can reference ['data'][0] here since we only query one productID
+        $productCustomProperties = $this->productRepository->findProductCustomPropertiesAsArray([$productID])['data'][0];
+        foreach ($productCustomProperties['customProperties'] as $customProperty) {
+            if ($customProperty['translatable']) {
+                continue;
+            }
+            $customPropertiesArray[$customProperty['key']] = $customProperty['value'];
+        }
+        return $customPropertiesArray;
+    }
 }
