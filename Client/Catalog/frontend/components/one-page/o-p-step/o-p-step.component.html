@@ -1,22 +1,22 @@
-<ng-container *ngIf="section && product && elements">
+<ng-container *ngIf="progressStep && product && elements">
     <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [id]="'id' + index?.toString()" [expanded]="index === 0">
         <mat-expansion-panel-header [class.divider-line]="panelOpenState">
             <div>
                 <mat-panel-title>
                     <img *ngIf="previewImageLink" [src]="previewImageLink" class="preview-img mr-2" />
-                    {{ section.section.name | translate }}
-                    <div *ngIf="section.fulfilled && section.active" [class.selected]="section.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
+                    {{ progressStep.section.name | translate }}
+                    <div *ngIf="progressStep.fulfilled && progressStep.active" [class.selected]="progressStep.fulfilled" class="circle-one-page"><mat-icon>done</mat-icon></div>
                 </mat-panel-title>
             </div>
         </mat-expansion-panel-header>
-        <div class="one-page-elements section-{{ section.section.identifier }}">
+        <div class="one-page-elements section-{{ progressStep.section.identifier }}">
             <div class="element-container" *ngFor="let element of sectionProductElements" [class.element-is-disabled]="isElementDisabled(element.id, element.sectionRepetition)">
                 <ng-container *ngIf="getProgressElement(element.id) as pElement">
                     <apto-slot-outlet
                         *ngIf="!isElementDisabled(element.id, element.sectionRepetition) || !product.keepSectionOrder"
                         [identifier]="pElement.element.definition.staticValues.aptoElementDefinitionId"
                         [product]="product"
-                        [section]="section.section"
+                        [section]="progressStep.section"
                         [element]="pElement">
                     </apto-slot-outlet>
                 </ng-container>

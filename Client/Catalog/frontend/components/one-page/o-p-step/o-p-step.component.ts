@@ -20,7 +20,7 @@ import {
 })
 export class OPStepComponent implements OnInit {
     @Input()
-    public section: ProgressStep | undefined;
+    public progressStep: ProgressStep | undefined;
 
     @Input()
     public index: number | undefined;
@@ -53,19 +53,19 @@ export class OPStepComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        this.store.select(selectSectionProductElements(this.section.section.id)).subscribe((next) => {
+        this.store.select(selectSectionProductElements(this.progressStep.section.id)).subscribe((next) => {
             this.sectionProductElements = next;
         });
 
-        this.store.select(selectSectionStateElements(this.section.section.id)).subscribe((next) => {
+        this.store.select(selectSectionStateElements(this.progressStep.section.id)).subscribe((next) => {
             this.sectionStateElements = next;
         });
 
-        this.previewImageLink = this.section?.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        this.previewImageLink = this.progressStep?.elements.filter(el => el.state.active)[0]?.element.previewImage;
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        this.previewImageLink = changes['section']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        this.previewImageLink = changes['progressStep']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
     }
 
     public isElementDisabled(elementId: string, sectionRepetition: number): boolean {
