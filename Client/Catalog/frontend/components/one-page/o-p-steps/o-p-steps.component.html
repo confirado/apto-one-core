@@ -9,7 +9,7 @@
                     <mat-expansion-panel hideToggle [expanded]="i === 0">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                <h3>{{groupedStep.group.name | translate}}</h3>
+                                <h3>{{groupedStep.group?.name | translate}}</h3>
                             </mat-panel-title>
                         </mat-expansion-panel-header>
 
@@ -28,6 +28,20 @@
 
                 </mat-accordion>
 
+            </div>
+
+            <div *ngIf="stepsWithoutGroups">
+                <mat-accordion class="section-list">
+                    <apto-o-p-step
+                        *ngFor="let step of stepsWithoutGroups; index as i; trackBy: stepTrackBy"
+                        [status]="step.status"
+                        [progressStep]="step"
+                        [elements]="step.elements"
+                        [description]="step.description"
+                        [product]="product"
+                        [index]="i">
+                    </apto-o-p-step>
+                </mat-accordion>
             </div>
 
         </ng-container>
