@@ -90,14 +90,6 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
             )
             .subscribe((value) => {
                 this.store.dispatch(setQuantity({ quantity: value }));
-                this.store.dispatch(updateConfigurationState({
-                    updates: {
-                        parameters: [{
-                            name: ParameterStateTypes.QUANTITY,
-                            value
-                        }]
-                    }
-                }));
             });
     }
 
@@ -118,15 +110,18 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
 
         if (!this.isQuantityInRange(quantity) && this.isQuantityValid(quantity)) {
             if (quantity < this.minValue && this.isQuantityValid(this.minValue)) {
-                this.userInput$.next(this.minValue);
+                // this.userInput$.next(this.minValue);
                 this.inputRef.nativeElement.value = this.minValue;
+                this.setQuantity(this.minValue);
             } else if (quantity > this.maxValue && this.isQuantityValid(this.maxValue)) {
-                this.userInput$.next(this.maxValue);
+                // this.userInput$.next(this.maxValue);
                 this.inputRef.nativeElement.value = this.maxValue;
+                this.setQuantity(this.maxValue);
             }
 
             this.handleErrorCase(quantity);
         }
+        this.setQuantity(quantity);
     }
 
     /**
