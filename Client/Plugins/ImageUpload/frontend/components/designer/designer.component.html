@@ -46,6 +46,15 @@
                         </div>
                     </div>
 
+                    <ngx-file-drop
+                        dropZoneLabel="Drop files here"
+                        (onFileDrop)="dropped($event)"
+                        [dropZoneClassName]="'apto-file-drop-zone'" contentClassName="apto-file-drop-content">
+                        <ng-template ngx-file-drop-content-tmp>
+                            Oder Datei hier ablegen.
+                        </ng-template>
+                    </ngx-file-drop>
+
                     <button *ngIf="fabricSelectedObject && fabricSelectedObject.payload.type === 'image'" class="image-upload-delete" color="warn" mat-flat-button (click)="removeSelectedObject()">{{ contentSnippet$ | async | contentSnippet: 'upload.deleteImage' }}</button>
                 </div>
             </ng-container>
