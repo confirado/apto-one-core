@@ -22,6 +22,7 @@ export class OPStepsComponent {
 
     public uniqueGroups: Group[];
     public groupedSteps: GroupedSteps[];
+    public stepsWithoutGroups: ProgressStep[];
 
     public constructor(private store: Store) {
     }
@@ -31,21 +32,13 @@ export class OPStepsComponent {
     }
 
     public ngOnInit(): void {
-        this.product$.subscribe((product) => {
-            console.log('product', product);
-        });
-
         this.steps$.subscribe((steps) => {
-            console.log('steps', steps);
-
-            this.uniqueGroups = [...new Map(steps.steps.map(step => [step.section.group.id, step.section.group])).values()];
+            this.uniqueGroups = [...new Map(steps.steps.map(step => [step.section?.group?.id, step.section?.group])).values()]
+                .filter(group => group != null);
             this.groupedSteps = this.uniqueGroups.map(group => (
-                { group, steps: steps.steps.filter(step => group.id === step.section.group.id) }
+                { group, steps: steps.steps.filter(step => group?.id === step.section?.group?.id) }
             ));
-            const stepsWithoutGroups = steps.steps.filter(step => !step.section.group);
-
-            console.log('this.groupedSteps', this.groupedSteps);
-            console.log('stepsWithoutGroups', stepsWithoutGroups);
+            this.stepsWithoutGroups = steps.steps.filter(step => !step.section?.group);
         });
     }
 }
