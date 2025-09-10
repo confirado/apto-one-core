@@ -87,10 +87,17 @@ export class QuantityInputEditableComponent implements ControlValueAccessor, OnC
         this.userInput$
             .pipe(
                 debounceTime(300)
-                // distinctUntilChanged()
             )
             .subscribe((value) => {
                 this.store.dispatch(setQuantity({ quantity: value }));
+                this.store.dispatch(updateConfigurationState({
+                    updates: {
+                        parameters: [{
+                            name: ParameterStateTypes.QUANTITY,
+                            value
+                        }]
+                    }
+                }));
             });
     }
 
