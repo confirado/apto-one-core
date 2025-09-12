@@ -1,14 +1,16 @@
 <div class="product-list-wrapper">
     <apto-search [formControl]="formElement"></apto-search>
 
-    <div [formGroup]="categoryForm">
-        <div [formArrayName]="'categories'" class="flex flex-wrap">
-            <ng-container *ngFor="let control of categoryFormArray.controls; let i = index;">
-                <div class="mx-2 mb-2">
-                    <input type="checkbox" id="control-{{i}}" [formControlName]="i" />
-                    <label for="control-{{i}}">{{ categories[i].name | translate }}</label>
-                </div>
-            </ng-container>
+    <div *ngIf="categories.length" class="w-full shadow-md p-3">
+        <div [formGroup]="categoryForm">
+            <div [formArrayName]="'categories'" class="flex flex-wrap">
+                <ng-container *ngFor="let control of categoryFormArray.controls; let i = index;">
+                    <div class="mx-2 mb-2">
+                        <input type="checkbox" id="control-{{i}}" [formControlName]="i" />
+                        <label for="control-{{i}}">{{ categories[i].name | translate }}</label>
+                    </div>
+                </ng-container>
+            </div>
         </div>
     </div>
 
