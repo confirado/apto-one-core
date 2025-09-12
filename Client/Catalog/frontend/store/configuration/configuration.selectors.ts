@@ -241,6 +241,13 @@ export const selectSumPrice = createSelector(featureSelector, (state: CatalogFea
 	return state.configuration.statePrice.sum.price.formatted;
 });
 
+export const selectTotalPrice = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  if (state.configuration.statePrice === null) {
+    return null;
+  }
+  return state.configuration.statePrice.sum.price.amount * state.configuration.quantity;
+});
+
 export const selectCurrentPerspective = createSelector(
 	featureSelector,
 	(state: CatalogFeatureState) => state.configuration.currentPerspective
