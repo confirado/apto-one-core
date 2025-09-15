@@ -4,219 +4,227 @@ import { CustomProperty } from '@apto-base-core/store/custom-property/custom-pro
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
 
+export interface Category {
+    id: string;
+    description: TranslatedValue;
+    name: TranslatedValue;
+}
+
 export interface Product {
-	id: string;
-	identifier: string;
-	seoUrl: string;
-	name: TranslatedValue;
-	description: TranslatedValue;
-	previewImage: string | null;
-	useStepByStep: boolean;
-  keepSectionOrder: boolean;
-	position: number;
-	customProperties: CustomProperty[];
-  hidden: boolean;
-  active: boolean;
-  minPurchase: number;
-  maxPurchase: number;
-  metaTitle: TranslatedValue;
-  metaDescription: TranslatedValue;
+    id: string;
+    identifier: string;
+    seoUrl: string;
+    name: TranslatedValue;
+    description: TranslatedValue;
+    previewImage: string | null;
+    useStepByStep: boolean;
+    keepSectionOrder: boolean;
+    position: number;
+    customProperties: CustomProperty[];
+    hidden: boolean;
+    active: boolean;
+    minPurchase: number;
+    maxPurchase: number;
+    metaTitle: TranslatedValue;
+    metaDescription: TranslatedValue;
+    categories: Category[];
 }
 
 export interface Group {
-	id: string;
-	identifier: string;
-	name: TranslatedValue;
-	position: number;
+    id: string;
+    identifier: string;
+    name: TranslatedValue;
+    position: number;
 }
 
 export interface Section {
-	id: string;
-	identifier: string;
-  group: Group,
-	groupId: string | null;
-	groupIdentifier: string | null;
-	name: TranslatedValue;
-	description: TranslatedValue;
-	allowMultiple: boolean;
-	isHidden: boolean;
-	isMandatory: boolean;
-	position: number;
-  previewImage: string | null;
-  isZoomable: boolean;
-  repetition?: number;
-  repeatableCalculatedValueName?: null | string;
-  repeatableType?: SectionTypes;
-  customProperties: any;
+    id: string;
+    identifier: string;
+    group: Group,
+    groupId: string | null;
+    groupIdentifier: string | null;
+    name: TranslatedValue;
+    description: TranslatedValue;
+    allowMultiple: boolean;
+    isHidden: boolean;
+    isMandatory: boolean;
+    position: number;
+    previewImage: string | null;
+    isZoomable: boolean;
+    repetition?: number;
+    repeatableCalculatedValueName?: null | string;
+    repeatableType?: SectionTypes;
+    customProperties: any;
 }
 
 export interface Conditions {
-	type: string;
-	step: number;
-	max: number;
-	min: number;
+    type: string;
+    step: number;
+    max: number;
+    min: number;
 }
 
 export interface InputField {
-	conditions: Conditions;
+    conditions: Conditions;
 }
 
 export interface InfoField {
-	default: number;
-	prefix: TranslatedValue;
-	suffix: TranslatedValue;
-	rendering: string;
+    default: number;
+    prefix: TranslatedValue;
+    suffix: TranslatedValue;
+    rendering: string;
 }
 
 export interface PriceMatrix {
-	column: unknown;
-	id: unknown;
-	row: unknown;
+    column: unknown;
+    id: unknown;
+    row: unknown;
 }
 
 export interface PriceMultiplication {
-	active: boolean;
-	baseValueFormula: unknown;
-	factor: number;
+    active: boolean;
+    baseValueFormula: unknown;
+    factor: number;
 }
 
 export interface defaultItem {
-	id: string;
-	elementId: string;
-	name: TranslatedValue;
+    id: string;
+    elementId: string;
+    name: TranslatedValue;
 }
 
 export enum SelectableValueTypes {
-  SELECTABLE = 'Selectable',
-  COMPUTABLE = 'Computable',
+    SELECTABLE = 'Selectable',
+    COMPUTABLE = 'Computable',
 }
 
 export enum CompareValueTypes {
-  MINIMUM = 'Minimum',
-  MAXIMUM = 'Maximum',
+    MINIMUM = 'Minimum',
+    MAXIMUM = 'Maximum',
 }
 
 export interface ElementValueRefs {
-  sectionId: string
-  elementId: string,
-  selectableValue: string,
-  selectableValueType: SelectableValueTypes,
-  compareValueType: CompareValueTypes,
-  compareValueFormula: string
+    sectionId: string
+    elementId: string,
+    selectableValue: string,
+    selectableValueType: SelectableValueTypes,
+    compareValueType: CompareValueTypes,
+    compareValueFormula: string
 }
 
 export interface StaticValues {
-	aptoElementDefinitionId: string;
-	fields?: InfoField[];
-	prefixWidth?: TranslatedValue;
-	prefixHeight?: TranslatedValue;
-	suffixWidth?: TranslatedValue;
-	suffixHeight?: TranslatedValue;
-	suffix?: TranslatedValue;
-	prefix?: TranslatedValue;
-	livePricePrefix: TranslatedValue;
-	livePriceSuffix: TranslatedValue;
-	priceMatrix: PriceMatrix;
-	priceMultiplication: PriceMultiplication;
-	renderDialogInOnePageDesktop: boolean;
-	renderingWidth?: string;
-	renderingHeight?: string;
-	defaultHeight?: string;
-	defaultWidth?: string;
-	defaultValue?: string;
-	defaultItem?: defaultItem;
-	rendering?: string;
-	enableMultiplier?: boolean;
-	enableMultiSelect?: boolean;
-	multiplierPrefix?: TranslatedValue;
-	multiplierSuffix?: TranslatedValue;
-	sumOfFieldValueActive: boolean;
-	poolId: string;
-	placeholder: TranslatedValue;
-	allowMultiple: boolean;
-  colorSectionActive: boolean;
-	searchboxActive: boolean;
-  priceGroupActive: boolean;
-  showPriceGroupInMaterialName: boolean;
-  sortByPosition: string;
-	secondaryMaterialActive: boolean;
-  monochromeImage: string;
-  multicoloredImageAlternately: string;
-  multicoloredImageInput: string;
-  background: any;
-  area: any;
-  renderingType: string;
-  elementValueRefs: ElementValueRefs[];
+    aptoElementDefinitionId: string;
+    fields?: InfoField[];
+    prefixWidth?: TranslatedValue;
+    prefixHeight?: TranslatedValue;
+    suffixWidth?: TranslatedValue;
+    suffixHeight?: TranslatedValue;
+    suffix?: TranslatedValue;
+    prefix?: TranslatedValue;
+    livePricePrefix: TranslatedValue;
+    livePriceSuffix: TranslatedValue;
+    priceMatrix: PriceMatrix;
+    priceMultiplication: PriceMultiplication;
+    renderDialogInOnePageDesktop: boolean;
+    renderingWidth?: string;
+    renderingHeight?: string;
+    defaultHeight?: string;
+    defaultWidth?: string;
+    defaultValue?: string;
+    defaultItem?: defaultItem;
+    rendering?: string;
+    enableMultiplier?: boolean;
+    enableMultiSelect?: boolean;
+    multiplierPrefix?: TranslatedValue;
+    multiplierSuffix?: TranslatedValue;
+    sumOfFieldValueActive: boolean;
+    poolId: string;
+    placeholder: TranslatedValue;
+    allowMultiple: boolean;
+    colorSectionActive: boolean;
+    searchboxActive: boolean;
+    priceGroupActive: boolean;
+    showPriceGroupInMaterialName: boolean;
+    sortByPosition: string;
+    secondaryMaterialActive: boolean;
+    monochromeImage: string;
+    multicoloredImageAlternately: string;
+    multicoloredImageInput: string;
+    background: any;
+    area: any;
+    renderingType: string;
+    elementValueRefs: ElementValueRefs[];
 }
 
 export interface RangeField {
-	type: string;
-	minimum: number;
-	maximum: number;
-	step: number;
+    type: string;
+    minimum: number;
+    maximum: number;
+    step: number;
 }
 
 export interface HeightWidthProperties {
-	height?: RangeField[];
-	width?: RangeField[];
+    height?: RangeField[];
+    width?: RangeField[];
 }
+
 export interface Definition<Properties> {
-	component: string;
-	name: string;
-	properties: Properties;
-	staticValues: StaticValues;
+    component: string;
+    name: string;
+    properties: Properties;
+    staticValues: StaticValues;
 }
 
 export interface Attachments {
-  id: string;
-  name: TranslatedValue;
-  mediaFile: {
     id: string;
-    path: string;
-    filename: TranslatedValue;
-    extension: string;
-  };
-  fileUrl: string;
+    name: TranslatedValue;
+    mediaFile: {
+        id: string;
+        path: string;
+        filename: TranslatedValue;
+        extension: string;
+    };
+    fileUrl: string;
 }
 
 export interface Element<DefinitionProperties = unknown> {
-  id: string;
-  identifier: string;
-  sectionId: string;
-  sectionIdentifier: string;
-  name: TranslatedValue;
-  description: TranslatedValue;
-  definition: Definition<DefinitionProperties>;
-  errorMessage: TranslatedValue;
-  previewImage: string | null;
-  isMandatory: boolean;
-  position: number;
-  attachments: Attachments[];
-  zoomFunction: ElementZoomFunctionEnum;
-  sectionRepetition?: number;
-  gallery?: any[];
-  customProperties: any;
+    id: string;
+    identifier: string;
+    sectionId: string;
+    sectionIdentifier: string;
+    name: TranslatedValue;
+    description: TranslatedValue;
+    definition: Definition<DefinitionProperties>;
+    errorMessage: TranslatedValue;
+    previewImage: string | null;
+    isMandatory: boolean;
+    position: number;
+    attachments: Attachments[];
+    zoomFunction: ElementZoomFunctionEnum;
+    sectionRepetition?: number;
+    gallery?: any[];
+    customProperties: any;
 }
 
 export enum ElementZoomFunctionEnum {
-  DEACTIVATED = 'deactivated',
-  IMAGE_PREVIEW = 'image_preview',
-  GALLERY = 'gallery'
+    DEACTIVATED = 'deactivated',
+    IMAGE_PREVIEW = 'image_preview',
+    GALLERY = 'gallery'
 }
 
 export enum FloatInputTypes {
-  INPUT = 'input',
-  SLIDER = 'slider',
-  INPUT_SLIDER = 'input_slider'
+    INPUT = 'input',
+    SLIDER = 'slider',
+    INPUT_SLIDER = 'input_slider'
 }
 
 export enum ProductModes {
-  STEP_BY_STEP = 'StepByStep',
-  ONE_PAGE = 'OnePage',
+    STEP_BY_STEP = 'StepByStep',
+    ONE_PAGE = 'OnePage',
 }
 
 export interface RuleRepairSettings {
-  maxTries: number;
-  operators: number[];
-  selectEmptySections: boolean;
+    maxTries: number;
+    operators: number[];
+    selectEmptySections: boolean;
 }

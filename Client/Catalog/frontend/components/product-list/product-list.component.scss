@@ -100,3 +100,25 @@
 		padding: 10px;
     }
 }
+
+.category-filter-box {
+    border-radius: var(--border-radius-card);
+    background-color: var(--color-background-card);
+    box-shadow: var(--box-shadow);
+}
+
+.category-title {
+    font-size: 18px;
+    color: var(--color-text);
+    font-weight: 500;
+    text-align: left;
+}
+
+.category-element {
+    font-family: var(--main-font-1), sans-serif;
+    font-size: 15px;
+    color: var(--color-text);
+    font-weight: 600;
+    width: 100%;
+}
+

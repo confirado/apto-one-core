@@ -1,10 +1,26 @@
 <div class="product-list-wrapper">
     <apto-search [formControl]="formElement"></apto-search>
 
+    <div *ngIf="categories.length" class="w-full">
+        <div class="category-title pb-3">{{ contentSnippets$ | async | contentSnippet: 'filterTitle' }}</div>
+        <div class="w-full p-3 category-filter-box">
+            <div [formGroup]="categoryForm">
+                <div [formArrayName]="'categories'" class="flex flex-wrap pt-1.5">
+                    <ng-container *ngFor="let control of categoryFormArray.controls; let i = index;">
+                        <div class="mx-2 mb-2">
+                            <input type="checkbox" id="control-{{i}}" [formControlName]="i" />
+                            <label for="control-{{i}}" class="category-element pl-1">{{ categories[i].name | translate }}</label>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="product-list">
         <apto-loading-indicator *ngIf="selectProductListLoading$ | async" [type]="loadingIndicatorTypes.ELEMENT"></apto-loading-indicator>
 
-        <ng-container *ngFor="let product of productList$ | async">
+        <ng-container *ngFor="let product of shownProductList">
             <div *ngIf="!product.hidden" class="product-wrapper" [attr.data-id]="product.id">
                 <div class="product" [routerLink]="['/product', product.seoUrl]">
                     <div class="image" [ngClass]="{'no-image': !product.previewImage}">
@@ -19,8 +35,7 @@
                         </div>
                         <button mat-flat-button color="primary"
                                 [routerLink]="['/product', product.seoUrl ?? product.id]"
-                                [attr.data-link]="'/product/' + (product.seoUrl ?? product.id)"
-                        >
+                                [attr.data-link]="'/product/' + (product.seoUrl ?? product.id)">
                             {{ contentSnippets$ | async | contentSnippet: 'button' }}
                         </button>
                     </div>
