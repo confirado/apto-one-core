@@ -106,4 +106,6 @@ export class ProductListComponent implements OnInit {
 
         return retval;
     }
+
+
 }
