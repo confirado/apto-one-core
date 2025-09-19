@@ -56,6 +56,7 @@ export class ProductRepository {
             active: response.active,
             minPurchase: response.minPurchase,
             maxPurchase: response.maxPurchase,
+            deliveryTime: response.deliveryTime,
             metaDescription: response.metaDescription,
             metaTitle: response.metaTitle,
             categories: response.categories

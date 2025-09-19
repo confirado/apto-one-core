@@ -25,6 +25,7 @@ export interface Product {
     active: boolean;
     minPurchase: number;
     maxPurchase: number;
+    deliveryTime: number;
     metaTitle: TranslatedValue;
     metaDescription: TranslatedValue;
     categories: Category[];
