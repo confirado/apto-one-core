@@ -1,38 +1,4 @@
 {
-  "aptoFooterNav": {
-    "menu": {
-      "entry5": {
-        "link": [],
-        "text": {
-          "de_DE": "Datenschutz"
-        }
-      },
-      "entry1": {
-        "link": [],
-        "text": {
-          "de_DE": "Kontakt"
-        }
-      },
-      "entry2": {
-        "link": [],
-        "text": {
-          "de_DE": "Impressum"
-        }
-      },
-      "entry4": {
-        "link": [],
-        "text": {
-          "de_DE": "Widerrufsrecht"
-        }
-      },
-      "entry3": {
-        "link": [],
-        "text": {
-          "de_DE": "AGB"
-        }
-      }
-    }
-  },
   "aptoSelect": {
     "suffix": {
       "de_DE": "Stück"
@@ -59,11 +25,6 @@
   },
   "aptoTrackingCodes": {
     "scripts": []
-  },
-  "aptoFooterPaymentProvider": {
-    "paymentImage": {
-      "de_DE": "/paymentimage.png"
-    }
   },
   "aptoProductIsNotAvailable": {
     "message": {
@@ -92,6 +53,11 @@
       "InvalidTokenException": {
         "de_DE": "Fehler beim Zurücksetzen des Passworts"
       }
+    }
+  },
+  "aptoProductList": {
+    "filterTitle": {
+      "de_DE": "Kategorien"
     }
   }
 }
