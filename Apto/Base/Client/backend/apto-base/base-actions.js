@@ -12,6 +12,7 @@ import CustomerActions from './actions/customer.actions';
 import CustomerGroupActions from './actions/customer-group.actions';
 import ContentSnippetActions from './actions/content-snippet.actions';
 import CustomPropertyActions from './actions/custom-property.actions';
+import SettingsActions from './actions/settings.actions';
 
 // actions must be an angular factory
 const AptoBackendActions = [
@@ -28,7 +29,8 @@ const AptoBackendActions = [
     CustomerActions,
     CustomerGroupActions,
     ContentSnippetActions,
-    CustomPropertyActions
+    CustomPropertyActions,
+    SettingsActions
 ];
 
 export default AptoBackendActions;
