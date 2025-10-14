@@ -54,6 +54,18 @@
     {
       "alias": "@apto-catalog-frontend-summary-section-price",
       "path": "components/summary/summary-section-price/summary-section-price.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-summary-configuration",
+      "path": "components/summary/summary-configuration/summary-configuration.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-summary-finish-message",
+      "path": "components/summary/summary-finish-message/summary-finish-message.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-summary",
+      "path": "components/summary/summary.component.ts"
     }
   ]
 }
