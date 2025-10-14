@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
-import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 
 @Injectable()
 export class DialogService {

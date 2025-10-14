@@ -22,7 +22,7 @@ import { selectRuleRepairSettings } from '@apto-catalog-frontend/store/product/p
 import { loginSuccess, logoutSuccess } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
-import { ConfirmationDialogComponent } from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '@apto-catalog-frontend-confirmation-dialog';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';

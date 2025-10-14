@@ -14,7 +14,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+} from '@apto-catalog-frontend-confirmation-dialog';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';

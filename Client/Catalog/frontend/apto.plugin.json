@@ -54,6 +54,10 @@
     {
       "alias": "@apto-catalog-frontend-summary-section-price",
       "path": "components/summary/summary-section-price/summary-section-price.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-confirmation-dialog",
+      "path": "components/common/dialogs/confirmation-dialog/confirmation-dialog.component.ts"
     }
   ]
 }

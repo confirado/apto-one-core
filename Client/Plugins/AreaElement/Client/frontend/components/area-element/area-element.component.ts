@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '@apto-frontend/src/environments/environment';
 import {
   ConfirmationDialogComponent
-} from '@apto-catalog-frontend/components/common/dialogs/confirmation-dialog/confirmation-dialog.component';
+} from '@apto-catalog-frontend-confirmation-dialog';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
