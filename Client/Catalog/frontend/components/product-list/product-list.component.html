@@ -8,7 +8,7 @@
                 <div [formArrayName]="'categories'" class="flex flex-wrap pt-1.5">
                     <ng-container *ngFor="let control of categoryFormArray.controls; let i = index;">
                         <div class="mx-2 mb-2">
-                            <input type="checkbox" id="control-{{i}}" [formControlName]="i" />
+                            <input class="category-checkbox" type="checkbox" id="control-{{i}}" [formControlName]="i" />
                             <label for="control-{{i}}" class="category-element pl-1">{{ categories[i].name | translate }}</label>
                         </div>
                     </ng-container>
