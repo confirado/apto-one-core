@@ -169,8 +169,9 @@ export const addToBasket = createAction(
 			formData?: any;
       humanReadableState?: HumanReadableState;
       productImage?: string;
-      configurationId?: string
-      configurationType?: string
+      configurationId?: string;
+      configurationType?: string;
+      additionalData?: any;
 		};
 	}>()
 );

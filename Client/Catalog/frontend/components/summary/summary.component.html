@@ -27,7 +27,7 @@
                                 [size]="'big'"
                                 [width]="'100px'"
                             ></apto-quantity-input-editable>
-                            <button class="add-to-basket" color="primary" (click)="addBasket()" mat-flat-button>
+                            <button class="add-to-basket" color="primary" (click)="addToBasket()" mat-flat-button>
                                 {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
                             </button>
                         </div>
@@ -51,7 +51,7 @@
                             [name]="'quantityInput2'"
                             formControlName="quantityInput"
                         ></apto-quantity-input-editable>
-                        <button class="add-to-basket" color="primary" (click)="addBasket()" mat-flat-button>
+                        <button class="add-to-basket" color="primary" (click)="addToBasket()" mat-flat-button>
                             {{ contentSnippet$ | async | contentSnippet: 'addToBasket' }}
                         </button>
                     </div>
