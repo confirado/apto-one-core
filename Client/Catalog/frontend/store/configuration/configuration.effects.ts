@@ -480,6 +480,7 @@ export class ConfigurationEffects {
 
 				let additionalData: any = {
           productImages: payload.productImage ? [payload.productImage] : [],
+          ...(payload.additionalData ?? {}),
         };
 
         if (payload.type === 'REQUEST_FORM') {

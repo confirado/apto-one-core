@@ -81,7 +81,7 @@ export class SummaryComponent {
     return environment.showPrices;
   }
 
-	public addBasket(): void {
+	public addToBasket(): void {
     // @todo make product image size configurable
     if (this.renderImage) {
       this.renderImageService.resize(this.renderImage, 800).then((image: any) => {
@@ -92,6 +92,8 @@ export class SummaryComponent {
               productImage: image.src,
               configurationId: this.configurationId,
               configurationType: this.configurationType,
+              additionalData: {
+              },
             },
           })
         );
@@ -104,6 +106,8 @@ export class SummaryComponent {
             productImage: null,
             configurationId: this.configurationId,
             configurationType: this.configurationType,
+            additionalData: {
+            },
           },
         })
       );
