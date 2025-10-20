@@ -100,11 +100,6 @@ class CreateProductPdfInquiryHandler implements EventHandlerInterface
     private string $mediaDirectory;
 
     /**
-     * @var bool
-     */
-    private bool $sendPDFToCustomer;
-
-    /**
      * @var string|int
      */
     private $randomNumber;
@@ -200,7 +195,6 @@ class CreateProductPdfInquiryHandler implements EventHandlerInterface
         $this->assertValidConfig();
 
         // config
-        $this->sendPDFToCustomer = true;
         $this->randomNumber = 0;
         $this->randomNumberPrefix = '';
         if (array_key_exists('randomNumberPrefix', $this->config)) {
@@ -416,7 +410,7 @@ class CreateProductPdfInquiryHandler implements EventHandlerInterface
         }
 
         // set customer pdf
-        if (array_key_exists('generateUserPDF', $this->config) && $this->config['generateUserPDF'] && $this->sendPDFToCustomer) {
+        if (array_key_exists('generateUserPDF', $this->config) && $this->config['generateUserPDF']) {
             $customerPdf = $pdf;
         }
 

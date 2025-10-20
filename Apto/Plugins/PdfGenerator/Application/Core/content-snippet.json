@@ -115,40 +115,6 @@
           "de_DE": "zurück"
         }
       },
-      "mail": {
-        "customer": {
-          "dear": {
-            "de_DE": "Guten Tag,"
-          },
-          "dearMisses": {
-            "de_DE": "Sehr geehrte Frau"
-          },
-          "dearMister": {
-            "de_DE": "Sehr geehrter Herr"
-          },
-          "title": {
-            "de_DE": "Produktanfrage"
-          },
-          "orderNumber": {
-            "de_DE": "Bestellnummer: "
-          },
-          "priceText": {
-            "de_DE": "Gesamtbetrag inkl. MwSt.: "
-          },
-          "configurationLinkPrefix": {
-            "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
-          },
-          "configurationLink": {
-            "de_DE": "Konfiguration laden"
-          },
-          "WeHaveReceivedYourConfiguration": {
-            "de_DE": "Vielen Dank, dass Sie unseren Konfigurator genutzt haben."
-          },
-          "YoursSincerely": {
-            "de_DE": "<p>Herzlichste Grüße,</p>"
-          }
-        }
-      },
       "pdf": {
         "body": {
           "salutationW": {
