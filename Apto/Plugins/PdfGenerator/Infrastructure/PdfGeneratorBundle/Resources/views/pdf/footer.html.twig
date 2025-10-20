@@ -25,10 +25,6 @@
                             <td class="footer-table-column-value">{{ contentSnippets.company.phone[locale] | default('') }} </td>
                         </tr>
                         <tr>
-                            <td class="footer-table-column-name">{{ contentSnippets.common.mailName[locale] | default('') }}:</td>
-                            <td class="footer-table-column-value"><a class="footer-link" href="mailto:{{ contentSnippets.company.mail[locale] | default('') }}">{{contentSnippets.company.mail[locale] | default('') }}</a></td>
-                        </tr>
-                        <tr>
                             <td class="footer-table-column-name">{{ contentSnippets.common.internetName[locale] | default('') }}:</td>
                             <td class="footer-table-column-value"><a class="footer-link" href="{{ contentSnippets.company.websiteLink[locale] | default('')}}">{{contentSnippets.company.website[locale] | default('') }}</a></td>
                         </tr>

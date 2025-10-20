@@ -8,7 +8,6 @@ use Mpdf\HTMLParserMode;
 use Mpdf\MpdfException;
 
 use Apto\Base\Application\Core\Service\TemplateRendererInterface;
-use Apto\Base\Application\Core\Service\TemplateMailerInterface;
 use Apto\Base\Domain\Core\Service\AptoParameterInterface;
 use Apto\Base\Application\Core\Query\ContentSnippet\ContentSnippetFinder;
 use Apto\Base\Application\Core\Service\RequestStore;
@@ -38,7 +37,7 @@ use Apto\Plugins\PartsList\Application\Core\Service\Converter\CsvStringConverter
 use Apto\Plugins\PdfGenerator\Application\Core\Service\Pdf\PdfFactory;
 use Apto\Plugins\PdfGenerator\Application\Core\Service\Pdf\PdfTemplateVars;
 
-class SendProductInquiryHandler implements EventHandlerInterface
+class CreateProductPdfInquiryHandler implements EventHandlerInterface
 {
     /**
      * @var RequestStore
@@ -74,11 +73,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @var StatePriceService
      */
     protected StatePriceService $statePriceService;
-
-    /**
-     * @var TemplateMailerInterface
-     */
-    protected TemplateMailerInterface $templateMailer;
 
     /**
      * @var TemplateRendererInterface
@@ -164,7 +158,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @param ProductFinder $productFinder
      * @param ContentSnippetFinder $contentSnippetFinder
      * @param StatePriceService $statePriceService
-     * @param TemplateMailerInterface $templateMailer
      * @param TemplateRendererInterface $templateRenderer
      * @param AptoParameterInterface $aptoParameter
      * @param MediaFileSystemConnector $mediaFileSystemConnector
@@ -180,7 +173,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         ProductFinder $productFinder,
         ContentSnippetFinder $contentSnippetFinder,
         StatePriceService $statePriceService,
-        TemplateMailerInterface $templateMailer,
         TemplateRendererInterface $templateRenderer,
         AptoParameterInterface $aptoParameter,
         MediaFileSystemConnector $mediaFileSystemConnector,
@@ -194,7 +186,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $this->productFinder = $productFinder;
         $this->contentSnippetFinder = $contentSnippetFinder;
         $this->statePriceService = $statePriceService;
-        $this->templateMailer = $templateMailer;
         $this->templateRenderer = $templateRenderer;
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
         $this->csvStringConverter = $csvStringConverter;
@@ -373,7 +364,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             $this->storeData($customer, $productInquiry->getState());
         }
 
-        $this->sendMail($productInquiry);
+        $this->createPdf($productInquiry);
     }
 
     /**
@@ -382,7 +373,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @throws InvalidUuidException
      * @throws MpdfException
      */
-    protected function sendMail(ProductInquiry $productInquiry)
+    protected function createPdf(ProductInquiry $productInquiry)
     {
         // get customer
         $formData = $productInquiry->getFormData();
@@ -411,7 +402,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
             array_key_exists('generateUserPDF', $this->config) && $this->config['generateUserPDF']
         ) {
             try {
-                $pdf = $this->generatePDF($product, $formData, $customer, $productInquiry);
+                $pdf = $this->generatePdf($product, $formData, $customer, $productInquiry);
             } catch (\Exception $e) {
                 echo $e->getFile();
                 echo $e->getLine();
@@ -440,138 +431,10 @@ class SendProductInquiryHandler implements EventHandlerInterface
             );
         }
 
-        // send admin mail if config exists
-        if (array_key_exists('admin_mail', $this->config)) {
-            $this->sendAdminMail($productInquiry, $customer, $adminPdf, $product, $partsListCsv);
-        }
-
-        // send customer mail if config exists
-        if (array_key_exists('customer_mail', $this->config)) {
-            $this->sendCustomerMail($productInquiry, $customer, $customerPdf, $product, $partsListCsv);
-        }
-
         // upload parts list
         if ($this->hasPartsListFtpUpload()) {
             $this->uploadPartsList($partsListCsv);
         }
-    }
-
-    /**
-     * @param ProductInquiry $productInquiry
-     * @param array $customer
-     * @param string $pdf
-     * @param array $product
-     * @param $partsListCsv
-     * @return void
-     */
-    protected function sendCustomerMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product, $partsListCsv)
-    {
-        $locale = new AptoLocale($productInquiry->getLocale());
-        $hasBcc = array_key_exists('bcc', $this->config['customer_mail']);
-
-        // set sender mail
-        $mailFrom = [
-            'email' => $this->config['customer_mail']['mail_from'],
-            'name' => $this->config['customer_mail']['name_from']
-        ];
-
-        // get Template File
-        $templatePath = '@PdfGenerator/mail/customer/mail.html.twig';
-
-        // create customer mail
-        $mailCustomer = $this->generateMail(
-            $this->config['customer_mail']['subject'],
-            $mailFrom,
-            [
-                'email' => $customer['email'],
-                'name' => $customer['name']
-            ],
-            $hasBcc ? $this->config['customer_mail']['bcc'] : [],
-            $customer,
-            $productInquiry->getState(),
-            $templatePath,
-            $productInquiry->getQuantity(),
-            $productInquiry->getCompressedState(),
-            $productInquiry->getRenderImages(),
-            $locale,
-            $pdf,
-            $product,
-            $this->hasCustomerElementAttachments()
-        );
-
-        // add parts list attachment
-        if ($this->hasCustomerPartsListAttachment()) {
-            $mailCustomer['attachments'][] = [
-                'content' => $partsListCsv,
-                'name' => 'stückliste.csv',
-                'contentType' => 'text/csv'
-            ];
-        }
-
-        // send customer mail
-        $this->templateMailer->send($mailCustomer);
-    }
-
-    /**
-     * @param ProductInquiry $productInquiry
-     * @param array $customer
-     * @param string $pdf
-     * @param array $product
-     * @param string $partsListCsv
-     * @return void
-     */
-    protected function sendAdminMail(ProductInquiry $productInquiry, array $customer, string $pdf, array $product, string $partsListCsv)
-    {
-        $locale = new AptoLocale($productInquiry->getLocale());
-
-        // set bcc
-        $hasBcc = array_key_exists('bcc', $this->config['admin_mail']);
-
-        // set recipient mail
-        $mailTo = [
-            'email' => $this->config['admin_mail']['mail_to'],
-            'name' => $this->config['admin_mail']['name_to']
-        ];
-
-        // set sender mail
-        $mailFrom = $mailTo;
-        if (array_key_exists('mail_from', $this->config['admin_mail'])) {
-            $mailFrom['email'] = $this->config['admin_mail']['mail_from'];
-        }
-
-        if (array_key_exists('name_from', $this->config['admin_mail'])) {
-            $mailFrom['name'] = $this->config['admin_mail']['name_from'];
-        }
-
-        // create admin mail
-        $mailAdmin = $this->generateMail(
-            $this->config['admin_mail']['subject'],
-            $mailFrom,
-            $mailTo,
-            $hasBcc ? $this->config['admin_mail']['bcc'] : [],
-            $customer,
-            $productInquiry->getState(),
-            '@PdfGenerator/mail/admin/mail.html.twig',
-            $productInquiry->getQuantity(),
-            $productInquiry->getCompressedState(),
-            $productInquiry->getRenderImages(),
-            $locale,
-            $pdf,
-            $product,
-            $this->hasAdminElementAttachments()
-        );
-
-        // add parts list attachment
-        if ($this->hasAdminPartsListAttachment()) {
-            $mailAdmin['attachments'][] = [
-                'content' => $partsListCsv,
-                'name' => 'stückliste.csv',
-                'contentType' => 'text/csv'
-            ];
-        }
-
-        // create admin mail
-        $this->templateMailer->send($mailAdmin);
     }
 
     /**
@@ -612,128 +475,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
     }
 
     /**
-     * @param string $subject
-     * @param array $emailFrom
-     * @param array $emailTo
-     * @param array $bcc
-     * @param array $customer
-     * @param array $state
-     * @param string $template
-     * @param int $quantity
-     * @param array $compressedState
-     * @param array $renderImages
-     * @param string $locale
-     * @param string $pdf
-     * @param array $product
-     * @param bool $addElementAttachments
-     * @return array
-     */
-    protected function generateMail(
-        string $subject,
-        array $emailFrom,
-        array $emailTo,
-        array $bcc,
-        array $customer,
-        array $state,
-        string $template,
-        int $quantity,
-        array $compressedState,
-        array $renderImages,
-        string $locale,
-        string $pdf,
-        array $product,
-        bool $addElementAttachments
-    ): array {
-        $mail = [
-            'subject' => $subject,
-            'from' => [
-                'email' => $emailFrom['email'],
-                'name' => $emailFrom['name'] ?: ''
-            ],
-            'to' => [
-                'email' => $emailTo['email'],
-                'name' => $emailTo['name'] ?: ''
-            ],
-            'template' => $template,
-            'context' => [
-                'product' => $product,
-                'customer' => $customer,
-                'state' => $state,
-                'locale' => $locale,
-                'contentSnippets' => $this->contentSnippets['plugins']['pdfGenerator']['mail'],
-                'quantity' => $quantity,
-                'pdfToCustomer' =>  $this->sendPDFToCustomer,
-                'renderImages' => $renderImages,
-                'compressedState' => $compressedState,
-                'randomNumber' => $this->randomNumber,
-                'configurationId' => $this->basketItem->getConfigurationId(),
-                'prices' => $this->prices,
-                'showPrices' => $this->config['showPrices']
-            ],
-            'attachments' => []
-        ];
-
-        if ($pdf !== '') {
-            // set file name prefix
-            $pdfFileNamePrefix = '';
-            if (
-                array_key_exists('fileNamePrefix', $this->contentSnippets['plugins']['pdfGenerator']['pdf']) &&
-                array_key_exists($locale, $this->contentSnippets['plugins']['pdfGenerator']['pdf']['fileNamePrefix'])
-            ) {
-                $pdfFileNamePrefix = $this->contentSnippets['plugins']['pdfGenerator']['pdf']['fileNamePrefix'][$locale];
-            }
-
-            // add pdf as mail attachment
-            $mail['attachments'] = array_merge($mail['attachments'], [[
-                'name' => $pdfFileNamePrefix . $this->randomNumber . '.pdf',
-                'content' => $pdf,
-                'contentType' => 'application/pdf'
-            ]]);
-        }
-
-        if ($addElementAttachments === true) {
-            $mail['attachments'] = array_merge($mail['attachments'], $this->elementAttachments);
-        }
-
-        foreach ($bcc as $value) {
-            if ($value['email'] != '') {
-                $mail['bcc'][] = [
-                    'email' => $value['email'],
-                    'name' => $value['name'] ?: ''
-                ];
-            }
-        }
-
-        return $mail;
-    }
-
-    /**
-     * @return void
-     */
-    private function assertValidConfig()
-    {
-        if (array_key_exists('customer_mail', $this->config)) {
-            if (
-                // customer settings exists
-                !array_key_exists('subject', $this->config['customer_mail']) ||
-                !array_key_exists('mail_from', $this->config['customer_mail'])
-            ) {
-                throw new \InvalidArgumentException('Some settings are missing in parameters->apto_plugin_pdf_generator');
-            }
-        }
-
-        if (array_key_exists('admin_mail', $this->config)) {
-            if (
-                // admin settings exists
-                !array_key_exists('subject', $this->config['admin_mail']) ||
-                !array_key_exists('mail_to', $this->config['admin_mail'])
-            ) {
-                throw new \InvalidArgumentException('Some settings are missing in parameters->apto_plugin_pdf_generator');
-            }
-        }
-    }
-
-    /**
      * @param array $product
      * @param array $formData
      * @param array $customer
@@ -742,7 +483,7 @@ class SendProductInquiryHandler implements EventHandlerInterface
      * @throws InvalidUuidException
      * @throws MpdfException
      */
-    private function generatePDF(array $product, array $formData, array $customer, ProductInquiry $productInquiry): string
+    private function generatePdf(array $product, array $formData, array $customer, ProductInquiry $productInquiry): string
     {
         // set locale
         $locale = new AptoLocale($productInquiry->getLocale());
@@ -977,62 +718,6 @@ class SendProductInquiryHandler implements EventHandlerInterface
         $offerData = new OfferData($this->offerDataRepository->nextIdentity(), $this->randomNumber, $data);
         $this->offerDataRepository->add($offerData);
         $offerData->publishEvents();
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasAdminElementAttachments(): bool
-    {
-        if (
-            array_key_exists('add_element_attachments', $this->config['admin_mail']) && $this->config['admin_mail']['add_element_attachments']
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasAdminPartsListAttachment(): bool
-    {
-        if (
-            array_key_exists('add_parts_list_attachment', $this->config['admin_mail']) && $this->config['admin_mail']['add_parts_list_attachment']
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasCustomerElementAttachments(): bool
-    {
-        if (
-            array_key_exists('add_element_attachments', $this->config['customer_mail']) && $this->config['customer_mail']['add_element_attachments']
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasCustomerPartsListAttachment(): bool
-    {
-        if (
-            array_key_exists('add_parts_list_attachment', $this->config['customer_mail']) && $this->config['customer_mail']['add_parts_list_attachment']
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

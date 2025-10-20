@@ -18,8 +18,7 @@
             {% endif %}
             {{ customer.street }} <br>
             {{ customer.zipCode }} {{ customer.city }} <br>
-            {{ contentSnippets.common.telephoneName[locale] | default('') }}: {{ customer.phone }} <br>
-            {{ contentSnippets.common.mailName[locale] | default('') }}: {{ customer.email }} <br>
+            {{ contentSnippets.common.telephoneName[locale] | default('') }}: {{ customer.phone }}
         </p>
     </div>
 
