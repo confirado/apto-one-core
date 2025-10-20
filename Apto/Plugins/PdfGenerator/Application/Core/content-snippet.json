@@ -1,0 +1,256 @@
+{
+  "plugins": {
+    "pdfGenerator": {
+      "aptoSummary": {
+        "fieldsWhenUserIsLoggedIn": {
+          "de_DE": "all"
+        },
+        "values": {
+          "gender": {
+            "ms": {
+              "de_DE": "Frau"
+            },
+            "mr": {
+              "de_DE": "Herr"
+            },
+            "di": {
+              "de_DE": "keine Angabe"
+            }
+          }
+        },
+        "beforeSend": {
+          "headline": {
+            "de_DE": "Ihre Kontaktdaten"
+          },
+          "subline": {
+            "de_DE": "Bitte geben Sie uns Ihre Daten, damit wir mit einem Angebot auf Sie zukommen können"
+          }
+        },
+        "labels": {
+          "city": {
+            "de_DE": "Ort"
+          },
+          "cityPlaceholder": {
+            "de_DE": "Ihr Ort"
+          },
+          "company": {
+            "de_DE": "Unternehmen"
+          },
+          "companyPlaceholder": {
+            "de_DE": "Name Ihres Unternehmens"
+          },
+          "email": {
+            "de_DE": "E-Mail"
+          },
+          "emailPlaceholder": {
+            "de_DE": "Ihre E-Mail-Adresse"
+          },
+          "gender": {
+            "de_DE": "Anrede"
+          },
+          "genderPlaceholder": {
+            "de_DE": "Anrede"
+          },
+          "message": {
+            "de_DE": "Ihre Nachricht"
+          },
+          "messagePlaceholder": {
+            "de_DE": "Anmerkung, Wünsche, Notizen"
+          },
+          "name": {
+            "de_DE": "Vorname"
+          },
+          "namePlaceholder": {
+            "de_DE": "Ihr Vorname"
+          },
+          "surname": {
+            "de_DE": "Nachname"
+          },
+          "surnamePlaceholder": {
+            "de_DE": "Ihr Nachname"
+          },
+          "phone": {
+            "de_DE": "Telefon"
+          },
+          "phonePlaceholder": {
+            "de_DE": "Ihre Telefonnummer"
+          },
+          "street": {
+            "de_DE": "Adresse"
+          },
+          "streetPlaceholder": {
+            "de_DE": "Straße, Hausnummer"
+          },
+          "zipCode": {
+            "de_DE": "Postleitzahl"
+          },
+          "zipCodePlaceholder": {
+            "de_DE": "Ihre Postleitzahl"
+          }
+        },
+        "afterSend": {
+          "headlineError": {
+            "de_DE": "Ups,"
+          },
+          "headlineSuccess": {
+            "de_DE": "Glückwunsch!"
+          },
+          "sublineError": {
+            "de_DE": "Da ging etwas schief!"
+          },
+          "sublineSuccess": {
+            "de_DE": "Ihre Anfrage wurde erfolgreich versendet!"
+          }
+        },
+        "declarationOfConsent": {
+          "de_DE": "Durch das Absenden des Formulares erklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw. zur Kontaktaufnahme verwenden.<br />\nWeitere Informationen zum Datenschutz finden Sie in unserer <a href=\"https://www.confirado.de/rechtliches/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>.<br />\nAlle auf confirado.de genannten Preise sind Nettopreise (zzgl 19% USt.)."
+        },
+        "sendForm": {
+          "de_DE": "Anfrage senden"
+        },
+        "requiredMessage": {
+          "de_DE": "Alle Pflichtfelder sind mit einem Stern (*) gekennzeichnet."
+        },
+        "back": {
+          "de_DE": "zurück"
+        }
+      },
+      "mail": {
+        "customer": {
+          "dear": {
+            "de_DE": "Guten Tag,"
+          },
+          "dearMisses": {
+            "de_DE": "Sehr geehrte Frau"
+          },
+          "dearMister": {
+            "de_DE": "Sehr geehrter Herr"
+          },
+          "title": {
+            "de_DE": "Produktanfrage"
+          },
+          "orderNumber": {
+            "de_DE": "Bestellnummer: "
+          },
+          "priceText": {
+            "de_DE": "Gesamtbetrag inkl. MwSt.: "
+          },
+          "configurationLinkPrefix": {
+            "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
+          },
+          "configurationLink": {
+            "de_DE": "Konfiguration laden"
+          },
+          "WeHaveReceivedYourConfiguration": {
+            "de_DE": "Vielen Dank, dass Sie unseren Konfigurator genutzt haben."
+          },
+          "YoursSincerely": {
+            "de_DE": "<p>Herzlichste Grüße,</p>"
+          }
+        }
+      },
+      "pdf": {
+        "body": {
+          "salutationW": {
+            "de_DE": "Sehr geehrte Frau"
+          },
+          "salutationM": {
+            "de_DE": "Sehr geehrter Herr"
+          },
+          "salutationD": {
+            "de_DE": "Sehr geehrte Damen und Herren"
+          },
+          "ourOffer": {
+            "de_DE": "Unser Vorabangebot"
+          },
+          "afterOrderListTable": {
+            "de_DE": "<p>Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter www.confirado.de/agb/ einzusehen sind.</p><p>Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot.</p><p>Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen.</p><p><br /></p><p>- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten.</p><p>- Individuelle Anpassungen werden schrittweise durchgeführt</p>"
+          },
+          "beforeOrderListTable": {
+            "de_DE": "<p>die Umsetzung möchten wir Ihnen wie folgt anbieten.</p><p><br /></p><p>Ihre konfigurierbaren Produkte:</p><p>\n</p>"
+          },
+          "signature": {
+            "de_DE": "<p>Mit freundlichen Grüßen</p><p>Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt.</p>"
+          }
+        },
+        "common": {
+          "addressName": {
+            "de_DE": "Adresse"
+          },
+          "internetName": {
+            "de_DE": "Internet"
+          },
+          "mailName": {
+            "de_DE": "E-mail"
+          },
+          "telephoneName": {
+            "de_DE": "Telefon"
+          },
+          "faxName": {
+            "de_DE": "Fax"
+          },
+          "postalCodeName": {
+            "de_DE": "Postfach"
+          }
+        },
+        "company": {
+          "phone": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "name": {
+            "de_DE": "Confirado GmbH & Co. KG"
+          },
+          "mail": {
+            "de_DE": "info@confirado.de"
+          },
+          "website": {
+            "de_DE": "www.confirado.de"
+          },
+          "websiteLink": {
+            "de_DE": "https://www.confirado.de/"
+          },
+          "zip": {
+            "de_DE": "97616"
+          },
+          "city": {
+            "de_DE": "Bad Neustadt"
+          },
+          "street": {
+            "de_DE": "Salzpforte"
+          },
+          "postalCode": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "fax": {
+            "de_DE": "09771 - 68 78 250"
+          },
+          "contactPerson": {
+            "name": "",
+            "shortName": "",
+            "email": "",
+            "position": ""
+          }
+        },
+        "header": {
+          "logo": ["/logo.png"]
+        },
+        "footer": {
+          "city": {
+            "de_DE": "Bad Neustadt an der Saale"
+          }
+        },
+        "table": {
+          "elementColumnName": {
+            "de_DE": "Konfiguration"
+          },
+          "priceColumnName": {
+            "de_DE": "Preis"
+          },
+          "sectionColumnName": {
+            "de_DE": "Sektion"
+          }
+        }
+      }
+    }
+  }
+}

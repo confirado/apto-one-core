@@ -1,0 +1,41 @@
+<footer>
+    <table class="footer-table">
+        <tr>
+            {% if contentSnippets.footer.html[locale] | default('') %}
+                <td>
+                    {{ contentSnippets.footer.html[locale] | default('') | raw }}
+                </td>
+            {% else %}
+                <td nowrap class="align-left">
+                    <table class="table-no-spacing">
+                        <tr>
+                            <td class="footer-table-column-name">{{ contentSnippets.common.addressName[locale] | default('') }}:</td>
+                            <td class="footer-table-column-value">{{ contentSnippets.company.street[locale] | default('') }}</td>
+                        </tr>
+                        <tr>
+                            <td class="footer-table-column-name"></td>
+                            <td class="footer-table-column-value">{{ contentSnippets.company.zip[locale] | default('') }} {{ contentSnippets.footer.city[locale] | default('') }}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td nowrap class="align-right">
+                    <table class="table-no-spacing">
+                        <tr>
+                            <td class="footer-table-column-name">{{ contentSnippets.common.telephoneName[locale] | default('') }}:</td>
+                            <td class="footer-table-column-value">{{ contentSnippets.company.phone[locale] | default('') }} </td>
+                        </tr>
+                        <tr>
+                            <td class="footer-table-column-name">{{ contentSnippets.common.mailName[locale] | default('') }}:</td>
+                            <td class="footer-table-column-value"><a class="footer-link" href="mailto:{{ contentSnippets.company.mail[locale] | default('') }}">{{contentSnippets.company.mail[locale] | default('') }}</a></td>
+                        </tr>
+                        <tr>
+                            <td class="footer-table-column-name">{{ contentSnippets.common.internetName[locale] | default('') }}:</td>
+                            <td class="footer-table-column-value"><a class="footer-link" href="{{ contentSnippets.company.websiteLink[locale] | default('')}}">{{contentSnippets.company.website[locale] | default('') }}</a></td>
+                        </tr>
+                    </table>
+                </td>
+            {% endif %}
+        </tr>
+    </table>
+</footer>
+

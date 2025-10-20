@@ -1,0 +1,150 @@
+<div class="container">
+    <div class="consignor-container margin-bottom-small">
+        <small class="consignor">{{ contentSnippets.company.name[locale] | default('') }} &#9899;
+            {{ contentSnippets.company.street[locale] | default('') }} &#9899;
+            {{ contentSnippets.company.zip[locale] | default('') }} {{ contentSnippets.company.city[locale] | default('') }}
+        </small>
+    </div>
+
+    <div class="customer-address-container margin-bottom-small">
+        <p>
+            {{ customer.company }}<br>
+            {% if customer.gender == 'm' %}
+                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% elseif customer.gender == 'f' %}
+                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% else %}
+                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }} {{ customer.surname }} <br>
+            {% endif %}
+            {{ customer.street }} <br>
+            {{ customer.zipCode }} {{ customer.city }} <br>
+            {{ contentSnippets.common.telephoneName[locale] | default('') }}: {{ customer.phone }} <br>
+            {{ contentSnippets.common.mailName[locale] | default('') }}: {{ customer.email }} <br>
+        </p>
+    </div>
+
+    <div class="title-container margin-bottom-big">
+        <div class="title-container-div">
+            <table class="title-table table-border-collapse">
+                <thead>
+                    <tr>
+                        <th class="title-table-order-number">Angebotsnummer</th>
+                        <th class="title-table-order-date">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="title-table-order-number">{{ randomNumber }}</td>
+                        <td class="title-table-order-date">{{ "now" | date("d.m.Y") }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="title-headline margin-bottom-small">
+        <h2>{{ contentSnippets.body.ourOffer[locale] | default('') }}</h2>
+    </div>
+
+    <div class="before-order-list-table-container margin-bottom-small">
+        <p>
+            {% if customer.gender == 'm' %}
+                {{contentSnippets.body.salutationM[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
+            {% elseif customer.gender == 'f' %}
+                {{contentSnippets.body.salutationW[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
+            {% else %}
+                {{contentSnippets.body.salutationD[locale]|default('')}} {{ customer.name }} {{ customer.surname }},
+            {% endif %}
+        </p>
+        <p>
+            {% if contentSnippets.body.beforeOrderListTable[locale] %}
+                {{ contentSnippets.body.beforeOrderListTable[locale] | default('') | raw }}
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="order-list-container margin-bottom-big">
+        <table class="order-list-table table-no-spacing">
+            <caption>
+                {{ product['name'][locale] | default('') }}
+            </caption>
+            <thead>
+                <tr>
+                    <th class="order-list-table-th-section">
+                        {{contentSnippets.table.sectionColumnName[locale] | default('')}}
+                    </th>
+                    <th class="order-list-table-th-element">
+                        {{contentSnippets.table.elementColumnName[locale] | default('')}}
+                    </th>
+                    {% if showPrices %}
+                        <th class="order-list-table-th-price">
+                            {{ contentSnippets.table.priceColumnName[locale] | default('') }}
+                        </th>
+                    {% endif %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for section in sortedProperties %}
+                    <tr>
+                        <td class="order-list-table-td-section">
+                            {{ section.name }}
+                        </td>
+                        <td class="order-list-table-td-element">
+                            {% for element in section.elements %}
+                                {{ element.name }}
+                                {% if element.properties|length > 0 %}
+                                <ul>
+                                    {% for property in element.properties %}
+                                        <li>{{ property.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <br />
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% if showPrices %}
+                        <td class="order-list-table-td-price">
+                            {{ sectionPrices[section.sectionId][section.repetition].sum.price.formatted }}
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                {% if showPrices %}
+                    <tr>
+                        <td class="order-list-table-td-section">
+                        </td>
+                        <td class="order-list-table-td-element">
+                            {% if customerGroup.showGross == false %}
+                                {{ contentSnippets.tax.withoutTax[locale] | default('') }}
+                            {% else %}
+                                {{ contentSnippets.tax.withTax[locale] | default('') }}
+                            {% endif %}
+                        </td>
+                        <td class="order-list-table-td-price">
+                            <b>{{ sumPrices.price.formatted }}</b>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="after-order-list-table-container margin-bottom-big">
+        <p>
+            {% if contentSnippets.body.afterOrderListTable[locale] %}
+                {{ contentSnippets.body.afterOrderListTable[locale] | default('') | raw }}
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="signature-container">
+        <p>
+            {% if contentSnippets.body.signature[locale] %}
+                {{ contentSnippets.body.signature[locale] | default('') | raw }}
+            {% endif %}
+        </p>
+    </div>
+</div>

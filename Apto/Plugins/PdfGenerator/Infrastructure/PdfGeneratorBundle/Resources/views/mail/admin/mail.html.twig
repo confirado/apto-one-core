@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            font-size: 13px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        body {
+            margin: 1em;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            color: #333333;
+            background-color: #FFFFFF;
+        }
+
+        b, strong {
+            font-weight: bold;
+        }
+
+        small {
+            font-size: 80%;
+        }
+
+        sub, sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sup {
+            top: -0.5em;
+        }
+
+        sub {
+            bottom: -0.25em;
+        }
+
+        a {
+            background-color: transparent;
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        th {
+            text-align: left;
+            background: #F0F0F0;
+        }
+
+        table {
+            background-color: transparent;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        table th {
+            padding: 8px;
+            margin: 0;
+            line-height: 1em;
+            vertical-align: middle;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table td {
+            padding: 8px;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+<p>
+    Es liegt eine neue Anfrage des Kunden {{ customer.name }} {{ customer.surname }} vor.
+</p>
+
+{% if pdfToCustomer == false %}
+    <p>
+        <strong style="color: red;">ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!</strong>
+    </p>
+{% endif %}
+
+<p>
+    <strong>Bestellnummer:</strong> {{ randomNumber }}
+</p>
+
+{% if showPrices %}
+<p>
+    <strong>Gesamtbetrag: </strong> {{ quantity > 1 ? quantity ~ ' * ' : '' }}{{ prices.sum.price.formatted }}
+</p>
+{% endif %}
+
+<p>
+    <strong>Link zur Konfiguration:</strong>
+    <a href="{{ url('apto_base_infrastructure_aptobase_frontend_index') }}#/configuration/basket/{{ configurationId }}">
+        Konfiguration laden
+    </a>
+</p>
+<p>
+    <strong>Kundendaten:</strong>
+</p>
+<table>
+    <thead>
+    <tr>
+        <th>field</th>
+        <th>value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key in customer|keys %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ customer[key] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p>
+    <strong>Konfiguration:</strong> {{ product.name[locale]|default('') }}
+</p>
+
+<table>
+    <thead>
+    <tr>
+        <th>field</th>
+        <th>value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key in state|keys %}
+        <tr>
+            <td><strong>{{ key }}</strong></td>
+            <td>
+                {% for element in state[key] %}
+                    {{ element.name }}
+
+                    {% if element.values|length > 0 %}
+                        <br /><br />Eigenschaften:
+
+                        {% for valueKey in element.values|keys %}
+                            <br />{{ valueKey }}: {{ element.values[valueKey] }}<br />
+                        {% endfor %}
+                    {% endif %}
+                    {% if loop.last == false %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td><strong>quantity</strong></td>
+        <td>{{ quantity }}</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
