@@ -15,7 +15,7 @@ import {
   setPrevStep,
   setQuantity, setSectionTouched,
   setStep, updateConfigurationState,
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+} from '@apto-catalog-frontend-configuration-actions';
 import {
   ComputedValues,
   Configuration,
@@ -26,7 +26,7 @@ import {
   StatePrice,
   TempStateItem,
   ConfigurationError,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { Action, createReducer, on } from '@ngrx/store';
 
 export interface ConfigurationState {

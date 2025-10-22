@@ -12,7 +12,7 @@ import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/conte
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
-import { setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { setStep } from '@apto-catalog-frontend-configuration-actions';
 import {
   selectBasicPrice,
   selectBasicPseudoPrice,
@@ -21,8 +21,8 @@ import {
   selectSectionPrice, selectSectionPriceTable, selectSectionPseudoPrice,
   selectSumPrice,
   selectSumPseudoPrice,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-selectors';
+import { SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend-configuration-model';
 
 @Component({
   selector: 'apto-summary-configuration',

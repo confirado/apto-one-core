@@ -1,9 +1,9 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Material, MaterialPickerItem } from '@apto-catalog-frontend/models/material-picker';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { selectProgressState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectProgressState } from '@apto-catalog-frontend-configuration-selectors';
 import { Store } from '@ngrx/store';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';

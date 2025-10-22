@@ -7,7 +7,7 @@ import {
   ComputedValues,
   Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
   RenderImage, StatePrice, UpdateBasketConfigurationArguments,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 

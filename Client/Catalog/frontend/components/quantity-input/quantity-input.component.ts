@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { setQuantity } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectQuantity } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { setQuantity } from '@apto-catalog-frontend-configuration-actions';
+import { selectQuantity } from '@apto-catalog-frontend-configuration-selectors';
 import { Store } from '@ngrx/store';
 import { debounceTime, delay, map } from 'rxjs';
 

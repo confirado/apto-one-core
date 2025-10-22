@@ -15,8 +15,8 @@ import {
   MaterialPickerItem, Property,
   PropertyGroup
 } from '@apto-catalog-frontend/models/material-picker';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { ItemsUpdatePayload } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.model";
 import {

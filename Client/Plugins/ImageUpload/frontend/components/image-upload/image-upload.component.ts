@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Store } from '@ngrx/store';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { setHideOnePage } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { setHideOnePage } from '@apto-catalog-frontend-configuration-actions';
 import { findEditableRenderImage, setCanvasElement } from '@apto-image-upload-frontend/store/canvas/canvas.actions';
 
 @Component({

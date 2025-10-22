@@ -6,7 +6,7 @@ import {
   ProgressStep,
   RenderImage,
   RenderImageData, SectionPriceTableItem, ParameterStateTypes, ProgressStatuses, ElementState, SectionTypes, HumanReadableFullState,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';

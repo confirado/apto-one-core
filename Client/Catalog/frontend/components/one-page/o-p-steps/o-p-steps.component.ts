@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ProgressStep } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectProgressState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { ProgressStep } from '@apto-catalog-frontend-configuration-model';
+import { selectProgressState } from '@apto-catalog-frontend-configuration-selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { Group } from '@apto-catalog-frontend/store/product/product.model';

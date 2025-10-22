@@ -10,7 +10,7 @@ import {
   initMaterialPicker,
   initMaterialPickerSuccess
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.actions";
-import { selectConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectConfiguration } from '@apto-catalog-frontend-configuration-selectors';
 
 @Injectable()
 export class MaterialPickerEffects {

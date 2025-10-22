@@ -10,8 +10,8 @@ import {
   getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
   initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState
 }
-  from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
+  from '@apto-catalog-frontend-configuration-actions';
+import { ConfigurationRepository } from '@apto-catalog-frontend-configuration-repository';
 import { ProductRepository } from '@apto-catalog-frontend/store/product/product.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';

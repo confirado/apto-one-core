@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 

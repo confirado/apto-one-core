@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { setNextPerspective, setPrevPerspective } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { setNextPerspective, setPrevPerspective } from '@apto-catalog-frontend-configuration-actions';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

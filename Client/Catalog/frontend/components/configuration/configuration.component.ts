@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { initConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { initConfiguration } from '@apto-catalog-frontend-configuration-actions';
+import { selectConfiguration } from '@apto-catalog-frontend-configuration-selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { Title } from '@angular/platform-browser';

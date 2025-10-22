@@ -1,4 +1,4 @@
-import { configurationReducer, ConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.reducer';
+import { configurationReducer, ConfigurationState } from '@apto-catalog-frontend-configuration-reducer';
 import { productReducer, ProductState } from '@apto-catalog-frontend/store/product/product.reducer';
 import { Action, ActionReducerMap, createFeatureSelector } from '@ngrx/store';
 

@@ -7,11 +7,11 @@ import {
     ElementState,
     ProgressElement, ProgressStatuses,
     ProgressStep
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import {
     selectSectionProductElements,
     selectSectionStateElements
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-selectors';
 
 @Component({
     selector: 'apto-o-p-step',

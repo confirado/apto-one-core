@@ -13,8 +13,8 @@ import { Store } from "@ngrx/store";
 import {
   selectSectionPrice,
   selectSectionPriceTable
-} from "@apto-catalog-frontend/store/configuration/configuration.selectors";
-import { SectionPriceTableItem } from "@apto-catalog-frontend/store/configuration/configuration.model";
+} from "@apto-catalog-frontend-configuration-selectors";
+import { SectionPriceTableItem } from "@apto-catalog-frontend-configuration-model";
 import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 
 @Component({

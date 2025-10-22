@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { addGuestConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { addGuestConfiguration } from '@apto-catalog-frontend-configuration-actions';
 import { Store } from '@ngrx/store';
 import { selectContentSnippet } from "@apto-base-frontend/store/content-snippets/content-snippets.selectors";
 

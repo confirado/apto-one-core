@@ -70,6 +70,30 @@
     {
       "alias": "@apto-catalog-frontend-confirmation-dialog",
       "path": "components/common/dialogs/confirmation-dialog/confirmation-dialog.component.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-actions",
+      "path": "store/configuration/configuration.actions.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-effects",
+      "path": "store/configuration/configuration.effects.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-model",
+      "path": "store/configuration/configuration.model.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-reducer",
+      "path": "store/configuration/configuration.reducer.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-repository",
+      "path": "store/configuration/configuration.repository.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-configuration-selectors",
+      "path": "store/configuration/configuration.selectors.ts"
     }
   ]
 }

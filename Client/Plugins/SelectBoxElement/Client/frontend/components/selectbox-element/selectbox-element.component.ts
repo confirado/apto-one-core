@@ -4,8 +4,8 @@ import { TranslatedValue } from '@apto-base-core/store/translated-value/translat
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { startWith } from 'rxjs';

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 
 @Component({

@@ -3,7 +3,7 @@ import { MessageBusService } from '@apto-base-core/services/message-bus.service'
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { MessageBusResponse } from '@apto-base-core/models/message-bus-response';
-import { onError } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { onError } from '@apto-catalog-frontend-configuration-actions';
 
 @Injectable()
 export class AuthMessageBusService {

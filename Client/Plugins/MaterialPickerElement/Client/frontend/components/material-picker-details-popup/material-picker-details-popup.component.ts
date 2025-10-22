@@ -3,8 +3,8 @@ import { Material, MaterialPickerItem } from '@apto-catalog-frontend/models/mate
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { selectProgressState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { selectProgressState } from '@apto-catalog-frontend-configuration-selectors';
+import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 
 interface MaterialPickerDetailsPopupData {
   element: ProgressElement,

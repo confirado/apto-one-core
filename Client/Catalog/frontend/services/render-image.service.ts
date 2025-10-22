@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { environment } from '@apto-frontend/src/environments/environment';
-import { ElementState, RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ElementState, RenderImageData } from '@apto-catalog-frontend-configuration-model';
 import {
   selectElementState,
   selectRenderImagesForPerspective,
   selectStateActiveElements,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-selectors';
 import { ImageFromCanvas } from '@apto-catalog-frontend/models/image-from-canvas';
 import { ReplaceColorData } from '@apto-catalog-frontend/models/replace-color-data';
 import { selectElement, selectElements } from '@apto-catalog-frontend/store/product/product.selectors';

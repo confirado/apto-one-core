@@ -3,12 +3,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     setQuantity,
     updateConfigurationState
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { selectQuantity } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-actions';
+import { selectQuantity } from '@apto-catalog-frontend-configuration-selectors';
 import { Store } from '@ngrx/store';
 import { debounceTime, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ParameterStateTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { ParameterStateTypes } from '@apto-catalog-frontend-configuration-model';
 
 @Component({
     selector: 'apto-quantity-input-editable',

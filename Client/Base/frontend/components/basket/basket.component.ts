@@ -8,7 +8,7 @@ import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
-import { selectConfigurationLoading } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectConfigurationLoading } from '@apto-catalog-frontend-configuration-selectors';
 import { LoadingIndicatorComponent, LoadingIndicatorTypes } from '@apto-base-core/components/common/loading-indicator/loading-indicator.component';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { map, take } from 'rxjs/operators';

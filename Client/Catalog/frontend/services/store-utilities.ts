@@ -1,6 +1,6 @@
 import { CatalogFeatureState } from '@apto-catalog-frontend/store/feature';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
-import { HumanReadableFullState, HumanReadableState, SectionTypes } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { HumanReadableFullState, HumanReadableState, SectionTypes } from '@apto-catalog-frontend-configuration-model';
 
 /**
  * Return the state in special formatting usually ued for request or offer configuration forms

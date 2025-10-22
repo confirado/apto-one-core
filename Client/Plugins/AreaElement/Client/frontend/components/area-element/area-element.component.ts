@@ -5,12 +5,12 @@ import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import {
   getConfigurationStateSuccess,
   updateConfigurationState,
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+} from '@apto-catalog-frontend-configuration-actions';
 import {
   AreaElementDefinitionProperties,
   ConfigurationError,
   ProgressElement,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -27,7 +27,7 @@ import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-
 import { DialogTypesEnum } from '@apto-frontend/src/configs-static/dialog-types-enum';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
-import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectConfigurationError } from '@apto-catalog-frontend-configuration-selectors';
 
 @UntilDestroy()
 @Component({

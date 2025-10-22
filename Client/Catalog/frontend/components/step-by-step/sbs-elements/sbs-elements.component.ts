@@ -12,7 +12,7 @@ import {
   ElementState,
   ProgressElement,
   ProgressState, SectionTypes,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import {
   selectProduct
 } from '@apto-catalog-frontend/store/product/product.selectors';
@@ -22,13 +22,13 @@ import {
   selectCurrentProductElements,
   selectCurrentStateElements,
   selectProgressState,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-selectors';
 import {
   addToBasket,
   addToBasketSuccess,
   setSectionTouched,
   setStep
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+} from '@apto-catalog-frontend-configuration-actions';
 
 @UntilDestroy()
 @Component({

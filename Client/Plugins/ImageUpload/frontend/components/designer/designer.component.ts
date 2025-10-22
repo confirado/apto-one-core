@@ -17,7 +17,7 @@ import { CanvasState } from '@apto-image-upload-frontend/store/canvas/canvas.red
 import { FabricCanvasService } from '@apto-image-upload-frontend/services/fabric-canvas.service';
 import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/canvas/canvas.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { RenderImageData } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { RenderImageData } from '@apto-catalog-frontend-configuration-model';
 import { FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 
 @UntilDestroy()

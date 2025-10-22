@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ConfigurationError, ProgressElement } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
+import { ConfigurationError, ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Store } from '@ngrx/store';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
-import { selectConfigurationError } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { selectConfigurationError } from '@apto-catalog-frontend-configuration-selectors';
 
 @Component({
 	selector: 'apto-custom-text-element',

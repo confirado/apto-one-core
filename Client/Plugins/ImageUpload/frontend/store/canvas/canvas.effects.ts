@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { selectConfiguration } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { getRenderImagesSuccess } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { selectConfiguration } from '@apto-catalog-frontend-configuration-selectors';
+import { getRenderImagesSuccess } from '@apto-catalog-frontend-configuration-actions';
 import { CanvasRepository } from '@apto-image-upload-frontend/store/canvas/canvas.repository';
 import { findEditableRenderImage } from '@apto-image-upload-frontend/store/canvas/canvas.actions';
 

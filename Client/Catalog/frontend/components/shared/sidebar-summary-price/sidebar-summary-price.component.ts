@@ -8,8 +8,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
-import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import {addToBasket, addToBasketSuccess} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-frontend-configuration-selectors';
+import {addToBasket, addToBasketSuccess} from '@apto-catalog-frontend-configuration-actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 
 @UntilDestroy()

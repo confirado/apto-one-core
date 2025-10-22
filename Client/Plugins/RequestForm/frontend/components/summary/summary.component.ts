@@ -6,18 +6,18 @@ import { Actions, ofType } from '@ngrx/effects';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ViewportScroller } from '@angular/common';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
-import { addToBasket, addToBasketSuccess, onError } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { addToBasket, addToBasketSuccess, onError } from '@apto-catalog-frontend-configuration-actions';
 import {
   selectConfiguration,
   selectCurrentPerspective,
   selectPerspectives,
   selectRenderImage,
   selectSumPrice,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { HumanReadableState } from '@apto-catalog-frontend/store/configuration/configuration.model';
+import { HumanReadableState } from '@apto-catalog-frontend-configuration-model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 

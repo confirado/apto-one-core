@@ -18,13 +18,13 @@ import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets
 import {
   selectConfigurationError,
   selectStateElements,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
-import { updateConfigurationState } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+} from '@apto-catalog-frontend-configuration-selectors';
+import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
 import {
   ConfigurationError,
   ElementState,
   ProgressElement,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { Product, FloatInputTypes, CompareValueTypes, Section } from '@apto-catalog-frontend/store/product/product.model';
 
 import { number, Parser, parser } from 'mathjs';

@@ -4,7 +4,7 @@ import {
   ComputedValues,
   Configuration, CurrentSection,
   GetConfigurationStateArguments, HumanReadableFullStatePayload, HumanReadableState, PartsListPart, StatePrice, TempStateItem,
-} from '@apto-catalog-frontend/store/configuration/configuration.model';
+} from '@apto-catalog-frontend-configuration-model';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { createAction, props } from '@ngrx/store';
 

@@ -6,7 +6,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { RenderImageService } from "@apto-catalog-frontend/services/render-image.service";
-import { RenderImageData } from "@apto-catalog-frontend/store/configuration/configuration.model";
+import { RenderImageData } from "@apto-catalog-frontend-configuration-model";
 import {
   selectConfiguration,
   selectCurrentPerspective,
@@ -15,11 +15,11 @@ import {
   selectProgress,
   selectSumPrice,
   selectSumPseudoPrice,
-} from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+} from '@apto-catalog-frontend-configuration-selectors';
 import {
   createLoadingFlagAction,
   hideLoadingFlagAction
-} from "@apto-catalog-frontend/store/configuration/configuration.actions";
+} from "@apto-catalog-frontend-configuration-actions";
 
 @UntilDestroy()
 @Component({

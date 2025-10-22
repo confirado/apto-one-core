@@ -2,7 +2,7 @@ import {
   initConfiguration,
   initConfigurationSuccess,
   setNextStep, setPrevStep, setStep
-} from '@apto-catalog-frontend/store/configuration/configuration.actions';
+} from '@apto-catalog-frontend-configuration-actions';
 import { loadProductList, loadProductListSuccess } from '@apto-catalog-frontend/store/product/product.actions';
 import { Element, Group, Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { Action, createReducer, on } from '@ngrx/store';

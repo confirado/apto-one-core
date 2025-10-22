@@ -9,9 +9,9 @@ import { translate, TranslatedValue } from '@apto-base-core/store/translated-val
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
-import { setSectionTouched, setStep } from '@apto-catalog-frontend/store/configuration/configuration.actions';
-import { ProgressElement, ProgressState, ProgressStatuses, ProgressStep, SectionTypes, TempStateItem } from '@apto-catalog-frontend/store/configuration/configuration.model';
-import { selectTempState, selectElementValues, selectSectionIsValid } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
+import { setSectionTouched, setStep } from '@apto-catalog-frontend-configuration-actions';
+import { ProgressElement, ProgressState, ProgressStatuses, ProgressStep, SectionTypes, TempStateItem } from '@apto-catalog-frontend-configuration-model';
+import { selectTempState, selectElementValues, selectSectionIsValid } from '@apto-catalog-frontend-configuration-selectors';
 import { Element, Product } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 
