@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
-import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
+import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
   addGuestConfiguration, addGuestConfigurationSuccess, addOfferConfiguration, addOfferConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
   fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess, getElementComputableValues, getElementComputableValuesSuccess,

@@ -94,6 +94,10 @@
     {
       "alias": "@apto-catalog-frontend-configuration-selectors",
       "path": "store/configuration/configuration.selectors.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-service-catalog-message-bus",
+      "path": "services/catalog-message-bus.service.ts"
     }
   ]
 }

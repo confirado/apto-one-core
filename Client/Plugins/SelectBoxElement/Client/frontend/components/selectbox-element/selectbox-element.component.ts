@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { TranslatedValue } from '@apto-base-core/store/translated-value/translated-value.model';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
-import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
+import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
 import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

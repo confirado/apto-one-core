@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
-import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
+import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
   AddBasketConfigurationArguments,
   AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,

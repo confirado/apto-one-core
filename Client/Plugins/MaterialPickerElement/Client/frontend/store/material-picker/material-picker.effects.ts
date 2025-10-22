@@ -3,7 +3,7 @@ import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { forkJoin } from "rxjs";
 import { Store } from "@ngrx/store";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { CatalogMessageBusService } from "@apto-catalog-frontend/services/catalog-message-bus.service";
+import { CatalogMessageBusService } from "@apto-catalog-frontend-service-catalog-message-bus";
 import {
   findPoolItems,
   findPoolItemsSuccess,
