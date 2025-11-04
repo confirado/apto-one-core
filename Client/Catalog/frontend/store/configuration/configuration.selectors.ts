@@ -234,6 +234,13 @@ export const selectRenderImagesForPerspective = (perspective: string) => createS
   return state.configuration.renderImages[perspective] ?? [];
 });
 
+export const selectStatePrice = createSelector(featureSelector, (state: CatalogFeatureState) => {
+  if (state.configuration.statePrice === null) {
+    return null;
+  }
+  return state.configuration.statePrice;
+});
+
 export const selectSumPrice = createSelector(featureSelector, (state: CatalogFeatureState) => {
 	if (state.configuration.statePrice === null) {
 		return null;
