@@ -10,6 +10,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { Subject, takeUntil } from 'rxjs';
 import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { environment } from '@apto-frontend/src/environments/environment';
+import { Utils } from '@apto-one-template-frontend/models/utils';
 
 @Component({
 	selector: 'apto-configuration',
@@ -17,6 +18,8 @@ import { environment } from '@apto-frontend/src/environments/environment';
 	styleUrls: ['./configuration.component.scss'],
 })
 export class ConfigurationComponent implements OnInit, OnDestroy {
+  private utils: Utils = new Utils();
+
 	public readonly product$ = this.store.select(selectProduct);
 	public readonly configuration$ = this.store.select(selectConfiguration);
   private readonly destroy$ = new Subject<void>();
@@ -66,16 +69,17 @@ export class ConfigurationComponent implements OnInit, OnDestroy {
 				})
 			);
 		}
-
-    if (configurationId && configurationType) {
-      this.store.dispatch(
-        initConfiguration({
-          payload: {
-            id: configurationId,
-            type: configurationType
-          },
-        })
-      );
+    else if (configurationId && configurationType) {
+      this.utils.loadConfigurationJSON(configurationType, (json) => {
+        this.store.dispatch(
+          initConfiguration({
+            payload: {
+              id: configurationId,
+              type: configurationType
+            },
+          })
+        );
+      });
     }
 	}
 
