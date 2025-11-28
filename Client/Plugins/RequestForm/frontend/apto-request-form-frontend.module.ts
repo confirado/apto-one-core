@@ -16,7 +16,7 @@ import { SlotRegistry } from '@apto-base-core/slot/slot-registry';
 import { AptoBaseCoreModule } from '@apto-base-core/apto-base-core.module';
 import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.module';
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
-import { SummaryComponent } from './components/summary/summary.component';
+import { SummaryComponent } from '@apto-catalog-frontend-summary';
 import { RequestFormComponent } from '@apto-request-form-frontend-request-form';
 import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -24,7 +24,7 @@ import { AptoRequestFormFrontendCustomModule } from "@apto-request-form-frontend
 
 @NgModule({
 	declarations: [
-    RequestFormComponent, SummaryComponent, RequestMessageStateComponent
+    RequestFormComponent, RequestMessageStateComponent
   ],
 	exports: [
     AptoRequestFormFrontendCustomModule,
