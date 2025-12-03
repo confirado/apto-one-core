@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
 import {
@@ -48,7 +48,7 @@ export class AreaElementComponent implements OnInit {
   @Input()
   public isDialog = false;
 
-	public formElement = new UntypedFormGroup({});
+	public formElement = new UntypedFormGroup({}, [this.sumValidator(true)]);
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
 
@@ -82,6 +82,70 @@ export class AreaElementComponent implements OnInit {
 		return items;
 	}
 
+
+  private rangeValidator(min: number, max: number, allowZero: boolean) {
+    return (control: FormControl) => {
+      const value = control.value;
+
+      if (value === null || value === undefined) return null;
+      if (allowZero && value === 0) return null;
+      if (value < min || value > max) return { rangeError: true };
+
+      return null;
+    };
+  }
+
+  private sumValidator(allowZero: boolean) {
+    return (element) => {
+      if (!element.controls) return null;
+      if (Object.values(element.controls).length === 0) return null;
+
+      const value: number = this.getTotalValue();
+      if (allowZero && value === 0) return null;
+      if (value < this.getMinimumValue() || value > this.getMaximumValue()) return { rangeError: true };
+
+      return null;
+    };
+  }
+
+
+  private getTotalValue(): number {
+    let total: number = 0;
+
+    for (let c of Object.values(this.formElement.controls)) {
+      if (c.value && typeof(c.value) === 'number') {
+        total += Number(c.value);
+      }
+    }
+
+    return total;
+  }
+
+  private getMinimumValue(): number {
+    for (let [key, value] of Object.entries(this.element.element.definition.properties)) {
+      if (key === 'sumOfFieldValue') {
+        if (value[0].minimum) {
+          return value[0].minimum;
+        }
+      }
+    }
+
+    return 0;
+  }
+
+  private getMaximumValue(): number {
+    for (let [key, value] of Object.entries(this.element.element.definition.properties)) {
+      if (key === 'sumOfFieldValue') {
+        if (value[0].maximum) {
+          return value[0].maximum;
+        }
+      }
+    }
+
+    return 0;
+  }
+
+
 	public ngOnInit(): void {
 		if (!this.element) {
 			return;
@@ -96,15 +160,24 @@ export class AreaElementComponent implements OnInit {
 		for (
 			let i = 0;
 			i < Object.entries(this.element.element.definition.properties).filter(([property]) => property.includes('field_')).length;
-			i += 1
+			i++
 		) {
 			let itemsField: SelectItem[] = [];
       let validators = [];
 
       if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'input') {
-          validators = [
-            Validators.required,
-          ];
+        validators = [
+          Validators.required
+        ];
+
+        for (let index = 0; index < Object.entries(this.element.element.definition.properties[`field_${i}`]).length; index++) {
+          const min: number = this.element.element.definition.properties[`field_${i}`][index].minimum;
+          const max: number = this.element.element.definition.properties[`field_${i}`][index].maximum;
+
+          if (min || max) {
+            validators.push(this.rangeValidator(min, max, true));
+          }
+        }
       }
 
 			this.formElement.addControl(
@@ -116,7 +189,7 @@ export class AreaElementComponent implements OnInit {
 			);
 
 			if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'select') {
-				for (let index = 0; index < Object.entries(this.element.element.definition.properties[`field_${i}`]).length; index += 1) {
+				for (let index = 0; index < Object.entries(this.element.element.definition.properties[`field_${i}`]).length; index++) {
 					let itemField: SelectItem[] = [];
 					if (this.element.element.definition.properties[`field_${i}`][index].maximum) {
 						itemField = this.getSelectValues(
