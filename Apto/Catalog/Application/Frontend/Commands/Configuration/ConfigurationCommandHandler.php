@@ -18,11 +18,14 @@ use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Service\ConfigurableProduct\ConfigurableProductBuilder;
 use Apto\Catalog\Application\Core\Service\ShopConnector\BasketConnector;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\SimpleTaxCalculator;
+use Apto\Catalog\Application\Frontend\Events\Configuration\AnonymousConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\ConfigurationFinished;
 use Apto\Catalog\Application\Frontend\Events\Configuration\GuestConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\OfferConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Service\BasketItemFactory;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProductFactory;
+use Apto\Catalog\Domain\Core\Model\Configuration\AnonymousConfiguration;
+use Apto\Catalog\Domain\Core\Model\Configuration\AnonymousConfigurationRepository;
 use Apto\Catalog\Domain\Core\Model\Configuration\BasketConfiguration;
 use Apto\Catalog\Domain\Core\Model\Configuration\BasketConfigurationRepository;
 use Apto\Catalog\Domain\Core\Model\Configuration\CustomerConfiguration;
@@ -96,6 +99,11 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
     protected $proposedConfigurationRepository;
 
     /**
+     * @var AnonymousConfigurationRepository
+     */
+    protected $anonymousConfigurationRepository;
+
+    /**
      * @var GuestConfigurationRepository
      */
     protected $guestConfigurationRepository;
@@ -150,6 +158,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
      * @param CustomerConfigurationRepository $customerConfigurationRepository
      * @param OrderConfigurationRepository $orderConfigurationRepository
      * @param ProposedConfigurationRepository $proposedConfigurationRepository
+     * @param AnonymousConfigurationRepository $anonymousConfigurationRepository
      * @param GuestConfigurationRepository $guestConfigurationRepository
      * @param ImmutableConfigurationRepository $immutableConfigurationRepository
      * @param CodeConfigurationRepository $codeConfigurationRepository
@@ -169,6 +178,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         CustomerConfigurationRepository $customerConfigurationRepository,
         OrderConfigurationRepository $orderConfigurationRepository,
         ProposedConfigurationRepository $proposedConfigurationRepository,
+        AnonymousConfigurationRepository $anonymousConfigurationRepository,
         GuestConfigurationRepository $guestConfigurationRepository,
         ImmutableConfigurationRepository $immutableConfigurationRepository,
         CodeConfigurationRepository $codeConfigurationRepository,
@@ -189,6 +199,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         $this->customerConfigurationRepository = $customerConfigurationRepository;
         $this->orderConfigurationRepository = $orderConfigurationRepository;
         $this->proposedConfigurationRepository = $proposedConfigurationRepository;
+        $this->anonymousConfigurationRepository = $anonymousConfigurationRepository;
         $this->guestConfigurationRepository = $guestConfigurationRepository;
         $this->immutableConfigurationRepository = $immutableConfigurationRepository;
         $this->codeConfigurationRepository = $codeConfigurationRepository;
@@ -489,6 +500,55 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         );
         $this->proposedConfigurationRepository->add($proposedConfiguration);
         $proposedConfiguration->publishEvents();
+    }
+
+    /**
+     * @param AddAnonymousConfiguration $query
+     * @return void
+     * @throws ConfigurationInvalidMultipleSelection
+     * @throws ConfigurationProductRulesNotFulfilled
+     * @throws ConfigurationValueNotAllowedException
+     * @throws InvalidUuidException
+     * @throws AptoJsonSerializerException
+     */
+    public function handleAddAnonymousConfiguration(AddAnonymousConfiguration $command)
+    {
+        // get product from repository
+        $product = $this->productRepository->findById($command->getProductId());
+        if (null === $product) {
+            return '';
+        }
+
+        // get id
+        $id = $this->anonymousConfigurationRepository->nextIdentity();
+        if ('' !== $command->getId()) {
+            $id = new AptoUuid($command->getId());
+        }
+
+        // assign required variables
+        $state = new State($command->getState());
+
+        // assert valid values and rules
+        $configurableProduct = $this->configurableProductFactory->fromProductId($product->getId());
+        $this->valueValidationService->assertValidValues($configurableProduct, $state);
+        $this->ruleValidationService->validateState($configurableProduct, $state);
+
+        // todo shall we save payload into AnonymousConfiguration?
+        // todo if we save it then we need to update the corresponding twig template to match new humanredable state
+        // create new anonymous configuration
+        $anonymousConfiguration = new AnonymousConfiguration(
+            $id,
+            $product,
+            $state
+        );
+        $this->anonymousConfigurationRepository->add($anonymousConfiguration);
+        $anonymousConfiguration->publishEvents();
+
+        // fire AnonymousConfigurationAdded event
+        $this->eventBus->handle(new AnonymousConfigurationAdded(
+            $anonymousConfiguration->getId(),
+            $command->getPayload()
+        ));
     }
 
     /**
@@ -971,6 +1031,11 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
 
         yield AddProposedConfiguration::class => [
             'method' => 'handleAddProposedConfiguration',
+            'bus' => 'command_bus'
+        ];
+
+        yield AddAnonymousConfiguration::class => [
+            'method' => 'handleAddAnonymousConfiguration',
             'bus' => 'command_bus'
         ];
 

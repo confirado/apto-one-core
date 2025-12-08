@@ -122,6 +122,15 @@ export class CatalogMessageBusService {
 		return this.command('IncrementMaterialPickerMaterialClicks', [materialId]);
 	}
 
+  public addAnonymousConfiguration(
+    productId: string,
+    compressedState: any,
+    id: string,
+    payload: any[]
+  ): Observable<void> {
+    return this.command('AddAnonymousConfiguration', [productId, compressedState, id, payload]);
+  }
+
 	public addBasketConfiguration(
 		productId: string,
 		compressedState: any,

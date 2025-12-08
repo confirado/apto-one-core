@@ -2,6 +2,7 @@
 
 namespace Apto\Catalog\Application\Frontend\Query\Product;
 
+use Apto\Catalog\Application\Core\Query\Configuration\AnonymousConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\BasketConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\CodeConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\GuestConfigurationFinder;
@@ -24,6 +25,11 @@ class ProductQueryHandler implements QueryHandlerInterface
      * @var ConfigurableProductBuilder
      */
     private ConfigurableProductBuilder $configurableProductBuilder;
+
+    /**
+     * @var AnonymousConfigurationFinder
+     */
+    private AnonymousConfigurationFinder $anonymousConfigurationFinder;
 
     /**
      * @var GuestConfigurationFinder
@@ -62,6 +68,7 @@ class ProductQueryHandler implements QueryHandlerInterface
 
     /**
      * @param ConfigurableProductBuilder $configurableProductBuilder
+     * @param AnonymousConfigurationFinder $anonymousConfigurationFinder
      * @param GuestConfigurationFinder $guestConfigurationFinder
      * @param BasketConfigurationFinder $basketConfigurationFinder
      * @param OrderConfigurationFinder $orderConfigurationFinder
@@ -72,6 +79,7 @@ class ProductQueryHandler implements QueryHandlerInterface
      */
     public function __construct(
         ConfigurableProductBuilder $configurableProductBuilder,
+        AnonymousConfigurationFinder $anonymousConfigurationFinder,
         GuestConfigurationFinder $guestConfigurationFinder,
         BasketConfigurationFinder $basketConfigurationFinder,
         OrderConfigurationFinder $orderConfigurationFinder,
@@ -81,6 +89,7 @@ class ProductQueryHandler implements QueryHandlerInterface
         AptoParameterInterface $aptoParameter
     ) {
         $this->configurableProductBuilder = $configurableProductBuilder;
+        $this->anonymousConfigurationFinder = $anonymousConfigurationFinder;
         $this->guestConfigurationFinder = $guestConfigurationFinder;
         $this->basketConfigurationFinder = $basketConfigurationFinder;
         $this->orderConfigurationFinder = $orderConfigurationFinder;
@@ -129,6 +138,10 @@ class ProductQueryHandler implements QueryHandlerInterface
         // get configuration by type
         $configuration = null;
         switch ($query->getType()) {
+            case 'anonymous': {
+                $configuration = $this->anonymousConfigurationFinder->findById($query->getId());
+                break;
+            }
             case 'guest': {
                 $configuration = $this->guestConfigurationFinder->findById($query->getId());
                 break;
