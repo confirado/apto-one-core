@@ -24,7 +24,7 @@ class AnonymousConfigurationOrmFinder extends AptoOrmFinder implements Anonymous
         $builder
             ->findById($id)
             ->setValues([
-                'g' => [
+                'a' => [
                     ['id.id', 'id'],
                     'created',
                     'state'
@@ -33,7 +33,7 @@ class AnonymousConfigurationOrmFinder extends AptoOrmFinder implements Anonymous
                     ['id.id', 'id']
                 ]
             ])->setJoins([
-                'g' => [
+                'a' => [
                     ['product', 'p', 'id']
                 ]
             ]);
