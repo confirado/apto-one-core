@@ -1,5 +1,5 @@
 <ng-container *ngIf="progressStep && product && elements">
-    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [id]="'id' + index?.toString()" [expanded]="index === 0">
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [id]="'id' + index?.toString()" [expanded]="panelOpenState === true">
         <mat-expansion-panel-header [class.divider-line]="panelOpenState">
             <div>
                 <mat-panel-title>
