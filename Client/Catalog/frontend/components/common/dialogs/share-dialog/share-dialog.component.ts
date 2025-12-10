@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogDataInterface } from '@apto-catalog-frontend/components/common/dialogs/dialog-data-interface';
 
 @Component({
 	selector: 'apto-share-dialog',
@@ -11,6 +13,7 @@ import { combineLatest, map } from 'rxjs';
 	styleUrls: ['./share-dialog.component.scss'],
 })
 export class ShareDialogComponent {
+
 	public readonly links$ = combineLatest([
 		this.store.select(selectContentSnippet('aptoSliderAction.shareLinks')),
 		this.store.select(selectLocale),
@@ -21,7 +24,8 @@ export class ShareDialogComponent {
 				return [];
 			}
 
-			const currentURL = encodeURIComponent(window.location.href);
+      const currentURL: string = this.getCurrentURL();
+
 			const links = [];
 			for (const link of shareLinks.children) {
 				if (link.children) {
@@ -40,5 +44,19 @@ export class ShareDialogComponent {
 		})
 	);
 
-	public constructor(private store: Store) {}
+	public constructor(
+    @Inject(MAT_DIALOG_DATA) public data: DialogDataInterface,
+    private store: Store
+  ) {}
+
+
+  private getCurrentURL(): string {
+    let resultURL: string = window.location.href;
+
+    if (this.data && this.data['configurationId'] && this.data['configurationType']) {
+      resultURL = resultURL.replace(/\/product.*/, '/configuration/' + this.data['configurationType'] + '/' + this.data['configurationId']);
+    }
+
+    return encodeURIComponent(resultURL);
+  }
 }

@@ -170,6 +170,7 @@ const ConfigurationProvider = function() {
             addProposedConfiguration: ConfigurationActions.addProposedConfiguration,
             fetchProposedConfigurations: ConfigurationActions.fetchProposedConfigurations,
             getConfigurationState: ConfigurationActions.getConfigurationState,
+            addSharedConfiguration: ConfigurationActions.addSharedConfiguration,
             addGuestConfiguration: ConfigurationActions.addGuestConfiguration,
             addOfferConfiguration: ConfigurationActions.addOfferConfiguration,
             addCodeConfiguration: ConfigurationActions.addCodeConfiguration,
@@ -1157,6 +1158,42 @@ const ConfigurationProvider = function() {
             });
         }
 
+        function addSharedConfiguration(id, payload) {
+            if (!id) {
+                id = '';
+            }
+
+            if (!payload) {
+                payload = {};
+            }
+
+            // add inline additional data
+            if (APTO_INLINE && APTO_INLINE.additionalData && (APTO_INLINE.additionalData.swProductId || APTO_INLINE.additionalData.shopProductId)) {
+                if (APTO_INLINE.additionalData.swProductId) {
+                    payload.swProductId = APTO_INLINE.additionalData.swProductId;
+                }
+                if (APTO_INLINE.additionalData.shopProductId) {
+                    payload.shopProductId = APTO_INLINE.additionalData.shopProductId;
+                }
+            }
+
+            if (APTO_INLINE && APTO_INLINE.additionalData && (APTO_INLINE.additionalData.swProductUrl || APTO_INLINE.additionalData.shopProductUrl)) {
+                if (APTO_INLINE.additionalData.swProductUrl) {
+                    payload.swProductUrl = APTO_INLINE.additionalData.swProductUrl;
+                }
+                if (APTO_INLINE.additionalData.shopProductUrl) {
+                    payload.shopProductUrl = APTO_INLINE.additionalData.shopProductUrl;
+                }
+            }
+
+            return redux.addSharedConfiguration(
+                redux.productId,
+                self.getCompressedState(redux.configurationState, redux.quantity),
+                id,
+                payload
+            );
+        }
+
         function addGuestConfiguration(email, name, sendMail, id, payload) {
             if (!sendMail && sendMail !== false) {
                 sendMail = true;
@@ -1542,6 +1579,7 @@ const ConfigurationProvider = function() {
             previousPerspective: previousPerspective,
             addToBasket: addToBasket,
             addProposedConfiguration: addProposedConfiguration,
+            addSharedConfiguration: addSharedConfiguration,
             addGuestConfiguration: addGuestConfiguration,
             addOfferConfiguration: addOfferConfiguration,
             addCodeConfiguration: addCodeConfiguration,

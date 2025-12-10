@@ -6,7 +6,11 @@
 
                 <mat-accordion class="section-list">
 
-                    <mat-expansion-panel hideToggle [expanded]="i === 0">
+                    <mat-expansion-panel
+                        hideToggle
+                        (opened)="setGroupedStepExpanded(groupedStep, true)"
+                        (closed)="setGroupedStepExpanded(groupedStep, false)"
+                        [expanded]="isGroupedStepExpanded(groupedStep)">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <h3>{{groupedStep.group?.name | translate}}</h3>
@@ -21,6 +25,8 @@
                                 [elements]="step.elements"
                                 [description]="step.description"
                                 [product]="product"
+                                (expandedChanged)="setStepExpanded(step, $event)"
+                                [panelOpenState]="isStepExpanded(step)"
                                 [index]="i">
                             </apto-o-p-step>
                         </mat-accordion>
@@ -39,6 +45,8 @@
                         [elements]="step.elements"
                         [description]="step.description"
                         [product]="product"
+                        (expandedChanged)="setStepExpanded(step, $event)"
+                        [panelOpenState]="isStepExpanded(step)"
                         [index]="i">
                     </apto-o-p-step>
                 </mat-accordion>
@@ -55,6 +63,8 @@
 					[elements]="step.elements"
 					[description]="step.description"
 					[product]="product"
+                    (expandedChanged)="setStepExpanded(step, $event)"
+                    [panelOpenState]="isStepExpanded(step)"
                     [index]="i">
                 </apto-o-p-step>
 			</mat-accordion>

@@ -37,6 +37,11 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
     protected $proposedConfigurationFinder;
 
     /**
+     * @var SharedConfigurationFinder
+     */
+    protected $sharedConfigurationFinder;
+
+    /**
      * @var GuestConfigurationFinder
      */
     protected $guestConfigurationFinder;
@@ -62,6 +67,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
      * @param CustomerConfigurationFinder $customerConfigurationFinder
      * @param OrderConfigurationFinder $orderConfigurationFinder
      * @param ProposedConfigurationFinder $proposedConfigurationFinder
+     * @param SharedConfigurationFinder $sharedConfigurationFinder
      * @param GuestConfigurationFinder $guestConfigurationFinder
      * @param ImmutableConfigurationFinder $immutableConfigurationFinder
      * @param CodeConfigurationFinder $codeConfigurationFinder
@@ -73,6 +79,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         CustomerConfigurationFinder $customerConfigurationFinder,
         OrderConfigurationFinder $orderConfigurationFinder,
         ProposedConfigurationFinder $proposedConfigurationFinder,
+        SharedConfigurationFinder $sharedConfigurationFinder,
         GuestConfigurationFinder $guestConfigurationFinder,
         ImmutableConfigurationFinder $immutableConfigurationFinder,
         CodeConfigurationFinder $codeConfigurationFinder,
@@ -83,6 +90,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         $this->customerConfigurationFinder = $customerConfigurationFinder;
         $this->orderConfigurationFinder = $orderConfigurationFinder;
         $this->proposedConfigurationFinder = $proposedConfigurationFinder;
+        $this->sharedConfigurationFinder = $sharedConfigurationFinder;
         $this->guestConfigurationFinder = $guestConfigurationFinder;
         $this->immutableConfigurationFinder = $immutableConfigurationFinder;
         $this->codeConfigurationFinder = $codeConfigurationFinder;
@@ -151,6 +159,22 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         }
 
         return $this->prepareResult($result, 'proposed');
+    }
+
+    /**
+     * @param FindSharedConfiguration $query
+     * @return array|null
+     * @throws AptoJsonSerializerException
+     */
+    public function handleFindSharedConfiguration(FindSharedConfiguration $query)
+    {
+        $result = $this->sharedConfigurationFinder->findById($query->getConfigurationId());
+
+        if (null === $result) {
+            return $result;
+        }
+
+        return $this->prepareResult($result, 'shared');
     }
 
     /**
@@ -298,6 +322,11 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
 
         yield FindProposedConfiguration::class => [
             'method' => 'handleFindProposedConfiguration',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindSharedConfiguration::class => [
+            'method' => 'handleFindSharedConfiguration',
             'bus' => 'query_bus'
         ];
 

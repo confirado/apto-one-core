@@ -7,6 +7,7 @@ use Apto\Base\Application\Core\Service\TemplateMailerInterface;
 use Apto\Base\Application\Core\Service\RequestStore;
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
+use Apto\Catalog\Application\Frontend\Events\Configuration\SharedConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\GuestConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\OfferConfigurationAdded;
 use Apto\Catalog\Domain\Core\Model\Shop\Shop;
@@ -131,6 +132,20 @@ class ConfigurationEventHandler implements EventHandlerInterface
 
         // send customer mail
         $this->templateMailer->send($mail);
+    }
+
+    /**
+     * @param SharedConfigurationAdded $event
+     * @return void
+     */
+    public function onSharedConfigurationAdded(SharedConfigurationAdded $event)
+    {
+        // if configuration id is not set we have nothing to do
+        if (
+            !$event->getConfigurationId()
+        ) {
+            return;
+        }
     }
 
     /**
@@ -358,6 +373,11 @@ class ConfigurationEventHandler implements EventHandlerInterface
      */
     public static function getHandledMessages(): iterable
     {
+        yield SharedConfigurationAdded::class => [
+            'method' => 'onSharedConfigurationAdded',
+            'bus' => 'event_bus'
+        ];
+
         yield GuestConfigurationAdded::class => [
             'method' => 'onGuestConfigurationAdded',
             'bus' => 'event_bus'

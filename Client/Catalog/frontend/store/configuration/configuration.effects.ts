@@ -5,10 +5,32 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
-  addGuestConfiguration, addGuestConfigurationSuccess, addOfferConfiguration, addOfferConfigurationSuccess, addToBasket, addToBasketSuccess, fetchPartsList,
-  fetchPartsListSuccess, getConfigurationState, getConfigurationStateSuccess, getCurrentRenderImageSuccess, getElementComputableValues, getElementComputableValuesSuccess,
-  getRenderImagesSuccess, hideLoadingFlagAction, humanReadableStateLoadSuccess, initConfiguration,
-  initConfigurationSuccess, onError, setPrevStep, setPrevStepSuccess, setStep, setStepSuccess, updateConfigurationState
+  addSharedConfiguration,
+  addSharedConfigurationSuccess,
+  addGuestConfiguration,
+  addGuestConfigurationSuccess,
+  addOfferConfiguration,
+  addOfferConfigurationSuccess,
+  addToBasket,
+  addToBasketSuccess,
+  fetchPartsList,
+  fetchPartsListSuccess,
+  getConfigurationState,
+  getConfigurationStateSuccess,
+  getCurrentRenderImageSuccess,
+  getElementComputableValues,
+  getElementComputableValuesSuccess,
+  getRenderImagesSuccess,
+  hideLoadingFlagAction,
+  humanReadableStateLoadSuccess,
+  initConfiguration,
+  initConfigurationSuccess,
+  onError,
+  setPrevStep,
+  setPrevStepSuccess,
+  setStep,
+  setStepSuccess,
+  updateConfigurationState,
 }
   from '@apto-catalog-frontend-configuration-actions';
 import { ConfigurationRepository } from '@apto-catalog-frontend-configuration-repository';
@@ -246,6 +268,39 @@ export class ConfigurationEffects {
         })
       )
     )
+  );
+
+  public addSharedConfiguration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addSharedConfiguration),
+      withLatestFrom(this.store$.select(selectConfiguration)),
+      switchMap(([action, store]) =>
+        this.configurationRepository.addSharedConfiguration({
+          productId: store.productId as string,
+          compressedState: store.state.compressedState,
+          id: action.payload.id,
+          payload: {}
+        })
+      ),
+      switchMap((result: string) => [
+        addSharedConfigurationSuccess({ payload: { response: result } })
+      ])
+    )
+  );
+
+  public addSharedConfigurationSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(addSharedConfigurationSuccess),
+        map(() => {
+          this.matSnackBar.open(
+            'Ihre Konfiguration wurde gespeichert.',
+            undefined,
+            { duration: 3000 }
+          );
+        })
+      ),
+    { dispatch: false }
   );
 
 	public addGuestConfiguration$ = createEffect(() =>

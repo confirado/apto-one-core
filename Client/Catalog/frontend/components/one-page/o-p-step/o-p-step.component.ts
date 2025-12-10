@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 
@@ -19,6 +19,9 @@ import {
     styleUrls: ['./o-p-step.component.scss']
 })
 export class OPStepComponent implements OnInit {
+    @Output()
+    public expandedChanged = new EventEmitter<boolean>();
+
     @Input()
     public progressStep: ProgressStep | undefined;
 
@@ -40,7 +43,18 @@ export class OPStepComponent implements OnInit {
     @Input()
     public elements: ProgressElement[] | undefined | null;
 
-    public panelOpenState: boolean = false;
+    private _panelOpenState: boolean = false;
+    public get panelOpenState(): boolean {
+      return this._panelOpenState;
+    }
+    @Input()
+    public set panelOpenState(value: boolean) {
+      if (this._panelOpenState !== value) {
+        this.expandedChanged.emit(value);
+      }
+      this._panelOpenState = value;
+    }
+
     public sectionProductElements = [];
     public previewImageLink?: string;
 
@@ -65,7 +79,10 @@ export class OPStepComponent implements OnInit {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        this.previewImageLink = changes['progressStep']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        const previewImageLink = changes['progressStep']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        if (previewImageLink) {
+          this.previewImageLink = previewImageLink;
+        }
     }
 
     public isElementDisabled(elementId: string, sectionRepetition: number): boolean {

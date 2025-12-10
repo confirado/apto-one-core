@@ -125,6 +125,21 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
         }
     }
 
+    function addSharedConfiguration(productId, compressedState, id, payload) {
+        if (!id) {
+            id = '';
+        }
+
+        if (!payload) {
+            payload = {};
+        }
+
+        return {
+            type: getType('ADD_SHARED_CONFIGURATION'),
+            payload: MessageBusFactory.command('AddSharedConfiguration', [productId, compressedState, id, payload])
+        }
+    }
+
     function addGuestConfiguration(productId, compressedState, email, name, sendMail, id, payload) {
         if (!name) {
             name = '';
@@ -194,6 +209,10 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
             let configurationQuery = null;
             if (configurationType && configurationId) {
                 switch (configurationType) {
+                    case 'shared': {
+                        configurationQuery = MessageBusFactory.query('FindSharedConfiguration', [configurationId]);
+                        break;
+                    }
                     case 'basket': {
                         configurationQuery = MessageBusFactory.query('FindBasketConfiguration', [configurationId]);
                         break;
@@ -215,7 +234,7 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
                         break;
                     }
                     case 'immutable': {
-                        configurationQuery = MessageBusFactory.query('FindImmutableConfiguration', [configurationId])
+                        configurationQuery = MessageBusFactory.query('FindImmutableConfiguration', [configurationId]);
                         break;
                     }
                     case 'code': {
@@ -313,6 +332,7 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
         updateBasketConfiguration: updateBasketConfiguration,
         addCustomerConfiguration: addCustomerConfiguration,
         addProposedConfiguration: addProposedConfiguration,
+        addSharedConfiguration: addSharedConfiguration,
         addGuestConfiguration: addGuestConfiguration,
         addOfferConfiguration: addOfferConfiguration,
         addCodeConfiguration: addCodeConfiguration,

@@ -18,11 +18,14 @@ use Apto\Base\Domain\Core\Service\AptoJsonSerializerException;
 use Apto\Catalog\Application\Core\Service\ConfigurableProduct\ConfigurableProductBuilder;
 use Apto\Catalog\Application\Core\Service\ShopConnector\BasketConnector;
 use Apto\Catalog\Application\Core\Service\TaxCalculator\SimpleTaxCalculator;
+use Apto\Catalog\Application\Frontend\Events\Configuration\SharedConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\ConfigurationFinished;
 use Apto\Catalog\Application\Frontend\Events\Configuration\GuestConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Events\Configuration\OfferConfigurationAdded;
 use Apto\Catalog\Application\Frontend\Service\BasketItemFactory;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProductFactory;
+use Apto\Catalog\Domain\Core\Model\Configuration\SharedConfiguration;
+use Apto\Catalog\Domain\Core\Model\Configuration\SharedConfigurationRepository;
 use Apto\Catalog\Domain\Core\Model\Configuration\BasketConfiguration;
 use Apto\Catalog\Domain\Core\Model\Configuration\BasketConfigurationRepository;
 use Apto\Catalog\Domain\Core\Model\Configuration\CustomerConfiguration;
@@ -96,6 +99,11 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
     protected $proposedConfigurationRepository;
 
     /**
+     * @var SharedConfigurationRepository
+     */
+    protected $sharedConfigurationRepository;
+
+    /**
      * @var GuestConfigurationRepository
      */
     protected $guestConfigurationRepository;
@@ -150,6 +158,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
      * @param CustomerConfigurationRepository $customerConfigurationRepository
      * @param OrderConfigurationRepository $orderConfigurationRepository
      * @param ProposedConfigurationRepository $proposedConfigurationRepository
+     * @param SharedConfigurationRepository $sharedConfigurationRepository
      * @param GuestConfigurationRepository $guestConfigurationRepository
      * @param ImmutableConfigurationRepository $immutableConfigurationRepository
      * @param CodeConfigurationRepository $codeConfigurationRepository
@@ -169,6 +178,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         CustomerConfigurationRepository $customerConfigurationRepository,
         OrderConfigurationRepository $orderConfigurationRepository,
         ProposedConfigurationRepository $proposedConfigurationRepository,
+        SharedConfigurationRepository $sharedConfigurationRepository,
         GuestConfigurationRepository $guestConfigurationRepository,
         ImmutableConfigurationRepository $immutableConfigurationRepository,
         CodeConfigurationRepository $codeConfigurationRepository,
@@ -189,6 +199,7 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         $this->customerConfigurationRepository = $customerConfigurationRepository;
         $this->orderConfigurationRepository = $orderConfigurationRepository;
         $this->proposedConfigurationRepository = $proposedConfigurationRepository;
+        $this->sharedConfigurationRepository = $sharedConfigurationRepository;
         $this->guestConfigurationRepository = $guestConfigurationRepository;
         $this->immutableConfigurationRepository = $immutableConfigurationRepository;
         $this->codeConfigurationRepository = $codeConfigurationRepository;
@@ -489,6 +500,55 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
         );
         $this->proposedConfigurationRepository->add($proposedConfiguration);
         $proposedConfiguration->publishEvents();
+    }
+
+    /**
+     * @param AddSharedConfiguration $query
+     * @return void
+     * @throws ConfigurationInvalidMultipleSelection
+     * @throws ConfigurationProductRulesNotFulfilled
+     * @throws ConfigurationValueNotAllowedException
+     * @throws InvalidUuidException
+     * @throws AptoJsonSerializerException
+     */
+    public function handleAddSharedConfiguration(AddSharedConfiguration $command)
+    {
+        // get product from repository
+        $product = $this->productRepository->findById($command->getProductId());
+        if (null === $product) {
+            return '';
+        }
+
+        // get id
+        $id = $this->sharedConfigurationRepository->nextIdentity();
+        if ('' !== $command->getId()) {
+            $id = new AptoUuid($command->getId());
+        }
+
+        // assign required variables
+        $state = new State($command->getState());
+
+        // assert valid values and rules
+        $configurableProduct = $this->configurableProductFactory->fromProductId($product->getId());
+        $this->valueValidationService->assertValidValues($configurableProduct, $state);
+        $this->ruleValidationService->validateState($configurableProduct, $state);
+
+        // todo shall we save payload into SharedConfiguration?
+        // todo if we save it then we need to update the corresponding twig template to match new humanredable state
+        // create new shared configuration
+        $sharedConfiguration = new SharedConfiguration(
+            $id,
+            $product,
+            $state
+        );
+        $this->sharedConfigurationRepository->add($sharedConfiguration);
+        $sharedConfiguration->publishEvents();
+
+        // fire SharedConfigurationAdded event
+        $this->eventBus->handle(new SharedConfigurationAdded(
+            $sharedConfiguration->getId(),
+            $command->getPayload()
+        ));
     }
 
     /**
@@ -971,6 +1031,11 @@ class ConfigurationCommandHandler extends AbstractCommandHandler
 
         yield AddProposedConfiguration::class => [
             'method' => 'handleAddProposedConfiguration',
+            'bus' => 'command_bus'
+        ];
+
+        yield AddSharedConfiguration::class => [
+            'method' => 'handleAddSharedConfiguration',
             'bus' => 'command_bus'
         ];
 
