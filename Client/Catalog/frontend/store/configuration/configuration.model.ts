@@ -202,7 +202,7 @@ export interface UpdateBasketConfigurationArguments extends AddBasketConfigurati
 	configurationId: string;
 }
 
-export interface AddAnonymousConfigurationArguments {
+export interface AddSharedConfigurationArguments {
   productId: string;
   compressedState: any;
   id: string;

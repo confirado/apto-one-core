@@ -125,7 +125,7 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
         }
     }
 
-    function addAnonymousConfiguration(productId, compressedState, id, payload) {
+    function addSharedConfiguration(productId, compressedState, id, payload) {
         if (!id) {
             id = '';
         }
@@ -135,8 +135,8 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
         }
 
         return {
-            type: getType('ADD_ANONYMOUS_CONFIGURATION'),
-            payload: MessageBusFactory.command('AddAnonymousConfiguration', [productId, compressedState, id, payload])
+            type: getType('ADD_SHARED_CONFIGURATION'),
+            payload: MessageBusFactory.command('AddSharedConfiguration', [productId, compressedState, id, payload])
         }
     }
 
@@ -209,8 +209,8 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
             let configurationQuery = null;
             if (configurationType && configurationId) {
                 switch (configurationType) {
-                    case 'anonymous': {
-                        configurationQuery = MessageBusFactory.query('FindAnonymousConfiguration', [configurationId]);
+                    case 'shared': {
+                        configurationQuery = MessageBusFactory.query('FindSharedConfiguration', [configurationId]);
                         break;
                     }
                     case 'basket': {
@@ -332,7 +332,7 @@ const ConfigurationActions = function(MessageBusFactory, LanguageFactory, APTO_R
         updateBasketConfiguration: updateBasketConfiguration,
         addCustomerConfiguration: addCustomerConfiguration,
         addProposedConfiguration: addProposedConfiguration,
-        addAnonymousConfiguration: addAnonymousConfiguration,
+        addSharedConfiguration: addSharedConfiguration,
         addGuestConfiguration: addGuestConfiguration,
         addOfferConfiguration: addOfferConfiguration,
         addCodeConfiguration: addCodeConfiguration,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
 import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
-  AddAnonymousConfigurationArguments,
+  AddSharedConfigurationArguments,
   AddBasketConfigurationArguments,
   AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
   ComputedValues,
@@ -69,8 +69,8 @@ export class ConfigurationRepository {
 		);
 	}
 
-  public addAnonymousConfiguration(params: AddAnonymousConfigurationArguments): Observable<unknown> {
-    return this.catalogMessageBusService.addAnonymousConfiguration(
+  public addSharedConfiguration(params: AddSharedConfigurationArguments): Observable<unknown> {
+    return this.catalogMessageBusService.addSharedConfiguration(
       params.productId,
       params.compressedState,
       params.id,

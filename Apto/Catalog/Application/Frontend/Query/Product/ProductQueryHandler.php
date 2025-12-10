@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Application\Frontend\Query\Product;
 
-use Apto\Catalog\Application\Core\Query\Configuration\AnonymousConfigurationFinder;
+use Apto\Catalog\Application\Core\Query\Configuration\SharedConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\BasketConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\CodeConfigurationFinder;
 use Apto\Catalog\Application\Core\Query\Configuration\GuestConfigurationFinder;
@@ -27,9 +27,9 @@ class ProductQueryHandler implements QueryHandlerInterface
     private ConfigurableProductBuilder $configurableProductBuilder;
 
     /**
-     * @var AnonymousConfigurationFinder
+     * @var SharedConfigurationFinder
      */
-    private AnonymousConfigurationFinder $anonymousConfigurationFinder;
+    private SharedConfigurationFinder $sharedConfigurationFinder;
 
     /**
      * @var GuestConfigurationFinder
@@ -68,7 +68,7 @@ class ProductQueryHandler implements QueryHandlerInterface
 
     /**
      * @param ConfigurableProductBuilder $configurableProductBuilder
-     * @param AnonymousConfigurationFinder $anonymousConfigurationFinder
+     * @param SharedConfigurationFinder $sharedConfigurationFinder
      * @param GuestConfigurationFinder $guestConfigurationFinder
      * @param BasketConfigurationFinder $basketConfigurationFinder
      * @param OrderConfigurationFinder $orderConfigurationFinder
@@ -79,7 +79,7 @@ class ProductQueryHandler implements QueryHandlerInterface
      */
     public function __construct(
         ConfigurableProductBuilder $configurableProductBuilder,
-        AnonymousConfigurationFinder $anonymousConfigurationFinder,
+        SharedConfigurationFinder $sharedConfigurationFinder,
         GuestConfigurationFinder $guestConfigurationFinder,
         BasketConfigurationFinder $basketConfigurationFinder,
         OrderConfigurationFinder $orderConfigurationFinder,
@@ -89,7 +89,7 @@ class ProductQueryHandler implements QueryHandlerInterface
         AptoParameterInterface $aptoParameter
     ) {
         $this->configurableProductBuilder = $configurableProductBuilder;
-        $this->anonymousConfigurationFinder = $anonymousConfigurationFinder;
+        $this->sharedConfigurationFinder = $sharedConfigurationFinder;
         $this->guestConfigurationFinder = $guestConfigurationFinder;
         $this->basketConfigurationFinder = $basketConfigurationFinder;
         $this->orderConfigurationFinder = $orderConfigurationFinder;
@@ -138,8 +138,8 @@ class ProductQueryHandler implements QueryHandlerInterface
         // get configuration by type
         $configuration = null;
         switch ($query->getType()) {
-            case 'anonymous': {
-                $configuration = $this->anonymousConfigurationFinder->findById($query->getId());
+            case 'shared': {
+                $configuration = $this->sharedConfigurationFinder->findById($query->getId());
                 break;
             }
             case 'guest': {

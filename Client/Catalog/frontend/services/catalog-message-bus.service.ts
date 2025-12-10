@@ -122,13 +122,13 @@ export class CatalogMessageBusService {
 		return this.command('IncrementMaterialPickerMaterialClicks', [materialId]);
 	}
 
-  public addAnonymousConfiguration(
+  public addSharedConfiguration(
     productId: string,
     compressedState: any,
     id: string,
     payload: any[]
   ): Observable<void> {
-    return this.command('AddAnonymousConfiguration', [productId, compressedState, id, payload]);
+    return this.command('AddSharedConfiguration', [productId, compressedState, id, payload]);
   }
 
 	public addBasketConfiguration(

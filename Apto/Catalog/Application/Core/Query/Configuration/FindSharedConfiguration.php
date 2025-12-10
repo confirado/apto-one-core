@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Application\Core\Query\Configuration;
 
-class FindAnonymousConfiguration extends FindConfiguration
+class FindSharedConfiguration extends FindConfiguration
 {
 
 }

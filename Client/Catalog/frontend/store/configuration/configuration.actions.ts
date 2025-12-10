@@ -31,9 +31,9 @@ export enum ConfigurationActionTypes {
   AddToBasketSuccess = '[Basket] Add to basket success',
 	SetElementProperties = '[Update] Set Element Properties',
 	HumanReadableStateLoadSuccess = '[HumanReadableState] Load success',
-	AddAnonymousConfiguration = '[Configuration] Add anonymous configuration',
+	AddSharedConfiguration = '[Configuration] Add shared configuration',
 	AddGuestConfiguration = '[Configuration] Add guest configuration',
-  AddAnonymousConfigurationSuccess = '[Configuration] Add anonymous configuration success',
+  AddSharedConfigurationSuccess = '[Configuration] Add shared configuration success',
   AddGuestConfigurationSuccess = '[Configuration] Add guest configuration success',
   AddOfferConfiguration = '[Configuration] Add offer configuration',
 	AddOfferConfigurationSuccess = '[Configuration] Add offer configuration success',
@@ -193,8 +193,8 @@ export const setElementProperties = createAction(
 	}>()
 );
 
-export const addAnonymousConfiguration = createAction(
-  ConfigurationActionTypes.AddAnonymousConfiguration,
+export const addSharedConfiguration = createAction(
+  ConfigurationActionTypes.AddSharedConfiguration,
   props<{
     payload: {
       id: string;
@@ -202,7 +202,7 @@ export const addAnonymousConfiguration = createAction(
   }>()
 );
 
-export const addAnonymousConfigurationSuccess = createAction(ConfigurationActionTypes.AddAnonymousConfigurationSuccess, props<{ payload: any }>());
+export const addSharedConfigurationSuccess = createAction(ConfigurationActionTypes.AddSharedConfigurationSuccess, props<{ payload: any }>());
 
 export const addGuestConfiguration = createAction(
 	ConfigurationActionTypes.AddGuestConfiguration,

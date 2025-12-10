@@ -37,9 +37,9 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
     protected $proposedConfigurationFinder;
 
     /**
-     * @var AnonymousConfigurationFinder
+     * @var SharedConfigurationFinder
      */
-    protected $anonymousConfigurationFinder;
+    protected $sharedConfigurationFinder;
 
     /**
      * @var GuestConfigurationFinder
@@ -67,7 +67,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
      * @param CustomerConfigurationFinder $customerConfigurationFinder
      * @param OrderConfigurationFinder $orderConfigurationFinder
      * @param ProposedConfigurationFinder $proposedConfigurationFinder
-     * @param AnonymousConfigurationFinder $anonymousConfigurationFinder
+     * @param SharedConfigurationFinder $sharedConfigurationFinder
      * @param GuestConfigurationFinder $guestConfigurationFinder
      * @param ImmutableConfigurationFinder $immutableConfigurationFinder
      * @param CodeConfigurationFinder $codeConfigurationFinder
@@ -79,7 +79,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         CustomerConfigurationFinder $customerConfigurationFinder,
         OrderConfigurationFinder $orderConfigurationFinder,
         ProposedConfigurationFinder $proposedConfigurationFinder,
-        AnonymousConfigurationFinder $anonymousConfigurationFinder,
+        SharedConfigurationFinder $sharedConfigurationFinder,
         GuestConfigurationFinder $guestConfigurationFinder,
         ImmutableConfigurationFinder $immutableConfigurationFinder,
         CodeConfigurationFinder $codeConfigurationFinder,
@@ -90,7 +90,7 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
         $this->customerConfigurationFinder = $customerConfigurationFinder;
         $this->orderConfigurationFinder = $orderConfigurationFinder;
         $this->proposedConfigurationFinder = $proposedConfigurationFinder;
-        $this->anonymousConfigurationFinder = $anonymousConfigurationFinder;
+        $this->sharedConfigurationFinder = $sharedConfigurationFinder;
         $this->guestConfigurationFinder = $guestConfigurationFinder;
         $this->immutableConfigurationFinder = $immutableConfigurationFinder;
         $this->codeConfigurationFinder = $codeConfigurationFinder;
@@ -162,19 +162,19 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * @param FindAnonymousConfiguration $query
+     * @param FindSharedConfiguration $query
      * @return array|null
      * @throws AptoJsonSerializerException
      */
-    public function handleFindAnonymousConfiguration(FindAnonymousConfiguration $query)
+    public function handleFindSharedConfiguration(FindSharedConfiguration $query)
     {
-        $result = $this->anonymousConfigurationFinder->findById($query->getConfigurationId());
+        $result = $this->sharedConfigurationFinder->findById($query->getConfigurationId());
 
         if (null === $result) {
             return $result;
         }
 
-        return $this->prepareResult($result, 'anonymous');
+        return $this->prepareResult($result, 'shared');
     }
 
     /**
@@ -325,8 +325,8 @@ class ConfigurationQueryHandler implements QueryHandlerInterface
             'bus' => 'query_bus'
         ];
 
-        yield FindAnonymousConfiguration::class => [
-            'method' => 'handleFindAnonymousConfiguration',
+        yield FindSharedConfiguration::class => [
+            'method' => 'handleFindSharedConfiguration',
             'bus' => 'query_bus'
         ];
 

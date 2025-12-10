@@ -4,14 +4,14 @@ namespace Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm;
 
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\AptoOrmFinder;
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlQueryBuilder;
-use Apto\Catalog\Application\Core\Query\Configuration\AnonymousConfigurationFinder;
+use Apto\Catalog\Application\Core\Query\Configuration\SharedConfigurationFinder;
 
 use Apto\Base\Infrastructure\AptoBaseBundle\Doctrine\Orm\DqlBuilderException;
-use Apto\Catalog\Domain\Core\Model\Configuration\AnonymousConfiguration;
+use Apto\Catalog\Domain\Core\Model\Configuration\SharedConfiguration;
 
-class AnonymousConfigurationOrmFinder extends AptoOrmFinder implements AnonymousConfigurationFinder
+class SharedConfigurationOrmFinder extends AptoOrmFinder implements SharedConfigurationFinder
 {
-    const ENTITY_CLASS = AnonymousConfiguration::class;
+    const ENTITY_CLASS = SharedConfiguration::class;
 
     /**
      * @param string $id
@@ -24,7 +24,7 @@ class AnonymousConfigurationOrmFinder extends AptoOrmFinder implements Anonymous
         $builder
             ->findById($id)
             ->setValues([
-                'a' => [
+                's' => [
                     ['id.id', 'id'],
                     'created',
                     'state'
@@ -33,7 +33,7 @@ class AnonymousConfigurationOrmFinder extends AptoOrmFinder implements Anonymous
                     ['id.id', 'id']
                 ]
             ])->setJoins([
-                'a' => [
+                's' => [
                     ['product', 'p', 'id']
                 ]
             ]);

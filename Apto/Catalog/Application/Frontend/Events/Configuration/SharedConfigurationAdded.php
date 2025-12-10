@@ -3,7 +3,7 @@ namespace Apto\Catalog\Application\Frontend\Events\Configuration;
 
 use Apto\Base\Application\Core\EventInterface;
 
-class AnonymousConfigurationAdded implements EventInterface
+class SharedConfigurationAdded implements EventInterface
 {
     /**
      * @var string
@@ -16,7 +16,7 @@ class AnonymousConfigurationAdded implements EventInterface
     private $payload;
 
     /**
-     * AnonymousConfigurationAdded constructor.
+     * SharedConfigurationAdded constructor.
      * @param string $configurationId
      * @param array $payload
      */

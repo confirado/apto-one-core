@@ -5,8 +5,8 @@ import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
-  addAnonymousConfiguration,
-  addAnonymousConfigurationSuccess,
+  addSharedConfiguration,
+  addSharedConfigurationSuccess,
   addGuestConfiguration,
   addGuestConfigurationSuccess,
   addOfferConfiguration,
@@ -270,12 +270,12 @@ export class ConfigurationEffects {
     )
   );
 
-  public addAnonymousConfiguration$ = createEffect(() =>
+  public addSharedConfiguration$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(addAnonymousConfiguration),
+      ofType(addSharedConfiguration),
       withLatestFrom(this.store$.select(selectConfiguration)),
       switchMap(([action, store]) =>
-        this.configurationRepository.addAnonymousConfiguration({
+        this.configurationRepository.addSharedConfiguration({
           productId: store.productId as string,
           compressedState: store.state.compressedState,
           id: action.payload.id,
@@ -283,15 +283,15 @@ export class ConfigurationEffects {
         })
       ),
       switchMap((result: string) => [
-        addAnonymousConfigurationSuccess({ payload: { response: result } })
+        addSharedConfigurationSuccess({ payload: { response: result } })
       ])
     )
   );
 
-  public addAnonymousConfigurationSuccess$ = createEffect(
+  public addSharedConfigurationSuccess$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(addAnonymousConfigurationSuccess),
+        ofType(addSharedConfigurationSuccess),
         map(() => {
           this.matSnackBar.open(
             'Ihre Konfiguration wurde gespeichert.',

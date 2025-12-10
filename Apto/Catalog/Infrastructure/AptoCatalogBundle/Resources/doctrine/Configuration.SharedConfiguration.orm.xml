@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Apto\Catalog\Domain\Core\Model\Configuration\AnonymousConfiguration" table="apto_anonymous_configuration" repository-class="Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm\AnonymousConfigurationOrmRepository">
+    <entity name="Apto\Catalog\Domain\Core\Model\Configuration\SharedConfiguration" table="apto_shared_configuration" repository-class="Apto\Catalog\Infrastructure\AptoCatalogBundle\Doctrine\Orm\SharedConfigurationOrmRepository">
         <indexes>
             <index name="AptoSurrogateId" columns="surrogate_id"/>
             <index name="AptoCreated" columns="created"/>

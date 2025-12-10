@@ -2,7 +2,7 @@
 
 namespace Apto\Catalog\Application\Frontend\Commands\Configuration;
 
-class AddAnonymousConfiguration extends ConfigurationCommand
+class AddSharedConfiguration extends ConfigurationCommand
 {
     /**
      * @var string
@@ -25,7 +25,7 @@ class AddAnonymousConfiguration extends ConfigurationCommand
     private $payload;
 
     /**
-     * AddAnonymousConfiguration constructor.
+     * AddSharedConfiguration constructor.
      * @param string $productId
      * @param array $state
      * @param string $id

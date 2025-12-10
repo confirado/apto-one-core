@@ -4,8 +4,8 @@ import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
 import { SaveDialogComponent } from '@apto-catalog-frontend-save-dialog';
 import {
-  addAnonymousConfiguration,
-  addAnonymousConfigurationSuccess,
+  addSharedConfiguration,
+  addSharedConfigurationSuccess,
 } from '@apto-catalog-frontend-configuration-actions';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
@@ -26,7 +26,7 @@ export class OPButtonComponent {
     private store: Store,
     private readonly actions$: Actions
   ) {
-    this.showModalOnAddAnonymousConfigurationSuccess();
+    this.showModalOnAddSharedConfigurationSuccess();
   }
 
 	public save(): void {
@@ -39,7 +39,7 @@ export class OPButtonComponent {
   }
 
 	public share(): void {
-    this.store.dispatch(addAnonymousConfiguration(
+    this.store.dispatch(addSharedConfiguration(
       {
         payload: {
           id: this.generateConfigurationId()
@@ -47,14 +47,14 @@ export class OPButtonComponent {
       }));
 	}
 
-  private showModalOnAddAnonymousConfigurationSuccess(): void {
+  private showModalOnAddSharedConfigurationSuccess(): void {
     this.actions$.pipe(
-      ofType(addAnonymousConfigurationSuccess),
+      ofType(addSharedConfigurationSuccess),
       untilDestroyed(this)
     ).subscribe((result) => {
       const data = {
         configurationId: this.lastConfigurationId,
-        configurationType: 'anonymous'
+        configurationType: 'shared'
       };
       this.dialogService.openCustomDialog(ShareDialogComponent, DialogSizesEnum.md, data);
     });

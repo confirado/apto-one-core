@@ -4,7 +4,7 @@ namespace Apto\Catalog\Application\Core\Query\Configuration;
 
 use Apto\Base\Application\Core\Query\AptoFinder;
 
-interface AnonymousConfigurationFinder extends AptoFinder
+interface SharedConfigurationFinder extends AptoFinder
 {
     /**
      * @param string $id

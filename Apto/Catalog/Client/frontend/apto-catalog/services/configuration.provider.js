@@ -170,7 +170,7 @@ const ConfigurationProvider = function() {
             addProposedConfiguration: ConfigurationActions.addProposedConfiguration,
             fetchProposedConfigurations: ConfigurationActions.fetchProposedConfigurations,
             getConfigurationState: ConfigurationActions.getConfigurationState,
-            addAnonymousConfiguration: ConfigurationActions.addAnonymousConfiguration,
+            addSharedConfiguration: ConfigurationActions.addSharedConfiguration,
             addGuestConfiguration: ConfigurationActions.addGuestConfiguration,
             addOfferConfiguration: ConfigurationActions.addOfferConfiguration,
             addCodeConfiguration: ConfigurationActions.addCodeConfiguration,
@@ -1158,7 +1158,7 @@ const ConfigurationProvider = function() {
             });
         }
 
-        function addAnonymousConfiguration(id, payload) {
+        function addSharedConfiguration(id, payload) {
             if (!id) {
                 id = '';
             }
@@ -1186,7 +1186,7 @@ const ConfigurationProvider = function() {
                 }
             }
 
-            return redux.addAnonymousConfiguration(
+            return redux.addSharedConfiguration(
                 redux.productId,
                 self.getCompressedState(redux.configurationState, redux.quantity),
                 id,
@@ -1579,7 +1579,7 @@ const ConfigurationProvider = function() {
             previousPerspective: previousPerspective,
             addToBasket: addToBasket,
             addProposedConfiguration: addProposedConfiguration,
-            addAnonymousConfiguration: addAnonymousConfiguration,
+            addSharedConfiguration: addSharedConfiguration,
             addGuestConfiguration: addGuestConfiguration,
             addOfferConfiguration: addOfferConfiguration,
             addCodeConfiguration: addCodeConfiguration,
