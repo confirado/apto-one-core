@@ -79,7 +79,10 @@ export class OPStepComponent implements OnInit {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        this.previewImageLink = changes['progressStep']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        const previewImageLink = changes['progressStep']?.currentValue.elements.filter(el => el.state.active)[0]?.element.previewImage;
+        if (previewImageLink) {
+          this.previewImageLink = previewImageLink;
+        }
     }
 
     public isElementDisabled(elementId: string, sectionRepetition: number): boolean {
