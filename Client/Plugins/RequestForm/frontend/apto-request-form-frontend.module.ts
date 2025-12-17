@@ -20,7 +20,7 @@ import { SummaryComponent } from '@apto-catalog-frontend-summary';
 import { RequestFormComponent } from '@apto-request-form-frontend-request-form';
 import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AptoRequestFormFrontendCustomModule } from "@apto-request-form-frontend-custom-module";
+import { AptoRequestFormFrontendCustomModule } from '@apto-request-form-frontend-custom-module';
 
 @NgModule({
 	declarations: [

@@ -12,13 +12,16 @@ import { AptoBaseFrontendModule } from '@apto-base-frontend/apto-base-frontend.m
 import { AptoCatalogFrontendModule } from '@apto-catalog-frontend/apto-catalog-frontend.module';
 import { AreaElementWrapperComponent } from '@element-definition-area-element-wrapper';
 import { AreaElementComponent } from '@element-definition-area-element';
+import { AptoAreaElementFrontendCustomModule } from '@apto-area-element-frontend-custom-module';
 
 @NgModule({
   declarations: [
     AreaElementComponent,
     AreaElementWrapperComponent,
   ],
-	exports: [],
+	exports: [
+    AptoAreaElementFrontendCustomModule,
+  ],
 	entryComponents: [],
   imports: [
     RouterModule,
@@ -32,6 +35,7 @@ import { AreaElementComponent } from '@element-definition-area-element';
     MatDialogModule,
     MatIconModule,
     MatButtonModule,
+    AptoAreaElementFrontendCustomModule,
   ],
 	providers: [
     {
