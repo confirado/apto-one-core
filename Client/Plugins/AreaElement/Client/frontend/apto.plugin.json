@@ -10,10 +10,6 @@
 	],
   "aliases": [
     {
-      "alias": "@apto-area-element-frontend-custom-module",
-      "path": "apto-area-element-frontend-custom.module.ts"
-    },
-    {
       "alias": "@element-definition-area-element",
       "path": "components/area-element/area-element.component.ts"
     },
