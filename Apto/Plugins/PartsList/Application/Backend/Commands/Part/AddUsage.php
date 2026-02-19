@@ -24,6 +24,11 @@ abstract class AddUsage implements CommandInterface
     /**
      * @var string
      */
+    private $value;
+
+    /**
+     * @var string
+     */
     private $productId;
 
     /**
@@ -31,13 +36,15 @@ abstract class AddUsage implements CommandInterface
      * @param string $partId
      * @param string $usageForUuid
      * @param string $quantity
+     * @param string $value
      * @param string $productId
      */
-    public function __construct(string $partId, string $usageForUuid, string $quantity, string $productId)
+    public function __construct(string $partId, string $usageForUuid, string $quantity, string $value, string $productId)
     {
         $this->partId = $partId;
         $this->usageForUuid = $usageForUuid;
         $this->quantity = $quantity;
+        $this->value = $value;
         $this->productId = $productId;
     }
 
@@ -63,6 +70,14 @@ abstract class AddUsage implements CommandInterface
     public function getQuantity(): string
     {
         return $this->quantity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
     }
 
     /**

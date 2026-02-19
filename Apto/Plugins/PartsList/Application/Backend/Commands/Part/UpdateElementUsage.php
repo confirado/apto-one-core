@@ -22,6 +22,11 @@ class UpdateElementUsage implements CommandInterface
     private $quantity;
 
     /**
+     * @var string
+     */
+    private $value;
+
+    /**
      * @var array
      */
     private $quantityCalculation;
@@ -31,13 +36,15 @@ class UpdateElementUsage implements CommandInterface
      * @param string $partId
      * @param string $usageId
      * @param string $quantity
+     * @param string $value
      * @param array $quantityCalculation
      */
-    public function __construct(string $partId, string $usageId, string $quantity, array $quantityCalculation)
+    public function __construct(string $partId, string $usageId, string $quantity, string $value, array $quantityCalculation)
     {
         $this->partId = $partId;
         $this->usageId = $usageId;
         $this->quantity = $quantity;
+        $this->value = $value;
         $this->quantityCalculation = $quantityCalculation;
     }
 
@@ -64,6 +71,15 @@ class UpdateElementUsage implements CommandInterface
     {
         return $this->quantity;
     }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
     /**
      * @return array
      */

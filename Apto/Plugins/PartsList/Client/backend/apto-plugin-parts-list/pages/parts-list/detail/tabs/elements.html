@@ -18,6 +18,10 @@
                 <md-option ng-value="null">keine</md-option>
                 <md-option ng-value="element" ng-repeat="element in availableElements | filter:elementSearchTerm">{{ element.identifier }}</md-option>
             </md-optgroup>
+            <md-optgroup label="Wert">
+                <md-option ng-value="null">keine</md-option>
+                <md-option ng-value="element" ng-repeat="element in availableElements | filter:elementSearchTerm">{{ element.identifier }}</md-option>
+            </md-optgroup>
         </md-select>
     </md-input-container>
     <div flex="5"></div>
@@ -26,8 +30,13 @@
         <input ng-model="newElementUsage.quantity">
     </md-input-container>
     <div flex="5"></div>
+    <md-input-container flex>
+        <label>Wert:</label>
+        <input ng-model="newElementUsage.value">
+    </md-input-container>
+    <div flex="5"></div>
     <md-input-container>
-        <md-button ng-disabled="!newElementUsage.usedForUuid || !newElementUsage.quantity" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElementUsage()">Hinzufügen</md-button>
+        <md-button ng-disabled="!newElementUsage.usedForUuid || !(newElementUsage.quantity || newElementUsage.value)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addElementUsage()">Hinzufügen</md-button>
     </md-input-container>
 </div>
 
@@ -35,10 +44,11 @@
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column style="width:30%;">Id</th>
+            <th md-column style="width:20%;">Id</th>
             <th md-column style="width:30%;">verwendet für</th>
-            <th md-column style="width:25%;">Anzahl</th>
-            <th md-column style="width:15%; text-align: center;">Actions</th>
+            <th md-column style="width:20%;">Anzahl</th>
+            <th md-column style="width:20%;">Wert</th>
+            <th md-column style="width:10%; text-align: center;">Actions</th>
         </tr>
         </thead>
         <tbody md-body>
@@ -46,6 +56,7 @@
             <td md-cell>{{elementUsage.id}}</td>
             <td md-cell>{{getUsageIdentifierByUsageForUuid(elementUsage.usageForUuid, 'element')}}</td>
             <td md-cell>{{elementUsage.quantity}}</td>
+            <td md-cell>{{elementUsage.value}}</td>
             <td md-cell style="text-align: center;">
                 <md-button
                         title="Bearbeiten"

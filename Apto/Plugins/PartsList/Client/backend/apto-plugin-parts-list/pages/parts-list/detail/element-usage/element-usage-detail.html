@@ -17,6 +17,10 @@
                     <label>Anzahl:</label>
                     <input ng-model="elementUsageDetails.quantity">
                 </md-input-container>
+                <md-input-container flex>
+                    <label>Wert:</label>
+                    <input ng-model="elementUsageDetails.value">
+                </md-input-container>
             </div>
             <div ng-if="elementUsageDetails.element.selectableValues.length > 0 || elementUsageDetails.element.computableValues.length > 0">
                 <h4>Berechnung:</h4>

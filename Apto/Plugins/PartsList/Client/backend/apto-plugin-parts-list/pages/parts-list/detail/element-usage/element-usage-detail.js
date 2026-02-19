@@ -23,7 +23,7 @@ const ElementUsageDetailController = function($scope, $mdDialog, $ngRedux, AptoP
     }
 
     function save() {
-        $scope.updateElementUsage(partId, elementUsageId, $scope.elementUsageDetails.quantity, $scope.elementUsageDetails.quantityCalculation);
+        $scope.updateElementUsage(partId, elementUsageId, $scope.elementUsageDetails.quantity, $scope.elementUsageDetails.value, $scope.elementUsageDetails.quantityCalculation);
     }
 
     function close() {

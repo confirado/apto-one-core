@@ -16,6 +16,7 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Part;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\PartRepository;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation;
+use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Value;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\UnitRepository;
 use Exception;
@@ -155,6 +156,9 @@ class PartCommandHandler extends AbstractCommandHandler
                 ),
                 new Quantity(
                     $command->getQuantity()
+                ),
+                new Value(
+                    $command->getValue()
                 )
             )
             ->addPartProductAssociation(
@@ -187,7 +191,11 @@ class PartCommandHandler extends AbstractCommandHandler
                 ),
                 new Quantity(
                     $command->getQuantity()
-                ), $productId
+                ),
+                new Value(
+                    $command->getValue()
+                ),
+                $productId
             )
             ->addPartProductAssociation(
                 $product
@@ -219,7 +227,11 @@ class PartCommandHandler extends AbstractCommandHandler
                 ),
                 new Quantity(
                     $command->getQuantity()
-                ), $productId
+                ),
+                new Value(
+                    $command->getValue()
+                ),
+                $productId
             )
             ->addPartProductAssociation(
                 $product
@@ -245,6 +257,9 @@ class PartCommandHandler extends AbstractCommandHandler
             $command->getname(),
             new Quantity(
                 $command->getQuantity()
+            ),
+            new Value(
+                $command->getValue()
             )
         );
 
@@ -278,6 +293,31 @@ class PartCommandHandler extends AbstractCommandHandler
     }
 
     /**
+     * @param UpdateProductUsageValue $command
+     * @throws InvalidUuidException
+     */
+    public function handleUpdateProductUsageValue(UpdateProductUsageValue $command)
+    {
+        $part = $this->partRepository->findById($command->getPartId());
+
+        if (null === $part) {
+            return;
+        }
+
+        $part->setProductUsageValue(
+            new AptoUuid(
+                $command->getUsageId()
+            ),
+            new Value(
+                $command->getValue()
+            )
+        );
+
+        $this->partRepository->update($part);
+        $part->publishEvents();
+    }
+
+    /**
      * @param UpdateSectionUsageQuantity $command
      * @throws InvalidUuidException
      */
@@ -303,6 +343,31 @@ class PartCommandHandler extends AbstractCommandHandler
     }
 
     /**
+     * @param UpdateSectionUsageValue $command
+     * @throws InvalidUuidException
+     */
+    public function handleUpdateSectionUsageValue(UpdateSectionUsageValue $command)
+    {
+        $part = $this->partRepository->findById($command->getPartId());
+
+        if (null === $part) {
+            return;
+        }
+
+        $part->setSectionUsageValue(
+            new AptoUuid(
+                $command->getUsageId()
+            ),
+            new Value(
+                $command->getValue()
+            )
+        );
+
+        $this->partRepository->update($part);
+        $part->publishEvents();
+    }
+
+    /**
      * @param UpdateElementUsage $command
      * @throws InvalidUuidException
      */
@@ -320,6 +385,15 @@ class PartCommandHandler extends AbstractCommandHandler
             ),
             new Quantity(
                 $command->getQuantity()
+            )
+        );
+
+        $part->setElementUsageValue(
+            new AptoUuid(
+                $command->getUsageId()
+            ),
+            new Value(
+                $command->getValue()
             )
         );
 
@@ -358,6 +432,15 @@ class PartCommandHandler extends AbstractCommandHandler
             ),
             new Quantity(
                 $command->getQuantity()
+            )
+        );
+
+        $part->setRuleUsageValue(
+            new AptoUuid(
+                $command->getUsageId()
+            ),
+            new Value(
+                $command->getValue()
             )
         );
 
@@ -751,8 +834,20 @@ class PartCommandHandler extends AbstractCommandHandler
             'bus' => 'command_bus'
         ];
 
+        yield UpdateProductUsageValue::class => [
+            'method' => 'handleUpdateProductUsageValue',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'command_bus'
+        ];
+
         yield UpdateSectionUsageQuantity::class => [
             'method' => 'handleUpdateSectionUsageQuantity',
+            'aptoMessagePrefix' => 'AptoPartsList',
+            'bus' => 'command_bus'
+        ];
+
+        yield UpdateSectionUsageValue::class => [
+            'method' => 'handleUpdateSectionUsageValue',
             'aptoMessagePrefix' => 'AptoPartsList',
             'bus' => 'command_bus'
         ];

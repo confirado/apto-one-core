@@ -20,6 +20,7 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleCondition;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\SectionUsage;
+use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Value;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -276,11 +277,12 @@ class Part extends AptoAggregate
     /**
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
+     * @param Value $value
      * @return $this
      */
-    public function addProductUsage(AptoUuid $usageForUuid, Quantity $quantity): Part
+    public function addProductUsage(AptoUuid $usageForUuid, Quantity $quantity, Value $value): Part
     {
-        $productUsage = new Usage\ProductUsage($this, $this->nextUsageId(), $usageForUuid, $quantity);
+        $productUsage = new Usage\ProductUsage($this, $this->nextUsageId(), $usageForUuid, $quantity, $value);
         $this->productUsages->set($productUsage->getId()->getId(), $productUsage);
 
         return $this;
@@ -297,7 +299,7 @@ class Part extends AptoAggregate
             $assoc->addAssoc();
         }
         else {
-            $this->associatedProducts->add(new PartProductAssociation(new AptoUuid(), $this, $product ));
+            $this->associatedProducts->add(new PartProductAssociation(new AptoUuid(), $this, $product));
         }
         return $this;
     }
@@ -323,12 +325,13 @@ class Part extends AptoAggregate
     /**
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
+     * @param Value $value
      * @param AptoUuid $productId
      * @return $this
      */
-    public function addSectionUsage(AptoUuid $usageForUuid, Quantity $quantity, AptoUuid $productId): Part
+    public function addSectionUsage(AptoUuid $usageForUuid, Quantity $quantity, Value $value, AptoUuid $productId): Part
     {
-        $sectionUsage = new Usage\SectionUsage($this, $this->nextUsageId(), $usageForUuid, $quantity, $productId);
+        $sectionUsage = new Usage\SectionUsage($this, $this->nextUsageId(), $usageForUuid, $quantity, $value, $productId);
         $this->sectionUsages->set($sectionUsage->getId()->getId(), $sectionUsage);
         return $this;
     }
@@ -336,12 +339,13 @@ class Part extends AptoAggregate
     /**
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
+     * @param Value $value
      * @param AptoUuid $productId
      * @return $this
      */
-    public function addElementUsage(AptoUuid $usageForUuid, Quantity $quantity, AptoUuid $productId): Part
+    public function addElementUsage(AptoUuid $usageForUuid, Quantity $quantity, Value $value, AptoUuid $productId): Part
     {
-        $elementUsage = new Usage\ElementUsage($this, $this->nextUsageId(), $usageForUuid, $quantity, $productId);
+        $elementUsage = new Usage\ElementUsage($this, $this->nextUsageId(), $usageForUuid, $quantity, $value, $productId);
         $this->elementUsages->set($elementUsage->getId()->getId(), $elementUsage);
         return $this;
     }
@@ -349,11 +353,12 @@ class Part extends AptoAggregate
     /**
      * @param string $name
      * @param Quantity $quantity
+     * @param Value $value
      * @return $this
      */
-    public function addRuleUsage(string $name, Quantity $quantity): Part
+    public function addRuleUsage(string $name, Quantity $quantity, Value $value): Part
     {
-        $ruleUsage = new Usage\RuleUsage($this, $this->nextUsageId(), $quantity, $name);
+        $ruleUsage = new Usage\RuleUsage($this, $this->nextUsageId(), $quantity, $value, $name);
         $this->ruleUsages->set($ruleUsage->getId()->getId(), $ruleUsage);
         return $this;
     }
@@ -370,6 +375,23 @@ class Part extends AptoAggregate
 
         if (null !== $productUsage) {
             $productUsage->setQuantity($quantity);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $usageId
+     * @param Value $value
+     * @return Part
+     */
+    public function setProductUsageValue(AptoUuid $usageId, Value $value): Part
+    {
+        /** @var ProductUsage|null $productUsage */
+        $productUsage = $this->productUsages->get($usageId->getId());
+
+        if (null !== $productUsage) {
+            $productUsage->setValue($value);
         }
 
         return $this;
@@ -394,6 +416,23 @@ class Part extends AptoAggregate
 
     /**
      * @param AptoUuid $usageId
+     * @param Value $value
+     * @return Part
+     */
+    public function setSectionUsageValue(AptoUuid $usageId, Value $value): Part
+    {
+        /** @var SectionUsage|null $sectionUsage */
+        $sectionUsage = $this->sectionUsages->get($usageId->getId());
+
+        if (null !== $sectionUsage) {
+            $sectionUsage->setValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $usageId
      * @param Quantity $quantity
      * @return Part
      */
@@ -411,6 +450,23 @@ class Part extends AptoAggregate
 
     /**
      * @param AptoUuid $usageId
+     * @param Value $value
+     * @return Part
+     */
+    public function setElementUsageValue(AptoUuid $usageId, Value $value): Part
+    {
+        /** @var ElementUsage|null $elementUsage */
+        $elementUsage = $this->elementUsages->get($usageId->getId());
+
+        if (null !== $elementUsage) {
+            $elementUsage->setValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $usageId
      * @param Quantity $quantity
      * @return Part
      */
@@ -421,6 +477,23 @@ class Part extends AptoAggregate
 
         if (null !== $ruleUsage) {
             $ruleUsage->setQuantity($quantity);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $usageId
+     * @param Value $value
+     * @return Part
+     */
+    public function setRuleUsageValue(AptoUuid $usageId, Value $value): Part
+    {
+        /** @var RuleUsage|null $elementUsage */
+        $ruleUsage = $this->ruleUsages->get($usageId->getId());
+
+        if (null !== $ruleUsage) {
+            $ruleUsage->setValue($value);
         }
 
         return $this;

@@ -227,7 +227,8 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                     ['quantityCalculation.operation', 'quantityCalculationOperation'],
                     ['quantityCalculation.fieldType', 'quantityCalculationFieldType'],
                     ['quantityCalculation.field', 'quantityCalculationField'],
-                    ['quantityCalculation.fieldPosition', 'quantityCalculationFieldPosition']
+                    ['quantityCalculation.fieldPosition', 'quantityCalculationFieldPosition'],
+                    ['value.value', 'value']
                 ]
             ])
             ->setPostProcess([
@@ -283,6 +284,7 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                     ['id.id', 'id'],
                     'name',
                     ['quantity.quantity', 'quantity'],
+                    ['value.value', 'value'],
                     'conditionsOperator'
 
                 ],
@@ -639,16 +641,19 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
         $usageValues = [
             ['id.id', 'id'],
             ['usageForUuid.id', 'usageForUuid'],
-            ['quantity.quantity', 'quantity']
+            ['quantity.quantity', 'quantity'],
+            ['value.value', 'value']
         ];
 
         if ($usages === 'ruleUsages') {
             $usageValues = [
                 ['id.id', 'id'],
                 'name',
-                ['quantity.quantity', 'quantity']
+                ['quantity.quantity', 'quantity'],
+                ['value.value', 'value']
             ];
         }
+
         $builder = new DqlQueryBuilder($this->entityClass);
         $builder
             ->findById($id)

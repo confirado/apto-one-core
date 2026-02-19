@@ -229,31 +229,31 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
-    function addProductUsage(partId, usageForUuid, quantity) {
+    function addProductUsage(partId, usageForUuid, quantity, value) {
         return {
             type: getType('ADD_PRODUCT_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListAddProductUsage', [partId, usageForUuid, quantity])
+            payload: MessageBusFactory.command('AptoPartsListAddProductUsage', [partId, usageForUuid, quantity, value])
         }
     }
 
-    function addSectionUsage(partId, usageForUuid, quantity, productId) {
+    function addSectionUsage(partId, usageForUuid, quantity, value, productId) {
         return {
             type: getType('ADD_SECTION_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListAddSectionUsage', [partId, usageForUuid, quantity, productId])
+            payload: MessageBusFactory.command('AptoPartsListAddSectionUsage', [partId, usageForUuid, quantity, value, productId])
         }
     }
 
-    function addElementUsage(partId, usageForUuid, quantity, productId) {
+    function addElementUsage(partId, usageForUuid, quantity, value, productId) {
         return {
             type: getType('ADD_ELEMENT_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListAddElementUsage', [partId, usageForUuid, quantity, productId])
+            payload: MessageBusFactory.command('AptoPartsListAddElementUsage', [partId, usageForUuid, quantity, value, productId])
         }
     }
 
-    function addRuleUsage(partId, name, quantity) {
+    function addRuleUsage(partId, name, quantity, value) {
         return {
             type: getType('ADD_RULE_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListAddRuleUsage', [partId, name, quantity])
+            payload: MessageBusFactory.command('AptoPartsListAddRuleUsage', [partId, name, quantity, value])
         }
     }
 
@@ -278,31 +278,45 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
-    function updateProductUsageQuantity(partId, usageId, quantity) {
+    function updateProductUsageQuantity(partId, usageId, quantity, value) {
         return {
             type: getType('UPDATE_PRODUCT_USAGE_QUANTITY'),
-            payload: MessageBusFactory.command('AptoPartsListUpdateProductUsageQuantity', [partId, usageId, quantity])
+            payload: MessageBusFactory.command('AptoPartsListUpdateProductUsageQuantity', [partId, usageId, quantity, value])
         }
     }
 
-    function updateSectionUsageQuantity(partId, usageId, quantity) {
+    function updateProductUsageValue(partId, usageId, quantity, value) {
+        return {
+            type: getType('UPDATE_PRODUCT_USAGE_VALUE'),
+            payload: MessageBusFactory.command('AptoPartsListUpdateProductUsageValue', [partId, usageId, quantity, value])
+        }
+    }
+
+    function updateSectionUsageQuantity(partId, usageId, quantity, value) {
         return {
             type: getType('UPDATE_SECTION_USAGE_QUANTITY'),
-            payload: MessageBusFactory.command('AptoPartsListUpdateSectionUsageQuantity', [partId, usageId, quantity])
+            payload: MessageBusFactory.command('AptoPartsListUpdateSectionUsageQuantity', [partId, usageId, quantity, value])
         }
     }
 
-    function updateElementUsage(partId, usageId, quantity, quantityCalculation) {
+    function updateSectionUsageValue(partId, usageId, quantity, value) {
         return {
-            type: getType('UPDATE_ELEMENT_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListUpdateElementUsage', [partId, usageId, quantity, quantityCalculation])
+            type: getType('UPDATE_SECTION_USAGE_VALUE'),
+            payload: MessageBusFactory.command('AptoPartsListUpdateSectionUsageValue', [partId, usageId, quantity, value])
         }
     }
-    
-    function updateRuleUsage(partId, usageId, quantity, active, name, operator) {
+
+    function updateElementUsage(partId, usageId, quantity, value, quantityCalculation) {
+        return {
+            type: getType('UPDATE_ELEMENT_USAGE'),
+            payload: MessageBusFactory.command('AptoPartsListUpdateElementUsage', [partId, usageId, quantity, value, quantityCalculation])
+        }
+    }
+
+    function updateRuleUsage(partId, usageId, quantity, value, active, name, operator) {
         return {
             type: getType('UPDATE_RULE_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListUpdateRuleUsage', [partId, usageId, quantity, active, name, operator])
+            payload: MessageBusFactory.command('AptoPartsListUpdateRuleUsage', [partId, usageId, quantity, value, active, name, operator])
         }
     }
 
@@ -326,7 +340,7 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
             payload: MessageBusFactory.command('AptoPartsListRemoveElementUsage', [partId, usageId])
         }
     }
-    
+
     function removeRuleUsage(partId, usageId) {
         return {
             type: getType('REMOVE_RULE_USAGE'),
@@ -373,7 +387,9 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         addElementUsage: addElementUsage,
         addRuleUsage: addRuleUsage,
         updateProductUsageQuantity: updateProductUsageQuantity,
+        updateProductUsageValue: updateProductUsageValue,
         updateSectionUsageQuantity: updateSectionUsageQuantity,
+        updateSectionUsageValue: updateSectionUsageValue,
         updateElementUsage: updateElementUsage,
         updateRuleUsage: updateRuleUsage,
         removeProductUsage: removeProductUsage,

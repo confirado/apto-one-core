@@ -23,11 +23,12 @@ class ElementUsage extends Usage
      * @param AptoUuid $id
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
-     * @param AptoUuid $producId
+     * @param Value $value
+     * @param AptoUuid $productId
      */
-    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, AptoUuid $producId)
+    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, Value $value, AptoUuid $productId)
     {
-        parent::__construct($part, $id, $quantity, $producId);
+        parent::__construct($part, $id, $quantity, $value, $productId);
         $this->usageForUuid = $usageForUuid;
         $this->quantityCalculation = new QuantityCalculation(
             false,
