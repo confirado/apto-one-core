@@ -136,7 +136,7 @@ class ConfigurationPartsList
         $list = [];
         /** @var Usage $usage */
         foreach ($usages as $usage) {
-            $list[] = $this->makeListItem($usage->getPart(), $usage, $currency, $customerGroupId, $fallbackCustomerGroupId, $locale);
+            $list[] = $this->makeListItem($usage->getPart(), $state, $usage, $currency, $customerGroupId, $fallbackCustomerGroupId, $locale);
         }
         return $list;
     }
@@ -155,13 +155,14 @@ class ConfigurationPartsList
      * @throws NoProductIdGivenException
      * @throws NoStateGivenException
      */
-    private function makeListItem(Part $part, Usage $usage, Currency $currency, string $customerGroupId, $fallbackCustomerGroupId, AptoLocale $locale)
+    private function makeListItem(Part $part, State $state, Usage $usage, Currency $currency, string $customerGroupId, $fallbackCustomerGroupId, AptoLocale $locale)
     {
         $currencies = new ISOCurrencies();
         $moneyFormatter = new DecimalMoneyFormatter($currencies);
         $formattedBasePartPrice = $moneyFormatter->format($this->getPartPrice($part, $usage, $currency, $customerGroupId, $fallbackCustomerGroupId, false));
         $formattedPartPrice = $moneyFormatter->format($this->getPartPrice($part, $usage, $currency, $customerGroupId, $fallbackCustomerGroupId));
-        return [
+
+        $listItem = [
             'partNumber' => $part->getPartNumber(),
             'partName' => $part->getName()->getTranslation($locale)->getValue(),
             'quantity' => str_replace('.', ',', (string) $this->getQuantity($usage, 2)),
@@ -170,6 +171,40 @@ class ConfigurationPartsList
             'itemPrice' => str_replace('.', ',', $formattedBasePartPrice),
             'itemPriceTotal' => str_replace('.', ',', $formattedPartPrice)
         ];
+
+        $elementList = $state->getElementList();
+
+        $foundElements = [];
+
+        $elementUsages = $part->getElementUsages();
+        if ($elementUsages !== null) {
+            foreach ($elementUsages as $elementUsage) {
+                $elementUsageValue = $this->findElementUsageValue($elementUsage, $elementList);
+                if ($elementUsageValue !== null) {
+                    $foundElements[] = $elementUsageValue;
+                }
+            }
+        }
+
+        foreach ($foundElements as $foundElement) {
+            // _ = Eingabe Feld
+            $listItem[] = '_' . $foundElement;
+        }
+
+        return $listItem;
+    }
+
+    private function findElementUsageValue($elementUsage, $elementList) {
+        foreach ($elementList as $element) {
+            $elementId = $element['elementId'];
+            $sectionId = $element['sectionId'];
+
+            $elementUsageElementId = $elementUsage->getUsageForUuid()->getId();
+            if ($elementUsageElementId === $elementId) {
+                $backendValue = $elementUsage->getValue();
+                return $element['values']['text'];
+            }
+        }
     }
 
     /**

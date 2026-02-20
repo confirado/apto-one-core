@@ -209,6 +209,9 @@ class CsvStringConverter
         $headerInfo[6] = '';
         $headerInfo[7] = '';
         $headerInfo[8] = '';
+
+        $headerInfo[9] = '';
+
         array_push($content, $headerInfo);
         // line two...
         $headerInfo[0] = '';
@@ -220,6 +223,9 @@ class CsvStringConverter
         $headerInfo[6] = 'Summe Materialkosten';
         $headerInfo[7] = '';
         $headerInfo[8] = $this->formatFloatValue($totalMaterialCosts / 100);
+
+        $headerInfo[9] = '';
+
         array_push($content, $headerInfo);
         // line two...
         $headerInfo[0] = '';
@@ -231,6 +237,9 @@ class CsvStringConverter
         $headerInfo[6] = '';
         $headerInfo[7] = '';
         $headerInfo[8] = '';
+
+        $headerInfo[9] = '';
+
         array_push($content, $headerInfo);
 
         return $content;
@@ -255,6 +264,14 @@ class CsvStringConverter
             $entry[7] = $row['unit']; // ME
             $entry[8] = $this->formatFloatValue($row['itemPriceTotal']); // Mat.-Kosten
 
+            $counter = 9;
+            foreach ($row as $cell) {
+                if (str_starts_with($cell, '_')) {
+                    $entry[$counter] = ltrim($cell, '_');
+                    $counter++;
+                }
+            }
+
             array_push($content, $entry);
         }
 
@@ -276,6 +293,8 @@ class CsvStringConverter
         $headline['Basis'] = true;
         $headline['ME'] = true;
         $headline['Mat.-Kosten'] = true;
+
+        $headline['Eingabe'] = true;
 
         return $headline;
     }

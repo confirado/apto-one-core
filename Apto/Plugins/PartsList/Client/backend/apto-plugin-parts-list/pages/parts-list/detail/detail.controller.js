@@ -111,16 +111,16 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     function initNewProductUsage() {
         $scope.newProductUsage = {
             usedForUuid: null,
-            quantity: null,
-            value: null
+            quantity: '',
+            value: ''
         };
     }
 
     function initNewSectionUsage() {
         $scope.newSectionUsage = {
             usedForUuid: null,
-            quantity: null,
-            value: null,
+            quantity: '',
+            value: '',
             productId: null
         };
     }
@@ -128,8 +128,8 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     function initNewElementUsage() {
         $scope.newElementUsage = {
             usedForUuid: null,
-            quantity: null,
-            value: null,
+            quantity: '',
+            value: '',
             productId: null
         };
     }
@@ -137,8 +137,8 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     function initNewRuleUsage() {
         $scope.newRuleUsage = {
             name: null,
-            quantity: null,
-            value: null
+            quantity: '',
+            value: ''
         };
     }
 
