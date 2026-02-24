@@ -264,18 +264,29 @@ class CsvStringConverter
             $entry[7] = $row['unit']; // ME
             $entry[8] = $this->formatFloatValue($row['itemPriceTotal']); // Mat.-Kosten
 
-            $counter = 9;
-            foreach ($row as $cell) {
-                if (str_starts_with($cell, '_')) {
-                    $entry[$counter] = ltrim($cell, '_');
-                    $counter++;
-                }
-            }
+            $this->createCustomRowEntries($entry, $row);
 
             array_push($content, $entry);
         }
 
         return $content;
+    }
+
+    /**
+     * @param array $entry
+     * @param mixed $row
+     * @return void
+     */
+    private function createCustomRowEntries(array &$entry, mixed $row): void {
+        $counter = count($entry);
+        foreach ($row as $cell) {
+            // Custom row cells start with __
+            if (str_starts_with($cell, '__')) {
+                $value = substr($cell, 2);
+                $entry[$counter] = $value;
+                $counter++;
+            }
+        }
     }
 
     /**

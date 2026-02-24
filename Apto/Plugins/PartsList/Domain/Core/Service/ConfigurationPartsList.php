@@ -172,39 +172,51 @@ class ConfigurationPartsList
             'itemPriceTotal' => str_replace('.', ',', $formattedPartPrice)
         ];
 
+        $elementUsages = $part->getElementUsages();
         $elementList = $state->getElementList();
 
-        $foundElements = [];
-
-        $elementUsages = $part->getElementUsages();
-        if ($elementUsages !== null) {
-            foreach ($elementUsages as $elementUsage) {
-                $elementUsageValue = $this->findElementUsageValue($elementUsage, $elementList);
-                if ($elementUsageValue !== null) {
-                    $foundElements[] = $elementUsageValue;
-                }
-            }
-        }
-
-        foreach ($foundElements as $foundElement) {
-            // _ = Eingabe Feld
-            $listItem[] = '_' . $foundElement;
-        }
+        $this->findElementUsageValues($listItem, $elementUsages, $elementList);
 
         return $listItem;
     }
 
-    private function findElementUsageValue($elementUsage, $elementList) {
-        foreach ($elementList as $element) {
-            $elementId = $element['elementId'];
-            $sectionId = $element['sectionId'];
-
-            $elementUsageElementId = $elementUsage->getUsageForUuid()->getId();
-            if ($elementUsageElementId === $elementId) {
-                $backendValue = $elementUsage->getValue();
-                return $element['values']['text'];
+    /**
+     * @param $listItem
+     * @param $elementUsages
+     * @param $elementList
+     * @return void
+     */
+    private function findElementUsageValues(&$listItem, $elementUsages, $elementList) {
+        if ($elementUsages !== null) {
+            foreach ($elementUsages as $elementUsage) {
+                $elementUsageValue = $this->findElementUsageValue($elementUsage, $elementList);
+                if ($elementUsageValue !== null) {
+                    // Custom row cells start with __
+                    $listItem[] = '__' . $elementUsageValue;
+                }
             }
         }
+    }
+
+    /**
+     * @param $elementUsage
+     * @param $elementList
+     * @return mixed|null
+     */
+    private function findElementUsageValue($elementUsage, $elementList) {
+        $elementUsageElementId = $elementUsage->getUsageForUuid()->getId();
+        foreach ($elementList as $element) {
+            $elementId = $element['elementId'];
+            if ($elementUsageElementId === $elementId) {
+                $value = $elementUsage->getValue();
+                if ($value !== null) {
+                    $fieldName = $value->getValue();
+                    return $element['values'][$fieldName] ?? null;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

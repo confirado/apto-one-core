@@ -10,8 +10,8 @@ import ElementUsageDetailController from './element-usage/element-usage-detail';
 import RuleUsageDetailTemplate from './rule-usage/rule-usage-detail.html';
 import RuleUsageDetailController from './rule-usage/rule-usage-detail';
 
-const ControllerInject = ['$scope', '$mdDialog', '$ngRedux', '$templateCache', '$mdEditDialog', 'LanguageFactory', 'AptoPartsListPartActions', 'id', 'onClose'];
-const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEditDialog, LanguageFactory, AptoPartsListPartActions, id, onClose) {
+const ControllerInject = ['$scope', '$mdDialog', '$ngRedux', '$templateCache', '$mdEditDialog', 'LanguageFactory', 'AptoPartsListPartActions', 'ElementActions', 'id', 'onClose'];
+const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEditDialog, LanguageFactory, AptoPartsListPartActions, ElementActions, id, onClose) {
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/part.html', PartTab);
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/products.html', ProductsTab);
     $templateCache.put('apto-plugin-parts-list/pages/parts-list/detail/tabs/sections.html', SectionsTab);
@@ -22,6 +22,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.mapStateToThis = function(state) {
         return {
             details: state.aptoPartsListPart.details,
+            detail: state.element.detail,
             availableUnits: state.aptoPartsListPart.availableUnits,
             availableProducts: state.aptoPartsListPart.availableProducts,
             availableSections: state.aptoPartsListPart.availableSections,
@@ -32,10 +33,12 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             ruleUsages: state.aptoPartsListPart.ruleUsages,
             prices: state.aptoPartsListPart.prices,
             availableCustomerGroups: state.aptoPartsListPart.availableCustomerGroups,
+            registeredDefinitions: state.element.registeredDefinitions,
         }
     };
 
     const subscribedActions = $ngRedux.connect($scope.mapStateToThis, {
+        fetchDetail: ElementActions.fetchDetail,
         fetchDetails: AptoPartsListPartActions.fetchDetails,
         saveDetails: AptoPartsListPartActions.saveDetails,
         resetDetails: AptoPartsListPartActions.resetDetails,
@@ -58,10 +61,11 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         fetchProductUsages: AptoPartsListPartActions.fetchProductUsages,
         fetchSectionUsages: AptoPartsListPartActions.fetchSectionUsages,
         fetchElementUsages: AptoPartsListPartActions.fetchElementUsages,
+        fetchRegisteredDefinitions: ElementActions.fetchRegisteredDefinitions,
         fetchRuleUsages: AptoPartsListPartActions.fetchRuleUsages,
         fetchPrices: AptoPartsListPartActions.fetchPrices,
         addPartPrice: AptoPartsListPartActions.addPartPrice,
-        removePartPrice: AptoPartsListPartActions.removePartPrice
+        removePartPrice: AptoPartsListPartActions.removePartPrice,
     })($scope);
 
     function init() {
@@ -87,6 +91,8 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.fetchAvailableProducts();
         $scope.fetchAvailableSections();
         $scope.fetchAvailableElements();
+
+        $scope.selectedElement = null;
     }
 
     function closeEditDialogAndShow(dialog) {
@@ -361,14 +367,41 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         });
     }
 
-    function onSectionChange(section) {
-        $scope.newSectionUsage.usedForUuid = section.id;
-        $scope.newSectionUsage.productId = section.productId;
-    }
-
     function onElementChange(element) {
+        $scope.selectedElement = element;
         $scope.newElementUsage.usedForUuid = element.id;
         $scope.newElementUsage.productId = element.productId;
+
+        $scope.selectableProperties = [];
+        if (element) {
+            createElementSelectableProperties();
+        }
+    }
+
+    function createElementSelectableProperties() {
+        if ($scope.selectedElement === null) {
+            return null;
+        }
+
+        $scope.fetchDetail($scope.selectedElement.id).then(() => {
+            $scope.fetchRegisteredDefinitions().then(() => {
+                for (let i = 0; i < $scope.registeredDefinitions.length; i++) {
+                    if ($scope.registeredDefinitions[i].className === $scope.detail.definition.class) {
+                        $scope.selectedDefinition = $scope.registeredDefinitions[i];
+
+                        switch ($scope.selectedDefinition.name) {
+                            case 'Custom Text Element':
+                                $scope.selectableProperties = ['text'];
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    }
+                }
+            });
+        });
     }
 
     function save(detailsForm, close) {
@@ -433,7 +466,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.clearSectionSearchTerm = clearSectionSearchTerm;
     $scope.clearElementSearchTerm = clearElementSearchTerm;
 
-    $scope.onSectionChange = onSectionChange;
     $scope.onElementChange = onElementChange;
 
     $scope.getUsageIdentifierByUsageForUuid = getUsageIdentifierByUsageForUuid;

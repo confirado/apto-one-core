@@ -32,7 +32,16 @@
     <div flex="5"></div>
     <md-input-container flex>
         <label>Wert:</label>
-        <input ng-model="newElementUsage.value">
+        <md-select
+            multiple="false"
+            ng-disabled="selectableProperties === null"
+            ng-model="newElementUsage.value"
+        >
+            <md-option ng-value="''"></md-option>
+            <md-option ng-repeat="property in selectableProperties" ng-value="property">
+                {{property}}
+            </md-option>
+        </md-select>
     </md-input-container>
     <div flex="5"></div>
     <md-input-container>
