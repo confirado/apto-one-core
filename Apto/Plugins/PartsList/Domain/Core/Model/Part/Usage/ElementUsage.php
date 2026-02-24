@@ -13,6 +13,11 @@ class ElementUsage extends Usage
     private $quantityCalculation;
 
     /**
+     * @var ValueCalculation
+     */
+    private $valueCalculation;
+
+    /**
      * @var AptoUuid
      */
     protected $usageForUuid;
@@ -37,6 +42,10 @@ class ElementUsage extends Usage
             null,
             null
         );
+        $this->valueCalculation = new ValueCalculation(
+            false,
+            null
+        );
     }
 
     /**
@@ -54,6 +63,24 @@ class ElementUsage extends Usage
     public function setQuantityCalculation(QuantityCalculation $quantityCalculation): ElementUsage
     {
         $this->quantityCalculation = $quantityCalculation;
+        return $this;
+    }
+
+    /**
+     * @return ValueCalculation
+     */
+    public function getValueCalculation(): ValueCalculation
+    {
+        return $this->valueCalculation;
+    }
+
+    /**
+     * @param ValueCalculation $valueCalculation
+     * @return ElementUsage
+     */
+    public function setValueCalculation(ValueCalculation $valueCalculation): ElementUsage
+    {
+        $this->valueCalculation = $valueCalculation;
         return $this;
     }
 

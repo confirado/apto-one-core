@@ -23,7 +23,8 @@ const ElementReducer = function(AptoReducersProvider) {
         customProperties: [],
         attachments: [],
         gallery: [],
-        availablePriceMatrices: []
+        availablePriceMatrices: [],
+        selectableValues: []
     };
 
     function getType(type) {
@@ -40,6 +41,13 @@ const ElementReducer = function(AptoReducersProvider) {
             case getType('FETCH_DETAIL_FULFILLED'):
                 newState = update(state, {
                     detail: {
+                        $set: action.payload.data.result
+                    }
+                });
+                return newState;
+            case getType('FETCH_ELEMENT_SELECTABLE_VALUES_FULFILLED'):
+                newState = update(state, {
+                    selectableValues: {
                         $set: action.payload.data.result
                     }
                 });

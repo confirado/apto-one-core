@@ -22,6 +22,7 @@
         <embedded class="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity" use-column-prefix="false" name="quantity"/>
         <embedded class="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Value" use-column-prefix="false" name="value"/>
         <embedded class="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation" use-column-prefix="true" column-prefix="quantity_calculation_" name="quantityCalculation"/>
+        <embedded class="Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ValueCalculation" use-column-prefix="true" column-prefix="value_calculation_" name="valueCalculation"/>
 
         <many-to-one field="part" target-entity="Apto\Plugins\PartsList\Domain\Core\Model\Part\Part" inversed-by="elementUsages">
             <join-column name="part_surrogate_id" referenced-column-name="surrogate_id" />

@@ -21,6 +21,7 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleCondition;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\RuleUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\SectionUsage;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Value;
+use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ValueCalculation;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -627,6 +628,23 @@ class Part extends AptoAggregate
 
         if (null !== $elementUsage) {
             $elementUsage->setQuantityCalculation($quantityCalculation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid $usageId
+     * @param ValueCalculation $valueCalculation
+     * @return Part
+     */
+    public function setElementUsageValueCalculation(AptoUuid $usageId, ValueCalculation $valueCalculation): Part
+    {
+        /** @var ElementUsage|null $elementUsage */
+        $elementUsage = $this->elementUsages->get($usageId->getId());
+
+        if (null !== $elementUsage) {
+            $elementUsage->setValueCalculation($valueCalculation);
         }
 
         return $this;

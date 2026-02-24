@@ -113,6 +113,23 @@ class ElementQueryHandler implements QueryHandlerInterface
     }
 
     /**
+     * @param FindElementSelectableValues $query
+     * @return array
+     */
+    public function handleFindElementSelectableValues(FindElementSelectableValues $query): array
+    {
+        $elementId = $query->getElementId();
+        $element = $this->productElementFinder->findById($elementId);
+        if (!$element) {
+            throw new \InvalidArgumentException('Section does not contain an element with Uuid \'' . $elementId . '\'.');
+        }
+
+        $elementDefinition = $this->aptoJsonSerializer->jsonUnSerialize(json_encode($element['definition'], JSON_UNESCAPED_UNICODE));
+
+        return $elementDefinition->getSelectableValues();
+    }
+
+    /**
      * @param FindRegisteredElementDefinitions $query
      * @return array
      */
@@ -189,6 +206,11 @@ class ElementQueryHandler implements QueryHandlerInterface
 
         yield FindElementCustomProperties::class => [
             'method' => 'handleFindElementCustomProperties',
+            'bus' => 'query_bus'
+        ];
+
+        yield FindElementSelectableValues::class => [
+            'method' => 'handleFindElementSelectableValues',
             'bus' => 'query_bus'
         ];
 

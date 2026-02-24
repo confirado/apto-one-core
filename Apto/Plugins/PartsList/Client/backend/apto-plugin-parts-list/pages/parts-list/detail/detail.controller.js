@@ -22,7 +22,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.mapStateToThis = function(state) {
         return {
             details: state.aptoPartsListPart.details,
-            detail: state.element.detail,
             availableUnits: state.aptoPartsListPart.availableUnits,
             availableProducts: state.aptoPartsListPart.availableProducts,
             availableSections: state.aptoPartsListPart.availableSections,
@@ -33,12 +32,11 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             ruleUsages: state.aptoPartsListPart.ruleUsages,
             prices: state.aptoPartsListPart.prices,
             availableCustomerGroups: state.aptoPartsListPart.availableCustomerGroups,
-            registeredDefinitions: state.element.registeredDefinitions,
+            selectableValues: state.element.selectableValues,
         }
     };
 
     const subscribedActions = $ngRedux.connect($scope.mapStateToThis, {
-        fetchDetail: ElementActions.fetchDetail,
         fetchDetails: AptoPartsListPartActions.fetchDetails,
         saveDetails: AptoPartsListPartActions.saveDetails,
         resetDetails: AptoPartsListPartActions.resetDetails,
@@ -61,7 +59,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         fetchProductUsages: AptoPartsListPartActions.fetchProductUsages,
         fetchSectionUsages: AptoPartsListPartActions.fetchSectionUsages,
         fetchElementUsages: AptoPartsListPartActions.fetchElementUsages,
-        fetchRegisteredDefinitions: ElementActions.fetchRegisteredDefinitions,
+        fetchSelectableValues: ElementActions.fetchSelectableValues,
         fetchRuleUsages: AptoPartsListPartActions.fetchRuleUsages,
         fetchPrices: AptoPartsListPartActions.fetchPrices,
         addPartPrice: AptoPartsListPartActions.addPartPrice,
@@ -374,33 +372,19 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
 
         $scope.selectableProperties = [];
         if (element) {
-            createElementSelectableProperties();
+            createElementSelectableValues();
         }
     }
 
-    function createElementSelectableProperties() {
+    function createElementSelectableValues() {
         if ($scope.selectedElement === null) {
             return null;
         }
 
-        $scope.fetchDetail($scope.selectedElement.id).then(() => {
-            $scope.fetchRegisteredDefinitions().then(() => {
-                for (let i = 0; i < $scope.registeredDefinitions.length; i++) {
-                    if ($scope.registeredDefinitions[i].className === $scope.detail.definition.class) {
-                        $scope.selectedDefinition = $scope.registeredDefinitions[i];
-
-                        switch ($scope.selectedDefinition.name) {
-                            case 'Custom Text Element':
-                                $scope.selectableProperties = ['text'];
-                                break;
-                            default:
-                                break;
-                        }
-
-                        break;
-                    }
-                }
-            });
+        $scope.fetchSelectableValues($scope.selectedElement.id).then(() => {
+            const selectableValue = $scope.selectableValues;
+            const keys = Object.keys(selectableValue);
+            $scope.selectableProperties = keys;
         });
     }
 

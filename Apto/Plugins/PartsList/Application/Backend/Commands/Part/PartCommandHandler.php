@@ -17,6 +17,7 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\PartRepository;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Quantity;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\QuantityCalculation;
 use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\Value;
+use Apto\Plugins\PartsList\Domain\Core\Model\Part\Usage\ValueCalculation;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\Unit;
 use Apto\Plugins\PartsList\Domain\Core\Model\Unit\UnitRepository;
 use Exception;
@@ -407,6 +408,16 @@ class PartCommandHandler extends AbstractCommandHandler
                 $command->getQuantityCalculation()['fieldType'],
                 $command->getQuantityCalculation()['field'],
                 $command->getQuantityCalculation()['fieldPosition']
+            )
+        );
+
+        $part->setElementUsageValueCalculation(
+            new AptoUuid(
+                $command->getUsageId()
+            ),
+            new ValueCalculation(
+                $command->getQuantityCalculation()['active'],
+                $command->getQuantityCalculation()['field']
             )
         );
 

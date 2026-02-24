@@ -306,10 +306,10 @@ const Actions = function ($ngRedux, MessageBusFactory, PageHeaderActions, DataLi
         }
     }
 
-    function updateElementUsage(partId, usageId, quantity, value, quantityCalculation) {
+    function updateElementUsage(partId, usageId, quantity, value, quantityCalculation, valueCalculation) {
         return {
             type: getType('UPDATE_ELEMENT_USAGE'),
-            payload: MessageBusFactory.command('AptoPartsListUpdateElementUsage', [partId, usageId, quantity, value, quantityCalculation])
+            payload: MessageBusFactory.command('AptoPartsListUpdateElementUsage', [partId, usageId, quantity, value, quantityCalculation, valueCalculation])
         }
     }
 

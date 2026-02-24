@@ -11,6 +11,13 @@ const ElementActions = function (MessageBusFactory) {
         }
     }
 
+    function fetchSelectableValues (elementId) {
+        return {
+            type: getType('FETCH_ELEMENT_SELECTABLE_VALUES', [elementId]),
+            payload: MessageBusFactory.query('FindElementSelectableValues', [elementId])
+        }
+    }
+
     function fetchRegisteredDefinitions () {
         return {
             type: getType('FETCH_REGISTERED_DEFINITIONS'),
@@ -125,6 +132,7 @@ const ElementActions = function (MessageBusFactory) {
 
     return {
         fetchDetail: fetchDetail,
+        fetchSelectableValues: fetchSelectableValues,
         fetchRegisteredDefinitions: fetchRegisteredDefinitions,
         fetchRenderImages: fetchRenderImages,
         fetchCustomProperties: fetchCustomProperties,

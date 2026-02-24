@@ -228,12 +228,15 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                     ['quantityCalculation.fieldType', 'quantityCalculationFieldType'],
                     ['quantityCalculation.field', 'quantityCalculationField'],
                     ['quantityCalculation.fieldPosition', 'quantityCalculationFieldPosition'],
-                    ['value.value', 'value']
+                    ['value.value', 'value'],
+                    ['valueCalculation.active', 'valueCalculationActive'],
+                    ['valueCalculation.field', 'valueCalculationField']
                 ]
             ])
             ->setPostProcess([
                 'e' => [
-                    'quantityCalculationActive' => [DqlQueryBuilder::class, 'decodeBool']
+                    'quantityCalculationActive' => [DqlQueryBuilder::class, 'decodeBool'],
+                    'valueCalculationActive' => [DqlQueryBuilder::class, 'decodeBool'],
                 ]
             ]);
 
@@ -256,12 +259,22 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
             'fieldPosition' => $result['quantityCalculationFieldPosition']
         ];
 
+        $result['valueCalculation'] = [
+            'active' => $result['valueCalculationActive'],
+            'field' => $result['valueCalculationField']
+        ];
+
         unset(
             $result['quantityCalculationActive'],
             $result['quantityCalculationOperation'],
             $result['quantityCalculationFieldType'],
             $result['quantityCalculationField'],
             $result['quantityCalculationFieldPosition']
+        );
+
+        unset(
+            $result['valueCalculationActive'],
+            $result['valueCalculationField']
         );
 
         return $result;
