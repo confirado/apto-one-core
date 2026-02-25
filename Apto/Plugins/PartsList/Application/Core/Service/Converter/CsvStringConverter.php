@@ -93,14 +93,6 @@ class CsvStringConverter
         $articleName = AptoTranslatedValue::fromArray($product['name']);
         $articleNumber = $product['articleNumber'] ?: 'NA';
 
-        $content = [];
-        $content = $this->createHeader(
-            $content,
-            $articleName->getTranslation($this->locale, new AptoLocale('de_DE'), true)->getValue(),
-            $articleNumber,
-            (float) $partsPrice->getAmount()
-        );
-
         $basicList = $this->configurationPartsList->getBasicList(
             $productId,
             $state,
@@ -112,6 +104,15 @@ class CsvStringConverter
         );
 
         $hasCustomEntries = $this->hasCustomEntries($basicList);
+
+        $content = [];
+        $content = $this->createHeader(
+            $content,
+            $articleName->getTranslation($this->locale, new AptoLocale('de_DE'), true)->getValue(),
+            $articleNumber,
+            (float) $partsPrice->getAmount(),
+            $hasCustomEntries
+        );
 
         $content = $this->createRows(
             $content,
@@ -215,7 +216,8 @@ class CsvStringConverter
         array $content,
         string $articleNumber,
         string $articleName,
-        float $totalMaterialCosts
+        float $totalMaterialCosts,
+        bool $hasCustomEntries
     ): array {
         $headerInfo = [];
 
@@ -230,7 +232,9 @@ class CsvStringConverter
         $headerInfo[7] = '';
         $headerInfo[8] = '';
 
-        $headerInfo[9] = '';
+        if ($hasCustomEntries) {
+            $headerInfo[9] = '';
+        }
 
         array_push($content, $headerInfo);
         // line two...
@@ -244,7 +248,9 @@ class CsvStringConverter
         $headerInfo[7] = '';
         $headerInfo[8] = $this->formatFloatValue($totalMaterialCosts / 100);
 
-        $headerInfo[9] = '';
+        if ($hasCustomEntries) {
+            $headerInfo[9] = '';
+        }
 
         array_push($content, $headerInfo);
         // line two...
@@ -258,7 +264,9 @@ class CsvStringConverter
         $headerInfo[7] = '';
         $headerInfo[8] = '';
 
-        $headerInfo[9] = '';
+        if ($hasCustomEntries) {
+            $headerInfo[9] = '';
+        }
 
         array_push($content, $headerInfo);
 
