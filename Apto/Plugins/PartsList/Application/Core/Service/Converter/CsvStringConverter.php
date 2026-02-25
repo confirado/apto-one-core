@@ -101,22 +101,42 @@ class CsvStringConverter
             (float) $partsPrice->getAmount()
         );
 
+        $basicList = $this->configurationPartsList->getBasicList(
+            $productId,
+            $state,
+            $currency,
+            $customerGroupId,
+            $fallBackCustomerGroupId,
+            $this->locale,
+            $computedValues
+        );
+
+        $hasCustomEntries = $this->hasCustomEntries($basicList);
+
         $content = $this->createRows(
             $content,
-            $this->configurationPartsList->getBasicList(
-                $productId,
-                $state,
-                $currency,
-                $customerGroupId,
-                $fallBackCustomerGroupId,
-                $this->locale,
-                $computedValues
-            )
+            $basicList,
+            $hasCustomEntries
         );
 
         $csv = new CsvExport($content, ';');
-        $csv->createHeader($this->createHeadline());
+        $csv->createHeader($this->createHeadline($hasCustomEntries));
         return $csv->getCSVString();
+    }
+
+    /**
+     * @param $basicList
+     * @return bool
+     */
+    private function hasCustomEntries($basicList): bool {
+        foreach ($basicList as $list) {
+            foreach ($list as $row) {
+                if (str_starts_with($row, '__')) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -248,9 +268,10 @@ class CsvStringConverter
     /**
      * @param array $content
      * @param array $rows
+     * @param bool $hasCustomEntries
      * @return array
      */
-    private function createRows(array $content, array $rows): array
+    private function createRows(array $content, array $rows, bool $hasCustomEntries): array
     {
         foreach ($rows as $i => $row) {
             $entry = [];
@@ -264,7 +285,9 @@ class CsvStringConverter
             $entry[7] = $row['unit']; // ME
             $entry[8] = $this->formatFloatValue($row['itemPriceTotal']); // Mat.-Kosten
 
-            $this->createCustomRowEntries($entry, $row);
+            if ($hasCustomEntries) {
+                $this->createCustomRowEntries($entry, $row);
+            }
 
             array_push($content, $entry);
         }
@@ -292,7 +315,7 @@ class CsvStringConverter
     /**
      * @return array
      */
-    private function createHeadline(): array
+    private function createHeadline($hasCustomEntries): array
     {
         $headline = [];
         $headline['Artikelnr'] = true;
@@ -305,7 +328,9 @@ class CsvStringConverter
         $headline['ME'] = true;
         $headline['Mat.-Kosten'] = true;
 
-        $headline['Eingabe'] = true;
+        if ($hasCustomEntries) {
+            $headline['Eingabe'] = true;
+        }
 
         return $headline;
     }
