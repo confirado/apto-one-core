@@ -116,7 +116,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.newProductUsage = {
             usedForUuid: null,
             quantity: '',
-            value: ''
         };
     }
 
@@ -124,7 +123,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.newSectionUsage = {
             usedForUuid: null,
             quantity: '',
-            value: '',
             productId: null
         };
     }
@@ -142,7 +140,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.newRuleUsage = {
             name: null,
             quantity: '',
-            value: ''
         };
     }
 
@@ -151,7 +148,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function addProductUsage() {
-        $scope.addPartProductUsage(id, $scope.newProductUsage.usedForUuid, $scope.newProductUsage.quantity, $scope.newProductUsage.value).then(() => {
+        $scope.addPartProductUsage(id, $scope.newProductUsage.usedForUuid, $scope.newProductUsage.quantity).then(() => {
             initNewProductUsage();
             clearProductSearchTerm();
             $scope.fetchProductUsages(id);
@@ -159,7 +156,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function addSectionUsage() {
-        $scope.addPartSectionUsage(id, $scope.newSectionUsage.usedForUuid, $scope.newSectionUsage.quantity, $scope.newSectionUsage.value, $scope.newSectionUsage.productId).then(() => {
+        $scope.addPartSectionUsage(id, $scope.newSectionUsage.usedForUuid, $scope.newSectionUsage.quantity, $scope.newSectionUsage.productId).then(() => {
             initNewSectionUsage();
             clearSectionSearchTerm();
             $scope.fetchSectionUsages(id);
@@ -175,7 +172,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function addRuleUsage() {
-        $scope.addPartRuleUsage(id, $scope.newRuleUsage.name, $scope.newRuleUsage.quantity, $scope.newRuleUsage.value).then(() => {
+        $scope.addPartRuleUsage(id, $scope.newRuleUsage.name, $scope.newRuleUsage.quantity).then(() => {
             initNewRuleUsage();
             $scope.fetchRuleUsages(id);
         });
@@ -197,28 +194,12 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         });
     }
 
-    function updateProductUsageValue($event, usage) {
-        $event.stopPropagation();
-        closeEditDialogAndShow({
-            modelValue: usage.value,
-            save: function (input) {
-                $scope.updatePartProductUsageValue(id, usage.id, usage.quantity, input.$modelValue).then(() => {
-                    $scope.fetchProductUsages(id);
-                });
-            },
-            targetEvent: $event,
-            cancel: 'Abbrechen',
-            ok: 'Speichern',
-            title: 'Wert:'
-        });
-    }
-
     function updateSectionUsageQuantity($event, usage) {
         $event.stopPropagation();
         closeEditDialogAndShow({
             modelValue: usage.quantity,
             save: function (input) {
-                $scope.updatePartSectionUsageQuantity(id, usage.id, input.$modelValue, usage.value).then(() => {
+                $scope.updatePartSectionUsageQuantity(id, usage.id, input.$modelValue).then(() => {
                     $scope.fetchSectionUsages(id);
                 });
             },
@@ -226,22 +207,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
             cancel: 'Abbrechen',
             ok: 'Speichern',
             title: 'Anzahl:'
-        });
-    }
-
-    function updateSectionUsageValue($event, usage) {
-        $event.stopPropagation();
-        closeEditDialogAndShow({
-            modelValue: usage.value,
-            save: function (input) {
-                $scope.updatePartSectionUsageValue(id, usage.id, usage.quantity, input.$modelValue).then(() => {
-                    $scope.fetchSectionUsages(id);
-                });
-            },
-            targetEvent: $event,
-            cancel: 'Abbrechen',
-            ok: 'Speichern',
-            title: 'Wert:'
         });
     }
 
@@ -426,9 +391,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.addRuleUsage = addRuleUsage;
 
     $scope.updateProductUsageQuantity = updateProductUsageQuantity;
-    $scope.updateProductUsageValue = updateProductUsageValue;
     $scope.updateSectionUsageQuantity = updateSectionUsageQuantity;
-    $scope.updateSectionUsageValue = updateSectionUsageValue;
     $scope.showElementUsageDetails = showElementUsageDetails;
     $scope.showRuleUsageDetails = showRuleUsageDetails;
 

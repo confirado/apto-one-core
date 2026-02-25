@@ -229,14 +229,11 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                     ['quantityCalculation.field', 'quantityCalculationField'],
                     ['quantityCalculation.fieldPosition', 'quantityCalculationFieldPosition'],
                     ['value.value', 'value'],
-                    ['valueCalculation.active', 'valueCalculationActive'],
-                    ['valueCalculation.field', 'valueCalculationField']
                 ]
             ])
             ->setPostProcess([
                 'e' => [
                     'quantityCalculationActive' => [DqlQueryBuilder::class, 'decodeBool'],
-                    'valueCalculationActive' => [DqlQueryBuilder::class, 'decodeBool'],
                 ]
             ]);
 
@@ -259,22 +256,12 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
             'fieldPosition' => $result['quantityCalculationFieldPosition']
         ];
 
-        $result['valueCalculation'] = [
-            'active' => $result['valueCalculationActive'],
-            'field' => $result['valueCalculationField']
-        ];
-
         unset(
             $result['quantityCalculationActive'],
             $result['quantityCalculationOperation'],
             $result['quantityCalculationFieldType'],
             $result['quantityCalculationField'],
             $result['quantityCalculationFieldPosition']
-        );
-
-        unset(
-            $result['valueCalculationActive'],
-            $result['valueCalculationField']
         );
 
         return $result;
@@ -297,9 +284,7 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
                     ['id.id', 'id'],
                     'name',
                     ['quantity.quantity', 'quantity'],
-                    ['value.value', 'value'],
                     'conditionsOperator'
-
                 ],
                 'c' => [
                     ['id.id', 'id'],
@@ -654,16 +639,23 @@ class PartOrmFinder extends AptoOrmFinder implements PartFinder
         $usageValues = [
             ['id.id', 'id'],
             ['usageForUuid.id', 'usageForUuid'],
-            ['quantity.quantity', 'quantity'],
-            ['value.value', 'value']
+            ['quantity.quantity', 'quantity']
         ];
+
+        if ($usages === 'elementUsages') {
+            $usageValues = [
+                ['id.id', 'id'],
+                ['usageForUuid.id', 'usageForUuid'],
+                ['quantity.quantity', 'quantity'],
+                ['value.value', 'value']
+            ];
+        }
 
         if ($usages === 'ruleUsages') {
             $usageValues = [
                 ['id.id', 'id'],
                 'name',
-                ['quantity.quantity', 'quantity'],
-                ['value.value', 'value']
+                ['quantity.quantity', 'quantity']
             ];
         }
 

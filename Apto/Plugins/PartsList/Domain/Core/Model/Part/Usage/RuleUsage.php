@@ -48,12 +48,11 @@ class RuleUsage extends Usage
      * @param Part $part
      * @param AptoUuid $id
      * @param Quantity $quantity
-     * @param Value $value
      * @param string $name
      */
-    public function __construct(Part $part, AptoUuid $id, Quantity $quantity, Value $value, string $name)
+    public function __construct(Part $part, AptoUuid $id, Quantity $quantity, string $name)
     {
-        parent::__construct($part, $id, $quantity, $value);
+        parent::__construct($part, $id, $quantity);
         $this->conditions = new ArrayCollection();
         $this->active = false;
         $this->name = $name;

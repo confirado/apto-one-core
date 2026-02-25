@@ -22,23 +22,16 @@ class AddRuleUsage implements CommandInterface
     private $quantity;
 
     /**
-     * @var string
-     */
-    private $value;
-
-    /**
      * AddRuleUsage constructor.
      * @param string $partId
      * @param string $name
      * @param string $quantity
-     * @param string $value
      */
-    public function __construct(string $partId, string $name, string $quantity, string $value)
+    public function __construct(string $partId, string $name, string $quantity)
     {
         $this->partId = $partId;
         $this->name = $name;
         $this->quantity = $quantity;
-        $this->value = $value;
     }
 
     /**
@@ -63,13 +56,5 @@ class AddRuleUsage implements CommandInterface
     public function getQuantity(): string
     {
         return $this->quantity;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->value;
     }
 }

@@ -9,10 +9,9 @@ class AddProductUsage extends AddUsage
      * @param string $partId
      * @param string $usageForUuid
      * @param string $quantity
-     * @param string $value
      */
-    public function __construct(string $partId, string $usageForUuid, string $quantity, string $value)
+    public function __construct(string $partId, string $usageForUuid, string $quantity)
     {
-        parent::__construct($partId, $usageForUuid, $quantity, $value, $usageForUuid);
+        parent::__construct($partId, $usageForUuid, $quantity, $usageForUuid);
     }
 }

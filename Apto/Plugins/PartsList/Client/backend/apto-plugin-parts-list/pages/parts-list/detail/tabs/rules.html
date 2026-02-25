@@ -9,13 +9,8 @@
         <input ng-model="newRuleUsage.quantity">
     </md-input-container>
     <div flex="5"></div>
-    <md-input-container flex>
-        <label>Wert:</label>
-        <input ng-model="newRuleUsage.value">
-    </md-input-container>
-    <div flex="5"></div>
     <md-input-container>
-        <md-button ng-disabled="!newRuleUsage.name || !(newRuleUsage.quantity || newRuleUsage.value)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addRuleUsage()">Hinzufügen</md-button>
+        <md-button ng-disabled="!newRuleUsage.name || !newRuleUsage.quantity" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addRuleUsage()">Hinzufügen</md-button>
     </md-input-container>
 </div>
 
@@ -23,11 +18,10 @@
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column style="width:20%;">Id</th>
+            <th md-column style="width:30%;">Id</th>
             <th md-column style="width:30%;">Name</th>
-            <th md-column style="width:20%;">Anzahl</th>
-            <th md-column style="width:20%;">Wert</th>
-            <th md-column style="width:10%; text-align: center;">Actions</th>
+            <th md-column style="width:25%;">Anzahl</th>
+            <th md-column style="width:15%; text-align: center;">Actions</th>
         </tr>
         </thead>
         <tbody md-body>
@@ -35,7 +29,6 @@
             <td md-cell>{{ruleUsage.id}}</td>
             <td md-cell>{{ruleUsage.name}}</td>
             <td md-cell>{{ruleUsage.quantity}}</td>
-            <td md-cell>{{ruleUsage.value}}</td>
             <td md-cell style="text-align: center;">
                 <md-button
                         title="Bearbeiten"

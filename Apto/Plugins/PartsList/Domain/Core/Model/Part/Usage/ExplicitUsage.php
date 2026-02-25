@@ -11,11 +11,10 @@ class ExplicitUsage extends Usage
      * @param Part $part
      * @param AptoUuid $id
      * @param Quantity $quantity
-     * @param Value $value
      * @param AptoUuid $productId
      */
-    public function __construct(Part $part, AptoUuid $id,  Quantity $quantity, Value $value, AptoUuid $productId)
+    public function __construct(Part $part, AptoUuid $id,  Quantity $quantity, AptoUuid $productId)
     {
-        parent::__construct($part, $id, $quantity, $value, $productId);
+        parent::__construct($part, $id, $quantity, $productId);
     }
 }

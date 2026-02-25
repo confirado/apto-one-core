@@ -26,13 +26,8 @@
         <input ng-model="newSectionUsage.quantity">
     </md-input-container>
     <div flex="5"></div>
-    <md-input-container flex>
-        <label>Wert:</label>
-        <input ng-model="newSectionUsage.value">
-    </md-input-container>
-    <div flex="5"></div>
     <md-input-container>
-        <md-button ng-disabled="!newSectionUsage.usedForUuid || !(newSectionUsage.quantity || newSectionUsage.value)" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addSectionUsage()">Hinzufügen</md-button>
+        <md-button ng-disabled="!newSectionUsage.usedForUuid || !newSectionUsage.quantity" style="margin: 0;" class="md-raised md-primary md-cornered" ng-click="addSectionUsage()">Hinzufügen</md-button>
     </md-input-container>
 </div>
 
@@ -40,11 +35,10 @@
     <table md-table>
         <thead md-head>
         <tr md-row>
-            <th md-column style="width:20%;">Id</th>
+            <th md-column style="width:30%;">Id</th>
             <th md-column style="width:30%;">verwendet für</th>
-            <th md-column style="width:20%;">Anzahl</th>
-            <th md-column style="width:20%;">Wert</th>
-            <th md-column style="width:10%; text-align: center;">Actions</th>
+            <th md-column style="width:25%;">Anzahl</th>
+            <th md-column style="width:15%; text-align: center;">Actions</th>
         </tr>
         </thead>
         <tbody md-body>
@@ -52,7 +46,6 @@
             <td md-cell>{{sectionUsage.id}}</td>
             <td md-cell>{{getUsageIdentifierByUsageForUuid(sectionUsage.usageForUuid, 'section')}}</td>
             <td md-cell ng-click="updateSectionUsageQuantity($event, sectionUsage)">{{sectionUsage.quantity}}</td>
-            <td md-cell ng-click="updateSectionUsageValue($event, sectionUsage)">{{sectionUsage.value}}</td>
             <td md-cell style="text-align: center;">
                 <md-button
                         title="Löschen"

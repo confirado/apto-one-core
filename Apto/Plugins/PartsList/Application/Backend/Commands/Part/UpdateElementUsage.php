@@ -32,27 +32,20 @@ class UpdateElementUsage implements CommandInterface
     private $quantityCalculation;
 
     /**
-     * @var array
-     */
-    private $valueCalculation;
-
-    /**
      * UpdateElementUsage constructor.
      * @param string $partId
      * @param string $usageId
      * @param string $quantity
      * @param string $value
      * @param array $quantityCalculation
-     * @param array $valueCalculation
      */
-    public function __construct(string $partId, string $usageId, string $quantity, string $value, array $quantityCalculation, array $valueCalculation)
+    public function __construct(string $partId, string $usageId, string $quantity, string $value, array $quantityCalculation)
     {
         $this->partId = $partId;
         $this->usageId = $usageId;
         $this->quantity = $quantity;
         $this->value = $value;
         $this->quantityCalculation = $quantityCalculation;
-        $this->valueCalculation = $valueCalculation;
     }
 
     /**
@@ -93,13 +86,5 @@ class UpdateElementUsage implements CommandInterface
     public function getQuantityCalculation(): array
     {
         return $this->quantityCalculation;
-    }
-
-    /**
-     * @return array
-     */
-    public function getValueCalculation(): array
-    {
-        return $this->valueCalculation;
     }
 }

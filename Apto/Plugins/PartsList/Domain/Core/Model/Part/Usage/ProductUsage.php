@@ -18,11 +18,10 @@ class ProductUsage extends Usage
      * @param AptoUuid $id
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
-     * @param Value $value
      */
-    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, Value $value)
+    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity)
     {
-        parent::__construct($part, $id, $quantity, $value, $usageForUuid);
+        parent::__construct($part, $id, $quantity, $usageForUuid);
         $this->usageForUuid = $usageForUuid;
     }
 

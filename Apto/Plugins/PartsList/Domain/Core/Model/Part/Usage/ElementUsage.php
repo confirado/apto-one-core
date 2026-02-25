@@ -8,14 +8,14 @@ use Apto\Plugins\PartsList\Domain\Core\Model\Part\Part;
 class ElementUsage extends Usage
 {
     /**
+     * @var Value
+     */
+    protected $value;
+
+    /**
      * @var QuantityCalculation
      */
     private $quantityCalculation;
-
-    /**
-     * @var ValueCalculation
-     */
-    private $valueCalculation;
 
     /**
      * @var AptoUuid
@@ -33,7 +33,8 @@ class ElementUsage extends Usage
      */
     public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, Value $value, AptoUuid $productId)
     {
-        parent::__construct($part, $id, $quantity, $value, $productId);
+        parent::__construct($part, $id, $quantity, $productId);
+        $this->value = $value;
         $this->usageForUuid = $usageForUuid;
         $this->quantityCalculation = new QuantityCalculation(
             false,
@@ -42,10 +43,24 @@ class ElementUsage extends Usage
             null,
             null
         );
-        $this->valueCalculation = new ValueCalculation(
-            false,
-            null
-        );
+    }
+
+    /**
+     * @return Value
+     */
+    public function getValue(): Value
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param Value $value
+     * @return $this
+     */
+    public function setValue(Value $value): self
+    {
+        $this->value = $value;
+        return $this;
     }
 
     /**
@@ -63,24 +78,6 @@ class ElementUsage extends Usage
     public function setQuantityCalculation(QuantityCalculation $quantityCalculation): ElementUsage
     {
         $this->quantityCalculation = $quantityCalculation;
-        return $this;
-    }
-
-    /**
-     * @return ValueCalculation
-     */
-    public function getValueCalculation(): ValueCalculation
-    {
-        return $this->valueCalculation;
-    }
-
-    /**
-     * @param ValueCalculation $valueCalculation
-     * @return ElementUsage
-     */
-    public function setValueCalculation(ValueCalculation $valueCalculation): ElementUsage
-    {
-        $this->valueCalculation = $valueCalculation;
         return $this;
     }
 

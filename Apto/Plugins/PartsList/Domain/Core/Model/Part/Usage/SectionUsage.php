@@ -18,12 +18,11 @@ class SectionUsage extends Usage
      * @param AptoUuid $id
      * @param AptoUuid $usageForUuid
      * @param Quantity $quantity
-     * @param Value $value
      * @param AptoUuid $productId
      */
-    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, Value $value, AptoUuid $productId)
+    public function __construct(Part $part, AptoUuid $id, AptoUuid $usageForUuid, Quantity $quantity, AptoUuid $productId)
     {
-        parent::__construct($part, $id, $quantity, $value, $productId);
+        parent::__construct($part, $id, $quantity, $productId);
         $this->usageForUuid = $usageForUuid;
     }
 
