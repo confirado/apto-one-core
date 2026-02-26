@@ -328,6 +328,11 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         });
     }
 
+    function onSectionChange(section) {
+        $scope.newSectionUsage.usedForUuid = section.id;
+        $scope.newSectionUsage.productId = section.productId;
+    }
+
     function onElementChange(element) {
         $scope.selectedElement = element;
         $scope.newElementUsage.usedForUuid = element.id;
@@ -411,6 +416,7 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     $scope.clearSectionSearchTerm = clearSectionSearchTerm;
     $scope.clearElementSearchTerm = clearElementSearchTerm;
 
+    $scope.onSectionChange = onSectionChange;
     $scope.onElementChange = onElementChange;
 
     $scope.getUsageIdentifierByUsageForUuid = getUsageIdentifierByUsageForUuid;
