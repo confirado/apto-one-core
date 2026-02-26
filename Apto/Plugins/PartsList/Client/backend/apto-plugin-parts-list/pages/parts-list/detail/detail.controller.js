@@ -87,8 +87,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
         $scope.fetchAvailableProducts();
         $scope.fetchAvailableSections();
         $scope.fetchAvailableElements();
-
-        $scope.selectedElement = null;
     }
 
     function closeEditDialogAndShow(dialog) {
@@ -334,7 +332,6 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function onElementChange(element) {
-        $scope.selectedElement = element;
         $scope.newElementUsage.usedForUuid = element.id;
         $scope.newElementUsage.productId = element.productId;
 
@@ -345,11 +342,11 @@ const Controller = function($scope, $mdDialog, $ngRedux, $templateCache, $mdEdit
     }
 
     function createElementSelectableValues() {
-        if ($scope.selectedElement === null) {
+        if (!$scope.newElementUsage.usedForUuid) {
             return null;
         }
 
-        $scope.fetchSelectableValues($scope.selectedElement.id).then(() => {
+        $scope.fetchSelectableValues($scope.newElementUsage.usedForUuid).then(() => {
             const selectableValue = $scope.selectableValues;
             const keys = Object.keys(selectableValue);
             $scope.selectableProperties = keys;
