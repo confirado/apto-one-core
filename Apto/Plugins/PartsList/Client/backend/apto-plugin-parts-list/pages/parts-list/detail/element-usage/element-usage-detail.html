@@ -81,7 +81,7 @@
                                 ng-disabled="!(elementUsageDetails.quantityCalculation.active && elementUsageDetails.quantityCalculation.operation)"
                                 ng-model="elementUsageDetails.quantityCalculation.fieldType"
                                 ng-model-options="{trackBy: '$value'}"
-                                ng-change="onChangeQuantityCalculationFieldType()"
+                                ng-change="onChangeFieldType()"
                         >
                             <md-option ng-repeat="fieldType in elementUsageDetails.fieldTypes" ng-value="fieldType">
                                 {{fieldType}}

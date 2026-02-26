@@ -31,7 +31,7 @@ const ElementUsageDetailController = function($scope, $mdDialog, $ngRedux, AptoP
         });
     }
 
-    function onChangeQuantityCalculationFieldType() {
+    function onChangeFieldType() {
         $scope.elementUsageDetails.quantityCalculation.field = null;
     }
 
@@ -49,7 +49,7 @@ const ElementUsageDetailController = function($scope, $mdDialog, $ngRedux, AptoP
 
     $scope.save = save;
     $scope.close = close;
-    $scope.onChangeQuantityCalculationFieldType = onChangeQuantityCalculationFieldType;
+    $scope.onChangeFieldType = onChangeFieldType;
     $scope.$on('$destroy', subscribedActions);
 };
 
