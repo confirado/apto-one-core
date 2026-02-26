@@ -337,7 +337,7 @@ class CsvStringConverter
         $headline['Mat.-Kosten'] = true;
 
         if ($hasCustomEntries) {
-            $headline['Eingabe'] = true;
+            $headline['Wert'] = true;
         }
 
         return $headline;
