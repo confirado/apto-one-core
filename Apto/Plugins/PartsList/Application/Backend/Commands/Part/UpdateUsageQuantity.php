@@ -22,22 +22,16 @@ abstract class UpdateUsageQuantity implements CommandInterface
     private $quantity;
 
     /**
-     * @var string
-     */
-    private $value;
-
-    /**
      * UpdateUsageQuantity constructor.
      * @param string $partId
      * @param string $usageId
      * @param string $quantity
      */
-    public function __construct(string $partId, string $usageId, string $quantity, string $value)
+    public function __construct(string $partId, string $usageId, string $quantity)
     {
         $this->partId = $partId;
         $this->usageId = $usageId;
         $this->quantity = $quantity;
-        $this->value = $value;
     }
 
     /**
@@ -62,13 +56,5 @@ abstract class UpdateUsageQuantity implements CommandInterface
     public function getQuantity(): string
     {
         return $this->quantity;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->value;
     }
 }
