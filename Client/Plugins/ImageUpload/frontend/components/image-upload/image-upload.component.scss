@@ -15,6 +15,6 @@
 
     .element-name {
         @include element-name();
-        word-break: normal;
+        word-break: normal !important;
     }
 }
