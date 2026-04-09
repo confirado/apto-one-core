@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from "@ngrx/effects";
-import { take } from "rxjs";
+import { take } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
@@ -11,6 +11,7 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-frontend-configuration-selectors';
 import {addToBasket, addToBasketSuccess} from '@apto-catalog-frontend-configuration-actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
+import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +30,8 @@ export class SidebarSummaryPriceComponent {
 	public sumPseudoPrice: string | null | undefined;
 	@Input()
 	public discount: number | undefined;
+
+  public showGross: boolean = true;
 
   public renderImage = null;
   public sw6CartButtonDisabled: boolean = false;
@@ -50,6 +53,12 @@ export class SidebarSummaryPriceComponent {
   ) {
     this.store.select(selectCurrentPerspective).pipe(untilDestroyed(this)).subscribe(async (result: string) => {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
+    });
+
+    this.store.select(selectCurrentUser).pipe(untilDestroyed(this)).subscribe((currentUser) => {
+      if (currentUser && currentUser.customerGroup) {
+        this.showGross = currentUser.customerGroup.showGross;
+      }
     });
   }
 

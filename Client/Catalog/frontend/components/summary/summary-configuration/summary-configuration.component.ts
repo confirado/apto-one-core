@@ -23,6 +23,7 @@ import {
   selectSumPseudoPrice,
 } from '@apto-catalog-frontend-configuration-selectors';
 import { SectionPriceTableItem, SectionTypes } from '@apto-catalog-frontend-configuration-model';
+import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 
 @Component({
   selector: 'apto-summary-configuration',
@@ -57,6 +58,8 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
 
   @Input() public showPrices: boolean = true;
 
+  public showGross: boolean = true;
+
   public constructor(
     private store: Store,
     private router: Router,
@@ -64,6 +67,7 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {
     this.locale = environment.defaultLocale;
+    this.showGross = environment.defaultCustomerGroup.showGross;
   }
 
   public ngOnInit(): void {
@@ -93,6 +97,12 @@ export class SummaryConfigurationComponent implements OnInit, OnDestroy {
         this.humanReadableState = next;
       } else {
         this.humanReadableState = {};
+      }
+    });
+
+    this.store.select(selectCurrentUser).pipe(takeUntil(this.destroy$)).subscribe((currentUser) => {
+      if (currentUser && currentUser.customerGroup) {
+        this.showGross = currentUser.customerGroup.showGross;
       }
     });
   }

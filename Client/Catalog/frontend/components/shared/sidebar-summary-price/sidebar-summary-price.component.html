@@ -10,7 +10,7 @@
                     </div>
                     <h3 class="sum-amount">{{ sumPrice }}</h3>
                     <span class="mwst-info">
-                        {{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+                        {{ contentSnippets$ | async | contentSnippet: (showGross ? 'tax.withTax' : 'tax.withoutTax') }}
                         <span>
                             <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
                                 {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}
@@ -59,7 +59,7 @@
 						<h4 class="discount-amount">{{ sumPseudoPrice }}</h4>
 					</div>
 					<h3 class="sum-amount">{{ sumPrice }}</h3>
-					<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: 'tax.withTax' }}
+					<span class="mwst-info">{{ contentSnippets$ | async | contentSnippet: (showGross ? 'tax.withTax' : 'tax.withoutTax') }}
                         <span>
                             <a *ngIf="sidebarSummary$ | async | contentSnippet: 'shippingCostsLink'" href="{{ sidebarSummary$ | async | contentSnippet: 'shippingCostsLink' }}" target="_blank">
                                 {{ sidebarSummary$ | async | contentSnippet: 'shippingCosts' }}

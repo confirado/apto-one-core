@@ -17,9 +17,9 @@ import {
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { selectHumanReadableState } from '@apto-request-form-frontend/store/human-readable-state.selectors';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
-import { HumanReadableState } from '@apto-catalog-frontend-configuration-model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
 
 @UntilDestroy()
 @Component({
@@ -48,6 +48,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
     error: false,
   };
   public readonly showRequestFormOnBottom = environment.hasOwnProperty('showRequestFormOnBottom') ? environment['showRequestFormOnBottom'] : false;
+  public showGross: boolean = true;
 
   public constructor(
     private store: Store,
@@ -61,6 +62,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
       if (!c.loading && c.state.sections.length === 0) {
         router.navigate(['..'], { relativeTo: activatedRoute });
       }
+      this.showGross = environment.defaultCustomerGroup.showGross;
     });
 
     // this.renderImageService.init();
@@ -91,6 +93,12 @@ export class SummaryComponent implements OnInit, OnDestroy {
     this.actions$.pipe(ofType(addToBasketSuccess)).subscribe((result) => {
       this.requestState.sending = false;
       this.requestState.success = true;
+    });
+
+    this.store.select(selectCurrentUser).pipe(untilDestroyed(this)).subscribe((currentUser) => {
+      if (currentUser && currentUser.customerGroup) {
+        this.showGross = currentUser.customerGroup.showGross;
+      }
     });
   }
 

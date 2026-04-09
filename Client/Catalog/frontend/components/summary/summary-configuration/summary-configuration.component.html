@@ -87,7 +87,7 @@
                                                 [label]="configuration.statePrice.discount.name"
                                             ></apto-discount-tag>
                                         </div>
-                                        <div class="discount-name">{{ contentSnippet$ | async | contentSnippet: 'tax.withTax' }}</div>
+                                        <div class="discount-name">{{ contentSnippet$ | async | contentSnippet: (showGross ? 'tax.withTax' : 'tax.withoutTax') }}</div>
                                         <apto-slot-outlet identifier="after-summary-tax"></apto-slot-outlet>
                                     </div>
                                 </div>
