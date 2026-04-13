@@ -16,7 +16,7 @@ import { RenderImageService } from '@apto-catalog-frontend/services/render-image
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { selectCurrentUser } from '@apto-base-frontend/store/frontend-user/frontend-user.selectors';
+import { initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
 
 @UntilDestroy()
 @Component({
@@ -70,10 +70,17 @@ export class SummaryComponent {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
     });
 
-    this.showGross = environment.defaultCustomerGroup.showGross;
-    this.store.select(selectCurrentUser).pipe(untilDestroyed(this)).subscribe((currentUser) => {
-      if (currentUser && currentUser.customerGroup) {
-        this.showGross = currentUser.customerGroup.showGross;
+    this.store.select(initShopSuccess).pipe(untilDestroyed(this)).subscribe((result: any) => {
+      const aptoBase: any = result.aptoBase;
+
+      if (aptoBase.shop && aptoBase.shop.connector && aptoBase.shop.connector.user && aptoBase.shop.connector.customerGroup) {
+        this.showGross = aptoBase.shop.connector.customerGroup.showGross;
+      }
+      else if (aptoBase.frontendUser && aptoBase.frontendUser.currentUser && aptoBase.frontendUser.currentUser.customerGroup) {
+        this.showGross = aptoBase.frontendUser.currentUser.customerGroup.showGross;
+      }
+      else {
+        this.showGross = environment.defaultCustomerGroup.showGross;
       }
     });
 	}
