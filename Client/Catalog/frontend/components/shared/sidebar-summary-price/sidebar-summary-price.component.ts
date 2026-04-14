@@ -12,6 +12,7 @@ import { configurationIsValid, selectCurrentPerspective } from '@apto-catalog-fr
 import {addToBasket, addToBasketSuccess} from '@apto-catalog-frontend-configuration-actions';
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
+import { getShowGross } from '@apto-catalog-frontend/services/shop-utilities';
 
 @UntilDestroy()
 @Component({
@@ -56,17 +57,7 @@ export class SidebarSummaryPriceComponent {
     });
 
     this.store.select(initShopSuccess).pipe(untilDestroyed(this)).subscribe((result: any) => {
-      const aptoBase: any = result.aptoBase;
-
-      if (aptoBase.shop && aptoBase.shop.connector && aptoBase.shop.connector.user && aptoBase.shop.connector.customerGroup) {
-        this.showGross = aptoBase.shop.connector.customerGroup.showGross;
-      }
-      else if (aptoBase.frontendUser && aptoBase.frontendUser.currentUser && aptoBase.frontendUser.currentUser.customerGroup) {
-        this.showGross = aptoBase.frontendUser.currentUser.customerGroup.showGross;
-      }
-      else {
-        this.showGross = environment.defaultCustomerGroup.showGross;
-      }
+      this.showGross = getShowGross(result);
     });
   }
 
