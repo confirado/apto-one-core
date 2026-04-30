@@ -259,48 +259,52 @@ export class DesignerComponent implements OnInit, AfterViewInit {
       });
     }
 
+    private initFont(family: string, url: string, isDefault: boolean): void {
+      const fontUrl: string = this.mediaUrl + url;
+
+      for (const font of this.fonts) {
+        if (font.url === fontUrl) {
+          if (isDefault) {
+            this.selectedFont = font;
+          }
+          return;
+        }
+      }
+
+      this.fonts.push({
+        family,
+        url: fontUrl
+      });
+
+      if (isDefault) {
+        this.selectedFont = this.fonts[this.fonts.length - 1];
+      }
+    }
+
     private initFonts(predefinedFonts): Promise<any> {
         this.fonts = [];
         this.selectedFont = null;
-        const promises = [(new FontFaceObserver('Montserrat')).load()];
+        const promises = [];
 
         if (predefinedFonts && predefinedFonts.length > 0) {
           for (const predefinedFont of predefinedFonts) {
             if (predefinedFont.isActive) {
-              this.fonts.push({
-                family: predefinedFont.name,
-                url: this.mediaUrl + predefinedFont.filename
-              });
-
-              if (predefinedFont.isDefault) {
-                this.selectedFont = this.fonts[this.fonts.length - 1];
-              }
-
-              promises.push((new FontFaceObserver(predefinedFont.name)).load());
+              this.initFont(predefinedFont.name, predefinedFont.filename, predefinedFont.isDefault);
             }
           }
-          return Promise.all(promises);
         }
 
-        if (!this.canvas.element.staticValues.text.fonts) {
-            return Promise.all(promises);
-        }
-
-        for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
+        if (this.canvas.element.staticValues.text.fonts) {
+          for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
             const font = this.canvas.element.staticValues.text.fonts[i];
             if (font.isActive) {
-
-                this.fonts.push({
-                    family: font.name,
-                    url: this.mediaUrl + font.file
-                });
-
-                if (font.isDefault) {
-                    this.selectedFont = this.fonts[this.fonts.length - 1];
-                }
-
-                promises.push((new FontFaceObserver(font.name)).load());
+              this.initFont(font.name, font.file, font.isDefault);
             }
+          }
+        }
+
+        for (const font of this.fonts) {
+          promises.push((new FontFaceObserver(font.family)).load());
         }
 
         return Promise.all(promises);
