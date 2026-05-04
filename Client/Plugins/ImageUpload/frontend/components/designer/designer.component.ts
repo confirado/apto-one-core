@@ -19,6 +19,8 @@ import { CanvasStyle, Font, PrintArea } from '@apto-image-upload-frontend/store/
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { RenderImageData } from '@apto-catalog-frontend-configuration-model';
 import { FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import { Subject, takeUntil } from 'rxjs';
+import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 
 @UntilDestroy()
 @Component({
@@ -116,6 +118,8 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     public selectedFont: Font | null = null;
     public selectedMotive: string;
 
+    private destroy$ = new Subject<void>();
+
     public constructor(private store: Store, private fabricCanvasService: FabricCanvasService, public renderImageService: RenderImageService) {
     }
 
@@ -165,66 +169,142 @@ export class DesignerComponent implements OnInit, AfterViewInit {
     }
 
     private init(): void {
-        this.initFonts().then(() => {
-            setTimeout(() => {
-                this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
-                    preserveObjectStacking: true,
-                    selection: false
-                });
-
-                this.initCanvasSize();
-
-                this.fabricCanvas.on({
-                    'selection:created': this.selectionUpdated.bind(this),
-                    'selection:updated': this.selectionUpdated.bind(this),
-                    'selection:cleared': this.selectionCleared.bind(this)
-                });
-
-                if (!this.canvas.element.state.payload || !this.canvas.element.state.payload[this.currentPerspective]) {
-                    this.initTextBoxes();
-                    this.fabricCanvas.requestRenderAll();
-                } else {
-                    this.initState(() => {
-                        this.fabricCanvas.requestRenderAll();
-
-                        for (const canvasObjects of this.fabricCanvas.getObjects()) {
-                            if (canvasObjects.payload.type !== 'motive') {
-                                continue;
-                            }
-
-                            this.selectedMotive = canvasObjects.payload.file.name;
-                            break;
-                        }
-                    });
-                }
+      this.getPredefinedFonts((predefinedFonts) => {
+        this.initFonts(predefinedFonts).then(() => {
+          setTimeout(() => {
+            this.fabricCanvas = new fabric.Canvas(this.htmlCanvas.nativeElement, {
+              preserveObjectStacking: true,
+              selection: false
             });
+
+            this.initCanvasSize();
+
+            this.fabricCanvas.on({
+              'selection:created': this.selectionUpdated.bind(this),
+              'selection:updated': this.selectionUpdated.bind(this),
+              'selection:cleared': this.selectionCleared.bind(this)
+            });
+
+            if (!this.canvas.element.state.payload || !this.canvas.element.state.payload[this.currentPerspective]) {
+              this.initTextBoxes();
+              this.fabricCanvas.requestRenderAll();
+            } else {
+              this.initState(() => {
+                this.fabricCanvas.requestRenderAll();
+
+                for (const canvasObjects of this.fabricCanvas.getObjects()) {
+                  if (canvasObjects.payload.type !== 'motive') {
+                    continue;
+                  }
+
+                  this.selectedMotive = canvasObjects.payload.file.name;
+                  break;
+                }
+              });
+            }
+          });
         });
+      });
     }
 
-    private initFonts(): Promise<any> {
-        this.fonts = [];
-        this.selectedFont = null;
-        const promises = [(new FontFaceObserver('Montserrat')).load()];
+    private getPredefinedFonts(callback): void {
+      this.contentSnippet$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((next) => {
+        const fonts: any[] = [];
 
-        if (!this.canvas.element.staticValues.text.fonts) {
-            return Promise.all(promises);
+        if (next.children && next.children.length > 0) {
+          for (const child of next.children) {
+            if (child.name === 'fonts') {
+              if (child.children && child.children.length > 0) {
+                for (const predefinedFont of child.children) {
+                  const font = {
+                    name: '',
+                    filename: '',
+                    isActive: false,
+                    isDefault: false
+                  };
+
+                  if (predefinedFont.children && predefinedFont.children.length > 0) {
+                    for (const predefinedFontProperty of predefinedFont.children) {
+                      switch (predefinedFontProperty.name) {
+                        case 'name':
+                          font.name = translate(predefinedFontProperty.content, this.locale);
+                          break;
+                        case 'filename':
+                          font.filename = translate(predefinedFontProperty.content, this.locale);
+                          break;
+                        case 'active':
+                          font.isActive = translate(predefinedFontProperty.content, this.locale) === 'yes';
+                          break;
+                        case 'default':
+                          font.isDefault = translate(predefinedFontProperty.content, this.locale) === 'yes';
+                          break;
+                        default:
+                          break;
+                      }
+                    }
+                  }
+
+                  if (font.isActive) {
+                    fonts.push(font);
+                  }
+                }
+              }
+            }
+          }
         }
 
-        for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
+        callback(fonts);
+      });
+    }
+
+    private initFont(family: string, url: string, isDefault: boolean): void {
+      const fontUrl: string = this.mediaUrl + url;
+
+      for (const font of this.fonts) {
+        if (font.url === fontUrl) {
+          if (isDefault) {
+            this.selectedFont = font;
+          }
+          return;
+        }
+      }
+
+      this.fonts.push({
+        family,
+        url: fontUrl
+      });
+
+      if (isDefault) {
+        this.selectedFont = this.fonts[this.fonts.length - 1];
+      }
+    }
+
+    private initFonts(predefinedFonts): Promise<any> {
+        this.fonts = [];
+        this.selectedFont = null;
+        const promises = [];
+
+        if (predefinedFonts && predefinedFonts.length > 0) {
+          for (const predefinedFont of predefinedFonts) {
+            if (predefinedFont.isActive) {
+              this.initFont(predefinedFont.name, predefinedFont.filename, predefinedFont.isDefault);
+            }
+          }
+        }
+
+        if (this.canvas.element.staticValues.text.fonts) {
+          for (let i = 0; i < this.canvas.element.staticValues.text.fonts.length; i++) {
             const font = this.canvas.element.staticValues.text.fonts[i];
             if (font.isActive) {
-
-                this.fonts.push({
-                    family: font.name,
-                    url: this.mediaUrl + font.file
-                });
-
-                if (font.isDefault) {
-                    this.selectedFont = this.fonts[this.fonts.length - 1];
-                }
-
-                promises.push((new FontFaceObserver(font.name)).load());
+              this.initFont(font.name, font.file, font.isDefault);
             }
+          }
+        }
+
+        for (const font of this.fonts) {
+          promises.push((new FontFaceObserver(font.family)).load());
         }
 
         return Promise.all(promises);
