@@ -13,6 +13,7 @@ import AptoMediaSelect from './components/media-select/media-select.component';
 import AptoTrumbowygEditor from './components/trumbowyg-editor/trumbowyg-editor.component';
 import AptoContentSnippetTree from './components/content-snippet-tree/content-snippet-tree.component';
 import AptoHome from './components/home/home.component';
+import AptoSettings from './components/settings/settings.component';
 
 const AptoBackendComponents = [
     AptoPageHeader,
@@ -29,7 +30,8 @@ const AptoBackendComponents = [
     AptoMediaSelect,
     AptoTrumbowygEditor,
     AptoContentSnippetTree,
-    AptoHome
+    AptoHome,
+    AptoSettings
 ];
 
 export default AptoBackendComponents;

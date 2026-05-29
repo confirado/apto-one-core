@@ -19,7 +19,8 @@ class BackendTemplate implements BackendTemplateInterface
                 '@AptoBase/apto/base/backend/pages/media/media.html.twig',
                 '@AptoBase/apto/base/backend/pages/customer/customer.html.twig',
                 '@AptoBase/apto/base/backend/pages/customer-group/customer-group.html.twig',
-                '@AptoBase/apto/base/backend/pages/content-snippet/content-snippet.html.twig'
+                '@AptoBase/apto/base/backend/pages/content-snippet/content-snippet.html.twig',
+                '@AptoBase/apto/base/backend/pages/settings/settings.html.twig'
             ]
         ];
         return [$data, 'backend'];
@@ -71,6 +72,10 @@ class BackendTemplate implements BackendTemplateInterface
                 '/content-snippet/' => [
                     'templateUrl' => '@AptoBase/apto/base/backend/pages/content-snippet/content-snippet.html.twig',
                     'controller' => 'ContentSnippetController'
+                ],
+                '/settings/' => [
+                    'templateUrl' => '@AptoBase/apto/base/backend/pages/settings/settings.html.twig',
+                    'controller' => 'SettingsController'
                 ]
             ],
             'routeNames' => [
@@ -210,6 +215,16 @@ class BackendTemplate implements BackendTemplateInterface
                 'aclMessagesRequired' => json_encode([
                     'commands' => [],
                     'queries' => ['FindContentSnippetTree'],
+                    'strategy' => 'all'
+                ]),
+            ],
+            '/settings/' => [
+                'route' => '/settings/',
+                'label' => 'Einstellungen',
+                'icon' => 'f085',
+                'aclMessagesRequired' => json_encode([
+                    'commands' => [],
+                    'queries' => [],
                     'strategy' => 'all'
                 ]),
             ]

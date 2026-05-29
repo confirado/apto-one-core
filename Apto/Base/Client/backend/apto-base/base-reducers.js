@@ -9,6 +9,7 @@ import CustomerReducer from './reducers/customer.reducer';
 import CustomerGroupReducer from './reducers/customer-group.reducer';
 import ContentSnippetReducer from './reducers/content-snippet.reducer';
 import CustomPropertyReducer from './reducers/custom-property.reducer';
+import SettingsReducer from './reducers/settings.reducer';
 
 // reducers must be an angular provider
 const AptoBackendReducers = [
@@ -22,7 +23,8 @@ const AptoBackendReducers = [
     CustomerReducer,
     CustomerGroupReducer,
     ContentSnippetReducer,
-    CustomPropertyReducer
+    CustomPropertyReducer,
+    SettingsReducer
 ];
 
 export default AptoBackendReducers;
