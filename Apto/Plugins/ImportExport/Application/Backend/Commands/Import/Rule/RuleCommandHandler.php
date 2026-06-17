@@ -409,6 +409,12 @@ class RuleCommandHandler extends AbstractCommandHandler
             case 'inactive': {
                 return new CriterionOperator(CriterionOperator::NOT_ACTIVE);
             }
+            case 'contains': {
+                return new CriterionOperator(CriterionOperator::CONTAINS);
+            }
+            case 'does not contain': {
+                return new CriterionOperator(CriterionOperator::NOT_CONTAINS);
+            }
         }
 
         throw new \InvalidArgumentException('No match found for given operator "' . $operator .  '".');
