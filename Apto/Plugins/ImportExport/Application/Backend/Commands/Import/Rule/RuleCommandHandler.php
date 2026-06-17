@@ -412,7 +412,7 @@ class RuleCommandHandler extends AbstractCommandHandler
             case 'contains': {
                 return new CriterionOperator(CriterionOperator::CONTAINS);
             }
-            case 'does not contain': {
+            case 'not-contains': {
                 return new CriterionOperator(CriterionOperator::NOT_CONTAINS);
             }
         }
