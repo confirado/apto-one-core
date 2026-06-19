@@ -27,6 +27,8 @@ use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\PoolRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroupRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceMatrix;
+use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\GroupRepository;
+use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\PropertyRepository;
 
 class MaterialCommandHandler extends AbstractCommandHandler
 {
@@ -71,6 +73,15 @@ class MaterialCommandHandler extends AbstractCommandHandler
     private $priceMatrixRepository;
 
     /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+    /**
+     * @var PropertyRepository
+     */
+    private $propertyRepository;
+
+    /**
      * @var StringSanitizer
      */
     protected $sanitizer;
@@ -102,7 +113,9 @@ class MaterialCommandHandler extends AbstractCommandHandler
         MediaFileSystemConnector $mediaFileSystemConnector,
         PriceMatrixRepository $priceMatrixRepository,
         StringSanitizer $sanitizer,
+        PropertyRepository $propertyRepository,
         ProductRepository $productRepository,
+        GroupRepository $groupRepository
     ) {
         $this->languageRepository = $languageRepository;
         $this->shopRepository = $shopRepository;
@@ -113,6 +126,8 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
         $this->priceMatrixRepository = $priceMatrixRepository;
         $this->sanitizer = $sanitizer;
+        $this->groupRepository = $groupRepository;
+        $this->propertyRepository = $propertyRepository;
         $this->productRepository = $productRepository;
     }
 
@@ -223,6 +238,27 @@ class MaterialCommandHandler extends AbstractCommandHandler
             }
         }
 
+        if (array_key_exists('group_name:property_name', $fields) && trim($fields['group_name:property_name']) !== '') {
+            $propertyNames = array_filter(array_map(
+                static fn (string $name): string => trim($name),
+                explode('|', $fields['group_name:property_name'])
+            ));
+            foreach($propertyNames as $propertyName) {
+                $val = array_map(
+                    static fn (string $name): string => trim($name),
+                    explode(':', $propertyName));
+                $properties = $this->getPropertiesByGroupName($val[0], $command);
+                foreach($properties as $property) {
+                    $values = json_decode(json_encode($property->getName()), true);
+                    $propertyVal = reset($values);
+
+                    if($propertyVal === $val[1]){
+                        $material->addProperty($propertyVal);
+                    }
+                }
+            }
+        }
+
         // add material to pool
         $poolItemId = $pool->getItemIdByMaterialId($material->getId());
         if (null !== $poolItemId) {
@@ -233,6 +269,19 @@ class MaterialCommandHandler extends AbstractCommandHandler
 
         $this->poolRepository->update($pool);
         $pool->publishEvents();
+    }
+
+    /**
+     * @var array<string, Property>|null
+     */
+
+    private function getPropertiesByGroupName(string $groupName, ImportMaterialDataType $command): array
+    {
+        $groupNameTranslatedValue = $this->getTranslatedValue([
+            $command->getLocale() => $groupName,
+        ]);
+        $group = $this->groupRepository->findByName($groupNameTranslatedValue);
+        return $this->propertyRepository->getPropertiesByGroupId($group->getId());
     }
 
     /**
