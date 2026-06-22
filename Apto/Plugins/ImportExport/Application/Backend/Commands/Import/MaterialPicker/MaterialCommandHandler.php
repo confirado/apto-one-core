@@ -238,26 +238,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
             }
         }
 
-        if (array_key_exists('group_name:property_name', $fields) && trim($fields['group_name:property_name']) !== '') {
-            $propertyNames = array_filter(array_map(
-                static fn (string $name): string => trim($name),
-                explode('|', $fields['group_name:property_name'])
-            ));
-            foreach($propertyNames as $propertyName) {
-                $val = array_map(
-                    static fn (string $name): string => trim($name),
-                    explode(':', $propertyName));
-                $properties = $this->getPropertiesByGroupName($val[0], $command);
-                foreach($properties as $property) {
-                    $values = json_decode(json_encode($property->getName()), true);
-                    $propertyVal = reset($values);
-
-                    if($propertyVal === $val[1]){
-                        $material->addProperty($propertyVal);
-                    }
-                }
-            }
-        }
+        $this->assignPropertiesToMaterial($material, $fields, $command);
 
         // add material to pool
         $poolItemId = $pool->getItemIdByMaterialId($material->getId());
@@ -271,17 +252,80 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $pool->publishEvents();
     }
 
-    /**
-     * @var array<string, Property>|null
-     */
+    private function assignPropertiesToMaterial(
+        Material $material,
+        array $fields,
+        ImportMaterialDataType $command
+    ): void {
+        $fieldName = 'group_name:property_name';
 
-    private function getPropertiesByGroupName(string $groupName, ImportMaterialDataType $command): array
-    {
-        $groupNameTranslatedValue = $this->getTranslatedValue([
-            $command->getLocale() => $groupName,
-        ]);
-        $group = $this->groupRepository->findByName($groupNameTranslatedValue);
-        return $this->propertyRepository->getPropertiesByGroupId($group->getId());
+        if (!array_key_exists($fieldName, $fields) || trim($fields[$fieldName]) === '') {
+            return;
+        }
+
+        $assignments = array_filter(
+            array_map(
+                static fn (string $value): string => trim($value),
+                explode('|', $fields[$fieldName])
+            )
+        );
+
+        foreach ($assignments as $assignment) {
+            $parts = array_map(
+                static fn (string $value): string => trim($value),
+                explode(':', $assignment, 2)
+            );
+
+            if (count($parts) !== 2 || $parts[0] === '' || $parts[1] === '') {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid property assignment "%s". Expected format: "group_name:property_name".',
+                        $assignment
+                    )
+                );
+            }
+
+            [$groupName, $propertyName] = $parts;
+
+            $groupNameTranslatedValue = $this->getTranslatedValue([
+                $command->getLocale() => $groupName,
+            ]);
+
+            $group = $this->groupRepository->findByName($groupNameTranslatedValue);
+
+            if ($group === null) {
+                throw new \InvalidArgumentException(
+                    sprintf('Property group "%s" was not found.', $groupName)
+                );
+            }
+
+            $propertyFound = false;
+
+            foreach ($group->getProperties() as $property) {
+                $propertyValue = $property->getName()
+                    ->getTranslation(new AptoLocale($command->getLocale()))
+                    ->getValue();
+
+                if ($propertyValue !== $propertyName) {
+                    continue;
+                }
+
+                $material->addProperty($property);
+                $propertyFound = true;
+
+                break;
+            }
+
+            if (!$propertyFound) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Property "%s" was not found in group "%s".',
+                        $propertyName,
+                        $groupName
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -368,6 +412,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
             'bus' => 'command_bus',
             'aptoMessagePrefix' => 'ImportExport'
         ];
+
     }
 
     /**
