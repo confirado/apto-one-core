@@ -29,6 +29,7 @@ use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroupRe
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceMatrix;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\GroupRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\PropertyRepository;
+use Apto\Base\Domain\Core\Model\Color;
 
 class MaterialCommandHandler extends AbstractCommandHandler
 {
@@ -90,6 +91,24 @@ class MaterialCommandHandler extends AbstractCommandHandler
      * @var ProductRepository
      */
     private $productRepository;
+
+    /**
+     * @var array 1-1 mapping of color names to hex codes
+     */
+    private const COLOR_HEX_BY_NAME = [
+        'Schwarz' => '#000000',
+        'Rot' => '#ff0000',
+        'Gelb' => '#ffff00',
+        'Grün' => '#00ff00',
+        'Blau' => '#0000ff',
+        'Orange' => '#ffa500',
+        'Weiß' => '#ffffff',
+        'Grau' => '#888888',
+        'Beige' => '#f5f5dc',
+        'Braun' => '#b47d49',
+        'Türkis' => '#3f888f',
+        'Violett' => '#8800ff',
+    ];
 
     /**
      * @param LanguageRepository       $languageRepository
@@ -239,6 +258,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
         }
 
         $this->assignPropertiesToMaterial($material, $fields, $command);
+        $this->assignColorsToMaterial($material, $fields, $command);
 
         // add material to pool
         $poolItemId = $pool->getItemIdByMaterialId($material->getId());
@@ -325,6 +345,61 @@ class MaterialCommandHandler extends AbstractCommandHandler
                     )
                 );
             }
+        }
+    }
+
+    private function assignColorsToMaterial(
+        Material $material,
+        array $fields,
+        ImportMaterialDataType $command
+    ): void {
+        $fieldName = 'color:rating';
+        if (!array_key_exists($fieldName, $fields) || trim($fields[$fieldName]) === '') {
+            return;
+        }
+
+        $assignments = array_filter(
+            array_map(
+                static fn (string $value): string => trim($value),
+                explode('|', $fields[$fieldName])
+            )
+        );
+
+        foreach ($assignments as $assignment) {
+            $parts = array_map(
+                static fn(string $value): string => trim($value),
+                explode(':', $assignment, 2)
+            );
+
+            if (count($parts) !== 2 || $parts[0] === '' || $parts[1] === '') {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid color assignment "%s". Expected format: "color:rating".',
+                    )
+                );
+            }
+
+            [$colorName, $ratingValue] = $parts;
+
+            if (!array_key_exists($colorName, self::COLOR_HEX_BY_NAME)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Color "%s" was not found.', $colorName)
+                );
+            }
+
+            if (!preg_match('/^\d+$/', $ratingValue) || (int) $ratingValue > 100) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid rating "%s" for color "%s". Expected integer between 0 and 100.',
+                        $ratingValue,
+                        $colorName
+                    )
+                );
+            }
+
+            $material->addColorRating(
+                Color::fromHex(self::COLOR_HEX_BY_NAME[$colorName]),
+                (int) $ratingValue);
         }
     }
 

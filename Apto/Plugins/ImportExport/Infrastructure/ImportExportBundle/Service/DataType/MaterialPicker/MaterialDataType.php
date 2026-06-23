@@ -21,6 +21,7 @@ class MaterialDataType extends AbstractDataType
         'absorption',
         'vorschau-bild',
         'condition_',
-        'group_name:property_name'
+        'group_name:property_name',
+        'color:rating'
     ];
 }
