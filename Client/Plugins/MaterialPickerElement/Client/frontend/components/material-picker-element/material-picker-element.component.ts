@@ -11,65 +11,72 @@ import { translate } from "@apto-base-core/store/translated-value/translated-val
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import {
-  MaterialPickerFilterForm,
-  MaterialPickerItem, Property,
-  PropertyGroup
+    MaterialPickerFilterForm,
+    MaterialPickerItem, Property,
+    PropertyGroup
 } from '@apto-catalog-frontend/models/material-picker';
 import { updateConfigurationState } from '@apto-catalog-frontend-configuration-actions';
 import { ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { ItemsUpdatePayload } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.model";
 import {
-  selectColors,
-  selectItems, selectMultiPropertyGroups,
-  selectPriceGroups, selectSinglePropertyGroups
+    selectColors,
+    selectItems, selectMultiPropertyGroups,
+    selectPriceGroups, selectSinglePropertyGroups
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.selectors";
 import {
-  findPoolItems,
-  initMaterialPicker
+    findPoolItems,
+    initMaterialPicker
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.actions";
 
 /**
  * Angular component for the Material Picker Element.
  * This component handles the selection of materials and related properties.
  */
+type SelectedMaterial = {
+    id: string;
+    name: string;
+    priceGroup: string;
+    materialPropertyValues: string[];
+};
+
 @UntilDestroy()
 @Component({
-	selector: 'apto-material-picker-element',
-	templateUrl: './material-picker-element.component.html',
-	styleUrls: ['./material-picker-element.component.scss'],
+    selector: 'apto-material-picker-element',
+    templateUrl: './material-picker-element.component.html',
+    styleUrls: ['./material-picker-element.component.scss'],
 })
 export class MaterialPickerElementComponent implements OnInit {
-  @Input()
-  public element: ProgressElement<any>;
+    @Input()
+    public element: ProgressElement<any>;
 
-  @Input()
-  public section: Section | undefined;
+    @Input()
+    public section: Section | undefined;
 
-	@Input()
-	public product: Product | undefined;
+    @Input()
+    public product: Product | undefined;
 
-  public mediaUrl = environment.api.media + '/';
-  public locale: string = environment.defaultLocale;
-  public step: number = 1;
+    public mediaUrl = environment.api.media + '/';
+    public locale: string = environment.defaultLocale;
+    public step: number = 1;
 
-	public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
-	public readonly contentSnippetButton$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
-  public readonly items$ = this.store.select(selectItems);
-  public readonly colors$ = this.store.select(selectColors);
-  public readonly priceGroups$ = this.store.select(selectPriceGroups);
-  public readonly singlePropertyGroups$ = this.store.select(selectSinglePropertyGroups);
-  public readonly multiplePropertyGroups$ = this.store.select(selectMultiPropertyGroups);
+    public readonly contentSnippet$ = this.store.select(selectContentSnippet('plugins.materialPickerElement'));
+    public readonly contentSnippetButton$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
+    public readonly items$ = this.store.select(selectItems);
+    public readonly colors$ = this.store.select(selectColors);
+    public readonly priceGroups$ = this.store.select(selectPriceGroups);
+    public readonly singlePropertyGroups$ = this.store.select(selectSinglePropertyGroups);
+    public readonly multiplePropertyGroups$ = this.store.select(selectMultiPropertyGroups);
 
-  public currentItem: { id: string; name: string; priceGroup: string } | undefined;
-	public currentMaterials: { id: string; name: string; priceGroup: string }[] = [];
-  public currentSecondaryItem: { id: string; name: string; priceGroup: string } | undefined;
-  public currentSecondaryMaterials: { id: string; name: string; priceGroup: string }[] = [];
-  public formElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
-  public secondaryFormElement = new FormControl<{ id: string; name: string; priceGroup: string }[]>([]);
-	public multiColor = new FormControl<boolean>(false);
-	public colorOrder = new FormControl<boolean>(false);
-	public inputCount = new FormControl<number>(0);
+    public currentItem: SelectedMaterial | undefined;
+    public currentMaterials: SelectedMaterial[] = [];
+    public currentSecondaryItem: SelectedMaterial | undefined;
+    public currentSecondaryMaterials: SelectedMaterial[] = [];
+    public formElement = new FormControl<SelectedMaterial[]>([]);
+    public secondaryFormElement = new FormControl<SelectedMaterial[]>([]);
+    public multiColor = new FormControl<boolean>(false);
+    public colorOrder = new FormControl<boolean>(false);
+    public inputCount = new FormControl<number>(0);
 
   public filter = new FormGroup<MaterialPickerFilterForm>({
 		colorRating: new FormControl<string | null>(null),
@@ -78,7 +85,7 @@ export class MaterialPickerElementComponent implements OnInit {
 		searchString: new FormControl<string>(''),
 	});
 
-	public constructor(private store: Store) {}
+    public constructor(private store: Store) {}
 
   public ngOnInit(): void {
     this.store.dispatch(initMaterialPicker({
@@ -132,40 +139,48 @@ export class MaterialPickerElementComponent implements OnInit {
     this.step = 2;
   }
 
-  private initSingleSelection() {
-    if (this.element.state.values.materialId) {
-      this.currentItem = {
-        id: this.element.state.values.materialId,
-        name: this.element.state.values.materialName,
-        priceGroup: this.element.state.values.priceGroup,
-      };
-      this.formElement.setValue([this.currentItem]);
+    private initSingleSelection() {
+        if (this.element.state.values.materialId) {
+            this.currentItem = {
+                id: this.element.state.values.materialId,
+                name: this.element.state.values.materialName,
+                priceGroup: this.element.state.values.priceGroup,
+                materialPropertyValues: this.element.state.values.materialProperty || [],
+            };
+            this.formElement.setValue([this.currentItem]);
+        }
+
+        if (this.element.state.values.materialIdSecondary) {
+            this.currentSecondaryItem = {
+                id: this.element.state.values.materialIdSecondary,
+                name: this.element.state.values.materialNameSecondary,
+                priceGroup: this.element.state.values.priceGroupSecondary,
+                materialPropertyValues: this.element.state.values.materialProperty || [],
+            };
+            this.secondaryFormElement.setValue([this.currentSecondaryItem]);
+        }
     }
 
-    if (this.element.state.values.materialIdSecondary) {
-      this.currentSecondaryItem = {
-        id: this.element.state.values.materialIdSecondary,
-        name: this.element.state.values.materialNameSecondary,
-        priceGroup: this.element.state.values.priceGroupSecondary,
-      };
-      this.secondaryFormElement.setValue([this.currentSecondaryItem]);
-    }
-  }
+    private initMultiSelection() {
+        if (this.element.state.values.materials) {
+            for (const item of this.element.state.values.materials) {
+                this.currentMaterials.push({
+                    ...item,
+                    materialPropertyValues: item.materialPropertyValues || this.element.state.values.materialProperty || [],
+                });
+            }
+        }
 
-  private initMultiSelection() {
-    if (this.element.state.values.materials) {
-      for (const item of this.element.state.values.materials) {
-        this.currentMaterials.push(item);
-      }
-    }
+        this.currentSecondaryMaterials = [];
 
-    this.currentSecondaryMaterials = [];
-
-    if (this.element.state.values.materialsSecondary) {
-      for (const item of this.element.state.values.materialsSecondary) {
-        this.currentSecondaryMaterials.push(item);
-      }
-    }
+        if (this.element.state.values.materialsSecondary) {
+            for (const item of this.element.state.values.materialsSecondary) {
+                this.currentSecondaryMaterials.push({
+                    ...item,
+                    materialPropertyValues: item.materialPropertyValues || this.element.state.values.materialProperty || [],
+                });
+            }
+        }
 
     this.secondaryFormElement.setValue(this.currentSecondaryMaterials);
 
@@ -181,35 +196,34 @@ export class MaterialPickerElementComponent implements OnInit {
       return;
     }
 
-    const localeItem: any = {
-      id: item.material.id,
-      name: translate(item.material.name, this.locale),
-      priceGroup: translate(item.priceGroup.name, this.locale)
-    };
+        const localeItem: SelectedMaterial = {
+            id: item.material.id,
+            name: translate(item.material.name, this.locale),
+            priceGroup: translate(item.priceGroup.name, this.locale),
+            materialPropertyValues: item.material.properties.map((property) => {
+                return translate(property.group.name, environment.defaultLocale) + ': ' + translate(property.name, environment.defaultLocale);
+            })
+        };
 
     let currentItem = this.step === 2 ? this.currentSecondaryItem : this.currentItem;
     let currentMaterials = this.step === 2 ? this.currentSecondaryMaterials : this.currentMaterials;
     let formElement = this.step === 2 ? this.secondaryFormElement : this.formElement;
 
-    if (!this.element.element.definition.staticValues.allowMultiple) {
-      if (currentItem && currentItem.id === localeItem.id) {
-        currentItem = undefined;
-        formElement.setValue([]);
-      } else {
-        currentItem = localeItem;
-        formElement.setValue([currentItem]);
-      }
-    } else {
-      const cutItem = currentMaterials.find((i: any) => i.id === localeItem.id);
-      if (cutItem) {
-        currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
-      } else if (localeItem) {
-        currentMaterials.push({
-          id: localeItem.id,
-          name: localeItem.name,
-          priceGroup: localeItem.priceGroup,
-        });
-      }
+        if (!this.element.element.definition.staticValues.allowMultiple) {
+            if (currentItem && currentItem.id === localeItem.id) {
+                currentItem = undefined;
+                formElement.setValue([]);
+            } else {
+                currentItem = localeItem;
+                formElement.setValue([currentItem]);
+            }
+        } else {
+            const cutItem = currentMaterials.find((i: any) => i.id === localeItem.id);
+            if (cutItem) {
+                currentMaterials.splice(currentMaterials.indexOf(cutItem), 1);
+            } else if (localeItem) {
+                currentMaterials.push(localeItem);
+            }
 
       formElement.setValue(currentMaterials);
     }
@@ -313,9 +327,31 @@ export class MaterialPickerElementComponent implements OnInit {
     return payload;
   }
 
-  public saveInput(): void {
-    if (!this.element) {
-      return;
+    private getSelectedMaterialPropertyValues(): string[] {
+        const values: string[] = [];
+
+        if (this.currentItem) {
+            values.push(...this.currentItem.materialPropertyValues);
+        }
+
+        if (this.currentSecondaryItem) {
+            values.push(...this.currentSecondaryItem.materialPropertyValues);
+        }
+
+        this.currentMaterials.forEach((material) => {
+            values.push(...material.materialPropertyValues);
+        });
+
+        this.currentSecondaryMaterials.forEach((material) => {
+            values.push(...material.materialPropertyValues);
+        });
+
+        return [...new Set(values)];
+    }
+
+    public saveInput(): void {
+        if (!this.element) {
+        return;
     }
 
     let materialColorMixing = 'monochrome';
@@ -333,69 +369,74 @@ export class MaterialPickerElementComponent implements OnInit {
       inputCountString = this.inputCount.value.toString();
     }
 
-    if (this.element.element.definition.staticValues.allowMultiple) {
-      this.store.dispatch(
-        updateConfigurationState({
-          updates: {
-            set: [
-              this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
-              this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
-              this.getStateUpdateObject('productId', this.product?.id),
-              this.getStateUpdateObject('materialId', ''),
-              this.getStateUpdateObject('materialName', ''),
-              this.getStateUpdateObject('priceGroup', ''),
-              this.getStateUpdateObject('materials', [...this.currentMaterials]),
-              this.getStateUpdateObject('materialIdSecondary', ''),
-              this.getStateUpdateObject('materialNameSecondary', ''),
-              this.getStateUpdateObject('priceGroupSecondary', ''),
-              this.getStateUpdateObject('materialsSecondary', [...this.currentSecondaryMaterials]),
-              this.getStateUpdateObject('materialColorMixing', materialColorMixing),
-              this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
-              this.getStateUpdateObject('materialColorQuantity', inputCountString)
-            ],
-          },
-        })
-      );
-    } else if (this.currentItem) {
-      let secondaryItem = this.currentSecondaryItem;
-      if (!secondaryItem) {
-        secondaryItem = {
-          id: '',
-          name: '',
-          priceGroup: ''
-        };
-      }
+        const materialPropertyValues = this.getSelectedMaterialPropertyValues();
 
-      this.store.dispatch(
-        updateConfigurationState({
-          updates: {
-            set: [
-              this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
-              this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
-              this.getStateUpdateObject('productId', this.product?.id),
-              this.getStateUpdateObject('materialId', this.currentItem.id),
-              this.getStateUpdateObject('materialName', this.currentItem.name),
-              this.getStateUpdateObject('priceGroup', this.currentItem.priceGroup),
-              this.getStateUpdateObject('materialIdSecondary', secondaryItem.id),
-              this.getStateUpdateObject('materialNameSecondary', secondaryItem.name),
-              this.getStateUpdateObject('priceGroupSecondary', secondaryItem.priceGroup),
-              this.getStateUpdateObject('materialsSecondary', []),
-              this.getStateUpdateObject('materialColorMixing', materialColorMixing),
-              this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
-              this.getStateUpdateObject('materialColorQuantity', inputCountString)
-            ],
-          },
-        })
-      );
+        if (this.element.element.definition.staticValues.allowMultiple) {
+            this.store.dispatch(
+                updateConfigurationState({
+                    updates: {
+                        set: [
+                            this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
+                            this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
+                            this.getStateUpdateObject('productId', this.product?.id),
+                            this.getStateUpdateObject('materialId', ''),
+                            this.getStateUpdateObject('materialName', ''),
+                            this.getStateUpdateObject('priceGroup', ''),
+                            this.getStateUpdateObject('materials', [...this.currentMaterials]),
+                            this.getStateUpdateObject('materialIdSecondary', ''),
+                            this.getStateUpdateObject('materialNameSecondary', ''),
+                            this.getStateUpdateObject('priceGroupSecondary', ''),
+                            this.getStateUpdateObject('materialsSecondary', [...this.currentSecondaryMaterials]),
+                            this.getStateUpdateObject('materialProperty', materialPropertyValues),
+                            this.getStateUpdateObject('materialColorMixing', materialColorMixing),
+                            this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
+                            this.getStateUpdateObject('materialColorQuantity', inputCountString)
+                        ],
+                    },
+                })
+            );
+        } else if (this.currentItem) {
+            let secondaryItem = this.currentSecondaryItem;
+            if (!secondaryItem) {
+                secondaryItem = {
+                    id: '',
+                    name: '',
+                    priceGroup: '',
+                    materialPropertyValues: []
+                };
+            }
+
+            this.store.dispatch(
+                updateConfigurationState({
+                    updates: {
+                        set: [
+                            this.getStateUpdateObject('aptoElementDefinitionId', 'apto-element-material-picker'),
+                            this.getStateUpdateObject('poolId', this.element.element.definition.staticValues.poolId),
+                            this.getStateUpdateObject('productId', this.product?.id),
+                            this.getStateUpdateObject('materialId', this.currentItem.id),
+                            this.getStateUpdateObject('materialName', this.currentItem.name),
+                            this.getStateUpdateObject('priceGroup', this.currentItem.priceGroup),
+                            this.getStateUpdateObject('materialIdSecondary', secondaryItem.id),
+                            this.getStateUpdateObject('materialNameSecondary', secondaryItem.name),
+                            this.getStateUpdateObject('priceGroupSecondary', secondaryItem.priceGroup),
+                            this.getStateUpdateObject('materialsSecondary', []),
+                            this.getStateUpdateObject('materialProperty', materialPropertyValues),
+                            this.getStateUpdateObject('materialColorMixing', materialColorMixing),
+                            this.getStateUpdateObject('materialColorArrangement', materialColorOrder),
+                            this.getStateUpdateObject('materialColorQuantity', inputCountString)
+                        ],
+                    },
+                })
+            );
+        }
     }
-  }
 
   public removeInput(): void {
     if (!this.element) {
       return;
     }
 
-    this.step = 1;
+        this.step = 1;
 
     this.store.dispatch(
       updateConfigurationState({
