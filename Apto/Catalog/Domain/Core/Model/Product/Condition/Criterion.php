@@ -30,6 +30,16 @@ abstract class Criterion extends AptoEntity
     protected $elementId;
 
     /**
+     * @var AptoUuid|null
+     */
+    protected $groupId;
+
+    /**
+     * @var AptoUuid|null
+     */
+    protected $groupPropertyId;
+
+    /**
      * @var string|null
      */
     protected $property;
@@ -56,6 +66,8 @@ abstract class Criterion extends AptoEntity
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
+     * @param AptoUuid|null $groupId
+     * @param AptoUuid|null $groupPropertyId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
@@ -70,6 +82,8 @@ abstract class Criterion extends AptoEntity
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?AptoUuid $groupId,
+        ?AptoUuid $groupPropertyId,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -116,6 +130,8 @@ abstract class Criterion extends AptoEntity
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
+        $this->groupId = $groupId;
+        $this->groupPropertyId = $groupPropertyId;
         $this->property = $property;
         $this->operator = $operator;
         $this->value = $value;
@@ -159,6 +175,46 @@ abstract class Criterion extends AptoEntity
     public function setElementId(?AptoUuid $elementId): self
     {
         $this->elementId = $elementId;
+
+        return $this;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getGroupId(): ?AptoUuid
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @param AptoUuid|null $groupId
+     *
+     * @return $this
+     */
+    public function setGroupId(?AptoUuid $groupId): self
+    {
+        $this->groupId = $groupId;
+
+        return $this;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getGroupPropertyId(): ?AptoUuid
+    {
+        return $this->groupPropertyId;
+    }
+
+    /**
+     * @param AptoUuid|null $groupPropertyId
+     *
+     * @return $this
+     */
+    public function setGroupPropertyId(?AptoUuid $groupPropertyId): self
+    {
+        $this->groupPropertyId = $groupPropertyId;
 
         return $this;
     }

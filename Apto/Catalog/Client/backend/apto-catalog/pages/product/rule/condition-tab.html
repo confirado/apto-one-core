@@ -69,11 +69,11 @@
         <label>Gruppe:</label>
         <md-select
             multiple="false"
-            ng-disabled="$parent.selectableGroups === null || $parent.selectableGroups.length === 0"
-            ng-model="$parent.selectedGroup"
-            ng-change="onChangeSelectedGroup()"
+            ng-disabled="$parent.selectableConditionGroups === null || $parent.selectableConditionGroups.length === 0"
+            ng-model="$parent.selectedConditionGroup"
+            ng-change="onChangeSelectedConditionGroup()"
         >
-            <md-option ng-repeat="group in selectableGroups" ng-value="group">
+            <md-option ng-repeat="group in selectableConditionGroups" ng-value="group">
                 {{languageFactory.translate(group.name)}}
             </md-option>
         </md-select>
@@ -85,11 +85,11 @@
         <label>Gruppeneigenschaft:</label>
         <md-select
             multiple="true"
-            ng-disabled="$parent.selectableGroupProperties === null || $parent.selectableGroupProperties.length === 0"
-            ng-model="$parent.selectedGroupProperty"
-            ng-change="onChangeSelectedGroupProperty()"
+            ng-disabled="$parent.selectableConditionGroupProperties === null || $parent.selectableConditionGroupProperties.length === 0"
+            ng-model="$parent.selectedConditionGroupProperty"
+            ng-change="onChangeSelectedConditionGroupProperty()"
         >
-            <md-option ng-repeat="groupProperty in selectableGroupProperties" ng-value="groupProperty">
+            <md-option ng-repeat="groupProperty in selectableConditionGroupProperties" ng-value="groupProperty">
                 {{languageFactory.translate(groupProperty.name)}}
             </md-option>
         </md-select>
@@ -163,8 +163,8 @@
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
-            <td ng-if="condition.type === 0" md-cell>0</td>
-            <td ng-if="condition.type === 0" md-cell>0</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getGroupName(condition.groupId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ getGroupPropertyName(condition.groupPropertyId) }}</td>
             <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
             <td ng-if="condition.type === 1" md-cell></td>
             <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>

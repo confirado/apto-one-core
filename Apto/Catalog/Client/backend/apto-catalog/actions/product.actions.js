@@ -726,6 +726,8 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
                 condition.type,
                 condition.sectionId,
                 condition.elementId,
+                condition.groupId,
+                condition.groupPropertyId,
                 condition.property,
                 condition.computedValue,
                 condition.operator,
@@ -800,6 +802,8 @@ const ProductActions = function($ngRedux, MessageBusFactory, PageHeaderActions, 
         commandArguments.push(condition.computedProductValueId);
         commandArguments.push(condition.sectionId);
         commandArguments.push(condition.elementId);
+        commandArguments.push(condition.groupId);
+        commandArguments.push(condition.groupPropertyId);
         commandArguments.push(condition.property);
 
         return {

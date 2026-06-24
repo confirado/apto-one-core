@@ -27,6 +27,8 @@ abstract class RuleCriterion extends Criterion
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
+     * @param AptoUuid|null $groupId
+     * @param AptoUuid|null $groupPropertyId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param CriterionOperator $operator
@@ -43,6 +45,8 @@ abstract class RuleCriterion extends Criterion
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?AptoUuid $groupId,
+        ?AptoUuid $groupPropertyId,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -54,6 +58,8 @@ abstract class RuleCriterion extends Criterion
             $type,
             $sectionId,
             $elementId,
+            $groupId,
+            $groupPropertyId,
             $property,
             $computedProductValue,
             $value
@@ -93,6 +99,16 @@ abstract class RuleCriterion extends Criterion
         $element = null === $orgElementId ? null : $entityMapping->get($orgElementId->getId());
         $elementId = null === $element ? null : $element->getId();
 
+        // set group id
+        $orgGroupId = $this->getGroupId();
+        $group = null === $orgGroupId ? null : $entityMapping->get($orgGroupId->getId());
+        $groupId = null === $group ? null : $group->getId();
+
+        // set group property id
+        $orgGroupPropertyId = $this->getGroupPropertyId();
+        $groupProperty = null === $orgGroupPropertyId ? null : $entityMapping->get($orgGroupPropertyId->getId());
+        $groupPropertyId = null === $groupProperty ? null : $groupProperty->getId();
+
         // set computed product value
         $computedProductValue = null === $this->getComputedProductValue() ? null : $entityMapping->get($this->getComputedProductValue()->getId()->getId());
 
@@ -104,6 +120,8 @@ abstract class RuleCriterion extends Criterion
             $this->getType(),
             $sectionId,
             $elementId,
+            $groupId,
+            $groupPropertyId,
             $this->getProperty(),
             $computedProductValue,
             $this->getValue()

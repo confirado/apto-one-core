@@ -219,6 +219,8 @@ class Rule extends AptoEntity
         ?int                  $type = Criterion::TYPE,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
+        ?AptoUuid             $groupId = null,
+        ?AptoUuid             $groupPropertyId = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string               $value = null
@@ -233,6 +235,8 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
+                $groupId,
+                $groupPropertyId,
                 $property,
                 $computedProductValue,
                 $value

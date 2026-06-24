@@ -2939,6 +2939,8 @@ class Product extends AptoAggregate
         int                   $type = 0,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
+        ?AptoUuid             $groupId = null,
+        ?AptoUuid             $groupPropertyId = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string               $value = null
@@ -2947,7 +2949,7 @@ class Product extends AptoAggregate
         $rule = $this->getRule($ruleId);
 
         if (null !== $rule) {
-            $rule->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
+            $rule->addCondition($operator, $type, $sectionId, $elementId, $groupId, $groupPropertyId, $property, $computedProductValue, $value);
         }
 
         return $this;

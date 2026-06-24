@@ -134,6 +134,8 @@ class ProductRuleHandler extends ProductChildHandler
                 $command->getType(),
                 null !== $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null,
                 null !== $command->getElementId() ? new AptoUuid($command->getElementId()) : null,
+                null !== $command->getGroupId() ? new AptoUuid($command->getGroupId()) : null,
+                null !== $command->getGroupPropertyId() ? new AptoUuid($command->getGroupPropertyId()) : null,
                 $command->getProperty(),
                 $computedProductValue,
                 $command->getValue()

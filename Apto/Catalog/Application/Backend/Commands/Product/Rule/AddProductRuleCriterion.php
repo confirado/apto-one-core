@@ -22,6 +22,16 @@ abstract class AddProductRuleCriterion extends ProductRuleCommand
     /**
      * @var string|null
      */
+    private $groupId;
+
+    /**
+     * @var string|null
+     */
+    private $groupPropertyId;
+
+    /**
+     * @var string|null
+     */
     private $property;
 
     /**
@@ -44,18 +54,22 @@ abstract class AddProductRuleCriterion extends ProductRuleCommand
      * @param string $ruleId
      * @param string|null $sectionId
      * @param string|null $elementId
+     * @param string|null $groupId
+     * @param string|null $groupPropertyId
      * @param string|null $property
      * @param int $operator
      * @param string $value
      * @param int|null $type
      * @param string|null $computedValueId
      */
-    public function __construct(string $productId, string $ruleId, ?int $type, string $sectionId = null, string $elementId = null, string $property = null, string $computedValueId = null, int $operator, string $value)
+    public function __construct(string $productId, string $ruleId, ?int $type, string $sectionId = null, string $elementId = null, string $groupId = null, string $groupPropertyId = null, string $property = null, string $computedValueId = null, int $operator, string $value)
     {
         parent::__construct($productId, $ruleId);
         $this->type = $type === null ? 0 : $type;
         $this->sectionId = '' !== $sectionId ? $sectionId : null;
         $this->elementId = '' !== $elementId ? $elementId : null;
+        $this->groupId = '' !== $groupId ? $groupId : null;
+        $this->groupPropertyId = '' !== $groupId ? $groupId : null;
         $this->property = '' !== $property ? $property : null;
         $this->computedValueId = '' !== $computedValueId ? $computedValueId : null;
         $this->operator = $operator;
@@ -76,6 +90,22 @@ abstract class AddProductRuleCriterion extends ProductRuleCommand
     public function getElementId(): ?string
     {
         return $this->elementId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroupId(): ?string
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroupPropertyId(): ?string
+    {
+        return $this->groupPropertyId;
     }
 
     /**
