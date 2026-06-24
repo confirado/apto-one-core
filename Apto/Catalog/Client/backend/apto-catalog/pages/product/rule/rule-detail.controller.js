@@ -4,8 +4,8 @@ import RuleTab from './rule-tab.html';
 import ConditionTab from './condition-tab.html';
 import ImplicationTab from './implication-tab.html';
 
-const RuleDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'ProductActions', 'RuleActions', 'targetEvent', 'productId', 'ruleId'];
-const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, ProductActions, RuleActions, targetEvent, productId, ruleId) {
+const RuleDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'MaterialPickerPropertyActions', 'ProductActions', 'RuleActions', 'targetEvent', 'productId', 'ruleId'];
+const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, MaterialPickerPropertyActions, ProductActions, RuleActions, targetEvent, productId, ruleId) {
     $templateCache.put('catalog/pages/product/rule/rule-tab.html', RuleTab);
     $templateCache.put('catalog/pages/product/rule/condition-tab.html', ConditionTab);
     $templateCache.put('catalog/pages/product/rule/implication-tab.html', ImplicationTab);
@@ -28,6 +28,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         fetchSections: RuleActions.fetchSections,
         fetchConditions: RuleActions.fetchConditions,
         fetchImplications: RuleActions.fetchImplications,
+        fetchGroups: MaterialPickerPropertyActions.fetchGroups,
+        fetchGroupProperties: MaterialPickerPropertyActions.fetchGroupProperties,
         resetStore: RuleActions.reset,
         updateProductRule: ProductActions.updateProductRule,
         fetchProductRules: ProductActions.fetchRules,
@@ -124,6 +126,29 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         } else {
             $scope.selectableConditionOperators = $scope.operatorsActive;
         }
+
+
+        // TODO: Groups + Properties as Key Value Pairs
+    //    if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.length > 0 && $scope.selectedConditionProperty[0] === 'materialProperty') {
+            $scope.fetchGroups('').then((groupData) => {
+                const groupKeyValues = [];
+
+                const groups = groupData.value.data.result.data;
+                for (const group of groups) {
+                    const groupKeyValue = {
+                        id: group.id,
+                        name: group.name,
+                        properties: []
+                    };
+
+                    const groupId = group.id;
+                    $scope.fetchGroupProperties(groupId).then((groupPropertiesData) => {
+                        const groupProperties = groupPropertiesData.value.data.result.data;
+                        console.log(groupProperties);
+                    });
+                }
+            });
+    //    }
     }
 
     function onChangeSelectedConditionOperator() {
