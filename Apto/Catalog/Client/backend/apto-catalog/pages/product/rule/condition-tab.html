@@ -64,6 +64,38 @@
     </md-input-container>
     <div flex="5"></div>
 
+    <!-- groups select box -->
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
+        <label>Gruppe:</label>
+        <md-select
+            multiple="false"
+            ng-disabled="$parent.selectableGroups === null || $parent.selectableGroups.length === 0"
+            ng-model="$parent.selectedGroup"
+            ng-change="onChangeSelectedGroup()"
+        >
+            <md-option ng-repeat="group in selectableGroups" ng-value="group">
+                {{languageFactory.translate(group.name)}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
+    <!-- group properties select box -->
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
+        <label>Gruppeneigenschaft:</label>
+        <md-select
+            multiple="true"
+            ng-disabled="$parent.selectableGroupProperties === null || $parent.selectableGroupProperties.length === 0"
+            ng-model="$parent.selectedGroupProperty"
+            ng-change="onChangeSelectedGroupProperty()"
+        >
+            <md-option ng-repeat="groupProperty in selectableGroupProperties" ng-value="groupProperty">
+                {{languageFactory.translate(groupProperty.name)}}
+            </md-option>
+        </md-select>
+    </md-input-container>
+    <div flex="5"></div>
+
     <!-- computedValues select box -->
     <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 1" data-cy="condition-computed-value">
         <label>Berechneter Wert:</label>
@@ -119,6 +151,8 @@
             <th md-column>Sektion/Type</th>
             <th md-column>Element</th>
             <th md-column>Feld</th>
+            <th md-column>Gruppe</th>
+            <th md-column>Gruppeneigenschaft</th>
             <th md-column>Operator</th>
             <th md-column>Wert</th>
             <th md-column style="width: 170px;"></th>
@@ -129,6 +163,8 @@
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
+            <td ng-if="condition.type === 0" md-cell>0</td>
+            <td ng-if="condition.type === 0" md-cell>0</td>
             <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
             <td ng-if="condition.type === 1" md-cell></td>
             <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>

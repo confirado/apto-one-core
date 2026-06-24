@@ -4,8 +4,8 @@ import RuleTab from './rule-tab.html';
 import ConditionTab from './condition-tab.html';
 import ImplicationTab from './implication-tab.html';
 
-const RuleDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'MaterialPickerPropertyActions', 'ProductActions', 'RuleActions', 'targetEvent', 'productId', 'ruleId'];
-const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, MaterialPickerPropertyActions, ProductActions, RuleActions, targetEvent, productId, ruleId) {
+const RuleDetailControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'LanguageFactory', 'MaterialPickerPropertyActions', 'ProductActions', 'RuleActions', 'targetEvent', 'productId', 'ruleId'];
+const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedux, LanguageFactory, MaterialPickerPropertyActions, ProductActions, RuleActions, targetEvent, productId, ruleId) {
     $templateCache.put('catalog/pages/product/rule/rule-tab.html', RuleTab);
     $templateCache.put('catalog/pages/product/rule/condition-tab.html', ConditionTab);
     $templateCache.put('catalog/pages/product/rule/implication-tab.html', ImplicationTab);
@@ -46,6 +46,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     })($scope);
 
     function init() {
+        $scope.languageFactory = LanguageFactory;
+
         $scope.currentConditionId = null;
         $scope.currentImplicationId = null;
 
@@ -90,6 +92,11 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         $scope.selectedImplicationOperator = null;
         $scope.selectedImplicationValue = '';
         $scope.selectedImplicationComputedValue = null;
+
+        $scope.selectedGroup = null;
+        $scope.selectableGroups = [];
+        $scope.selectedGroupProperty = null;
+        $scope.selectableGroupProperties = [];
     }
 
     function onChangeSelectedConditionSection() {
@@ -104,7 +111,6 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     }
 
     function onChangeSelectedConditionElement() {
-
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 0) {
             $scope.selectedConditionElement = null;
         }
@@ -128,27 +134,38 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         }
 
 
-        // TODO: Groups + Properties as Key Value Pairs
-    //    if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.length > 0 && $scope.selectedConditionProperty[0] === 'materialProperty') {
-            $scope.fetchGroups('').then((groupData) => {
-                const groupKeyValues = [];
+        $scope.selectableGroups = [];
+        $scope.selectableGroupProperties = [];
 
+        if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.includes('materialProperty')) {
+            $scope.fetchGroups('').then((groupData) => {
                 const groups = groupData.value.data.result.data;
                 for (const group of groups) {
-                    const groupKeyValue = {
-                        id: group.id,
-                        name: group.name,
-                        properties: []
-                    };
-
-                    const groupId = group.id;
-                    $scope.fetchGroupProperties(groupId).then((groupPropertiesData) => {
-                        const groupProperties = groupPropertiesData.value.data.result.data;
-                        console.log(groupProperties);
-                    });
+                    $scope.selectableGroups.push(group);
                 }
             });
-    //    }
+        }
+    }
+
+    function onChangeSelectedGroup() {
+        $scope.selectableGroupProperties = [];
+
+        const selectedGroup = $scope.selectedGroup;
+
+        if (selectedGroup) {
+            $scope.fetchGroupProperties(selectedGroup.id).then((groupPropertiesData) => {
+                console.log(groupPropertiesData);
+
+                const groupProperties = groupPropertiesData.value.data.result.data;
+                for (const property of groupProperties) {
+                    $scope.selectableGroupProperties.push(property);
+                }
+            });
+        }
+    }
+
+    function onChangeSelectedGroupProperty() {
+
     }
 
     function onChangeSelectedConditionOperator() {
@@ -469,6 +486,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             name: 'Standard',
             id: 0
         };
+        $scope.selectedGroup = null;
+        $scope.selectedGroupProperty = null;
     }
 
     function resetConditionForm() {
@@ -856,11 +875,16 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     $scope.saveCondition = saveCondition;
 
     $scope.isValidCondition = isValidCondition;
+
     $scope.onChangeSelectedImplicationSection = onChangeSelectedImplicationSection;
     $scope.onChangeSelectedImplicationElement = onChangeSelectedImplicationElement;
     $scope.onChangeSelectedImplicationProperty = onChangeSelectedImplicationProperty;
     $scope.onChangeSelectedImplicationOperator = onChangeSelectedImplicationOperator;
     $scope.onChangeImplicationCriterionType = onChangeImplicationCriterionType;
+
+    $scope.onChangeSelectedGroup = onChangeSelectedGroup;
+    $scope.onChangeSelectedGroupProperty = onChangeSelectedGroupProperty;
+
     $scope.addImplication = addImplication;
     $scope.saveImplication = saveImplication;
     $scope.resetImplicationForm = resetImplicationForm;
