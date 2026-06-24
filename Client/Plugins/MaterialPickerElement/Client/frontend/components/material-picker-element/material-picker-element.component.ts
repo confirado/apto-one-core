@@ -29,6 +29,7 @@ import {
     initMaterialPicker
 } from "@apto-material-picker-element-frontend/store/material-picker/material-picker.actions";
 
+
 /**
  * Angular component for the Material Picker Element.
  * This component handles the selection of materials and related properties.
