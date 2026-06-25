@@ -125,9 +125,9 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         $scope.selectedConditionGroupProperty = null;
         $scope.selectedConditionProperty = null;
         $scope.selectedConditionOperator = null;
+
         $scope.selectableConditionProperties = null;
         $scope.selectableConditionOperators = $scope.operatorsActive;
-
         $scope.selectableConditionGroups = getSelectableGroups();
         $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
@@ -135,21 +135,23 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function onChangeSelectedConditionElement() {
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 0) {
             $scope.selectedConditionElement = null;
+            $scope.selectedConditionGroup = null;
+            $scope.selectedConditionGroupProperty = null;
         }
-        $scope.selectableConditionGroups = null;
-        $scope.selectableConditionGroupProperties = null;
         $scope.selectedConditionProperty = null;
         $scope.selectedConditionOperator = null;
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 1) {
             $scope.selectableConditionProperties = getElementSelectableProperties($scope.selectedConditionElement[0].definition);
         }
+
         $scope.selectableConditionOperators = $scope.operatorsActive;
+        $scope.selectableConditionGroups = getSelectableGroups();
+        $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
 
     function onChangeSelectedConditionProperty() {
         if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.length === 0) {
             $scope.selectedConditionProperty = null;
-
             $scope.selectedConditionGroup = null;
             $scope.selectedConditionGroupProperty = null;
         }
@@ -167,12 +169,15 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function onChangeSelectedConditionGroup() {
         if ($scope.selectedConditionGroup && $scope.selectedConditionGroup.length === 0) {
             $scope.selectedConditionGroup = null;
+            $scope.selectedConditionGroupProperty = null;
         }
         $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
 
     function onChangeSelectedConditionGroupProperty() {
-
+        if ($scope.selectedConditionGroupProperty && $scope.selectedConditionGroupProperty.length === 0) {
+            $scope.selectedConditionGroupProperty = null;
+        }
     }
 
     function onChangeSelectedConditionOperator() {
@@ -511,6 +516,9 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function resetSelectedCondition() {
         $scope.selectableConditionProperties = null;
         $scope.selectableConditionOperators = $scope.operatorsActive;
+        $scope.selectableConditionGroups = null;
+        $scope.selectableConditionGroupProperties = null;
+
         $scope.selectedConditionSection = null;
         $scope.selectedConditionElement = null;
         $scope.selectedConditionGroup = null;
