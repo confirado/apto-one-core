@@ -323,6 +323,44 @@ class Rule extends AptoEntity
     }
 
     /**
+     * @param AptoUuid      $conditionId
+     * @param AptoUuid|null $groupId
+     *
+     * @return $this
+     */
+    public function setConditionGroupId(AptoUuid $conditionId, ?AptoUuid $groupId): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroupId($groupId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid      $conditionId
+     * @param AptoUuid|null $groupPropertyId
+     *
+     * @return $this
+     */
+    public function setConditionGroupPropertyId(AptoUuid $conditionId, ?AptoUuid $groupPropertyId): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroupPropertyId($groupPropertyId);
+
+        return $this;
+    }
+
+    /**
      * @param AptoUuid    $conditionId
      * @param string|null $property
      *

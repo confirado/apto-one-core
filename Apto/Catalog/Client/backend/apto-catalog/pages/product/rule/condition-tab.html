@@ -65,7 +65,7 @@
     <div flex="5"></div>
 
     <!-- groups select box -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-group">
         <label>Gruppe:</label>
         <md-select
             multiple="false"
@@ -81,7 +81,7 @@
     <div flex="5"></div>
 
     <!-- group properties select box -->
-    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-properties">
+    <md-input-container flex ng-hide="$parent.conditionCriterionType.id !== 0" data-cy="condition-group-property">
         <label>Gruppeneigenschaft:</label>
         <md-select
             multiple="true"
@@ -163,8 +163,8 @@
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
-            <td ng-if="condition.type === 0" md-cell>{{ getGroupName(condition.groupId) }}</td>
-            <td ng-if="condition.type === 0" md-cell>{{ getGroupPropertyName(condition.groupPropertyId) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ languageFactory.translate(getGroupName(condition.groupId)) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ languageFactory.translate(getGroupPropertyName(condition.groupPropertyId)) }}</td>
             <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
             <td ng-if="condition.type === 1" md-cell></td>
             <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>

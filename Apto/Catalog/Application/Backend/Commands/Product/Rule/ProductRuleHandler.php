@@ -203,9 +203,11 @@ class ProductRuleHandler extends ProductChildHandler
             $computedValueId = $command->getComputedValueId() ? new AptoUuid($command->getComputedValueId()) : null;
             $sectionId = $command->getSectionId() ? new AptoUuid($command->getSectionId()) : null;
             $elementId = $command->getElementId() ? new AptoUuid($command->getElementId()) : null;
+            $groupId = $command->getGroupId() ? new AptoUuid($command->getGroupId()) : null;
+            $groupPropertyId = $command->getGroupPropertyId() ? new AptoUuid($command->getGroupPropertyId()) : null;
             $property = $command->getProperty();
 
-            $product->setRuleCondition($ruleId, $conditionId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $property);
+            $product->setRuleCondition($ruleId, $conditionId, $type, $operator, $value, $computedValueId, $sectionId, $elementId, $groupId, $groupPropertyId, $property);
 
             $this->productRepository->update($product);
         }

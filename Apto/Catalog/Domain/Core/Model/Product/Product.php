@@ -3077,6 +3077,8 @@ class Product extends AptoAggregate
      * @param AptoUuid|null         $computedValueId
      * @param AptoUuid|null         $sectionId
      * @param AptoUuid|null         $elementId
+     * @param AptoUuid|null         $groupId
+     * @param AptoUuid|null         $groupPropertyId
      * @param string|null           $property
      *
      * @return $this
@@ -3090,6 +3092,8 @@ class Product extends AptoAggregate
         AptoUuid          $computedValueId = null,
         AptoUuid          $sectionId = null,
         AptoUuid          $elementId = null,
+        AptoUuid          $groupId = null,
+        AptoUuid          $groupPropertyId = null,
         string            $property = null,
     ): Product {
         $rule = $this->getRule($ruleId);
@@ -3104,6 +3108,8 @@ class Product extends AptoAggregate
         if ($type === RuleCriterion::STANDARD_TYPE) {
             $rule->setConditionSectionId($conditionId, $sectionId);
             $rule->setConditionElementId($conditionId,  $elementId);
+            $rule->setConditionGroupId($conditionId,  $groupId);
+            $rule->setConditionGroupPropertyId($conditionId,  $groupPropertyId);
             $rule->setConditionProperty($conditionId, $property);
 
             $rule->setConditionComputedValue($conditionId, null);
@@ -3113,6 +3119,8 @@ class Product extends AptoAggregate
 
             $rule->setConditionSectionId($conditionId, null);
             $rule->setConditionElementId($conditionId,  null);
+            $rule->setConditionGroupId($conditionId,  null);
+            $rule->setConditionGroupPropertyId($conditionId,  null);
             $rule->setConditionProperty($conditionId, null);
         }
 

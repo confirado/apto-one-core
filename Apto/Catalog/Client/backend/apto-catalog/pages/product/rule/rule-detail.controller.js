@@ -95,8 +95,25 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         $scope.selectedImplicationValue = '';
         $scope.selectedImplicationComputedValue = null;
 
+        $scope.groups = [];
+        $scope.groupProperties = [];
         $scope.selectableConditionGroups = [];
         $scope.selectableConditionGroupProperties = [];
+
+        $scope.fetchGroups('').then((groupData) => {
+            const groups = groupData.value.data.result.data;
+            for (const group of groups) {
+                const groupId = group.id;
+                $scope.groups.push(group);
+
+                $scope.fetchGroupProperties(groupId).then((groupPropertiesData) => {
+                    const groupProperties = groupPropertiesData.value.data.result.data;
+                    for (const property of groupProperties) {
+                        $scope.groupProperties.push(property);
+                    }
+                });
+            }
+        });
     }
 
     function onChangeSelectedConditionSection() {
@@ -104,6 +121,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             $scope.selectedConditionSection = null;
         }
         $scope.selectedConditionElement = null;
+        $scope.selectedConditionGroup = null;
+        $scope.selectedConditionGroupProperty = null;
         $scope.selectedConditionProperty = null;
         $scope.selectedConditionOperator = null;
         $scope.selectableConditionProperties = null;
@@ -113,6 +132,9 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function onChangeSelectedConditionElement() {
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 0) {
             $scope.selectedConditionElement = null;
+
+            $scope.selectedConditionGroup = null;
+            $scope.selectedConditionGroupProperty = null;
         }
         $scope.selectedConditionProperty = null;
         $scope.selectedConditionOperator = null;
@@ -135,15 +157,13 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
 
 
         $scope.selectableConditionGroups = [];
-        $scope.selectableConditionGroupProperties = [];
 
         if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.includes('materialProperty')) {
-            $scope.fetchGroups('').then((groupData) => {
-                const groups = groupData.value.data.result.data;
-                for (const group of groups) {
-                    $scope.selectableConditionGroups.push(group);
-                }
-            });
+            for (const group of $scope.groups) {
+                $scope.selectableConditionGroups.push(group);
+            }
+
+            onChangeSelectedConditionGroup();
         }
     }
 
@@ -153,14 +173,11 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         const selectedConditionGroup = $scope.selectedConditionGroup;
 
         if (selectedConditionGroup) {
-            $scope.fetchGroupProperties(selectedConditionGroup.id).then((groupPropertiesData) => {
-                console.log(groupPropertiesData);
-
-                const groupProperties = groupPropertiesData.value.data.result.data;
-                for (const property of groupProperties) {
-                    $scope.selectableConditionGroupProperties.push(property);
+            for (const groupProperty of $scope.groupProperties) {
+                if (groupProperty.group && groupProperty.group.length > 0 && groupProperty.group[0].id === selectedConditionGroup.id) {
+                    $scope.selectableConditionGroupProperties.push(groupProperty);
                 }
-            });
+            }
         }
     }
 
@@ -242,7 +259,7 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             operatorId: $scope.selectedConditionOperator ? $scope.selectedConditionOperator.id : null,
             property: $scope.selectedConditionProperty ? $scope.selectedConditionProperty[0] : null,
             sectionId: $scope.selectedConditionSection ? $scope.selectedConditionSection[0].id : null,
-            groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup[0].id : null,
+            groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
             groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
             typeId: $scope.conditionCriterionType.id,
             value: $scope.selectedConditionValue,
@@ -280,6 +297,20 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                         if (element) {
                             $scope.selectedConditionElement = [element];
                             onChangeSelectedConditionElement();
+                        }
+
+                        // group
+                        const group = getGroup(condition.groupId);
+                        if (group) {
+                            $scope.selectedConditionGroup = group;
+                            onChangeSelectedConditionGroup();
+                        }
+
+                        // group property
+                        const groupProperty = getGroupProperty(condition.groupPropertyId);
+                        if (groupProperty) {
+                            $scope.selectedConditionGroupProperty = [groupProperty];
+                            onChangeSelectedConditionGroupProperty();
                         }
                     // berechnete werte
                     } else {
@@ -347,6 +378,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                         ruleId: ruleId,
                         sectionId: section.id,
                         elementId: null,
+                        groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                        groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                         property: null,
                         operator: $scope.selectedConditionOperator.id,
                         value: ''
@@ -370,6 +403,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                     ruleId: ruleId,
                     sectionId: section.id,
                     elementId: null,
+                    groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                    groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                     property: null,
                     operator: $scope.selectedConditionOperator.id,
                     value: $scope.selectedConditionValue
@@ -385,6 +420,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                         ruleId: ruleId,
                         sectionId: section.id,
                         elementId: element.id,
+                        groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                        groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                         property: null,
                         operator: $scope.selectedConditionOperator.id,
                         value: ''
@@ -408,6 +445,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                     ruleId: ruleId,
                     sectionId: section.id,
                     elementId: element.id,
+                    groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                    groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                     property: null,
                     operator: $scope.selectedConditionOperator.id,
                     value: $scope.selectedConditionValue
@@ -423,6 +462,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                         ruleId: ruleId,
                         sectionId: section.id,
                         elementId: element.id,
+                        groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                        groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                         property: property,
                         operator: $scope.selectedConditionOperator.id,
                         value: $scope.selectedConditionValue
@@ -443,6 +484,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                 ruleId: ruleId,
                 sectionId: section.id,
                 elementId: element.id,
+                groupId: $scope.selectedConditionGroup ? $scope.selectedConditionGroup.id : null,
+                groupPropertyId: $scope.selectedConditionGroupProperty ? $scope.selectedConditionGroupProperty[0].id : null,
                 property: property,
                 operator: $scope.selectedConditionOperator.id,
                 value: $scope.selectedConditionValue
@@ -817,12 +860,38 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         return element ? element.identifier : '';
     }
 
+    function getGroup(groupId) {
+        for (let i = 0; i < $scope.groups.length; i++) {
+            if ($scope.groups[i].id === groupId) {
+                return angular.copy($scope.groups[i]);
+            }
+        }
+    }
+
     function getGroupName(groupId) {
-        return 'Group Name';
+        if (null === groupId) {
+            return null;
+        }
+        const group = getGroup(groupId);
+
+        return group ? group.name : '';
+    }
+
+    function getGroupProperty(groupPropertyId) {
+        for (let i = 0; i < $scope.groupProperties.length; i++) {
+            if ($scope.groupProperties[i].id === groupPropertyId) {
+                return angular.copy($scope.groupProperties[i]);
+            }
+        }
     }
 
     function getGroupPropertyName(groupPropertyId) {
-        return 'Group Property Name';
+        if (null === groupPropertyId) {
+            return null;
+        }
+        const groupProperty = getGroupProperty(groupPropertyId);
+
+        return groupProperty ? groupProperty.name : '';
     }
 
     function getOperatorName(operatorId) {
