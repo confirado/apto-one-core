@@ -99,16 +99,6 @@ abstract class RuleCriterion extends Criterion
         $element = null === $orgElementId ? null : $entityMapping->get($orgElementId->getId());
         $elementId = null === $element ? null : $element->getId();
 
-        // set group id
-        $orgGroupId = $this->getGroupId();
-        $group = null === $orgGroupId ? null : $entityMapping->get($orgGroupId->getId());
-        $groupId = null === $group ? null : $group->getId();
-
-        // set group property id
-        $orgGroupPropertyId = $this->getGroupPropertyId();
-        $groupProperty = null === $orgGroupPropertyId ? null : $entityMapping->get($orgGroupPropertyId->getId());
-        $groupPropertyId = null === $groupProperty ? null : $groupProperty->getId();
-
         // set computed product value
         $computedProductValue = null === $this->getComputedProductValue() ? null : $entityMapping->get($this->getComputedProductValue()->getId()->getId());
 
@@ -120,8 +110,8 @@ abstract class RuleCriterion extends Criterion
             $this->getType(),
             $sectionId,
             $elementId,
-            $groupId,
-            $groupPropertyId,
+            $this->getGroupId(),
+            $this->getGroupPropertyId(),
             $this->getProperty(),
             $computedProductValue,
             $this->getValue()
