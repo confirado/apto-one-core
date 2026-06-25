@@ -127,15 +127,17 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
         $scope.selectedConditionOperator = null;
         $scope.selectableConditionProperties = null;
         $scope.selectableConditionOperators = $scope.operatorsActive;
+
+        $scope.selectableConditionGroups = getSelectableGroups();
+        $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
 
     function onChangeSelectedConditionElement() {
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 0) {
             $scope.selectedConditionElement = null;
-
-            $scope.selectedConditionGroup = null;
-            $scope.selectedConditionGroupProperty = null;
         }
+        $scope.selectableConditionGroups = null;
+        $scope.selectableConditionGroupProperties = null;
         $scope.selectedConditionProperty = null;
         $scope.selectedConditionOperator = null;
         if ($scope.selectedConditionElement && $scope.selectedConditionElement.length === 1) {
@@ -147,6 +149,9 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function onChangeSelectedConditionProperty() {
         if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.length === 0) {
             $scope.selectedConditionProperty = null;
+
+            $scope.selectedConditionGroup = null;
+            $scope.selectedConditionGroupProperty = null;
         }
         $scope.selectedConditionOperator = null;
         if ($scope.selectedConditionProperty !== null) {
@@ -155,30 +160,15 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             $scope.selectableConditionOperators = $scope.operatorsActive;
         }
 
-
-        $scope.selectableConditionGroups = [];
-
-        if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.includes('materialProperty')) {
-            for (const group of $scope.groups) {
-                $scope.selectableConditionGroups.push(group);
-            }
-
-            onChangeSelectedConditionGroup();
-        }
+        $scope.selectableConditionGroups = getSelectableGroups();
+        $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
 
     function onChangeSelectedConditionGroup() {
-        $scope.selectableConditionGroupProperties = [];
-
-        const selectedConditionGroup = $scope.selectedConditionGroup;
-
-        if (selectedConditionGroup) {
-            for (const groupProperty of $scope.groupProperties) {
-                if (groupProperty.group && groupProperty.group.length > 0 && groupProperty.group[0].id === selectedConditionGroup.id) {
-                    $scope.selectableConditionGroupProperties.push(groupProperty);
-                }
-            }
+        if ($scope.selectedConditionGroup && $scope.selectedConditionGroup.length === 0) {
+            $scope.selectedConditionGroup = null;
         }
+        $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }
 
     function onChangeSelectedConditionGroupProperty() {
@@ -904,6 +894,35 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             return null;
         }
         return Object.keys(definitionClass.properties);
+    }
+
+    function getSelectableGroups() {
+        const selectableGroups = [];
+
+        if ($scope.selectedConditionProperty && $scope.selectedConditionProperty.includes('materialProperty')) {
+            for (const group of $scope.groups) {
+                selectableGroups.push(group);
+            }
+        }
+
+        return selectableGroups;
+    }
+
+    function getSelectableGroupProperties() {
+        const selectableGroupProperties = [];
+
+        if ($scope.selectableConditionGroups && $scope.selectableConditionGroups.length > 0) {
+            const selectedConditionGroup = $scope.selectedConditionGroup;
+            if (selectedConditionGroup) {
+                for (const groupProperty of $scope.groupProperties) {
+                    if (groupProperty.group && groupProperty.group.length > 0 && groupProperty.group[0].id === selectedConditionGroup.id) {
+                        selectableGroupProperties.push(groupProperty);
+                    }
+                }
+            }
+        }
+
+        return selectableGroupProperties;
     }
 
     function onChangeConditionCriterionType() {
