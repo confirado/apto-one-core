@@ -22,6 +22,8 @@ class Condition extends Criterion
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
+     * @param AptoUuid|null $groupId
+     * @param AptoUuid|null $groupPropertyId
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
@@ -37,6 +39,8 @@ class Condition extends Criterion
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?AptoUuid $groupId,
+        ?AptoUuid $groupPropertyId,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -47,6 +51,8 @@ class Condition extends Criterion
             $type,
             $sectionId,
             $elementId,
+            $groupId,
+            $groupPropertyId,
             $property,
             $computedProductValue,
             $value
@@ -95,6 +101,8 @@ class Condition extends Criterion
             $this->getType(),
             $sectionId,
             $elementId,
+            $this->getGroupId(),
+            $this->getGroupPropertyId(),
             $this->getProperty(),
             $computedProductValue,
             $this->getValue()

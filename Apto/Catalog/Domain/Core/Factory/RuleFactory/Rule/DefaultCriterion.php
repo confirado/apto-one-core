@@ -29,6 +29,16 @@ class DefaultCriterion extends Criterion
     protected $elementId;
 
     /**
+     * @var AptoUuid|null
+     */
+    protected $groupId;
+
+    /**
+     * @var AptoUuid|null
+     */
+    protected $groupPropertyId;
+
+    /**
      * @var string|null
      */
     protected $property;
@@ -53,6 +63,8 @@ class DefaultCriterion extends Criterion
         ?string $value,
         AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?AptoUuid $groupId,
+        ?AptoUuid $groupPropertyId,
         ?string $property,
         int $repetition = 0,
     ) {
@@ -83,6 +95,8 @@ class DefaultCriterion extends Criterion
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
+        $this->groupId = $groupId;
+        $this->groupPropertyId = $groupPropertyId;
         $this->property = $property;
         $this->repetition = $repetition;
 
@@ -103,6 +117,22 @@ class DefaultCriterion extends Criterion
     public function getElementId(): ?AptoUuid
     {
         return $this->elementId;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getGroupId(): ?AptoUuid
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * @return AptoUuid|null
+     */
+    public function getGroupPropertyId(): ?AptoUuid
+    {
+        return $this->groupPropertyId;
     }
 
     /**
@@ -136,6 +166,13 @@ class DefaultCriterion extends Criterion
         } else {
             $value = $state->isSectionActive($this->sectionId, $this->repetition) ? true : null;
         }
+
+
+        // TODO: Implement comparing with groups and group properties
+        if (isset($this->groupId)) {
+            dd($this->getGroupId());
+        }
+
 
         return $this->operator->compare($value, $this->value);
     }

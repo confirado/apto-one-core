@@ -26,6 +26,8 @@
         </field>
         <field name="sectionId" column="section_id" type="AptoPropertyUuid" nullable="true"/>
         <field name="elementId" column="element_id" type="AptoPropertyUuid" nullable="true"/>
+        <field name="groupId" column="group_id" type="AptoPropertyUuid" nullable="true"/>
+        <field name="groupPropertyId" column="group_property_id" type="AptoPropertyUuid" nullable="true"/>
         <field name="property" column="property" type="string" nullable="true"/>
 
         <many-to-one field="computedProductValue" target-entity="Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue">

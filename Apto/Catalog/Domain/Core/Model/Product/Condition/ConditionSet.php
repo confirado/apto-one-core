@@ -127,6 +127,8 @@ class ConditionSet extends AptoEntity
         int $type = 0,
         ?AptoUuid $sectionId = null,
         ?AptoUuid $elementId = null,
+        ?AptoUuid $groupId = null,
+        ?AptoUuid $groupPropertyId = null,
         ?string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -141,6 +143,8 @@ class ConditionSet extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
+                $groupId,
+                $groupPropertyId,
                 $property,
                 $computedProductValue,
                 $value,
