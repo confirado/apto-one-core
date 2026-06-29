@@ -168,14 +168,44 @@ class DefaultCriterion extends Criterion
         }
 
 
-        // TODO: Implement comparing with groups and group properties
-        if (isset($state->groupId) && isset($state->groupPropertyId)) {
-            dd($state);
+        if ($this->property === "materialProperty") {
+            $properties = $this->findProperties($this->property, $state);
+            if ($properties !== null) {
+                $value = $properties;
+                dd($value, $this);
+            }
         }
 
 
         return $this->operator->compare($value, $this->value);
     }
+
+
+    private function findAptoElementDefinitionValues($name, $state) {
+        $stateItems = $state->getState();
+
+        foreach ($stateItems as $stateItem) {
+            if (isset($stateItem["values"]["aptoElementDefinitionId"]) && $stateItem["values"]["aptoElementDefinitionId"] === $name) {
+                return $stateItem;
+            }
+        }
+
+        return null;
+    }
+
+    private function findProperties($propertyName, $state) {
+        $stateItem = $this->findAptoElementDefinitionValues("apto-element-material-picker", $state);
+
+        if ($stateItem !== null) {
+            $properties = $stateItem["values"][$propertyName];
+            if (isset($properties)) {
+                return $properties;
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * @param ConfigurableProduct $product
