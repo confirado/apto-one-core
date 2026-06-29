@@ -530,6 +530,8 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
+                null,
+                null,
                 $property,
                 $computedProductValue,
                 $value

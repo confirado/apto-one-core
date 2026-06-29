@@ -134,7 +134,7 @@ class RuleRepairService
 
                         // DEFAULT_ELEMENT
                         case 'apto-element-default-element': {
-                            $enrichedState->getState()->setValue($sectionId, $elementId, null, null, $repetition);
+                            $enrichedState->getState()->setValue($sectionId, $elementId, null, null, null, null, $repetition);
                             break;
                         }
 
@@ -144,6 +144,8 @@ class RuleRepairService
                                 $enrichedState->getState()->setValue(
                                     $sectionId,
                                     $elementId,
+                                    null,
+                                    null,
                                     'active',
                                     true,
                                     $repetition,
@@ -156,19 +158,19 @@ class RuleRepairService
                         case 'apto-element-select-box': {
                             if ($staticValues['defaultItem'] ?? null) {
                                 $enrichedState->getState()->setValue(
-                                    $sectionId, $elementId, 'aptoElementDefinitionId', 'apto-element-select-box', $repetition
+                                    $sectionId, $elementId, null, null, 'aptoElementDefinitionId', 'apto-element-select-box', $repetition
                                 );
                                 $enrichedState->getState()->setValue(
-                                    $sectionId, $elementId, 'boxes', [$staticValues['defaultItem']], $repetition
+                                    $sectionId, $elementId, null, null, 'boxes', [$staticValues['defaultItem']], $repetition
                                 );
                                 $enrichedState->getState()->setValue(
-                                    $sectionId, $elementId, 'selectedItem', $staticValues['defaultItem']['id'], $repetition
+                                    $sectionId, $elementId, null, null, 'selectedItem', $staticValues['defaultItem']['id'], $repetition
                                 );
                                 $enrichedState->getState()->setValue(
-                                    $sectionId, $elementId, 'id', $staticValues['defaultItem']['id'], $repetition
+                                    $sectionId, $elementId, null, null, 'id', $staticValues['defaultItem']['id'], $repetition
                                 );
                                 $enrichedState->getState()->setValue(
-                                    $sectionId, $elementId, 'name', $staticValues['defaultItem']['name'], $repetition
+                                    $sectionId, $elementId, null, null, 'name', $staticValues['defaultItem']['name'], $repetition
                                 );
                             }
                             break;

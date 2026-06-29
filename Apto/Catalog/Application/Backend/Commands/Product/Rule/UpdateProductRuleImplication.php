@@ -33,7 +33,7 @@ class UpdateProductRuleImplication extends AddProductRuleCriterion
         string $elementId = null,
         string $property = null,
     ) {
-        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $property, $computedValueId, $operator, $value);
+        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, null, null, $property, $computedValueId, $operator, $value);
 
         $this->implicationId = $implicationId;
     }

@@ -68,8 +68,8 @@ abstract class AddProductRuleCriterion extends ProductRuleCommand
         $this->type = $type === null ? 0 : $type;
         $this->sectionId = '' !== $sectionId ? $sectionId : null;
         $this->elementId = '' !== $elementId ? $elementId : null;
-        $this->groupId = '' !== $groupId ? $groupId : null;
-        $this->groupPropertyId = '' !== $groupPropertyId ? $groupPropertyId : null;
+        $this->groupId = null !== $groupId ? $groupId : null;
+        $this->groupPropertyId = null !== $groupPropertyId ? $groupPropertyId : null;
         $this->property = '' !== $property ? $property : null;
         $this->computedValueId = '' !== $computedValueId ? $computedValueId : null;
         $this->operator = $operator;

@@ -400,13 +400,15 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @param AptoUuid    $sectionId
      * @param AptoUuid    $elementId
+     * @param ?AptoUuid   $groupId
+     * @param ?AptoUuid   $groupPropertyId
      * @param string|null $property is null on default element, or when element has no properties at all (has no selectable values in element definition)
      * @param mixed|null  $value
      * @param int         $repetition
      *
      * @return State
      */
-    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, mixed $value = null, int $repetition = 0): State
+    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, ?AptoUuid $groupId = null, ?AptoUuid $groupPropertyId = null, string $property = null, mixed $value = null, int $repetition = 0): State
     {
         // if an element isn't found in the state create a new entry for it
         if (!$this->isElementActive($sectionId, $elementId, $repetition)) {
@@ -414,14 +416,18 @@ class State implements AptoJsonSerializable, \JsonSerializable
                 'repetition' => $repetition,
                 'sectionId' => $sectionId->getId(),
                 'elementId' => $elementId->getId(),
+                'groupId' => ($groupId !== null ? $groupId->getId() : null),
+                'groupPropertyId' => ($groupPropertyId !== null ? $groupPropertyId->getId() : null),
                 'values' => $property !== null ? [$property => $value] : []
             ];
         }
         else {
-            // if element is found update hte value
+            // if element is found update the value
             foreach ($this->state as $key => &$state) {
                 if ($state['sectionId'] === $sectionId->getId() &&
                     $state['elementId'] === $elementId->getId() &&
+                    $state['groupId'] === ($groupId !== null ? $groupId->getId() : null) &&
+                    $state['groupPropertyId'] === ($groupPropertyId !== null ? $groupPropertyId->getId() : null) &&
                     $state['repetition'] === $repetition
                 ) {
                     if ($property !== null) {

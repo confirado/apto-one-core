@@ -169,8 +169,8 @@ class DefaultCriterion extends Criterion
 
 
         // TODO: Implement comparing with groups and group properties
-        if (isset($this->groupId)) {
-            dd($this->getGroupId());
+        if (isset($state->groupId) && isset($state->groupPropertyId)) {
+            dd($state);
         }
 
 
