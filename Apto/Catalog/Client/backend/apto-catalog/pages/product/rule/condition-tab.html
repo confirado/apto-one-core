@@ -163,8 +163,8 @@
             <td ng-if="condition.type === 0" md-cell>{{ getSectionIdentifier(condition.sectionId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ getElementIdentifier(condition.sectionId, condition.elementId) }}</td>
             <td ng-if="condition.type === 0" md-cell>{{ condition.property }}</td>
-            <td ng-if="condition.type === 0" md-cell>{{ languageFactory.translate(getGroupName(condition.groupId)) }}</td>
-            <td ng-if="condition.type === 0" md-cell>{{ languageFactory.translate(getGroupPropertyName(condition.groupPropertyId)) }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ condition.group }}</td>
+            <td ng-if="condition.type === 0" md-cell>{{ condition.groupProperty }}</td>
             <td ng-if="condition.type === 1" md-cell>Berechneter Wert</td>
             <td ng-if="condition.type === 1" md-cell></td>
             <td ng-if="condition.type === 1" md-cell>{{ condition.computedProductValue[0].name }}</td>

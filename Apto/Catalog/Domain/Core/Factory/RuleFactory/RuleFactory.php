@@ -90,8 +90,8 @@ class RuleFactory
                     $rawCriterion['value'] ?? null,
                     new AptoUuid($rawCriterion['sectionId']),
                     $rawCriterion['elementId'] ? new AptoUuid($rawCriterion['elementId']) : null,
-                    isset($rawCriterion['groupId']) ? new AptoUuid($rawCriterion['groupId']) : null,
-                    isset($rawCriterion['groupPropertyId']) ? new AptoUuid($rawCriterion['groupPropertyId']) : null,
+                    $rawCriterion['group'] ?? null,
+                    $rawCriterion['groupProperty'] ?? null,
                     $rawCriterion['property'] ?? null,
                     $rawCriterion['repetition'] ?? 0,
                 );

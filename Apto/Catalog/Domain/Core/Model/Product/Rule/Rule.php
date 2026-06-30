@@ -219,8 +219,8 @@ class Rule extends AptoEntity
         ?int                  $type = Criterion::TYPE,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
-        ?AptoUuid             $groupId = null,
-        ?AptoUuid             $groupPropertyId = null,
+        ?string               $group = null,
+        ?string               $groupProperty = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string               $value = null
@@ -235,8 +235,8 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
-                $groupId,
-                $groupPropertyId,
+                $group,
+                $groupProperty,
                 $property,
                 $computedProductValue,
                 $value
@@ -324,11 +324,11 @@ class Rule extends AptoEntity
 
     /**
      * @param AptoUuid      $conditionId
-     * @param AptoUuid|null $groupId
+     * @param string|null   $group
      *
      * @return $this
      */
-    public function setConditionGroupId(AptoUuid $conditionId, ?AptoUuid $groupId): Rule
+    public function setConditionGroup(AptoUuid $conditionId, ?string $group): Rule
     {
         $condition = $this->getCondition($conditionId);
 
@@ -336,18 +336,18 @@ class Rule extends AptoEntity
             return $this;
         }
 
-        $condition->setGroupId($groupId);
+        $condition->setGroup($group);
 
         return $this;
     }
 
     /**
      * @param AptoUuid      $conditionId
-     * @param AptoUuid|null $groupPropertyId
+     * @param string|null   $groupProperty
      *
      * @return $this
      */
-    public function setConditionGroupPropertyId(AptoUuid $conditionId, ?AptoUuid $groupPropertyId): Rule
+    public function setConditionGroupProperty(AptoUuid $conditionId, ?string $groupProperty): Rule
     {
         $condition = $this->getCondition($conditionId);
 
@@ -355,7 +355,7 @@ class Rule extends AptoEntity
             return $this;
         }
 
-        $condition->setGroupPropertyId($groupPropertyId);
+        $condition->setGroupProperty($groupProperty);
 
         return $this;
     }

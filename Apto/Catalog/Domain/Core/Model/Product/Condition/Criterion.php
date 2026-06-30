@@ -7,7 +7,6 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\ComputedProductValueCriterion;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
-use Apto\Catalog\Domain\Core\Model\Product\Product;
 
 abstract class Criterion extends AptoEntity
 {
@@ -30,14 +29,14 @@ abstract class Criterion extends AptoEntity
     protected $elementId;
 
     /**
-     * @var AptoUuid|null
+     * @var string|null
      */
-    protected $groupId;
+    protected $group;
 
     /**
-     * @var AptoUuid|null
+     * @var string|null
      */
-    protected $groupPropertyId;
+    protected $groupProperty;
 
     /**
      * @var string|null
@@ -66,8 +65,8 @@ abstract class Criterion extends AptoEntity
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
-     * @param AptoUuid|null $groupId
-     * @param AptoUuid|null $groupPropertyId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
@@ -82,8 +81,8 @@ abstract class Criterion extends AptoEntity
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?AptoUuid $groupId,
-        ?AptoUuid $groupPropertyId,
+        ?string $group,
+        ?string $groupProperty,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -130,8 +129,8 @@ abstract class Criterion extends AptoEntity
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
-        $this->groupId = $groupId;
-        $this->groupPropertyId = $groupPropertyId;
+        $this->group = $group;
+        $this->groupProperty = $groupProperty;
         $this->property = $property;
         $this->operator = $operator;
         $this->value = $value;
@@ -180,41 +179,41 @@ abstract class Criterion extends AptoEntity
     }
 
     /**
-     * @return AptoUuid|null
+     * @return string|null
      */
-    public function getGroupId(): ?AptoUuid
+    public function getGroup(): ?string
     {
-        return $this->groupId;
+        return $this->group;
     }
 
     /**
-     * @param AptoUuid|null $groupId
+     * @param string|null $group
      *
      * @return $this
      */
-    public function setGroupId(?AptoUuid $groupId): self
+    public function setGroup(?string $group): self
     {
-        $this->groupId = $groupId;
+        $this->group = $group;
 
         return $this;
     }
 
     /**
-     * @return AptoUuid|null
+     * @return string|null
      */
-    public function getGroupPropertyId(): ?AptoUuid
+    public function getGroupProperty(): ?string
     {
-        return $this->groupPropertyId;
+        return $this->groupProperty;
     }
 
     /**
-     * @param AptoUuid|null $groupPropertyId
+     * @param string|null $groupProperty
      *
      * @return $this
      */
-    public function setGroupPropertyId(?AptoUuid $groupPropertyId): self
+    public function setGroupProperty(?string $groupProperty): self
     {
-        $this->groupPropertyId = $groupPropertyId;
+        $this->groupProperty = $groupProperty;
 
         return $this;
     }

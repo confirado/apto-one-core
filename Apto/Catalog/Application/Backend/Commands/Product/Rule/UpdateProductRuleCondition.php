@@ -19,8 +19,8 @@ class UpdateProductRuleCondition extends AddProductRuleCriterion
      * @param string|null $computedValueId
      * @param string|null $sectionId
      * @param string|null $elementId
-     * @param string|null $groupId
-     * @param string|null $groupPropertyId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      */
     public function __construct(
@@ -33,11 +33,11 @@ class UpdateProductRuleCondition extends AddProductRuleCriterion
         string $computedValueId = null,
         string $sectionId = null,
         string $elementId = null,
-        string $groupId = null,
-        string $groupPropertyId = null,
+        string $group = null,
+        string $groupProperty = null,
         string $property = null,
     ) {
-        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $groupId, $groupPropertyId, $property, $computedValueId, $operator, $value);
+        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $group, $groupProperty, $property, $computedValueId, $operator, $value);
 
         $this->conditionId = $conditionId;
     }

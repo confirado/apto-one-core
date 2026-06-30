@@ -27,8 +27,8 @@ abstract class RuleCriterion extends Criterion
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
-     * @param AptoUuid|null $groupId
-     * @param AptoUuid|null $groupPropertyId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param CriterionOperator $operator
@@ -45,8 +45,8 @@ abstract class RuleCriterion extends Criterion
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?AptoUuid $groupId,
-        ?AptoUuid $groupPropertyId,
+        ?string $group,
+        ?string $groupProperty,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -58,8 +58,8 @@ abstract class RuleCriterion extends Criterion
             $type,
             $sectionId,
             $elementId,
-            $groupId,
-            $groupPropertyId,
+            $group,
+            $groupProperty,
             $property,
             $computedProductValue,
             $value
@@ -110,8 +110,8 @@ abstract class RuleCriterion extends Criterion
             $this->getType(),
             $sectionId,
             $elementId,
-            $this->getGroupId(),
-            $this->getGroupPropertyId(),
+            $this->getGroup(),
+            $this->getGroupProperty(),
             $this->getProperty(),
             $computedProductValue,
             $this->getValue()

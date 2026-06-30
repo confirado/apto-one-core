@@ -29,14 +29,14 @@ class DefaultCriterion extends Criterion
     protected $elementId;
 
     /**
-     * @var AptoUuid|null
+     * @var string|null
      */
-    protected $groupId;
+    protected $group;
 
     /**
-     * @var AptoUuid|null
+     * @var string|null
      */
-    protected $groupPropertyId;
+    protected $groupProperty;
 
     /**
      * @var string|null
@@ -54,6 +54,8 @@ class DefaultCriterion extends Criterion
      * @param string|null $value
      * @param AptoUuid $sectionId
      * @param AptoUuid|null $elementId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param int $repetition
      */
@@ -63,8 +65,8 @@ class DefaultCriterion extends Criterion
         ?string $value,
         AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?AptoUuid $groupId,
-        ?AptoUuid $groupPropertyId,
+        ?string $group,
+        ?string $groupProperty,
         ?string $property,
         int $repetition = 0,
     ) {
@@ -95,8 +97,8 @@ class DefaultCriterion extends Criterion
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
-        $this->groupId = $groupId;
-        $this->groupPropertyId = $groupPropertyId;
+        $this->group = $group;
+        $this->groupProperty = $groupProperty;
         $this->property = $property;
         $this->repetition = $repetition;
 
@@ -120,19 +122,19 @@ class DefaultCriterion extends Criterion
     }
 
     /**
-     * @return AptoUuid|null
+     * @return string|null
      */
-    public function getGroupId(): ?AptoUuid
+    public function getGroup(): ?string
     {
-        return $this->groupId;
+        return $this->group;
     }
 
     /**
-     * @return AptoUuid|null
+     * @return string|null
      */
-    public function getGroupPropertyId(): ?AptoUuid
+    public function getGroupProperty(): ?string
     {
-        return $this->groupPropertyId;
+        return $this->groupProperty;
     }
 
     /**
@@ -170,9 +172,11 @@ class DefaultCriterion extends Criterion
 
         if ($this->property === "materialProperty") {
             $properties = $this->findProperties($this->property, $state);
-            if ($properties !== null) {
-                $value = $properties;
-                dd($value, $this);
+            if ($properties !== null && count($properties) > 0) {
+                $value = $properties[0];
+                $groupPropertyName = $this->getGroup() . ": " . $this->getGroupProperty();
+                $fulfilled = $this->operator->compare($value, $groupPropertyName);
+                return $fulfilled;
             }
         }
 
@@ -220,7 +224,7 @@ class DefaultCriterion extends Criterion
             return $state;
         }
 
-        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->property, $this->value, $this->repetition);
+        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->group, $this->groupProperty, $this->property, $this->value, $this->repetition);
     }
 
     /**
