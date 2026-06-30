@@ -161,6 +161,16 @@ class DefaultCriterion extends Criterion
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
         // if this is an element with value (not default element or similar)
+        if ($this->property === "materialProperty") {
+            $properties = $this->findProperties($this->property, $state);
+            if ($properties !== null && count($properties) > 0) {
+                return $this->operator->compare($properties[0], $this->getGroupPropertyKeyValueString());
+            }
+            else {
+                return false;
+            }
+        }
+
         if ($this->property !== null) {
             $value = $state->getValue($this->sectionId, $this->elementId, $this->property, $this->repetition);
         } else if ($this->elementId !== null) {
@@ -168,18 +178,6 @@ class DefaultCriterion extends Criterion
         } else {
             $value = $state->isSectionActive($this->sectionId, $this->repetition) ? true : null;
         }
-
-
-        if ($this->property === "materialProperty") {
-            $properties = $this->findProperties($this->property, $state);
-            if ($properties !== null && count($properties) > 0) {
-                $value = $properties[0];
-                $groupPropertyName = $this->getGroup() . ": " . $this->getGroupProperty();
-                $fulfilled = $this->operator->compare($value, $groupPropertyName);
-                return $fulfilled;
-            }
-        }
-
 
         return $this->operator->compare($value, $this->value);
     }
@@ -208,6 +206,10 @@ class DefaultCriterion extends Criterion
         }
 
         return null;
+    }
+
+    private function getGroupPropertyKeyValueString(): string {
+        return $this->getGroup() . ": " . $this->getGroupProperty();
     }
 
 
