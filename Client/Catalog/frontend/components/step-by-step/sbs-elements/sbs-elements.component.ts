@@ -29,6 +29,7 @@ import {
   setSectionTouched,
   setStep
 } from '@apto-catalog-frontend-configuration-actions';
+import {setPrevStep} from "../../../store/configuration/configuration.actions";
 
 @UntilDestroy()
 @Component({
@@ -116,7 +117,7 @@ export class SbsElementsComponent implements OnInit{
 	public prevStep(state: ProgressState): void {
     const step = state.beforeSteps.length ? state.beforeSteps[state.beforeSteps.length - 1] : state.currentStep;
 
-		this.store.dispatch(setStep({
+    this.store.dispatch(setPrevStep({
       payload: {
         id: step.section.id, repetition: step.section.repetition,
       },
