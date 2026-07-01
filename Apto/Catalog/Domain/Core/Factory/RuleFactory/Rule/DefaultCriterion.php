@@ -160,7 +160,6 @@ class DefaultCriterion extends Criterion
      */
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
-        // if this is an element with value (not default element or similar)
         if ($this->property === "materialProperty") {
             $properties = $this->findProperties($this->property, $state);
             if ($properties !== null && count($properties) > 0) {
@@ -171,6 +170,7 @@ class DefaultCriterion extends Criterion
             }
         }
 
+        // if this is an element with value (not default element or similar)
         if ($this->property !== null) {
             $value = $state->getValue($this->sectionId, $this->elementId, $this->property, $this->repetition);
         } else if ($this->elementId !== null) {
