@@ -31,6 +31,16 @@ class DefaultCriterion extends Criterion
     /**
      * @var string|null
      */
+    protected $group;
+
+    /**
+     * @var string|null
+     */
+    protected $groupProperty;
+
+    /**
+     * @var string|null
+     */
     protected $property;
 
     /**
@@ -44,6 +54,8 @@ class DefaultCriterion extends Criterion
      * @param string|null $value
      * @param AptoUuid $sectionId
      * @param AptoUuid|null $elementId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param int $repetition
      */
@@ -53,6 +65,8 @@ class DefaultCriterion extends Criterion
         ?string $value,
         AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?string $group,
+        ?string $groupProperty,
         ?string $property,
         int $repetition = 0,
     ) {
@@ -83,6 +97,8 @@ class DefaultCriterion extends Criterion
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
+        $this->group = $group;
+        $this->groupProperty = $groupProperty;
         $this->property = $property;
         $this->repetition = $repetition;
 
@@ -103,6 +119,22 @@ class DefaultCriterion extends Criterion
     public function getElementId(): ?AptoUuid
     {
         return $this->elementId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroup(): ?string
+    {
+        return $this->group;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroupProperty(): ?string
+    {
+        return $this->groupProperty;
     }
 
     /**
@@ -128,6 +160,16 @@ class DefaultCriterion extends Criterion
      */
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
+        if ($this->property === "materialProperty") {
+            $properties = $this->findProperties($this->property, $state);
+            if ($properties !== null && count($properties) > 0) {
+                return $this->operator->compare($properties[0], $this->getGroupPropertyKeyValueString());
+            }
+            else {
+                return false;
+            }
+        }
+
         // if this is an element with value (not default element or similar)
         if ($this->property !== null) {
             $value = $state->getValue($this->sectionId, $this->elementId, $this->property, $this->repetition);
@@ -139,6 +181,37 @@ class DefaultCriterion extends Criterion
 
         return $this->operator->compare($value, $this->value);
     }
+
+
+    private function findAptoElementDefinitionValues($name, $state) {
+        $stateItems = $state->getState();
+
+        foreach ($stateItems as $stateItem) {
+            if (isset($stateItem["values"]["aptoElementDefinitionId"]) && $stateItem["values"]["aptoElementDefinitionId"] === $name) {
+                return $stateItem;
+            }
+        }
+
+        return null;
+    }
+
+    private function findProperties($propertyName, $state) {
+        $stateItem = $this->findAptoElementDefinitionValues("apto-element-material-picker", $state);
+
+        if ($stateItem !== null) {
+            $properties = $stateItem["values"][$propertyName];
+            if (isset($properties)) {
+                return $properties;
+            }
+        }
+
+        return null;
+    }
+
+    private function getGroupPropertyKeyValueString(): string {
+        return $this->getGroup() . ": " . $this->getGroupProperty();
+    }
+
 
     /**
      * @param ConfigurableProduct $product
@@ -153,7 +226,7 @@ class DefaultCriterion extends Criterion
             return $state;
         }
 
-        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->property, $this->value, $this->repetition);
+        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->group, $this->groupProperty, $this->property, $this->value, $this->repetition);
     }
 
     /**

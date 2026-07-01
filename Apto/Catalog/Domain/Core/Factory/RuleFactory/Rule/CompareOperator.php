@@ -128,13 +128,15 @@ class CompareOperator
      * @param State               $state
      * @param AptoUuid            $sectionId
      * @param AptoUuid|null       $elementId
+     * @param string|null         $group
+     * @param string|null         $groupProperty
      * @param string|null         $property
      * @param string|null         $value
      * @param int                 $repetition
      *
      * @return State
      */
-    public function fulfill(ConfigurableProduct $product, State $state, AptoUuid $sectionId, ?AptoUuid $elementId, ?string $property, ?string $value, int $repetition = 0): State
+    public function fulfill(ConfigurableProduct $product, State $state, AptoUuid $sectionId, ?AptoUuid $elementId, ?string $group, ?string $groupProperty, ?string $property, ?string $value, int $repetition = 0): State
     {
         switch($this->operator) {
 
@@ -150,7 +152,7 @@ class CompareOperator
 
             // ACTIVE
             case self::ACTIVE: {
-                $state->setValue($sectionId, $elementId, null, null, $repetition);
+                $state->setValue($sectionId, $elementId, $group, $groupProperty, null, null, $repetition);
                 break;
             }
 
@@ -202,7 +204,7 @@ class CompareOperator
                         $guess = null;
                 }
                 if (null !== $guess) {
-                    $state->setValue($sectionId, $elementId, $property, $guess, $repetition);
+                    $state->setValue($sectionId, $elementId, $group, $groupProperty, $property, $guess, $repetition);
                 }
                 break;
             }

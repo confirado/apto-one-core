@@ -7,7 +7,6 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\ComputedProductValueCriterion;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\DefaultCriterion;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\ComputedProductValue;
-use Apto\Catalog\Domain\Core\Model\Product\Product;
 
 abstract class Criterion extends AptoEntity
 {
@@ -28,6 +27,16 @@ abstract class Criterion extends AptoEntity
      * @var AptoUuid|null
      */
     protected $elementId;
+
+    /**
+     * @var string|null
+     */
+    protected $group;
+
+    /**
+     * @var string|null
+     */
+    protected $groupProperty;
 
     /**
      * @var string|null
@@ -56,6 +65,8 @@ abstract class Criterion extends AptoEntity
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
@@ -70,6 +81,8 @@ abstract class Criterion extends AptoEntity
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
+        ?string $group,
+        ?string $groupProperty,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string $value = null
@@ -116,6 +129,8 @@ abstract class Criterion extends AptoEntity
 
         $this->sectionId = $sectionId;
         $this->elementId = $elementId;
+        $this->group = $group;
+        $this->groupProperty = $groupProperty;
         $this->property = $property;
         $this->operator = $operator;
         $this->value = $value;
@@ -159,6 +174,46 @@ abstract class Criterion extends AptoEntity
     public function setElementId(?AptoUuid $elementId): self
     {
         $this->elementId = $elementId;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroup(): ?string
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param string|null $group
+     *
+     * @return $this
+     */
+    public function setGroup(?string $group): self
+    {
+        $this->group = $group;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroupProperty(): ?string
+    {
+        return $this->groupProperty;
+    }
+
+    /**
+     * @param string|null $groupProperty
+     *
+     * @return $this
+     */
+    public function setGroupProperty(?string $groupProperty): self
+    {
+        $this->groupProperty = $groupProperty;
 
         return $this;
     }

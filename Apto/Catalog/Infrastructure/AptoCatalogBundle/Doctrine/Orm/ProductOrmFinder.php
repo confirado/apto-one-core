@@ -555,6 +555,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     'type',
                     'sectionId',
                     'elementId',
+                    'group',
+                    'groupProperty',
                     'property',
                     ['operator.operator', 'operator'],
                     'value'
@@ -677,6 +679,8 @@ class ProductOrmFinder extends AptoOrmFinder implements ProductFinder
                     ['id.id', 'id'],
                     'sectionId',
                     'elementId',
+                    'group',
+                    'groupProperty',
                     'property',
                     ['operator.operator', 'operator'],
                     'value',
