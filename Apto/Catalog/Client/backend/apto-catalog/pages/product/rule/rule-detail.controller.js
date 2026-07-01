@@ -167,9 +167,6 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     }
 
     function onChangeSelectedConditionGroup() {
-        if ($scope.selectedConditionGroup && $scope.selectedConditionGroup.length === 0) {
-            $scope.selectedConditionGroup = null;
-        }
         $scope.selectedConditionGroupProperty = null;
         $scope.selectableConditionGroupProperties = getSelectableGroupProperties();
     }

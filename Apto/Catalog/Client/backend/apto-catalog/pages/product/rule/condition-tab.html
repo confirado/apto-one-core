@@ -130,7 +130,7 @@
     <!-- value text field -->
     <md-input-container flex data-cy="condition-value">
         <label>Wert:</label>
-        <input ng-disabled="$parent.selectedConditionOperator === null || $parent.selectedConditionOperator.id === 0 || $parent.selectedConditionOperator.id === 1" ng-model="$parent.selectedConditionValue">
+        <input ng-disabled="$parent.selectedConditionOperator === null || $parent.selectedConditionOperator.id === 0 || $parent.selectedConditionOperator.id === 1 || $parent.selectedConditionGroup || $parent.selectedConditionGroupProperty" ng-model="$parent.selectedConditionValue">
     </md-input-container>
     <div flex="5"></div>
 
