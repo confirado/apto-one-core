@@ -513,8 +513,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function resetSelectedCondition() {
         $scope.selectableConditionProperties = null;
         $scope.selectableConditionOperators = $scope.operatorsActive;
-        $scope.selectableConditionGroups = null;
-        $scope.selectableConditionGroupProperties = null;
+        $scope.selectableConditionGroups = [];
+        $scope.selectableConditionGroupProperties = [];
 
         $scope.selectedConditionSection = null;
         $scope.selectedConditionElement = null;
@@ -899,7 +899,7 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function findGroupByName(groupName) {
         for (const group of $scope.groups) {
             if ($scope.languageFactory.translate(group.name) === groupName) {
-                return angular.copy(group);
+                return group;
             }
         }
         return null;
@@ -912,7 +912,7 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
                 && groupProperty.group.length > 0
                 && groupProperty.group[0].id === group.id
                 && $scope.languageFactory.translate(groupProperty.name) === groupPropertyName) {
-                    return angular.copy(groupProperty);
+                    return groupProperty;
                 }
             }
         }
