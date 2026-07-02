@@ -162,15 +162,8 @@ class DefaultCriterion extends Criterion
     {
         if ($this->property === "materialProperty") {
             $groupPropertyKeyValueString = $this->getGroupPropertyKeyValueString();
-
-            $properties = $this->findProperties($this->property, $state);
-
-            if ($properties !== null && count($properties) > 0) {
-                $propertiesString = implode('|', $properties);
-                return $this->operator->compare($propertiesString, $groupPropertyKeyValueString);
-            }
-
-            return false;
+            $groupPropertiesString = $this->getGroupPropertiesString($state);
+            return strlen($groupPropertiesString) > 0 && $this->operator->compare($groupPropertiesString, $groupPropertyKeyValueString);
         }
 
         // if this is an element with value (not default element or similar)
@@ -209,6 +202,16 @@ class DefaultCriterion extends Criterion
         }
 
         return null;
+    }
+
+    private function getGroupPropertiesString($state): string {
+        $properties = $this->findProperties($this->property, $state);
+
+        if ($properties !== null && count($properties) > 0) {
+            return implode('|', $properties);
+        }
+
+        return "";
     }
 
     private function getGroupPropertyKeyValueString(): string {
