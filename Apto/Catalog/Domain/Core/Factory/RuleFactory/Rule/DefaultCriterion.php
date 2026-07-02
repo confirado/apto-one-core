@@ -161,13 +161,16 @@ class DefaultCriterion extends Criterion
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
         if ($this->property === "materialProperty") {
+            $groupPropertyKeyValueString = $this->getGroupPropertyKeyValueString();
+
             $properties = $this->findProperties($this->property, $state);
+
             if ($properties !== null && count($properties) > 0) {
-                return $this->operator->compare($properties[0], $this->getGroupPropertyKeyValueString());
+                $propertiesString = implode('|', $properties);
+                return $this->operator->compare($propertiesString, $groupPropertyKeyValueString);
             }
-            else {
-                return false;
-            }
+
+            return false;
         }
 
         // if this is an element with value (not default element or similar)
