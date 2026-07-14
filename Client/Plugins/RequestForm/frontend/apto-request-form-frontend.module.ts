@@ -21,10 +21,11 @@ import { RequestFormComponent } from '@apto-request-form-frontend-request-form';
 import { RequestMessageStateComponent } from '@apto-request-form-frontend/components/request-message-state/request-message-state.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AptoRequestFormFrontendCustomModule } from '@apto-request-form-frontend-custom-module';
+import { SummaryComponent as RequestFormSummaryComponent } from '@apto-request-form-frontend-summary';
 
 @NgModule({
   declarations: [
-    RequestFormComponent, RequestMessageStateComponent
+    RequestFormComponent, RequestMessageStateComponent, RequestFormSummaryComponent
   ],
 	exports: [
     AptoRequestFormFrontendCustomModule,
