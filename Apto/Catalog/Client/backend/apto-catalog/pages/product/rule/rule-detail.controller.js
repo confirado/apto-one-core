@@ -886,7 +886,8 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
             const selectedConditionGroup = $scope.selectedConditionGroup;
             if (selectedConditionGroup) {
                 for (const groupProperty of $scope.groupProperties) {
-                    if (groupProperty.group && groupProperty.group.length > 0 && groupProperty.group[0].id === selectedConditionGroup.id) {
+                    const group = groupProperty.group;
+                    if (group && group.length > 0 && group[0].id === selectedConditionGroup.id) {
                         selectableGroupProperties.push(groupProperty);
                     }
                 }
@@ -908,9 +909,10 @@ const RuleDetailController = function($scope, $templateCache, $mdDialog, $ngRedu
     function findGroupPropertyByName(groupPropertyName, group) {
         if (group) {
             for (const groupProperty of $scope.groupProperties) {
-                if (groupProperty.group
-                && groupProperty.group.length > 0
-                && groupProperty.group[0].id === group.id
+                const group = groupProperty.group;
+                if (group
+                && group.length > 0
+                && group[0].id === group.id
                 && $scope.languageFactory.translate(groupProperty.name) === groupPropertyName) {
                     return groupProperty;
                 }

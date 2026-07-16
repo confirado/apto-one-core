@@ -161,13 +161,9 @@ class DefaultCriterion extends Criterion
     public function isFulfilled(State $state, RulePayload $rulePayload): bool
     {
         if ($this->property === "materialProperty") {
-            $properties = $this->findProperties($this->property, $state);
-            if ($properties !== null && count($properties) > 0) {
-                return $this->operator->compare($properties[0], $this->getGroupPropertyKeyValueString());
-            }
-            else {
-                return false;
-            }
+            $groupPropertyKeyValueString = $this->getGroupPropertyKeyValueString();
+            $groupPropertiesString = $this->getGroupPropertiesString($state);
+            return strlen($groupPropertiesString) > 0 && $this->operator->compare($groupPropertiesString, $groupPropertyKeyValueString);
         }
 
         // if this is an element with value (not default element or similar)
@@ -206,6 +202,16 @@ class DefaultCriterion extends Criterion
         }
 
         return null;
+    }
+
+    private function getGroupPropertiesString($state): string {
+        $properties = $this->findProperties($this->property, $state);
+
+        if ($properties !== null && count($properties) > 0) {
+            return implode('|', $properties);
+        }
+
+        return "";
     }
 
     private function getGroupPropertyKeyValueString(): string {
