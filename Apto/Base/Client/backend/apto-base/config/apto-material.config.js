@@ -67,13 +67,13 @@ const AptoMaterialConfig = function ($mdThemingProvider, $mdIconProvider, $mdDat
         '200': '#90caf9',
         '300': '#64b5f6',
         '400': '#42a5f5',
-        '500': '#14548c',   // confirado
+        '500': '#14548c',   // nanoLogika
         '600': '#1e88e5',
         '700': '#1976d2',
-        '800': '#072540',   // confirado
+        '800': '#072540',   // nanoLogika
         '900': '#0d47a1',
         'A100': '#82b1ff',
-        'A200': '#14548c',  // confirado
+        'A200': '#14548c',  // nanoLogika
         'A400': '#2979ff',
         'A700': '#2962ff',
         'contrastDefaultColor': 'light',
@@ -87,10 +87,10 @@ const AptoMaterialConfig = function ($mdThemingProvider, $mdIconProvider, $mdDat
         '200': '#90caf9',
         '300': '#64b5f6',
         '400': '#42a5f5',
-        '500': '#14548c',   // confirado
+        '500': '#14548c',   // nanoLogika
         '600': '#1e88e5',
         '700': '#1976d2',
-        '800': '#072540',   // confirado
+        '800': '#072540',   // nanoLogika
         '900': '#0d47a1',
         'A100': '#ffffff',  // from grey
         'A200': '#000000',  // from grey

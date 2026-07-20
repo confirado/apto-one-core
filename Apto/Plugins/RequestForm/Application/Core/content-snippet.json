@@ -103,7 +103,7 @@
           }
         },
         "declarationOfConsent": {
-          "de_DE": "Durch das Absenden des Formulares erklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw. zur Kontaktaufnahme verwenden.<br />\nWeitere Informationen zum Datenschutz finden Sie in unserer <a href=\"https://www.confirado.de/rechtliches/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>.<br />\nAlle auf confirado.de genannten Preise sind Nettopreise (zzgl 19% USt.)."
+          "de_DE": "Durch das Absenden des Formulares erklären Sie sich damit einverstanden, dass wir Ihre Angaben für die Bearbeitung Ihrer Anfrage bzw. zur Kontaktaufnahme verwenden.<br />\nWeitere Informationen zum Datenschutz finden Sie in unserer <a href=\"https://www.nanoLogika.de/rechtliches/datenschutz.html\" target=\"_blank\">Datenschutzerklärung</a>.<br />\nAlle auf nanoLogika.de genannten Preise sind Nettopreise (zzgl 19% USt.)."
         },
         "sendForm": {
           "de_DE": "Anfrage senden"
@@ -164,7 +164,7 @@
             "de_DE": "Unser Vorabangebot"
           },
           "afterOrderListTable": {
-            "de_DE": "<p>Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter www.confirado.de/agb/ einzusehen sind.</p><p>Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot.</p><p>Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen.</p><p><br /></p><p>- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten.</p><p>- Individuelle Anpassungen werden schrittweise durchgeführt</p>"
+            "de_DE": "<p>Es gelten unsere Allgemeinen Geschäftsbedingungen, die unter www.nanoLogika.de/agb/ einzusehen sind.</p><p>Bei der in diesem Angebot aufgeführten Einschätzung handelt es sich um ein unverbindliches Preisangebot.</p><p>Ein verbindliches Angebot mit Festpreis und einem festen Fertigstellungsdatum können wir nach der Erstellung des Funktionsbriefings nennen.</p><p><br /></p><p>- Bei Auftragsbestätigung: Abrechnungen der Lizenzen und Module inkl. dazugehöriger Installationsarbeiten.</p><p>- Individuelle Anpassungen werden schrittweise durchgeführt</p>"
           },
           "beforeOrderListTable": {
             "de_DE": "<p>die Umsetzung möchten wir Ihnen wie folgt anbieten.</p><p><br /></p><p>Ihre konfigurierbaren Produkte:</p><p>\n</p>"
@@ -195,28 +195,28 @@
         },
         "company": {
           "phone": {
-            "de_DE": "09771 - 68 78 250"
+            "de_DE": "+49 (30) 770 19 26 – 0"
           },
           "name": {
-            "de_DE": "Confirado GmbH & Co. KG"
+            "de_DE": "nanoLogika GmbH"
           },
           "mail": {
-            "de_DE": "info@confirado.de"
+            "de_DE": "info@nanologika.de"
           },
           "website": {
-            "de_DE": "www.confirado.de"
+            "de_DE": "www.nanologika.de"
           },
           "websiteLink": {
-            "de_DE": "https://www.confirado.de/"
+            "de_DE": "https://www.nanologika.de/"
           },
           "zip": {
-            "de_DE": "97616"
+            "de_DE": "12163 "
           },
           "city": {
-            "de_DE": "Bad Neustadt"
+            "de_DE": "Berlin"
           },
           "street": {
-            "de_DE": "Salzpforte"
+            "de_DE": "Schloßstraße 32"
           },
           "postalCode": {
             "de_DE": "09771 - 68 78 250"
@@ -236,7 +236,7 @@
         },
         "footer": {
           "city": {
-            "de_DE": "Bad Neustadt an der Saale"
+            "de_DE": "Berlin"
           }
         },
         "table": {
