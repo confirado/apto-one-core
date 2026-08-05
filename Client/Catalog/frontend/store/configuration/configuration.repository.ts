@@ -10,6 +10,7 @@ import {
 } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
+import {AddSharedConfigurationArguments} from "./configuration.model";
 
 @Injectable()
 export class ConfigurationRepository {
@@ -69,6 +70,14 @@ export class ConfigurationRepository {
 			params.quantity,
 			params.perspectives,
 			params.additionalData
+		);
+	}
+	public addSharedConfiguration(params: AddSharedConfigurationArguments): Observable<unknown> {
+		return this.catalogMessageBusService.addSharedConfiguration(
+			params.productId,
+			params.compressedState,
+			params.id,
+			params.payload
 		);
 	}
 
