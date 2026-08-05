@@ -1,13 +1,13 @@
-import {Promise} from "es6-promise";
+import { fabric } from 'fabric';
 import ImageTab from './tabs/image-settings.html';
 import MotiveTab from './tabs/motive-settings.html';
 import TextTab from './tabs/text-settings.html';
 import AreaTab from './tabs/area-settings.html';
 import PriceTab from './tabs/price-settings.html';
-import angular from 'angular';
 
-const ControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', 'targetEvent', 'showDetailsDialog', 'canvasId', 'ImageUploadCanvasActions', 'ProductActions', 'SanitizerFactory'];
-const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetEvent, showDetailsDialog, canvasId, ImageUploadCanvasActions, ProductActions, SanitizerFactory) {
+
+const ControllerInject = ['$scope', '$templateCache', '$mdDialog', '$ngRedux', '$timeout', 'targetEvent', 'showDetailsDialog', 'canvasId', 'ImageUploadCanvasActions', 'ProductActions', 'SanitizerFactory'];
+const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, $timeout, targetEvent, showDetailsDialog, canvasId, ImageUploadCanvasActions, ProductActions, SanitizerFactory) {
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/image-settings.html', ImageTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/motive-settings.html', MotiveTab);
     $templateCache.put('plugins/image-upload/pages/canvas/tabs/text-settings.html', TextTab);
@@ -28,6 +28,18 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         availableCustomerGroupsFetch: ProductActions.availableCustomerGroupsFetch
     })($scope);
 
+
+    let editorFabricCanvas = null;
+    let editorPrintableAreaRect = null;
+    let editorBackgroundImage = null;
+
+    $scope.editorPrintableAreaShapes = [
+      'Circle',
+      'Polygon'
+    ];
+    $scope.editorPrintableAreaShape = 'Polygon';
+
+
     function init() {
         $scope.availableCustomerGroupsFetch();
         initNewAllowedFileType();
@@ -37,6 +49,9 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         initNewTextBox();
         initNewMotive();
         initNewImageSettings();
+        setTimeout(() => {
+            initEditor();
+        }, 0);
 
         if (typeof canvasId !== "undefined") {
             $scope.fetchCanvas(canvasId).then(() => {
@@ -133,6 +148,93 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
             perspective: 'persp1'
         }
     }
+
+    function initEditor() {
+        editorFabricCanvas = new fabric.Canvas('printableAreaEditor');
+
+        if (!editorPrintableAreaRect) {
+            editorPrintableAreaRect = new fabric.Rect({
+                left: 0,
+                top: 0,
+                width: 0,
+                height: 0,
+
+                fill: '',
+                stroke: 'red',
+                strokeWidth: 5,
+                strokeDashArray: [5],
+                opacity: 0.5,
+
+                selectable: false,
+                evented: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockRotation: true
+            });
+
+            editorFabricCanvas.add(editorPrintableAreaRect);
+        }
+
+        editorFabricCanvas.renderAll();
+
+
+        console.log(editorFabricCanvas.getObjects());
+
+        console.log(editorFabricCanvas);
+
+        console.log(editorFabricCanvas.version);
+    }
+
+    $scope.updateEditorPrintableArea = function () {
+        if (!editorPrintableAreaRect) {
+            return;
+        }
+
+        editorPrintableAreaRect.set({
+            top: $scope.newArea.top,
+            left: $scope.newArea.left,
+            width: $scope.newArea.width ,
+            height: $scope.newArea.height
+        });
+
+        editorPrintableAreaRect.setCoords();
+
+        let maxWidth = 0;
+        let maxHeight = 0;
+
+        [editorPrintableAreaRect, editorBackgroundImage]
+            .filter(Boolean)
+            .forEach(obj => {
+                obj.setCoords();
+
+                const bounds = obj.getBoundingRect(true, true);
+
+                maxWidth = Math.max(
+                    maxWidth,
+                    bounds.left + bounds.width
+                );
+
+                maxHeight = Math.max(
+                    maxHeight,
+                    bounds.top + bounds.height
+                );
+            });
+
+        maxWidth = Math.ceil(maxWidth);
+        maxHeight = Math.ceil(maxHeight);
+
+        editorFabricCanvas.setDimensions({
+            width: maxWidth,
+            height: maxHeight
+        });
+
+        editorFabricCanvas.calcOffset();
+        editorFabricCanvas.requestRenderAll();
+    };
 
     function save(detailForm, closeForm) {
         if(detailForm.$valid) {
@@ -249,6 +351,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     function editArea(index) {
         $scope.newAreaEditMode = true;
         $scope.newArea = $scope.detail.areaSettings[index];
+
+        $scope.updateEditorPrintableArea();
     }
 
     function cancelEditArea() {
@@ -278,6 +382,51 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
         }
         return false;
     }
+
+    function openEditorBackgroundImage() {
+        document.getElementById('background-image-file').click();
+    }
+
+    $scope.editorBackgroundImageSelected = function(input) {
+        const file = input.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        if (editorBackgroundImage) {
+            editorFabricCanvas.remove(editorBackgroundImage);
+            editorBackgroundImage = null;
+        }
+
+        reader.onload = function (event) {
+            fabric.Image.fromURL(event.target.result, function (img) {
+                editorBackgroundImage = img;
+
+                img.set({
+                    selectable: false,
+                    evented: false,
+                    hasControls: false,
+                    hasBorders: false,
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    lockScalingX: true,
+                    lockScalingY: true,
+                    lockRotation: true
+                });
+
+                editorFabricCanvas.add(img);
+
+                editorFabricCanvas.sendToBack(img);
+
+                editorFabricCanvas.renderAll();
+
+                $scope.updateEditorPrintableArea();
+            });
+        };
+
+        reader.readAsDataURL(file);
+    };
 
     function addNewTextBox() {
         if (!$scope.newTextBox.identifier) {
@@ -423,6 +572,7 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, targetE
     $scope.removeArea = removeArea;
     $scope.cancelEditArea = cancelEditArea;
     $scope.areaIdentifierExists = areaIdentifierExists;
+    $scope.openEditorBackgroundImage = openEditorBackgroundImage;
     $scope.addNewTextBox = addNewTextBox;
     $scope.addNewMotive = addNewMotive;
     $scope.addNewImageSettings = addNewImageSettings;

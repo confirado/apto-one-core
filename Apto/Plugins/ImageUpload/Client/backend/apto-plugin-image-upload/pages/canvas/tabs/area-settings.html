@@ -16,23 +16,43 @@
 <div layout="row" layout-align="start" flex>
     <md-input-container flex>
         <label>Breite (px):</label>
-        <input type="number" min="0" step="1" ng-model="newArea.width">
+        <input type="number" min="0" step="1" ng-model="newArea.width" onchange="angular.element(this).scope().updateEditorPrintableArea()">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Höhe (px):</label>
-        <input type="number" min="0" step="1" ng-model="newArea.height">
+        <input type="number" min="0" step="1" ng-model="newArea.height" onchange="angular.element(this).scope().updateEditorPrintableArea()">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Abstand links (px):</label>
-        <input type="number" min="0" step="1" ng-model="newArea.left">
+        <input type="number" min="0" step="1" ng-model="newArea.left" onchange="angular.element(this).scope().updateEditorPrintableArea()">
     </md-input-container>
     <div flex="5"></div>
     <md-input-container flex>
         <label>Abstand oben (px):</label>
-        <input type="number" min="0" step="1" ng-model="newArea.top">
+        <input type="number" min="0" step="1" ng-model="newArea.top" onchange="angular.element(this).scope().updateEditorPrintableArea()">
     </md-input-container>
+</div>
+
+<h5>Editor</h5>
+<div layout="row" layout-align="start" flex>
+    <div style="border:1px solid black;width:100%;height:300px;overflow:auto;">
+        <canvas id="printableAreaEditor" width="300" height="300"></canvas>
+    </div>
+</div>
+<div layout="row" layout-align="start" flex>
+    <input id="background-image-file" type="file" accept="image/*" onchange="angular.element(this).scope().editorBackgroundImageSelected(this)" style="display:none" />
+    <md-button
+        class="md-raised md-primary md-cornered md-button md-ink-ripple"
+        title="Open Background Image"
+        ng-click="openEditorBackgroundImage()">
+        Open Background Image
+    </md-button>
+
+    <md-select ng-model="editorPrintableAreaShape">
+        <md-option ng-value="shape" ng-repeat="shape in editorPrintableAreaShapes">{{ shape }}</md-option>
+    </md-select>
 </div>
 
 <h5>Render Image</h5>
