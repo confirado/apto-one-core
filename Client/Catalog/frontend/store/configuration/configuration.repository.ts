@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SelectConnector } from '@apto-base-frontend/store/shop/shop.model';
-import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
+import { CatalogMessageBusService } from '@apto-catalog-frontend/services/catalog-message-bus.service';
 import {
-  AddSharedConfigurationArguments,
-  AddBasketConfigurationArguments,
-  AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
-  ComputedValues,
-  Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
-  RenderImage, StatePrice, UpdateBasketConfigurationArguments,
-} from '@apto-catalog-frontend-configuration-model';
+	AddBasketConfigurationArguments,
+	AddGuestConfigurationArguments, AddOfferConfigurationArguments, CompressedState,
+	ComputedValues,
+	Configuration, FetchPartsListArguments, GetConfigurationResult, PartsListPart,
+	RenderImage, StatePrice, UpdateBasketConfigurationArguments,
+} from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { map, Observable, tap } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
 
@@ -44,6 +43,10 @@ export class ConfigurationRepository {
 			.pipe(map((response) => this.responseToConfigurationState(response)));
 	}
 
+	public getSubstitutes(productId: string, compressedState: any, preResolvedText: string): Observable<string> {
+		return this.catalogMessageBusService.findSubstitutesByState(productId, compressedState, preResolvedText);
+	}
+
 	public addToBasket(params: AddBasketConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addBasketConfiguration(
 			params.productId,
@@ -69,15 +72,6 @@ export class ConfigurationRepository {
 		);
 	}
 
-  public addSharedConfiguration(params: AddSharedConfigurationArguments): Observable<unknown> {
-    return this.catalogMessageBusService.addSharedConfiguration(
-      params.productId,
-      params.compressedState,
-      params.id,
-      params.payload
-    );
-  }
-
 	public addGuestConfiguration(params: AddGuestConfigurationArguments): Observable<unknown> {
 		return this.catalogMessageBusService.addGuestConfiguration(
 			params.productId,
@@ -90,64 +84,65 @@ export class ConfigurationRepository {
 		);
 	}
 
-  public addOfferConfiguration(params: AddOfferConfigurationArguments): Observable<unknown> {
-    return this.catalogMessageBusService.addOfferConfiguration(
-      params.productId,
-      params.compressedState,
-      params.email,
-      params.name,
-      params.payload
-    );
-  }
+	public addOfferConfiguration(params: AddOfferConfigurationArguments): Observable<unknown> {
+		return this.catalogMessageBusService.addOfferConfiguration(
+			params.productId,
+			params.compressedState,
+			params.email,
+			params.name,
+			params.payload
+		);
+	}
 
-  public fetchPartsList(params: FetchPartsListArguments): Observable<PartsListPart[]> {
-    return this.catalogMessageBusService.fetchPartsList(
-      params.productId,
-      params.compressedState,
-      params.currency,
-      params.customerGroupExternalId,
-    );
-  }
+	public fetchPartsList(params: FetchPartsListArguments): Observable<PartsListPart[]> {
+		return this.catalogMessageBusService.fetchPartsList(
+			params.productId,
+			params.compressedState,
+			params.currency,
+			params.customerGroupExternalId,
+		);
+	}
 
 	private responseToConfigurationState(result: any): GetConfigurationResult {
 		const state: Configuration = {
 			compressedState: result.compressedState || [],
 			sections: [],
 			elements: [],
-      failedRules: result.failedRules || [],
+			failedRules: result.failedRules || [],
 		};
+
 		const responseState = result.configurationState;
 
-    for (const section of responseState.sections) {
-      state.sections.push({
-        id: section.id,
-        identifier: section.identifier,
-        active: section.state.active,
-        disabled: section.state.disabled,
-        multiple: section.allowMultiple,
-        mandatory: section.isMandatory,
-        hidden: section.isHidden,
-        repetition: section.repetition,
-        repeatableCalculatedValueName: section.repeatableCalculatedValueName,
-        repeatableType: section.repeatableType,
-        customProperties: section.customProperties
-      });
-    }
+		for (const section of responseState.sections) {
+			state.sections.push({
+				id: section.id,
+				identifier: section.identifier,
+				active: section.state.active,
+				disabled: section.state.disabled,
+				multiple: section.allowMultiple,
+				mandatory: section.isMandatory,
+				hidden: section.isHidden,
+				repetition: section.repetition,
+				repeatableCalculatedValueName: section.repeatableCalculatedValueName,
+				repeatableType: section.repeatableType,
+				customProperties: section.customProperties
+			});
+		}
 
-    for (const element of responseState.elements) {
-      state.elements.push({
-        id: element.id,
-        identifier: element.identifier,
-        sectionId: element.sectionId,
-        sectionRepetition: element.sectionRepetition,
-        sectionIdentifier: element.identifier,
-        active: element.state.active,
-        disabled: element.state.disabled,
-        mandatory: element.isMandatory,
-        values: element.state.values,
-        customProperties: element.customProperties
-      });
-    }
+		for (const element of responseState.elements) {
+			state.elements.push({
+				id: element.id,
+				identifier: element.identifier,
+				sectionId: element.sectionId,
+				sectionRepetition: element.sectionRepetition,
+				sectionIdentifier: element.identifier,
+				active: element.state.active,
+				disabled: element.state.disabled,
+				mandatory: element.isMandatory,
+				values: element.state.values,
+				customProperties: element.customProperties
+			});
+		}
 
 		return { state: state, renderImages: result.renderImages, updates: result.intention };
 	}

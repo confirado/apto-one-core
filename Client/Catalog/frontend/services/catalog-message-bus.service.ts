@@ -11,8 +11,8 @@ import {
 } from '@apto-catalog-frontend/models/material-picker';
 import { Page } from '@apto-catalog-frontend/models/pagination';
 import { SelectItem } from '@apto-catalog-frontend/models/select-items';
-import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend-configuration-actions';
-import { CompressedState, ComputedValues, HumanReadableFullStatePayload, HumanReadableState, PartsListPart, RenderImage, StatePrice } from '@apto-catalog-frontend-configuration-model';
+import { onError, resetLoadingFlagAction } from '@apto-catalog-frontend/store/configuration/configuration.actions';
+import { CompressedState, ComputedValues, HumanReadableFullStatePayload, PartsListPart, RenderImage, StatePrice } from '@apto-catalog-frontend/store/configuration/configuration.model';
 import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { FrontendUser } from '@apto-base-frontend/store/frontend-user/frontend-user.model';
@@ -28,8 +28,8 @@ export class CatalogMessageBusService {
 			filter((response) => {
 				if (response.message.error) {
 					this.store.dispatch(onError({ message: response.message }));
-          // we close loading from here because in case of error it is not done in getconfiguration action
-          this.store.dispatch(resetLoadingFlagAction());
+					// we close loading from here because in case of error it is not done in getconfiguration action
+					this.store.dispatch(resetLoadingFlagAction());
 				}
 				return !response.message.error;
 			}),
@@ -42,8 +42,8 @@ export class CatalogMessageBusService {
 			filter((response) => {
 				if (response.message.error) {
 					this.store.dispatch(onError({ message: response.message }));
-          // we close loading from here because in case of error it is not done in getconfiguration action
-          this.store.dispatch(resetLoadingFlagAction());
+					// we close loading from here because in case of error it is not done in getconfiguration action
+					this.store.dispatch(resetLoadingFlagAction());
 				}
 				return !response.message.error;
 			}),
@@ -60,21 +60,21 @@ export class CatalogMessageBusService {
 	}
 
 	public findPriceByState(productId: string, compressedState: any, connector: SelectConnector, currentUser: FrontendUser | null): Observable<StatePrice> {
-    let customerGroupId = connector.customerGroup.id;
-    if (currentUser !== null && connector.configured === false) {
-      customerGroupId = currentUser.customerGroup.externalId
-    }
+		let customerGroupId = connector.customerGroup.id;
+		if (currentUser !== null && connector.configured === false) {
+			customerGroupId = currentUser.customerGroup.externalId
+		}
 
 		return this.query('FindPriceByState', [
 			productId,
 			compressedState,
 			connector.shopCurrency,
 			connector.displayCurrency,
-      customerGroupId,
+			customerGroupId,
 			connector.locale,
 			connector.sessionCookies,
 			connector.taxState,
-      connector.user
+			connector.user
 		]);
 	}
 
@@ -114,22 +114,17 @@ export class CatalogMessageBusService {
 		return this.query('FindMaterialPickerPoolColors', [poolId, filter]);
 	}
 
-  public findElementComputableValues(compressedState: CompressedState[], sectionId: string, elementId: string, repetition: number): Observable<any> {
-    return this.query('FindElementComputableValues', [compressedState, sectionId, elementId, repetition]);
-  }
+	public findElementComputableValues(compressedState: CompressedState[], sectionId: string, elementId: string, repetition: number): Observable<any> {
+		return this.query('FindElementComputableValues', [compressedState, sectionId, elementId, repetition]);
+	}
+
+	public findSubstitutesByState(productId: string, compressedState: any, preResolvedText: string): Observable<string> {
+		return this.query<string>('FindSubstitutesByState', [compressedState, preResolvedText, productId]);
+	}
 
 	public incrementMaterialPickerMaterialClicks(materialId: string): Observable<void> {
 		return this.command('IncrementMaterialPickerMaterialClicks', [materialId]);
 	}
-
-  public addSharedConfiguration(
-    productId: string,
-    compressedState: any,
-    id: string,
-    payload: any[]
-  ): Observable<void> {
-    return this.command('AddSharedConfiguration', [productId, compressedState, id, payload]);
-  }
 
 	public addBasketConfiguration(
 		productId: string,
@@ -163,7 +158,7 @@ export class CatalogMessageBusService {
 	): Observable<unknown> {
 		return this.command<unknown>('UpdateBasketConfiguration', [
 			productId,
-      configurationId,
+			configurationId,
 			compressedState,
 			sessionCookies,
 			locale,
@@ -185,30 +180,30 @@ export class CatalogMessageBusService {
 		return this.command('AddGuestConfiguration', [productId, compressedState, email, name, sendMail, id, payload]);
 	}
 
-  public fetchPartsList(
-    productId: string,
-    compressedState: any,
-    currency: string,
-    customerGroupExternalId: string
-  ): Observable<PartsListPart[]> {
-    return this.query('AptoPartsListFindPartsList', [productId, compressedState, currency, customerGroupExternalId]);
-  }
+	public fetchPartsList(
+		productId: string,
+		compressedState: any,
+		currency: string,
+		customerGroupExternalId: string
+	): Observable<PartsListPart[]> {
+		return this.query('AptoPartsListFindPartsList', [productId, compressedState, currency, customerGroupExternalId]);
+	}
 
-  public addOfferConfiguration(
-    productId: string,
-    compressedState: CompressedState[],
-    email: string,
-    name: string,
-    payload: HumanReadableFullStatePayload | undefined[]
-  ): Observable<void> {
-    if (!name) {
-      name = '';
-    }
+	public addOfferConfiguration(
+		productId: string,
+		compressedState: CompressedState[],
+		email: string,
+		name: string,
+		payload: HumanReadableFullStatePayload | undefined[]
+	): Observable<void> {
+		if (!name) {
+			name = '';
+		}
 
-    if (!payload) {
-      payload = [];
-    }
+		if (!payload) {
+			payload = [];
+		}
 
-    return this.command('AddOfferConfiguration', [productId, compressedState, email, name, payload]);
-  }
+		return this.command('AddOfferConfiguration', [productId, compressedState, email, name, payload]);
+	}
 }
