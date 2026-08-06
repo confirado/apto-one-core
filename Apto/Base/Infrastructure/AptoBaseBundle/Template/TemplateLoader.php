@@ -136,6 +136,7 @@ class TemplateLoader
     {
         $this->processApiRoutes($context);
         $this->data[$context]['webpackFiles'] = $this->getWebpackFiles($context, $template);
+        $this->data[$context]['settingsFiles'] = $this->getSettingsFiles();
         $this->data[$context]['customFiles'] = $this->getCustomFiles();
 
         return $this->data[$context];
@@ -310,6 +311,30 @@ class TemplateLoader
     /**
      * @return array
      */
+    protected function getSettingsFiles(): array
+    {
+        // init settingsFiles
+        $settingsFiles = [
+            'js' => [],
+            'css' => []
+        ];
+
+        // define CSS file and path
+        $settingsCssPath = 'public/assets/css';
+        $settingsCssFile = '/settings.css';
+        $settingsCssSearchPath = realpath($this->kernel->getProjectDir() . '/web/' . $settingsCssPath);
+
+        // check if customer.css file exist and add to customFiles
+        if (file_exists($settingsCssSearchPath.$settingsCssFile)) {
+            $settingsFiles['css'][] = $settingsCssPath.$settingsCssFile;
+        }
+
+        return $settingsFiles;
+    }
+
+    /**
+     * @return array
+     */
     protected function getCustomFiles(): array
     {
         // init customFiles
@@ -318,7 +343,7 @@ class TemplateLoader
             'css' => []
         ];
 
-        // generate CSS file and path
+        // define CSS file and path
         $customCssPath = 'public/assets/css';
         $customCssMediaPath = 'public/media/apto/css';
         $customCssFile = '/custom.css';
