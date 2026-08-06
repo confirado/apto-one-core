@@ -103,7 +103,7 @@ class ContentSnippetQueryHandler implements QueryHandlerInterface
                     $child['name'] = substr($child['name'], strlen($currentSnippetPrefix . '_'));
                 }
                 elseif (str_starts_with($child['name'], $ignoredSnippetPrefix . '_')) {
-                    unset($node[$key]);
+                //  unset($node[$key]);
                     continue;
                 }
             }
