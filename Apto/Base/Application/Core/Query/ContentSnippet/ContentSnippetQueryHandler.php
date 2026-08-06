@@ -70,22 +70,23 @@ class ContentSnippetQueryHandler implements QueryHandlerInterface
         $tree = $this->contentSnippetFinder->getTree($query->getFrontend(), $host, $query->getFrontendIndexed());
 
 
-        $ignoredSnippetPrefixes = $this->findAllSnippetPrefixes();
+        if ($treeType !== 'Backend') {
+            $ignoredSnippetPrefixes = $this->findAllSnippetPrefixes();
 
-        $currentSnippetPrefix = $this->findSnippetPrefixForHost($host);
-        if (isset($currentSnippetPrefix) && !empty($currentSnippetPrefix)) {
-            $ignoredSnippetPrefixes = array_diff(
-                $ignoredSnippetPrefixes,
-                [$currentSnippetPrefix]
-            );
-        }
+            $currentSnippetPrefix = $this->findSnippetPrefixForHost($host);
+            if (isset($currentSnippetPrefix) && !empty($currentSnippetPrefix)) {
+                $ignoredSnippetPrefixes = array_diff(
+                    $ignoredSnippetPrefixes,
+                    [$currentSnippetPrefix]
+                );
+            }
 
-        if (isset($ignoredSnippetPrefixes) && is_array($ignoredSnippetPrefixes) && count($ignoredSnippetPrefixes) > 0) {
-            foreach ($ignoredSnippetPrefixes as $ignoredSnippetPrefix) {
-                $this->removeContentSnippetPrefixes($tree, $currentSnippetPrefix, $ignoredSnippetPrefix);
+            if (isset($ignoredSnippetPrefixes) && is_array($ignoredSnippetPrefixes) && count($ignoredSnippetPrefixes) > 0) {
+                foreach ($ignoredSnippetPrefixes as $ignoredSnippetPrefix) {
+                    $this->removeContentSnippetPrefixes($tree, $currentSnippetPrefix, $ignoredSnippetPrefix);
+                }
             }
         }
-
 
         AptoCacheService::setItem('ContentSnippetTree-' . $treeType, $tree);
         return $tree;
@@ -103,7 +104,7 @@ class ContentSnippetQueryHandler implements QueryHandlerInterface
                     $child['name'] = substr($child['name'], strlen($currentSnippetPrefix . '_'));
                 }
                 elseif (str_starts_with($child['name'], $ignoredSnippetPrefix . '_')) {
-                //  unset($node[$key]);
+                    unset($node[$key]);
                     continue;
                 }
             }
