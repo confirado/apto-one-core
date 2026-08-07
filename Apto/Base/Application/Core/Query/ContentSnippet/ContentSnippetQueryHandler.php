@@ -94,13 +94,15 @@ class ContentSnippetQueryHandler implements QueryHandlerInterface
 
 
     private function removeContentSnippetPrefixes(array &$node, string $currentSnippetPrefix, string $ignoredSnippetPrefix): void {
+        $wasList = array_is_list($node);
+
         foreach ($node as $key => &$child) {
             if (!is_array($child)) {
                 continue;
             }
 
             if (isset($child['name']) && is_string($child['name'])) {
-                if (isset($currentSnippetPrefix) && !empty($currentSnippetPrefix) && str_starts_with($child['name'], $currentSnippetPrefix . '_')) {
+                if ($currentSnippetPrefix !== '' && str_starts_with($child['name'], $currentSnippetPrefix . '_')) {
                     $child['name'] = substr($child['name'], strlen($currentSnippetPrefix . '_'));
                 }
                 elseif (str_starts_with($child['name'], $ignoredSnippetPrefix . '_')) {
@@ -113,6 +115,10 @@ class ContentSnippetQueryHandler implements QueryHandlerInterface
         }
 
         unset($child);
+
+        if ($wasList) {
+            $node = array_values($node);
+        }
     }
 
 
