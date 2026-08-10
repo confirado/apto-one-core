@@ -68,11 +68,45 @@ class AreaEditorController {
 
     initEditor() {
         this.backgroundImageFileInput = document.getElementById("background-image-file");
-        this.backgroundImageFileInput.addEventListener("change", () => {
+        this.backgroundImageFileInput.addEventListener('change', () => {
             this.editorBackgroundImageSelected();
         });
 
         this.editorFabricCanvas = new fabric.Canvas('printableAreaEditor');
+
+        this.editorFabricCanvas.on('mouse:down', (e) => {
+            if (!this.shapeObjectProperties) {
+                return;
+            }
+
+            switch (this.editorPrintableAreaShape) {
+                case 'Polygon':
+                    if (this.shapeObjectProperties.isCreating) {
+                        const pointer = this.editorFabricCanvas.getPointer(e.e);
+
+                        this.shapeObjectProperties.points.push({
+                            x: pointer.x,
+                            y: pointer.y
+                        });
+
+                        if (this.shapeObjectProperties.points.length >= 2) {
+                            if (this.editorFabricCanvas.contains(this.shapeObject)) {
+                                this.editorFabricCanvas.remove(this.shapeObject);
+                            }
+
+                            this.shapeObject = new fabric.Polygon(
+                                [...this.shapeObjectProperties.points]
+                            );
+
+                            this.editorFabricCanvas.add(this.shapeObject);
+                            this.editorFabricCanvas.renderAll();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
 
         if (!this.editorPrintableAreaRect) {
             this.editorPrintableAreaRect = new fabric.Rect({
@@ -152,6 +186,43 @@ class AreaEditorController {
         this.editorFabricCanvas.renderAll();
     }
 
+    createPolygon() {
+        this.clearObject();
+
+        this.shapeObjectProperties = {
+            isCreating: false,
+            points: []
+        };
+/*
+        this.shapeObject = new fabric.Circle({
+            left: x,
+            top: y,
+            radius: r,
+
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 2,
+
+            lockScalingX: true,
+            lockScalingY: true,
+
+            lockRotation: true
+        });
+
+        this.shapeObject.on('modified', (e) => {
+            const obj = e.target;
+
+            this.shapeObjectProperties.left = obj.left;
+            this.shapeObjectProperties.top = obj.top;
+
+            this.$scope.$applyAsync();
+        });
+
+        this.editorFabricCanvas.add(this.shapeObject);
+*/
+        this.editorFabricCanvas.renderAll();
+    }
+
 
     onChangeShape() {
         switch (this.editorPrintableAreaShape) {
@@ -159,13 +230,33 @@ class AreaEditorController {
                 this.createCircle(10, 10, 50);
                 break;
             case 'Polygon':
-
+                this.createPolygon();
                 break;
             default:
                 this.clearObject();
                 break;
         }
     }
+
+
+    startCreatingPolygon() {
+        if (!this.shapeObjectProperties) {
+            return;
+        }
+
+        this.shapeObjectProperties.isCreating = true;
+        this.$scope.$applyAsync();
+    }
+
+    stopCreatingPolygon() {
+        if (!this.shapeObjectProperties) {
+            return;
+        }
+
+        this.shapeObjectProperties.isCreating = false;
+        this.$scope.$applyAsync();
+    }
+
 
     updateShapeObject() {
         if (!this.shapeObject) {

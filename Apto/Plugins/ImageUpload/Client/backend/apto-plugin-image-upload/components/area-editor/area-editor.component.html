@@ -45,4 +45,28 @@
             <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.radius" ng-change="$ctrl.updateShapeObject()">
         </md-input-container>
     </ng-container>
+
+    <ng-container ng-if="$ctrl.editorPrintableAreaShape === 'Polygon'" flex>
+        <md-button
+            class="md-raised md-primary md-cornered md-button md-ink-ripple"
+            title="Start"
+            ng-click="$ctrl.startCreatingPolygon()"
+            ng-disabled="$ctrl.shapeObjectProperties.isCreating">
+            Start
+        </md-button>
+        <md-button
+            class="md-raised md-primary md-cornered md-button md-ink-ripple"
+            title="Start"
+            ng-click="$ctrl.stopCreatingPolygon()"
+            ng-disabled="!$ctrl.shapeObjectProperties.isCreating">
+            Stop
+        </md-button>
+        <md-button
+            class="md-raised md-primary md-cornered md-button md-ink-ripple"
+            title="Clear"
+            ng-click="$ctrl.createPolygon()"
+            ng-disabled="!$ctrl.shapeObjectProperties || $ctrl.shapeObjectProperties.points.length === 0">
+            Clear
+        </md-button>
+    </ng-container>
 </div>
