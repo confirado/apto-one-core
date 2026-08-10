@@ -2,10 +2,12 @@ import { fabric } from 'fabric';
 
 import AreaEditorTemplate from './area-editor.component.html';
 
-const AreaEditorControllerInject = ['$ngRedux', 'ElementActions', 'ProductActions'];
+const AreaEditorControllerInject = ['$scope', '$ngRedux', 'ElementActions', 'ProductActions'];
 class AreaEditorController {
 
-    constructor($ngRedux, ElementActions, ProductActions) {
+    constructor($scope, $ngRedux, ElementActions, ProductActions) {
+        this.$scope = $scope;
+
         this.editorFabricCanvas = null;
         this.editorPrintableAreaRect = null;
         this.editorBackgroundImage = null;
@@ -19,10 +21,14 @@ class AreaEditorController {
         };
 
         this.editorPrintableAreaShapes = [
+            'None',
             'Circle',
             'Polygon'
         ];
-        this.editorPrintableAreaShape = 'Polygon';
+        this.editorPrintableAreaShape = 'None';
+
+        this.shapeObject = null;
+        this.shapeObjectProperties = null;
     }
 
 
@@ -96,13 +102,84 @@ class AreaEditorController {
         }
 
         this.editorFabricCanvas.renderAll();
+    }
 
 
-        console.log(this.editorFabricCanvas.getObjects());
+    clearObject() {
+        if (this.shapeObject && this.editorFabricCanvas.contains(this.shapeObject)) {
+            this.editorFabricCanvas.remove(this.shapeObject);
+        }
 
-        console.log(this.editorFabricCanvas);
+        this.shapeObjectProperties = null;
+        this.shapeObject = null;
+    }
 
-        console.log(this.editorFabricCanvas.version);
+    createCircle(x, y, r) {
+        this.clearObject();
+
+        this.shapeObjectProperties = {
+            left: x,
+            top: y,
+            radius: r
+        };
+
+        this.shapeObject = new fabric.Circle({
+            left: x,
+            top: y,
+            radius: r,
+
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 2,
+
+            lockScalingX: true,
+            lockScalingY: true,
+
+            lockRotation: true
+        });
+
+        this.shapeObject.on('modified', (e) => {
+            const obj = e.target;
+
+            this.shapeObjectProperties.left = obj.left;
+            this.shapeObjectProperties.top = obj.top;
+
+            this.$scope.$applyAsync();
+        });
+
+        this.editorFabricCanvas.add(this.shapeObject);
+
+        this.editorFabricCanvas.renderAll();
+    }
+
+
+    onChangeShape() {
+        switch (this.editorPrintableAreaShape) {
+            case 'Circle':
+                this.createCircle(10, 10, 50);
+                break;
+            case 'Polygon':
+
+                break;
+            default:
+                this.clearObject();
+                break;
+        }
+    }
+
+    updateShapeObject() {
+        if (!this.shapeObject) {
+            return;
+        }
+
+        this.shapeObject.set({
+            left: this.shapeObjectProperties.left,
+            top: this.shapeObjectProperties.top,
+            radius: this.shapeObjectProperties.radius
+        });
+
+        this.shapeObject.setCoords();
+        this.editorFabricCanvas.requestRenderAll();
     }
 
 
