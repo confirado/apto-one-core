@@ -59,12 +59,30 @@
                         <div layout="row" layout-align="start" flex>
                             <md-input-container class="md-block" flex>
                                 <label>Minimum:</label>
-                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.minimum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.minimum" ng-change="$ctrl.onChangeManualBound('minimum')">
+                            </md-input-container>
+                            <md-input-container style="min-width: 64px; max-width: 64px;">
+                                <label>Σ</label>
+                                <md-select ng-model="$ctrl.fieldValue.minimumComputedValue">
+                                    <md-option ng-value="null">–</md-option>
+                                    <md-option ng-value="computedValue.name" ng-repeat="computedValue in $ctrl.redux.computedValues">
+                                        {{ computedValue.name }}
+                                    </md-option>
+                                </md-select>
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
                                 <label>Maximum:</label>
-                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.maximum">
+                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.maximum" ng-change="$ctrl.onChangeManualBound('maximum')">
+                            </md-input-container>
+                            <md-input-container style="min-width: 64px; max-width: 64px;">
+                                <label>Σ</label>
+                                <md-select ng-model="$ctrl.fieldValue.maximumComputedValue">
+                                    <md-option ng-value="null">–</md-option>
+                                    <md-option ng-value="computedValue.name" ng-repeat="computedValue in $ctrl.redux.computedValues">
+                                        {{ computedValue.name }}
+                                    </md-option>
+                                </md-select>
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
@@ -89,8 +107,8 @@
                                 </thead>
                                 <tbody md-body>
                                 <tr md-row ng-repeat="value in field.values track by $index" ng-init="valueIndex = $index">
-                                    <td md-cell>{{ value.minimum }}</td>
-                                    <td md-cell>{{ value.maximum }}</td>
+                                    <td md-cell>{{ $ctrl.displayBound(value.minimum) }}</td>
+                                    <td md-cell>{{ $ctrl.displayBound(value.maximum) }}</td>
                                     <td md-cell>{{ value.step }}</td>
                                     <td md-cell style="width: 5%;" >
                                         <md-button
@@ -113,17 +131,17 @@
                         <div layout="row" layout-align="start" flex>
                             <md-input-container class="md-block" flex>
                                 <label>Minimum:</label>
-                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.minimum">
+                                <input type="number" ng-step="{{ $ctrl.sumOfFieldValue.step }}" ng-model="$ctrl.sumOfFieldValue.minimum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
                                 <label>Maximum:</label>
-                                <input type="number" ng-step="{{ $ctrl.fieldValue.step }}" ng-model="$ctrl.fieldValue.maximum">
+                                <input type="number" ng-step="{{ $ctrl.sumOfFieldValue.step }}" ng-model="$ctrl.sumOfFieldValue.maximum">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container class="md-block" flex>
                                 <label>Step:</label>
-                                <input type="number" min="0" step="0.001" ng-model="$ctrl.fieldValue.step">
+                                <input type="number" min="0" step="0.001" ng-model="$ctrl.sumOfFieldValue.step">
                             </md-input-container>
                             <div flex="5"></div>
                             <md-input-container>
@@ -256,4 +274,3 @@
         </div>
     </md-tab>
 </md-tabs>
-

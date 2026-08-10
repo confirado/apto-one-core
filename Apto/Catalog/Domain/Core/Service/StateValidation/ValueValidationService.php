@@ -6,6 +6,7 @@ use Apto\Base\Domain\Core\Model\AptoUuid;
 use Apto\Base\Domain\Core\Model\InvalidUuidException;
 use Apto\Catalog\Application\Core\Query\Product\Condition\ProductConditionSetFinder;
 use Apto\Catalog\Application\Core\Service\ComputedProductValue\CircularReferenceException;
+use Apto\Catalog\Application\Core\Service\ComputedProductValue\ComputedProductValueCalculator;
 use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Condition;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\LinkOperator;
@@ -32,12 +33,19 @@ class ValueValidationService
     protected RulePayloadFactory $rulePayloadFactory;
 
     /**
+     * @var ComputedProductValueCalculator
+     */
+    protected ComputedProductValueCalculator $calculator;
+
+    /**
      * @param PoolFinder $poolFinder
      * @param ProductConditionSetFinder $productConditionSetFinder
      * @param RulePayloadFactory $rulePayloadFactory
+     * @param ComputedProductValueCalculator $calculator
      */
-    public function __construct(PoolFinder $poolFinder, ProductConditionSetFinder $productConditionSetFinder, RulePayloadFactory $rulePayloadFactory)
+    public function __construct(PoolFinder $poolFinder, ProductConditionSetFinder $productConditionSetFinder, RulePayloadFactory $rulePayloadFactory, ComputedProductValueCalculator $calculator)
     {
+        $this->calculator = $calculator;
         $this->poolFinder = $poolFinder;
         $this->productConditionSetFinder = $productConditionSetFinder;
         $this->rulePayloadFactory = $rulePayloadFactory;
@@ -82,6 +90,11 @@ class ValueValidationService
         }
     }
 
+    public function calculateComputedValues(ConfigurableProduct $product, State $state): array
+    {
+        return $this->calculator->calculateComputedValues($product->getId()->getId(), $state);
+    }
+
     /**
      * Checks element value validity (values property in state)
      *
@@ -94,6 +107,8 @@ class ValueValidationService
      */
     public function assertValidValues(ConfigurableProduct $product, State $state): void
     {
+        $computedValues = $this->calculateComputedValues($product, $state);
+
         foreach ($this->getSectionListGroupedBy($state, 'repetition') as $section) {
             $sectionId = $section[0]['sectionId'];
             $sectionUuid = new AptoUuid($sectionId);
@@ -124,7 +139,7 @@ class ValueValidationService
                 if (!empty($element['values'])) {
                     foreach ($element['values'] as $property => $value) {
                         self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
-                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value);
+                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value, $computedValues);
                     }
                 }
             }
@@ -312,11 +327,12 @@ class ValueValidationService
      * @param AptoUuid $elementId
      * @param string $property
      * @param $value
+     * @param array $computedValues
      * @throws InvalidUuidException
      */
-    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value): void
+    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = []): void
     {
-        if (!$product->hasValue($sectionId, $elementId, $property, $value)) {
+        if (!$product->hasValue($sectionId, $elementId, $property, $value, $computedValues)) {
             throw new InvalidStateException(
                 sprintf(
                     'The given value \'%s\' is not allowed for property \'%s\' in element \'%s(%s)\' and section \'%s(%s)\'.',

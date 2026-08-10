@@ -101,7 +101,11 @@ class RegisteredAreaElementDefinition implements RegisteredElementDefinition
 
             // set values
             foreach ($field['values'] as &$value) {
-                $value = new ElementRangeValue($value['minimum'], $value['maximum'], $value['step']);
+                $value = new ElementRangeValue(
+                    ElementRangeValue::decodeBound($value['minimum']),
+                    ElementRangeValue::decodeBound($value['maximum']),
+                    (float) $value['step']
+                );
             }
 
             $field['values'] = new ElementValueCollection($field['values']);

@@ -4,16 +4,16 @@ namespace Apto\Catalog\Domain\Core\Model\Product\Element;
 
 use Apto\Base\Domain\Core\Service\Math\Calculator;
 
-class ElementRangeValue implements ElementValue
+class ElementRangeValue implements ElementValue, EffectiveElementValue
 {
 
     /**
-     * @var float
+     * @var float|ComputedValueReference
      */
     protected $minimum;
 
     /**
-     * @var float
+     * @var float|ComputedValueReference
      */
     protected $maximum;
 
@@ -24,15 +24,19 @@ class ElementRangeValue implements ElementValue
 
     /**
      * ElementRangeValue constructor.
-     * @param float $minimum
-     * @param float $maximum
+     * @param float|ComputedValueReference $minimum
+     * @param float|ComputedValueReference $maximum
      * @param float $step
      */
-    public function __construct(float $minimum = 0.0, float $maximum = 0.0, float $step = 1.0)
+    public function __construct($minimum = 0.0, $maximum = 0.0, float $step = 1.0)
     {
-        $this->minimum = $minimum;
-        $this->maximum = $maximum;
+        $this->assertValidBound($minimum, 'minimum');
+        $this->assertValidBound($maximum, 'maximum');
+
+        $this->minimum = is_int($minimum) ? (float) $minimum : $minimum;
+        $this->maximum = is_int($maximum) ? (float) $maximum : $maximum;
         $this->step = $step;
+
         $this->assertMinimumLessOrEqualMaximum();
         $this->assertValidStep();
     }
@@ -42,6 +46,7 @@ class ElementRangeValue implements ElementValue
      */
     public function getMinimum(): float
     {
+        $this->assertEffective();
         return $this->minimum;
     }
 
@@ -50,6 +55,7 @@ class ElementRangeValue implements ElementValue
      */
     public function getMaximum(): float
     {
+        $this->assertEffective();
         return $this->maximum;
     }
 
@@ -69,8 +75,8 @@ class ElementRangeValue implements ElementValue
         return [
             'class' => get_class($this),
             'json' => [
-                'minimum' => $this->minimum,
-                'maximum' => $this->maximum,
+                'minimum' => $this->encodeBound($this->minimum),
+                'maximum' => $this->encodeBound($this->maximum),
                 'step' => $this->step
             ]
         ];
@@ -90,10 +96,23 @@ class ElementRangeValue implements ElementValue
         }
 
         return new self(
-            (float)$json['json']['minimum'],
-            (float)$json['json']['maximum'],
-            (float)$json['json']['step']
+            self::decodeBound($json['json']['minimum']),
+            self::decodeBound($json['json']['maximum']),
+            (float) $json['json']['step']
         );
+    }
+
+    /**
+     * @param $bound
+     * @param string $label
+     */
+    private function assertValidBound($bound, string $label): void
+    {
+        if (!is_float($bound) && !is_int($bound) && !($bound instanceof ComputedValueReference)) {
+            throw new \InvalidArgumentException(
+                'The given ' . $label . ' must be a number or an instance of ComputedValueReference.'
+            );
+        }
     }
 
     /**
@@ -101,7 +120,7 @@ class ElementRangeValue implements ElementValue
      */
     protected function assertMinimumLessOrEqualMaximum()
     {
-        if ($this->minimum > $this->maximum) {
+        if (is_float($this->minimum) && is_float($this->maximum) && $this->minimum > $this->maximum) {
             throw new \InvalidArgumentException('The given minimum must be less or equal the given maximum.');
         }
     }
@@ -122,6 +141,8 @@ class ElementRangeValue implements ElementValue
      */
     public function getValueLowerThan($value)
     {
+        $this->assertEffective();
+
         if (is_array($value)) {
             return null;
         }
@@ -154,6 +175,8 @@ class ElementRangeValue implements ElementValue
      */
     public function getValueGreaterThan($value)
     {
+        $this->assertEffective();
+
         if (is_array($value)) {
             return null;
         }
@@ -186,6 +209,8 @@ class ElementRangeValue implements ElementValue
      */
     public function getValueEqualTo($value)
     {
+        $this->assertEffective();
+
         if (is_array($value)) {
             return null;
         }
@@ -211,6 +236,8 @@ class ElementRangeValue implements ElementValue
      */
     public function getValueNotEqualTo($value)
     {
+        $this->assertEffective();
+
         $min = $this->getValueLowerThan($value);
         if (null !== $min) {
             return $min;
@@ -229,6 +256,10 @@ class ElementRangeValue implements ElementValue
      */
     public function getAnyValue()
     {
+        if (!$this->isEffective()) {
+            return null;
+        }
+
         return $this->minimum;
     }
 
@@ -238,6 +269,8 @@ class ElementRangeValue implements ElementValue
      */
     public function contains($value): bool
     {
+        $this->assertEffective();
+
         if (is_array($value)) {
             return false;
         }
@@ -275,11 +308,111 @@ class ElementRangeValue implements ElementValue
         // calculate modulo: ($a - $b * floor($a / $b))
         return $calculator->sub(
             $a, $calculator->mul(
-                $b, $calculator->floor(
-                    $calculator->div($a, $b)
-                )
-            )
+            $b, $calculator->floor(
+            $calculator->div($a, $b)
+        )
+        )
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEffective(): bool
+    {
+        return !($this->minimum instanceof ComputedValueReference)
+            && !($this->maximum instanceof ComputedValueReference);
+    }
+
+    /**
+     * @param array $computedValues
+     * @return ElementValue
+     */
+    public function withEffectiveValues(array $computedValues): ElementValue
+    {
+        return new self(
+            $this->resolveBound($this->minimum, $computedValues, 'minimum'),
+            $this->resolveBound($this->maximum, $computedValues, 'maximum'),
+            $this->step
+        );
+    }
+
+    /**
+     * @param $bound
+     * @param array $computedValues
+     * @param string $label
+     * @return float
+     */
+    private function resolveBound($bound, array $computedValues, string $label): float
+    {
+        if (!($bound instanceof ComputedValueReference)) {
+            return (float) $bound;
+        }
+
+        $name = $bound->getName();
+        if (!array_key_exists($name, $computedValues)) {
+            throw new \InvalidArgumentException(
+                'Cannot resolve ' . $label . ': computed value \'' . $name . '\' was not found.'
+            );
+        }
+
+        return (float) $computedValues[$name];
+    }
+
+    /**
+     * @param $bound
+     */
+    private function assertEffective(): void
+    {
+        if (!$this->isEffective()) {
+            throw new \LogicException(
+                'ElementRangeValue must be resolved via withEffectiveValues() before it can be evaluated.'
+            );
+        }
+    }
+
+    /**
+     * @param float|ComputedValueReference $bound
+     * @return array
+     */
+    private function encodeBound($bound): array
+    {
+        if ($bound instanceof ComputedValueReference) {
+            return [
+                'type' => 'computed',
+                'name' => $bound->getName()
+            ];
+        }
+
+        return [
+            'type' => 'fixed',
+            'value' => (float) $bound
+        ];
+    }
+
+    /**
+     * @param mixed $raw
+     * @return float|ComputedValueReference
+     */
+    public static function decodeBound($raw)
+    {
+        if (!is_array($raw)) {
+            return (float) $raw;
+        }
+
+        if (($raw['type'] ?? null) === 'computed') {
+            if (!isset($raw['name']) || !is_string($raw['name'])) {
+                throw new \InvalidArgumentException('Computed value bound requires a string name.');
+            }
+
+            return new ComputedValueReference($raw['name']);
+        }
+
+        if (($raw['type'] ?? null) === 'fixed' && array_key_exists('value', $raw)) {
+            return (float) $raw['value'];
+        }
+
+        throw new \InvalidArgumentException('Bound must be a number or a valid computed-value reference.');
     }
 
     /**
@@ -289,9 +422,25 @@ class ElementRangeValue implements ElementValue
     {
         return [
             'type' => 'range',
-            'minimum' => $this->getMinimum(),
-            'maximum' => $this->getMaximum(),
+            'minimum' => $this->serializeBound($this->minimum),
+            'maximum' => $this->serializeBound($this->maximum),
             'step' => $this->getStep(),
         ];
+    }
+
+    /**
+     * @param float|ComputedValueReference $bound
+     * @return float|array
+     */
+    private function serializeBound($bound)
+    {
+        if ($bound instanceof ComputedValueReference) {
+            return [
+                'type' => 'computed',
+                'name' => $bound->getName()
+            ];
+        }
+
+        return $bound;
     }
 }

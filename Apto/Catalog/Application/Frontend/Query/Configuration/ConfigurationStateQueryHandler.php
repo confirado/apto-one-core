@@ -302,6 +302,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
      */
     private function applySet(ConfigurableProduct $product, EnrichedState $state, array $items)
     {
+        $computedValues = $this->valueValidationService->calculateComputedValues($product, $state->getState());
+
         foreach ($items as $item) {
             $section = AptoUuid::fromId($item['sectionId']);
             $element = AptoUuid::fromId($item['elementId']);
@@ -321,7 +323,14 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             }
 
             if (null !== $property) {
-                $this->valueValidationService->assertHasValue($product, $section, $element, $property, $value);
+                $this->valueValidationService->assertHasValue(
+                    $product,
+                    $section,
+                    $element,
+                    $property,
+                    $value,
+                    $computedValues
+                );
             }
 
             // because we want to toggle elements on none multiple sections we remove the element section first in that case
