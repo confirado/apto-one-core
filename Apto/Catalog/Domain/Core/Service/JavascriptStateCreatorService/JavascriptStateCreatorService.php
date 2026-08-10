@@ -11,6 +11,7 @@ use Apto\Catalog\Domain\Core\Factory\ConfigurableProduct\ConfigurableProduct;
 use Apto\Catalog\Domain\Core\Factory\EnrichedState\EnrichedState;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayloadFactory;
+use Apto\Catalog\Domain\Core\Model\Product\Element\EffectiveElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Configuration\State\State;
 use Apto\Catalog\Domain\Core\Model\Product\RepeatableValidationException;
 use Apto\Catalog\Domain\Core\Service\EnrichedStateValidation\RuleValidationResult;
@@ -122,6 +123,47 @@ class JavascriptStateCreatorService
     }
 
     /**
+     * Löst die properties (u.a. minimum/maximum) mit den aktuell berechneten Computed Values auf,
+     * falls die Definition das unterstützt. Fällt auf die statischen (ggf. unaufgelösten) properties
+     * zurück, wenn die Auflösung (noch) nicht möglich ist (z.B. abhängige Felder noch nicht ausgefüllt).
+     *
+     * @param ConfigurableProduct $product
+     * @param AptoUuid $sectionId
+     * @param AptoUuid $elementId
+     * @param array $element
+     * @param RulePayload $rulePayloadByName
+     * @return array|null
+     */
+    private function resolveElementProperties(
+        ConfigurableProduct $product,
+        AptoUuid $sectionId,
+        AptoUuid $elementId,
+        array $element,
+        RulePayload $rulePayloadByName
+    ): ?array
+    {
+        $staticProperties = $element['definition']['properties'] ?? null;
+
+        $definition = $product->getElementDefinition($sectionId, $elementId);
+        if (!($definition instanceof EffectiveElementDefinition)) {
+            return $staticProperties;
+        }
+
+        try {
+            $resolvedDefinition = $definition->withEffectiveValues($rulePayloadByName->getComputedValues());
+        } catch (\InvalidArgumentException $e) {
+            return $staticProperties;
+        }
+
+        $properties = [];
+        foreach ($resolvedDefinition->getSelectableValues() as $property => $valueCollection) {
+            $properties[$property] = $valueCollection->jsonSerialize();
+        }
+
+        return $properties;
+    }
+
+    /**
      * @param ConfigurableProduct $product
      * @param EnrichedState $enrichedState
      * @param RulePayload $rulePayloadById
@@ -147,11 +189,13 @@ class JavascriptStateCreatorService
                 foreach ($section['elements'] as $element) {
                     $elementId = new AptoUuid($element['id']);
 
+                    $properties = $this->resolveElementProperties($product, $sectionId, $elementId, $element, $rulePayloadByName);
+
                     // empty properties must be initialized with null, elements without electable values must use null instead of an empty array
                     $selectedValues = array_merge(
                         array_fill_keys(
                             array_keys(
-                                $element['definition']['properties'] ?? []
+                                $properties ?? []
                             ),
                             null
                         ),
@@ -168,7 +212,7 @@ class JavascriptStateCreatorService
                         'isMandatory' => $element['isMandatory'],
                         'name' => AptoTranslatedValue::fromArray($element['name'] ?: []),
                         'previewImage' => $element['previewImage'],
-                        'properties' => $element['definition']['properties'] ?? null, // @TODO needed anymore?
+                        'properties' => $properties, // @TODO needed anymore?
                         'state' => [
                             'active' => $state->isElementActive($sectionId, $elementId, $repetition),
                             'disabled' => $enrichedState->isElementDisabled($sectionId, $elementId, $repetition),

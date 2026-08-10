@@ -29,6 +29,14 @@ import { translate } from '@apto-base-core/store/translated-value/translated-val
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';
 import { selectConfigurationError } from '@apto-catalog-frontend-configuration-selectors';
 
+/**
+ * Diskriminiertes Range-Bound-Format vom Backend:
+ * entweder eine feste Zahl (Altdaten / bereits aufgeloest) oder ein Objekt,
+ * das entweder einen festen Wert oder eine (noch nicht zwingend aufgeloeste)
+ * Computed-Value-Referenz beschreibt.
+ */
+type RangeBound = number | { type: string; value?: number; name?: string } | null | undefined;
+
 @UntilDestroy()
 @Component({
   selector: 'apto-area-element',
@@ -61,15 +69,58 @@ export class AreaElementComponent implements OnInit {
   public decreaseStep: number | undefined;
 
   public constructor(
-    private store: Store,
-    private dialogRef: MatDialogRef<AreaElementComponent>,
-    private dialogService: DialogService,
-    private readonly actions$: Actions
+      private store: Store,
+      private dialogRef: MatDialogRef<AreaElementComponent>,
+      private dialogService: DialogService,
+      private readonly actions$: Actions
   ) {}
 
-  public getSelectValues(min: number, max: number, step: number): SelectItem[] {
+  /**
+   * Unwrapped das diskriminierte Bound-Format vom Backend.
+   * Gibt null zurueck, wenn kein sinnvoller Zahlenwert vorhanden ist
+   * (z.B. eine Computed-Value-Referenz, die aktuell noch nicht aufloesbar ist).
+   */
+  public resolveBound(bound: RangeBound): number | null {
+    if (bound === null || bound === undefined) {
+      return null;
+    }
+
+    if (typeof bound === 'object') {
+      if (bound.type === 'fixed' && typeof bound.value === 'number') {
+        return bound.value;
+      }
+      // 'computed' und (noch) unaufgeloest: kein sinnvoller Zahlenwert anzeigbar
+      return null;
+    }
+
+    return bound;
+  }
+
+  /**
+   * Anzeige-String fuer die Wertebereich-Hinweise im Template.
+   * Zeigt lieber nichts an, statt "[object Object]" bei unaufgeloesten Referenzen.
+   */
+  public displayRange(fieldValues: { minimum: RangeBound; maximum: RangeBound }, suffix: string): string {
+    const min = this.resolveBound(fieldValues.minimum);
+    const max = this.resolveBound(fieldValues.maximum);
+
+    if (min === null || max === null) {
+      return '';
+    }
+
+    return `${min} - ${max} ${suffix}`.trim();
+  }
+
+  public getSelectValues(min: RangeBound, max: RangeBound, step: number): SelectItem[] {
+    const resolvedMin = this.resolveBound(min);
+    const resolvedMax = this.resolveBound(max);
+
+    if (resolvedMin === null || resolvedMax === null) {
+      return [];
+    }
+
     const items: SelectItem[] = [];
-    for (let i = min; i <= max; i += step) {
+    for (let i = resolvedMin; i <= resolvedMax; i += step) {
       items.push({
         surrogateId: '',
         id: `${i}`,
@@ -94,9 +145,9 @@ export class AreaElementComponent implements OnInit {
     this.initIncreaseDecreaseStep();
 
     for (
-      let i = 0;
-      i < Object.entries(this.element.element.definition.properties).filter(([property]) => property.includes('field_')).length;
-      i += 1
+        let i = 0;
+        i < Object.entries(this.element.element.definition.properties).filter(([property]) => property.includes('field_')).length;
+        i += 1
     ) {
       let itemsField: SelectItem[] = [];
       let validators = [];
@@ -108,21 +159,24 @@ export class AreaElementComponent implements OnInit {
       }
 
       this.formElement.addControl(
-        `field_${i}`,
-        new UntypedFormControl(
-          this.element.state.values[`field_${i}`] || this.element.element.definition.staticValues.fields?.[i]?.default || 0,
-          validators
-        )
+          `field_${i}`,
+          new UntypedFormControl(
+              this.element.state.values[`field_${i}`] || this.element.element.definition.staticValues.fields?.[i]?.default || 0,
+              validators
+          )
       );
 
       if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'select') {
         for (let index = 0; index < Object.entries(this.element.element.definition.properties[`field_${i}`]).length; index += 1) {
           let itemField: SelectItem[] = [];
-          if (this.element.element.definition.properties[`field_${i}`][index].maximum) {
+          const entry = this.element.element.definition.properties[`field_${i}`][index];
+          const resolvedMax = this.resolveBound(entry.maximum);
+
+          if (resolvedMax !== null) {
             itemField = this.getSelectValues(
-              this.element.element.definition.properties[`field_${i}`][index].minimum,
-              this.element.element.definition.properties[`field_${i}`][index].maximum,
-              this.element.element.definition.properties[`field_${i}`][index].step
+                entry.minimum,
+                entry.maximum,
+                entry.step
             );
           }
           itemsField = itemsField.concat(itemField);
@@ -158,8 +212,8 @@ export class AreaElementComponent implements OnInit {
 
     if (!this.formElement.valid) {
       combineLatest(
-        this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
-        this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer.incorrectValuesInRange')),
+          this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
+          this.store.select(selectContentSnippet('aptoStepByStep.elementsContainer.incorrectValuesInRange')),
       ).pipe(take(1)).subscribe((result) => {
         this.dialogService.openCustomDialog(ConfirmationDialogComponent, DialogSizesEnum.md, {
           type: DialogTypesEnum.ERROR,
@@ -173,17 +227,17 @@ export class AreaElementComponent implements OnInit {
 
     this.closeModalOnSuccess();
     this.store.dispatch(
-      updateConfigurationState({
-        updates: {
-          set: Object.entries(this.formElement.value).map(([property, value]) => ({
-            sectionId: this.element!.element.sectionId,
-            elementId: this.element!.element.id,
-            sectionRepetition: this.element!.state.sectionRepetition,
-            property,
-            value,
-          })),
-        },
-      })
+        updateConfigurationState({
+          updates: {
+            set: Object.entries(this.formElement.value).map(([property, value]) => ({
+              sectionId: this.element!.element.sectionId,
+              elementId: this.element!.element.id,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property,
+              value,
+            })),
+          },
+        })
     );
   }
 
@@ -192,17 +246,17 @@ export class AreaElementComponent implements OnInit {
       return;
     }
     this.store.dispatch(
-      updateConfigurationState({
-        updates: {
-          remove: Object.entries(this.formElement.value).map(([property, value]) => ({
-            sectionId: this.element!.element.sectionId,
-            elementId: this.element!.element.id,
-            sectionRepetition: this.element!.state.sectionRepetition,
-            property,
-            value,
-          })),
-        },
-      })
+        updateConfigurationState({
+          updates: {
+            remove: Object.entries(this.formElement.value).map(([property, value]) => ({
+              sectionId: this.element!.element.sectionId,
+              elementId: this.element!.element.id,
+              sectionRepetition: this.element!.state.sectionRepetition,
+              property,
+              value,
+            })),
+          },
+        })
     );
   }
 
@@ -245,8 +299,8 @@ export class AreaElementComponent implements OnInit {
   private closeModalOnSuccess(): void {
     if (this.dialogRef?.id) {
       this.actions$.pipe(
-        ofType(getConfigurationStateSuccess),
-        untilDestroyed(this)
+          ofType(getConfigurationStateSuccess),
+          untilDestroyed(this)
       ).subscribe((result) => {
         this.dialogRef.close();
       });
