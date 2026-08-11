@@ -29,6 +29,12 @@ class AreaEditorController {
 
         this.shapeObject = null;
         this.shapeObjectProperties = null;
+
+        this.shapeStroke = 'lime';
+        this.shapeFill = '';
+        this.shapeStrokeWidth = 5;
+        this.shapeStrokeDashArray = [5];
+        this.shapeOpacity = 0.5;
     }
 
 
@@ -98,6 +104,12 @@ class AreaEditorController {
                                 [...this.shapeObjectProperties.points]
                             );
 
+                            this.shapeObject.fill = this.shapeFill;
+                            this.shapeObject.stroke = this.shapeStroke;
+                            this.shapeObject.strokeWidth = this.shapeStrokeWidth;
+                            this.shapeObject.strokeDashArray = this.shapeStrokeDashArray;
+                            this.shapeObject.opacity = this.shapeOpacity;
+
                             this.editorFabricCanvas.add(this.shapeObject);
                             this.editorFabricCanvas.renderAll();
                         }
@@ -117,9 +129,9 @@ class AreaEditorController {
 
                 fill: '',
                 stroke: 'red',
-                strokeWidth: 5,
-                strokeDashArray: [5],
-                opacity: 0.5,
+                strokeWidth: this.shapeStrokeWidth,
+                strokeDashArray: this.shapeStrokeDashArray,
+                opacity: this.shapeOpacity,
 
                 selectable: false,
                 evented: false,
@@ -162,9 +174,9 @@ class AreaEditorController {
             top: y,
             radius: r,
 
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 2,
+            fill: this.shapeFill,
+            stroke: this.shapeStroke,
+            strokeWidth: this.shapeStrokeWidth,
 
             lockScalingX: true,
             lockScalingY: true,
@@ -193,33 +205,7 @@ class AreaEditorController {
             isCreating: false,
             points: []
         };
-/*
-        this.shapeObject = new fabric.Circle({
-            left: x,
-            top: y,
-            radius: r,
 
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 2,
-
-            lockScalingX: true,
-            lockScalingY: true,
-
-            lockRotation: true
-        });
-
-        this.shapeObject.on('modified', (e) => {
-            const obj = e.target;
-
-            this.shapeObjectProperties.left = obj.left;
-            this.shapeObjectProperties.top = obj.top;
-
-            this.$scope.$applyAsync();
-        });
-
-        this.editorFabricCanvas.add(this.shapeObject);
-*/
         this.editorFabricCanvas.renderAll();
     }
 
