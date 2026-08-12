@@ -86,7 +86,8 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, $timeou
             left: 0,
             top: 0,
             perspective: 'persp1',
-            layer: '0'
+            layer: '0',
+            data: {}
         }
     }
 

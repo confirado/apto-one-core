@@ -2,10 +2,10 @@ import { fabric } from 'fabric';
 
 import AreaEditorTemplate from './area-editor.component.html';
 
-const AreaEditorControllerInject = ['$scope', '$ngRedux', 'ElementActions', 'ProductActions'];
+const AreaEditorControllerInject = ['$scope'];
 class AreaEditorController {
 
-    constructor($scope, $ngRedux, ElementActions, ProductActions) {
+    constructor($scope) {
         this.$scope = $scope;
 
         this.editorFabricCanvas = null;
@@ -17,7 +17,8 @@ class AreaEditorController {
             left: 0,
             top: 0,
             width: 0,
-            height: 0
+            height: 0,
+            data: {}
         };
 
         this.editorPrintableAreaShapes = [
@@ -39,7 +40,7 @@ class AreaEditorController {
 
 
     $onInit() {
-        this.initFabricJs();
+        this.initEditor();
     }
 
     $onChanges = (changes) => {
@@ -59,16 +60,23 @@ class AreaEditorController {
             this.printableArea.height = angular.copy(this.height);
         }
 
-        if (changes.left || changes.top || changes.width || changes.height) {
+        if (changes.data) {
+            // TODO fix reference
+            this.printableArea.data = this.data;
+
+            if (this.printableArea.data && this.printableArea.data.shape) {
+                this.editorPrintableAreaShape = this.printableArea.data.shape;
+            }
+            else {
+                this.editorPrintableAreaShape = 'None';
+            }
+
+            this.onChangeShape();
+        }
+
+        if (changes.left || changes.top || changes.width || changes.height || changes.data) {
             this.updateEditorPrintableArea();
         }
-    }
-
-
-    initFabricJs() {
-        setTimeout(() => {
-            this.initEditor();
-        }, 0)
     }
 
 
@@ -104,15 +112,14 @@ class AreaEditorController {
                                 [...this.shapeObjectProperties.points]
                             );
 
-                            this.shapeObject.fill = this.shapeFill;
-                            this.shapeObject.stroke = this.shapeStroke;
-                            this.shapeObject.strokeWidth = this.shapeStrokeWidth;
-                            this.shapeObject.strokeDashArray = this.shapeStrokeDashArray;
-                            this.shapeObject.opacity = this.shapeOpacity;
+                            this.lockShape(this.shapeObject);
+                            this.initShapeProperties(this.shapeObject);
 
                             this.editorFabricCanvas.add(this.shapeObject);
                             this.editorFabricCanvas.renderAll();
                         }
+
+                        this.printableArea.data.points = this.shapeObjectProperties.points;
                     }
                     break;
                 default:
@@ -127,12 +134,6 @@ class AreaEditorController {
                 width: 0,
                 height: 0,
 
-                fill: '',
-                stroke: 'red',
-                strokeWidth: this.shapeStrokeWidth,
-                strokeDashArray: this.shapeStrokeDashArray,
-                opacity: this.shapeOpacity,
-
                 selectable: false,
                 evented: false,
                 hasControls: false,
@@ -142,6 +143,13 @@ class AreaEditorController {
                 lockScalingX: true,
                 lockScalingY: true,
                 lockRotation: true
+            });
+
+            this.initShapeProperties(this.shapeObject);
+
+            this.editorPrintableAreaRect.set({
+                fill: '',
+                stroke: 'red'
             });
 
             this.editorFabricCanvas.add(this.editorPrintableAreaRect);
@@ -158,6 +166,8 @@ class AreaEditorController {
 
         this.shapeObjectProperties = null;
         this.shapeObject = null;
+
+        this.updateAreaData();
     }
 
     createCircle(x, y, r) {
@@ -172,23 +182,18 @@ class AreaEditorController {
         this.shapeObject = new fabric.Circle({
             left: x,
             top: y,
-            radius: r,
-
-            fill: this.shapeFill,
-            stroke: this.shapeStroke,
-            strokeWidth: this.shapeStrokeWidth,
-
-            lockScalingX: true,
-            lockScalingY: true,
-
-            lockRotation: true
+            radius: r
         });
+
+        this.initShapeProperties(this.shapeObject);
 
         this.shapeObject.on('modified', (e) => {
             const obj = e.target;
 
             this.shapeObjectProperties.left = obj.left;
             this.shapeObjectProperties.top = obj.top;
+
+            this.updateAreaData();
 
             this.$scope.$applyAsync();
         });
@@ -210,6 +215,32 @@ class AreaEditorController {
     }
 
 
+    lockShape() {
+        if (!this.shapeObject) {
+            return;
+        }
+
+        this.shapeObject.set({
+            lockScalingX: true,
+            lockScalingY: true,
+
+            lockRotation: true
+        });
+    }
+
+    initShapeProperties(shapeObj) {
+        if (!shapeObj) {
+            return;
+        }
+
+        shapeObj.fill = this.shapeFill;
+        shapeObj.stroke = this.shapeStroke;
+        shapeObj.strokeWidth = this.shapeStrokeWidth;
+        shapeObj.strokeDashArray = this.shapeStrokeDashArray;
+        shapeObj.opacity = this.shapeOpacity;
+    }
+
+
     onChangeShape() {
         switch (this.editorPrintableAreaShape) {
             case 'Circle':
@@ -222,6 +253,8 @@ class AreaEditorController {
                 this.clearObject();
                 break;
         }
+
+        this.lockShape();
     }
 
 
@@ -257,6 +290,8 @@ class AreaEditorController {
 
         this.shapeObject.setCoords();
         this.editorFabricCanvas.requestRenderAll();
+
+        this.updateAreaData();
     }
 
 
@@ -305,6 +340,22 @@ class AreaEditorController {
 
         this.editorFabricCanvas.calcOffset();
         this.editorFabricCanvas.requestRenderAll();
+    }
+
+    updateAreaData() {
+        if (!this.printableArea && !this.printableArea.data) {
+            return;
+        }
+
+        if (this.editorPrintableAreaShape === 'None') {
+            this.printableArea.data.shape = '';
+            this.printableArea.data.points = null;
+        }
+        else {
+            this.printableArea.data.shape = this.editorPrintableAreaShape;
+        }
+
+        this.$scope.$applyAsync();
     }
 
 
@@ -364,7 +415,8 @@ const AreaEditorComponent = {
         left: '<',
         top: '<',
         width: '<',
-        height: '<'
+        height: '<',
+        data: '<'
     },
     template: AreaEditorTemplate,
     controller: AreaEditorController
