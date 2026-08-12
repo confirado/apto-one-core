@@ -71,7 +71,7 @@ class AreaEditorController {
                 this.editorPrintableAreaShape = 'None';
             }
 
-            this.onChangeShape();
+            this.createShape(this.printableArea.data);
         }
 
         if (changes.left || changes.top || changes.width || changes.height || changes.data) {
@@ -94,6 +94,11 @@ class AreaEditorController {
             }
 
             switch (this.editorPrintableAreaShape) {
+                case 'Circle':
+                    this.printableArea.data.left = this.shapeObjectProperties.left;
+                    this.printableArea.data.top = this.shapeObjectProperties.top;
+                    this.printableArea.data.radius = this.shapeObjectProperties.radius;
+                    break;
                 case 'Polygon':
                     if (this.shapeObjectProperties.isCreating) {
                         const pointer = this.editorFabricCanvas.getPointer(e.e);
@@ -159,7 +164,7 @@ class AreaEditorController {
     }
 
 
-    clearObject() {
+    clearObject(data) {
         if (this.shapeObject && this.editorFabricCanvas.contains(this.shapeObject)) {
             this.editorFabricCanvas.remove(this.shapeObject);
         }
@@ -167,22 +172,33 @@ class AreaEditorController {
         this.shapeObjectProperties = null;
         this.shapeObject = null;
 
-        this.updateAreaData();
+        if (!data) {
+            this.updateAreaData();
+        }
     }
 
-    createCircle(x, y, r) {
-        this.clearObject();
+    createCircle(data) {
+        this.clearObject(data);
 
-        this.shapeObjectProperties = {
-            left: x,
-            top: y,
-            radius: r
-        };
+        if (data) {
+            this.shapeObjectProperties = {
+                left: data.left,
+                top: data.top,
+                radius: data.radius
+            };
+        }
+        else {
+            this.shapeObjectProperties = {
+                left: 10,
+                top: 10,
+                radius: 50
+            };
+        }
 
         this.shapeObject = new fabric.Circle({
-            left: x,
-            top: y,
-            radius: r
+            left: this.shapeObjectProperties.left,
+            top: this.shapeObjectProperties.top,
+            radius: this.shapeObjectProperties.radius
         });
 
         this.initShapeProperties(this.shapeObject);
@@ -203,13 +219,32 @@ class AreaEditorController {
         this.editorFabricCanvas.renderAll();
     }
 
-    createPolygon() {
-        this.clearObject();
+    createPolygon(data) {
+        this.clearObject(data);
 
-        this.shapeObjectProperties = {
-            isCreating: false,
-            points: []
-        };
+        if (data) {
+            this.shapeObjectProperties = {
+                isCreating: data.isCreating,
+                points: data.points
+            }
+
+            this.shapeObject = new fabric.Polygon([
+                ...data.points
+            ]);
+
+            this.initShapeProperties(this.shapeObject);
+            this.lockShape();
+
+            this.editorFabricCanvas.add(this.shapeObject);
+
+            this.editorFabricCanvas.renderAll();
+        }
+        else {
+            this.shapeObjectProperties = {
+                isCreating: false,
+                points: []
+            };
+        }
 
         this.editorFabricCanvas.renderAll();
     }
@@ -241,13 +276,21 @@ class AreaEditorController {
     }
 
 
-    onChangeShape() {
-        switch (this.editorPrintableAreaShape) {
+    createShape(data) {
+        let shape = '';
+        if (data) {
+            shape = data.shape;
+        }
+        else {
+            shape = this.editorPrintableAreaShape;
+        }
+
+        switch (shape) {
             case 'Circle':
-                this.createCircle(10, 10, 50);
+                this.createCircle(data);
                 break;
             case 'Polygon':
-                this.createPolygon();
+                this.createPolygon(data);
                 break;
             default:
                 this.clearObject();

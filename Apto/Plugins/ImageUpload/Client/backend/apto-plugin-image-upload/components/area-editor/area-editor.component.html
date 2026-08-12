@@ -22,7 +22,7 @@
     <div flex="5"></div>
     <md-input-container>
         <label>Shape:</label>
-        <md-select ng-model="$ctrl.editorPrintableAreaShape" ng-change="$ctrl.onChangeShape()">
+        <md-select ng-model="$ctrl.editorPrintableAreaShape" ng-change="$ctrl.createShape()">
             <md-option ng-value="shape" ng-repeat="shape in $ctrl.editorPrintableAreaShapes">{{ shape }}</md-option>
         </md-select>
     </md-input-container>
