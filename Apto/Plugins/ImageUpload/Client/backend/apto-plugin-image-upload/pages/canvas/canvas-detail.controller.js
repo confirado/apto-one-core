@@ -251,6 +251,10 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, $timeou
     function editArea(index) {
         $scope.newAreaEditMode = true;
         $scope.newArea = $scope.detail.areaSettings[index];
+
+        if (!$scope.newArea.data) {
+            $scope.newArea.data = {};
+        }
     }
 
     function cancelEditArea() {
