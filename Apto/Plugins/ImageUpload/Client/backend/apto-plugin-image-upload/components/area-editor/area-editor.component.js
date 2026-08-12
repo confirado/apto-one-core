@@ -386,7 +386,7 @@ class AreaEditorController {
     }
 
     updateAreaData() {
-        if (!this.printableArea && !this.printableArea.data) {
+        if (!this.printableArea || !this.printableArea.data) {
             return;
         }
 
