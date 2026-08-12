@@ -11,7 +11,7 @@ import {
 import { login } from '@apto-base-frontend/store/frontend-user/frontend-user.actions';
 import { translate } from '@apto-base-core/store/translated-value/translated-value.model';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippet.model';
 import { ForgotPasswordComponent } from '@apto-base-frontend/components/frontend-users-login/forgot-password/forgot-password.component';
 import { DialogSizesEnum } from '@apto-frontend/src/configs-static/dialog-sizes-enum';
