@@ -100,6 +100,9 @@ class AreaEditorController {
                     this.printableArea.data.radius = this.shapeObjectProperties.radius;
                     break;
                 case 'Polygon':
+                    this.printableArea.data.left = this.shapeObjectProperties.left;
+                    this.printableArea.data.top = this.shapeObjectProperties.top;
+
                     if (this.shapeObjectProperties.isCreating) {
                         const pointer = this.editorFabricCanvas.getPointer(e.e);
 
