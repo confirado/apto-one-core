@@ -120,8 +120,7 @@ class AreaEditorController {
                                 [...this.shapeObjectProperties.points]
                             );
 
-                            this.lockShape(this.shapeObject);
-                            this.initShapeProperties(this.shapeObject);
+                            this.initShape(this.shapeObject);
 
                             this.editorFabricCanvas.add(this.shapeObject);
                             this.editorFabricCanvas.renderAll();
@@ -153,7 +152,7 @@ class AreaEditorController {
                 lockRotation: true
             });
 
-            this.initShapeProperties(this.shapeObject);
+            this.initShape(this.shapeObject);
 
             this.editorPrintableAreaRect.set({
                 fill: '',
@@ -183,20 +182,11 @@ class AreaEditorController {
     createCircle(data) {
         this.clearObject(data);
 
-        if (data) {
-            this.shapeObjectProperties = {
-                left: data.left,
-                top: data.top,
-                radius: data.radius
-            };
-        }
-        else {
-            this.shapeObjectProperties = {
-                left: 10,
-                top: 10,
-                radius: 50
-            };
-        }
+        this.shapeObjectProperties = {
+            left: data ? data.left : 10,
+            top: data ? data.top : 10,
+            radius: data ? data.radius : 50
+        };
 
         this.shapeObject = new fabric.Circle({
             left: this.shapeObjectProperties.left,
@@ -204,89 +194,92 @@ class AreaEditorController {
             radius: this.shapeObjectProperties.radius
         });
 
-        this.initShapeProperties(this.shapeObject);
-
-        this.shapeObject.on('modified', (e) => {
-            const obj = e.target;
-
-            this.shapeObjectProperties.left = obj.left;
-            this.shapeObjectProperties.top = obj.top;
-
-            this.updateAreaData();
-
-            this.$scope.$applyAsync();
-        });
+        this.initShape(this.shapeObject);
 
         this.editorFabricCanvas.add(this.shapeObject);
-
         this.editorFabricCanvas.renderAll();
     }
 
     createPolygon(data) {
         this.clearObject(data);
 
-        if (data) {
-            this.shapeObjectProperties = {
-                isCreating: data.isCreating,
-                points: data.points
-            }
+        this.shapeObjectProperties = {
+            isCreating: data ? data.isCreating : false,
+            points: data ? data.points : []
+        };
 
+        if (data) {
             this.shapeObject = new fabric.Polygon([
                 ...data.points
             ]);
 
-            this.initShapeProperties(this.shapeObject);
-            this.lockShape();
+            this.initShape(this.shapeObject);
 
             this.editorFabricCanvas.add(this.shapeObject);
-
-            this.editorFabricCanvas.renderAll();
-        }
-        else {
-            this.shapeObjectProperties = {
-                isCreating: false,
-                points: []
-            };
         }
 
         this.editorFabricCanvas.renderAll();
     }
 
 
-    lockShape() {
-        if (!this.shapeObject) {
-            return;
-        }
-
-        this.shapeObject.set({
-            lockScalingX: true,
-            lockScalingY: true,
-
-            lockRotation: true
-        });
-    }
-
-    initShapeProperties(shapeObj) {
+    lockShape(shapeObj) {
         if (!shapeObj) {
             return;
         }
 
-        shapeObj.fill = this.shapeFill;
-        shapeObj.stroke = this.shapeStroke;
-        shapeObj.strokeWidth = this.shapeStrokeWidth;
-        shapeObj.strokeDashArray = this.shapeStrokeDashArray;
-        shapeObj.opacity = this.shapeOpacity;
+        shapeObj.set({
+            lockScalingX: true,
+            lockScalingY: true,
+            lockRotation: true
+        });
+    }
+
+    initShape(shapeObj) {
+        if (!shapeObj) {
+            return;
+        }
+
+        shapeObj.set({
+            fill: this.shapeFill,
+            stroke: this.shapeStroke,
+            strokeWidth: this.shapeStrokeWidth,
+            strokeDashArray: this.shapeStrokeDashArray,
+            opacity: this.shapeOpacity,
+            evented: true
+        });
+
+        this.lockShape(shapeObj);
+
+        shapeObj.on({
+            moving: this.handleShapeTransform,
+            rotating: this.handleShapeTransform,
+            scaling: this.handleShapeTransform,
+            modified: this.handleShapeTransform
+        });
+    }
+
+    handleShapeTransform = (e) => {
+        if (!e.target || !this.shapeObjectProperties) {
+            return;
+        }
+
+        console.log(e);
+
+        const obj = e.target;
+
+        const boundingRect = obj.getBoundingRect();
+
+        this.shapeObjectProperties.left = boundingRect.left;
+        this.shapeObjectProperties.top = boundingRect.top;
+
+        this.updateAreaData();
+
+        this.$scope.$applyAsync();
     }
 
 
     createShape(data) {
-        let shape = '';
-        if (data) {
-            shape = data.shape;
-        }
-        else {
-            shape = this.editorPrintableAreaShape;
-        }
+        const shape = data ? data.shape : this.editorPrintableAreaShape;
 
         switch (shape) {
             case 'Circle':
@@ -299,12 +292,10 @@ class AreaEditorController {
                 this.clearObject();
                 break;
         }
-
-        this.lockShape();
     }
 
 
-    startCreatingPolygon() {
+    markCreatingPolygon(isCreating) {
         if (!this.shapeObjectProperties) {
             return;
         }
@@ -313,13 +304,12 @@ class AreaEditorController {
         this.$scope.$applyAsync();
     }
 
-    stopCreatingPolygon() {
-        if (!this.shapeObjectProperties) {
-            return;
-        }
+    startCreatingPolygon() {
+        this.markCreatingPolygon(true);
+    }
 
-        this.shapeObjectProperties.isCreating = false;
-        this.$scope.$applyAsync();
+    stopCreatingPolygon() {
+        this.markCreatingPolygon(false);
     }
 
 
@@ -328,11 +318,28 @@ class AreaEditorController {
             return;
         }
 
-        this.shapeObject.set({
-            left: this.shapeObjectProperties.left,
-            top: this.shapeObjectProperties.top,
-            radius: this.shapeObjectProperties.radius
-        });
+        if (!this.shapeObjectProperties || !this.shapeObjectProperties.shape) {
+            return;
+        }
+
+        switch (this.shapeObjectProperties.shape) {
+            case 'Circle':
+                this.shapeObject.set({
+                    left: this.shapeObjectProperties.left,
+                    top: this.shapeObjectProperties.top,
+                    radius: this.shapeObjectProperties.radius
+                });
+                break;
+            case 'Polygon':
+                this.shapeObject.set({
+                    left: this.shapeObjectProperties.left,
+                    top: this.shapeObjectProperties.top,
+                    points: this.shapeObjectProperties.points
+                });
+                break;
+            default:
+                break;
+        }
 
         this.shapeObject.setCoords();
         this.editorFabricCanvas.requestRenderAll();
@@ -436,9 +443,7 @@ class AreaEditorController {
                 });
 
                 this.editorFabricCanvas.add(img);
-
                 this.editorFabricCanvas.sendToBack(img);
-
                 this.editorFabricCanvas.renderAll();
 
                 this.updateEditorPrintableArea();
