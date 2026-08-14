@@ -2,10 +2,10 @@ import { fabric } from 'fabric';
 
 import AreaEditorTemplate from './area-editor.component.html';
 
-const AreaEditorControllerInject = ['$scope'];
+const AreaEditorControllerInject = ['$scope', '$ngRedux', 'MessageBusFactory'];
 class AreaEditorController {
 
-    constructor($scope) {
+    constructor($scope, $ngRedux, MessageBusFactory) {
         this.$scope = $scope;
 
         this.editorFabricCanvas = null;
@@ -14,6 +14,7 @@ class AreaEditorController {
         this.backgroundImageFileInput = null;
 
         this.printableArea = {
+            identifier: '',
             left: 0,
             top: 0,
             width: 0,
@@ -36,14 +37,97 @@ class AreaEditorController {
         this.shapeStrokeWidth = 5;
         this.shapeStrokeDashArray = [5];
         this.shapeOpacity = 0.5;
+
+
+        this.fetchAllProductIds = () => {
+            return MessageBusFactory.query('FindProductIdsByFilter', [{
+                searchString: '',
+                categories: []
+            }]);
+        }
+
+        this.fetchSectionsElements = (productId) => {
+            return MessageBusFactory.query('FindProductSectionsElements', [
+                productId
+            ]);
+        }
+
+        this.fetchRenderImages = (elementId) => {
+            return MessageBusFactory.query('FindElementRenderImages', [
+                elementId
+            ]);
+        }
+
+
+        this.fetchRenderImages('b731a807-5118-4724-a03c-7c4f782e8460').then(result => {
+            console.log(result);
+        });
     }
 
+    mapState(state) {
+        return {
+            section: state.sections
+        };
+    }
 
     $onInit() {
         this.initEditor();
+
+        this.findSectionsOfCurrentPrintableArea();
+    }
+
+    findSectionsOfCurrentPrintableArea() {
+        console.log(this.printableArea.identifier);
+
+
+        if (!this.printableArea || !this.printableArea.identifier || this.printableArea.identifier === '') {
+            return;
+        }
+
+
+        this.fetchAllProductIds().then((productValues) => {
+            for (let i = 0; i < productValues.data.result.length; i++) {
+                const productId = productValues.data.result[i];
+
+                this.fetchSectionsElements(productId).then((sectionElementValues) => {
+                    if (!sectionElementValues.data.result || !sectionElementValues.data.result.sections) {
+                        return;
+                    }
+
+                    const sections = sectionElementValues.data.result.sections;
+
+                    for (let j = 0; j < sections.length; j++) {
+                        const section = sections[j];
+                        const elements = section.elements;
+
+                        for (let k = 0; k < elements.length; k++) {
+                            const element = elements[k];
+
+                           if (element.identifier === this.printableArea.identifier) {
+                                const elementId = element.id;
+
+                                this.fetchRenderImages(elementId).then((renderImageValues) => {
+                                    const renderImages = renderImageValues.data.result.renderImages;
+
+                                    console.log(renderImages);
+                                }).catch(error => {
+                                //    console.error("fetchRenderImages failed:", error);
+                                });
+
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     $onChanges = (changes) => {
+        if (changes.identifier && this.printableArea.identifier === '') {
+            this.printableArea.identifier = this.identifier;
+            this.findSectionsOfCurrentPrintableArea();
+        }
+
         if (changes.left) {
             this.printableArea.left = angular.copy(this.left);
         }
@@ -463,6 +547,7 @@ AreaEditorController.$inject = AreaEditorControllerInject;
 const AreaEditorComponent = {
     bindings: {
         definitionValidation: '&',
+        identifier: '<',
         left: '<',
         top: '<',
         width: '<',

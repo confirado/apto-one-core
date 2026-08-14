@@ -80,7 +80,7 @@ const Controller = function($scope, $templateCache, $mdDialog, $ngRedux, $timeou
     function initNewArea() {
         $scope.newArea = {
             name: '',
-            identifier: '',
+            identifier: $scope.detail && $scope.detail.identifier ? $scope.detail.identifier : '',
             width: 0,
             height: 0,
             left: 0,
