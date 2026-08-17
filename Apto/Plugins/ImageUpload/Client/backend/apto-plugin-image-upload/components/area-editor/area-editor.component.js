@@ -519,7 +519,7 @@ class AreaEditorController {
             return;
         }
 
-        this.shapeObjectProperties.isCreating = true;
+        this.shapeObjectProperties.isCreating = isCreating;
         this.$scope.$applyAsync();
     }
 
