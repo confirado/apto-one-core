@@ -57,11 +57,6 @@ class AreaEditorController {
                 elementId
             ]);
         }
-
-
-        this.fetchRenderImages('b731a807-5118-4724-a03c-7c4f782e8460').then(result => {
-            console.log(result);
-        });
     }
 
     mapState(state) {
@@ -72,52 +67,190 @@ class AreaEditorController {
 
     $onInit() {
         this.initEditor();
-
-        this.findSectionsOfCurrentPrintableArea();
     }
 
-    findSectionsOfCurrentPrintableArea() {
-        console.log(this.printableArea.identifier);
+    getSectionsForPrintableArea(sectionElements) {
+        for (const sectionElement of sectionElements) {
+            if (!sectionElement
+                || !sectionElement.data
+                || !sectionElement.data.result
+                || !sectionElement.data.result.sections) {
+                continue;
+            }
+
+            const sections = sectionElement.data.result.sections;
+
+            for (const section of sections) {
+                for (const element of section.elements) {
+                    if (element.identifier === this.printableArea.identifier) {
+                        return sections;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    findProductWhereCurrentPrintableAreaIsUsed() {
+        return this.fetchAllProductIds().then((productValues) => {
+            const promises = [];
+
+            const productIds = productValues.data.result;
+
+            for (const productId of productIds) {
+                promises.push(this.fetchSectionsElements(productId));
+            }
+
+            return Promise.all(promises);
+        })
+        .then((sectionElements) => {
+            const sectionsList = [];
+
+            const sectionsForPrintableArea = this.getSectionsForPrintableArea(sectionElements);
+            if (sectionsForPrintableArea) {
+                for (const section of sectionsForPrintableArea) {
+                    if (!Array.isArray(section.elements)) {
+                        continue;
+                    }
+
+                    sectionsList.push(section);
+                }
+            }
+
+            return sectionsList;
+        });
+    }
+
+    findRenderImagesForProduct(callback) {
+        this.findProductWhereCurrentPrintableAreaIsUsed().then(sections => {
+            this.findRenderImages(sections).then((renderImages) => {
+                callback(renderImages);
+            });
+        });
+    }
+
+    findRenderImages(sections) {
+        const promises = [];
+
+        for (let j = 0; j < sections.length; j++) {
+            const section = sections[j];
+            const elements = section.elements;
+
+            if (!Array.isArray(elements)) {
+                continue;
+            }
+
+            for (let k = 0; k < elements.length; k++) {
+                const element = elements[k];
+                const elementId = element.id;
+
+                promises.push(this.fetchRenderImages(elementId));
+
+                break;
+            }
+        }
 
 
+        return Promise.all(promises).then((renderImageValuesList) => {
+            const renderImageList = [];
+
+            for (const renderImageValues of renderImageValuesList) {
+                if (!renderImageValues.data
+                || !renderImageValues.data.result
+                || !renderImageValues.data.result.renderImages) {
+                    continue;
+                }
+
+                const renderImageResults = renderImageValues.data.result.renderImages;
+                if (renderImageResults && renderImageResults.length > 0) {
+                    for (const renderImage of renderImageResults) {
+                        renderImageList.push(renderImage);
+                    }
+                }
+            }
+
+            return renderImageList;
+        });
+    }
+
+    mergeImages(urls) {
+        return Promise.all(
+            urls.map(url => new Promise((resolve, reject) => {
+                const img = new Image();
+
+                img.crossOrigin = 'anonymous';
+
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+
+                img.src = url;
+            }))).then(images => {
+                const width = Math.max(...images.map(img => img.width));
+                const height = Math.max(...images.map(img => img.height));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+
+                images.forEach(img => {
+                    ctx.drawImage(img, 0, 0);
+                });
+
+                return canvas;
+            }
+        );
+    }
+
+    drawRenderImage() {
         if (!this.printableArea || !this.printableArea.identifier || this.printableArea.identifier === '') {
             return;
         }
 
 
-        this.fetchAllProductIds().then((productValues) => {
-            for (let i = 0; i < productValues.data.result.length; i++) {
-                const productId = productValues.data.result[i];
+        this.findRenderImagesForProduct((renderImages) => {
+            if (renderImages && renderImages.length > 0) {
+                console.log('drawing render image!', renderImages);
 
-                this.fetchSectionsElements(productId).then((sectionElementValues) => {
-                    if (!sectionElementValues.data.result || !sectionElementValues.data.result.sections) {
-                        return;
-                    }
+                const imagePaths = [];
 
-                    const sections = sectionElementValues.data.result.sections;
+                for (const renderImage of renderImages) {
+                    if (renderImage.perspective === 'persp1') {
 
-                    for (let j = 0; j < sections.length; j++) {
-                        const section = sections[j];
-                        const elements = section.elements;
-
-                        for (let k = 0; k < elements.length; k++) {
-                            const element = elements[k];
-
-                           if (element.identifier === this.printableArea.identifier) {
-                                const elementId = element.id;
-
-                                this.fetchRenderImages(elementId).then((renderImageValues) => {
-                                    const renderImages = renderImageValues.data.result.renderImages;
-
-                                    console.log(renderImages);
-                                }).catch(error => {
-                                //    console.error("fetchRenderImages failed:", error);
-                                });
-
-                            }
+                        for (const mf of renderImage.mediaFile) {
+                            imagePaths.push('http://grobi.projektversion.de/apto-project-misterpen/web/public/media' + mf.path + '/' + mf.filename + '.' + mf.extension);
                         }
                     }
-                });
+                }
+
+                console.warn(imagePaths);
+
+                this.mergeImages(imagePaths)
+                    .then(canvas => {
+                        const img = new fabric.Image(canvas);
+
+                        this.editorBackgroundImage = img;
+
+                        img.set({
+                            selectable: false,
+                            evented: false,
+                            hasControls: false,
+                            hasBorders: false,
+                            lockMovementX: true,
+                            lockMovementY: true,
+                            lockScalingX: true,
+                            lockScalingY: true,
+                            lockRotation: true
+                        });
+
+                        this.editorFabricCanvas.add(img);
+                        this.editorFabricCanvas.sendToBack(img);
+                        this.editorFabricCanvas.renderAll();
+
+                        this.updateEditorPrintableArea();
+                    });
             }
         });
     }
@@ -125,7 +258,7 @@ class AreaEditorController {
     $onChanges = (changes) => {
         if (changes.identifier && this.printableArea.identifier === '') {
             this.printableArea.identifier = this.identifier;
-            this.findSectionsOfCurrentPrintableArea();
+            this.drawRenderImage();
         }
 
         if (changes.left) {
@@ -267,6 +400,7 @@ class AreaEditorController {
         this.clearObject(data);
 
         this.shapeObjectProperties = {
+            shape: 'Circle',
             left: data ? data.left : 10,
             top: data ? data.top : 10,
             radius: data ? data.radius : 50
@@ -288,6 +422,7 @@ class AreaEditorController {
         this.clearObject(data);
 
         this.shapeObjectProperties = {
+            shape: 'Polygon',
             isCreating: data ? data.isCreating : false,
             points: data ? data.points : []
         };
