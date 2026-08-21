@@ -148,15 +148,15 @@
             "de_DE": "<p>Herzlichste Grüße,</p>"
           },
           "quote": {
-            "de_DE": "Der Kunde möchte ein Angebot erhalten: ",
-            "en_EN": "The customer would like to receive a quote: ",
-            "fr_FR": "Le client souhaite recevoir un devis: ",
-            "es_ES": "El cliente desea recibir un presupuesto: "
+            "de_DE": "Der Kunde möchte ein Angebot erhalten:",
+            "en_EN": "The customer would like to receive a quote:",
+            "fr_FR": "Le client souhaite recevoir un devis :",
+            "es_ES": "El cliente desea recibir un presupuesto:"
           },
           "configurationNumber": {
-            "de_DE": "Konfigurationsnummer: ",
-            "en_EN": "Configuration number: ",
-            "fr_FR": "Numéro de configuration: ",
+            "de_DE": "Konfigurationsnummer:",
+            "en_EN": "Configuration number:",
+            "fr_FR": "Numéro de configuration :",
             "es_ES": "Número de configuración:"
           }
         }
@@ -187,7 +187,7 @@
           "projectName": {
             "de_DE": "Projektname:",
             "en_EN": "Project Name:",
-            "fr_FR": "Nom du projet:",
+            "fr_FR": "Nom du projet :",
             "es_ES": "Nombre del proyecto:"
           }
         },
@@ -310,22 +310,22 @@
             "es_ES": "Cálculo <br /> necesario"
           },
           "fillingQuantity": {
-            "de_DE": "Füllmenge: ",
-            "en_EN": "Filling quantity: ",
-            "fr_FR": "Quantité de remplissage: ",
-            "es_ES": "Capacidad de llenado: "
+            "de_DE": "Füllmenge:",
+            "en_EN": "Filling quantity:",
+            "fr_FR": "Quantité de remplissage :",
+            "es_ES": "Capacidad de llenado:"
           },
           "volume": {
-            "de_DE": "Volumen: ",
-            "en_EN": "Volume: ",
-            "fr_FR": "Volume: ",
-            "es_ES": "Volumen: "
+            "de_DE": "Volumen:",
+            "en_EN": "Volume:",
+            "fr_FR": "Volume :",
+            "es_ES": "Volumen:"
           },
           "filledSpace": {
-            "de_DE": "Befüllter Raum: ",
-            "en_EN": "Filled space: ",
-            "fr_FR": "Espace occupé: ",
-            "es_ES": "Espacio ocupado: "
+            "de_DE": "Befüllter Raum:",
+            "en_EN": "Filled space:",
+            "fr_FR": "Espace occupé :",
+            "es_ES": "Espacio ocupado:"
           },
           "notSpecified": {
             "de_DE": "keine Angabe",
