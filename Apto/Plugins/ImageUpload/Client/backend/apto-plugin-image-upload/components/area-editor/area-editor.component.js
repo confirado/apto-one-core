@@ -204,6 +204,45 @@ class AreaEditorController {
         );
     }
 
+
+    getRootPath() {
+        const path = location.href;
+
+        const regexWeb = /\/web\/#/;
+        const regexWebLocale = /\/web\/[a-zA-Z_]+\/#/;
+        const regexLocale = /\/[a-zA-Z_]+\/#/;
+
+        const matchRegexWeb = path.match(regexWeb);
+        const matchRegexWebLocale = path.match(regexWebLocale);
+        const matchRegexLocale = path.match(regexLocale);
+
+        const slash = '/';
+        const web = '/web/';
+
+        if (matchRegexWebLocale) {
+            return path.substring(0, path.indexOf(matchRegexWebLocale[0])) + web;
+        }
+        else if (matchRegexWeb) {
+            return path.substring(0, path.indexOf(matchRegexWeb[0])) + web;
+        }
+        else if (matchRegexLocale) {
+            return path.substring(0, path.indexOf(matchRegexLocale[0])) + slash;
+        }
+        else {
+            return '';
+        }
+    }
+
+    getMediaPath(path) {
+        const rootPath = this.getRootPath();
+        const mediaPath = 'public/media/';
+        if (path) {
+            return rootPath + mediaPath + path;
+        }
+        return rootPath + mediaPath;
+    }
+
+
     drawRenderImage() {
         if (!this.printableArea || !this.printableArea.identifier || this.printableArea.identifier === '') {
             return;
@@ -220,7 +259,7 @@ class AreaEditorController {
                     if (renderImage.perspective === 'persp1') {
 
                         for (const mf of renderImage.mediaFile) {
-                            imagePaths.push('http://grobi.projektversion.de/apto-project-misterpen/web/public/media' + mf.path + '/' + mf.filename + '.' + mf.extension);
+                            imagePaths.push(this.getMediaPath() + mf.path + '/' + mf.filename + '.' + mf.extension);
                         }
                     }
                 }
