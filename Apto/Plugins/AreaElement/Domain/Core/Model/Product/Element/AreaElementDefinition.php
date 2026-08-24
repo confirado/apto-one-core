@@ -4,12 +4,13 @@ namespace Apto\Plugins\AreaElement\Domain\Core\Model\Product\Element;
 
 use Apto\Base\Domain\Core\Model\AptoLocale;
 use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
+use Apto\Catalog\Domain\Core\Model\Product\Element\EffectiveElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinitionDefaultValues;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 use Apto\Base\Domain\Core\Model\InvalidTranslatedValueException;
 
-class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues
+class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefaultValues, EffectiveElementDefinition
 {
     const NAME = 'Flächen Element';
     const BACKEND_COMPONENT = '<apto-area-element definition-validation="setDefinitionValidation(definitionValidation)"></apto-area-element>';
@@ -358,6 +359,30 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
     }
 
     /**
+     * @param array $computedValues
+     * @return ElementDefinition
+     */
+    public function withEffectiveValues(array $computedValues): ElementDefinition
+    {
+        $fields = $this->fields;
+
+        foreach ($fields as &$field) {
+            $field['values'] = $field['values']->resolveEffectiveValues($computedValues);
+        }
+        unset($field);
+
+        return new self(
+            $this->renderDialogInOnePageDesktop,
+            $this->priceMatrix,
+            $fields,
+            $this->livePricePrefix,
+            $this->livePriceSuffix,
+            $this->sumOfFieldValues,
+            $this->priceMultiplication
+        );
+    }
+
+    /**
      * @throws \InvalidArgumentException
      */
     private function assertValidFields()
@@ -381,6 +406,7 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
             // check valid default value
             if(
                 null !== $field['default'] &&
+                $field['values']->isEffective() &&
                 !$field['values']->contains($field['default'])
             ) {
                 throw new \InvalidArgumentException('Field ' . ($key + 1) . ' default value \'' . $field['default'] . '\' is not a part of field ' . ($key + 1) . ' values.');

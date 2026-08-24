@@ -9,6 +9,7 @@ use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\ConditionSet;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\RuleFactory;
 use Apto\Catalog\Domain\Core\Factory\RuleFactory\Rule\Payload\RulePayload;
 use Apto\Catalog\Domain\Core\Model\Product\ComputedProductValue\OrderedComputedProductValues;
+use Apto\Catalog\Domain\Core\Model\Product\Element\EffectiveElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementDefinition;
 use Apto\Catalog\Domain\Core\Model\Product\Element\ElementValueCollection;
 use Apto\Catalog\Domain\Core\Model\Product\Product;
@@ -361,11 +362,26 @@ class ConfigurableProduct implements \JsonSerializable
      * @param AptoUuid $sectionId
      * @param AptoUuid $elementId
      * @param string $property
+     * @param array $computedValues
      * @return ElementValueCollection|null
      */
-    public function getElementValueCollection(AptoUuid $sectionId, AptoUuid $elementId, string $property): ?ElementValueCollection
+    public function getElementValueCollection(AptoUuid $sectionId, AptoUuid $elementId, string $property, array $computedValues = []): ?ElementValueCollection
     {
-        $selectableValues = $this->getElementDefinition($sectionId, $elementId)->getSelectableValues();
+        $definition = $this->getElementDefinition($sectionId, $elementId);
+
+        if (null === $definition) {
+            return null;
+        }
+
+        if ($definition instanceof EffectiveElementDefinition) {
+            try {
+                $definition = $definition->withEffectiveValues($computedValues);
+            } catch (\InvalidArgumentException $e) {
+                return null;
+            }
+        }
+
+        $selectableValues = $definition->getSelectableValues();
 
         return $selectableValues[$property] ?? null;
     }
@@ -421,15 +437,16 @@ class ConfigurableProduct implements \JsonSerializable
      * @param AptoUuid $elementId
      * @param string $property
      * @param $value
+     * @param array $computedValues
      * @return bool
      */
-    public function hasValue(AptoUuid $sectionId, AptoUuid $elementId, string $property, $value): bool
+    public function hasValue(AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = []): bool
     {
         if (!$this->hasProperty($sectionId, $elementId, $property)) {
             return false;
         }
 
-        $valueCollection = $this->getElementValueCollection($sectionId, $elementId, $property);
+        $valueCollection = $this->getElementValueCollection($sectionId, $elementId, $property, $computedValues);
 
         return null !== $valueCollection && $valueCollection->contains($value);
     }

@@ -27,7 +27,7 @@
 
         <div class="picture">
             <apto-element-picture *ngIf="element.element.previewImage"
-                [previewImage]="element.element.previewImage" [zoomFunction]="element.element.zoomFunction" [gallery]="element.element.gallery"
+                                  [previewImage]="element.element.previewImage" [zoomFunction]="element.element.zoomFunction" [gallery]="element.element.gallery"
             ></apto-element-picture>
         </div>
 
@@ -39,25 +39,25 @@
 
                 <div class="input">
                     <apto-input-field
-                        *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'input'"
-                        [formControlName]="field.key"
-                        [type]="'numeric'"
-                        [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
-                        [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
-                        [step]="element.element.definition.properties['field_' + i][0].step"
-                        [increaseStep]="this.increaseStep"
-                        [decreaseStep]="this.decreaseStep"
-                        [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'field_' + i"
+                            *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'input'"
+                            [formControlName]="field.key"
+                            [type]="'numeric'"
+                            [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
+                            [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
+                            [step]="element.element.definition.properties['field_' + i][0].step"
+                            [increaseStep]="this.increaseStep"
+                            [decreaseStep]="this.decreaseStep"
+                            [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'field_' + i"
                     ></apto-input-field>
 
                     <apto-select-field
-                        *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'select'"
-                        [default]="element.element.definition.staticValues.fields?.[i]?.default + ''"
-                        [enableClear]="false"
-                        [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
-                        [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
-                        [items]="itemFieldList[i]"
-                        [formControlName]="field.key"
+                            *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'select'"
+                            [default]="element.element.definition.staticValues.fields?.[i]?.default + ''"
+                            [enableClear]="false"
+                            [suffix]="element.element.definition.staticValues.fields?.[i]?.suffix | translate"
+                            [name]="element.element.definition.staticValues.fields?.[i]?.prefix | translate"
+                            [items]="itemFieldList[i]"
+                            [formControlName]="field.key"
                     >
                     </apto-select-field>
 
@@ -66,7 +66,7 @@
 
                 <div class="hint" *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
                     <div *ngFor="let fieldValues of element.element.definition.properties['field_'+i]">
-                        {{ fieldValues.minimum + ' - ' + fieldValues.maximum + ' ' + (element.element.definition.staticValues.fields?.[i]?.suffix |translate) }}
+                        {{ displayRange(fieldValues, element.element.definition.staticValues.fields?.[i]?.suffix | translate) }}
                         <br />
                     </div>
                 </div>
@@ -74,14 +74,14 @@
                 <div class="hint" *ngIf="field.key === 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering !== 'select'">
                     <div *ngIf="field.key === 'sumOfFieldValue'">{{sumOfFieldValues}}</div>
                     <div *ngFor="let sumFieldValues of element.element.definition.properties['sumOfFieldValue']">
-                        {{ sumFieldValues.minimum + ' - ' + sumFieldValues.maximum }}
+                        {{ displayRange(sumFieldValues, '') }}
                         <br />
                     </div>
                 </div>
 
-<!--                <div class="suffix">-->
-<!--                    {{element.element.definition.staticValues.fields?.[i]?.suffix | translate}}-->
-<!--                </div>-->
+                <!--                <div class="suffix">-->
+                <!--                    {{element.element.definition.staticValues.fields?.[i]?.suffix | translate}}-->
+                <!--                </div>-->
             </div>
         </div>
 
@@ -96,34 +96,34 @@
 
         <div class="apply-button" *ngIf="!hasOnlySelectInputFields()">
             <button
-                *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
-                mat-flat-button
-                color="primary"
-                (click)="saveInput()"
+                    *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
+                    mat-flat-button
+                    color="primary"
+                    (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
-                *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
-                mat-flat-button
-                color="primary"
-                (click)="saveInput()"
+                    *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
+                    mat-flat-button
+                    color="primary"
+                    (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
             <button
-                *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
-                mat-flat-button
-                color="accent"
-                (click)="removeInput()"
+                    *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
+                    mat-flat-button
+                    color="accent"
+                    (click)="removeInput()"
             >{{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
             </button>
             <button
-                *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
-                mat-flat-button
-                color="accent"
-                [mat-dialog-close]="true"
-                (click)="removeInput()"
+                    *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
+                    mat-flat-button
+                    color="accent"
+                    [mat-dialog-close]="true"
+                    (click)="removeInput()"
             >
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
             </button>

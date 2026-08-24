@@ -40,11 +40,19 @@ class Controller {
             default: null,
             values: []
         };
-        this.fieldValue = {
+
+        // value entry model for "Felder"-Tab, unterstuetzt Computed Values
+        this.fieldValue = this.getEmptyFieldValue();
+
+        // value entry model for "Summe aller Felder"-Tab, bewusst OHNE Computed Values,
+        // eigenstaendiges Objekt, damit keine Computed-Value-Auswahl aus dem Felder-Tab hier
+        // versehentlich mit uebernommen wird
+        this.sumOfFieldValue = {
             minimum: 0,
             maximum: 1,
             step: 1
         };
+
         this.fieldRenderings = [{
             id: 'input',
             label: 'Eingabefeld'
@@ -58,7 +66,8 @@ class Controller {
         this.mapStateToThis = function(state) {
             return {
                 priceMatrices: state.areaElement.priceMatrices,
-                detailDefinition: state.element.detail.definition
+                detailDefinition: state.element.detail.definition,
+                computedValues: state.product.computedValues
             }
         };
 
@@ -97,6 +106,8 @@ class Controller {
                 });
 
                 // add field values
+                // fieldCollection[j].json enthaelt bereits das diskriminierte Format
+                // { minimum: {type:'fixed'|'computed', ...}, maximum: {...}, step: N }
                 for (let j = 0; j < fieldCollection.length; j++) {
                     this.pushFieldValue(i, fieldCollection[j].json);
                 }
@@ -112,7 +123,7 @@ class Controller {
                 this.livePriceSuffix = this.redux.detailDefinition.json.livePriceSuffix;
             }
 
-            // init sumOfFieldValues
+            // init sumOfFieldValues (bleibt bewusst rein numerisch, keine Computed Values)
             if (this.redux.detailDefinition.json.sumOfFieldValues) {
                 const sumOfFieldValuesCollection = this.redux.detailDefinition.json.sumOfFieldValues.json.collection;
                 for (let i = 0; i < sumOfFieldValuesCollection.length; i++) {
@@ -156,11 +167,69 @@ class Controller {
         });
     }
 
+    /**
+     * @return {{minimum: number, minimumComputedValue: null, maximum: number, maximumComputedValue: null, step: number}}
+     */
+    getEmptyFieldValue() {
+        return {
+            minimum: 0,
+            minimumComputedValue: null,
+            maximum: 1,
+            maximumComputedValue: null,
+            step: 1
+        };
+    }
+
+    /**
+     * @param {number} value
+     * @param {string|null} computedValueName
+     * @return {{type: string, name: string}|{type: string, value: number}}
+     */
+    encodeBound(value, computedValueName) {
+        if (computedValueName) {
+            return {
+                type: 'computed',
+                name: computedValueName
+            };
+        }
+
+        return {
+            type: 'fixed',
+            value: Number(value)
+        };
+    }
+
+    /**
+     * Fuer die Anzeige in der Werte-Tabelle. Versteht sowohl das neue diskriminierte
+     * Format als auch (zur Sicherheit) rohe Altdaten-Zahlen.
+     * @param bound
+     * @return {string|number}
+     */
+    displayBound(bound) {
+        if (bound && typeof bound === 'object') {
+            if (bound.type === 'computed') {
+                return 'Σ ' + bound.name;
+            }
+            return bound.value;
+        }
+
+        return bound;
+    }
+
+    /**
+     * Wird per ng-change auf dem Zahlen-Input aufgerufen: manuelle Eingabe hat Vorrang,
+     * eine evtl. vorher getroffene Dropdown-Auswahl fuer diese Grenze wird verworfen.
+     * @param {string} bound 'minimum' | 'maximum'
+     */
+    onChangeManualBound(bound) {
+        this.fieldValue[bound + 'ComputedValue'] = null;
+    }
+
     addSumOfFieldValues() {
         this.sumOfFieldValues.push({
-            minimum: this.fieldValue.minimum,
-            maximum: this.fieldValue.maximum,
-            step: this.fieldValue.step
+            minimum: this.sumOfFieldValue.minimum,
+            maximum: this.sumOfFieldValue.maximum,
+            step: this.sumOfFieldValue.step
         });
     }
 
@@ -170,10 +239,12 @@ class Controller {
 
     addFieldValue(index) {
         this.pushFieldValue(index, {
-            minimum: this.fieldValue.minimum,
-            maximum: this.fieldValue.maximum,
+            minimum: this.encodeBound(this.fieldValue.minimum, this.fieldValue.minimumComputedValue),
+            maximum: this.encodeBound(this.fieldValue.maximum, this.fieldValue.maximumComputedValue),
             step: this.fieldValue.step
         });
+
+        this.fieldValue = this.getEmptyFieldValue();
     };
 
     pushFieldValue(index, value) {
