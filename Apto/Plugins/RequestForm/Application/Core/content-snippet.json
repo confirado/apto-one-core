@@ -126,6 +126,12 @@
           "dearMister": {
             "de_DE": "Sehr geehrter Herr"
           },
+          "salutationPerson": {
+            "de_DE": "Sehr geehrte/r"
+          },
+          "goodAfternoon": {
+            "de_DE": "Guten Tag,"
+          },
           "title": {
             "de_DE": "Produktanfrage"
           },
@@ -153,11 +159,46 @@
             "fr_FR": "Le client souhaite recevoir un devis :",
             "es_ES": "El cliente desea recibir un presupuesto:"
           },
+          "configuration": {
+            "de_DE": "Konfiguration:",
+            "link": {
+              "de_DE": "Link zur Konfiguration:"
+            }
+          },
           "configurationNumber": {
             "de_DE": "Konfigurationsnummer:",
             "en_EN": "Configuration number:",
             "fr_FR": "Numéro de configuration :",
             "es_ES": "Número de configuración:"
+          },
+          "totalAmount": {
+            "de_DE": "Gesamtbetrag:"
+          },
+          "details": {
+            "de_DE": "Kundendaten:"
+          },
+          "contractNotReceived": {
+            "de_DE": "ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!"
+          },
+          "configurationField": {
+            "de_DE": "field"
+          },
+          "configurationValue": {
+            "de_DE": "value"
+          },
+          "newRequest": {
+            "prefix": {
+              "de_DE": "Es liegt eine neue Anfrage des Kunden"
+            },
+            "suffix": {
+              "de_DE": "vor."
+            }
+          },
+          "configurationQuantity": {
+            "de_DE": "quantity"
+          },
+          "configurationProperties": {
+            "de_DE": "Eigenschaften:"
           }
         }
       },
@@ -189,6 +230,12 @@
             "en_EN": "Project Name:",
             "fr_FR": "Nom du projet :",
             "es_ES": "Nombre del proyecto:"
+          },
+          "contractNumber": {
+            "de_DE": "Angebotsnummer"
+          },
+          "date": {
+            "de_DE": "Datum"
           }
         },
         "common": {
