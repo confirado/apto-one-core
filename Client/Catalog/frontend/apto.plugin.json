@@ -98,6 +98,18 @@
     {
       "alias": "@apto-catalog-frontend-service-catalog-message-bus",
       "path": "services/catalog-message-bus.service.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-product-model",
+      "path": "store/product/product.model.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-progress-element-builder",
+      "path": "testing/progress-element.builder.ts"
+    },
+    {
+      "alias": "@apto-catalog-frontend-store-initial-state-builder",
+      "path": "testing/store-initial-state.builder.ts"
     }
   ]
 }

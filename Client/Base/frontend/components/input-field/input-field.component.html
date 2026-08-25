@@ -5,6 +5,7 @@
     <div class="container-elem" [style.width]="width" [class]="{'input-error': inputError}">
         <input *ngIf="isNumeric()"
            type="number"
+           data-cy="input-field-numeric"
            (focus)="onInputFocus($event)"
            [formControl]="formElement"
            [placeholder]="placeholder"

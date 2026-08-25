@@ -20,7 +20,7 @@
                     <div class="element">
                         <mat-radio-group class="flex" [formControl]="multiColor">
                             <mat-radio-button color="primary" [value]="false">{{ contentSnippet$ | async | contentSnippet: 'plain' }}</mat-radio-button>
-                            <mat-radio-button color="primary" [value]="true">{{ contentSnippet$ | async | contentSnippet: 'multicolor' }}</mat-radio-button>
+                            <mat-radio-button color="primary" data-cy="material-multicolor-radio" [value]="true">{{ contentSnippet$ | async | contentSnippet: 'multicolor' }}</mat-radio-button>
                         </mat-radio-group>
                     </div>
                 </div>
@@ -168,6 +168,7 @@
                     </div>
                     <div class="elements">
                         <div class="element" *ngFor="let item of items;"
+                             [attr.data-cy]="'material-item-' + item.material.id"
                              (click)="onSelectElement(item)"
                              [class.selected]="isElementSelected(item.material.id)"
                              aptoTooltip [tooltipContentRef]="tooltipContent"
@@ -197,13 +198,13 @@
         <mat-divider></mat-divider>
 
         <div class="apply-button" *ngIf="this.element.element.definition.staticValues.secondaryMaterialActive">
-            <button *ngIf="step === 1 && elementState('second-material')" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="nextStep()">
+            <button *ngIf="step === 1 && elementState('second-material')" data-cy="material-next-button" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="nextStep()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.continue' }}
             </button>
-            <button *ngIf="step === 2 || !elementState('second-material')" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="saveInput()">
+            <button *ngIf="step === 2 || !elementState('second-material')" data-cy="material-save-button" [disabled]="!asserValidValues()" mat-flat-button color="primary" (click)="saveInput()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.select' }}
             </button>
-            <button *ngIf="elementState('active')" mat-flat-button color="accent" (click)="removeInput()">
+            <button *ngIf="elementState('active')" data-cy="material-remove-button" mat-flat-button color="accent" (click)="removeInput()">
                 {{ contentSnippetButton$ | async | contentSnippet: 'buttons.remove' }}
             </button>
         </div>
