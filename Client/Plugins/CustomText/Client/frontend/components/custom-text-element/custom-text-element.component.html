@@ -31,6 +31,7 @@
             <div class="input">
                 <ng-container *ngIf="element.element.definition.staticValues.rendering === 'input'">
                     <apto-input-field
+                        data-cy="custom-text-input"
                         [formControl]="formElement"
                         [type]="'text'"
                         [placeholder]="element.element.definition.staticValues.placeholder | translate"
@@ -39,6 +40,7 @@
                 </ng-container>
                 <ng-container *ngIf="element.element.definition.staticValues.rendering === 'textarea'">
                     <apto-text-input-field
+                        data-cy="custom-text-textarea"
                         [formControl]="formElement"
                         [placeholder]="element.element.definition.staticValues.placeholder | translate"
                         [inputError]="configurationError !== null && configurationError.errorPayload['property'] === 'text'"
@@ -63,10 +65,10 @@
     <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 
     <div class="apply-button">
-        <button mat-flat-button color="primary" (click)="saveInput()">
+        <button mat-flat-button color="primary" data-cy="custom-text-apply-button" (click)="saveInput()">
             {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
         </button>
-        <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">
+        <button mat-flat-button *ngIf="hasValues()" color="accent" data-cy="custom-text-remove-button" (click)="removeInput()">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
         </button>
     </div>

@@ -1,4 +1,4 @@
-<div class="default-element-step-by-step" *ngIf="element && section && product"
+<div class="default-element-step-by-step" data-cy="price-per-unit-step-by-step" *ngIf="element && section && product"
      [class.selected]="element.state.active"
      [class.step-by-step]="product.useStepByStep"
      [class.one-page]="!product.useStepByStep"
