@@ -101,7 +101,7 @@
 {% endif %}
 
 <p>
-    <strong>{{ contentSnippets.customer.configuration.link[locale]|default('') }}</strong>
+    <strong>{{ contentSnippets.customer.linkForConfiguration[locale]|default('') }}</strong>
     <a href="{{ url('apto_base_infrastructure_aptobase_frontend_index') }}#/configuration/basket/{{ configurationId }}">
         {{ contentSnippets.customer.configurationLink[locale]|default('') }}
     </a>

@@ -160,10 +160,10 @@
             "es_ES": "El cliente desea recibir un presupuesto:"
           },
           "configuration": {
-            "de_DE": "Konfiguration:",
-            "link": {
-              "de_DE": "Link zur Konfiguration:"
-            }
+            "de_DE": "Konfiguration:"
+          },
+          "linkForConfiguration": {
+            "de_DE": "Link zur Konfiguration:"
           },
           "configurationNumber": {
             "de_DE": "Konfigurationsnummer:",
