@@ -2,7 +2,7 @@
 <html>
 <head>
     {% include '@AptoCatalog/apto/catalog/mail/guest-configuration/partials/styles.html.twig' %}
-    <title>Apto Konfigurator</title>
+    <title>{{ mail.aptoConfigurator[locale]|default('') }}</title>
 </head>
 
 <body>

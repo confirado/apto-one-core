@@ -390,6 +390,9 @@
       },
       "signature": {
         "de_DE": "<p>Herzlichste Grüße,</p>"
+      },
+      "aptoConfigurator": {
+        "de_DE": "Apto Configurator"
       }
     },
     "form": {
@@ -502,6 +505,9 @@
         "en_EN": "<p>Warmest regards,</p>",
         "fr_FR": "<p>Cordialement,</p>",
         "es_ES": "<p>Un cordial saludo,</p>"
+      },
+      "aptoConfigurator": {
+        "de_DE": "Apto Configurator"
       }
     },
     "form": {
