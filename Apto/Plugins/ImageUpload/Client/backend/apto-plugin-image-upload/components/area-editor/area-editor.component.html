@@ -1,6 +1,6 @@
 <h5>Editor</h5>
 <div layout="row" layout-align="start" flex>
-    <div style="border:1px solid black;width:100%;height:600px;overflow:auto;">
+    <div id="printableAreaEditorContainer" style="border:1px solid black;width:100%;height:600px;overflow:auto;">
         <canvas id="printableAreaEditor"></canvas>
     </div>
 </div>
@@ -14,7 +14,7 @@
         <md-button
             class="md-raised md-primary md-cornered md-button md-ink-ripple"
             title="Open Background Image"
-            ng-click="$ctrl.openEditorBackgroundImage()">
+            ng-click="$ctrl.openBackgroundImage()">
             Open Background Image
         </md-button>
     </md-input-container>
@@ -22,31 +22,54 @@
     <div flex="5"></div>
     <md-input-container>
         <label>Shape:</label>
-        <md-select ng-model="$ctrl.editorPrintableAreaShape" ng-change="$ctrl.createShape()">
-            <md-option ng-value="shape" ng-repeat="shape in $ctrl.editorPrintableAreaShapes">{{ shape }}</md-option>
+        <md-select ng-model="$ctrl.printableAreaShape" ng-change="$ctrl.createShape()">
+            <md-option ng-value="shape" ng-repeat="shape in $ctrl.printableAreaShapes">{{ shape }}</md-option>
         </md-select>
     </md-input-container>
 
 
     <div flex="5"></div>
-    <ng-container ng-if="$ctrl.editorPrintableAreaShape === 'Circle'" flex>
+
+    <ng-container ng-if="$ctrl.printableAreaShape === 'Rectangle'" flex>
         <md-input-container flex>
-            <label>Circle X (px):</label>
+            <label>Abstand links (px):</label>
             <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.left" ng-change="$ctrl.updateShapeObject()">
         </md-input-container>
 
         <md-input-container flex>
-            <label>Circle Y (px):</label>
+            <label>Abstand oben (px):</label>
             <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.top" ng-change="$ctrl.updateShapeObject()">
         </md-input-container>
 
         <md-input-container flex>
-            <label>Circle Radius (px):</label>
+            <label>Breite (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.width" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Höhe (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.height" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+    </ng-container>
+
+    <ng-container ng-if="$ctrl.printableAreaShape === 'Circle'" flex>
+        <md-input-container flex>
+            <label>Abstand links (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.left" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Abstand oben (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.top" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Radius (px):</label>
             <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.radius" ng-change="$ctrl.updateShapeObject()">
         </md-input-container>
     </ng-container>
 
-    <ng-container ng-if="$ctrl.editorPrintableAreaShape === 'Polygon'" flex>
+    <ng-container ng-if="$ctrl.printableAreaShape === 'Polygon'" flex>
         <md-button
             class="md-raised md-primary md-cornered md-button md-ink-ripple"
             title="Start"

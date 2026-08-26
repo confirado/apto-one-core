@@ -2,15 +2,14 @@ import { fabric } from 'fabric';
 
 import AreaEditorTemplate from './area-editor.component.html';
 
-const AreaEditorControllerInject = ['$scope', '$ngRedux', 'MessageBusFactory'];
+const AreaEditorControllerInject = ['$window', '$scope', '$ngRedux', 'MessageBusFactory'];
 class AreaEditorController {
 
-    constructor($scope, $ngRedux, MessageBusFactory) {
+    constructor($window, $scope, $ngRedux, MessageBusFactory) {
         this.$scope = $scope;
 
-        this.editorFabricCanvas = null;
-        this.editorPrintableAreaRect = null;
-        this.editorBackgroundImage = null;
+        this.canvas = null;
+        this.backgroundImage = null;
         this.backgroundImageFileInput = null;
 
         this.printableArea = {
@@ -22,12 +21,14 @@ class AreaEditorController {
             data: {}
         };
 
-        this.editorPrintableAreaShapes = [
-            'None',
+        this.defaultPrintableAreaShape = 'Rectangle';
+
+        this.printableAreaShapes = [
+            this.defaultPrintableAreaShape,
             'Circle',
             'Polygon'
         ];
-        this.editorPrintableAreaShape = 'None';
+        this.printableAreaShape = this.defaultPrintableAreaShape;
 
         this.shapeObject = null;
         this.shapeObjectProperties = null;
@@ -37,6 +38,35 @@ class AreaEditorController {
         this.shapeStrokeWidth = 5;
         this.shapeStrokeDashArray = [5];
         this.shapeOpacity = 0.5;
+
+
+        this.updateCanvasSize = () => {
+            if (!this.canvas) {
+                return;
+            }
+
+            const printableAreaEditorContainer = document.getElementById('printableAreaEditorContainer');
+            if (!printableAreaEditorContainer) {
+                return;
+            }
+
+            let width = printableAreaEditorContainer.clientWidth;
+            let height = printableAreaEditorContainer.clientHeight;
+
+            this.canvas.getObjects().forEach((obj) => {
+                const objBoundingRect = obj.getBoundingRect();
+
+                width = Math.max(width, objBoundingRect.left + objBoundingRect.width);
+                height = Math.max(height, objBoundingRect.top + objBoundingRect.height);
+            });
+
+            this.canvas.setDimensions({
+                width: width,
+                height: height
+            });
+        };
+
+        angular.element($window).bind('resize', this.updateCanvasSize);
 
 
         this.fetchAllProductIds = () => {
@@ -251,8 +281,6 @@ class AreaEditorController {
 
         this.findRenderImagesForProduct((renderImages) => {
             if (renderImages && renderImages.length > 0) {
-                console.log('drawing render image!', renderImages);
-
                 const imagePaths = [];
 
                 for (const renderImage of renderImages) {
@@ -264,13 +292,11 @@ class AreaEditorController {
                     }
                 }
 
-                console.warn(imagePaths);
-
                 this.mergeImages(imagePaths)
                     .then(canvas => {
                         const img = new fabric.Image(canvas);
 
-                        this.editorBackgroundImage = img;
+                        this.backgroundImage = img;
 
                         img.set({
                             selectable: false,
@@ -284,11 +310,9 @@ class AreaEditorController {
                             lockRotation: true
                         });
 
-                        this.editorFabricCanvas.add(img);
-                        this.editorFabricCanvas.sendToBack(img);
-                        this.editorFabricCanvas.renderAll();
-
-                        this.updateEditorPrintableArea();
+                        this.canvas.add(img);
+                        this.canvas.sendToBack(img);
+                        this.canvas.renderAll();
                     });
             }
         });
@@ -321,17 +345,13 @@ class AreaEditorController {
             this.printableArea.data = this.data;
 
             if (this.printableArea.data && this.printableArea.data.shape) {
-                this.editorPrintableAreaShape = this.printableArea.data.shape;
+                this.printableAreaShape = this.printableArea.data.shape;
             }
             else {
-                this.editorPrintableAreaShape = 'None';
+                this.printableAreaShape = this.defaultPrintableAreaShape;
             }
 
             this.createShape(this.printableArea.data);
-        }
-
-        if (changes.left || changes.top || changes.width || changes.height || changes.data) {
-            this.updateEditorPrintableArea();
         }
     }
 
@@ -339,17 +359,24 @@ class AreaEditorController {
     initEditor() {
         this.backgroundImageFileInput = document.getElementById("background-image-file");
         this.backgroundImageFileInput.addEventListener('change', () => {
-            this.editorBackgroundImageSelected();
+            this.backgroundImageSelected();
         });
 
-        this.editorFabricCanvas = new fabric.Canvas('printableAreaEditor');
+        this.canvas = new fabric.Canvas('printableAreaEditor');
+        this.updateCanvasSize();
 
-        this.editorFabricCanvas.on('mouse:down', (e) => {
+        this.canvas.on('mouse:down', (e) => {
             if (!this.shapeObjectProperties) {
                 return;
             }
 
-            switch (this.editorPrintableAreaShape) {
+            switch (this.printableAreaShape) {
+                case 'Rectangle':
+                    this.printableArea.data.left = this.shapeObjectProperties.left;
+                    this.printableArea.data.top = this.shapeObjectProperties.top;
+                    this.printableArea.data.width = this.shapeObjectProperties.width;
+                    this.printableArea.data.height = this.shapeObjectProperties.height;
+                    break;
                 case 'Circle':
                     this.printableArea.data.left = this.shapeObjectProperties.left;
                     this.printableArea.data.top = this.shapeObjectProperties.top;
@@ -360,7 +387,7 @@ class AreaEditorController {
                     this.printableArea.data.top = this.shapeObjectProperties.top;
 
                     if (this.shapeObjectProperties.isCreating) {
-                        const pointer = this.editorFabricCanvas.getPointer(e.e);
+                        const pointer = this.canvas.getPointer(e.e);
 
                         this.shapeObjectProperties.points.push({
                             x: pointer.x,
@@ -368,8 +395,8 @@ class AreaEditorController {
                         });
 
                         if (this.shapeObjectProperties.points.length >= 2) {
-                            if (this.editorFabricCanvas.contains(this.shapeObject)) {
-                                this.editorFabricCanvas.remove(this.shapeObject);
+                            if (this.canvas.contains(this.shapeObject)) {
+                                this.canvas.remove(this.shapeObject);
                             }
 
                             this.shapeObject = new fabric.Polygon(
@@ -378,8 +405,8 @@ class AreaEditorController {
 
                             this.initShape(this.shapeObject);
 
-                            this.editorFabricCanvas.add(this.shapeObject);
-                            this.editorFabricCanvas.renderAll();
+                            this.canvas.add(this.shapeObject);
+                            this.canvas.renderAll();
                         }
 
                         this.printableArea.data.points = this.shapeObjectProperties.points;
@@ -390,41 +417,13 @@ class AreaEditorController {
             }
         });
 
-        if (!this.editorPrintableAreaRect) {
-            this.editorPrintableAreaRect = new fabric.Rect({
-                left: 0,
-                top: 0,
-                width: 0,
-                height: 0,
-
-                selectable: false,
-                evented: false,
-                hasControls: false,
-                hasBorders: false,
-                lockMovementX: true,
-                lockMovementY: true,
-                lockScalingX: true,
-                lockScalingY: true,
-                lockRotation: true
-            });
-
-            this.initShape(this.shapeObject);
-
-            this.editorPrintableAreaRect.set({
-                fill: '',
-                stroke: 'red'
-            });
-
-            this.editorFabricCanvas.add(this.editorPrintableAreaRect);
-        }
-
-        this.editorFabricCanvas.renderAll();
+        this.canvas.renderAll();
     }
 
 
     clearObject(data) {
-        if (this.shapeObject && this.editorFabricCanvas.contains(this.shapeObject)) {
-            this.editorFabricCanvas.remove(this.shapeObject);
+        if (this.shapeObject && this.canvas.contains(this.shapeObject)) {
+            this.canvas.remove(this.shapeObject);
         }
 
         this.shapeObjectProperties = null;
@@ -433,6 +432,30 @@ class AreaEditorController {
         if (!data) {
             this.updateAreaData();
         }
+    }
+
+    createRectangle(data) {
+        this.clearObject(data);
+
+        this.shapeObjectProperties = {
+            shape: 'Rectangle',
+            left: data ? data.left : 10,
+            top: data ? data.top: 10,
+            width: data ? data.width : 100,
+            height: data ? data.height : 50
+        };
+
+        this.shapeObject = new fabric.Rect({
+            left: this.shapeObjectProperties.left,
+            top: this.shapeObjectProperties.top,
+            width: this.shapeObjectProperties.width,
+            height: this.shapeObjectProperties.height
+        });
+
+        this.initShape(this.shapeObject);
+
+        this.canvas.add(this.shapeObject);
+        this.canvas.renderAll();
     }
 
     createCircle(data) {
@@ -453,8 +476,8 @@ class AreaEditorController {
 
         this.initShape(this.shapeObject);
 
-        this.editorFabricCanvas.add(this.shapeObject);
-        this.editorFabricCanvas.renderAll();
+        this.canvas.add(this.shapeObject);
+        this.canvas.renderAll();
     }
 
     createPolygon(data) {
@@ -473,10 +496,10 @@ class AreaEditorController {
 
             this.initShape(this.shapeObject);
 
-            this.editorFabricCanvas.add(this.shapeObject);
+            this.canvas.add(this.shapeObject);
         }
 
-        this.editorFabricCanvas.renderAll();
+        this.canvas.renderAll();
     }
 
 
@@ -521,7 +544,6 @@ class AreaEditorController {
             return;
         }
 
-        console.log(e);
 
         const obj = e.target;
 
@@ -532,14 +554,19 @@ class AreaEditorController {
 
         this.updateAreaData();
 
+        this.updateCanvasSize();
+
         this.$scope.$applyAsync();
     }
 
 
     createShape(data) {
-        const shape = data ? data.shape : this.editorPrintableAreaShape;
+        const shape = data ? data.shape : this.printableAreaShape;
 
         switch (shape) {
+            case 'Rectangle':
+                this.createRectangle(data);
+                break;
             case 'Circle':
                 this.createCircle(data);
                 break;
@@ -581,6 +608,14 @@ class AreaEditorController {
         }
 
         switch (this.shapeObjectProperties.shape) {
+            case 'Rectangle':
+                this.shapeObject.set({
+                    left: this.shapeObjectProperties.left,
+                    top: this.shapeObjectProperties.top,
+                    width: this.shapeObjectProperties.width,
+                    height: this.shapeObjectProperties.height
+                });
+                break;
             case 'Circle':
                 this.shapeObject.set({
                     left: this.shapeObjectProperties.left,
@@ -600,57 +635,9 @@ class AreaEditorController {
         }
 
         this.shapeObject.setCoords();
-        this.editorFabricCanvas.requestRenderAll();
+        this.canvas.requestRenderAll();
 
         this.updateAreaData();
-    }
-
-
-    updateEditorPrintableArea() {
-        if (!this.editorPrintableAreaRect) {
-            return;
-        }
-
-        this.editorPrintableAreaRect.set({
-            top: this.printableArea.top,
-            left: this.printableArea.left,
-            width: this.printableArea.width ,
-            height: this.printableArea.height
-        });
-
-        this.editorPrintableAreaRect.setCoords();
-
-        let maxWidth = 0;
-        let maxHeight = 0;
-
-        [this.editorPrintableAreaRect, this.editorBackgroundImage]
-            .filter(Boolean)
-            .forEach(obj => {
-                obj.setCoords();
-
-                const bounds = obj.getBoundingRect(true, true);
-
-                maxWidth = Math.max(
-                    maxWidth,
-                    bounds.left + bounds.width
-                );
-
-                maxHeight = Math.max(
-                    maxHeight,
-                    bounds.top + bounds.height
-                );
-            });
-
-        maxWidth = Math.ceil(maxWidth);
-        maxHeight = Math.ceil(maxHeight);
-
-        this.editorFabricCanvas.setDimensions({
-            width: maxWidth,
-            height: maxHeight
-        });
-
-        this.editorFabricCanvas.calcOffset();
-        this.editorFabricCanvas.requestRenderAll();
     }
 
     updateAreaData() {
@@ -658,19 +645,13 @@ class AreaEditorController {
             return;
         }
 
-        if (this.editorPrintableAreaShape === 'None') {
-            this.printableArea.data.shape = '';
-            this.printableArea.data.points = null;
-        }
-        else {
-            this.printableArea.data.shape = this.editorPrintableAreaShape;
-        }
+        this.printableArea.data.shape = this.printableAreaShape;
 
         this.$scope.$applyAsync();
     }
 
 
-    editorBackgroundImageSelected() {
+    backgroundImageSelected() {
         const file = this.backgroundImageFileInput.files[0];
 
         if (!file) {
@@ -679,14 +660,14 @@ class AreaEditorController {
 
         const reader = new FileReader();
 
-        if (this.editorBackgroundImage) {
-            this.editorFabricCanvas.remove(this.editorBackgroundImage);
-            this.editorBackgroundImage = null;
+        if (this.backgroundImage) {
+            this.canvas.remove(this.backgroundImage);
+            this.backgroundImage = null;
         }
 
         reader.onload = (event) => {
             fabric.Image.fromURL(event.target.result, (img) => {
-                this.editorBackgroundImage = img;
+                this.backgroundImage = img;
 
                 img.set({
                     selectable: false,
@@ -700,18 +681,18 @@ class AreaEditorController {
                     lockRotation: true
                 });
 
-                this.editorFabricCanvas.add(img);
-                this.editorFabricCanvas.sendToBack(img);
-                this.editorFabricCanvas.renderAll();
+                this.canvas.add(img);
+                this.canvas.sendToBack(img);
+                this.canvas.renderAll();
 
-                this.updateEditorPrintableArea();
+                this.updateCanvasSize();
             });
         };
 
         reader.readAsDataURL(file);
     }
 
-    openEditorBackgroundImage() {
+    openBackgroundImage() {
         document.getElementById('background-image-file').click();
     }
 }
