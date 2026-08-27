@@ -18,7 +18,6 @@ import { SelectboxElementComponent } from '@element-definition-selectbox-element
     SelectboxElementComponent
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

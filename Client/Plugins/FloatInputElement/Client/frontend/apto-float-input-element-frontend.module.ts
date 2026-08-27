@@ -19,7 +19,6 @@ import { FloatInputElementComponent } from '@element-definition-float-input-elem
     FloatInputElementComponent
   ],
 	exports: [],
-	entryComponents: [],
     imports: [
         RouterModule,
         CommonModule,

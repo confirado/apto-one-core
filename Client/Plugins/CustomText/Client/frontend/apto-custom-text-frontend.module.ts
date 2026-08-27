@@ -18,7 +18,6 @@ import { CustomTextElementComponent } from '@element-definition-custom-text-elem
     CustomTextElementComponent
   ],
 	exports: [],
-	entryComponents: [],
   imports: [
     RouterModule,
     CommonModule,

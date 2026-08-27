@@ -70,6 +70,10 @@ export const configurationInitialState: ConfigurationState = {
   configurationError: null,
 };
 
+function isNavigableSection(section: Configuration['sections'][number]): boolean {
+  return !section.disabled && !section.hidden;
+}
+
 const _configurationReducer = createReducer(
 	configurationInitialState,
 	/*
@@ -249,8 +253,8 @@ const _configurationReducer = createReducer(
     };
   }),
 	on(setPrevStep, (state) => {
-		const sections = state.state.sections.filter((section) => !section.disabled);
-    const currentIndex = sections.findIndex((section) => section.id === state.currentStep.id && section.repetition === state.currentStep.repetition);
+		const sections = state.state.sections.filter(isNavigableSection);
+	    const currentIndex = sections.findIndex((section) => section.id === state.currentStep?.id && section.repetition === state.currentStep?.repetition);
 
 		// if no current index was found but at least one section is available set current step to first section
 		if (currentIndex === -1 && sections.length > 0) {
@@ -273,8 +277,8 @@ const _configurationReducer = createReducer(
 		};
 	}),
 	on(setNextStep, (state) => {
-		const sections = state.state.sections.filter((section) => !section.disabled);
-		const currentIndex = sections.findIndex((section) => section.id === state.currentStep.id && section.repetition === state.currentStep.repetition);
+		const sections = state.state.sections.filter(isNavigableSection);
+		const currentIndex = sections.findIndex((section) => section.id === state.currentStep?.id && section.repetition === state.currentStep?.repetition);
 
 		// if no current index was found but at least one section is available set current step to first section
 		if (currentIndex === -1 && sections.length > 0) {

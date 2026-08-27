@@ -10,7 +10,7 @@ import {
 import { CatalogFeatureState, featureSelector } from '@apto-catalog-frontend/store/feature';
 import { createSelector } from '@ngrx/store';
 import { Element, Section } from '../product/product.model';
-import { TempStateItem } from './configuration.model';
+import { ParameterState, TempStateItem } from './configuration.model';
 import { ProductState } from '../product/product.reducer';
 
 import { getHumanReadableFullState } from '@apto-catalog-frontend/services/store-utilities';
@@ -384,13 +384,13 @@ export const selectSectionPriceTable = (section: Section): any => createSelector
 export const selectQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => state.configuration.quantity);
 
 export const selectParameterQuantity = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.QUANTITY)
-  return result['value'] ? Number(result['value']) : 1;
+  const result = state.configuration.state.compressedState.find((elem): elem is ParameterState => 'value' in elem && elem.name === ParameterStateTypes.QUANTITY)
+  return result?.value ? Number(result.value) : 1;
 });
 
 export const selectParameterRepetitions = createSelector(featureSelector, (state: CatalogFeatureState) => {
-  const result = state.configuration.state.compressedState.find(elem => elem['name'] && elem['name'] === ParameterStateTypes.REPETITIONS)
-  return result['value'] ? Number(result['value']) : 1;
+  const result = state.configuration.state.compressedState.find((elem): elem is ParameterState => 'value' in elem && elem.name === ParameterStateTypes.REPETITIONS)
+  return result?.value ? Number(result.value) : 1;
 });
 
 

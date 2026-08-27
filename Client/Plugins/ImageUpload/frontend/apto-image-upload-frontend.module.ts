@@ -28,7 +28,6 @@ import { DesignerPerspectiveComponent } from './components/designer-perspective/
 @NgModule({
   declarations: [ImageUploadComponent, DesignerComponent, DesignerPerspectiveComponent],
   exports: [DesignerComponent, DesignerPerspectiveComponent],
-  entryComponents: [],
 	imports: [
 		RouterModule,
 		CommonModule,
