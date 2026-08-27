@@ -18,10 +18,16 @@
         },
         "minDimensions": {
           "prefix": {
-            "de_DE": "Die Auflösung muss mindestens"
+            "de_DE": "Die Auflösung muss mindestens",
+            "en_EN": "The resolution must be at least",
+            "fr_FR": "La résolution doit être d'au moins",
+            "es_ES": "La resolución debe ser como mínimo"
           },
           "suffix": {
-            "de_DE": "Pixel betragen."
+            "de_DE": "Pixel betragen.",
+            "en_EN": "pixels.",
+            "fr_FR": "pixels.",
+            "es_ES": "píxeles."
           }
         }
       },
@@ -36,24 +42,39 @@
           "de_DE": "Verwerfen"
         },
         "cancelMessage": {
-          "de_DE": "Deine aktuellen Änderungen werden verworfen."
+          "de_DE": "Deine aktuellen Änderungen werden verworfen.",
+          "en_EN": "Your current changes will be discarded.",
+          "fr_FR": "Vos modifications actuelles seront perdues.",
+          "es_ES": "Se descartarán los cambios que hayas realizado."
         },
         "reset": {
-          "de_DE": "Zurücksetzen"
+          "de_DE": "Zurücksetzen",
+          "en_EN": "Reset",
+          "fr_FR": "Réinitialiser",
+          "es_ES": "Restablecer"
         },
         "resetMessage": {
-          "de_DE": "Dein komplettes Design wird gelöscht."
+          "de_DE": "Dein komplettes Design wird gelöscht.",
+          "en_EN": "Your entire design will be deleted.",
+          "fr_FR": "Votre design complet sera supprimé.",
+          "es_ES": "Se eliminará todo tu diseño."
         },
         "save": {
           "de_DE": "Übernehmen"
         },
         "deleteImage": {
-          "de_DE": "Bild löschen"
+          "de_DE": "Bild löschen",
+          "en_EN": "Delete image",
+          "fr_FR": "Supprimer l'image",
+          "es_ES": "Eliminar imagen"
         }
       },
       "text": {
         "label": {
-          "de_DE": "Texteingabe:"
+          "de_DE": "Texteingabe:",
+          "en_EN": "Text input:",
+          "fr_FR": "Saisie de texte :",
+          "es_ES": "Introducción de texto:"
         }
       }
     }

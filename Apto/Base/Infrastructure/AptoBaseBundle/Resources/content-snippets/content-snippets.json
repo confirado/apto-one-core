@@ -40,24 +40,39 @@
   "auth": {
     "mail": {
       "subject": {
-        "de_DE": "Ihr Passwort wurde erfolgreich aktualisiert"
+        "de_DE": "Ihr Passwort wurde erfolgreich aktualisiert",
+        "en_EN": "Your password has been successfully updated",
+        "fr_FR": "Votre mot de passe a été mis à jour avec succès",
+        "es_ES": "Su contraseña se ha actualizado correctamente"
       },
       "description": {
-        "de_DE": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Wenn dies von Ihnen veranlasst wurde, klicken Sie bitte auf den folgenden Link:"
+        "de_DE": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Wenn dies von Ihnen veranlasst wurde, klicken Sie bitte auf den folgenden Link:",
+        "en_EN": "We have received a request to reset your password. If you initiated this request, please click the following link:",
+        "fr_FR": "Nous avons reçu une demande de réinitialisation de votre mot de passe. Si vous en êtes à l'origine, veuillez cliquer sur le lien suivant :",
+        "es_ES": "Hemos recibido una solicitud para restablecer su contraseña. Si ha sido usted quien la ha solicitado, haga clic en el siguiente enlace:"
       }
     },
     "errors": {
       "PasswordValidationException": {
-        "de_DE": "Passwortvalidierung fehlgeschlagen"
+        "de_DE": "Passwortvalidierung fehlgeschlagen",
+        "en_EN": "Error resetting password",
+        "fr_FR": "Erreur lors de la réinitialisation du mot de passe",
+        "es_ES": "Error al restablecer la contraseña"
       },
       "InvalidTokenException": {
-        "de_DE": "Fehler beim Zurücksetzen des Passworts"
+        "de_DE": "Fehler beim Zurücksetzen des Passworts",
+        "en_EN": "Error resetting password",
+        "fr_FR": "Erreur lors de la réinitialisation du mot de passe",
+        "es_ES": "Error al restablecer la contraseña"
       }
     }
   },
   "aptoProductList": {
     "filterTitle": {
-      "de_DE": "Kategorien"
+      "de_DE": "Kategorien",
+      "en_EN": "Categories",
+      "fr_FR": "Catégories",
+      "es_ES": "Categorías"
     }
   }
 }

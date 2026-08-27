@@ -126,6 +126,12 @@
           "dearMister": {
             "de_DE": "Sehr geehrter Herr"
           },
+          "salutationPerson": {
+            "de_DE": "Sehr geehrte/r"
+          },
+          "goodAfternoon": {
+            "de_DE": "Guten Tag,"
+          },
           "title": {
             "de_DE": "Produktanfrage"
           },
@@ -146,6 +152,53 @@
           },
           "YoursSincerely": {
             "de_DE": "<p>Herzlichste Grüße,</p>"
+          },
+          "quote": {
+            "de_DE": "Der Kunde möchte ein Angebot erhalten:",
+            "en_EN": "The customer would like to receive a quote:",
+            "fr_FR": "Le client souhaite recevoir un devis :",
+            "es_ES": "El cliente desea recibir un presupuesto:"
+          },
+          "configuration": {
+            "de_DE": "Konfiguration:"
+          },
+          "linkForConfiguration": {
+            "de_DE": "Link zur Konfiguration:"
+          },
+          "configurationNumber": {
+            "de_DE": "Konfigurationsnummer:",
+            "en_EN": "Configuration number:",
+            "fr_FR": "Numéro de configuration :",
+            "es_ES": "Número de configuración:"
+          },
+          "totalAmount": {
+            "de_DE": "Gesamtbetrag:"
+          },
+          "details": {
+            "de_DE": "Kundendaten:"
+          },
+          "contractNotReceived": {
+            "de_DE": "ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!"
+          },
+          "configurationField": {
+            "de_DE": "field"
+          },
+          "configurationValue": {
+            "de_DE": "value"
+          },
+          "newRequest": {
+            "prefix": {
+              "de_DE": "Es liegt eine neue Anfrage des Kunden"
+            },
+            "suffix": {
+              "de_DE": "vor."
+            }
+          },
+          "configurationQuantity": {
+            "de_DE": "quantity"
+          },
+          "configurationProperties": {
+            "de_DE": "Eigenschaften:"
           }
         }
       },
@@ -171,20 +224,44 @@
           },
           "signature": {
             "de_DE": "<p>Mit freundlichen Grüßen</p><p>Dieses PDF - Dokument wurde von unserer Konfigurator-Software Apto.ONE automatisiert erstellt.</p>"
+          },
+          "projectName": {
+            "de_DE": "Projektname:",
+            "en_EN": "Project Name:",
+            "fr_FR": "Nom du projet :",
+            "es_ES": "Nombre del proyecto:"
+          },
+          "contractNumber": {
+            "de_DE": "Angebotsnummer"
+          },
+          "date": {
+            "de_DE": "Datum"
           }
         },
         "common": {
           "addressName": {
             "de_DE": "Adresse"
           },
+          "date": {
+            "de_DE": "Datum",
+            "en_EN": "Date",
+            "fr_FR": "Date",
+            "es_ES": "Fecha"
+          },
           "internetName": {
             "de_DE": "Internet"
           },
           "mailName": {
-            "de_DE": "E-mail"
+            "de_DE": "E-mail",
+            "en_EN": "Email",
+            "fr_FR": "E-mail",
+            "es_ES": "Correo electrónico"
           },
           "telephoneName": {
-            "de_DE": "Telefon"
+            "de_DE": "Telefon",
+            "en_EN": "Phone",
+            "fr_FR": "Téléphone",
+            "es_ES": "Teléfono"
           },
           "faxName": {
             "de_DE": "Fax"
@@ -248,6 +325,78 @@
           },
           "sectionColumnName": {
             "de_DE": "Sektion"
+          },
+          "room": {
+            "de_DE": "Raum",
+            "en_EN": "Room",
+            "fr_FR": "Pièce",
+            "es_ES": "¿"
+          },
+          "roomName": {
+            "de_DE": "Raumname",
+            "en_EN": "Room Name",
+            "fr_FR": "Nom de la pièce",
+            "es_ES": "Nombre de la sala"
+          },
+          "calculation": {
+            "de_DE": "Berechnung",
+            "en_EN": "Calculation",
+            "fr_FR": "Calcul",
+            "es_ES": "Cálculo"
+          },
+          "result": {
+            "de_DE": "Ergebnis",
+            "en_EN": "Result",
+            "fr_FR": "Résultat",
+            "es_ES": "Resultado"
+          },
+          "verificationRequired": {
+            "de_DE": "Absicherung <br /> notwendig",
+            "en_EN": "Verification <br /> required",
+            "fr_FR": "Validation <br /> obligatoire",
+            "es_ES": "Cálculo <br /> necesario"
+          },
+          "fillingQuantity": {
+            "de_DE": "Füllmenge:",
+            "en_EN": "Filling quantity:",
+            "fr_FR": "Quantité de remplissage :",
+            "es_ES": "Capacidad de llenado:"
+          },
+          "volume": {
+            "de_DE": "Volumen:",
+            "en_EN": "Volume:",
+            "fr_FR": "Volume :",
+            "es_ES": "Volumen:"
+          },
+          "filledSpace": {
+            "de_DE": "Befüllter Raum:",
+            "en_EN": "Filled space:",
+            "fr_FR": "Espace occupé :",
+            "es_ES": "Espacio ocupado:"
+          },
+          "notSpecified": {
+            "de_DE": "keine Angabe",
+            "en_EN": "Not specified",
+            "fr_FR": "non spécifié",
+            "es_ES": "sin especificar"
+          },
+          "no": {
+            "de_DE": "Nein",
+            "en_EN": "No",
+            "fr_FR": "Non",
+            "es_ES": "No"
+          },
+          "recommended": {
+            "de_DE": "Empfohlen",
+            "en_EN": "Recommended",
+            "fr_FR": "Recommandé",
+            "es_ES": "Recomendado"
+          },
+          "yes": {
+            "de_DE": "Ja",
+            "en_EN": "Yes",
+            "fr_FR": "Oui",
+            "es_ES": "Sí"
           }
         }
       }
