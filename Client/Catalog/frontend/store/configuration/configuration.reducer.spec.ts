@@ -44,7 +44,7 @@ describe('configurationReducer', () => {
     const configuration = buildConfiguration({ compressedState: [{ name: ParameterStateTypes.QUANTITY, value: 3 }] });
     const result = configurationReducer(previous, getConfigurationStateSuccess({
       payload: {
-        productId: 'product-1', configuration, renderImages: {}, computedValues: {}, perspectives: ['front'],
+        productId: 'product-1', configuration, renderImages: [], computedValues: {}, perspectives: ['front'],
         currentPerspective: 'front', statePrice: null, updates: {},
       },
     }));
