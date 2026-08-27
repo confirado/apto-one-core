@@ -60,13 +60,15 @@ describe('FloatInputElementComponent', () => {
       cy.spy(store, 'dispatch').as('dispatchSpy');
     });
 
+    cy.clock();
     cy.get('[data-cy="input-field-numeric"]').clear().type('15');
 
     cy.get('[data-cy="input-field-numeric"]').should('have.value', '15');
+    cy.tick(100);
 
     cy.get('[data-cy="apply-button"]').click();
 
-    cy.get<DispatchSpy>('@dispatchSpy').then((spy) => {
+    cy.get<DispatchSpy>('@dispatchSpy').should((spy) => {
       const actualAction = spy.getCalls().map((call) => call.args[0]).find((action) => action.type === updateConfigurationState.type);
       const expectedAction = updateConfigurationState({
         updates: {
