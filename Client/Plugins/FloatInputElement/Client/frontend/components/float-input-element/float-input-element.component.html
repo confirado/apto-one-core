@@ -109,10 +109,10 @@
     <apto-element-attachment *ngIf="hasAttachments" [attachments]="element.element.attachments"></apto-element-attachment>
 
     <div class="apply-button" *ngIf="inputType === 'input'">
-        <button mat-flat-button color="primary" (click)="saveInput(formElementInput.value)">
+        <button mat-flat-button color="primary" data-cy="apply-button" (click)="saveInput(formElementInput.value)">
             {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
         </button>
-        <button mat-flat-button *ngIf="hasValues()" color="accent" (click)="removeInput()">
+        <button mat-flat-button *ngIf="hasValues()" color="accent" data-cy="float-input-remove-button" (click)="removeInput()">
             {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
         </button>
     </div>

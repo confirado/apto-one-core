@@ -4,7 +4,7 @@ import { selectLocale } from '@apto-base-frontend/store/language/language.select
 import { selectProduct } from '@apto-catalog-frontend/store/product/product.selectors';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { DialogDataInterface } from '@apto-catalog-frontend/components/common/dialogs/dialog-data-interface';
 
 @Component({

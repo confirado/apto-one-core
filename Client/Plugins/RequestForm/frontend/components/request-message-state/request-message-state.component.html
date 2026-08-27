@@ -1,8 +1,8 @@
-<div *ngIf="state.sending && !state.success && !state.error" class="step-finished">
+<div *ngIf="state.sending && !state.success && !state.error" class="step-finished" data-cy="request-state-sending">
     <mat-spinner diameter="50"></mat-spinner>
 </div>
 
-<div *ngIf="!state.sending && state.success && !state.error" class="step-finished">
+<div *ngIf="!state.sending && state.success && !state.error" class="step-finished" data-cy="request-state-success">
     <div class="step-finished-title">
         <div>
             <div class="circle finished"><mat-icon>done</mat-icon></div>
@@ -16,7 +16,7 @@
     <div *ngIf="success.message" class="step-finished-message" [innerHTML]="success.message | safeHtml"></div>
 </div>
 
-<div *ngIf="!state.sending && !state.success && state.error"  class="step-finished">
+<div *ngIf="!state.sending && !state.success && state.error"  class="step-finished" data-cy="request-state-error">
     <div class="step-finished-title">
         <div>
             <div class="circle error"><mat-icon>priority_high</mat-icon></div>

@@ -5,6 +5,7 @@
     <div class="container" [class.open-left]="isOverlayOpen" [class.open-right]="isOverlayOpen && !enableClear" [style.width]="width">
         <div class="select"
              mat-ripple
+             data-cy="select-box-field-trigger"
              [matRippleDisabled]="disabled"
              (click)="disabled || toggleOverlay()"
              cdkOverlayOrigin
@@ -43,7 +44,7 @@
     (overlayOutsideClick)="toggleOverlay(); $event.stopPropagation()"
 >
     <div class="overlay" >
-        <div class="items" *ngFor="let item of _items" (click)="selectItem(item.id)">
+        <div class="items" [attr.data-cy]="'select-box-item-' + item.id" *ngFor="let item of _items" (click)="selectItem(item.id)">
 			<div class="item" mat-ripple>
                 <span class="text">{{ item.name | translate }}</span>
                 <span class="circle" *ngIf="isSelected(item.id)"><mat-icon>done</mat-icon></span>

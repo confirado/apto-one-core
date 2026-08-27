@@ -3,7 +3,7 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { ResizedEvent } from 'angular-resize-event';
+import { ResizedEvent } from 'angular-resize-event-package';
 import { Color, stringInputToObject } from '@angular-material-components/color-picker';
 import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { fabric } from 'fabric';

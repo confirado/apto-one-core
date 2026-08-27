@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Components App</title>
-  </head>
-  <body>
-    <div data-cy-root></div>
-  </body>
+    <script>
+        window.APTO_API = {
+            client: 'http://localhost/api',
+            command: 'http://localhost/api/command',
+            media: 'http://localhost/media'
+        };
+        window.AptoInline = {};
+        window.PluginManager = {};
+    </script>
+</head>
+<body>
+<div data-cy-root></div>
+</body>
 </html>

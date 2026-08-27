@@ -16,6 +16,7 @@
                     [items]="[diverse, herr, frau]"
                     [enableClear]="false"
                     [default]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.genderPlaceholder') + ' *'"
+                    data-cy="request-form-gender"
                 ></apto-select-field>
 
                 <apto-input-field
@@ -25,6 +26,7 @@
                     [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.email') + ' *'"
                     [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.emailPlaceholder') + ' *'"
                     [type]="'text'"
+                    data-cy="request-form-email"
                 ></apto-input-field>
 
                 <apto-input-field
@@ -34,6 +36,7 @@
                     [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.name') + ' *'"
                     [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.namePlaceholder') + ' *'"
                     [type]="'text'"
+                    data-cy="request-form-name"
                 ></apto-input-field>
 
                 <apto-input-field
@@ -43,6 +46,7 @@
                     [name]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.surname') + ' *'"
                     [placeholder]="(csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.surnamePlaceholder') + ' *'"
                     [type]="'text'"
+                    data-cy="request-form-surname"
                 ></apto-input-field>
 
                 <apto-input-field
@@ -52,6 +56,7 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phone'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.phonePlaceholder'"
                     [type]="'text'"
+                    data-cy="request-form-phone"
                 ></apto-input-field>
                 <apto-input-field
                     *ngIf="isFieldVisible()"
@@ -60,6 +65,7 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.company'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.companyPlaceholder'"
                     [type]="'text'"
+                    data-cy="request-form-company"
                 ></apto-input-field>
                 <apto-input-field
                     *ngIf="isFieldVisible()"
@@ -68,6 +74,7 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.street'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.streetPlaceholder'"
                     [type]="'text'"
+                    data-cy="request-form-street"
                 ></apto-input-field>
                 <apto-input-field
                     *ngIf="isFieldVisible()"
@@ -76,6 +83,7 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCode'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.zipCodePlaceholder'"
                     [type]="'text'"
+                    data-cy="request-form-zip-code"
                 ></apto-input-field>
                 <apto-input-field
                     *ngIf="isFieldVisible()"
@@ -84,6 +92,7 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.city'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.cityPlaceholder'"
                     [type]="'text'"
+                    data-cy="request-form-city"
                 ></apto-input-field>
             </div>
             <div class="large-textfield">
@@ -92,13 +101,14 @@
                     [name]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.message'"
                     [placeholder]="csRequestForm$ | async | contentSnippet: 'aptoSummary.labels.messagePlaceholder'"
                     [rows]="6"
+                    data-cy="request-form-message"
                 ></apto-text-input-field>
             </div>
             <div class="title break-text">
                 <p>{{ csRequestForm$ | async | contentSnippet: 'aptoSummary.requiredMessage' }}</p>
             </div>
             <div class="agreement">
-                <mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent">
+                <mat-checkbox class="mat-checkbox-multiline-label" color="primary" formControlName="declarationOfConsent" data-cy="request-form-consent">
                     <span [innerHTML]="csRequestForm$ | async | contentSnippet: 'aptoSummary.declarationOfConsent'"></span>
                 </mat-checkbox>
             </div>
@@ -111,7 +121,7 @@
                     [name]="'quantityInput2'"
                     formControlName="quantityInput"
                 ></apto-quantity-input-editable>
-                <button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid">
+                <button mat-flat-button color="primary" (click)="onSendRequestForm()" [disabled]="!requestForm.valid" data-cy="request-form-submit">
                     {{ csRequestForm$ | async | contentSnippet: 'aptoSummary.sendForm' }}
                 </button>
             </div>
