@@ -50,7 +50,7 @@ describe('ConfigurationEffects', () => {
 
   it('adds configured rule repair and emits a complete refreshed state', async () => {
     const { actions$, effects, repository } = createHarness(new Map<object, unknown>([[selectRuleRepairSettings, { strategy: 'repair' }]]));
-    repository.getConfigurationState.and.returnValue(of({ state: { compressedState: [], sections: [], elements: [], failedRules: [] }, renderImages: {}, updates: { set: [] } }));
+    repository.getConfigurationState.and.returnValue(of({ state: { compressedState: [], sections: [], elements: [], failedRules: [] }, renderImages: [], updates: { set: [] } }));
     repository.getComputedValues.and.returnValue(of({ width: '10' }));
     repository.getPerspectives.and.returnValue(of(['front']));
     repository.getStatePrice.and.returnValue(of(null));
@@ -58,7 +58,7 @@ describe('ConfigurationEffects', () => {
     const request = getConfigurationState({ payload: { productId: 'product-1', compressedState: [], connector, updates: { set: [] }, currentPerspective: null, currentUser: null } });
     actions$.next(request as never);
 
-    expect(await result).toEqual(getConfigurationStateSuccess({ payload: { productId: 'product-1', configuration: { compressedState: [], sections: [], elements: [], failedRules: [] }, renderImages: {}, computedValues: { width: '10' }, perspectives: ['front'], currentPerspective: 'front', statePrice: null, updates: { set: [] } } }));
+    expect(await result).toEqual(getConfigurationStateSuccess({ payload: { productId: 'product-1', configuration: { compressedState: [], sections: [], elements: [], failedRules: [] }, renderImages: [], computedValues: { width: '10' }, perspectives: ['front'], currentPerspective: 'front', statePrice: null, updates: { set: [] } } }));
     expect(repository.getConfigurationState).toHaveBeenCalledWith(jasmine.objectContaining({ updates: { set: [], repair: { strategy: 'repair' } } }));
   });
 

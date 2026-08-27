@@ -75,7 +75,7 @@ describe('FloatInputElementComponent', () => {
             elementId: 'element-42',
             sectionRepetition: 0,
             property: 'value',
-            value: '15',
+            value: 15,
           }],
         },
       });
