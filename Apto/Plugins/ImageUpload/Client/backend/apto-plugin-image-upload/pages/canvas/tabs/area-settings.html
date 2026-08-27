@@ -15,6 +15,7 @@
 
 <apto-area-editor-element
     identifier="newArea.identifier"
+    perspective="newArea.perspective"
     left="newArea.left"
     top="newArea.top"
     width="newArea.width"
@@ -54,10 +55,6 @@
         <tr md-row>
             <th md-column style="width: 15%;">Name</th>
             <th md-column style="width: 15%;">Kennung</th>
-            <th md-column style="width: 10%;">Breite</th>
-            <th md-column style="width: 10%;">Höhe</th>
-            <th md-column style="width: 10%;">Abstand links</th>
-            <th md-column style="width: 10%;">Abstand oben</th>
             <th md-column style="width: 10%;">Perspective</th>
             <th md-column style="width: 10%;">Layer</th>
             <th md-column style="width: 10%;"></th>
@@ -70,18 +67,6 @@
             </td>
             <td md-cell>
                 {{ area.identifier }}
-            </td>
-            <td md-cell>
-                {{ area.width }}
-            </td>
-            <td md-cell>
-                {{ area.height }}
-            </td>
-            <td md-cell>
-                {{ area.left }}
-            </td>
-            <td md-cell>
-                {{ area.top }}
             </td>
             <td md-cell>
                 {{ area.perspective }}

@@ -14,6 +14,7 @@ class AreaEditorController {
 
         this.printableArea = {
             identifier: '',
+            perspective: '',
             left: 0,
             top: 0,
             width: 0,
@@ -152,15 +153,15 @@ class AreaEditorController {
         });
     }
 
-    findRenderImagesForProduct(callback) {
+    findRenderImagesForProduct(perspective, callback) {
         this.findProductWhereCurrentPrintableAreaIsUsed().then(sections => {
-            this.findRenderImages(sections).then((renderImages) => {
+            this.findRenderImages(sections, perspective).then((renderImages) => {
                 callback(renderImages);
             });
         });
     }
 
-    findRenderImages(sections) {
+    findRenderImages(sections, perspective) {
         const promises = [];
 
         for (let j = 0; j < sections.length; j++) {
@@ -171,13 +172,8 @@ class AreaEditorController {
                 continue;
             }
 
-            for (let k = 0; k < elements.length; k++) {
-                const element = elements[k];
-                const elementId = element.id;
-
-                promises.push(this.fetchRenderImages(elementId));
-
-                break;
+            if (elements.length > 0 && elements[0].id) {
+                promises.push(this.fetchRenderImages(elements[0].id));
             }
         }
 
@@ -195,7 +191,9 @@ class AreaEditorController {
                 const renderImageResults = renderImageValues.data.result.renderImages;
                 if (renderImageResults && renderImageResults.length > 0) {
                     for (const renderImage of renderImageResults) {
-                        renderImageList.push(renderImage);
+                        if (renderImage.perspective === perspective) {
+                            renderImageList.push(renderImage);
+                        }
                     }
                 }
             }
@@ -274,21 +272,28 @@ class AreaEditorController {
 
 
     drawRenderImage() {
-        if (!this.printableArea || !this.printableArea.identifier || this.printableArea.identifier === '') {
+        if (!this.printableArea
+        || !this.printableArea.identifier
+        || this.printableArea.identifier === ''
+        || !this.printableArea.perspective
+        || this.printableArea.perspective === '') {
             return;
         }
 
 
-        this.findRenderImagesForProduct((renderImages) => {
+        this.removeBackgroundImage();
+
+        if (!this.printableArea.perspective.startsWith('persp')) {
+            return;
+        }
+
+        this.findRenderImagesForProduct(this.printableArea.perspective, (renderImages) => {
             if (renderImages && renderImages.length > 0) {
                 const imagePaths = [];
 
                 for (const renderImage of renderImages) {
-                    if (renderImage.perspective === 'persp1') {
-
-                        for (const mf of renderImage.mediaFile) {
-                            imagePaths.push(this.getMediaPath() + mf.path + '/' + mf.filename + '.' + mf.extension);
-                        }
+                    for (const mf of renderImage.mediaFile) {
+                        imagePaths.push(this.getMediaPath() + mf.path + '/' + mf.filename + '.' + mf.extension);
                     }
                 }
 
@@ -296,19 +301,10 @@ class AreaEditorController {
                     .then(canvas => {
                         const img = new fabric.Image(canvas);
 
+                        this.removeBackgroundImage();
                         this.backgroundImage = img;
 
-                        img.set({
-                            selectable: false,
-                            evented: false,
-                            hasControls: false,
-                            hasBorders: false,
-                            lockMovementX: true,
-                            lockMovementY: true,
-                            lockScalingX: true,
-                            lockScalingY: true,
-                            lockRotation: true
-                        });
+                        this.lockObject(img, true);
 
                         this.canvas.add(img);
                         this.canvas.sendToBack(img);
@@ -319,9 +315,22 @@ class AreaEditorController {
     }
 
     $onChanges = (changes) => {
-        if (changes.identifier && this.printableArea.identifier === '') {
-            this.printableArea.identifier = this.identifier;
-            this.drawRenderImage();
+        if (changes.identifier) {
+            let prevIdentifier = this.printableArea.identifier;
+
+            if (this.identifier !== prevIdentifier) {
+                this.printableArea.identifier = this.identifier;
+                this.drawRenderImage();
+            }
+        }
+
+        if (changes.perspective) {
+            let prevPerspective = this.printableArea.perspective;
+
+            if (this.perspective !== prevPerspective) {
+                this.printableArea.perspective = this.perspective;
+                this.drawRenderImage();
+            }
         }
 
         if (changes.left) {
@@ -363,6 +372,7 @@ class AreaEditorController {
         });
 
         this.canvas = new fabric.Canvas('printableAreaEditor');
+
         this.updateCanvasSize();
 
         this.canvas.on('mouse:down', (e) => {
@@ -370,22 +380,17 @@ class AreaEditorController {
                 return;
             }
 
+            this.updatePrintableAreaLocation();
+
             switch (this.printableAreaShape) {
                 case 'Rectangle':
-                    this.printableArea.data.left = this.shapeObjectProperties.left;
-                    this.printableArea.data.top = this.shapeObjectProperties.top;
                     this.printableArea.data.width = this.shapeObjectProperties.width;
                     this.printableArea.data.height = this.shapeObjectProperties.height;
                     break;
                 case 'Circle':
-                    this.printableArea.data.left = this.shapeObjectProperties.left;
-                    this.printableArea.data.top = this.shapeObjectProperties.top;
                     this.printableArea.data.radius = this.shapeObjectProperties.radius;
                     break;
                 case 'Polygon':
-                    this.printableArea.data.left = this.shapeObjectProperties.left;
-                    this.printableArea.data.top = this.shapeObjectProperties.top;
-
                     if (this.shapeObjectProperties.isCreating) {
                         const pointer = this.canvas.getPointer(e.e);
 
@@ -421,6 +426,16 @@ class AreaEditorController {
     }
 
 
+    updatePrintableAreaLocation() {
+        if (!this.printableArea || !this.printableArea.data || !this.shapeObjectProperties) {
+            return;
+        }
+
+        this.printableArea.data.left = this.shapeObjectProperties.left;
+        this.printableArea.data.top = this.shapeObjectProperties.top;
+    }
+
+
     clearObject(data) {
         if (this.shapeObject && this.canvas.contains(this.shapeObject)) {
             this.canvas.remove(this.shapeObject);
@@ -439,18 +454,18 @@ class AreaEditorController {
 
         this.shapeObjectProperties = {
             shape: 'Rectangle',
-            left: data ? data.left : 10,
-            top: data ? data.top: 10,
+            left: data ? data.left : 0,
+            top: data ? data.top: 0,
             width: data ? data.width : 100,
             height: data ? data.height : 50
         };
 
         this.shapeObject = new fabric.Rect({
-            left: this.shapeObjectProperties.left,
-            top: this.shapeObjectProperties.top,
             width: this.shapeObjectProperties.width,
             height: this.shapeObjectProperties.height
         });
+
+        this.updateShapeObjectLocation();
 
         this.initShape(this.shapeObject);
 
@@ -463,16 +478,16 @@ class AreaEditorController {
 
         this.shapeObjectProperties = {
             shape: 'Circle',
-            left: data ? data.left : 10,
-            top: data ? data.top : 10,
+            left: data ? data.left : 0,
+            top: data ? data.top : 0,
             radius: data ? data.radius : 50
         };
 
         this.shapeObject = new fabric.Circle({
-            left: this.shapeObjectProperties.left,
-            top: this.shapeObjectProperties.top,
             radius: this.shapeObjectProperties.radius
         });
+
+        this.updateShapeObjectLocation();
 
         this.initShape(this.shapeObject);
 
@@ -485,6 +500,8 @@ class AreaEditorController {
 
         this.shapeObjectProperties = {
             shape: 'Polygon',
+            left: data ? data.left : 0,
+            top: data ? data.top : 0,
             isCreating: data ? data.isCreating : false,
             points: data ? data.points : []
         };
@@ -494,6 +511,8 @@ class AreaEditorController {
                 ...data.points
             ]);
 
+            this.updateShapeObjectLocation();
+
             this.initShape(this.shapeObject);
 
             this.canvas.add(this.shapeObject);
@@ -502,17 +521,30 @@ class AreaEditorController {
         this.canvas.renderAll();
     }
 
-
-    lockShape(shapeObj) {
-        if (!shapeObj) {
-            return;
-        }
-
-        shapeObj.set({
+    lockObject(obj, isBackgroundObject) {
+        obj.set({
+            selectable: true,
+            evented: true,
+            hasControls: false,
+            hasBorders: true,
             lockScalingX: true,
             lockScalingY: true,
             lockRotation: true
         });
+
+        if (isBackgroundObject) {
+            obj.set({
+                selectable: false,
+                evented: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockRotation: true
+            });
+        }
     }
 
     initShape(shapeObj) {
@@ -529,7 +561,7 @@ class AreaEditorController {
             evented: true
         });
 
-        this.lockShape(shapeObj);
+        this.lockObject(shapeObj, false);
 
         shapeObj.on({
             moving: this.handleShapeTransform,
@@ -545,18 +577,18 @@ class AreaEditorController {
         }
 
 
-        const obj = e.target;
-
-        const boundingRect = obj.getBoundingRect();
-
-        this.shapeObjectProperties.left = boundingRect.left;
-        this.shapeObjectProperties.top = boundingRect.top;
-
+        this.saveShapeObjectLocation();
         this.updateAreaData();
-
         this.updateCanvasSize();
 
         this.$scope.$applyAsync();
+    }
+
+    saveShapeObjectLocation() {
+        const obj = this.shapeObject;
+        const boundingRect = obj.getBoundingRect();
+        this.shapeObjectProperties.left = boundingRect.left;
+        this.shapeObjectProperties.top = boundingRect.top;
     }
 
 
@@ -586,6 +618,7 @@ class AreaEditorController {
         }
 
         this.shapeObjectProperties.isCreating = isCreating;
+        this.saveShapeObjectLocation();
         this.$scope.$applyAsync();
     }
 
@@ -598,35 +631,50 @@ class AreaEditorController {
     }
 
 
-    updateShapeObject() {
+    isShapeObjectDefined() {
         if (!this.shapeObject) {
-            return;
+            return false;
         }
 
         if (!this.shapeObjectProperties || !this.shapeObjectProperties.shape) {
+            return false;
+        }
+
+        return true;
+    }
+
+    updateShapeObjectLocation() {
+        if (!this.isShapeObjectDefined()) {
             return;
         }
+
+        this.shapeObject.set({
+            left: this.shapeObjectProperties.left,
+            top: this.shapeObjectProperties.top
+        });
+    }
+
+    updateShapeObject() {
+        if (!this.isShapeObjectDefined()) {
+            return;
+        }
+
+        this.updateShapeObjectLocation();
 
         switch (this.shapeObjectProperties.shape) {
             case 'Rectangle':
                 this.shapeObject.set({
-                    left: this.shapeObjectProperties.left,
-                    top: this.shapeObjectProperties.top,
                     width: this.shapeObjectProperties.width,
                     height: this.shapeObjectProperties.height
                 });
                 break;
             case 'Circle':
                 this.shapeObject.set({
-                    left: this.shapeObjectProperties.left,
-                    top: this.shapeObjectProperties.top,
                     radius: this.shapeObjectProperties.radius
                 });
                 break;
             case 'Polygon':
                 this.shapeObject.set({
-                    left: this.shapeObjectProperties.left,
-                    top: this.shapeObjectProperties.top,
                     points: this.shapeObjectProperties.points
                 });
                 break;
@@ -651,6 +699,13 @@ class AreaEditorController {
     }
 
 
+    removeBackgroundImage() {
+        if (this.backgroundImage) {
+            this.canvas.remove(this.backgroundImage);
+            this.backgroundImage = null;
+        }
+    }
+
     backgroundImageSelected() {
         const file = this.backgroundImageFileInput.files[0];
 
@@ -660,26 +715,14 @@ class AreaEditorController {
 
         const reader = new FileReader();
 
-        if (this.backgroundImage) {
-            this.canvas.remove(this.backgroundImage);
-            this.backgroundImage = null;
-        }
+        this.removeBackgroundImage();
 
         reader.onload = (event) => {
             fabric.Image.fromURL(event.target.result, (img) => {
+                this.removeBackgroundImage();
                 this.backgroundImage = img;
 
-                img.set({
-                    selectable: false,
-                    evented: false,
-                    hasControls: false,
-                    hasBorders: false,
-                    lockMovementX: true,
-                    lockMovementY: true,
-                    lockScalingX: true,
-                    lockScalingY: true,
-                    lockRotation: true
-                });
+                this.lockObject(img, true);
 
                 this.canvas.add(img);
                 this.canvas.sendToBack(img);
@@ -703,6 +746,7 @@ const AreaEditorComponent = {
     bindings: {
         definitionValidation: '&',
         identifier: '<',
+        perspective: '<',
         left: '<',
         top: '<',
         width: '<',

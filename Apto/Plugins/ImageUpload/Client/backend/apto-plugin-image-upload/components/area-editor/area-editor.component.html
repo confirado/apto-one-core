@@ -70,6 +70,16 @@
     </ng-container>
 
     <ng-container ng-if="$ctrl.printableAreaShape === 'Polygon'" flex>
+        <md-input-container flex>
+            <label>Abstand links (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.left" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Abstand oben (px):</label>
+            <input type="number" step="1" ng-model="$ctrl.shapeObjectProperties.top" ng-change="$ctrl.updateShapeObject()">
+        </md-input-container>
+
         <md-button
             class="md-raised md-primary md-cornered md-button md-ink-ripple"
             title="Start"
@@ -77,6 +87,7 @@
             ng-disabled="$ctrl.shapeObjectProperties.isCreating">
             Start
         </md-button>
+
         <md-button
             class="md-raised md-primary md-cornered md-button md-ink-ripple"
             title="Start"
@@ -84,6 +95,7 @@
             ng-disabled="!$ctrl.shapeObjectProperties.isCreating">
             Stop
         </md-button>
+
         <md-button
             class="md-raised md-primary md-cornered md-button md-ink-ripple"
             title="Clear"
