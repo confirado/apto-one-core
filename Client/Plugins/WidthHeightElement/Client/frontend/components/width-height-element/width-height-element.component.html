@@ -49,6 +49,7 @@
 
                 <div class="input">
                     <apto-input-field
+                        data-cy="width-height-height-input"
                         *ngIf="element.element.definition.staticValues.renderingHeight === 'input'"
                         formControlName="height"
                         [type]="'integer'"
@@ -61,6 +62,7 @@
                     </apto-input-field>
 
                     <apto-select-field
+                        data-cy="width-height-height-select"
                         *ngIf="element.element.definition.staticValues.renderingHeight === 'select'"
                         [items]="itemsHeight"
                         [name]="element.element.definition.staticValues.prefixHeight | translate"
@@ -71,6 +73,7 @@
                     </apto-select-field>
 
                     <apto-select-field
+                        data-cy="width-height-height-none"
                         *ngIf="element.element.definition.staticValues.renderingHeight === 'none'"
                         [name]="element.element.definition.staticValues.prefixHeight | translate"
                         [default]="element.element.definition.staticValues.defaultHeight"
@@ -102,6 +105,7 @@
 <!--                <div class="prefix">{{element.element.definition.staticValues.prefixWidth | translate}}</div>-->
                 <div class="input">
                     <apto-input-field
+                        data-cy="width-height-width-input"
                         *ngIf="element.element.definition.staticValues.renderingWidth === 'input'"
                         formControlName="width"
                         [type]="'integer'"
@@ -116,6 +120,7 @@
                     </apto-input-field>
 
                     <apto-select-field
+                        data-cy="width-height-width-select"
                         *ngIf="element.element.definition.staticValues.renderingWidth === 'select'"
                         formControlName="width"
                         [items]="itemsWidth"
@@ -126,6 +131,7 @@
                     </apto-select-field>
 
                     <apto-select-field
+                        data-cy="width-height-width-none"
                         *ngIf="element.element.definition.staticValues.renderingWidth === 'none'"
                         [default]="element.element.definition.staticValues.defaultWidth"
                         [enableClear]="false"
@@ -158,6 +164,7 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product?.useStepByStep"
                 mat-flat-button
                 color="primary"
+                data-cy="width-height-apply-button"
                 (click)="saveInput()"
                 >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
@@ -166,6 +173,7 @@
                 *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
                 mat-flat-button
                 color="primary"
+                data-cy="width-height-apply-button"
                 (click)="saveInput()"
                 >{{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
             </button>
@@ -174,6 +182,7 @@
                 *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
                 mat-flat-button
                 color="accent"
+                data-cy="width-height-remove-button"
                 (click)="removeInput()"
             >
                 {{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
@@ -182,6 +191,7 @@
                 *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
                 mat-flat-button
                 color="accent"
+                data-cy="width-height-remove-button"
                 [mat-dialog-close]="true"
                 (click)="removeInput()"
             >

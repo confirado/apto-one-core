@@ -7,7 +7,7 @@ import {
 import { selectQuantity } from '@apto-catalog-frontend-configuration-selectors';
 import { Store } from '@ngrx/store';
 import { debounceTime, Subject } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ParameterStateTypes } from '@apto-catalog-frontend-configuration-model';
 
 @Component({

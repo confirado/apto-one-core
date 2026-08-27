@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AreaElementDefinitionProperties, ProgressElement } from '@apto-catalog-frontend-configuration-model';
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { DialogService } from '@apto-catalog-frontend/components/common/dialogs/dialog-service';

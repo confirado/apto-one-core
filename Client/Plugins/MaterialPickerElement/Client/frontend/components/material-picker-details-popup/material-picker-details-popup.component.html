@@ -49,7 +49,7 @@
             <div class="item-details-description" [innerHTML]="data.poolItem.material.description | translate | safeHtml"></div>
 
             <div class="item-details-gallery-images" *ngIf="data.poolItem.material.galleryImages.length > 0">
-                <div class="item-details-gallery-image"
+                <div class="item-details-gallery-image" data-cy="material-preview-image"
                      (click)="setPoolItemImage(data.poolItem.material.previewImage.fileUrl)"
                      [class.gallery-image-selected]="data.poolItem.material.previewImage.fileUrl === poolItemImageSelected"
                 >
@@ -57,6 +57,7 @@
                 </div>
 
                 <div class="item-details-gallery-image" *ngFor="let galleryImage of data.poolItem.material.galleryImages"
+                     [attr.data-cy]="'material-gallery-image-' + galleryImage.fileUrl"
                      (click)="setPoolItemImage(galleryImage.fileUrl)"
                      [class.gallery-image-selected]="poolItemImageSelected === galleryImage.fileUrl"
                 >

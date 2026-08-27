@@ -4,7 +4,7 @@
               [class.open-in-dialog]="isDialog"
               [class.disabled]="element.state.disabled"
 >
-	<div class="container">
+	<div class="container" data-cy="price-per-unit-one-page">
 		<div class="single-element">
 			<div [class.selected]="element.state.active">
                 <div *ngIf="element.state.active" [class.selected]="element.state.active" class="circle"><mat-icon>done</mat-icon></div>

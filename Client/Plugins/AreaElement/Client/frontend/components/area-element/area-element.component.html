@@ -39,6 +39,7 @@
 
                 <div class="input">
                     <apto-input-field
+                        [attr.data-cy]="'area-field-' + field.key"
                         *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'input'"
                         [formControlName]="field.key"
                         [type]="'numeric'"
@@ -51,6 +52,7 @@
                     ></apto-input-field>
 
                     <apto-select-field
+                        [attr.data-cy]="'area-field-' + field.key"
                         *ngIf="field.key !== 'sumOfFieldValue' && element.element.definition.staticValues.fields?.[i]?.rendering === 'select'"
                         [default]="element.element.definition.staticValues.fields?.[i]?.default + ''"
                         [enableClear]="false"
@@ -99,6 +101,7 @@
                 *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                 mat-flat-button
                 color="primary"
+                data-cy="area-apply-button"
                 (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
@@ -107,6 +110,7 @@
                 *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
                 mat-flat-button
                 color="primary"
+                data-cy="area-apply-button"
                 (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
@@ -115,6 +119,7 @@
                 *ngIf="hasValues() && (product.useStepByStep || !element.element.definition.staticValues.renderDialogInOnePageDesktop)"
                 mat-flat-button
                 color="accent"
+                data-cy="area-remove-button"
                 (click)="removeInput()"
             >{{ contentSnippet$ | async | contentSnippet: 'buttons.remove' }}
             </button>
@@ -122,6 +127,7 @@
                 *ngIf="hasValues() && !product.useStepByStep && element.element.definition.staticValues.renderDialogInOnePageDesktop"
                 mat-flat-button
                 color="accent"
+                data-cy="area-remove-button"
                 [mat-dialog-close]="true"
                 (click)="removeInput()"
             >

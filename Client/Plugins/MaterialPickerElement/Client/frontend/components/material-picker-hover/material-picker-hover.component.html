@@ -17,7 +17,7 @@
         <b>{{poolItem.priceGroup.additionalCharge}} {{ contentSnippet$ | async | contentSnippet: 'poolItemPriceInfoPercentage' }}</b>
     </p>
 
-    <div class="item-open-details" *ngIf="(contentSnippet$ | async | contentSnippet: 'poolItemOpenDetails')" (click)="showDetails()">
+    <div class="item-open-details" *ngIf="(contentSnippet$ | async | contentSnippet: 'poolItemOpenDetails')" (click)="showDetails()" data-cy="material-open-details">
         <mat-icon>zoom_in</mat-icon> <span class="text">{{contentSnippet$ | async | contentSnippet: 'poolItemOpenDetails'}}</span>
     </div>
 </div>
