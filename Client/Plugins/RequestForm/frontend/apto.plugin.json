@@ -16,6 +16,10 @@
     {
       "alias": "@apto-request-form-frontend-request-form",
       "path": "components/request-form/request-form.component.ts"
+    },
+    {
+      "alias": "@apto-request-form-frontend-summary",
+      "path": "components/summary/summary.component.ts"
     }
   ]
 }
