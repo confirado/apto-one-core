@@ -1,0 +1,25 @@
+{
+  "plugins": {
+    "partsList": {
+      "table": {
+        "title": {
+          "de_DE": "Einzelkomponenten"
+        },
+        "columns": {
+          "pos": {
+            "de_DE": "Pos."
+          },
+          "partNumber": {
+            "de_DE": "Art. Nummer"
+          },
+          "partName": {
+            "de_DE": "Komponente"
+          },
+          "quantity": {
+            "de_DE": "Menge"
+          }
+        }
+      }
+    }
+  }
+}
