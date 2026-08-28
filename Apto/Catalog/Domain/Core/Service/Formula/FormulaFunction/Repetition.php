@@ -141,6 +141,8 @@ class Repetition extends AbstractFormulaFunction
             $value,
             new AptoUuid($alias['sectionId']),
             new AptoUuid($alias['elementId']),
+            $alias['group'],
+            $alias['groupProperty'],
             $propertyName,
             $repetition
         );

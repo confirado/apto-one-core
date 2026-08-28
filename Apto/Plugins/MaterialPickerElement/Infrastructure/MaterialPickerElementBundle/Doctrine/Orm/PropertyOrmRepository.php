@@ -53,6 +53,28 @@ class PropertyOrmRepository extends AptoOrmRepository implements PropertyReposit
     }
 
     /**
+     * @return Property[]
+     */
+    public function getProperties(): array
+    {
+        return $this->createQueryBuilder('Property')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $groupId
+     * @return Property[]
+     */
+    public function getPropertiesByGroupId($groupId): array
+    {
+        $builder = $this->createQueryBuilder('Property')
+            ->where('Property.group_id = :group_id')
+            ->setParameter('group_id', $groupId);
+        return $builder->getQuery()->getResult();
+    }
+
+    /**
      * @return void
      */
     public function invalidateCache()

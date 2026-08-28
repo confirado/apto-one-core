@@ -22,6 +22,8 @@
         </field>
         <field name="sectionId" column="section_id" type="AptoPropertyUuid" nullable="true"/>
         <field name="elementId" column="element_id" type="AptoPropertyUuid" nullable="true"/>
+        <field name="group" column="group_name" type="string" nullable="true"/>
+        <field name="groupProperty" column="group_property" type="string" nullable="true"/>
         <field name="property" column="property" type="string" nullable="true"/>
         <field name="value" column="value" type="string" nullable="true"/>
 

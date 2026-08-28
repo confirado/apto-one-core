@@ -168,7 +168,8 @@ class MaterialPickerElementDefinition implements ElementDefinition
             'materialsSecondary' => new ElementValueCollection([new ElementJsonValue()]),
             'materialColorMixing' => new ElementValueCollection([new ElementTextValue(0, 255)]),
             'materialColorArrangement' => new ElementValueCollection([new ElementTextValue(0, 255)]),
-            'materialColorQuantity' => new ElementValueCollection([new ElementTextValue(0, 255)])
+            'materialColorQuantity' => new ElementValueCollection([new ElementTextValue(0, 255)]),
+            'materialProperty' => new ElementValueCollection([new ElementJsonValue()]),
         ];
     }
 

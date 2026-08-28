@@ -219,6 +219,8 @@ class Rule extends AptoEntity
         ?int                  $type = Criterion::TYPE,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
+        ?string               $group = null,
+        ?string               $groupProperty = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
         ?string               $value = null
@@ -233,6 +235,8 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
+                $group,
+                $groupProperty,
                 $property,
                 $computedProductValue,
                 $value
@@ -314,6 +318,44 @@ class Rule extends AptoEntity
         }
 
         $condition->setElementId($elementId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid      $conditionId
+     * @param string|null   $group
+     *
+     * @return $this
+     */
+    public function setConditionGroup(AptoUuid $conditionId, ?string $group): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroup($group);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid      $conditionId
+     * @param string|null   $groupProperty
+     *
+     * @return $this
+     */
+    public function setConditionGroupProperty(AptoUuid $conditionId, ?string $groupProperty): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroupProperty($groupProperty);
 
         return $this;
     }
@@ -488,6 +530,8 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
+                null,
+                null,
                 $property,
                 $computedProductValue,
                 $value
