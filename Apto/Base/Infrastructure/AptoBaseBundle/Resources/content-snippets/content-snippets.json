@@ -1,12 +1,18 @@
 {
   "aptoSelect": {
     "suffix": {
-      "de_DE": "Stück"
+      "de_DE": "Stück",
+      "en_EN": "piece",
+      "fr_FR": "unitè",
+      "es_ES": "unidad"
     }
   },
   "aptoLanguageSwitch": {
     "switch": {
-      "de_DE": "Sprache wählen:"
+      "de_DE": "Sprache wählen:",
+      "en_EN": "choose language",
+      "fr_FR": "Choisissez la langue:",
+      "es_ES": "Seleccionar idioma:"
     }
   },
   "aptoLogo": {
@@ -28,13 +34,18 @@
   },
   "aptoProductIsNotAvailable": {
     "message": {
-      "de_DE": "Das Produkt ist nicht verfügbar. Bitte wenden Sie sich an den Shopbetreiber."
+      "de_DE": "Das Produkt ist nicht verfügbar. Bitte wenden Sie sich an den Shopbetreiber.",
+      "en_EN": "The product is no loger available. Please contact the shop owner.",
+      "fr_FR": "Ce produit n'est pas disponible. Veuillez contacter le gérant de la boutique.",
+      "es_ES": "El producto ne esté disponible. Ponte en contacto con el responsable de la tienda."
     }
   },
   "aptoPageNotFound": {
     "info": {
       "de_DE": "<h2>Seite wurde nicht gefunden.</h2>",
-      "en_GB": "<h2>Page not found.</h2>"
+      "en_EN": "<h2>Page not found.</h2>",
+      "fr_FR": "<h2>Page introuvable.</h2>",
+      "es_ES": "<h2>No se ha encontrado la página. </h2>"
     }
   },
   "auth": {

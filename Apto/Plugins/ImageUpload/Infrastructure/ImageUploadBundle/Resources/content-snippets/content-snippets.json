@@ -3,18 +3,30 @@
     "imageUpload": {
       "error": {
         "default": {
-          "de_DE": "Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+          "de_DE": "Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+          "en_EN": "Upload failed. Please try again.",
+          "fr_FR": "Une erreur s'est produite lors du téléchargement. Veuillez réessayer.",
+          "es_ES": "Se ha producido un error al subir en el archivo. Inténtalo de nuevo."
         },
         "maxSize": {
           "prefix": {
-            "de_DE": "Die Dateigröße darf"
+            "de_DE": "Die Dateigröße darf",
+            "en_EN": "File size cannot",
+            "fr_FR": "La taille du fichier ne doit pas dépasser",
+            "es_ES": "El tamaño del archivo no debe superar"
           },
           "suffix": {
-            "de_DE": "nicht überschreiten."
+            "de_DE": "nicht überschreiten.",
+            "en_EN": "exeed \"file size\".",
+            "fr_FR": "\"file size\"",
+            "es_ES": "\"file size\""
           }
         },
         "pattern": {
-          "de_DE": "Folgende Dateitypen sind erlaubt:"
+          "de_DE": "Folgende Dateitypen sind erlaubt:",
+          "en_EN": "These file types are allowed",
+          "fr_FR": "Les types de fichiers suivants sont autorisés :",
+          "es_ES": "Se admiten los siguientes tipos de archivo:"
         },
         "minDimensions": {
           "prefix": {
@@ -33,13 +45,22 @@
       },
       "upload": {
         "dragover": {
-          "de_DE": "Datei-Upload via Drag'n'Drop oder Klick"
+          "de_DE": "Datei-Upload via Drag'n'Drop oder Klick",
+          "en_EN": "File upload using drag'n'drop or by click",
+          "fr_FR": "Téléchargement de fichiers par glisser-déposer ou par clic",
+          "es_ES": "Carga de archivos mediante  arrestar y soltar o con un clic"
         },
         "edit": {
-          "de_DE": "Bearbeiten"
+          "de_DE": "Bearbeiten",
+          "en_EN": "edit",
+          "fr_FR": "modifier",
+          "es_ES": "editar"
         },
         "cancel": {
-          "de_DE": "Verwerfen"
+          "de_DE": "Verwerfen",
+          "en_EN": "delete",
+          "fr_FR": "rejeter",
+          "es_ES": "descartar"
         },
         "cancelMessage": {
           "de_DE": "Deine aktuellen Änderungen werden verworfen.",
@@ -60,7 +81,10 @@
           "es_ES": "Se eliminará todo tu diseño."
         },
         "save": {
-          "de_DE": "Übernehmen"
+          "de_DE": "Übernehmen",
+          "en_EN": "apply",
+          "fr_FR": "appliquer",
+          "es_ES": "aplicar"
         },
         "deleteImage": {
           "de_DE": "Bild löschen",

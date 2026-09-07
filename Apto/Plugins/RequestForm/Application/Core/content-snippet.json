@@ -150,16 +150,28 @@
         },
         "afterSend": {
           "headlineError": {
-            "de_DE": "Ups,"
+            "de_DE": "Ups,",
+            "en_EN": "Oops,",
+            "fr_FR": "Oups,",
+            "es_ES": "¡Vaya!"
           },
           "headlineSuccess": {
-            "de_DE": "Glückwunsch!"
+            "de_DE": "Glückwunsch!",
+            "en_EN": "Congratulations!",
+            "fr_FR": "Félicitations !",
+            "es_ES": "¡Enhorabuena!"
           },
           "sublineError": {
-            "de_DE": "Da ging etwas schief!"
+            "de_DE": "Da ging etwas schief!",
+            "en_EN": "Something went wrong!",
+            "fr_FR": "Une erreur s'est produite !",
+            "es_ES": "¡Algo salió mal!"
           },
           "sublineSuccess": {
-            "de_DE": "Ihre Anfrage wurde erfolgreich versendet!"
+            "de_DE": "Ihre Anfrage wurde erfolgreich versendet!",
+            "en_EN": "Your request was sent successfully!",
+            "fr_FR": "Votre demande a été envoyée avec succès !",
+            "es_ES": "¡Su solicitud se ha enviado correctamente!"
           }
         },
         "declarationOfConsent": {
@@ -187,10 +199,16 @@
             "de_DE": "Sehr geehrter Herr"
           },
           "salutationPerson": {
-            "de_DE": "Sehr geehrte/r"
+            "de_DE": "Sehr geehrte/r",
+            "en_EN": "Dear",
+            "fr_FR": "Cher/Chère",
+            "es_ES": "Estimado/a"
           },
           "goodAfternoon": {
-            "de_DE": "Guten Tag,"
+            "de_DE": "Guten Tag,",
+            "en_EN": "Hello, Good Morning, Good Day,",
+            "fr_FR": "Bonjour",
+            "es_ES": "Buenas Dias"
           },
           "title": {
             "de_DE": "Produktanfrage"
@@ -369,7 +387,9 @@
           }
         },
         "header": {
-          "logo": ["/logo.png"]
+          "logo": [
+            "/logo.png"
+          ]
         },
         "footer": {
           "city": {

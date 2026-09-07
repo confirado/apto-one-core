@@ -30,49 +30,82 @@
       }
     },
     "share": {
-      "de_DE": "Teilen"
+      "de_DE": "Teilen",
+      "en_EN": "share",
+      "fr_FR": "partage",
+      "es_ES": "compartir"
     },
     "save": {
-      "de_DE": "Speichern"
+      "de_DE": "Speichern",
+      "en_EN": "save",
+      "fr_FR": "enregistrer",
+      "es_ES": "guardar"
     }
   },
   "aptoSidebarInfo": {
     "shipping": {
       "link": {
         "text": {
-          "de_DE": "Versandkosten"
+          "de_DE": "Versandkosten",
+          "en_EN": "shipping costs",
+          "fr_FR": "les frais d'envoi / d'expetition",
+          "es_ES": "gastos de envío"
         },
         "href": []
       },
       "prefix": {
-        "de_DE": "zzgl."
+        "de_DE": "zzgl.",
+        "en_EN": "excl.",
+        "fr_FR": "hors",
+        "es_ES": "más"
       }
     },
     "tax": {
       "withoutShop": {
-        "de_DE": "inkl. MwSt."
+        "de_DE": "inkl. MwSt.",
+        "en_EN": "incl. Tax",
+        "fr_FR": "TVA comprise",
+        "es_ES": "IVA includido"
       },
       "withoutTax": {
-        "de_DE": "zzgl. MwSt."
+        "de_DE": "zzgl. MwSt.",
+        "en_EN": "excl. Tax",
+        "fr_FR": "hors TVA",
+        "es_ES": "sin IVA"
       },
       "withTax": {
-        "de_DE": "inkl. MwSt."
+        "de_DE": "inkl. MwSt.",
+        "en_EN": "incl. Tax",
+        "fr_FR": "TVA comprise",
+        "es_ES": "IVA includido"
       }
     }
   },
   "aptoDefaultElementDefinition": {
     "buttons": {
       "update": {
-        "de_DE": "Aktualisieren"
+        "de_DE": "Aktualisieren",
+        "en_EN": "update",
+        "fr_FR": "actualiser",
+        "es_ES": "actualización"
       },
       "remove": {
-        "de_DE": "Abwählen"
+        "de_DE": "Abwählen",
+        "en_EN": "deselect",
+        "fr_FR": "décocher",
+        "es_ES": "desmarcar"
       },
       "select": {
-        "de_DE": "Auswählen"
+        "de_DE": "Auswählen",
+        "en_EN": "choose",
+        "fr_FR": "choisir",
+        "es_ES": "seleccionar"
       },
       "select-continue": {
-        "de_DE": "Auswählen & Weiter"
+        "de_DE": "Auswählen & Weiter",
+        "en_EN": "choose and continue",
+        "fr_FR": "choisir et continue",
+        "es_ES": "seleccionar y continuar"
       },
       "continue": {
         "de_DE": "Weiter",
@@ -93,26 +126,44 @@
   "AptoLoginController": {
     "form": {
       "register": {
-        "de_DE": "Registrieren"
+        "de_DE": "Registrieren",
+        "en_EN": "register",
+        "fr_FR": "enregistrer",
+        "es_ES": "registrarse"
       },
       "mail": {
-        "de_DE": "Ihre E-Mail Adresse"
+        "de_DE": "Ihre E-Mail Adresse",
+        "en_EN": "your e-mail address",
+        "fr_FR": "votre adresse e-mail",
+        "es_ES": "tu e-mail"
       },
       "login": {
-        "de_DE": "Anmelden"
+        "de_DE": "Anmelden",
+        "en_EN": "login",
+        "fr_FR": "connexion",
+        "es_ES": "Iniciar sesión"
       },
       "password": {
-        "de_DE": "Passwort"
+        "de_DE": "Passwort",
+        "en_EN": "password",
+        "fr_FR": "mot de pass",
+        "es_ES": "Contraseña"
       }
     }
   },
   "aptoStepByStep": {
     "sidebarSummary": {
       "taxes": {
-        "de_DE": "inkl. MwSt., zzgl."
+        "de_DE": "inkl. MwSt., zzgl.",
+        "en_EN": "incl. Tax, excl.",
+        "fr_FR": "TVA comprise, hors",
+        "es_ES": "IVA incluido, más"
       },
       "sum": {
-        "de_DE": "Summe:"
+        "de_DE": "Summe:",
+        "en_EN": "sum",
+        "fr_FR": "total",
+        "es_ES": "suma/ total"
       },
       "offerNotification": {
         "de_DE": "Wenn Sie Fragen haben, oder ein individuelles Angebot wünschen, können Sie dies hier anfordern.",
@@ -121,45 +172,78 @@
         "es_ES": "Si tiene alguna pregunta o desea recibir un presupuesto personalizado, puede solicitarlo aquí."
       },
       "basketNotification": {
-        "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können."
+        "de_DE": "Schließen Sie alle Schritte ab, um Ihre Konfiguration in den Warenkorb legen zu können.",
+        "en_EN": "Please complete all the steps to be able to add your configuration to your shopping cart.",
+        "fr_FR": "Suivez toutes les étapes pour pouvoir ajouter votre configuration à votre panier.",
+        "es_ES": "Completa todos los pasos para poder añadir tu configuración a la cesta de la compra."
       },
       "shippingCosts": {
-        "de_DE": "zzgl. Versandkosten"
+        "de_DE": "zzgl. Versandkosten",
+        "en_EN": "excl. shipping costs",
+        "fr_FR": "hors frais de port",
+        "es_ES": "más gastos de envío"
       },
       "basketNotificationTitle": {
-        "de_DE": "Hinweis"
+        "de_DE": "Hinweis",
+        "en_EN": "Notice",
+        "fr_FR": "Avis",
+        "es_ES": "Note"
       },
       "cart": {
-        "de_DE": "In den Warenkorb legen"
+        "de_DE": "In den Warenkorb legen",
+        "en_EN": "Add to cart",
+        "fr_FR": "Ajouter au panier",
+        "es_ES": "añadir a la cesta de tu compra / añadir al carrito"
       },
       "basePrice": {
-        "de_DE": "Grundpreis:"
+        "de_DE": "Grundpreis:",
+        "en_EN": "starting price",
+        "fr_FR": "prix de base",
+        "es_ES": "precio  base"
       },
       "summary": {
-        "de_DE": "Zusammenfassung"
+        "de_DE": "Zusammenfassung",
+        "en_EN": "overview",
+        "fr_FR": "résumé",
+        "es_ES": "resumen"
       }
     },
     "elementsContainer": {
       "configure": {
-        "de_DE": "Konfigurieren Sie Ihr Produkt"
+        "de_DE": "Konfigurieren Sie Ihr Produkt",
+        "en_EN": "configure your product",
+        "fr_FR": "Configurez votre produit",
+        "es_ES": "configura tu producto"
       },
-      "prevStep" : {
+      "prevStep": {
         "de_DE": "Zurück",
         "en_EN": "Back",
         "fr_FR": "Retour",
         "es_ES": "Atrás"
       },
       "nextRoom": {
-        "de_DE": "Nächster Raum"
+        "de_DE": "Nächster Raum",
+        "en_EN": "Next room",
+        "fr_FR": "Pièce suivante",
+        "es_ES": "Siguiente Espacio"
       },
       "nextStep": {
-        "de_DE": "Nächster Schritt"
+        "de_DE": "Nächster Schritt",
+        "en_EN": "Next step",
+        "fr_FR": "Étape suivante",
+        "es_ES": "Siguiente paso"
       },
       "finishSteps": {
-        "de_DE": "Konfiguartion abschließen"
+        "de_DE": "Konfiguartion abschließen",
+        "en_EN": "Complete configuration",
+        "fr_FR": "Terminer la configuration",
+        "es_ES": "Finalizar la configuración"
       },
       "filter": {
-        "de_DE": "Nach Eigenschaft filtern"
+        "de_DE": "Nach Eigenschaft filtern",
+        "en_EN": "Filter by property",
+        "fr_FR": "Filtrer par caractéristique",
+        "es_ES": "filtrar poi característica"
       },
       "incorrectValuesInRange": {
         "de_DE": "Die Werte liegen nicht innerhalb des definierten Bereichs",
@@ -173,15 +257,15 @@
     "finishMessage": {
       "title": {
         "de_DE": "Glückwunsch!",
-        "en_EN": "Congratulations!",
-        "fr_FR": "Félicitations !",
+        "en_EN": "Congratulation",
+        "fr_FR": "Congratulations",
         "es_ES": "¡Enhorabuena!"
       },
       "subline": {
         "de_DE": "Die Konfiguration ist abgeschlossen",
         "en_EN": "The configuration is complete",
         "fr_FR": "La configuration est terminée",
-        "es_ES": "La configuración está completa"
+        "es_ES": "La configuración ha finalizado"
       }
     },
     "totalPrice": {
@@ -192,20 +276,35 @@
     },
     "tax": {
       "withoutTax": {
-        "de_DE": "zzgl. MwSt., zzgl. Versand"
+        "de_DE": "zzgl. MwSt., zzgl. Versand",
+        "en_EN": "excl. Tax, excl. Shipping costs",
+        "fr_FR": "hors TVA, hors frais de port",
+        "es_ES": "más IVA, más gastos de envío"
       },
       "withTax": {
-        "de_DE": "inkl. MwSt., zzgl. Versand"
+        "de_DE": "inkl. MwSt., zzgl. Versand",
+        "en_EN": "incl. Tax, incl. Shipping costs",
+        "fr_FR": "TVA comprise, hors frais de port",
+        "es_ES": "IVA includido, más gastos de envío"
       }
     },
     "back": {
-      "de_DE": "Zurück"
+      "de_DE": "Zurück",
+      "en_EN": "back",
+      "fr_FR": "retour",
+      "es_ES": "atrás"
     },
     "addToBasket": {
-      "de_DE": "In den Warenkorb legen"
+      "de_DE": "In den Warenkorb legen",
+      "en_EN": "add to shopping cart",
+      "fr_FR": "Ajouter au panier",
+      "es_ES": "añadir a la cesta de tu compra / añadir al carrito"
     },
     "headline": {
-      "de_DE": "Zusammenfassung Ihrer Konfiguration"
+      "de_DE": "Zusammenfassung Ihrer Konfiguration",
+      "en_EN": "configuration overview",
+      "fr_FR": "résumé de votre configuration",
+      "es_ES": "resumen de su configuracíon"
     },
     "basicPrice": {
       "de_DE": "Grundpreis",
@@ -281,10 +380,16 @@
   "aptoBasket": {
     "confirmDeleteDialog": {
       "confirm": {
-        "de_DE": "Konfiguration löschen"
+        "de_DE": "Konfiguration löschen",
+        "en_EN": "delete configuration",
+        "fr_FR": "Supprimer la configuration",
+        "es_ES": "borrar la configuracíon"
       },
       "cancel": {
-        "de_DE": "Abbrechen"
+        "de_DE": "Abbrechen",
+        "en_EN": "cancel",
+        "fr_FR": "annuler",
+        "es_ES": "cancelar"
       },
       "title": {
         "de_DE": "Konfiguration löschen?",
@@ -293,23 +398,41 @@
         "es_ES": "¿Desea eliminar la configuración?"
       },
       "text": {
-        "de_DE": "Möchten Sie die Konfiguration <strong>{_productName_}</strong> <br />wirklich aus dem Warenkorb entfernen?"
+        "de_DE": "Möchten Sie die Konfiguration <strong>{_productName_}</strong> <br />wirklich aus dem Warenkorb entfernen?",
+        "en_EN": "Do you really wish to delete <strong>{_productName_}</strong> <br /> configuration from your cart?",
+        "fr_FR": "Voulez-vous vraiment supprimer <strong>{_productName_}</strong> <br /> configuration de votre panier?",
+        "es_ES": "¿De verdad quieres eliminar <strong>{_productName_}</strong> <br /> configuración de tu cesta?"
       }
     },
     "subtotal": {
-      "de_DE": "Zwischensumme"
+      "de_DE": "Zwischensumme",
+      "en_EN": "subtotal",
+      "fr_FR": "sous-total",
+      "es_ES": "subtotal"
     },
     "empty": {
-      "de_DE": "<br />Noch kein Artikel im Warenkorb!<br /><br />"
+      "de_DE": "<br />Noch kein Artikel im Warenkorb!<br /><br />",
+      "en_EN": "Your shopping cart is empty",
+      "fr_FR": "Votre panier est ancore vide.",
+      "es_ES": "¡Aún no hay ningún artículo en la cesta de la compra!"
     },
     "checkout": {
-      "de_DE": "Zur Kasse"
+      "de_DE": "Zur Kasse",
+      "en_EN": "to check out",
+      "fr_FR": "passer á la caisse",
+      "es_ES": "Ir a la ja caja."
     },
     "cart": {
-      "de_DE": "Zum Warenkorb"
+      "de_DE": "Zum Warenkorb",
+      "en_EN": "go to cart",
+      "fr_FR": "Aller au panier",
+      "es_ES": "Ir a la cesta de compra."
     },
     "back": {
-      "de_DE": "Jetzt weiter konfigurieren"
+      "de_DE": "Jetzt weiter konfigurieren",
+      "en_EN": "Continue with the configuration",
+      "fr_FR": "Poursuivre la configuration",
+      "es_ES": "Continuar a la configuracíon."
     },
     "clear": {
       "de_DE": "Warenkorb leeren",
@@ -318,7 +441,10 @@
       "es_ES": "Vaciar la cesta"
     },
     "pricePrefix": {
-      "de_DE": "je"
+      "de_DE": "je",
+      "en_EN": "each",
+      "fr_FR": "chacun",
+      "es_ES": "cada uno"
     },
     "sum": {
       "de_DE": "Summe:",
@@ -374,19 +500,34 @@
         "es_ES": "Hola,"
       },
       "salutationPerson": {
-        "de_DE": "Sehr geehrte/r"
+        "de_DE": "Sehr geehrte/r",
+        "en_EN": "Dear",
+        "fr_FR": "Cher/Chère",
+        "es_ES": "Estimado/a"
       },
       "configurationSaved": {
-        "de_DE": "Wir haben Ihre Konfiguration gespeichert."
+        "de_DE": "Wir haben Ihre Konfiguration gespeichert.",
+        "en_EN": "We have saved your configuration.",
+        "fr_FR": "Nous avons enregistré votre configuration.",
+        "es_ES": "Hemos guardado su configuracíon."
       },
       "configurationLinkPrefix": {
-        "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
+        "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen:",
+        "en_EN": "You can view your configuration by clicking on this link:",
+        "fr_FR": "Vous pouvez consulter à nouveau votre configuration en cliquant sur le lien suivant :",
+        "es_ES": "Puede volver a consultar su configuracíon en el siguiente enlace:"
       },
       "configurationLink": {
-        "de_DE": "Konfiguration laden"
+        "de_DE": "Konfiguration laden",
+        "en_EN": "load configuration",
+        "fr_FR": "Charger la configuration",
+        "es_ES": "Cargar configuracíon"
       },
       "yourDetails": {
-        "de_DE": "Ihre Angaben:"
+        "de_DE": "Ihre Angaben:",
+        "en_EN": "your infomation",
+        "fr_FR": "vos informations:",
+        "es_ES": "Sus datos:"
       },
       "yourConfiguration": {
         "de_DE": "Ihre gespeicherte Konfiguration:",
@@ -395,7 +536,10 @@
         "es_ES": "Su configuración guardada:"
       },
       "signature": {
-        "de_DE": "<p>Herzlichste Grüße,</p>"
+        "de_DE": "<p>Herzlichste Grüße,</p>",
+        "en_EN": "<p>best regards/ kind regards</p>",
+        "fr_FR": "<p>cordialment/ amicalment</p>",
+        "es_ES": "<p>Saludos cordiales</p>"
       },
       "aptoConfigurator": {
         "de_DE": "Apto Configurator"
@@ -403,10 +547,16 @@
     },
     "form": {
       "mail": {
-        "de_DE": "E-mail"
+        "de_DE": "E-mail",
+        "en_EN": "E-Mail",
+        "fr_FR": "e-mail",
+        "es_ES": "e-mail / correo electrónico"
       },
       "submit": {
-        "de_DE": "Speichern"
+        "de_DE": "Speichern",
+        "en_EN": "save",
+        "fr_FR": "enregistrer",
+        "es_ES": "guardar"
       },
       "cancel": {
         "de_DE": "Abbrechen",
@@ -415,7 +565,10 @@
         "es_ES": "Cancelar"
       },
       "name": {
-        "de_DE": "Name"
+        "de_DE": "Name",
+        "en_EN": "name",
+        "fr_FR": "nom",
+        "es_ES": "nombre"
       }
     },
     "afterSave": {
@@ -544,28 +697,46 @@
     },
     "afterSave": {
       "info": {
-        "de_DE": "Wir haben Ihnen eine Email mit dem Link zur aktuellen Konfiguration geschickt."
+        "de_DE": "Wir haben Ihnen eine Email mit dem Link zur aktuellen Konfiguration geschickt.",
+        "en_EN": "We have sent you an email with a link to your latest configuration.",
+        "fr_FR": "Nous vous avons envoyé un e-mail contenant le lien vers la configuration actuelle.",
+        "es_ES": "Le hemos eviado un correo electrónico con el enlace a la configuracíon actual."
       },
       "close": {
-        "de_DE": "Schließen"
+        "de_DE": "Schließen",
+        "en_EN": "close",
+        "fr_FR": "fermer",
+        "es_ES": "disparar"
       },
       "header": {
-        "de_DE": "Anfrage gesendet"
+        "de_DE": "Anfrage gesendet",
+        "en_EN": "message sent",
+        "fr_FR": "demande envoyée",
+        "es_ES": "solicitud enviada"
       }
     },
     "beforeSave": {
       "info": {
-        "de_DE": "Sie bekommen einen Link zur aktuellen Konfiguration per E-Mail gesendet."
+        "de_DE": "Sie bekommen einen Link zur aktuellen Konfiguration per E-Mail gesendet.",
+        "en_EN": "You will receive an email with a link to your latest configuration.",
+        "fr_FR": "Vous recevrez par e-mail un lien vers la configuration actuelle.",
+        "es_ES": "Se le enviará por correo electrónico un enlace  a la configuración actual."
       },
       "header": {
-        "de_DE": "Anfrage senden"
+        "de_DE": "Anfrage senden",
+        "en_EN": "Send message",
+        "fr_FR": "Envoyer la demande",
+        "es_ES": "solicitud enviada"
       }
     }
   },
   "aptoOnePage": {
     "sidebarElements": {
       "filter": {
-        "de_DE": "Filtern"
+        "de_DE": "Filtern",
+        "en_EN": "filter",
+        "fr_FR": "Filtrer par caractéristique",
+        "es_ES": "filtrar poi característica"
       }
     },
     "productDetail": {
@@ -579,27 +750,48 @@
   },
   "AptoSoftRuleDialog": {
     "title": {
-      "de_DE": "Achtung!"
+      "de_DE": "Achtung!",
+      "en_EN": "Attention!",
+      "fr_FR": "Attention!",
+      "es_ES": "¡Atención!"
     },
     "accept": {
-      "de_DE": "Auswahl verwerfen"
+      "de_DE": "Auswahl verwerfen",
+      "en_EN": "clear selection",
+      "fr_FR": "rejeter la sélection",
+      "es_ES": "Descartar selección"
     },
     "refuse": {
-      "de_DE": "Auswahl übernehmen"
+      "de_DE": "Auswahl übernehmen",
+      "en_EN": "save selection",
+      "fr_FR": "Appliquer la sélection",
+      "es_ES": "Aplicar selección"
     }
   },
   "AptoLoadConfigurationDialog": {
     "continue": {
-      "de_DE": "Neu Konfigurieren"
+      "de_DE": "Neu Konfigurieren",
+      "en_EN": "start new configuration",
+      "fr_FR": "Reconfigurer",
+      "es_ES": "Configurar de nuevo"
     },
     "header": {
-      "de_DE": "Konfiguration gefunden"
+      "de_DE": "Konfiguration gefunden",
+      "en_EN": "configuration found",
+      "fr_FR": "Configuration trouvée",
+      "es_ES": "Se ha encontrado la configuración"
     },
     "restore": {
-      "de_DE": "Konfiguration aufrufen"
+      "de_DE": "Konfiguration aufrufen",
+      "en_EN": "reopen configuration",
+      "fr_FR": "Accéder à la configuration",
+      "es_ES": "Acceder a la configuración"
     },
     "info": {
-      "de_DE": "Auf diesem Gerät wurde bereits eine Konfiguration gestartet."
+      "de_DE": "Auf diesem Gerät wurde bereits eine Konfiguration gestartet.",
+      "en_EN": "A configuration was alrady started on this device.",
+      "fr_FR": "Une configuration a déjà été lancée sur cet appareil.",
+      "es_ES": "Ya se ha iniciado una configración en este dispositivo."
     }
   },
   "AptoIsNotAvailableElement": {
@@ -612,16 +804,28 @@
   },
   "aptoLinksToShop": {
     "basket": {
-      "de_DE": "Warenkorb"
+      "de_DE": "Warenkorb",
+      "en_EN": "shopping cart",
+      "fr_FR": "Panier",
+      "es_ES": "cesta de la compra"
     },
     "account": {
-      "de_DE": "Mein Konto"
+      "de_DE": "Mein Konto",
+      "en_EN": "my account",
+      "fr_FR": "mon compte",
+      "es_ES": "Mi cuenta"
     },
     "register": {
-      "de_DE": "Anmelden / Registrieren"
+      "de_DE": "Anmelden / Registrieren",
+      "en_EN": "login / register",
+      "fr_FR": "connexion / inscription",
+      "es_ES": "Iniciar sesión / Registrarse"
     },
     "logout": {
-      "de_DE": "Logout"
+      "de_DE": "Logout",
+      "en_EN": "logout",
+      "fr_FR": "déconnexion",
+      "es_ES": "cerrar sesión"
     }
   },
   "aptoSidebarBasket": {
@@ -631,15 +835,24 @@
   },
   "aptoFavoriteDesigns": {
     "favoriteDesigns": {
-      "de_DE": "Beliebte Designs zum konfigurieren"
+      "de_DE": "Beliebte Designs zum konfigurieren",
+      "en_EN": "configure favourite designs",
+      "fr_FR": "Modèles populaires à personnaliser",
+      "es_ES": "Diseños populares para configurar"
     },
     "price": {
-      "de_DE": "ab 230,00 €"
+      "de_DE": "ab 230,00 €",
+      "en_EN": "starting from 230,00€",
+      "fr_FR": "à partir de 230,00 €",
+      "es_ES": "a partir de 230,00€"
     }
   },
   "aptoFavoriteDesignsItem": {
     "productName": {
-      "de_DE": "Produktname"
+      "de_DE": "Produktname",
+      "en_EN": "product name",
+      "fr_FR": "nom du produit",
+      "es_ES": "nombre del producto"
     }
   },
   "aptoProductList": {
@@ -684,7 +897,10 @@
   },
   "aptoFooterInfo": {
     "copyright": {
-      "de_DE": "- alle Rechte vorbehalten"
+      "de_DE": "- alle Rechte vorbehalten",
+      "en_EN": "all rights reserved",
+      "fr_FR": "tous droits réservés",
+      "es_ES": "todos los derechos reservados"
     }
   },
   "summaryProgress": {
