@@ -149,8 +149,17 @@
         "fr_FR": "Retour",
         "es_ES": "Atrás"
       },
+      "nextRoom": {
+        "de_DE": "Nächster Raum",
+        "en_EN": "Next room",
+        "fr_FR": "Pièce suivante",
+        "es_ES": "Siguiente habitación"
+      },
       "nextStep": {
-        "de_DE": "Nächster Schritt"
+        "de_DE": "Nächster Schritt",
+        "en_EN": "Next step",
+        "fr_FR": "Étape suivante",
+        "es_ES": "Siguiente paso"
       },
       "finishSteps": {
         "de_DE": "Konfiguartion abschließen",
@@ -172,10 +181,16 @@
   "aptoSummary": {
     "finishMessage": {
       "title": {
-        "de_DE": "Glückwunsch!"
+        "de_DE": "Glückwunsch!",
+        "en_EN": "Congratulations!",
+        "fr_FR": "Félicitations !",
+        "es_ES": "¡Enhorabuena!"
       },
       "subline": {
-        "de_DE": "Die Konfiguration ist abgeschlossen"
+        "de_DE": "Die Konfiguration ist abgeschlossen",
+        "en_EN": "The configuration is complete",
+        "fr_FR": "La configuration est terminée",
+        "es_ES": "La configuración está completa"
       }
     },
     "totalPrice": {

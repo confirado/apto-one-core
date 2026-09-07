@@ -28,64 +28,124 @@
         },
         "labels": {
           "city": {
-            "de_DE": "Ort"
+            "de_DE": "Ort",
+            "en_EN": "City",
+            "fr_FR": "Ville",
+            "es_ES": "Ciudad"
           },
           "cityPlaceholder": {
-            "de_DE": "Ihr Ort"
+            "de_DE": "Ihr Ort",
+            "en_EN": "Your city",
+            "fr_FR": "Votre ville",
+            "es_ES": "Su ciudad"
           },
           "company": {
-            "de_DE": "Unternehmen"
+            "de_DE": "Unternehmen",
+            "en_EN": "Company",
+            "fr_FR": "Entreprise",
+            "es_ES": "Empresa"
           },
           "companyPlaceholder": {
-            "de_DE": "Name Ihres Unternehmens"
+            "de_DE": "Name Ihres Unternehmens",
+            "en_EN": "Your company name",
+            "fr_FR": "Nom de votre entreprise",
+            "es_ES": "Nombre de su empresa"
           },
           "email": {
-            "de_DE": "E-Mail"
+            "de_DE": "E-Mail",
+            "en_EN": "Email",
+            "fr_FR": "E-mail",
+            "es_ES": "Correo electrónico"
           },
           "emailPlaceholder": {
-            "de_DE": "Ihre E-Mail-Adresse"
+            "de_DE": "Ihre E-Mail-Adresse",
+            "en_EN": "Your email address",
+            "fr_FR": "Votre adresse e-mail",
+            "es_ES": "Su dirección de correo electrónico"
           },
           "gender": {
-            "de_DE": "Anrede"
+            "de_DE": "Anrede",
+            "en_EN": "Salutation",
+            "fr_FR": "Civilité",
+            "es_ES": "Tratamiento"
           },
           "genderPlaceholder": {
-            "de_DE": "Anrede"
+            "de_DE": "Anrede",
+            "en_EN": "Salutation",
+            "fr_FR": "Civilité",
+            "es_ES": "Tratamiento"
           },
           "message": {
-            "de_DE": "Ihre Nachricht"
+            "de_DE": "Ihre Nachricht",
+            "en_EN": "Your message",
+            "fr_FR": "Votre message",
+            "es_ES": "Su mensaje"
           },
           "messagePlaceholder": {
-            "de_DE": "Anmerkung, Wünsche, Notizen"
+            "de_DE": "Anmerkung, Wünsche, Notizen",
+            "en_EN": "Comments, requests, notes",
+            "fr_FR": "Remarques, souhaits, notes",
+            "es_ES": "Comentarios, deseos, notas"
           },
           "name": {
-            "de_DE": "Vorname"
+            "de_DE": "Vorname",
+            "en_EN": "First name",
+            "fr_FR": "Prénom",
+            "es_ES": "Nombre"
           },
           "namePlaceholder": {
-            "de_DE": "Ihr Vorname"
+            "de_DE": "Ihr Vorname",
+            "en_EN": "Your first name",
+            "fr_FR": "Votre prénom",
+            "es_ES": "Su nombre"
           },
           "surname": {
-            "de_DE": "Nachname"
+            "de_DE": "Nachname",
+            "en_EN": "Last name",
+            "fr_FR": "Nom",
+            "es_ES": "Apellidos"
           },
           "surnamePlaceholder": {
-            "de_DE": "Ihr Nachname"
+            "de_DE": "Ihr Nachname",
+            "en_EN": "Your last name",
+            "fr_FR": "Votre nom",
+            "es_ES": "Sus apellidos"
           },
           "phone": {
-            "de_DE": "Telefon"
+            "de_DE": "Telefon",
+            "en_EN": "Phone",
+            "fr_FR": "Téléphone",
+            "es_ES": "Teléfono"
           },
           "phonePlaceholder": {
-            "de_DE": "Ihre Telefonnummer"
+            "de_DE": "Ihre Telefonnummer",
+            "en_EN": "Your phone number",
+            "fr_FR": "Votre numéro de téléphone",
+            "es_ES": "Su número de teléfono"
           },
           "street": {
-            "de_DE": "Adresse"
+            "de_DE": "Adresse",
+            "en_EN": "Address",
+            "fr_FR": "Adresse",
+            "es_ES": "Dirección"
           },
           "streetPlaceholder": {
-            "de_DE": "Straße, Hausnummer"
+            "de_DE": "Straße, Hausnummer",
+            "en_EN": "Street, house number",
+            "fr_FR": "Rue, numéro",
+            "es_ES": "Calle, número"
           },
           "zipCode": {
-            "de_DE": "Postleitzahl"
+            "de_DE": "Postleitzahl",
+            "en_EN": "Postal code",
+            "fr_FR": "Code postal",
+            "es_ES": "Código postal"
           },
           "zipCodePlaceholder": {
-            "de_DE": "Ihre Postleitzahl"
+            "de_DE": "Ihre Postleitzahl",
+            "en_EN": "Your postal code",
+            "fr_FR": "Votre code postal",
+            "es_ES": "Su código postal"
           }
         },
         "afterSend": {
