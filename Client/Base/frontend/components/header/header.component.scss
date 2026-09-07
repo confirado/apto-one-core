@@ -61,6 +61,13 @@ mat-toolbar {
     }
 }
 
+.language-flag {
+    display: inline-block;
+    width: 1.5rem;
+    margin-right: 0.35rem;
+    text-align: center;
+}
+
 ::ng-deep .language-mobile-popup {
     min-width: calc(100% + 12px) !important;
 }
