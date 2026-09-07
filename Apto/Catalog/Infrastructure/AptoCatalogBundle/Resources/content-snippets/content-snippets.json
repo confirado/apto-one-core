@@ -542,7 +542,10 @@
         "es_ES": "<p>Saludos cordiales</p>"
       },
       "aptoConfigurator": {
-        "de_DE": "Apto Configurator"
+        "de_DE": "Apto Configurator",
+        "en_EN": "apto configurator",
+        "fr_FR": "Configurateur Apto",
+        "es_ES": "configurator Apto"
       }
     },
     "form": {
@@ -666,7 +669,10 @@
         "es_ES": "<p>Un cordial saludo,</p>"
       },
       "aptoConfigurator": {
-        "de_DE": "Apto Configurator"
+        "de_DE": "Apto Configurator",
+        "en_EN": "apto configurator",
+        "fr_FR": "Configurateur Apto",
+        "es_ES": "configurator Apto"
       }
     },
     "form": {

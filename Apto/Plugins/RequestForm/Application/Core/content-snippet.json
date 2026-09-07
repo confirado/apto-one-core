@@ -214,7 +214,10 @@
             "de_DE": "Produktanfrage"
           },
           "orderNumber": {
-            "de_DE": "Bestellnummer: "
+            "de_DE": "Bestellnummer: ",
+            "en_EN": "order number",
+            "fr_FR": "Référence",
+            "es_ES": "Número de pedido:"
           },
           "priceText": {
             "de_DE": "Gesamtbetrag inkl. MwSt.: "
@@ -223,7 +226,10 @@
             "de_DE": "Sie können Ihre Konfiguration unter folgendem Link erneut abrufen: "
           },
           "configurationLink": {
-            "de_DE": "Konfiguration laden"
+            "de_DE": "Konfiguration laden",
+            "en_EN": "load configuration",
+            "fr_FR": "Charger la configuration",
+            "es_ES": "Cargar configuración"
           },
           "WeHaveReceivedYourConfiguration": {
             "de_DE": "Vielen Dank, dass Sie unseren Konfigurator genutzt haben."
@@ -238,10 +244,16 @@
             "es_ES": "El cliente desea recibir un presupuesto:"
           },
           "configuration": {
-            "de_DE": "Konfiguration:"
+            "de_DE": "Konfiguration:",
+            "en_EN": "configuration",
+            "fr_FR": "configuration",
+            "es_ES": "configurtión"
           },
           "linkForConfiguration": {
-            "de_DE": "Link zur Konfiguration:"
+            "de_DE": "Link zur Konfiguration:",
+            "en_EN": "configuration link",
+            "fr_FR": "Lien vers la configuration :",
+            "es_ES": "Enlace de la configración"
           },
           "configurationNumber": {
             "de_DE": "Konfigurationsnummer:",
@@ -250,33 +262,57 @@
             "es_ES": "Número de configuración:"
           },
           "totalAmount": {
-            "de_DE": "Gesamtbetrag:"
+            "de_DE": "Gesamtbetrag:",
+            "en_EN": "total amount",
+            "fr_FR": "montant total",
+            "es_ES": "Importe total:"
           },
           "details": {
-            "de_DE": "Kundendaten:"
+            "de_DE": "Kundendaten:",
+            "en_EN": "customer information",
+            "fr_FR": "Données client :",
+            "es_ES": "información del cliente"
           },
           "contractNotReceived": {
-            "de_DE": "ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!"
+            "de_DE": "ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!",
+            "en_EN": "ATTENTION! The customer has not yet received the offer!",
+            "fr_FR": "ATTENTION ! Le client n'a pas encore reçu l'offre !",
+            "es_ES": "¡ATENCIÓN! ¡El cliente aún no ha recibido la oferta!"
           },
           "configurationField": {
-            "de_DE": "field"
+            "de_DE": "field",
+            "en_EN": "field",
+            "fr_FR": "champ",
+            "es_ES": "campo"
           },
           "configurationValue": {
-            "de_DE": "value"
+            "de_DE": "value",
+            "en_EN": "value",
+            "fr_FR": "valeur",
+            "es_ES": "valor"
           },
           "newRequest": {
             "prefix": {
-              "de_DE": "Es liegt eine neue Anfrage des Kunden"
+              "de_DE": "Es liegt eine neue Anfrage des Kunden",
+              "en_EN": "We have received a new inquiry from the customer.",
+              "fr_FR": "Nous avons reçu une nouvelle demande de la part du client.",
+              "es_ES": "Hemos recibido una nueva solicitud del cliente."
             },
             "suffix": {
               "de_DE": "vor."
             }
           },
           "configurationQuantity": {
-            "de_DE": "quantity"
+            "de_DE": "quantity",
+            "en_EN": "quantity",
+            "fr_FR": "quantité",
+            "es_ES": "cantidad"
           },
           "configurationProperties": {
-            "de_DE": "Eigenschaften:"
+            "de_DE": "Eigenschaften:",
+            "en_EN": "specs",
+            "fr_FR": "Caractéristiques :",
+            "es_ES": "caracterìsticas"
           }
         }
       },
@@ -310,10 +346,16 @@
             "es_ES": "Nombre del proyecto:"
           },
           "contractNumber": {
-            "de_DE": "Angebotsnummer"
+            "de_DE": "Angebotsnummer",
+            "en_EN": "Quote number",
+            "fr_FR": "numéro d'offre",
+            "es_ES": "número de oferta"
           },
           "date": {
-            "de_DE": "Datum"
+            "de_DE": "Datum",
+            "en_EN": "date",
+            "fr_FR": "date",
+            "es_ES": "fecha"
           }
         },
         "common": {
@@ -410,7 +452,7 @@
             "de_DE": "Raum",
             "en_EN": "Room",
             "fr_FR": "Pièce",
-            "es_ES": "¿"
+            "es_ES": "Espacio"
           },
           "roomName": {
             "de_DE": "Raumname",
