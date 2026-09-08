@@ -78,18 +78,6 @@ export class HeaderComponent {
     });
 	}
 
-  public getLanguageFlagCode(locale: string): string {
-    const languageCode = locale.split(/[-_]/)[0].toLowerCase();
-    const countryCodeByLanguage: { [key: string]: string } = {
-      de: 'DE',
-      en: 'GB',
-      fr: 'FR',
-      es: 'ES',
-    };
-
-    return (countryCodeByLanguage[languageCode] || locale.split(/[-_]/)[1] || languageCode).toLowerCase();
-  }
-
   public showLoginButton(): boolean {
     if (this.connector && this.connector.configured === true || this.loginActive === false) {
       return false;
