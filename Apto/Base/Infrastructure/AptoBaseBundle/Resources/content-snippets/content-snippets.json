@@ -2,7 +2,7 @@
   "aptoSelect": {
     "suffix": {
       "de_DE": "Stück",
-      "en_EN": "piece",
+      "en_GB": "piece",
       "fr_FR": "unitè",
       "es_ES": "unidad"
     }
@@ -10,7 +10,7 @@
   "aptoLanguageSwitch": {
     "switch": {
       "de_DE": "Sprache wählen:",
-      "en_EN": "choose language",
+      "en_GB": "choose language",
       "fr_FR": "Choisissez la langue:",
       "es_ES": "Seleccionar idioma:"
     }
@@ -35,7 +35,7 @@
   "aptoProductIsNotAvailable": {
     "message": {
       "de_DE": "Das Produkt ist nicht verfügbar. Bitte wenden Sie sich an den Shopbetreiber.",
-      "en_EN": "The product is no loger available. Please contact the shop owner.",
+      "en_GB": "The product is no loger available. Please contact the shop owner.",
       "fr_FR": "Ce produit n'est pas disponible. Veuillez contacter le gérant de la boutique.",
       "es_ES": "El producto ne esté disponible. Ponte en contacto con el responsable de la tienda."
     }
@@ -43,7 +43,7 @@
   "aptoPageNotFound": {
     "info": {
       "de_DE": "<h2>Seite wurde nicht gefunden.</h2>",
-      "en_EN": "<h2>Page not found.</h2>",
+      "en_GB": "<h2>Page not found.</h2>",
       "fr_FR": "<h2>Page introuvable.</h2>",
       "es_ES": "<h2>No se ha encontrado la página. </h2>"
     }
@@ -52,13 +52,13 @@
     "mail": {
       "subject": {
         "de_DE": "Ihr Passwort wurde erfolgreich aktualisiert",
-        "en_EN": "Your password has been successfully updated",
+        "en_GB": "Your password has been successfully updated",
         "fr_FR": "Votre mot de passe a été mis à jour avec succès",
         "es_ES": "Su contraseña se ha actualizado correctamente"
       },
       "description": {
         "de_DE": "Wir haben eine Anfrage zum Zurücksetzen Ihres Passworts erhalten. Wenn dies von Ihnen veranlasst wurde, klicken Sie bitte auf den folgenden Link:",
-        "en_EN": "We have received a request to reset your password. If you initiated this request, please click the following link:",
+        "en_GB": "We have received a request to reset your password. If you initiated this request, please click the following link:",
         "fr_FR": "Nous avons reçu une demande de réinitialisation de votre mot de passe. Si vous en êtes à l'origine, veuillez cliquer sur le lien suivant :",
         "es_ES": "Hemos recibido una solicitud para restablecer su contraseña. Si ha sido usted quien la ha solicitado, haga clic en el siguiente enlace:"
       }
@@ -66,13 +66,13 @@
     "errors": {
       "PasswordValidationException": {
         "de_DE": "Passwortvalidierung fehlgeschlagen",
-        "en_EN": "Error resetting password",
+        "en_GB": "Error resetting password",
         "fr_FR": "Erreur lors de la réinitialisation du mot de passe",
         "es_ES": "Error al restablecer la contraseña"
       },
       "InvalidTokenException": {
         "de_DE": "Fehler beim Zurücksetzen des Passworts",
-        "en_EN": "Error resetting password",
+        "en_GB": "Error resetting password",
         "fr_FR": "Erreur lors de la réinitialisation du mot de passe",
         "es_ES": "Error al restablecer la contraseña"
       }
@@ -81,7 +81,7 @@
   "aptoProductList": {
     "filterTitle": {
       "de_DE": "Kategorien",
-      "en_EN": "Categories",
+      "en_GB": "Categories",
       "fr_FR": "Catégories",
       "es_ES": "Categorías"
     }

@@ -4,32 +4,32 @@
       "table": {
         "title": {
           "de_DE": "Einzelkomponenten",
-          "en_EN": "Individual components",
+          "en_GB": "Individual components",
           "fr_FR": "Composants individuels",
           "es_ES": "Componentes individuales"
         },
         "columns": {
           "pos": {
             "de_DE": "Pos.",
-            "en_EN": "Pos.",
+            "en_GB": "Pos.",
             "fr_FR": "Pos.",
             "es_ES": "Pos."
           },
           "partNumber": {
             "de_DE": "Art. Nummer",
-            "en_EN": "Part number",
+            "en_GB": "Part number",
             "fr_FR": "Référence",
             "es_ES": "N.º de artículo"
           },
           "partName": {
             "de_DE": "Komponente",
-            "en_EN": "Component",
+            "en_GB": "Component",
             "fr_FR": "Composant",
             "es_ES": "Componente"
           },
           "quantity": {
             "de_DE": "Menge",
-            "en_EN": "Quantity",
+            "en_GB": "Quantity",
             "fr_FR": "Quantité",
             "es_ES": "Cantidad"
           }

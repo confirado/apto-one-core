@@ -29,121 +29,121 @@
         "labels": {
           "city": {
             "de_DE": "Ort",
-            "en_EN": "City",
+            "en_GB": "City",
             "fr_FR": "Ville",
             "es_ES": "Ciudad"
           },
           "cityPlaceholder": {
             "de_DE": "Ihr Ort",
-            "en_EN": "Your city",
+            "en_GB": "Your city",
             "fr_FR": "Votre ville",
             "es_ES": "Su ciudad"
           },
           "company": {
             "de_DE": "Unternehmen",
-            "en_EN": "Company",
+            "en_GB": "Company",
             "fr_FR": "Entreprise",
             "es_ES": "Empresa"
           },
           "companyPlaceholder": {
             "de_DE": "Name Ihres Unternehmens",
-            "en_EN": "Your company name",
+            "en_GB": "Your company name",
             "fr_FR": "Nom de votre entreprise",
             "es_ES": "Nombre de su empresa"
           },
           "email": {
             "de_DE": "E-Mail",
-            "en_EN": "Email",
+            "en_GB": "Email",
             "fr_FR": "E-mail",
             "es_ES": "Correo electrónico"
           },
           "emailPlaceholder": {
             "de_DE": "Ihre E-Mail-Adresse",
-            "en_EN": "Your email address",
+            "en_GB": "Your email address",
             "fr_FR": "Votre adresse e-mail",
             "es_ES": "Su dirección de correo electrónico"
           },
           "gender": {
             "de_DE": "Anrede",
-            "en_EN": "Salutation",
+            "en_GB": "Salutation",
             "fr_FR": "Civilité",
             "es_ES": "Tratamiento"
           },
           "genderPlaceholder": {
             "de_DE": "Anrede",
-            "en_EN": "Salutation",
+            "en_GB": "Salutation",
             "fr_FR": "Civilité",
             "es_ES": "Tratamiento"
           },
           "message": {
             "de_DE": "Ihre Nachricht",
-            "en_EN": "Your message",
+            "en_GB": "Your message",
             "fr_FR": "Votre message",
             "es_ES": "Su mensaje"
           },
           "messagePlaceholder": {
             "de_DE": "Anmerkung, Wünsche, Notizen",
-            "en_EN": "Comments, requests, notes",
+            "en_GB": "Comments, requests, notes",
             "fr_FR": "Remarques, souhaits, notes",
             "es_ES": "Comentarios, deseos, notas"
           },
           "name": {
             "de_DE": "Vorname",
-            "en_EN": "First name",
+            "en_GB": "First name",
             "fr_FR": "Prénom",
             "es_ES": "Nombre"
           },
           "namePlaceholder": {
             "de_DE": "Ihr Vorname",
-            "en_EN": "Your first name",
+            "en_GB": "Your first name",
             "fr_FR": "Votre prénom",
             "es_ES": "Su nombre"
           },
           "surname": {
             "de_DE": "Nachname",
-            "en_EN": "Last name",
+            "en_GB": "Last name",
             "fr_FR": "Nom",
             "es_ES": "Apellidos"
           },
           "surnamePlaceholder": {
             "de_DE": "Ihr Nachname",
-            "en_EN": "Your last name",
+            "en_GB": "Your last name",
             "fr_FR": "Votre nom",
             "es_ES": "Sus apellidos"
           },
           "phone": {
             "de_DE": "Telefon",
-            "en_EN": "Phone",
+            "en_GB": "Phone",
             "fr_FR": "Téléphone",
             "es_ES": "Teléfono"
           },
           "phonePlaceholder": {
             "de_DE": "Ihre Telefonnummer",
-            "en_EN": "Your phone number",
+            "en_GB": "Your phone number",
             "fr_FR": "Votre numéro de téléphone",
             "es_ES": "Su número de teléfono"
           },
           "street": {
             "de_DE": "Adresse",
-            "en_EN": "Address",
+            "en_GB": "Address",
             "fr_FR": "Adresse",
             "es_ES": "Dirección"
           },
           "streetPlaceholder": {
             "de_DE": "Straße, Hausnummer",
-            "en_EN": "Street, house number",
+            "en_GB": "Street, house number",
             "fr_FR": "Rue, numéro",
             "es_ES": "Calle, número"
           },
           "zipCode": {
             "de_DE": "Postleitzahl",
-            "en_EN": "Postal code",
+            "en_GB": "Postal code",
             "fr_FR": "Code postal",
             "es_ES": "Código postal"
           },
           "zipCodePlaceholder": {
             "de_DE": "Ihre Postleitzahl",
-            "en_EN": "Your postal code",
+            "en_GB": "Your postal code",
             "fr_FR": "Votre code postal",
             "es_ES": "Su código postal"
           }
@@ -151,25 +151,25 @@
         "afterSend": {
           "headlineError": {
             "de_DE": "Ups,",
-            "en_EN": "Oops,",
+            "en_GB": "Oops,",
             "fr_FR": "Oups,",
             "es_ES": "¡Vaya!"
           },
           "headlineSuccess": {
             "de_DE": "Glückwunsch!",
-            "en_EN": "Congratulations!",
+            "en_GB": "Congratulations!",
             "fr_FR": "Félicitations !",
             "es_ES": "¡Enhorabuena!"
           },
           "sublineError": {
             "de_DE": "Da ging etwas schief!",
-            "en_EN": "Something went wrong!",
+            "en_GB": "Something went wrong!",
             "fr_FR": "Une erreur s'est produite !",
             "es_ES": "¡Algo salió mal!"
           },
           "sublineSuccess": {
             "de_DE": "Ihre Anfrage wurde erfolgreich versendet!",
-            "en_EN": "Your request was sent successfully!",
+            "en_GB": "Your request was sent successfully!",
             "fr_FR": "Votre demande a été envoyée avec succès !",
             "es_ES": "¡Su solicitud se ha enviado correctamente!"
           }
@@ -200,13 +200,13 @@
           },
           "salutationPerson": {
             "de_DE": "Sehr geehrte/r",
-            "en_EN": "Dear",
+            "en_GB": "Dear",
             "fr_FR": "Cher/Chère",
             "es_ES": "Estimado/a"
           },
           "goodAfternoon": {
             "de_DE": "Guten Tag,",
-            "en_EN": "Hello, Good Morning, Good Day,",
+            "en_GB": "Hello, Good Morning, Good Day,",
             "fr_FR": "Bonjour",
             "es_ES": "Buenas Dias"
           },
@@ -215,7 +215,7 @@
           },
           "orderNumber": {
             "de_DE": "Bestellnummer: ",
-            "en_EN": "order number",
+            "en_GB": "order number",
             "fr_FR": "Référence",
             "es_ES": "Número de pedido:"
           },
@@ -227,7 +227,7 @@
           },
           "configurationLink": {
             "de_DE": "Konfiguration laden",
-            "en_EN": "load configuration",
+            "en_GB": "load configuration",
             "fr_FR": "Charger la configuration",
             "es_ES": "Cargar configuración"
           },
@@ -239,62 +239,62 @@
           },
           "quote": {
             "de_DE": "Der Kunde möchte ein Angebot erhalten:",
-            "en_EN": "The customer would like to receive a quote:",
+            "en_GB": "The customer would like to receive a quote:",
             "fr_FR": "Le client souhaite recevoir un devis :",
             "es_ES": "El cliente desea recibir un presupuesto:"
           },
           "configuration": {
             "de_DE": "Konfiguration:",
-            "en_EN": "configuration",
+            "en_GB": "configuration",
             "fr_FR": "configuration",
             "es_ES": "configurtión"
           },
           "linkForConfiguration": {
             "de_DE": "Link zur Konfiguration:",
-            "en_EN": "configuration link",
+            "en_GB": "configuration link",
             "fr_FR": "Lien vers la configuration :",
             "es_ES": "Enlace de la configración"
           },
           "configurationNumber": {
             "de_DE": "Konfigurationsnummer:",
-            "en_EN": "Configuration number:",
+            "en_GB": "Configuration number:",
             "fr_FR": "Numéro de configuration :",
             "es_ES": "Número de configuración:"
           },
           "totalAmount": {
             "de_DE": "Gesamtbetrag:",
-            "en_EN": "total amount",
+            "en_GB": "total amount",
             "fr_FR": "montant total",
             "es_ES": "Importe total:"
           },
           "details": {
             "de_DE": "Kundendaten:",
-            "en_EN": "customer information",
+            "en_GB": "customer information",
             "fr_FR": "Données client :",
             "es_ES": "información del cliente"
           },
           "contractNotReceived": {
             "de_DE": "ACHTUNG! Das Angebot hat der Kunde noch nicht erhalten!",
-            "en_EN": "ATTENTION! The customer has not yet received the offer!",
+            "en_GB": "ATTENTION! The customer has not yet received the offer!",
             "fr_FR": "ATTENTION ! Le client n'a pas encore reçu l'offre !",
             "es_ES": "¡ATENCIÓN! ¡El cliente aún no ha recibido la oferta!"
           },
           "configurationField": {
             "de_DE": "field",
-            "en_EN": "field",
+            "en_GB": "field",
             "fr_FR": "champ",
             "es_ES": "campo"
           },
           "configurationValue": {
             "de_DE": "value",
-            "en_EN": "value",
+            "en_GB": "value",
             "fr_FR": "valeur",
             "es_ES": "valor"
           },
           "newRequest": {
             "prefix": {
               "de_DE": "Es liegt eine neue Anfrage des Kunden",
-              "en_EN": "We have received a new inquiry from the customer.",
+              "en_GB": "We have received a new inquiry from the customer.",
               "fr_FR": "Nous avons reçu une nouvelle demande de la part du client.",
               "es_ES": "Hemos recibido una nueva solicitud del cliente."
             },
@@ -304,13 +304,13 @@
           },
           "configurationQuantity": {
             "de_DE": "quantity",
-            "en_EN": "quantity",
+            "en_GB": "quantity",
             "fr_FR": "quantité",
             "es_ES": "cantidad"
           },
           "configurationProperties": {
             "de_DE": "Eigenschaften:",
-            "en_EN": "specs",
+            "en_GB": "specs",
             "fr_FR": "Caractéristiques :",
             "es_ES": "caracterìsticas"
           }
@@ -341,19 +341,19 @@
           },
           "projectName": {
             "de_DE": "Projektname:",
-            "en_EN": "Project Name:",
+            "en_GB": "Project Name:",
             "fr_FR": "Nom du projet :",
             "es_ES": "Nombre del proyecto:"
           },
           "contractNumber": {
             "de_DE": "Angebotsnummer",
-            "en_EN": "Quote number",
+            "en_GB": "Quote number",
             "fr_FR": "numéro d'offre",
             "es_ES": "número de oferta"
           },
           "date": {
             "de_DE": "Datum",
-            "en_EN": "date",
+            "en_GB": "date",
             "fr_FR": "date",
             "es_ES": "fecha"
           }
@@ -364,7 +364,7 @@
           },
           "date": {
             "de_DE": "Datum",
-            "en_EN": "Date",
+            "en_GB": "Date",
             "fr_FR": "Date",
             "es_ES": "Fecha"
           },
@@ -373,13 +373,13 @@
           },
           "mailName": {
             "de_DE": "E-mail",
-            "en_EN": "Email",
+            "en_GB": "Email",
             "fr_FR": "E-mail",
             "es_ES": "Correo electrónico"
           },
           "telephoneName": {
             "de_DE": "Telefon",
-            "en_EN": "Phone",
+            "en_GB": "Phone",
             "fr_FR": "Téléphone",
             "es_ES": "Teléfono"
           },
@@ -450,73 +450,73 @@
           },
           "room": {
             "de_DE": "Raum",
-            "en_EN": "Room",
+            "en_GB": "Room",
             "fr_FR": "Pièce",
             "es_ES": "Espacio"
           },
           "roomName": {
             "de_DE": "Raumname",
-            "en_EN": "Room Name",
+            "en_GB": "Room Name",
             "fr_FR": "Nom de la pièce",
             "es_ES": "Nombre de la sala"
           },
           "calculation": {
             "de_DE": "Berechnung",
-            "en_EN": "Calculation",
+            "en_GB": "Calculation",
             "fr_FR": "Calcul",
             "es_ES": "Cálculo"
           },
           "result": {
             "de_DE": "Ergebnis",
-            "en_EN": "Result",
+            "en_GB": "Result",
             "fr_FR": "Résultat",
             "es_ES": "Resultado"
           },
           "verificationRequired": {
             "de_DE": "Absicherung <br /> notwendig",
-            "en_EN": "Verification <br /> required",
+            "en_GB": "Verification <br /> required",
             "fr_FR": "Validation <br /> obligatoire",
             "es_ES": "Cálculo <br /> necesario"
           },
           "fillingQuantity": {
             "de_DE": "Füllmenge:",
-            "en_EN": "Filling quantity:",
+            "en_GB": "Filling quantity:",
             "fr_FR": "Quantité de remplissage :",
             "es_ES": "Capacidad de llenado:"
           },
           "volume": {
             "de_DE": "Volumen:",
-            "en_EN": "Volume:",
+            "en_GB": "Volume:",
             "fr_FR": "Volume :",
             "es_ES": "Volumen:"
           },
           "filledSpace": {
             "de_DE": "Befüllter Raum:",
-            "en_EN": "Filled space:",
+            "en_GB": "Filled space:",
             "fr_FR": "Espace occupé :",
             "es_ES": "Espacio ocupado:"
           },
           "notSpecified": {
             "de_DE": "keine Angabe",
-            "en_EN": "Not specified",
+            "en_GB": "Not specified",
             "fr_FR": "non spécifié",
             "es_ES": "sin especificar"
           },
           "no": {
             "de_DE": "Nein",
-            "en_EN": "No",
+            "en_GB": "No",
             "fr_FR": "Non",
             "es_ES": "No"
           },
           "recommended": {
             "de_DE": "Empfohlen",
-            "en_EN": "Recommended",
+            "en_GB": "Recommended",
             "fr_FR": "Recommandé",
             "es_ES": "Recomendado"
           },
           "yes": {
             "de_DE": "Ja",
-            "en_EN": "Yes",
+            "en_GB": "Yes",
             "fr_FR": "Oui",
             "es_ES": "Sí"
           }

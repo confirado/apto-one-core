@@ -4,40 +4,40 @@
       "error": {
         "default": {
           "de_DE": "Beim Upload ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-          "en_EN": "Upload failed. Please try again.",
+          "en_GB": "Upload failed. Please try again.",
           "fr_FR": "Une erreur s'est produite lors du téléchargement. Veuillez réessayer.",
           "es_ES": "Se ha producido un error al subir en el archivo. Inténtalo de nuevo."
         },
         "maxSize": {
           "prefix": {
             "de_DE": "Die Dateigröße darf",
-            "en_EN": "File size cannot",
+            "en_GB": "File size cannot",
             "fr_FR": "La taille du fichier ne doit pas dépasser",
             "es_ES": "El tamaño del archivo no debe superar"
           },
           "suffix": {
             "de_DE": "nicht überschreiten.",
-            "en_EN": "exeed \"file size\".",
+            "en_GB": "exeed \"file size\".",
             "fr_FR": "\"file size\"",
             "es_ES": "\"file size\""
           }
         },
         "pattern": {
           "de_DE": "Folgende Dateitypen sind erlaubt:",
-          "en_EN": "These file types are allowed",
+          "en_GB": "These file types are allowed",
           "fr_FR": "Les types de fichiers suivants sont autorisés :",
           "es_ES": "Se admiten los siguientes tipos de archivo:"
         },
         "minDimensions": {
           "prefix": {
             "de_DE": "Die Auflösung muss mindestens",
-            "en_EN": "The resolution must be at least",
+            "en_GB": "The resolution must be at least",
             "fr_FR": "La résolution doit être d'au moins",
             "es_ES": "La resolución debe ser como mínimo"
           },
           "suffix": {
             "de_DE": "Pixel betragen.",
-            "en_EN": "pixels.",
+            "en_GB": "pixels.",
             "fr_FR": "pixels.",
             "es_ES": "píxeles."
           }
@@ -46,49 +46,49 @@
       "upload": {
         "dragover": {
           "de_DE": "Datei-Upload via Drag'n'Drop oder Klick",
-          "en_EN": "File upload using drag'n'drop or by click",
+          "en_GB": "File upload using drag'n'drop or by click",
           "fr_FR": "Téléchargement de fichiers par glisser-déposer ou par clic",
           "es_ES": "Carga de archivos mediante  arrestar y soltar o con un clic"
         },
         "edit": {
           "de_DE": "Bearbeiten",
-          "en_EN": "edit",
+          "en_GB": "edit",
           "fr_FR": "modifier",
           "es_ES": "editar"
         },
         "cancel": {
           "de_DE": "Verwerfen",
-          "en_EN": "delete",
+          "en_GB": "delete",
           "fr_FR": "rejeter",
           "es_ES": "descartar"
         },
         "cancelMessage": {
           "de_DE": "Deine aktuellen Änderungen werden verworfen.",
-          "en_EN": "Your current changes will be discarded.",
+          "en_GB": "Your current changes will be discarded.",
           "fr_FR": "Vos modifications actuelles seront perdues.",
           "es_ES": "Se descartarán los cambios que hayas realizado."
         },
         "reset": {
           "de_DE": "Zurücksetzen",
-          "en_EN": "Reset",
+          "en_GB": "Reset",
           "fr_FR": "Réinitialiser",
           "es_ES": "Restablecer"
         },
         "resetMessage": {
           "de_DE": "Dein komplettes Design wird gelöscht.",
-          "en_EN": "Your entire design will be deleted.",
+          "en_GB": "Your entire design will be deleted.",
           "fr_FR": "Votre design complet sera supprimé.",
           "es_ES": "Se eliminará todo tu diseño."
         },
         "save": {
           "de_DE": "Übernehmen",
-          "en_EN": "apply",
+          "en_GB": "apply",
           "fr_FR": "appliquer",
           "es_ES": "aplicar"
         },
         "deleteImage": {
           "de_DE": "Bild löschen",
-          "en_EN": "Delete image",
+          "en_GB": "Delete image",
           "fr_FR": "Supprimer l'image",
           "es_ES": "Eliminar imagen"
         }
@@ -96,7 +96,7 @@
       "text": {
         "label": {
           "de_DE": "Texteingabe:",
-          "en_EN": "Text input:",
+          "en_GB": "Text input:",
           "fr_FR": "Saisie de texte :",
           "es_ES": "Introducción de texto:"
         }
