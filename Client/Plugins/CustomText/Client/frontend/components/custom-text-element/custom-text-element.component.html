@@ -48,7 +48,7 @@
             <div class="suffix"></div>
             <div class="hint">
                 <div *ngFor="let textValues of element.element.definition.properties.text">
-                    {{'Text (' + textValues.minLength + ' - ' + textValues.maxLength + ' Zeichen)' }}
+                    {{ getTextLengthHint(customTextContentSnippet$ | async | contentSnippet: 'textLength', textValues.minLength, textValues.maxLength) }}
                     <br />
                 </div>
             </div>

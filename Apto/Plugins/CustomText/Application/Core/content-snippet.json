@@ -1,6 +1,12 @@
 {
   "plugins": {
     "customText": {
+      "textLength": {
+        "de_DE": "Text ({_minLength_} - {_maxLength_} Zeichen)",
+        "en_EN": "Text ({_minLength_} - {_maxLength_} characters)",
+        "fr_FR": "Texte ({_minLength_} - {_maxLength_} caractères)",
+        "es_ES": "Texto ({_minLength_} - {_maxLength_} caracteres)"
+      },
       "buttons": {
         "select-continue": {
           "de_DE": "Auswählen & Weiter"

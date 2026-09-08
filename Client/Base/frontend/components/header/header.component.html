@@ -14,7 +14,7 @@
                 class="selector"
             >
                 <mat-option *ngFor="let language of languages" [value]="language.locale" [attr.data-locale]="language.locale">
-                    <span class="language-flag" role="img" [attr.aria-label]="language.locale">{{ getLanguageFlag(language.locale) }}</span>
+                    <span class="language-flag" [class]="'language-flag flag-' + getLanguageFlagCode(language.locale)" role="img" [attr.aria-label]="language.locale"></span>
                     {{ language.name | translate }}
                 </mat-option>
             </mat-select>
@@ -52,7 +52,7 @@
                     <span class="material-icons language-icon">language</span>
                 </mat-select-trigger>
                 <mat-option *ngFor="let language of languages" [value]="language.locale">
-                    <span class="language-flag" role="img" [attr.aria-label]="language.locale">{{ getLanguageFlag(language.locale) }}</span>
+                    <span class="language-flag" [class]="'language-flag flag-' + getLanguageFlagCode(language.locale)" role="img" [attr.aria-label]="language.locale"></span>
                     {{ language.name | translate }}
                 </mat-option>
             </mat-select>

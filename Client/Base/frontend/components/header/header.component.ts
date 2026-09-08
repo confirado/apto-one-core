@@ -78,7 +78,7 @@ export class HeaderComponent {
     });
 	}
 
-  public getLanguageFlag(locale: string): string {
+  public getLanguageFlagCode(locale: string): string {
     const languageCode = locale.split(/[-_]/)[0].toLowerCase();
     const countryCodeByLanguage: { [key: string]: string } = {
       de: 'DE',
@@ -86,11 +86,8 @@ export class HeaderComponent {
       fr: 'FR',
       es: 'ES',
     };
-    const countryCode = countryCodeByLanguage[languageCode] || locale.split(/[-_]/)[1] || languageCode;
 
-    return countryCode
-      .toUpperCase()
-      .replace(/[A-Z]/g, (character) => String.fromCodePoint(127397 + character.charCodeAt(0)));
+    return (countryCodeByLanguage[languageCode] || locale.split(/[-_]/)[1] || languageCode).toLowerCase();
   }
 
   public showLoginButton(): boolean {
