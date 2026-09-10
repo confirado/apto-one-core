@@ -16,8 +16,7 @@ import { RenderImageService } from '@apto-catalog-frontend/services/render-image
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
-import { getShowGross } from '@apto-catalog-frontend/services/shop-utilities';
+import { selectShowGross } from '@apto-base-frontend/store/shop/shop.selectors';
 import { Subject, takeUntil } from 'rxjs';
 
 @UntilDestroy()
@@ -71,8 +70,8 @@ export class SummaryComponent implements OnInit, OnDestroy {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
     });
 
-    this.store.select(initShopSuccess).pipe(untilDestroyed(this)).subscribe((result: any) => {
-      this.showGross = getShowGross(result);
+    this.store.select(selectShowGross).pipe(untilDestroyed(this)).subscribe((showGross: boolean) => {
+      this.showGross = showGross;
     });
 	}
 
