@@ -193,8 +193,6 @@ export class AreaElementComponent implements OnInit {
       return;
     }
 
-    // Values submitted while selecting become the new baseline. Therefore an
-    // update is only sent after the user changes a value afterwards.
     this.initialFieldValues = this.formElement.getRawValue();
     this.closeModalOnSuccess();
     this.store.dispatch(
