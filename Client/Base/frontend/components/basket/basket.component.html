@@ -37,15 +37,21 @@
          class="buttons">
         <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
            [href]="(csAptoBasket$ | async | contentSnippet: 'checkoutLink') || connector.url?.checkout"
-           color="primary" mat-flat-button target='_blank'>
+           color="primary" mat-flat-button>
             {{ csAptoBasket$ | async | contentSnippet: 'checkout' }}
         </a>
 
         <a *ngIf="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
            [href]="(csAptoBasket$ | async | contentSnippet: 'cartLink') || connector.url?.cart"
-           color="accent" mat-flat-button target='_blank'>
+           color="accent" mat-flat-button>
             {{ csAptoBasket$ | async | contentSnippet: 'cart' }}
         </a>
+        <a *ngIf="connector.url?.cart"
+           [href]="connector.url?.home"
+           color="accent" mat-flat-button>
+            Zurück zum Shop
+        </a>
+
 
         <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
             {{ csAptoBasket$ | async | contentSnippet: 'clear' }}
