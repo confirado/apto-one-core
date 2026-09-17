@@ -51,8 +51,6 @@
            color="accent" mat-flat-button>
             Zurück zum Shop
         </a>
-
-
         <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
             {{ csAptoBasket$ | async | contentSnippet: 'clear' }}
         </button>
