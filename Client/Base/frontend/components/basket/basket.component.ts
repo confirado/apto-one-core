@@ -95,11 +95,11 @@ export class BasketComponent {
 
   protected removeAllBasketItems(basketItems: any[]): void {
     combineLatest(
-      this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
-      this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.confirm')),
-      this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.cancel')),
-      this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.title')),
-      this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.text'))
+        this.store.select(selectLocale).pipe(map((l) => l || environment.defaultLocale)),
+        this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.confirm')),
+        this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.cancel')),
+        this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.title')),
+        this.store.select(selectContentSnippet('aptoBasket.clearCartConfirmation.text'))
     ).pipe(take(1)).subscribe((result) => {
       const lang = result[0];
       const dialogButtonAccept = translate(result[1].content, lang);

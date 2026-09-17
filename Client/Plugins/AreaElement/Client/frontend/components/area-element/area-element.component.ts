@@ -68,6 +68,8 @@ export class AreaElementComponent implements OnInit {
   public increaseStep: number | undefined;
   public decreaseStep: number | undefined;
 
+  private initialFieldValues: Record<string, unknown> = {};
+
   public constructor(
       private store: Store,
       private dialogRef: MatDialogRef<AreaElementComponent>,
@@ -150,13 +152,7 @@ export class AreaElementComponent implements OnInit {
         i += 1
     ) {
       let itemsField: SelectItem[] = [];
-      let validators = [];
-
-      if (this.element.element.definition.staticValues.fields?.[i]?.rendering === 'input') {
-        validators = [
-          Validators.required,
-        ];
-      }
+      const validators = [Validators.required, Validators.min(1)];
 
       this.formElement.addControl(
           `field_${i}`,
@@ -186,10 +182,12 @@ export class AreaElementComponent implements OnInit {
       this.itemFieldList.push(itemsField);
     }
 
+    this.initialFieldValues = this.formElement.getRawValue();
+
     // todo add logic for not allowing go further when the sum is too big
     this.formElement.valueChanges.subscribe(x => {
       this.sumOfFieldValues = <number>Object.values(x).reduce((a: any, b: any) => Number(a) + Number(b), 0);
-      if (this.hasOnlySelectInputFields()) {
+      if (this.hasOnlySelectInputFields() && this.shouldShowSaveButton()) {
         this.saveInput();
       }
     });
@@ -201,6 +199,26 @@ export class AreaElementComponent implements OnInit {
 
   public hasValues(): boolean {
     return this.element ? this.element.state.active : false;
+  }
+
+  /**
+   * An active element can only be updated after at least one field differs from
+   * the values loaded into the form. Every field value must be greater than 0.
+   */
+  public shouldShowSaveButton(): boolean {
+    const values = this.formElement.getRawValue() as Record<string, unknown>;
+
+    if (!Object.values(values).every((value) => Number(value) > 0)) {
+      return false;
+    }
+
+    if (!this.element || !this.element.state.active) {
+      return true;
+    }
+
+    return Object.entries(values).some(([property, value]) =>
+      !this.areEqualFieldValues(value, this.initialFieldValues[property])
+    );
   }
 
   public saveInput(): void {
@@ -225,6 +243,13 @@ export class AreaElementComponent implements OnInit {
       return;
     }
 
+    if (!this.shouldShowSaveButton()) {
+      return;
+    }
+
+    // Values submitted while selecting become the new baseline. Therefore an
+    // update is only sent after the user changes a value afterwards.
+    this.initialFieldValues = this.formElement.getRawValue();
     this.closeModalOnSuccess();
     this.store.dispatch(
         updateConfigurationState({
@@ -288,6 +313,10 @@ export class AreaElementComponent implements OnInit {
     if (decreaseStep && typeof decreaseStep.value === 'string') {
       this.decreaseStep = parseFloat(decreaseStep.value);
     }
+  }
+
+  private areEqualFieldValues(value: unknown, initialValue: unknown): boolean {
+    return String(value ?? '') === String(initialValue ?? '');
   }
 
   private markAllControlsAsDirty(): void {

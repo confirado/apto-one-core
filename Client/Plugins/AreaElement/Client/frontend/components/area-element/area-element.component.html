@@ -99,6 +99,7 @@
                     *ngIf="element.element.definition.staticValues.renderDialogInOnePageDesktop && !product.useStepByStep"
                     mat-flat-button
                     color="primary"
+                    [disabled]="!shouldShowSaveButton()"
                     (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
@@ -107,6 +108,7 @@
                     *ngIf="!element.element.definition.staticValues.renderDialogInOnePageDesktop || product?.useStepByStep"
                     mat-flat-button
                     color="primary"
+                    [disabled]="!shouldShowSaveButton()"
                     (click)="saveInput()"
             >
                 {{ element.state.active? (contentSnippet$ | async | contentSnippet: 'buttons.update') : (contentSnippet$ | async | contentSnippet: 'buttons.select') }}
