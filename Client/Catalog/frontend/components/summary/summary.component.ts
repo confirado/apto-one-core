@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BasketService } from '@apto-base-frontend/services/basket.service';
 import { selectContentSnippet } from '@apto-base-frontend/store/content-snippets/content-snippets.selectors';
@@ -16,8 +16,8 @@ import { RenderImageService } from '@apto-catalog-frontend/services/render-image
 import { environment } from '@apto-frontend/src/environments/environment';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
-import { getShowGross } from '@apto-catalog-frontend/services/shop-utilities';
+import { selectShowGross } from '@apto-base-frontend/store/shop/shop.selectors';
+import { Subject, takeUntil } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -25,13 +25,14 @@ import { getShowGross } from '@apto-catalog-frontend/services/shop-utilities';
 	templateUrl: './summary.component.html',
 	styleUrls: ['./summary.component.scss'],
 })
-export class SummaryComponent {
+export class SummaryComponent implements OnInit, OnDestroy {
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoSummary'));
   public readonly sidebarSummary$ = this.store.select(selectContentSnippet('aptoStepByStep.sidebarSummary'));
   protected readonly AptoOfferConfigurationDialog$ = this.store.select(selectContentSnippet('AptoOfferConfigurationDialog'));
   protected readonly locale$ = this.store.select(selectLocale);
   public readonly perspectives$ = this.store.select(selectPerspectives);
-  private locale = 'de_DE';
+  private destroy$ = new Subject<void>();
+  public locale: string;
   protected isOfferConfigurationEnabled = false;
   public product$ = this.store.select(selectProduct);
 	public configuration$ = this.store.select(selectConfiguration);
@@ -55,9 +56,7 @@ export class SummaryComponent {
       }
     });
 
-    this.locale$.subscribe((next) => {
-      this.locale = next;
-    });
+    this.locale = environment.defaultLocale;
 
     this.AptoOfferConfigurationDialog$.subscribe((data) => {
       data.children.forEach((dialogItem) => {
@@ -71,10 +70,32 @@ export class SummaryComponent {
       this.renderImage = await this.renderImageService.drawImageForPerspective(result);
     });
 
-    this.store.select(initShopSuccess).pipe(untilDestroyed(this)).subscribe((result: any) => {
-      this.showGross = getShowGross(result);
+    this.store.select(selectShowGross).pipe(untilDestroyed(this)).subscribe((showGross: boolean) => {
+      this.showGross = showGross;
     });
 	}
+
+  public ngOnInit(): void {
+    // subscribe for locale store value
+    this.store.select(selectLocale).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((locale: string) => {
+      this.onLocalChange(locale);
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private onLocalChange(locale: string) {
+    if (locale === null) {
+      this.locale = environment.defaultLocale;
+    } else {
+      this.locale = locale;
+    }
+  }
 
   private get configurationId(): string {
     return this.activatedRoute.snapshot.params['configurationId'];

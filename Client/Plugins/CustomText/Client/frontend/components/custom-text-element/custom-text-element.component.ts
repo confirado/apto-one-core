@@ -29,6 +29,8 @@ export class CustomTextElementComponent implements OnInit {
 
 	public readonly contentSnippet$ = this.store.select(selectContentSnippet('aptoDefaultElementDefinition'));
 
+	public readonly customTextContentSnippet$ = this.store.select(selectContentSnippet('plugins.customText'));
+
   public configurationError: ConfigurationError | null = null;
 
 	public constructor(private store: Store) {}
@@ -45,8 +47,14 @@ export class CustomTextElementComponent implements OnInit {
     return this.element.element.attachments?.length !== 0;
   }
 
-  public hasValues(): boolean {
+	public hasValues(): boolean {
 		return this.element ? this.element.state.active : false;
+	}
+
+	public getTextLengthHint(template: string, minLength: number, maxLength: number): string {
+		return template
+			.replace('{_minLength_}', String(minLength))
+			.replace('{_maxLength_}', String(maxLength));
 	}
 
 	public saveInput(): void {

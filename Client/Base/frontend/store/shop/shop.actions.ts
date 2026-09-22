@@ -6,6 +6,8 @@ import { ContentSnippet } from "@apto-base-frontend/store/content-snippets/conte
 export enum ShopActionTypes {
   InitShop = '[Shops] Init Shop',
   InitShopSuccess = '[Shops] Init Shop success',
+  RefreshConnector = '[Shops] Refresh Connector',
+  RefreshConnectorSuccess = '[Shops] Refresh Connector success',
   DeleteBasketItem = '[Shops] Delete Basket Item',
   DeleteBasketAllItems = '[Shops] Delete Basket All Items',
   DeleteBasketItemSuccess = '[Shops] Delete Basket Item Success',
@@ -18,6 +20,15 @@ export const initShop = createAction(
 export const initShopSuccess = createAction(
   ShopActionTypes.InitShopSuccess,
   props<{ payload: { shop: Shop, languages: Language[], locale: string, contentSnippets: ContentSnippet[], connector: Connector }; }>()
+);
+
+export const refreshConnector = createAction(
+  ShopActionTypes.RefreshConnector
+);
+
+export const refreshConnectorSuccess = createAction(
+  ShopActionTypes.RefreshConnectorSuccess,
+  props<{ payload: { connector: Connector } }>()
 );
 
 export const deleteBasketItem = createAction(

@@ -6,16 +6,20 @@ import {
   deleteBasketItemSuccess,
   initShop,
   initShopSuccess,
+  refreshConnector,
+  refreshConnectorSuccess,
 } from '@apto-base-frontend/store/shop/shop.actions';
 import { shopInitialState } from '@apto-base-frontend/store/shop/shop.reducer';
 import { ShopRepository } from '@apto-base-frontend/store/shop/shop.repository';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { forkJoin, iif, of } from 'rxjs';
+import { EMPTY, forkJoin, iif, of } from 'rxjs';
 import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Store} from "@ngrx/store";
 import {selectShop} from "@apto-base-frontend/store/shop/shop.selectors";
 import {translate} from "@apto-base-core/store/translated-value/translated-value.model";
 import {selectLocale} from "@apto-base-frontend/store/language/language.selectors";
+import { environment } from '@apto-frontend/src/environments/environment';
+
 
 @Injectable()
 export class ShopEffects {
@@ -61,6 +65,22 @@ export class ShopEffects {
 		)
 	);
 
+  public refreshConnector$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(refreshConnector),
+      withLatestFrom(this.store$.select(selectShop), this.store$.select(selectLocale)),
+      switchMap(([, shop, locale]) => {
+        if (!shop) {
+          return EMPTY;
+        }
+
+        return this.shopRepository
+          .getConnectorState(translate(shop.connectorUrl, locale || environment.defaultLocale))
+          .pipe(map((connector) => refreshConnectorSuccess({ payload: { connector } })));
+      })
+    )
+  );
+
   public deleteBasketItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteBasketItem),
@@ -102,5 +122,4 @@ export class ShopEffects {
     )
   );
 }
-
 

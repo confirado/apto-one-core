@@ -19,8 +19,7 @@ import { selectHumanReadableState } from '@apto-request-form-frontend/store/huma
 import { RenderImageService } from '@apto-catalog-frontend/services/render-image.service';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { initShopSuccess } from '@apto-base-frontend/store/shop/shop.actions';
-import { getShowGross } from '@apto-catalog-frontend/services/shop-utilities';
+import { selectShowGross } from '@apto-base-frontend/store/shop/shop.selectors';
 
 @UntilDestroy()
 @Component({
@@ -96,8 +95,8 @@ export class SummaryComponent implements OnInit, OnDestroy {
       this.requestState.success = true;
     });
 
-    this.store.select(initShopSuccess).pipe(untilDestroyed(this)).subscribe((result: any) => {
-      this.showGross = getShowGross(result);
+    this.store.select(selectShowGross).pipe(untilDestroyed(this)).subscribe((showGross: boolean) => {
+      this.showGross = showGross;
     });
   }
 

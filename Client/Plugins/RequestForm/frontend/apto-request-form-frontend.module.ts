@@ -25,32 +25,32 @@ import { SummaryComponent as CatalogSummaryComponent } from '@apto-catalog-front
 
 
 @NgModule({
-  declarations: [
-    RequestFormComponent, RequestMessageStateComponent, RequestFormSummaryComponent
-  ],
-	exports: [
-    AptoRequestFormFrontendCustomModule,
-  ],
-	imports: [
-		RouterModule,
-		CommonModule,
-		HttpClientModule,
-		AptoBaseCoreModule,
-		AptoBaseFrontendModule,
-    AptoCatalogFrontendModule,
-		ReactiveFormsModule,
-		FormsModule,
-		MatCheckboxModule,
-    MatIconModule,
-		MatButtonModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-    AptoRequestFormFrontendCustomModule,
-	],
-	providers: [],
+    declarations: [
+        RequestFormComponent, RequestMessageStateComponent, RequestFormSummaryComponent
+    ],
+    exports: [
+        AptoRequestFormFrontendCustomModule,
+    ],
+    imports: [
+        RouterModule,
+        CommonModule,
+        HttpClientModule,
+        AptoBaseCoreModule,
+        AptoBaseFrontendModule,
+        AptoCatalogFrontendModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        AptoRequestFormFrontendCustomModule,
+    ],
+    providers: [],
 })
 export class AptoRequestFormFrontendModule {
-	public constructor(private store: Store) {
+    public constructor(private store: Store) {
         this.store.select(selectShop).subscribe((shop) => {
             if (shop === null) {
                 return;
@@ -58,5 +58,5 @@ export class AptoRequestFormFrontendModule {
             const requestFormIsDisabled = shop.customProperties.some((property) => property.key === 'requestForm' && property.value === 'disabled');
             SlotRegistry.components.set('summary', requestFormIsDisabled ? CatalogSummaryComponent : RequestFormSummaryComponent);
         });
-	}
+    }
 }

@@ -16,10 +16,10 @@
                 {{ contentSnippets.customer.dear[locale]|default('') }} {{ customer.name }} {{ customer.surname }},
             {% endif %}
         {% else %}
-            Sehr geehrte/r {{ customer.name }} {{ customer.surname }},
+            {{ contentSnippets.customer.salutationPerson[locale]|default('') }} {{ customer.name }} {{ customer.surname }},
         {% endif %}
     {% else %}
-        Guten Tag,
+        {{ contentSnippets.customer.goodAfternoon[locale]|default('') }}
     {% endif %}
 </p>
 <div>

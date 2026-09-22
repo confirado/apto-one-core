@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectLocale } from '@apto-base-frontend/store/language/language.selectors';
-import { initShop } from '@apto-base-frontend/store/shop/shop.actions';
+import { refreshConnector } from '@apto-base-frontend/store/shop/shop.actions';
 import { selectConnector } from '@apto-base-frontend/store/shop/shop.selectors';
 import { CatalogMessageBusService } from '@apto-catalog-frontend-service-catalog-message-bus';
 import {
@@ -583,7 +583,7 @@ export class ConfigurationEffects {
             additionalData,
           });
         }
-          return this.configurationRepository.addToBasket({
+				return this.configurationRepository.addToBasket({
             productId: configurationState.productId,
             locale: connector?.locale,
             compressedState: configurationState.state.compressedState,
@@ -591,11 +591,11 @@ export class ConfigurationEffects {
             perspectives: configurationState.perspectives,
             sessionCookies: connector?.sessionCookies,
             additionalData,
-          });
+				});
 			}),
-      switchMap((result) => [
+      switchMap(() => [
         addToBasketSuccess(),
-        initShop(),
+        refreshConnector(),
       ])
 		)
 	);

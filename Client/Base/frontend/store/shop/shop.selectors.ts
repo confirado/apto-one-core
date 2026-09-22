@@ -7,6 +7,21 @@ export const selectShop = createSelector(featureSelector, (state: BaseFeatureSta
 export const selectFullConnector = createSelector(featureSelector, (state: BaseFeatureState) => state.shop.connector);
 export const selectShopLoading = createSelector(featureSelector, (state: BaseFeatureState) => state.shop.loading);
 
+export const selectShowGross = createSelector(
+  featureSelector,
+  (state: BaseFeatureState): boolean => {
+    if (state.shop.connector?.user && state.shop.connector.customerGroup) {
+      return state.shop.connector.customerGroup.showGross;
+    }
+
+    if (state.frontendUser.currentUser?.customerGroup) {
+      return state.frontendUser.currentUser.customerGroup.showGross;
+    }
+
+    return environment.defaultCustomerGroup.showGross;
+  }
+);
+
 export const selectConnector = createSelector(
 	featureSelector,
 	(state: BaseFeatureState): SelectConnector => ({
