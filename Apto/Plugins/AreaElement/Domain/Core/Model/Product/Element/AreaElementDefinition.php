@@ -362,12 +362,12 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
      * @param array $computedValues
      * @return ElementDefinition
      */
-    public function withEffectiveValues(array $computedValues): ElementDefinition
+    public function withEffectiveValues(array $computedValues, int $repetition = 0): ElementDefinition
     {
         $fields = $this->fields;
 
         foreach ($fields as &$field) {
-            $field['values'] = $field['values']->resolveEffectiveValues($computedValues);
+            $field['values'] = $field['values']->resolveEffectiveValues($computedValues, $repetition);
         }
         unset($field);
 

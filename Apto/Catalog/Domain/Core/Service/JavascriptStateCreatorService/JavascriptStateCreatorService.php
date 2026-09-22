@@ -132,6 +132,7 @@ class JavascriptStateCreatorService
      * @param AptoUuid $elementId
      * @param array $element
      * @param RulePayload $rulePayloadByName
+     * @param int $repetition
      * @return array|null
      */
     private function resolveElementProperties(
@@ -139,7 +140,8 @@ class JavascriptStateCreatorService
         AptoUuid $sectionId,
         AptoUuid $elementId,
         array $element,
-        RulePayload $rulePayloadByName
+        RulePayload $rulePayloadByName,
+        int $repetition
     ): ?array
     {
         $staticProperties = $element['definition']['properties'] ?? null;
@@ -150,7 +152,7 @@ class JavascriptStateCreatorService
         }
 
         try {
-            $resolvedDefinition = $definition->withEffectiveValues($rulePayloadByName->getComputedValues());
+            $resolvedDefinition = $definition->withEffectiveValues($rulePayloadByName->getComputedValues(), $repetition);
         } catch (\InvalidArgumentException $e) {
             return $staticProperties;
         }
@@ -189,7 +191,7 @@ class JavascriptStateCreatorService
                 foreach ($section['elements'] as $element) {
                     $elementId = new AptoUuid($element['id']);
 
-                    $properties = $this->resolveElementProperties($product, $sectionId, $elementId, $element, $rulePayloadByName);
+                    $properties = $this->resolveElementProperties($product, $sectionId, $elementId, $element, $rulePayloadByName, $repetition);
 
                     // empty properties must be initialized with null, elements without electable values must use null instead of an empty array
                     $selectedValues = array_merge(

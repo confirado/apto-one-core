@@ -8,5 +8,5 @@ interface EffectiveElementDefinition
      * @param array $computedValues
      * @return ElementDefinition
      */
-    public function withEffectiveValues(array $computedValues): ElementDefinition;
+    public function withEffectiveValues(array $computedValues, int $repetition = 0): ElementDefinition;
 }

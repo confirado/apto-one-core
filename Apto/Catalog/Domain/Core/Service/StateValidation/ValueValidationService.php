@@ -139,7 +139,7 @@ class ValueValidationService
                 if (!empty($element['values'])) {
                     foreach ($element['values'] as $property => $value) {
                         self::assertHasProperty($product, $sectionUuid, $elementUuid, $property);
-                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value, $computedValues);
+                        self::assertHasValue($product, $sectionUuid, $elementUuid, $property, $value, $computedValues, $element['repetition']);
                     }
                 }
             }
@@ -328,11 +328,12 @@ class ValueValidationService
      * @param string $property
      * @param $value
      * @param array $computedValues
+     * @param int $repetition
      * @throws InvalidUuidException
      */
-    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = []): void
+    public function assertHasValue(ConfigurableProduct $product, AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = [], int $repetition = 0): void
     {
-        if (!$product->hasValue($sectionId, $elementId, $property, $value, $computedValues)) {
+        if (!$product->hasValue($sectionId, $elementId, $property, $value, $computedValues, $repetition)) {
             throw new InvalidStateException(
                 sprintf(
                     'The given value \'%s\' is not allowed for property \'%s\' in element \'%s(%s)\' and section \'%s(%s)\'.',

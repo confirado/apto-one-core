@@ -8,7 +8,7 @@ interface EffectiveElementValue
      * @param array $computedValues
      * @return ElementValue
      */
-    public function withEffectiveValues(array $computedValues): ElementValue;
+    public function withEffectiveValues(array $computedValues, int $repetition = 0): ElementValue;
 
     /**
      * @return bool

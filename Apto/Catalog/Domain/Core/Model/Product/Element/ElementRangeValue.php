@@ -328,11 +328,11 @@ class ElementRangeValue implements ElementValue, EffectiveElementValue
      * @param array $computedValues
      * @return ElementValue
      */
-    public function withEffectiveValues(array $computedValues): ElementValue
+    public function withEffectiveValues(array $computedValues, int $repetition = 0): ElementValue
     {
         return new self(
-            $this->resolveBound($this->minimum, $computedValues, 'minimum'),
-            $this->resolveBound($this->maximum, $computedValues, 'maximum'),
+            $this->resolveBound($this->minimum, $computedValues, 'minimum', $repetition),
+            $this->resolveBound($this->maximum, $computedValues, 'maximum', $repetition),
             $this->step
         );
     }
@@ -341,15 +341,21 @@ class ElementRangeValue implements ElementValue, EffectiveElementValue
      * @param $bound
      * @param array $computedValues
      * @param string $label
+     * @param int $repetition
      * @return float
      */
-    private function resolveBound($bound, array $computedValues, string $label): float
+    private function resolveBound($bound, array $computedValues, string $label, int $repetition): float
     {
         if (!($bound instanceof ComputedValueReference)) {
             return (float) $bound;
         }
 
         $name = $bound->getName();
+        $repetitionName = $name . '[' . $repetition . ']';
+        if ($repetition > 0 && array_key_exists($repetitionName, $computedValues)) {
+            $name = $repetitionName;
+        }
+
         if (!array_key_exists($name, $computedValues)) {
             throw new \InvalidArgumentException(
                 'Cannot resolve ' . $label . ': computed value \'' . $name . '\' was not found.'

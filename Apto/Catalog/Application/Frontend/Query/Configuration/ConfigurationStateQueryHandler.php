@@ -329,7 +329,8 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
                     $element,
                     $property,
                     $value,
-                    $computedValues
+                    $computedValues,
+                    $sectionRepetition
                 );
             }
 

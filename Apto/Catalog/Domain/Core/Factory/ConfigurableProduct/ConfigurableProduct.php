@@ -363,9 +363,10 @@ class ConfigurableProduct implements \JsonSerializable
      * @param AptoUuid $elementId
      * @param string $property
      * @param array $computedValues
+     * @param int $repetition
      * @return ElementValueCollection|null
      */
-    public function getElementValueCollection(AptoUuid $sectionId, AptoUuid $elementId, string $property, array $computedValues = []): ?ElementValueCollection
+    public function getElementValueCollection(AptoUuid $sectionId, AptoUuid $elementId, string $property, array $computedValues = [], int $repetition = 0): ?ElementValueCollection
     {
         $definition = $this->getElementDefinition($sectionId, $elementId);
 
@@ -375,7 +376,7 @@ class ConfigurableProduct implements \JsonSerializable
 
         if ($definition instanceof EffectiveElementDefinition) {
             try {
-                $definition = $definition->withEffectiveValues($computedValues);
+                $definition = $definition->withEffectiveValues($computedValues, $repetition);
             } catch (\InvalidArgumentException $e) {
                 return null;
             }
@@ -438,15 +439,16 @@ class ConfigurableProduct implements \JsonSerializable
      * @param string $property
      * @param $value
      * @param array $computedValues
+     * @param int $repetition
      * @return bool
      */
-    public function hasValue(AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = []): bool
+    public function hasValue(AptoUuid $sectionId, AptoUuid $elementId, string $property, $value, array $computedValues = [], int $repetition = 0): bool
     {
         if (!$this->hasProperty($sectionId, $elementId, $property)) {
             return false;
         }
 
-        $valueCollection = $this->getElementValueCollection($sectionId, $elementId, $property, $computedValues);
+        $valueCollection = $this->getElementValueCollection($sectionId, $elementId, $property, $computedValues, $repetition);
 
         return null !== $valueCollection && $valueCollection->contains($value);
     }

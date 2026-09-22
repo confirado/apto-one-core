@@ -161,14 +161,14 @@ class ElementValueCollection implements AptoJsonSerializable, \JsonSerializable
      * @param array $computedValues
      * @return ElementValueCollection
      */
-    public function resolveEffectiveValues(array $computedValues): ElementValueCollection
+    public function resolveEffectiveValues(array $computedValues, int $repetition = 0): ElementValueCollection
     {
         $resolved = [];
 
         /** @var ElementValue $item */
         foreach ($this->collection as $item) {
             $resolved[] = $item instanceof EffectiveElementValue
-                ? $item->withEffectiveValues($computedValues)
+                ? $item->withEffectiveValues($computedValues, $repetition)
                 : $item;
         }
 
