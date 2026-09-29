@@ -163,10 +163,6 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
     {
         $humanReadableValues = [];
 
-        // set locales
-        $de_DE = new AptoLocale('de_DE');
-        $en_GB = new AptoLocale('en_GB');
-
         foreach ($selectedValues as $property => $value) {
             if($property === 'sumOfFieldValue') {
                 continue;
@@ -181,11 +177,23 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
             /** @var AptoTranslatedValue $suffix */
             $suffix = $this->fields[$fieldIndex]['suffix'];
 
-            // set human readable value
-            $humanReadableValues[$property] = AptoTranslatedValue::fromArray([
-                'de_DE' => $prefix->getTranslation($de_DE, null, true)->getValue() . ' ' . $value . $suffix->getTranslation($de_DE, null, true)->getValue(),
-                'en_GB' => $prefix->getTranslation($en_GB, null, true)->getValue() . ' ' . $value . $suffix->getTranslation($en_GB, null, true)->getValue()
-            ]);
+            // Generate an entry for every locale maintained by either the prefix or suffix.
+            // getTranslation(..., true) retains the existing fallback-to-first behavior when
+            // one side has no translation for a locale.
+            $locales = array_unique(array_merge(
+                array_keys($prefix->__toArray()),
+                array_keys($suffix->__toArray())
+            ));
+            $translatedValues = [];
+
+            foreach ($locales as $localeName) {
+                $locale = new AptoLocale($localeName);
+                $translatedValues[$localeName] = $prefix->getTranslation($locale, null, true)->getValue()
+                    . ' ' . $value
+                    . $suffix->getTranslation($locale, null, true)->getValue();
+            }
+
+            $humanReadableValues[$property] = AptoTranslatedValue::fromArray($translatedValues);
         }
 
         return $humanReadableValues;
