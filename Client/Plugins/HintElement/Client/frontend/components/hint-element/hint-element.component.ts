@@ -4,7 +4,7 @@ import { ProgressElement } from '@apto-catalog-frontend/store/configuration/conf
 import { Product, Section } from '@apto-catalog-frontend/store/product/product.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { ConfigurationRepository } from '@apto-catalog-frontend/store/configuration/configuration.repository';
 import { selectCompressedState } from '@apto-catalog-frontend/store/configuration/configuration.selectors';
 
@@ -58,6 +58,11 @@ export class HintElementComponent {
 			this.store.select(selectCompressedState),
 		]).pipe(
 			filter(([product, description]) => !!product?.id && !!description),
+			distinctUntilChanged((previous, current) =>
+				previous[0]?.id === current[0]?.id &&
+				previous[1] === current[1] &&
+				JSON.stringify(previous[2]) === JSON.stringify(current[2]),
+			),
 			switchMap(([product, description, state]) =>
 				this.configurationRepository.getSubstitutes(product.id, state, description),
 			),
