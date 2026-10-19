@@ -400,15 +400,15 @@ class State implements AptoJsonSerializable, \JsonSerializable
      *
      * @param AptoUuid    $sectionId
      * @param AptoUuid    $elementId
-     * @param string|null $group
-     * @param string|null $groupProperty
      * @param string|null $property is null on default element, or when element has no properties at all (has no selectable values in element definition)
      * @param mixed|null  $value
      * @param int         $repetition
+     * @param string|null $group
+     * @param string|null $groupProperty
      *
      * @return State
      */
-    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, ?string $group = null, ?string $groupProperty = null, string $property = null, mixed $value = null, int $repetition = 0): State
+    public function setValue(AptoUuid $sectionId, AptoUuid $elementId, string $property = null, mixed $value = null, int $repetition = 0, ?string $group = null, ?string $groupProperty = null): State
     {
         // if an element isn't found in the state create a new entry for it
         if (!$this->isElementActive($sectionId, $elementId, $repetition)) {

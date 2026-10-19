@@ -45,11 +45,11 @@ abstract class RuleCriterion extends Criterion
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?string $group,
-        ?string $groupProperty,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string $value = null,
+        ?string $group = null,
+        ?string $groupProperty = null
     )
     {
         parent::__construct(
@@ -58,11 +58,11 @@ abstract class RuleCriterion extends Criterion
             $type,
             $sectionId,
             $elementId,
-            $group,
-            $groupProperty,
             $property,
             $computedProductValue,
-            $value
+            $value,
+            $group,
+            $groupProperty
         );
 
 
@@ -110,11 +110,11 @@ abstract class RuleCriterion extends Criterion
             $this->getType(),
             $sectionId,
             $elementId,
-            $this->getGroup(),
-            $this->getGroupProperty(),
             $this->getProperty(),
             $computedProductValue,
-            $this->getValue()
+            $this->getValue(),
+            $this->getGroup(),
+            $this->getGroupProperty()
         );
     }
 

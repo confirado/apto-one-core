@@ -127,11 +127,11 @@ class ConditionSet extends AptoEntity
         int $type = 0,
         ?AptoUuid $sectionId = null,
         ?AptoUuid $elementId = null,
-        ?string $group = null,
-        ?string $groupProperty = null,
         ?string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string $value = null,
+        ?string $group = null,
+        ?string $groupProperty = null
     ): ConditionSet {
         $conditionId = $this->nextConditionId();
         $this->conditions->set(
@@ -143,11 +143,11 @@ class ConditionSet extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
-                $group,
-                $groupProperty,
                 $property,
                 $computedProductValue,
                 $value,
+                $group,
+                $groupProperty,
             )
         );
 

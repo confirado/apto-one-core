@@ -81,11 +81,11 @@ abstract class Criterion extends AptoEntity
         ?int $type,
         ?AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?string $group,
-        ?string $groupProperty,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string $value = null,
+        ?string $group = null,
+        ?string $groupProperty = null
     ) {
          parent::__construct($id);
 

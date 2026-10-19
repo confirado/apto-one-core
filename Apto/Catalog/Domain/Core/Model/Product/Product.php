@@ -2939,17 +2939,17 @@ class Product extends AptoAggregate
         int                   $type = 0,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
-        ?string               $group = null,
-        ?string               $groupProperty = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
+        ?string               $value = null,
+        ?string               $group = null,
+        ?string               $groupProperty = null
     ): Product
     {
         $rule = $this->getRule($ruleId);
 
         if (null !== $rule) {
-            $rule->addCondition($operator, $type, $sectionId, $elementId, $group, $groupProperty, $property, $computedProductValue, $value);
+            $rule->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value, $group, $groupProperty);
         }
 
         return $this;
@@ -3092,9 +3092,9 @@ class Product extends AptoAggregate
         AptoUuid          $computedValueId = null,
         AptoUuid          $sectionId = null,
         AptoUuid          $elementId = null,
+        string            $property = null,
         string            $group = null,
         string            $groupProperty = null,
-        string            $property = null,
     ): Product {
         $rule = $this->getRule($ruleId);
 
@@ -4328,12 +4328,14 @@ class Product extends AptoAggregate
         ?AptoUuid $elementId = null,
         ?string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string $value = null,
+        ?string $group = null,
+        ?string $groupProperty = null
     ): Product {
         $conditionSet = $this->getConditionSet($conditionSetId);
 
         if (null !== $conditionSet) {
-            $conditionSet->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value);
+            $conditionSet->addCondition($operator, $type, $sectionId, $elementId, $property, $computedProductValue, $value, $group, $groupProperty);
         }
 
         return $this;

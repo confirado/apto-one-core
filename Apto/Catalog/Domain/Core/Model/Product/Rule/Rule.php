@@ -219,11 +219,11 @@ class Rule extends AptoEntity
         ?int                  $type = Criterion::TYPE,
         ?AptoUuid             $sectionId = null,
         ?AptoUuid             $elementId = null,
-        ?string               $group = null,
-        ?string               $groupProperty = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
+        ?string               $value = null,
+        ?string               $group = null,
+        ?string               $groupProperty = null
     ): Rule {
         $conditionId = $this->nextConditionId();
         $this->conditions->set(
@@ -235,11 +235,11 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
-                $group,
-                $groupProperty,
                 $property,
                 $computedProductValue,
-                $value
+                $value,
+                $group,
+                $groupProperty
             )
         );
 
@@ -530,11 +530,11 @@ class Rule extends AptoEntity
                 $type,
                 $sectionId,
                 $elementId,
-                null,
-                null,
                 $property,
                 $computedProductValue,
-                $value
+                $value,
+                null,
+                null
             )
         );
         return $this;

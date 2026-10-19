@@ -333,11 +333,11 @@ class ConfigurationStateQueryHandler implements QueryHandlerInterface
             $state->getState()->setValue(
                 $section,
                 $element,
-                null,
-                null,
                 $property,
                 $value,
-                $sectionRepetition
+                $sectionRepetition,
+                null,
+                null
             );
         }
     }

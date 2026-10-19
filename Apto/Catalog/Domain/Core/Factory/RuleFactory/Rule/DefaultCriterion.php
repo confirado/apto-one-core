@@ -54,10 +54,10 @@ class DefaultCriterion extends Criterion
      * @param string|null $value
      * @param AptoUuid $sectionId
      * @param AptoUuid|null $elementId
-     * @param string|null $group
-     * @param string|null $groupProperty
      * @param string|null $property
      * @param int $repetition
+     * @param string|null $group
+     * @param string|null $groupProperty
      */
     public function __construct(
         bool $active,
@@ -65,10 +65,10 @@ class DefaultCriterion extends Criterion
         ?string $value,
         AptoUuid $sectionId,
         ?AptoUuid $elementId,
-        ?string $group,
-        ?string $groupProperty,
         ?string $property,
         int $repetition = 0,
+        ?string $group = null,
+        ?string $groupProperty = null,
     ) {
         // sanitize input values
         if ('' === trim($property)) {
@@ -232,7 +232,7 @@ class DefaultCriterion extends Criterion
             return $state;
         }
 
-        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->group, $this->groupProperty, $this->property, $this->value, $this->repetition);
+        return $this->operator->fulfill($product, $state, $this->sectionId, $this->elementId, $this->property, $this->value, $this->repetition, $this->group, $this->groupProperty);
     }
 
     /**
