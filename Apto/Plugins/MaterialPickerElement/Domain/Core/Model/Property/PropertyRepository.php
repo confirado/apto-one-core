@@ -28,16 +28,6 @@ interface PropertyRepository extends AptoRepository
     public function findById($id);
 
     /**
-     * @param $groupId
-     * @return Property[]
-     */
-    public function getPropertiesByGroupId($groupId);
-
-    /**
-     * @return Property[]
-     */
-    public function getProperties();
-    /**
      * @return void
      */
     public function invalidateCache();

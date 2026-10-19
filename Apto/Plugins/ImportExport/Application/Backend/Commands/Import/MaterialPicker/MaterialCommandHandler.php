@@ -28,7 +28,7 @@ use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroupRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceMatrix;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\GroupRepository;
-use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\PropertyRepository;
+use Apto\Plugins\MaterialPickerElement\Infrastructure\MaterialPickerElementBundle\Doctrine\Orm\PoolOrmFinder;
 use Apto\Base\Domain\Core\Model\Color;
 
 class MaterialCommandHandler extends AbstractCommandHandler
@@ -78,11 +78,6 @@ class MaterialCommandHandler extends AbstractCommandHandler
      */
     private $groupRepository;
     /**
-     * @var PropertyRepository
-     */
-    private $propertyRepository;
-
-    /**
      * @var StringSanitizer
      */
     protected $sanitizer;
@@ -91,24 +86,6 @@ class MaterialCommandHandler extends AbstractCommandHandler
      * @var ProductRepository
      */
     private $productRepository;
-
-    /**
-     * @var array 1-1 mapping of color names to hex codes
-     */
-    private const COLOR_HEX_BY_NAME = [
-        'Schwarz' => '#000000',
-        'Rot' => '#ff0000',
-        'Gelb' => '#ffff00',
-        'Grün' => '#00ff00',
-        'Blau' => '#0000ff',
-        'Orange' => '#ffa500',
-        'Weiß' => '#ffffff',
-        'Grau' => '#888888',
-        'Beige' => '#f5f5dc',
-        'Braun' => '#b47d49',
-        'Türkis' => '#3f888f',
-        'Violett' => '#8800ff',
-    ];
 
     /**
      * @param LanguageRepository       $languageRepository
@@ -121,6 +98,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
      * @param PriceMatrixRepository    $priceMatrixRepository
      * @param StringSanitizer          $sanitizer
      * @param ProductRepository        $productRepository
+     * @param GroupRepository          $groupRepository
      */
     public function __construct(
         LanguageRepository $languageRepository,
@@ -132,7 +110,6 @@ class MaterialCommandHandler extends AbstractCommandHandler
         MediaFileSystemConnector $mediaFileSystemConnector,
         PriceMatrixRepository $priceMatrixRepository,
         StringSanitizer $sanitizer,
-        PropertyRepository $propertyRepository,
         ProductRepository $productRepository,
         GroupRepository $groupRepository
     ) {
@@ -146,7 +123,6 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $this->priceMatrixRepository = $priceMatrixRepository;
         $this->sanitizer = $sanitizer;
         $this->groupRepository = $groupRepository;
-        $this->propertyRepository = $propertyRepository;
         $this->productRepository = $productRepository;
     }
 
@@ -322,11 +298,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
             $propertyFound = false;
 
             foreach ($group->getProperties() as $property) {
-                $propertyValue = $property->getName()
-                    ->getTranslation(new AptoLocale($command->getLocale()))
-                    ->getValue();
-
-                if ($propertyValue !== $propertyName) {
+                if (!in_array($propertyName, $property->getName()->__toArray(), true)) {
                     continue;
                 }
 
@@ -364,6 +336,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
                 explode('|', $fields[$fieldName])
             )
         );
+        $colorHexByName = array_column(PoolOrmFinder::COLOR_DEFINITIONS, 'hex', 'name');
 
         foreach ($assignments as $assignment) {
             $parts = array_map(
@@ -381,7 +354,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
 
             [$colorName, $ratingValue] = $parts;
 
-            if (!array_key_exists($colorName, self::COLOR_HEX_BY_NAME)) {
+            if (!array_key_exists($colorName, $colorHexByName)) {
                 throw new \InvalidArgumentException(
                     sprintf('Color "%s" was not found.', $colorName)
                 );
@@ -398,7 +371,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
             }
 
             $material->addColorRating(
-                Color::fromHex(self::COLOR_HEX_BY_NAME[$colorName]),
+                Color::fromHex($colorHexByName[$colorName]),
                 (int) $ratingValue);
         }
     }

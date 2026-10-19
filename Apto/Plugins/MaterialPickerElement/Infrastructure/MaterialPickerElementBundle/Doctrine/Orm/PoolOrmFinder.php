@@ -36,6 +36,21 @@ class PoolOrmFinder extends AptoOrmFinder implements PoolFinder
     const MATERIAL_ALL_VALUES = MaterialOrmFinder::MATERIAL_ALL_VALUES;
     const MATERIAL_ALL_POST_PROCESSES = MaterialOrmFinder::MATERIAL_ALL_POST_PROCESSES;
 
+    public const COLOR_DEFINITIONS = [
+        '#000000' => ['name' => 'Schwarz', 'hex' => '#000000', 'visibleHex' => '#404040'],
+        '#ff0000' => ['name' => 'Rot', 'hex' => '#ff0000', 'visibleHex' => '#F07B7B'],
+        '#ffff00' => ['name' => 'Gelb', 'hex' => '#ffff00', 'visibleHex' => '#F0F07B'],
+        '#00ff00' => ['name' => 'Grün', 'hex' => '#00ff00', 'visibleHex' => '#9AF07B'],
+        '#0000ff' => ['name' => 'Blau', 'hex' => '#0000ff', 'visibleHex' => '#7BB1F0'],
+        '#ffa500' => ['name' => 'Orange', 'hex' => '#ffa500', 'visibleHex' => '#F0D17B'],
+        '#ffffff' => ['name' => 'Weiß', 'hex' => '#ffffff', 'visibleHex' => '#f4f4f4'],
+        '#888888' => ['name' => 'Grau', 'hex' => '#888888', 'visibleHex' => '#868686'],
+        '#f5f5dc' => ['name' => 'Beige', 'hex' => '#f5f5dc', 'visibleHex' => '#F0E4C1'],
+        '#b47d49' => ['name' => 'Braun', 'hex' => '#b47d49', 'visibleHex' => '#CBA46E'],
+        '#3f888f' => ['name' => 'Türkis', 'hex' => '#3f888f', 'visibleHex' => '#3f888f'],
+        '#8800ff' => ['name' => 'Violett', 'hex' => '#8800ff', 'visibleHex' => '#9F7BF0'],
+    ];
+
     /**
      * @var string
      */
@@ -784,80 +799,11 @@ class PoolOrmFinder extends AptoOrmFinder implements PoolFinder
     {
         $filter['colorRating'] = false;
         $poolItems = $this->findPoolItemsFiltered($poolId, $filter);
-        $colors = [
-            '#000000' => [
-                'name'=> 'Schwarz',
-                'hex'=> '#000000',
-                'visibleHex'=> '#404040',
-                'inPool'=> false,
-            ],
-            '#ff0000' => [
-                'name'=> 'Rot',
-                'hex'=> '#ff0000',
-                'visibleHex'=> '#F07B7B',
-                'inPool'=> false,
-            ],
-            '#ffff00' => [
-                'name'=> 'Gelb',
-                'hex'=> '#ffff00',
-                'visibleHex'=> '#F0F07B',
-                'inPool'=> false,
-            ],
-            '#00ff00' => [
-                'name'=> 'Grün',
-                'hex'=> '#00ff00',
-                'visibleHex'=> '#9AF07B',
-                'inPool'=> false,
-            ],
-            '#0000ff' => [
-                'name'=> 'Blau',
-                'hex'=> '#0000ff',
-                'visibleHex'=> '#7BB1F0',
-                'inPool'=> false,
-            ],
-            '#ffa500' => [
-                'name'=> 'Orange',
-                'hex'=> '#ffa500',
-                'visibleHex'=> '#F0D17B',
-                'inPool'=> false,
-            ],
-            '#ffffff' => [
-                'name'=> 'Weiß',
-                'hex'=> '#ffffff',
-                'visibleHex'=> '#f4f4f4',
-                'inPool'=> false
-            ],
-            '#888888' => [
-                'name'=> 'Grau',
-                'hex'=> '#888888',
-                'visibleHex'=> '#868686',
-                'inPool'=> false
-            ],
-            '#f5f5dc' => [
-                'name'=> 'Beige',
-                'hex'=> '#f5f5dc',
-                'visibleHex'=> '#F0E4C1',
-                'inPool'=> false
-            ],
-            '#b47d49' => [
-                'name'=> 'Braun',
-                'hex'=> '#b47d49',
-                'visibleHex'=> '#CBA46E',
-                'inPool'=> false
-            ],
-            '#3f888f' => [
-                'name'=> 'Türkis',
-                'hex'=> '#3f888f',
-                'visibleHex'=> '#3f888f',
-                'inPool'=> false
-            ],
-            '#8800ff' => [
-                'name'=> 'Violett',
-                'hex'=> '#8800ff',
-                'visibleHex'=> '#9F7BF0',
-                'inPool'=> false
-            ]
-        ];
+        $colors = self::COLOR_DEFINITIONS;
+        foreach ($colors as &$color) {
+            $color['inPool'] = false;
+        }
+        unset($color);
 
         foreach ($poolItems['data'] as $poolItemData) {
             foreach ($poolItemData['material']['colorRatings'] as $poolItem) {

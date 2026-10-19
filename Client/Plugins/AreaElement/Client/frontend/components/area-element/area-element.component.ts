@@ -101,7 +101,7 @@ export class AreaElementComponent implements OnInit {
       i += 1
     ) {
       let itemsField: SelectItem[] = [];
-      const validators = [Validators.required, Validators.min(1)];
+      const validators = [Validators.required];
 
       this.formElement.addControl(
         `field_${i}`,
@@ -153,10 +153,6 @@ export class AreaElementComponent implements OnInit {
    */
   public shouldShowSaveButton(): boolean {
     const values = this.formElement.getRawValue() as Record<string, unknown>;
-
-    if (!Object.values(values).every((value) => Number(value) > 0)) {
-      return false;
-    }
 
     if (!this.element || !this.element.state.active) {
       return true;

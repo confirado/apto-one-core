@@ -3,7 +3,6 @@
 namespace Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property;
 
 use Apto\Base\Domain\Core\Model\AptoRepository;
-use Apto\Base\Domain\Core\Model\AptoTranslatedValue;
 
 interface GroupRepository extends AptoRepository
 {
@@ -29,10 +28,10 @@ interface GroupRepository extends AptoRepository
     public function findById($id);
 
     /**
-     * @param AptoTranslatedValue $name
+     * @param string $name
      * @return Group|null
      */
-    public function findByName(AptoTranslatedValue $name);
+    public function findByName($name): Group|null;
 
     /**
      * @return void

@@ -49,7 +49,7 @@
         <a *ngIf="connector.url?.cart"
            [href]="connector.url?.home"
            color="accent" mat-flat-button>
-            Zurück zum Shop
+            {{ csAptoBasket$ | async | contentSnippet: 'backToShop' }}
         </a>
         <button mat-flat-button class="clear-cart-confirmation-button" (click)="removeAllBasketItems(connector.basket.articles)">
             {{ csAptoBasket$ | async | contentSnippet: 'clear' }}
