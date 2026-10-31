@@ -92,6 +92,8 @@ class RuleFactory
                     $rawCriterion['elementId'] ? new AptoUuid($rawCriterion['elementId']) : null,
                     $rawCriterion['property'] ?? null,
                     $rawCriterion['repetition'] ?? 0,
+                    $rawCriterion['group'] ?? null,
+                    $rawCriterion['groupProperty'] ?? null,
                 );
             }
         }

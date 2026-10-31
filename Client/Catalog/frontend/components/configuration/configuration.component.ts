@@ -12,74 +12,78 @@ import { Product } from '@apto-catalog-frontend/store/product/product.model';
 import { environment } from '@apto-frontend/src/environments/environment';
 
 @Component({
-	selector: 'apto-configuration',
-	templateUrl: './configuration.component.html',
-	styleUrls: ['./configuration.component.scss'],
+    selector: 'apto-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.scss'],
 })
 export class ConfigurationComponent implements OnInit, OnDestroy {
-	public readonly product$ = this.store.select(selectProduct);
-	public readonly configuration$ = this.store.select(selectConfiguration);
-  private readonly destroy$ = new Subject<void>();
-  private locale$ = this.store.select(selectLocale);
-  private locale: string = environment.defaultLocale;
+    public readonly product$ = this.store.select(selectProduct);
+    public readonly configuration$ = this.store.select(selectConfiguration);
+    private readonly destroy$ = new Subject<void>();
+    private locale$ = this.store.select(selectLocale);
+    private locale: string = environment.defaultLocale;
 
-	public constructor(
-    private route: ActivatedRoute,
-    private store: Store,
-    private titleService: Title,
-    private metaService: Meta
-  ) {}
+    public constructor(
+        private route: ActivatedRoute,
+        private store: Store,
+        private titleService: Title,
+        private metaService: Meta
+    ) {}
 
-	public ngOnInit(): void {
+    public ngOnInit(): void {
 
-    this.locale = environment.defaultLocale;
-    this.locale$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(locale => {
-      this.locale = locale;
-    });
+        this.locale = environment.defaultLocale;
+        this.locale$.pipe(
+            takeUntil(this.destroy$)
+        ).subscribe(locale => {
+            this.locale = locale;
+        });
 
-    this.product$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((data: Product) => {
+        this.product$.pipe(
+            takeUntil(this.destroy$)
+        ).subscribe((data: Product) => {
 
-      if (data && data.metaTitle[this.locale]) {
-        this.titleService.setTitle(data.metaTitle[this.locale]);
-      }
+            if (data && data.metaTitle[this.locale]) {
+                this.titleService.setTitle(data.metaTitle[this.locale]);
+            }
 
-      if (data && data.metaDescription[this.locale]) {
-        this.metaService.updateTag({ name: 'description', content: data.metaDescription[this.locale] });
-      }
-    });
+            if (data && data.metaDescription[this.locale]) {
+                this.metaService.updateTag({ name: 'description', content: data.metaDescription[this.locale] });
+            }
+        });
 
-		const productId = this.route.snapshot.paramMap.get('productId');
-    const configurationId = this.route.snapshot.paramMap.get('configurationId');
-    const configurationType = this.route.snapshot.paramMap.get('configurationType');
+        this.route.paramMap.pipe(
+            takeUntil(this.destroy$)
+        ).subscribe(paramMap => {
+            const productId = paramMap.get('productId');
+            const configurationId = paramMap.get('configurationId');
+            const configurationType = paramMap.get('configurationType');
 
-		if (productId) {
-			this.store.dispatch(
-				initConfiguration({
-					payload: {
-						id: productId,
-            type: null
-					},
-				})
-			);
-		}
-    else if (configurationId && configurationType) {
-      this.store.dispatch(
-        initConfiguration({
-          payload: {
-            id: configurationId,
-            type: configurationType
-          },
-        })
-      );
+            if (productId) {
+                this.store.dispatch(
+                    initConfiguration({
+                        payload: {
+                            id: productId,
+                            type: null
+                        },
+                    })
+                );
+            }
+            else if (configurationId && configurationType) {
+                this.store.dispatch(
+                    initConfiguration({
+                        payload: {
+                            id: configurationId,
+                            type: configurationType
+                        },
+                    })
+                );
+            }
+        });
     }
-	}
 
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
 }

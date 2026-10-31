@@ -53,6 +53,18 @@ class GroupOrmRepository extends AptoOrmRepository implements GroupRepository
     }
 
     /**
+     * @param string $name
+     * @return Group|null
+     */
+    public function findByName($name): Group|null
+    {
+        $builder = $this->createQueryBuilder('PropertyGroup')
+            ->where('PropertyGroup.name = :name')
+            ->setParameter('name', $name);
+        return $builder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
      * @return void
      */
     public function invalidateCache()

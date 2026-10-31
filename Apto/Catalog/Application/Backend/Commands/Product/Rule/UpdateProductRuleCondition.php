@@ -20,6 +20,8 @@ class UpdateProductRuleCondition extends AddProductRuleCriterion
      * @param string|null $sectionId
      * @param string|null $elementId
      * @param string|null $property
+     * @param string|null $group
+     * @param string|null $groupProperty
      */
     public function __construct(
         string $productId,
@@ -32,8 +34,10 @@ class UpdateProductRuleCondition extends AddProductRuleCriterion
         string $sectionId = null,
         string $elementId = null,
         string $property = null,
+        string $group = null,
+        string $groupProperty = null,
     ) {
-        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $property, $computedValueId, $operator, $value);
+        parent::__construct($productId, $ruleId, $type, $sectionId, $elementId, $property, $computedValueId, $operator, $value, $group, $groupProperty);
 
         $this->conditionId = $conditionId;
     }

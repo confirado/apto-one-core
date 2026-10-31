@@ -28,6 +28,12 @@ interface GroupRepository extends AptoRepository
     public function findById($id);
 
     /**
+     * @param string $name
+     * @return Group|null
+     */
+    public function findByName($name): Group|null;
+
+    /**
      * @return void
      */
     public function invalidateCache();

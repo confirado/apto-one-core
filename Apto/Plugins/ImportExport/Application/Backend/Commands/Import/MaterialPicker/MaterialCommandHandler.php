@@ -27,6 +27,9 @@ use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Pool\PoolRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroup;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceGroupRepository;
 use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\PriceGroup\PriceMatrix;
+use Apto\Plugins\MaterialPickerElement\Domain\Core\Model\Property\GroupRepository;
+use Apto\Plugins\MaterialPickerElement\Infrastructure\MaterialPickerElementBundle\Doctrine\Orm\PoolOrmFinder;
+use Apto\Base\Domain\Core\Model\Color;
 
 class MaterialCommandHandler extends AbstractCommandHandler
 {
@@ -71,6 +74,10 @@ class MaterialCommandHandler extends AbstractCommandHandler
     private $priceMatrixRepository;
 
     /**
+     * @var GroupRepository
+     */
+    private $groupRepository;
+    /**
      * @var StringSanitizer
      */
     protected $sanitizer;
@@ -91,6 +98,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
      * @param PriceMatrixRepository    $priceMatrixRepository
      * @param StringSanitizer          $sanitizer
      * @param ProductRepository        $productRepository
+     * @param GroupRepository          $groupRepository
      */
     public function __construct(
         LanguageRepository $languageRepository,
@@ -103,6 +111,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
         PriceMatrixRepository $priceMatrixRepository,
         StringSanitizer $sanitizer,
         ProductRepository $productRepository,
+        GroupRepository $groupRepository
     ) {
         $this->languageRepository = $languageRepository;
         $this->shopRepository = $shopRepository;
@@ -113,6 +122,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
         $this->mediaFileSystemConnector = $mediaFileSystemConnector;
         $this->priceMatrixRepository = $priceMatrixRepository;
         $this->sanitizer = $sanitizer;
+        $this->groupRepository = $groupRepository;
         $this->productRepository = $productRepository;
     }
 
@@ -223,6 +233,9 @@ class MaterialCommandHandler extends AbstractCommandHandler
             }
         }
 
+        $this->assignPropertiesToMaterial($material, $fields, $command);
+        $this->assignColorsToMaterial($material, $fields, $command);
+
         // add material to pool
         $poolItemId = $pool->getItemIdByMaterialId($material->getId());
         if (null !== $poolItemId) {
@@ -233,6 +246,134 @@ class MaterialCommandHandler extends AbstractCommandHandler
 
         $this->poolRepository->update($pool);
         $pool->publishEvents();
+    }
+
+    private function assignPropertiesToMaterial(
+        Material $material,
+        array $fields,
+        ImportMaterialDataType $command
+    ): void {
+        $fieldName = 'group_name:property_name';
+
+        if (!array_key_exists($fieldName, $fields) || trim($fields[$fieldName]) === '') {
+            return;
+        }
+
+        $assignments = array_filter(
+            array_map(
+                static fn (string $value): string => trim($value),
+                explode('|', $fields[$fieldName])
+            )
+        );
+
+        foreach ($assignments as $assignment) {
+            $parts = array_map(
+                static fn (string $value): string => trim($value),
+                explode(':', $assignment, 2)
+            );
+
+            if (count($parts) !== 2 || $parts[0] === '' || $parts[1] === '') {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid property assignment "%s". Expected format: "group_name:property_name".',
+                        $assignment
+                    )
+                );
+            }
+
+            [$groupName, $propertyName] = $parts;
+
+            $groupNameTranslatedValue = $this->getTranslatedValue([
+                $command->getLocale() => $groupName,
+            ]);
+
+            $group = $this->groupRepository->findByName($groupNameTranslatedValue);
+
+            if ($group === null) {
+                throw new \InvalidArgumentException(
+                    sprintf('Property group "%s" was not found.', $groupName)
+                );
+            }
+
+            $propertyFound = false;
+
+            foreach ($group->getProperties() as $property) {
+                if (!in_array($propertyName, $property->getName()->__toArray(), true)) {
+                    continue;
+                }
+
+                $material->addProperty($property);
+                $propertyFound = true;
+
+                break;
+            }
+
+            if (!$propertyFound) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Property "%s" was not found in group "%s".',
+                        $propertyName,
+                        $groupName
+                    )
+                );
+            }
+        }
+    }
+
+    private function assignColorsToMaterial(
+        Material $material,
+        array $fields,
+        ImportMaterialDataType $command
+    ): void {
+        $fieldName = 'color:rating';
+        if (!array_key_exists($fieldName, $fields) || trim($fields[$fieldName]) === '') {
+            return;
+        }
+
+        $assignments = array_filter(
+            array_map(
+                static fn (string $value): string => trim($value),
+                explode('|', $fields[$fieldName])
+            )
+        );
+        $colorHexByName = array_column(PoolOrmFinder::COLOR_DEFINITIONS, 'hex', 'name');
+
+        foreach ($assignments as $assignment) {
+            $parts = array_map(
+                static fn(string $value): string => trim($value),
+                explode(':', $assignment, 2)
+            );
+
+            if (count($parts) !== 2 || $parts[0] === '' || $parts[1] === '') {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid color assignment "%s". Expected format: "color:rating".',
+                    )
+                );
+            }
+
+            [$colorName, $ratingValue] = $parts;
+
+            if (!array_key_exists($colorName, $colorHexByName)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Color "%s" was not found.', $colorName)
+                );
+            }
+
+            if (!preg_match('/^\d+$/', $ratingValue) || (int) $ratingValue > 100) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Invalid rating "%s" for color "%s". Expected integer between 0 and 100.',
+                        $ratingValue,
+                        $colorName
+                    )
+                );
+            }
+
+            $material->addColorRating(
+                Color::fromHex($colorHexByName[$colorName]),
+                (int) $ratingValue);
+        }
     }
 
     /**
@@ -319,6 +460,7 @@ class MaterialCommandHandler extends AbstractCommandHandler
             'bus' => 'command_bus',
             'aptoMessagePrefix' => 'ImportExport'
         ];
+
     }
 
     /**

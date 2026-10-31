@@ -221,7 +221,9 @@ class Rule extends AptoEntity
         ?AptoUuid             $elementId = null,
         ?string               $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string               $value = null
+        ?string               $value = null,
+        ?string               $group = null,
+        ?string               $groupProperty = null
     ): Rule {
         $conditionId = $this->nextConditionId();
         $this->conditions->set(
@@ -235,7 +237,9 @@ class Rule extends AptoEntity
                 $elementId,
                 $property,
                 $computedProductValue,
-                $value
+                $value,
+                $group,
+                $groupProperty
             )
         );
 
@@ -314,6 +318,44 @@ class Rule extends AptoEntity
         }
 
         $condition->setElementId($elementId);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid      $conditionId
+     * @param string|null   $group
+     *
+     * @return $this
+     */
+    public function setConditionGroup(AptoUuid $conditionId, ?string $group): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroup($group);
+
+        return $this;
+    }
+
+    /**
+     * @param AptoUuid      $conditionId
+     * @param string|null   $groupProperty
+     *
+     * @return $this
+     */
+    public function setConditionGroupProperty(AptoUuid $conditionId, ?string $groupProperty): Rule
+    {
+        $condition = $this->getCondition($conditionId);
+
+        if (null === $condition) {
+            return $this;
+        }
+
+        $condition->setGroupProperty($groupProperty);
 
         return $this;
     }
@@ -490,7 +532,9 @@ class Rule extends AptoEntity
                 $elementId,
                 $property,
                 $computedProductValue,
-                $value
+                $value,
+                null,
+                null
             )
         );
         return $this;

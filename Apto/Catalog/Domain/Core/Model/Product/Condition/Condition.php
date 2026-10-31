@@ -22,6 +22,8 @@ class Condition extends Criterion
      * @param int|null $type
      * @param AptoUuid|null $sectionId
      * @param AptoUuid|null $elementId
+     * @param string|null $group
+     * @param string|null $groupProperty
      * @param string|null $property
      * @param ComputedProductValue|null $computedProductValue
      * @param string|null $value
@@ -39,7 +41,9 @@ class Condition extends Criterion
         ?AptoUuid $elementId,
         string $property = null,
         ?ComputedProductValue $computedProductValue = null,
-        ?string $value = null
+        ?string $value = null,
+        ?string $group = null,
+        ?string $groupProperty = null
     ) {
         parent::__construct(
             $id,
@@ -49,7 +53,9 @@ class Condition extends Criterion
             $elementId,
             $property,
             $computedProductValue,
-            $value
+            $value,
+            $group,
+            $groupProperty
         );
 
         if (null !== $elementId && null !== $property && !array_key_exists($property, $conditionSet->getProduct()->getElementSelectableValues($sectionId, $elementId))) {
@@ -97,7 +103,9 @@ class Condition extends Criterion
             $elementId,
             $this->getProperty(),
             $computedProductValue,
-            $this->getValue()
+            $this->getValue(),
+            $this->getGroup(),
+            $this->getGroupProperty()
         );
     }
 }

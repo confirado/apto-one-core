@@ -180,6 +180,8 @@ class RuleRepetitionService
                 'type' => $criterion::TYPE,
                 'sectionId' => $criterion->getSectionId()->getId(),
                 'elementId' => $criterion->getElementId()?->getId(),
+                'group' => $criterion->getGroup(),
+                'groupProperty' => $criterion->getGroupProperty(),
                 'property' => $criterion->getProperty(),
                 'operator' => $criterion->getOperator()->getOperator(),
                 'value' => $criterion->getValue(),

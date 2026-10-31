@@ -479,7 +479,7 @@ export class ConfigurationEffects {
    */
 	public resetSteps$ = createEffect(() =>
 		this.actions$.pipe(
-			ofType(setStepSuccess, setPrevStepSuccess),
+			ofType(setPrevStepSuccess),
 			withLatestFrom(
         this.store$.select(selectConfiguration),
         this.store$.select(selectProgressState),

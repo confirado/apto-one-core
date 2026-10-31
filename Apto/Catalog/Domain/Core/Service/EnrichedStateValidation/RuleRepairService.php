@@ -147,6 +147,8 @@ class RuleRepairService
                                     'active',
                                     true,
                                     $repetition,
+                                    null,
+                                    null,
                                 );
                             }
                             break;
