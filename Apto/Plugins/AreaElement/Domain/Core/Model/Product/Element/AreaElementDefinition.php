@@ -184,6 +184,9 @@ class AreaElementDefinition implements ElementDefinition, ElementDefinitionDefau
                 array_keys($prefix->__toArray()),
                 array_keys($suffix->__toArray())
             ));
+            if ($locales === []) {
+                $locales = ['de_DE'];
+            }
             $translatedValues = [];
 
             foreach ($locales as $localeName) {
